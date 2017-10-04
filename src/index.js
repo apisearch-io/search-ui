@@ -1,12 +1,20 @@
 import apisearch from 'apisearch';
 import WidgetFactory from "./WidgetFactory";
+import EventDispatcher from "./EventDispatcher";
 
-
+/**
+ * ApisearchUI entry point
+ *
+ * @param apiKey
+ * @returns {ApisearchUI}
+ */
 module.exports = function(apiKey) {
     let api = apisearch(apiKey);
 
-    return new ApisearchUI(api)
+    return new ApisearchUI(api);
 };
+
+const dispatcher = new EventDispatcher();
 
 class ApisearchUI {
     constructor(api) {
@@ -51,10 +59,12 @@ class ApisearchUI {
      */
     init() {
         let widgets = this.activeWidgets || [];
-        console.log(widgets);
 
         widgets.map(widget => {
             widget.render();
+            this.currentQuery = widget.update(this.currentQuery);
+
+            console.log(this.currentQuery)
         })
     }
 }

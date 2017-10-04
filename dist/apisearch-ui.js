@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -80,15 +80,48 @@ return /******/ (function(modules) { // webpackBootstrap
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var AbstractWidget = function AbstractWidget(target) {
+    _classCallCheck(this, AbstractWidget);
+
+    if (this.constructor.name === AbstractWidget) {
+        throw TypeError('You can\'t instantiate an Abstract class');
+    }
+
+    if (typeof this.render === 'undefined') {
+        throw new TypeError('render() method must be implemented.');
+    }
+
+    this.target = target;
+};
+
+exports.default = AbstractWidget;
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _apisearch = __webpack_require__(1);
+var _apisearch = __webpack_require__(2);
 
 var _apisearch2 = _interopRequireDefault(_apisearch);
 
-var _WidgetFactory = __webpack_require__(2);
+var _WidgetFactory = __webpack_require__(3);
 
 var _WidgetFactory2 = _interopRequireDefault(_WidgetFactory);
+
+var _EventDispatcher = __webpack_require__(6);
+
+var _EventDispatcher2 = _interopRequireDefault(_EventDispatcher);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -96,11 +129,19 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+/**
+ * ApisearchUI entry point
+ *
+ * @param apiKey
+ * @returns {ApisearchUI}
+ */
 module.exports = function (apiKey) {
     var api = (0, _apisearch2.default)(apiKey);
 
     return new ApisearchUI(api);
 };
+
+var dispatcher = new _EventDispatcher2.default();
 
 var ApisearchUI = function () {
     function ApisearchUI(api) {
@@ -159,11 +200,15 @@ var ApisearchUI = function () {
     }, {
         key: "init",
         value: function init() {
+            var _this2 = this;
+
             var widgets = this.activeWidgets || [];
-            console.log(widgets);
 
             widgets.map(function (widget) {
                 widget.render();
+                _this2.currentQuery = widget.update(_this2.currentQuery);
+
+                console.log(_this2.currentQuery);
             });
         }
     }]);
@@ -172,7 +217,7 @@ var ApisearchUI = function () {
 }();
 
 /***/ }),
-/* 1 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -3430,7 +3475,7 @@ var SORT_BY_LOCATION_MI_ASC = exports.SORT_BY_LOCATION_MI_ASC = {
 //# sourceMappingURL=apisearch.node.js.map
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3442,13 +3487,9 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _Input = __webpack_require__(3);
+var _Input = __webpack_require__(4);
 
 var _Input2 = _interopRequireDefault(_Input);
-
-var _Hits = __webpack_require__(5);
-
-var _Hits2 = _interopRequireDefault(_Hits);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3464,11 +3505,6 @@ var WidgetFactory = function () {
         value: function input(target, settings) {
             return new _Input2.default(target, settings);
         }
-    }, {
-        key: "hits",
-        value: function hits(target, settings) {
-            return new _Hits2.default(target, settings);
-        }
     }]);
 
     return WidgetFactory;
@@ -3477,7 +3513,7 @@ var WidgetFactory = function () {
 exports.default = WidgetFactory;
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3489,7 +3525,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _AbstractWidget2 = __webpack_require__(4);
+var _AbstractWidget2 = __webpack_require__(0);
 
 var _AbstractWidget3 = _interopRequireDefault(_AbstractWidget2);
 
@@ -3533,14 +3569,10 @@ var Input = function (_AbstractWidget) {
             target.innerHTML = '<input\n            class="' + this.className + '" \n            type="' + this.type + '" \n            value="' + this.value + '" \n            placeholder="' + this.placeholder + '">';
         }
     }, {
-        key: 'attatchEvent',
-        value: function attatchEvent() {
-            for (var _len = arguments.length, currentQuery = Array(_len), _key = 0; _key < _len; _key++) {
-                currentQuery[_key] = arguments[_key];
-            }
-
-            document.querySelector(this.className).addEventListener('keyup', function (e) {
-                var query = currentQuery.create(e.target.value);
+        key: 'update',
+        value: function update(currentQuery) {
+            document.querySelector(this.target + ' > input').addEventListener('keyup', function (e) {
+                return currentQuery.q = e.target.value;
             });
         }
     }]);
@@ -3551,7 +3583,8 @@ var Input = function (_AbstractWidget) {
 exports.default = Input;
 
 /***/ }),
-/* 4 */
+/* 5 */,
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3561,80 +3594,55 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var AbstractWidget = function AbstractWidget(target) {
-    _classCallCheck(this, AbstractWidget);
-
-    if (this.constructor.name === AbstractWidget) {
-        throw TypeError('You can\'t instantiate an Abstract class');
-    }
-
-    if (typeof this.render === 'undefined') {
-        throw new TypeError('render() method must be implemented.');
-    }
-
-    this.target = target;
-};
-
-exports.default = AbstractWidget;
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _AbstractWidget2 = __webpack_require__(4);
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-var _AbstractWidget3 = _interopRequireDefault(_AbstractWidget2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _objectDestructuringEmpty(obj) { if (obj == null) throw new TypeError("Cannot destructure undefined"); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+/**
+ * Simple Event dispatcher
+ */
+var EventDispatcher = function () {
+    function EventDispatcher() {
+        _classCallCheck(this, EventDispatcher);
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Hits = function (_AbstractWidget) {
-    _inherits(Hits, _AbstractWidget);
-
-    function Hits(target, _ref) {
-        var _ref$className = _ref.className,
-            className = _ref$className === undefined ? '' : _ref$className,
-            _ref$textValue = _ref.textValue,
-            textValue = _ref$textValue === undefined ? '' : _ref$textValue;
-
-        _classCallCheck(this, Hits);
-
-        var _this = _possibleConstructorReturn(this, (Hits.__proto__ || Object.getPrototypeOf(Hits)).call(this, target));
-
-        _this.className = className;
-        _this.textValue = textValue;
-        return _this;
+        this.events = {};
     }
 
-    _createClass(Hits, [{
-        key: 'render',
-        value: function render() {
-            var target = document.querySelector(this.target);
+    _createClass(EventDispatcher, [{
+        key: 'on',
+        value: function on(eventId, callback) {
+            var event = this.events[event];
 
-            target.innerHTML = '<span class="' + this.className + '">' + this.textValue + '</span>';
+            if (typeof event !== 'undefined') {
+                return callback(event);
+            }
+        }
+    }, {
+        key: 'dispatch',
+        value: function dispatch(_ref) {
+            var eventId = _ref.eventId;
+
+            _objectDestructuringEmpty(_ref.event);
+
+            this.events = _extends({}, this.events, _defineProperty({}, eventId, event));
+        }
+    }, {
+        key: 'removeEvent',
+        value: function removeEvent(event) {
+            // silent pass
         }
     }]);
 
-    return Hits;
-}(_AbstractWidget3.default);
+    return EventDispatcher;
+}();
 
-exports.default = Hits;
+exports.default = EventDispatcher;
 
 /***/ })
 /******/ ]);

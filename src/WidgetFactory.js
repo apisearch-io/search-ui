@@ -1,5 +1,4 @@
 import Input from "./Widgets/Input";
-import Hits from "./Widgets/Hits";
 
 export default class WidgetFactory {
     static input(target, settings) {
@@ -9,10 +8,5 @@ export default class WidgetFactory {
         );
     };
 
-    static hits(target, settings) {
-        return new Hits(
-            target,
-            settings
-        )
-    }
+    // ... more widgets
 }
