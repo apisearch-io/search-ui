@@ -1,0 +1,28 @@
+<html>
+<head>
+    <title>Apisearch Javascript example</title>
+    <script src="../dist/apisearch-ui.js"></script>
+</head>
+
+<body>
+    <div class="search-input"></div>
+    <div class="results-container"></div>
+    <div class="hits-container"></div>
+    <script>
+        let ui = apisearchUI('sandbox_comments_secret');
+
+        ui.addWidgets(
+            ui.widgets.input('.search-input', {
+                type: 'text',
+                placeholder: 'Type something...'
+            }),
+            ui.widgets.hits('.hits-container', {
+                className: 'hits',
+                textValue: 0
+            })
+        );
+
+        ui.init()
+    </script>
+</body>
+</html>
