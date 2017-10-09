@@ -7,21 +7,22 @@ export default class EventDispatcher {
     }
 
     on(eventId, callback) {
-        let event = this.events[event];
+        let event = this.events[eventId];
 
         if (typeof event !== 'undefined') {
+            this.removeEvent(eventId);
             return callback(event);
         }
     }
 
-    dispatch({eventId, event: {}}) {
+    dispatch({eventId, event = {}}) {
         this.events = {
             ...this.events,
             [eventId]: event
         }
     }
 
-    removeEvent(event) {
-        // silent pass
+    removeEvent(eventId) {
+        delete this.events[eventId];
     }
 }

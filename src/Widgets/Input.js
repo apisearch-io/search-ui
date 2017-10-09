@@ -23,13 +23,11 @@ export default class Input extends AbstractWidget {
             type="${this.type}" 
             value="${this.value}" 
             placeholder="${this.placeholder}">`;
-    }
 
-    update(currentQuery) {
         document
             .querySelector(`${this.target} > input`)
-            .addEventListener('keyup', (e) => {
-                return currentQuery.q = e.target.value;
+            .addEventListener('keyup', e => {
+                console.log(e.target.value);
             });
     }
 }

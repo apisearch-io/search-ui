@@ -1,6 +1,7 @@
 import apisearch from 'apisearch';
 import WidgetFactory from "./WidgetFactory";
 import EventDispatcher from "./EventDispatcher";
+import AbstractWidget from "./Widgets/AbstractWidget";
 
 /**
  * ApisearchUI entry point
@@ -14,10 +15,14 @@ module.exports = function(apiKey) {
     return new ApisearchUI(api);
 };
 
-const dispatcher = new EventDispatcher();
-
-class ApisearchUI {
+class ApisearchUI extends EventDispatcher {
+    /**
+     * Constructor
+     * @param api
+     */
     constructor(api) {
+        super();
+
         this.currentQuery = api.query.createMatchAll();
         this.widgets = WidgetFactory;
         this.activeWidgets = [];
@@ -30,6 +35,17 @@ class ApisearchUI {
      * @returns {ApisearchUI}
      */
     addWidget(widget) {
+        if (widget instanceof AbstractWidget === false) {
+            throw new TypeError(`Given widget must be type of "AbstractWidget".`);
+        }
+
+        this.dispatch({
+            eventId: 'widget-added',
+            event: {
+                payload: 'blablabla'
+            }
+        });
+
         this.activeWidgets = [
             ...this.activeWidgets,
             widget
@@ -46,25 +62,22 @@ class ApisearchUI {
      * @returns {ApisearchUI}
      */
     addWidgets(...widgets) {
-        widgets.map(widget => {
-            this.addWidget(widget);
-        });
+        widgets.map(widget => this.addWidget(widget));
 
         return this;
     }
 
     /**
-     * Renders the widget to its targetted container
+     * Renders the widget to its target container
      * And re-attaches the event
      */
     init() {
         let widgets = this.activeWidgets || [];
 
+        this.on('widget-added', event => console.log(event));
+
         widgets.map(widget => {
             widget.render();
-            this.currentQuery = widget.update(this.currentQuery);
-
-            console.log(this.currentQuery)
         })
     }
 }

@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -80,54 +80,33 @@ return /******/ (function(modules) { // webpackBootstrap
 "use strict";
 
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var AbstractWidget = function AbstractWidget(target) {
-    _classCallCheck(this, AbstractWidget);
-
-    if (this.constructor.name === AbstractWidget) {
-        throw TypeError('You can\'t instantiate an Abstract class');
-    }
-
-    if (typeof this.render === 'undefined') {
-        throw new TypeError('render() method must be implemented.');
-    }
-
-    this.target = target;
-};
-
-exports.default = AbstractWidget;
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _apisearch = __webpack_require__(2);
+var _apisearch = __webpack_require__(1);
 
 var _apisearch2 = _interopRequireDefault(_apisearch);
 
-var _WidgetFactory = __webpack_require__(3);
+var _WidgetFactory = __webpack_require__(2);
 
 var _WidgetFactory2 = _interopRequireDefault(_WidgetFactory);
 
-var _EventDispatcher = __webpack_require__(6);
+var _EventDispatcher2 = __webpack_require__(5);
 
-var _EventDispatcher2 = _interopRequireDefault(_EventDispatcher);
+var _EventDispatcher3 = _interopRequireDefault(_EventDispatcher2);
+
+var _AbstractWidget = __webpack_require__(4);
+
+var _AbstractWidget2 = _interopRequireDefault(_AbstractWidget);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 /**
  * ApisearchUI entry point
@@ -141,15 +120,22 @@ module.exports = function (apiKey) {
     return new ApisearchUI(api);
 };
 
-var dispatcher = new _EventDispatcher2.default();
+var ApisearchUI = function (_EventDispatcher) {
+    _inherits(ApisearchUI, _EventDispatcher);
 
-var ApisearchUI = function () {
+    /**
+     * Constructor
+     * @param api
+     */
     function ApisearchUI(api) {
         _classCallCheck(this, ApisearchUI);
 
-        this.currentQuery = api.query.createMatchAll();
-        this.widgets = _WidgetFactory2.default;
-        this.activeWidgets = [];
+        var _this = _possibleConstructorReturn(this, (ApisearchUI.__proto__ || Object.getPrototypeOf(ApisearchUI)).call(this));
+
+        _this.currentQuery = api.query.createMatchAll();
+        _this.widgets = _WidgetFactory2.default;
+        _this.activeWidgets = [];
+        return _this;
     }
 
     /**
@@ -163,6 +149,17 @@ var ApisearchUI = function () {
     _createClass(ApisearchUI, [{
         key: "addWidget",
         value: function addWidget(widget) {
+            if (widget instanceof _AbstractWidget2.default === false) {
+                throw new TypeError("Given widget must be type of \"AbstractWidget\".");
+            }
+
+            this.dispatch({
+                eventId: 'widget-added',
+                event: {
+                    payload: 'blablabla'
+                }
+            });
+
             this.activeWidgets = [].concat(_toConsumableArray(this.activeWidgets), [widget]);
 
             return this;
@@ -179,45 +176,44 @@ var ApisearchUI = function () {
     }, {
         key: "addWidgets",
         value: function addWidgets() {
-            var _this = this;
+            var _this2 = this;
 
             for (var _len = arguments.length, widgets = Array(_len), _key = 0; _key < _len; _key++) {
                 widgets[_key] = arguments[_key];
             }
 
             widgets.map(function (widget) {
-                _this.addWidget(widget);
+                return _this2.addWidget(widget);
             });
 
             return this;
         }
 
         /**
-         * Renders the widget to its targetted container
+         * Renders the widget to its target container
          * And re-attaches the event
          */
 
     }, {
         key: "init",
         value: function init() {
-            var _this2 = this;
-
             var widgets = this.activeWidgets || [];
+
+            this.on('widget-added', function (event) {
+                return console.log(event);
+            });
 
             widgets.map(function (widget) {
                 widget.render();
-                _this2.currentQuery = widget.update(_this2.currentQuery);
-
-                console.log(_this2.currentQuery);
             });
         }
     }]);
 
     return ApisearchUI;
-}();
+}(_EventDispatcher3.default);
 
 /***/ }),
-/* 2 */
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -3475,7 +3471,7 @@ var SORT_BY_LOCATION_MI_ASC = exports.SORT_BY_LOCATION_MI_ASC = {
 //# sourceMappingURL=apisearch.node.js.map
 
 /***/ }),
-/* 3 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3487,7 +3483,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _Input = __webpack_require__(4);
+var _Input = __webpack_require__(3);
 
 var _Input2 = _interopRequireDefault(_Input);
 
@@ -3513,7 +3509,7 @@ var WidgetFactory = function () {
 exports.default = WidgetFactory;
 
 /***/ }),
-/* 4 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3525,7 +3521,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _AbstractWidget2 = __webpack_require__(0);
+var _AbstractWidget2 = __webpack_require__(4);
 
 var _AbstractWidget3 = _interopRequireDefault(_AbstractWidget2);
 
@@ -3567,12 +3563,9 @@ var Input = function (_AbstractWidget) {
             var target = document.querySelector(this.target);
 
             target.innerHTML = '<input\n            class="' + this.className + '" \n            type="' + this.type + '" \n            value="' + this.value + '" \n            placeholder="' + this.placeholder + '">';
-        }
-    }, {
-        key: 'update',
-        value: function update(currentQuery) {
+
             document.querySelector(this.target + ' > input').addEventListener('keyup', function (e) {
-                return currentQuery.q = e.target.value;
+                console.log(e.target.value);
             });
         }
     }]);
@@ -3583,8 +3576,36 @@ var Input = function (_AbstractWidget) {
 exports.default = Input;
 
 /***/ }),
-/* 5 */,
-/* 6 */
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var AbstractWidget = function AbstractWidget(target) {
+    _classCallCheck(this, AbstractWidget);
+
+    if (this.constructor.name === AbstractWidget) {
+        throw TypeError('You can\'t instantiate an Abstract class');
+    }
+
+    if (typeof this.render === 'undefined') {
+        throw new TypeError('render() method must be implemented.');
+    }
+
+    this.target = target;
+};
+
+exports.default = AbstractWidget;
+
+/***/ }),
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3599,8 +3620,6 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function _objectDestructuringEmpty(obj) { if (obj == null) throw new TypeError("Cannot destructure undefined"); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -3617,25 +3636,26 @@ var EventDispatcher = function () {
     _createClass(EventDispatcher, [{
         key: 'on',
         value: function on(eventId, callback) {
-            var event = this.events[event];
+            var event = this.events[eventId];
 
             if (typeof event !== 'undefined') {
+                this.removeEvent(eventId);
                 return callback(event);
             }
         }
     }, {
         key: 'dispatch',
         value: function dispatch(_ref) {
-            var eventId = _ref.eventId;
-
-            _objectDestructuringEmpty(_ref.event);
+            var eventId = _ref.eventId,
+                _ref$event = _ref.event,
+                event = _ref$event === undefined ? {} : _ref$event;
 
             this.events = _extends({}, this.events, _defineProperty({}, eventId, event));
         }
     }, {
         key: 'removeEvent',
-        value: function removeEvent(event) {
-            // silent pass
+        value: function removeEvent(eventId) {
+            delete this.events[eventId];
         }
     }]);
 
