@@ -15,10 +15,10 @@ export default class EventDispatcher {
         }
     }
 
-    dispatch({eventId, event = {}}) {
+    dispatch({eventId, payload = {}}) {
         this.events = {
             ...this.events,
-            [eventId]: event
+            [eventId]: payload
         }
     }
 

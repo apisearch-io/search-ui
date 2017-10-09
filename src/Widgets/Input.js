@@ -13,6 +13,9 @@ export default class Input extends AbstractWidget {
         this.type = type;
         this.value = value;
         this.placeholder = placeholder;
+
+        // widget event trigger
+        this.eventTrigger = 'keyup';
     }
 
     render() {
@@ -23,11 +26,11 @@ export default class Input extends AbstractWidget {
             type="${this.type}" 
             value="${this.value}" 
             placeholder="${this.placeholder}">`;
+    }
 
-        document
-            .querySelector(`${this.target} > input`)
-            .addEventListener('keyup', e => {
-                console.log(e.target.value);
-            });
+    updateQuery(query, value) {
+        query.q = value;
+
+        return query;
     }
 }

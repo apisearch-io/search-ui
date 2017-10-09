@@ -7,16 +7,12 @@ describe('EventDispatcher()', () => {
     it('should save an event on event stack when dispatching an event', () => {
         eventDispatcher.dispatch({
             eventId: 'something-has-happened',
-            event: {
-                payload: 'bla bla bla'
-            }
+            payload: 'bla bla bla'
         });
 
         expect(eventDispatcher).to.deep.equal({
             events: {
-                'something-has-happened': {
-                    payload: 'bla bla bla'
-                }
+                'something-has-happened': 'bla bla bla'
             }
         });
     });
@@ -24,19 +20,13 @@ describe('EventDispatcher()', () => {
     it('should store a new event keeping the event stack immutable', () => {
         eventDispatcher.dispatch({
             eventId: 'another-thing-has-happened',
-            event: {
-                payload: 'la la la'
-            }
+            payload: 'la la la'
         });
 
         expect(eventDispatcher).to.deep.equal({
             events: {
-                'something-has-happened': {
-                    payload: 'bla bla bla'
-                },
-                'another-thing-has-happened': {
-                    payload: 'la la la'
-                }
+                'something-has-happened': 'bla bla bla',
+                'another-thing-has-happened': 'la la la'
             }
         })
     });
@@ -46,16 +36,14 @@ describe('EventDispatcher()', () => {
 
         expect(eventDispatcher).to.deep.equal({
             events: {
-                'another-thing-has-happened': {
-                    payload: 'la la la'
-                }
+                'another-thing-has-happened': 'la la la'
             }
         })
     });
 
     it('should execute a callback when listening an event', () => {
         eventDispatcher.on('another-thing-has-happened', e => {
-            expect(e.payload).to.be.equal('la la la');
+            expect(e).to.be.equal('la la la');
         });
     })
 });

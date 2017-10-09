@@ -90,10 +90,6 @@ var _WidgetFactory = __webpack_require__(2);
 
 var _WidgetFactory2 = _interopRequireDefault(_WidgetFactory);
 
-var _EventDispatcher2 = __webpack_require__(5);
-
-var _EventDispatcher3 = _interopRequireDefault(_EventDispatcher2);
-
 var _AbstractWidget = __webpack_require__(4);
 
 var _AbstractWidget2 = _interopRequireDefault(_AbstractWidget);
@@ -103,10 +99,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 /**
  * ApisearchUI entry point
@@ -120,9 +112,7 @@ module.exports = function (apiKey) {
     return new ApisearchUI(api);
 };
 
-var ApisearchUI = function (_EventDispatcher) {
-    _inherits(ApisearchUI, _EventDispatcher);
-
+var ApisearchUI = function () {
     /**
      * Constructor
      * @param api
@@ -130,12 +120,10 @@ var ApisearchUI = function (_EventDispatcher) {
     function ApisearchUI(api) {
         _classCallCheck(this, ApisearchUI);
 
-        var _this = _possibleConstructorReturn(this, (ApisearchUI.__proto__ || Object.getPrototypeOf(ApisearchUI)).call(this));
-
-        _this.currentQuery = api.query.createMatchAll();
-        _this.widgets = _WidgetFactory2.default;
-        _this.activeWidgets = [];
-        return _this;
+        this.api = api;
+        this.widgets = _WidgetFactory2.default;
+        this.activeWidgets = [];
+        this.currentQuery = this.api.query.createMatchAll();
     }
 
     /**
@@ -153,13 +141,6 @@ var ApisearchUI = function (_EventDispatcher) {
                 throw new TypeError("Given widget must be type of \"AbstractWidget\".");
             }
 
-            this.dispatch({
-                eventId: 'widget-added',
-                event: {
-                    payload: 'blablabla'
-                }
-            });
-
             this.activeWidgets = [].concat(_toConsumableArray(this.activeWidgets), [widget]);
 
             return this;
@@ -176,14 +157,14 @@ var ApisearchUI = function (_EventDispatcher) {
     }, {
         key: "addWidgets",
         value: function addWidgets() {
-            var _this2 = this;
+            var _this = this;
 
             for (var _len = arguments.length, widgets = Array(_len), _key = 0; _key < _len; _key++) {
                 widgets[_key] = arguments[_key];
             }
 
             widgets.map(function (widget) {
-                return _this2.addWidget(widget);
+                return _this.addWidget(widget);
             });
 
             return this;
@@ -191,26 +172,49 @@ var ApisearchUI = function (_EventDispatcher) {
 
         /**
          * Renders the widget to its target container
-         * And re-attaches the event
+         * And attaches a DOM event
          */
 
     }, {
         key: "init",
         value: function init() {
-            var widgets = this.activeWidgets || [];
+            var _this2 = this;
 
-            this.on('widget-added', function (event) {
-                return console.log(event);
-            });
+            var widgets = this.activeWidgets || [];
 
             widgets.map(function (widget) {
                 widget.render();
+
+                document.querySelector(widget.target + " > input").addEventListener(widget.eventTrigger, function (e) {
+                    // Updating the current query object
+                    // with the widget method
+                    _this2.currentQuery = widget.updateQuery(_this2.currentQuery, e.target.value);
+
+                    // Request data to apisearch servers
+                    // using the new updated query object
+                    _this2.api.search(_this2.currentQuery, function (res, err) {
+                        _this2.reloadComponents(res);
+                    });
+                });
             });
+        }
+
+        /**
+         * @todo: implement this method
+         */
+
+    }, {
+        key: "reloadComponents",
+        value: function reloadComponents(data) {
+            // the response is in data value
+            // here we should re-render all components
+            // --> result-container, some filters, pagination, etc
+            console.log(data);
         }
     }]);
 
     return ApisearchUI;
-}(_EventDispatcher3.default);
+}();
 
 /***/ }),
 /* 1 */
@@ -3554,6 +3558,9 @@ var Input = function (_AbstractWidget) {
         _this.type = type;
         _this.value = value;
         _this.placeholder = placeholder;
+
+        // widget event trigger
+        _this.eventTrigger = 'keyup';
         return _this;
     }
 
@@ -3563,10 +3570,13 @@ var Input = function (_AbstractWidget) {
             var target = document.querySelector(this.target);
 
             target.innerHTML = '<input\n            class="' + this.className + '" \n            type="' + this.type + '" \n            value="' + this.value + '" \n            placeholder="' + this.placeholder + '">';
+        }
+    }, {
+        key: 'updateQuery',
+        value: function updateQuery(query, value) {
+            query.q = value;
 
-            document.querySelector(this.target + ' > input').addEventListener('keyup', function (e) {
-                console.log(e.target.value);
-            });
+            return query;
         }
     }]);
 
@@ -3588,6 +3598,10 @@ Object.defineProperty(exports, "__esModule", {
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+/**
+ * Abstract widget class
+ * It works as an interface
+ */
 var AbstractWidget = function AbstractWidget(target) {
     _classCallCheck(this, AbstractWidget);
 
@@ -3603,66 +3617,6 @@ var AbstractWidget = function AbstractWidget(target) {
 };
 
 exports.default = AbstractWidget;
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * Simple Event dispatcher
- */
-var EventDispatcher = function () {
-    function EventDispatcher() {
-        _classCallCheck(this, EventDispatcher);
-
-        this.events = {};
-    }
-
-    _createClass(EventDispatcher, [{
-        key: 'on',
-        value: function on(eventId, callback) {
-            var event = this.events[eventId];
-
-            if (typeof event !== 'undefined') {
-                this.removeEvent(eventId);
-                return callback(event);
-            }
-        }
-    }, {
-        key: 'dispatch',
-        value: function dispatch(_ref) {
-            var eventId = _ref.eventId,
-                _ref$event = _ref.event,
-                event = _ref$event === undefined ? {} : _ref$event;
-
-            this.events = _extends({}, this.events, _defineProperty({}, eventId, event));
-        }
-    }, {
-        key: 'removeEvent',
-        value: function removeEvent(eventId) {
-            delete this.events[eventId];
-        }
-    }]);
-
-    return EventDispatcher;
-}();
-
-exports.default = EventDispatcher;
 
 /***/ })
 /******/ ]);

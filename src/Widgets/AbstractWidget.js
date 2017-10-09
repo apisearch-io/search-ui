@@ -1,3 +1,7 @@
+/**
+ * Abstract widget class
+ * It works as an interface
+ */
 export default class AbstractWidget {
     constructor(target) {
         if (this.constructor.name === AbstractWidget) {
