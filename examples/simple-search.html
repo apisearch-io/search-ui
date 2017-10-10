@@ -20,6 +20,7 @@
             <div class="results-container"></div>
         </div>
     </div>
+
     <script>
         let ui = apisearchUI('sandbox_comments_secret');
 
@@ -28,7 +29,9 @@
                 placeholder: 'Type something...',
                 className: 'form-control'
             }),
-            ui.widgets.result('.results-container', {}),
+            ui.widgets.result('.results-container', {
+                className: 'list-group-item'
+            }),
             ui.widgets.hits('.hits-container', {
                 className: 'badge badge-primary'
             })

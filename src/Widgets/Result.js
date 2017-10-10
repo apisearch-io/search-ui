@@ -16,12 +16,18 @@ export default class Result extends AbstractReadWidget {
         target.innerHTML = null;
 
         // render the new list of results
-        data.items.map(item => {
-            let itemNode = document.createElement('div');
-            itemNode.appendChild(document.createTextNode(item.metadata.content));
+        // or print a no-results message
+        if (typeof data.items !== 'undefined') {
+            data.items.map(item => {
+                let itemNode = document.createElement('div');
+                itemNode.className = this.className;
+                itemNode.appendChild(document.createTextNode(item.metadata.content));
 
-            // Render item
-            target.appendChild(itemNode);
-        });
+                // Render item
+                target.appendChild(itemNode);
+            })
+        } else {
+            target.innerHTML = `No results :'(`;
+        }
     }
 }
