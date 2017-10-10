@@ -1,7 +1,6 @@
 import apisearch from 'apisearch';
 import WidgetFactory from "./WidgetFactory";
 import AbstractReadWidget from "./Widgets/AbstractReadWidget";
-import AbstractReadWriteWidget from "./Widgets/AbstractReadWriteWidget";
 
 /**
  * ApisearchUI entry point
@@ -31,7 +30,7 @@ class ApisearchUI {
             aggregations: {},
             total_hits: 0,
             total_items: 0
-        }
+        };
     }
 
     /**
@@ -74,13 +73,12 @@ class ApisearchUI {
     init() {
         let widgets = this.activeWidgets || [];
 
-        // Perform initial search
-        this.fetchData();
-
         widgets.forEach(widget => {
             // Request data to apisearch servers
             // Renders the initial state of the widget
-            widget.render(this.data);
+            this.api.search(this.currentQuery, (res, err) => {
+                widget.render(res)
+            });
 
             document
                 .querySelector(widget.target)
@@ -95,12 +93,7 @@ class ApisearchUI {
 
                     // Request data to apisearch servers
                     // using the new updated query object
-                    this.fetchData();
-
-                    // Re-render all components/widgets
-                    this.reloadComponents();
-
-                    console.log(this)
+                    this.reloadComponents()
                 })
             ;
         })
@@ -115,33 +108,10 @@ class ApisearchUI {
         this.activeWidgets.map(widget => {
             // Only re-renders if widget is readable
             if (widget instanceof AbstractReadWidget) {
-                widget.render(this.data);
+                this.api.search(this.currentQuery, (res, err) => {
+                    widget.render(res);
+                });
             }
-        });
-    }
-
-    /**
-     * Perform search against
-     * apisearch servers
-     */
-    fetchData() {
-        this.api.search(this.currentQuery, (res, err)  =>  {
-            const {
-                items,
-                query,
-                aggregations,
-                total_hits,
-                total_items
-            } = res;
-
-            this.data = {
-                ...this.data,
-                items: items || [],
-                query,
-                aggregations,
-                total_hits,
-                total_items
-            };
         });
     }
 }

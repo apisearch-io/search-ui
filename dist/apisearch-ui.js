@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -113,62 +113,19 @@ exports.default = AbstractReadWidget;
 "use strict";
 
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * Abstract widget class
- * It works as an interface
- */
-var AbstractReadWriteWidget = function AbstractReadWriteWidget(target) {
-    _classCallCheck(this, AbstractReadWriteWidget);
-
-    if (this.constructor.name === AbstractReadWriteWidget) {
-        throw TypeError('You can\'t instantiate an Abstract class');
-    }
-
-    if (typeof this.render === 'undefined') {
-        throw new TypeError('render() method must be implemented.');
-    }
-
-    if (typeof this.updateQuery === 'undefined') {
-        throw new TypeError('updateQuery() method must be implemented.');
-    }
-
-    this.target = target;
-};
-
-exports.default = AbstractReadWriteWidget;
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _apisearch = __webpack_require__(3);
+var _apisearch = __webpack_require__(2);
 
 var _apisearch2 = _interopRequireDefault(_apisearch);
 
-var _WidgetFactory = __webpack_require__(4);
+var _WidgetFactory = __webpack_require__(3);
 
 var _WidgetFactory2 = _interopRequireDefault(_WidgetFactory);
 
 var _AbstractReadWidget = __webpack_require__(0);
 
 var _AbstractReadWidget2 = _interopRequireDefault(_AbstractReadWidget);
-
-var _AbstractReadWriteWidget = __webpack_require__(1);
-
-var _AbstractReadWriteWidget2 = _interopRequireDefault(_AbstractReadWriteWidget);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -266,13 +223,12 @@ var ApisearchUI = function () {
 
             var widgets = this.activeWidgets || [];
 
-            // Perform initial search
-            this.fetchData();
-
             widgets.forEach(function (widget) {
                 // Request data to apisearch servers
                 // Renders the initial state of the widget
-                widget.render(_this2.data);
+                _this2.api.search(_this2.currentQuery, function (res, err) {
+                    widget.render(res);
+                });
 
                 document.querySelector(widget.target).addEventListener(widget.eventTrigger, function (e) {
                     // Updating the current query object
@@ -282,12 +238,7 @@ var ApisearchUI = function () {
 
                     // Request data to apisearch servers
                     // using the new updated query object
-                    _this2.fetchData();
-
-                    // Re-render all components/widgets
                     _this2.reloadComponents();
-
-                    console.log(_this2);
                 });
             });
         }
@@ -306,36 +257,10 @@ var ApisearchUI = function () {
             this.activeWidgets.map(function (widget) {
                 // Only re-renders if widget is readable
                 if (widget instanceof _AbstractReadWidget2.default) {
-                    widget.render(_this3.data);
+                    _this3.api.search(_this3.currentQuery, function (res, err) {
+                        widget.render(res);
+                    });
                 }
-            });
-        }
-
-        /**
-         * Perform search against
-         * apisearch servers
-         */
-
-    }, {
-        key: "fetchData",
-        value: function fetchData() {
-            var _this4 = this;
-
-            this.api.search(this.currentQuery, function (res, err) {
-                var items = res.items,
-                    query = res.query,
-                    aggregations = res.aggregations,
-                    total_hits = res.total_hits,
-                    total_items = res.total_items;
-
-
-                _this4.data = _extends({}, _this4.data, {
-                    items: items || [],
-                    query: query,
-                    aggregations: aggregations,
-                    total_hits: total_hits,
-                    total_items: total_items
-                });
             });
         }
     }]);
@@ -344,7 +269,7 @@ var ApisearchUI = function () {
 }();
 
 /***/ }),
-/* 3 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -3602,7 +3527,7 @@ var SORT_BY_LOCATION_MI_ASC = exports.SORT_BY_LOCATION_MI_ASC = {
 //# sourceMappingURL=apisearch.node.js.map
 
 /***/ }),
-/* 4 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3614,7 +3539,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _InputText = __webpack_require__(5);
+var _InputText = __webpack_require__(4);
 
 var _InputText2 = _interopRequireDefault(_InputText);
 
@@ -3661,7 +3586,7 @@ var WidgetFactory = function () {
 exports.default = WidgetFactory;
 
 /***/ }),
-/* 5 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3675,7 +3600,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _AbstractReadWriteWidget = __webpack_require__(1);
+var _AbstractReadWriteWidget = __webpack_require__(5);
 
 var _AbstractReadWriteWidget2 = _interopRequireDefault(_AbstractReadWriteWidget);
 
@@ -3735,6 +3660,43 @@ var InputText = function (_AbstractReadWriteWid) {
 }(_AbstractReadWriteWidget2.default);
 
 exports.default = InputText;
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * Abstract widget class
+ * It works as an interface
+ */
+var AbstractReadWriteWidget = function AbstractReadWriteWidget(target) {
+    _classCallCheck(this, AbstractReadWriteWidget);
+
+    if (this.constructor.name === AbstractReadWriteWidget) {
+        throw TypeError('You can\'t instantiate an Abstract class');
+    }
+
+    if (typeof this.render === 'undefined') {
+        throw new TypeError('render() method must be implemented.');
+    }
+
+    if (typeof this.updateQuery === 'undefined') {
+        throw new TypeError('updateQuery() method must be implemented.');
+    }
+
+    this.target = target;
+};
+
+exports.default = AbstractReadWriteWidget;
 
 /***/ }),
 /* 6 */
