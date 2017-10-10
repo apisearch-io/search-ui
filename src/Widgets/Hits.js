@@ -13,6 +13,6 @@ export default class Hits extends AbstractReadWidget {
     render(data) {
         let target = document.querySelector(this.target);
 
-        target.innerHTML = data.total_hits || 0;
+        target.innerHTML = `<span class="${this.className}">${data.total_hits || 0}</span>`;
     }
 }

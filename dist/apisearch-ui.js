@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -80,50 +80,17 @@ return /******/ (function(modules) { // webpackBootstrap
 "use strict";
 
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * Abstract component class
- * It works as an interface
- */
-var AbstractReadWidget = function AbstractReadWidget(target) {
-    _classCallCheck(this, AbstractReadWidget);
-
-    if (this.constructor.name === AbstractReadWidget) {
-        throw TypeError('You can\'t instantiate an Abstract class');
-    }
-
-    if (typeof this.render === 'undefined') {
-        throw new TypeError('render() method must be implemented.');
-    }
-
-    this.target = target;
-};
-
-exports.default = AbstractReadWidget;
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _apisearch = __webpack_require__(2);
+var _apisearch = __webpack_require__(1);
 
 var _apisearch2 = _interopRequireDefault(_apisearch);
 
-var _WidgetFactory = __webpack_require__(3);
+var _WidgetFactory = __webpack_require__(2);
 
 var _WidgetFactory2 = _interopRequireDefault(_WidgetFactory);
 
-var _AbstractReadWidget = __webpack_require__(0);
+var _AbstractReadWidget = __webpack_require__(8);
 
 var _AbstractReadWidget2 = _interopRequireDefault(_AbstractReadWidget);
 
@@ -269,7 +236,7 @@ var ApisearchUI = function () {
 }();
 
 /***/ }),
-/* 2 */
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -3527,7 +3494,7 @@ var SORT_BY_LOCATION_MI_ASC = exports.SORT_BY_LOCATION_MI_ASC = {
 //# sourceMappingURL=apisearch.node.js.map
 
 /***/ }),
-/* 3 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3539,7 +3506,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _InputText = __webpack_require__(4);
+var _InputText = __webpack_require__(9);
 
 var _InputText2 = _interopRequireDefault(_InputText);
 
@@ -3547,7 +3514,7 @@ var _Result = __webpack_require__(6);
 
 var _Result2 = _interopRequireDefault(_Result);
 
-var _Hits = __webpack_require__(7);
+var _Hits = __webpack_require__(11);
 
 var _Hits2 = _interopRequireDefault(_Hits);
 
@@ -3586,7 +3553,108 @@ var WidgetFactory = function () {
 exports.default = WidgetFactory;
 
 /***/ }),
-/* 4 */
+/* 3 */,
+/* 4 */,
+/* 5 */,
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _AbstractReadWidget2 = __webpack_require__(8);
+
+var _AbstractReadWidget3 = _interopRequireDefault(_AbstractReadWidget2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Result = function (_AbstractReadWidget) {
+    _inherits(Result, _AbstractReadWidget);
+
+    function Result(target, _ref) {
+        var _ref$className = _ref.className,
+            className = _ref$className === undefined ? '' : _ref$className;
+
+        _classCallCheck(this, Result);
+
+        var _this = _possibleConstructorReturn(this, (Result.__proto__ || Object.getPrototypeOf(Result)).call(this, target));
+
+        _this.className = className;
+        return _this;
+    }
+
+    _createClass(Result, [{
+        key: 'render',
+        value: function render(data) {
+            var target = document.querySelector(this.target);
+
+            // clear result html block
+            target.innerHTML = null;
+
+            // render the new list of results
+            data.items.map(function (item) {
+                var itemNode = document.createElement('div');
+                itemNode.appendChild(document.createTextNode(item.metadata.content));
+
+                // Render item
+                target.appendChild(itemNode);
+            });
+        }
+    }]);
+
+    return Result;
+}(_AbstractReadWidget3.default);
+
+exports.default = Result;
+
+/***/ }),
+/* 7 */,
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * Abstract component class
+ * It works as an interface
+ */
+var AbstractReadWidget = function AbstractReadWidget(target) {
+    _classCallCheck(this, AbstractReadWidget);
+
+    if (this.constructor.name === AbstractReadWidget) {
+        throw TypeError('You can\'t instantiate an Abstract class');
+    }
+
+    if (typeof this.render === 'undefined') {
+        throw new TypeError('render() method must be implemented.');
+    }
+
+    this.target = target;
+};
+
+exports.default = AbstractReadWidget;
+
+/***/ }),
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3600,7 +3668,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _AbstractReadWriteWidget = __webpack_require__(5);
+var _AbstractReadWriteWidget = __webpack_require__(10);
 
 var _AbstractReadWriteWidget2 = _interopRequireDefault(_AbstractReadWriteWidget);
 
@@ -3662,7 +3730,7 @@ var InputText = function (_AbstractReadWriteWid) {
 exports.default = InputText;
 
 /***/ }),
-/* 5 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3699,7 +3767,7 @@ var AbstractReadWriteWidget = function AbstractReadWriteWidget(target) {
 exports.default = AbstractReadWriteWidget;
 
 /***/ }),
-/* 6 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3711,71 +3779,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _AbstractReadWidget2 = __webpack_require__(0);
-
-var _AbstractReadWidget3 = _interopRequireDefault(_AbstractReadWidget2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Result = function (_AbstractReadWidget) {
-    _inherits(Result, _AbstractReadWidget);
-
-    function Result(target, _ref) {
-        var _ref$className = _ref.className,
-            className = _ref$className === undefined ? '' : _ref$className;
-
-        _classCallCheck(this, Result);
-
-        var _this = _possibleConstructorReturn(this, (Result.__proto__ || Object.getPrototypeOf(Result)).call(this, target));
-
-        _this.className = className;
-        return _this;
-    }
-
-    _createClass(Result, [{
-        key: 'render',
-        value: function render(data) {
-            var target = document.querySelector(this.target);
-
-            // clear result html block
-            target.innerHTML = null;
-
-            // render the new list of results
-            data.items.map(function (item) {
-                var itemNode = document.createElement('div');
-                itemNode.appendChild(document.createTextNode(item.metadata.content));
-
-                // Render item
-                target.appendChild(itemNode);
-            });
-        }
-    }]);
-
-    return Result;
-}(_AbstractReadWidget3.default);
-
-exports.default = Result;
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _AbstractReadWidget2 = __webpack_require__(0);
+var _AbstractReadWidget2 = __webpack_require__(8);
 
 var _AbstractReadWidget3 = _interopRequireDefault(_AbstractReadWidget2);
 
@@ -3809,7 +3813,7 @@ var Hits = function (_AbstractReadWidget) {
         value: function render(data) {
             var target = document.querySelector(this.target);
 
-            target.innerHTML = data.total_hits || 0;
+            target.innerHTML = "<span class=\"" + this.className + "\">" + (data.total_hits || 0) + "</span>";
         }
     }]);
 

@@ -1,22 +1,37 @@
 <html>
 <head>
     <title>Apisearch Javascript example</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M"
+          crossorigin="anonymous"
+    >
     <script src="../dist/apisearch-ui.js"></script>
 </head>
 
 <body>
-    <div class="search-input"></div>
-    <div class="results-container"></div>
-    <div class="hits-container"></div>
+    <div class="container mt-3">
+        <h1>ApisearchUI</h1>
+        <hr>
+
+        <div class="form">
+            <div class="hits-container mb-1"></div>
+            <div class="search-input mb-2"></div>
+            <div class="results-container"></div>
+        </div>
+    </div>
     <script>
         let ui = apisearchUI('sandbox_comments_secret');
 
         ui.addWidgets(
             ui.widgets.inputText('.search-input', {
-                placeholder: 'Type something...'
+                placeholder: 'Type something...',
+                className: 'form-control'
             }),
             ui.widgets.result('.results-container', {}),
-            ui.widgets.hits('.hits-container', {})
+            ui.widgets.hits('.hits-container', {
+                className: 'badge badge-primary'
+            })
         );
 
         ui.init()
