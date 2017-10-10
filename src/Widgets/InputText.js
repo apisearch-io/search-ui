@@ -1,9 +1,8 @@
-import AbstractWidget from "./AbstractWidget";
+import AbstractReadWriteWidget from "./AbstractReadWriteWidget";
 
-export default class Input extends AbstractWidget {
+export default class InputText extends AbstractReadWriteWidget {
     constructor(target, {
         className = '',
-        type = 'text',
         value = '',
         placeholder = '',
         eventTrigger,
@@ -11,16 +10,13 @@ export default class Input extends AbstractWidget {
     }) {
         super(target);
 
+        this.type = 'text';
         this.className = className;
-        this.type = type;
         this.value = value;
         this.placeholder = placeholder;
 
         // widget event trigger
         this.eventTrigger = 'keyup';
-
-        // data
-        this.data = data;
     }
 
     render() {
@@ -30,7 +26,8 @@ export default class Input extends AbstractWidget {
             class="${this.className}" 
             type="${this.type}" 
             value="${this.value}" 
-            placeholder="${this.placeholder}">`;
+            placeholder="${this.placeholder}"
+        >`;
     }
 
     updateQuery(query, value) {

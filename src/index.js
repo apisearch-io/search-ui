@@ -1,6 +1,7 @@
 import apisearch from 'apisearch';
 import WidgetFactory from "./WidgetFactory";
-import AbstractWidget from "./Widgets/AbstractWidget";
+import AbstractReadWidget from "./Widgets/AbstractReadWidget";
+import AbstractReadWriteWidget from "./Widgets/AbstractReadWriteWidget";
 
 /**
  * ApisearchUI entry point
@@ -23,9 +24,14 @@ class ApisearchUI {
         this.api = api;
         this.widgets = WidgetFactory;
         this.activeWidgets = [];
-        this.currentQuery = this.api
-            .query
-            .createMatchAll();
+        this.currentQuery = this.api.query.createMatchAll();
+        this.data = {
+            items: [],
+            query: {},
+            aggregations: {},
+            total_hits: 0,
+            total_items: 0
+        }
     }
 
     /**
@@ -35,9 +41,10 @@ class ApisearchUI {
      * @returns {ApisearchUI}
      */
     addWidget(widget) {
-        if (widget instanceof AbstractWidget === false) {
-            throw new TypeError(`Given widget must be type of "AbstractWidget".`);
-        }
+        // @todo: this method needs to validate the widget types
+        // if (widget instanceof AbstractWidget === false) {
+        //     throw new TypeError(`Given widget must be type of "AbstractWidget".`);
+        // }
 
         this.activeWidgets = [
             ...this.activeWidgets,
@@ -67,10 +74,13 @@ class ApisearchUI {
     init() {
         let widgets = this.activeWidgets || [];
 
-        widgets.map(widget => {
+        // Perform initial search
+        this.fetchData();
 
+        widgets.forEach(widget => {
+            // Request data to apisearch servers
             // Renders the initial state of the widget
-            widget.render();
+            widget.render(this.data);
 
             document
                 .querySelector(widget.target)
@@ -78,13 +88,19 @@ class ApisearchUI {
                     // Updating the current query object
                     // with the widget method additions/variations
                     // to the existing query
-                    this.currentQuery = widget.updateQuery(this.currentQuery, e.target.value);
+                    this.currentQuery = widget.updateQuery(
+                        this.currentQuery,
+                        e.target.value
+                    );
 
                     // Request data to apisearch servers
                     // using the new updated query object
-                    this.api.search(this.currentQuery, (res, err)  =>  {
-                        this.reloadComponents(res);
-                    });
+                    this.fetchData();
+
+                    // Re-render all components/widgets
+                    this.reloadComponents();
+
+                    console.log(this)
                 })
             ;
         })
@@ -92,23 +108,40 @@ class ApisearchUI {
 
     /**
      * Reload DOM components
-     * @param data
+     * here we should re-render all components
+     * --> result-container, some filters, pagination, total-hits etc
      */
-    reloadComponents(data) {
-        // the response is in data value
-        // here we should re-render all components
-        // --> result-container, some filters, pagination, total-hits etc
-        this.activeWidgets = [...this.activeWidgets].map(widget => {
-            let updatedWidget = Object.assign(
-                Object.create(widget),
-                {
-                    ...widget,
-                    data: data
-                },
-            );
-            updatedWidget.render();
+    reloadComponents() {
+        this.activeWidgets.map(widget => {
+            // Only re-renders if widget is readable
+            if (widget instanceof AbstractReadWidget) {
+                widget.render(this.data);
+            }
+        });
+    }
 
-            return updatedWidget;
+    /**
+     * Perform search against
+     * apisearch servers
+     */
+    fetchData() {
+        this.api.search(this.currentQuery, (res, err)  =>  {
+            const {
+                items,
+                query,
+                aggregations,
+                total_hits,
+                total_items
+            } = res;
+
+            this.data = {
+                ...this.data,
+                items: items || [],
+                query,
+                aggregations,
+                total_hits,
+                total_items
+            };
         });
     }
 }

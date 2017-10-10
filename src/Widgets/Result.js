@@ -1,25 +1,27 @@
-import AbstractWidget from "./AbstractWidget";
+import AbstractReadWidget from "./AbstractReadWidget";
 
-export default class Result extends AbstractWidget {
+export default class Result extends AbstractReadWidget {
     constructor(target, {
-        className = '',
-        data = {}
+        className = ''
     }) {
         super(target);
 
         this.className = className;
-        this.data = data;
     }
 
-    render() {
+    render(data) {
         let target = document.querySelector(this.target);
-        let items = (typeof this.data.items !== 'undefined')
-            ? this.data.items
-            : []
-        ;
 
-        target.innerHTML = items.map(item => {
-            return `<div class="${this.className}">${item.metadata.content}</div>`;
+        // clear result html block
+        target.innerHTML = null;
+
+        // render the new list of results
+        data.items.map(item => {
+            let itemNode = document.createElement('div');
+            itemNode.appendChild(document.createTextNode(item.metadata.content));
+
+            // Render item
+            target.appendChild(itemNode);
         });
     }
 }

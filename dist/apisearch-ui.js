@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -80,21 +80,95 @@ return /******/ (function(modules) { // webpackBootstrap
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * Abstract component class
+ * It works as an interface
+ */
+var AbstractReadWidget = function AbstractReadWidget(target) {
+    _classCallCheck(this, AbstractReadWidget);
+
+    if (this.constructor.name === AbstractReadWidget) {
+        throw TypeError('You can\'t instantiate an Abstract class');
+    }
+
+    if (typeof this.render === 'undefined') {
+        throw new TypeError('render() method must be implemented.');
+    }
+
+    this.target = target;
+};
+
+exports.default = AbstractReadWidget;
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * Abstract widget class
+ * It works as an interface
+ */
+var AbstractReadWriteWidget = function AbstractReadWriteWidget(target) {
+    _classCallCheck(this, AbstractReadWriteWidget);
+
+    if (this.constructor.name === AbstractReadWriteWidget) {
+        throw TypeError('You can\'t instantiate an Abstract class');
+    }
+
+    if (typeof this.render === 'undefined') {
+        throw new TypeError('render() method must be implemented.');
+    }
+
+    if (typeof this.updateQuery === 'undefined') {
+        throw new TypeError('updateQuery() method must be implemented.');
+    }
+
+    this.target = target;
+};
+
+exports.default = AbstractReadWriteWidget;
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _apisearch = __webpack_require__(1);
+var _apisearch = __webpack_require__(3);
 
 var _apisearch2 = _interopRequireDefault(_apisearch);
 
-var _WidgetFactory = __webpack_require__(2);
+var _WidgetFactory = __webpack_require__(4);
 
 var _WidgetFactory2 = _interopRequireDefault(_WidgetFactory);
 
-var _AbstractWidget = __webpack_require__(4);
+var _AbstractReadWidget = __webpack_require__(0);
 
-var _AbstractWidget2 = _interopRequireDefault(_AbstractWidget);
+var _AbstractReadWidget2 = _interopRequireDefault(_AbstractReadWidget);
+
+var _AbstractReadWriteWidget = __webpack_require__(1);
+
+var _AbstractReadWriteWidget2 = _interopRequireDefault(_AbstractReadWriteWidget);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -126,6 +200,13 @@ var ApisearchUI = function () {
         this.widgets = _WidgetFactory2.default;
         this.activeWidgets = [];
         this.currentQuery = this.api.query.createMatchAll();
+        this.data = {
+            items: [],
+            query: {},
+            aggregations: {},
+            total_hits: 0,
+            total_items: 0
+        };
     }
 
     /**
@@ -139,9 +220,10 @@ var ApisearchUI = function () {
     _createClass(ApisearchUI, [{
         key: "addWidget",
         value: function addWidget(widget) {
-            if (widget instanceof _AbstractWidget2.default === false) {
-                throw new TypeError("Given widget must be type of \"AbstractWidget\".");
-            }
+            // @todo: this method needs to validate the widget types
+            // if (widget instanceof AbstractWidget === false) {
+            //     throw new TypeError(`Given widget must be type of "AbstractWidget".`);
+            // }
 
             this.activeWidgets = [].concat(_toConsumableArray(this.activeWidgets), [widget]);
 
@@ -184,10 +266,13 @@ var ApisearchUI = function () {
 
             var widgets = this.activeWidgets || [];
 
-            widgets.map(function (widget) {
+            // Perform initial search
+            this.fetchData();
 
+            widgets.forEach(function (widget) {
+                // Request data to apisearch servers
                 // Renders the initial state of the widget
-                widget.render();
+                widget.render(_this2.data);
 
                 document.querySelector(widget.target).addEventListener(widget.eventTrigger, function (e) {
                     // Updating the current query object
@@ -197,31 +282,60 @@ var ApisearchUI = function () {
 
                     // Request data to apisearch servers
                     // using the new updated query object
-                    _this2.api.search(_this2.currentQuery, function (res, err) {
-                        _this2.reloadComponents(res);
-                    });
+                    _this2.fetchData();
+
+                    // Re-render all components/widgets
+                    _this2.reloadComponents();
+
+                    console.log(_this2);
                 });
             });
         }
 
         /**
          * Reload DOM components
-         * @param data
+         * here we should re-render all components
+         * --> result-container, some filters, pagination, total-hits etc
          */
 
     }, {
         key: "reloadComponents",
-        value: function reloadComponents(data) {
-            // the response is in data value
-            // here we should re-render all components
-            // --> result-container, some filters, pagination, total-hits etc
-            this.activeWidgets = [].concat(_toConsumableArray(this.activeWidgets)).map(function (widget) {
-                var updatedWidget = Object.assign(Object.create(widget), _extends({}, widget, {
-                    data: data
-                }));
-                updatedWidget.render();
+        value: function reloadComponents() {
+            var _this3 = this;
 
-                return updatedWidget;
+            this.activeWidgets.map(function (widget) {
+                // Only re-renders if widget is readable
+                if (widget instanceof _AbstractReadWidget2.default) {
+                    widget.render(_this3.data);
+                }
+            });
+        }
+
+        /**
+         * Perform search against
+         * apisearch servers
+         */
+
+    }, {
+        key: "fetchData",
+        value: function fetchData() {
+            var _this4 = this;
+
+            this.api.search(this.currentQuery, function (res, err) {
+                var items = res.items,
+                    query = res.query,
+                    aggregations = res.aggregations,
+                    total_hits = res.total_hits,
+                    total_items = res.total_items;
+
+
+                _this4.data = _extends({}, _this4.data, {
+                    items: items || [],
+                    query: query,
+                    aggregations: aggregations,
+                    total_hits: total_hits,
+                    total_items: total_items
+                });
             });
         }
     }]);
@@ -230,7 +344,7 @@ var ApisearchUI = function () {
 }();
 
 /***/ }),
-/* 1 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -3488,7 +3602,7 @@ var SORT_BY_LOCATION_MI_ASC = exports.SORT_BY_LOCATION_MI_ASC = {
 //# sourceMappingURL=apisearch.node.js.map
 
 /***/ }),
-/* 2 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3500,13 +3614,17 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _Input = __webpack_require__(3);
+var _InputText = __webpack_require__(5);
 
-var _Input2 = _interopRequireDefault(_Input);
+var _InputText2 = _interopRequireDefault(_InputText);
 
 var _Result = __webpack_require__(6);
 
 var _Result2 = _interopRequireDefault(_Result);
+
+var _Hits = __webpack_require__(7);
+
+var _Hits2 = _interopRequireDefault(_Hits);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3518,9 +3636,9 @@ var WidgetFactory = function () {
     }
 
     _createClass(WidgetFactory, null, [{
-        key: "input",
-        value: function input(target, settings) {
-            return new _Input2.default(target, settings);
+        key: "inputText",
+        value: function inputText(target, settings) {
+            return new _InputText2.default(target, settings);
         }
     }, {
         key: "result",
@@ -3530,6 +3648,11 @@ var WidgetFactory = function () {
         value: function result(target, settings) {
             return new _Result2.default(target, settings);
         }
+    }, {
+        key: "hits",
+        value: function hits(target, settings) {
+            return new _Hits2.default(target, settings);
+        }
     }]);
 
     return WidgetFactory;
@@ -3538,7 +3661,7 @@ var WidgetFactory = function () {
 exports.default = WidgetFactory;
 
 /***/ }),
-/* 3 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3552,9 +3675,9 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _AbstractWidget2 = __webpack_require__(4);
+var _AbstractReadWriteWidget = __webpack_require__(1);
 
-var _AbstractWidget3 = _interopRequireDefault(_AbstractWidget2);
+var _AbstractReadWriteWidget2 = _interopRequireDefault(_AbstractReadWriteWidget);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3564,14 +3687,12 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Input = function (_AbstractWidget) {
-    _inherits(Input, _AbstractWidget);
+var InputText = function (_AbstractReadWriteWid) {
+    _inherits(InputText, _AbstractReadWriteWid);
 
-    function Input(target, _ref) {
+    function InputText(target, _ref) {
         var _ref$className = _ref.className,
             className = _ref$className === undefined ? '' : _ref$className,
-            _ref$type = _ref.type,
-            type = _ref$type === undefined ? 'text' : _ref$type,
             _ref$value = _ref.value,
             value = _ref$value === undefined ? '' : _ref$value,
             _ref$placeholder = _ref.placeholder,
@@ -3580,29 +3701,26 @@ var Input = function (_AbstractWidget) {
             _ref$data = _ref.data,
             data = _ref$data === undefined ? {} : _ref$data;
 
-        _classCallCheck(this, Input);
+        _classCallCheck(this, InputText);
 
-        var _this = _possibleConstructorReturn(this, (Input.__proto__ || Object.getPrototypeOf(Input)).call(this, target));
+        var _this = _possibleConstructorReturn(this, (InputText.__proto__ || Object.getPrototypeOf(InputText)).call(this, target));
 
+        _this.type = 'text';
         _this.className = className;
-        _this.type = type;
         _this.value = value;
         _this.placeholder = placeholder;
 
         // widget event trigger
         _this.eventTrigger = 'keyup';
-
-        // data
-        _this.data = data;
         return _this;
     }
 
-    _createClass(Input, [{
+    _createClass(InputText, [{
         key: 'render',
         value: function render() {
             var target = document.querySelector(this.target);
 
-            target.innerHTML = '<input\n            class="' + this.className + '" \n            type="' + this.type + '" \n            value="' + this.value + '" \n            placeholder="' + this.placeholder + '">';
+            target.innerHTML = '<input\n            class="' + this.className + '" \n            type="' + this.type + '" \n            value="' + this.value + '" \n            placeholder="' + this.placeholder + '"\n        >';
         }
     }, {
         key: 'updateQuery',
@@ -3613,46 +3731,12 @@ var Input = function (_AbstractWidget) {
         }
     }]);
 
-    return Input;
-}(_AbstractWidget3.default);
+    return InputText;
+}(_AbstractReadWriteWidget2.default);
 
-exports.default = Input;
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * Abstract widget class
- * It works as an interface
- */
-var AbstractWidget = function AbstractWidget(target) {
-    _classCallCheck(this, AbstractWidget);
-
-    if (this.constructor.name === AbstractWidget) {
-        throw TypeError('You can\'t instantiate an Abstract class');
-    }
-
-    if (typeof this.render === 'undefined') {
-        throw new TypeError('render() method must be implemented.');
-    }
-
-    this.target = target;
-};
-
-exports.default = AbstractWidget;
+exports.default = InputText;
 
 /***/ }),
-/* 5 */,
 /* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3665,9 +3749,9 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _AbstractWidget2 = __webpack_require__(4);
+var _AbstractReadWidget2 = __webpack_require__(0);
 
-var _AbstractWidget3 = _interopRequireDefault(_AbstractWidget2);
+var _AbstractReadWidget3 = _interopRequireDefault(_AbstractReadWidget2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3677,42 +3761,100 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Result = function (_AbstractWidget) {
-    _inherits(Result, _AbstractWidget);
+var Result = function (_AbstractReadWidget) {
+    _inherits(Result, _AbstractReadWidget);
 
     function Result(target, _ref) {
         var _ref$className = _ref.className,
-            className = _ref$className === undefined ? '' : _ref$className,
-            _ref$data = _ref.data,
-            data = _ref$data === undefined ? {} : _ref$data;
+            className = _ref$className === undefined ? '' : _ref$className;
 
         _classCallCheck(this, Result);
 
         var _this = _possibleConstructorReturn(this, (Result.__proto__ || Object.getPrototypeOf(Result)).call(this, target));
 
         _this.className = className;
-        _this.data = data;
         return _this;
     }
 
     _createClass(Result, [{
         key: 'render',
-        value: function render() {
-            var _this2 = this;
-
+        value: function render(data) {
             var target = document.querySelector(this.target);
-            var items = typeof this.data.items !== 'undefined' ? this.data.items : [];
 
-            target.innerHTML = items.map(function (item) {
-                return '<div class="' + _this2.className + '">' + item.metadata.content + '</div>';
+            // clear result html block
+            target.innerHTML = null;
+
+            // render the new list of results
+            data.items.map(function (item) {
+                var itemNode = document.createElement('div');
+                itemNode.appendChild(document.createTextNode(item.metadata.content));
+
+                // Render item
+                target.appendChild(itemNode);
             });
         }
     }]);
 
     return Result;
-}(_AbstractWidget3.default);
+}(_AbstractReadWidget3.default);
 
 exports.default = Result;
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _AbstractReadWidget2 = __webpack_require__(0);
+
+var _AbstractReadWidget3 = _interopRequireDefault(_AbstractReadWidget2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Hits = function (_AbstractReadWidget) {
+    _inherits(Hits, _AbstractReadWidget);
+
+    function Hits(target, _ref) {
+        var _ref$className = _ref.className,
+            className = _ref$className === undefined ? '' : _ref$className,
+            _ref$data = _ref.data,
+            data = _ref$data === undefined ? {} : _ref$data;
+
+        _classCallCheck(this, Hits);
+
+        var _this = _possibleConstructorReturn(this, (Hits.__proto__ || Object.getPrototypeOf(Hits)).call(this, target));
+
+        _this.className = className;
+        return _this;
+    }
+
+    _createClass(Hits, [{
+        key: "render",
+        value: function render(data) {
+            var target = document.querySelector(this.target);
+
+            target.innerHTML = data.total_hits || 0;
+        }
+    }]);
+
+    return Hits;
+}(_AbstractReadWidget3.default);
+
+exports.default = Hits;
 
 /***/ })
 /******/ ]);

@@ -1,10 +1,10 @@
 /**
- * Abstract widget class
+ * Abstract component class
  * It works as an interface
  */
-export default class AbstractWidget {
+export default class AbstractReadWidget {
     constructor(target) {
-        if (this.constructor.name === AbstractWidget) {
+        if (this.constructor.name === AbstractReadWidget) {
             throw TypeError(`You can't instantiate an Abstract class`);
         }
 

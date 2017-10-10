@@ -12,13 +12,12 @@
         let ui = apisearchUI('sandbox_comments_secret');
 
         ui.addWidgets(
-            ui.widgets.input('.search-input', {
-                type: 'text',
+            ui.widgets.inputText('.search-input', {
                 placeholder: 'Type something...'
             }),
-            ui.widgets.result('.results-container', {})
+            ui.widgets.result('.results-container', {}),
+            ui.widgets.hits('.hits-container', {})
         );
-        console.log(ui);
 
         ui.init()
     </script>
