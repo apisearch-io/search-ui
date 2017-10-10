@@ -5,7 +5,9 @@ export default class Input extends AbstractWidget {
         className = '',
         type = 'text',
         value = '',
-        placeholder = ''
+        placeholder = '',
+        eventTrigger,
+        data = {}
     }) {
         super(target);
 
@@ -16,6 +18,9 @@ export default class Input extends AbstractWidget {
 
         // widget event trigger
         this.eventTrigger = 'keyup';
+
+        // data
+        this.data = data;
     }
 
     render() {
@@ -29,8 +34,12 @@ export default class Input extends AbstractWidget {
     }
 
     updateQuery(query, value) {
-        query.q = value;
-
-        return query;
+        return Object.assign(
+            Object.create(query),
+            {
+                ...query,
+                q: value
+            },
+        );
     }
 }

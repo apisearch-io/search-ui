@@ -80,6 +80,8 @@ return /******/ (function(modules) { // webpackBootstrap
 "use strict";
 
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _apisearch = __webpack_require__(1);
@@ -183,11 +185,14 @@ var ApisearchUI = function () {
             var widgets = this.activeWidgets || [];
 
             widgets.map(function (widget) {
+
+                // Renders the initial state of the widget
                 widget.render();
 
-                document.querySelector(widget.target + " > input").addEventListener(widget.eventTrigger, function (e) {
+                document.querySelector(widget.target).addEventListener(widget.eventTrigger, function (e) {
                     // Updating the current query object
-                    // with the widget method
+                    // with the widget method additions/variations
+                    // to the existing query
                     _this2.currentQuery = widget.updateQuery(_this2.currentQuery, e.target.value);
 
                     // Request data to apisearch servers
@@ -200,7 +205,8 @@ var ApisearchUI = function () {
         }
 
         /**
-         * @todo: implement this method
+         * Reload DOM components
+         * @param data
          */
 
     }, {
@@ -208,8 +214,15 @@ var ApisearchUI = function () {
         value: function reloadComponents(data) {
             // the response is in data value
             // here we should re-render all components
-            // --> result-container, some filters, pagination, etc
-            console.log(data);
+            // --> result-container, some filters, pagination, total-hits etc
+            this.activeWidgets = [].concat(_toConsumableArray(this.activeWidgets)).map(function (widget) {
+                var updatedWidget = Object.assign(Object.create(widget), _extends({}, widget, {
+                    data: data
+                }));
+                updatedWidget.render();
+
+                return updatedWidget;
+            });
         }
     }]);
 
@@ -3491,6 +3504,10 @@ var _Input = __webpack_require__(3);
 
 var _Input2 = _interopRequireDefault(_Input);
 
+var _Result = __webpack_require__(6);
+
+var _Result2 = _interopRequireDefault(_Result);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -3504,6 +3521,14 @@ var WidgetFactory = function () {
         key: "input",
         value: function input(target, settings) {
             return new _Input2.default(target, settings);
+        }
+    }, {
+        key: "result",
+
+
+        // ... more widgets
+        value: function result(target, settings) {
+            return new _Result2.default(target, settings);
         }
     }]);
 
@@ -3522,6 +3547,8 @@ exports.default = WidgetFactory;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -3548,7 +3575,10 @@ var Input = function (_AbstractWidget) {
             _ref$value = _ref.value,
             value = _ref$value === undefined ? '' : _ref$value,
             _ref$placeholder = _ref.placeholder,
-            placeholder = _ref$placeholder === undefined ? '' : _ref$placeholder;
+            placeholder = _ref$placeholder === undefined ? '' : _ref$placeholder,
+            eventTrigger = _ref.eventTrigger,
+            _ref$data = _ref.data,
+            data = _ref$data === undefined ? {} : _ref$data;
 
         _classCallCheck(this, Input);
 
@@ -3561,6 +3591,9 @@ var Input = function (_AbstractWidget) {
 
         // widget event trigger
         _this.eventTrigger = 'keyup';
+
+        // data
+        _this.data = data;
         return _this;
     }
 
@@ -3574,9 +3607,9 @@ var Input = function (_AbstractWidget) {
     }, {
         key: 'updateQuery',
         value: function updateQuery(query, value) {
-            query.q = value;
-
-            return query;
+            return Object.assign(Object.create(query), _extends({}, query, {
+                q: value
+            }));
         }
     }]);
 
@@ -3617,6 +3650,69 @@ var AbstractWidget = function AbstractWidget(target) {
 };
 
 exports.default = AbstractWidget;
+
+/***/ }),
+/* 5 */,
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _AbstractWidget2 = __webpack_require__(4);
+
+var _AbstractWidget3 = _interopRequireDefault(_AbstractWidget2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Result = function (_AbstractWidget) {
+    _inherits(Result, _AbstractWidget);
+
+    function Result(target, _ref) {
+        var _ref$className = _ref.className,
+            className = _ref$className === undefined ? '' : _ref$className,
+            _ref$data = _ref.data,
+            data = _ref$data === undefined ? {} : _ref$data;
+
+        _classCallCheck(this, Result);
+
+        var _this = _possibleConstructorReturn(this, (Result.__proto__ || Object.getPrototypeOf(Result)).call(this, target));
+
+        _this.className = className;
+        _this.data = data;
+        return _this;
+    }
+
+    _createClass(Result, [{
+        key: 'render',
+        value: function render() {
+            var _this2 = this;
+
+            var target = document.querySelector(this.target);
+            var items = typeof this.data.items !== 'undefined' ? this.data.items : [];
+
+            target.innerHTML = items.map(function (item) {
+                return '<div class="' + _this2.className + '">' + item.metadata.content + '</div>';
+            });
+        }
+    }]);
+
+    return Result;
+}(_AbstractWidget3.default);
+
+exports.default = Result;
 
 /***/ })
 /******/ ]);

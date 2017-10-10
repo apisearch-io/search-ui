@@ -1,4 +1,5 @@
 import Input from "./Widgets/Input";
+import Result from "./Widgets/Result";
 
 export default class WidgetFactory {
     static input(target, settings) {
@@ -9,4 +10,10 @@ export default class WidgetFactory {
     };
 
     // ... more widgets
+    static result(target, settings) {
+        return new Result(
+            target,
+            settings
+        );
+    }
 }

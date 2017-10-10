@@ -68,13 +68,16 @@ class ApisearchUI {
         let widgets = this.activeWidgets || [];
 
         widgets.map(widget => {
+
+            // Renders the initial state of the widget
             widget.render();
 
             document
-                .querySelector(`${widget.target} > input`)
+                .querySelector(widget.target)
                 .addEventListener(widget.eventTrigger, e => {
                     // Updating the current query object
-                    // with the widget method
+                    // with the widget method additions/variations
+                    // to the existing query
                     this.currentQuery = widget.updateQuery(this.currentQuery, e.target.value);
 
                     // Request data to apisearch servers
@@ -88,12 +91,24 @@ class ApisearchUI {
     }
 
     /**
-     * @todo: implement this method
+     * Reload DOM components
+     * @param data
      */
     reloadComponents(data) {
         // the response is in data value
         // here we should re-render all components
-        // --> result-container, some filters, pagination, etc
-        console.log(data)
+        // --> result-container, some filters, pagination, total-hits etc
+        this.activeWidgets = [...this.activeWidgets].map(widget => {
+            let updatedWidget = Object.assign(
+                Object.create(widget),
+                {
+                    ...widget,
+                    data: data
+                },
+            );
+            updatedWidget.render();
+
+            return updatedWidget;
+        });
     }
 }
