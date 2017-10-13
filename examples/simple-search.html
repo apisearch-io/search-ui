@@ -14,10 +14,17 @@
         <h1>ApisearchUI</h1>
         <hr>
 
-        <div class="form">
-            <div class="hits-container mb-1"></div>
-            <div class="search-input mb-2"></div>
-            <div class="results-container"></div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="search-input mb-2"></div>
+                <div class="hits-container mb-1"></div>
+            </div>
+            <div class="col-sm-8">
+                <div class="results-container"></div>
+            </div>
+            <div class="col-sm-4">
+                <div class="filters-container"></div>
+            </div>
         </div>
     </div>
 
@@ -28,6 +35,11 @@
             ui.widgets.inputText('.search-input', {
                 placeholder: 'Type something...',
                 className: 'form-control'
+            }),
+            ui.widgets.sortBy('.filters-container', {
+                className: 'list-group-item',
+                field: 'created_at',
+                order: 'asc'
             }),
             ui.widgets.result('.results-container', {
                 className: 'list-group-item'

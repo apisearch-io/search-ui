@@ -5,8 +5,7 @@ export default class InputText extends AbstractReadWriteWidget {
         className = '',
         value = '',
         placeholder = '',
-        eventTrigger,
-        data = {}
+        eventTrigger = 'keyup'
     }) {
         super(target);
 
@@ -14,9 +13,7 @@ export default class InputText extends AbstractReadWriteWidget {
         this.className = className;
         this.value = value;
         this.placeholder = placeholder;
-
-        // widget event trigger
-        this.eventTrigger = 'keyup';
+        this.eventTrigger = eventTrigger;
     }
 
     render() {

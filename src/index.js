@@ -24,13 +24,6 @@ class ApisearchUI {
         this.widgets = WidgetFactory;
         this.activeWidgets = [];
         this.currentQuery = this.api.query.createMatchAll();
-        this.data = {
-            items: [],
-            query: {},
-            aggregations: {},
-            total_hits: 0,
-            total_items: 0
-        };
     }
 
     /**
@@ -82,14 +75,16 @@ class ApisearchUI {
 
             document
                 .querySelector(widget.target)
-                .addEventListener(widget.eventTrigger, e => {
+                .addEventListener(widget.eventTrigger, event => {
                     // Updating the current query object
                     // with the widget method additions/variations
                     // to the existing query
+                    console.log(event.target.value);
                     this.currentQuery = widget.updateQuery(
                         this.currentQuery,
-                        e.target.value
+                        event.target.value
                     );
+                    console.log(this.currentQuery)
 
                     // Request data to apisearch servers
                     // using the new updated query object
@@ -106,7 +101,7 @@ class ApisearchUI {
      */
     reloadComponents() {
         this.activeWidgets.map(widget => {
-            // Only re-renders if widget is readable
+            // Only re-renders if the widget is read-only
             if (widget instanceof AbstractReadWidget) {
                 this.api.search(this.currentQuery, (res, err) => {
                     widget.render(res);
