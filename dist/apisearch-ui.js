@@ -70,11 +70,48 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * Abstract widget class
+ * It works as an interface
+ */
+var AbstractReadWriteWidget = function AbstractReadWriteWidget(target) {
+    _classCallCheck(this, AbstractReadWriteWidget);
+
+    if (this.constructor.name === AbstractReadWriteWidget) {
+        throw TypeError('You can\'t instantiate an Abstract class');
+    }
+
+    if (typeof this.render === 'undefined') {
+        throw new TypeError('render() method must be implemented.');
+    }
+
+    if (typeof this.updateQuery === 'undefined') {
+        throw new TypeError('updateQuery() method must be implemented.');
+    }
+
+    this.target = target;
+};
+
+exports.default = AbstractReadWriteWidget;
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -107,7 +144,7 @@ var AbstractReadWidget = function AbstractReadWidget(target) {
 exports.default = AbstractReadWidget;
 
 /***/ }),
-/* 1 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -115,15 +152,15 @@ exports.default = AbstractReadWidget;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _apisearch = __webpack_require__(2);
+var _apisearch = __webpack_require__(3);
 
 var _apisearch2 = _interopRequireDefault(_apisearch);
 
-var _WidgetFactory = __webpack_require__(3);
+var _WidgetFactory = __webpack_require__(4);
 
 var _WidgetFactory2 = _interopRequireDefault(_WidgetFactory);
 
-var _AbstractReadWidget = __webpack_require__(0);
+var _AbstractReadWidget = __webpack_require__(1);
 
 var _AbstractReadWidget2 = _interopRequireDefault(_AbstractReadWidget);
 
@@ -219,6 +256,7 @@ var ApisearchUI = function () {
             widgets.forEach(function (widget) {
                 // Request data to apisearch servers
                 // Renders the initial state of the widget
+                // @todo Should update the initial empty query: widget.updateQuery();
                 _this2.api.search(_this2.currentQuery, function (res, err) {
                     widget.render(res);
                 });
@@ -264,7 +302,7 @@ var ApisearchUI = function () {
 }();
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -3522,7 +3560,7 @@ var SORT_BY_LOCATION_MI_ASC = exports.SORT_BY_LOCATION_MI_ASC = {
 //# sourceMappingURL=apisearch.node.js.map
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3534,7 +3572,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _InputText = __webpack_require__(4);
+var _InputText = __webpack_require__(5);
 
 var _InputText2 = _interopRequireDefault(_InputText);
 
@@ -3546,14 +3584,21 @@ var _Hits = __webpack_require__(7);
 
 var _Hits2 = _interopRequireDefault(_Hits);
 
-var _SortBy = __webpack_require__(9);
+var _SortBy = __webpack_require__(8);
 
 var _SortBy2 = _interopRequireDefault(_SortBy);
+
+var _MultipleChoice = __webpack_require__(9);
+
+var _MultipleChoice2 = _interopRequireDefault(_MultipleChoice);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+/**
+ * Widgets factory class
+ */
 var WidgetFactory = function () {
     function WidgetFactory() {
         _classCallCheck(this, WidgetFactory);
@@ -3563,6 +3608,11 @@ var WidgetFactory = function () {
         key: "inputText",
         value: function inputText(target, settings) {
             return new _InputText2.default(target, settings);
+        }
+    }, {
+        key: "multipleChoice",
+        value: function multipleChoice(target, settings) {
+            return new _MultipleChoice2.default(target, settings);
         }
     }, {
         key: "sortBy",
@@ -3587,7 +3637,7 @@ var WidgetFactory = function () {
 exports.default = WidgetFactory;
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3601,7 +3651,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _AbstractReadWriteWidget = __webpack_require__(5);
+var _AbstractReadWriteWidget = __webpack_require__(0);
 
 var _AbstractReadWriteWidget2 = _interopRequireDefault(_AbstractReadWriteWidget);
 
@@ -3660,43 +3710,6 @@ var InputText = function (_AbstractReadWriteWid) {
 exports.default = InputText;
 
 /***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * Abstract widget class
- * It works as an interface
- */
-var AbstractReadWriteWidget = function AbstractReadWriteWidget(target) {
-    _classCallCheck(this, AbstractReadWriteWidget);
-
-    if (this.constructor.name === AbstractReadWriteWidget) {
-        throw TypeError('You can\'t instantiate an Abstract class');
-    }
-
-    if (typeof this.render === 'undefined') {
-        throw new TypeError('render() method must be implemented.');
-    }
-
-    if (typeof this.updateQuery === 'undefined') {
-        throw new TypeError('updateQuery() method must be implemented.');
-    }
-
-    this.target = target;
-};
-
-exports.default = AbstractReadWriteWidget;
-
-/***/ }),
 /* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3709,7 +3722,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _AbstractReadWidget2 = __webpack_require__(0);
+var _AbstractReadWidget2 = __webpack_require__(1);
 
 var _AbstractReadWidget3 = _interopRequireDefault(_AbstractReadWidget2);
 
@@ -3781,7 +3794,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _AbstractReadWidget2 = __webpack_require__(0);
+var _AbstractReadWidget2 = __webpack_require__(1);
 
 var _AbstractReadWidget3 = _interopRequireDefault(_AbstractReadWidget2);
 
@@ -3825,8 +3838,7 @@ var Hits = function (_AbstractReadWidget) {
 exports.default = Hits;
 
 /***/ }),
-/* 8 */,
-/* 9 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3838,7 +3850,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _AbstractReadWriteWidget = __webpack_require__(5);
+var _AbstractReadWriteWidget = __webpack_require__(0);
 
 var _AbstractReadWriteWidget2 = _interopRequireDefault(_AbstractReadWriteWidget);
 
@@ -3860,8 +3872,8 @@ var SortBy = function (_AbstractReadWriteWid) {
             className = _ref$className === undefined ? '' : _ref$className,
             _ref$field = _ref.field,
             field = _ref$field === undefined ? '' : _ref$field,
-            _ref$order = _ref.order,
-            order = _ref$order === undefined ? '' : _ref$order,
+            _ref$options = _ref.options,
+            options = _ref$options === undefined ? [] : _ref$options,
             _ref$eventTrigger = _ref.eventTrigger,
             eventTrigger = _ref$eventTrigger === undefined ? 'change' : _ref$eventTrigger;
 
@@ -3871,7 +3883,7 @@ var SortBy = function (_AbstractReadWriteWid) {
 
         _this.className = className;
         _this.field = field;
-        _this.order = order;
+        _this.options = options;
         _this.eventTrigger = eventTrigger;
         return _this;
     }
@@ -3880,8 +3892,11 @@ var SortBy = function (_AbstractReadWriteWid) {
         key: 'render',
         value: function render(data) {
             var target = document.querySelector(this.target);
+            var options = this.options.map(function (option) {
+                return '<option value="' + option.value + '">' + option.title + '</option>';
+            });
 
-            target.innerHTML = '<select class="' + this.className + '">\n            <option value="asc">Ascendent</option>\n            <option value="desc">Descendent</option>\n        </select>';
+            target.innerHTML = '<select class="' + this.className + '">' + options + '</select>';
         }
     }, {
         key: 'updateQuery',
@@ -3898,6 +3913,90 @@ var SortBy = function (_AbstractReadWriteWid) {
 }(_AbstractReadWriteWidget2.default);
 
 exports.default = SortBy;
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _AbstractReadWriteWidget = __webpack_require__(0);
+
+var _AbstractReadWriteWidget2 = _interopRequireDefault(_AbstractReadWriteWidget);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var MultipleChoice = function (_AbstractReadWriteWid) {
+    _inherits(MultipleChoice, _AbstractReadWriteWid);
+
+    function MultipleChoice(target, _ref) {
+        var _ref$className = _ref.className,
+            className = _ref$className === undefined ? '' : _ref$className,
+            _ref$field = _ref.field,
+            field = _ref$field === undefined ? '' : _ref$field,
+            _ref$options = _ref.options,
+            options = _ref$options === undefined ? [] : _ref$options,
+            _ref$eventTrigger = _ref.eventTrigger,
+            eventTrigger = _ref$eventTrigger === undefined ? 'change' : _ref$eventTrigger;
+
+        _classCallCheck(this, MultipleChoice);
+
+        var _this = _possibleConstructorReturn(this, (MultipleChoice.__proto__ || Object.getPrototypeOf(MultipleChoice)).call(this, target));
+
+        _this.className = className;
+        _this.field = field;
+        _this.options = options;
+        _this.eventTrigger = eventTrigger;
+        return _this;
+    }
+
+    _createClass(MultipleChoice, [{
+        key: 'render',
+        value: function render(data) {
+            var _this2 = this;
+
+            var target = document.querySelector(this.target);
+            var options = this.options.map(function (option) {
+                return '<label>\n                <input type="checkbox" \n                    name="' + _this2.field + '"\n                    value="' + option.value + '" \n                    ' + (option.selected ? 'checked' : '') + '\n                >\n                <span>' + option.title + '</span>\n            </label><br>';
+            });
+
+            target.innerHTML = '<fieldset class="' + this.className + '">' + options.join('') + '</fieldset>';
+        }
+    }, {
+        key: 'updateQuery',
+        value: function updateQuery(query, value) {
+            var clonedQuery = Object.assign(Object.create(query), query);
+
+            clonedQuery.filterUniverseBy('indexed_metadata.' + this.field, [this.options.map(function (option) {
+                return option.value;
+            })]);
+            clonedQuery.filterBy('indexed_metadata.' + this.field, this.field, [this.options.map(function (option) {
+                return option.value;
+            })]);
+
+            console.log(clonedQuery);
+
+            return clonedQuery;
+        }
+    }]);
+
+    return MultipleChoice;
+}(_AbstractReadWriteWidget2.default);
+
+exports.default = MultipleChoice;
 
 /***/ })
 /******/ ]);

@@ -4,24 +4,24 @@ export default class SortBy extends AbstractReadWriteWidget {
     constructor(target, {
         className = '',
         field = '',
-        order = '',
+        options = [],
         eventTrigger = 'change'
     }) {
         super(target);
 
         this.className = className;
         this.field = field;
-        this.order = order;
+        this.options = options;
         this.eventTrigger = eventTrigger;
     }
 
     render(data) {
         let target = document.querySelector(this.target);
+        let options = this.options.map(option => {
+            return `<option value="${option.value}">${option.title}</option>`
+        });
 
-        target.innerHTML = `<select class="${this.className}">
-            <option value="asc">Ascendent</option>
-            <option value="desc">Descendent</option>
-        </select>`;
+        target.innerHTML = `<select class="${this.className}">${options}</select>`;
     }
 
     updateQuery(query, value) {

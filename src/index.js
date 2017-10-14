@@ -69,6 +69,7 @@ class ApisearchUI {
         widgets.forEach(widget => {
             // Request data to apisearch servers
             // Renders the initial state of the widget
+            // @todo Should update the initial empty query: widget.updateQuery();
             this.api.search(this.currentQuery, (res, err) => {
                 widget.render(res)
             });
