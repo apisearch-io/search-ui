@@ -10,23 +10,34 @@
 </head>
 
 <body>
-    <div class="container mt-3">
-        <h1>ApisearchUI</h1>
-        <hr>
-
+    <div class="container mt-5">
+        <!-- Header -->
         <div class="row">
-            <div class="col-sm-12">
+            <!-- Logo -->
+            <div class="col-sm-12 text-center">
+                <img src="https://apisearch.io/bundles/apisearchweb/images/logo-.png" alt="Apisearch" width="400">
+            </div>
+            <!-- Search bar -->
+            <div class="col-sm-12 mt-5">
                 <div class="search-input mb-2"></div>
-                <div class="hits-container mb-1"></div>
             </div>
-            <div class="col-sm-8">
-                <div class="results-container"></div>
-            </div>
+        </div>
+        <!-- /Header -->
+
+        <hr> <!-- divider -->
+
+        <!-- Results and filters -->
+        <div class="row mt-3">
             <div class="col-sm-4">
                 <div class="filters-container"></div>
                 <div class="multiple-choice"></div>
             </div>
+            <div class="col-sm-8">
+                <div class="hits-container mb-1"></div>
+                <div class="results-container"></div>
+            </div>
         </div>
+        <!-- /Results and filters -->
     </div>
 
     <script>
@@ -47,6 +58,7 @@
                     {title: 'Oldest', value: 'desc'}
                 ]
             }),
+
 //            ui.widgets.multipleChoice('.multiple-choice', {
 //                className: 'list-group-item',
 //                field: 'author_uuid',
