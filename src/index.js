@@ -66,33 +66,35 @@ class ApisearchUI {
     init() {
         let widgets = this.activeWidgets || [];
 
-        widgets.forEach(widget => {
-            // Request data to apisearch servers
-            // Renders the initial state of the widget
-            // @todo Should update the initial empty query: widget.updateQuery();
-            this.api.search(this.currentQuery, (res, err) => {
-                widget.render(res)
-            });
+        // @todo Should update the initial empty query: widget.updateQuery();
+        // widgets.map(widget => widget.updateQuery())
+        this.api.search(this.currentQuery, (res, err) => {
 
-            document
-                .querySelector(widget.target)
-                .addEventListener(widget.eventTrigger, event => {
-                    // Updating the current query object
-                    // with the widget method additions/variations
-                    // to the existing query
-                    console.log(event.target.value);
-                    this.currentQuery = widget.updateQuery(
-                        this.currentQuery,
-                        event.target.value
-                    );
-                    console.log(this.currentQuery)
+            // Loop all active widgets
+            widgets.map(widget => {
+                // Request data to apisearch servers
+                // Renders the initial state of the widget
+                widget.render(res);
 
-                    // Request data to apisearch servers
-                    // using the new updated query object
-                    this.reloadComponents()
-                })
-            ;
-        })
+                document
+                    .querySelector(widget.target)
+                    .addEventListener(widget.eventTrigger, event => {
+                        // Updating the current query object
+                        // with the widget method additions/variations
+                        // to the existing query
+                        this.currentQuery = widget.updateQuery(
+                            this.currentQuery,
+                            event.target.value
+                        );
+
+                        // Request data to apisearch servers
+                        // using the new updated query object
+                        this.reloadComponents()
+                    })
+                ;
+            })
+
+        });
     }
 
     /**

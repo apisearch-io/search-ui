@@ -40,22 +40,23 @@
                 className: 'form-control'
             }),
             ui.widgets.sortBy('.filters-container', {
-                className: 'list-group-item',
+                className: 'form-control',
                 field: 'created_at',
                 options: [
                     {title: 'Newest', value: 'asc'},
                     {title: 'Oldest', value: 'desc'}
                 ]
             }),
-            ui.widgets.multipleChoice('.multiple-choice', {
-                className: 'list-group-item',
-                field: 'author_uuid',
-                options: [
-                    {title: 'Administrator', value: '11312__23131234', selected: false},
-                    {title: 'Another author', value: '1234', selected: false},
-                    {title: 'Unknown author', value: '123456', selected: false}
-                ],
-            }),
+//            ui.widgets.multipleChoice('.multiple-choice', {
+//                className: 'list-group-item',
+//                field: 'author_uuid',
+//                options: [
+//                    {title: 'Administrator', value: '11312__23131234', selected: false},
+//                    {title: 'Another author', value: '1234', selected: false},
+//                    {title: 'Unknown author', value: '123456', selected: false}
+//                ],
+//            }),
+
             // results
             ui.widgets.result('.results-container', {
                 className: 'list-group-item'

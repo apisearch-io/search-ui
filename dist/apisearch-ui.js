@@ -253,25 +253,26 @@ var ApisearchUI = function () {
 
             var widgets = this.activeWidgets || [];
 
-            widgets.forEach(function (widget) {
-                // Request data to apisearch servers
-                // Renders the initial state of the widget
-                // @todo Should update the initial empty query: widget.updateQuery();
-                _this2.api.search(_this2.currentQuery, function (res, err) {
-                    widget.render(res);
-                });
+            // @todo Should update the initial empty query: widget.updateQuery();
+            // widgets.map(widget => widget.updateQuery())
+            this.api.search(this.currentQuery, function (res, err) {
 
-                document.querySelector(widget.target).addEventListener(widget.eventTrigger, function (event) {
-                    // Updating the current query object
-                    // with the widget method additions/variations
-                    // to the existing query
-                    console.log(event.target.value);
-                    _this2.currentQuery = widget.updateQuery(_this2.currentQuery, event.target.value);
-                    console.log(_this2.currentQuery);
-
+                // Loop all active widgets
+                widgets.map(function (widget) {
                     // Request data to apisearch servers
-                    // using the new updated query object
-                    _this2.reloadComponents();
+                    // Renders the initial state of the widget
+                    widget.render(res);
+
+                    document.querySelector(widget.target).addEventListener(widget.eventTrigger, function (event) {
+                        // Updating the current query object
+                        // with the widget method additions/variations
+                        // to the existing query
+                        _this2.currentQuery = widget.updateQuery(_this2.currentQuery, event.target.value);
+
+                        // Request data to apisearch servers
+                        // using the new updated query object
+                        _this2.reloadComponents();
+                    });
                 });
             });
         }
@@ -3828,7 +3829,7 @@ var Hits = function (_AbstractReadWidget) {
         value: function render(data) {
             var target = document.querySelector(this.target);
 
-            target.innerHTML = "<span class=\"" + this.className + "\">" + (data.total_hits || 0) + "</span>";
+            target.innerHTML = "<span class=\"" + this.className + "\">" + (data.total_hits || 0) + " hits!</span>";
         }
     }]);
 
