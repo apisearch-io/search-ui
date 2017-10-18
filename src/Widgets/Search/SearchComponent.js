@@ -1,14 +1,34 @@
-import { render } from 'preact';
+/** @jsx h */
+import { h, Component } from 'preact';
 
-export default class InputText {
-    constructor({
-        target = '',
-        className = '',
-        eventTrigger = 'keyup'
-    }) {
-        this.type = 'text';
-        this.target = target;
-        this.className = className;
-        this.eventTrigger = eventTrigger;
+export default class SearchComponent extends Component {
+    constructor() {
+        super();
+
+        this.state = {
+            q: ''
+        };
+
+        this.handleSearch = this.handleSearch.bind(this);
+    }
+
+    handleSearch = (e) => {
+        this.setState({
+            q: e.target.value
+        })
+    };
+
+    render() {
+        return (
+            <div>
+                <input
+                    className="form-control"
+                    placeholder=""
+                    value={this.state.q}
+                    onKeyUp={this.handleSearch}
+                />
+                <span>{this.state.q}</span>
+            </div>
+        );
     }
 }
