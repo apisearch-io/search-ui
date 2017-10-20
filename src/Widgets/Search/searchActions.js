@@ -2,14 +2,16 @@
  * Search actions
  */
 
+import dispatcher from '../../dispatcher';
+
 /**
  * Keyup search action
  * @param text
  * @returns {{type: string, payload: *}}
  */
 export function keyupSearchAction(text) {
-    return {
-        type: 'KEYUP_SEARCH',
+    dispatcher.dispatch({
+        type: 'FETCH_DATA',
         payload: text
-    }
+    })
 }

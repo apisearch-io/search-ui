@@ -12,9 +12,8 @@ import { h, render, createElement } from 'preact';
  * Locals
  */
 import WidgetFactory from "./Factory/WidgetFactory";
-import Provider from "preact-redux";
-import SearchConnector from "./Widgets/Search/SearchConnector";
-import {store} from "./store";
+import {store} from "./ApisearchStore";
+
 
 /**
  * Apisearch UI

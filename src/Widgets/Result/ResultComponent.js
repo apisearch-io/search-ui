@@ -1,16 +1,22 @@
 /** @jsx h */
 import { h, Component } from 'preact';
+import ApisearchStore from "../../ApisearchStore";
 
 class ResultComponent extends Component {
+    constructor() {
+        super();
+        this.state = ApisearchStore.getData();
+    }
+
+    componentWillMount() {
+        ApisearchStore.on('change', () =>
+            this.setState(ApisearchStore.getData())
+        )
+    }
+
     render() {
-        console.log(this.props.store.getState())
         return (
-            <ul>
-                <li>Result 1</li>
-                <li>Result 2</li>
-                <li>Result 3</li>
-                <li>Result 4</li>
-            </ul>
+            <span>{this.state.query.q}</span>
         )
     }
 };
