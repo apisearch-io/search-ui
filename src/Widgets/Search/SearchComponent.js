@@ -19,7 +19,10 @@ class SearchComponent extends Component {
         });
 
         // Dispatch input search
-        keyupSearchAction(e.target.value)
+        keyupSearchAction(
+            e.target.value,
+            this.props.client
+        )
     };
 
     render() {

@@ -18,8 +18,8 @@ import WidgetFactory from "./Factory/WidgetFactory";
  * Apisearch UI
  */
 class ApisearchUI {
-    constructor(api) {
-        this.api = api;
+    constructor(client) {
+        this.client = client;
         this.widgets = WidgetFactory;
         this.activeWidgets = [];
     }
@@ -36,6 +36,10 @@ class ApisearchUI {
 
     init() {
         this.activeWidgets.map(widget => {
+            // pass apisearchClient as an component attribute
+            // this will be accessible on component props.
+            widget.attributes.client = this.client;
+
             render(
                 widget,
                 document.querySelector(
@@ -53,7 +57,7 @@ class ApisearchUI {
  * @returns {ApisearchUI}
  */
 module.exports = function(apiKey) {
-    window.api = apisearch(apiKey);
+    const apisearchClient = apisearch(apiKey);
 
-    return new ApisearchUI(window.api);
+    return new ApisearchUI(apisearchClient);
 };
