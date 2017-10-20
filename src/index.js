@@ -12,7 +12,6 @@ import { h, render, createElement } from 'preact';
  * Locals
  */
 import WidgetFactory from "./Factory/WidgetFactory";
-import {store} from "./ApisearchStore";
 
 
 /**
@@ -54,7 +53,7 @@ class ApisearchUI {
  * @returns {ApisearchUI}
  */
 module.exports = function(apiKey) {
-    const api = apisearch(apiKey);
+    window.api = apisearch(apiKey);
 
-    return new ApisearchUI(api);
+    return new ApisearchUI(window.api);
 };

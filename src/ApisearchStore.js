@@ -28,13 +28,7 @@ class ApisearchStore extends EventEmitter {
          * on a redux architecture
          */
         if (action.type === 'FETCH_DATA') {
-            this.data = {
-                ...this.data,
-                query: {
-                    ...this.data.query,
-                    q: action.payload
-                },
-            }
+            this.data = action.payload
         }
 
         this.emit('change');

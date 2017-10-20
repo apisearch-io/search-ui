@@ -15,8 +15,15 @@ class ResultComponent extends Component {
     }
 
     render() {
+        let items = (this.state.items !== 0)
+            ? this.state.items
+            : []
+        ;
+
         return (
-            <span>{this.state.query.q}</span>
+            <ul>
+                {items.map(item => <li>{item.uuid.id} - {item.uuid.type}</li>)}
+            </ul>
         )
     }
 };

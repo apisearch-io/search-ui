@@ -1063,8 +1063,6 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _events = __webpack_require__(8);
@@ -1116,11 +1114,7 @@ var ApisearchStore = function (_EventEmitter) {
              * on a redux architecture
              */
             if (action.type === 'FETCH_DATA') {
-                this.data = _extends({}, this.data, {
-                    query: _extends({}, this.data.query, {
-                        q: action.payload
-                    })
-                });
+                this.data = action.payload;
             }
 
             this.emit('change');
@@ -1371,8 +1365,6 @@ var _WidgetFactory = __webpack_require__(6);
 
 var _WidgetFactory2 = _interopRequireDefault(_WidgetFactory);
 
-var _ApisearchStore = __webpack_require__(1);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -1432,9 +1424,9 @@ var ApisearchUI = function () {
 
 
 module.exports = function (apiKey) {
-    var api = (0, _apisearch2.default)(apiKey);
+    window.api = (0, _apisearch2.default)(apiKey);
 
-    return new ApisearchUI(api);
+    return new ApisearchUI(window.api);
 };
 
 /***/ }),
@@ -2654,7 +2646,7 @@ module.exports = function (apiKey, endpoint) {
         throw new TypeError("ApiKey parameter must be defined.");
     }
 
-    return new Apisearch('apisearch-app-id', apiKey, endpoint);
+    return new Apisearch(apiKey, endpoint);
 };
 
 /**
@@ -2662,12 +2654,11 @@ module.exports = function (apiKey, endpoint) {
  */
 
 var Apisearch = function () {
-    function Apisearch(appId, apiKey) {
-        var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    function Apisearch(apiKey) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
         _classCallCheck(this, Apisearch);
 
-        this.appId = appId;
         this.apiKey = apiKey;
         this.endpoint = options.endpoint || 'http://127.0.0.1:9002/app.php';
 
@@ -5474,7 +5465,7 @@ module.exports = invariant;
 
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 exports.keyupSearchAction = keyupSearchAction;
 
@@ -5490,10 +5481,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * @returns {{type: string, payload: *}}
  */
 function keyupSearchAction(text) {
-  _dispatcher2.default.dispatch({
-    type: 'FETCH_DATA',
-    payload: text
-  });
+    window.api.search(window.api.query.create(text), function (result) {
+        _dispatcher2.default.dispatch({
+            type: 'FETCH_DATA',
+            payload: result
+        });
+    });
 } /**
    * Search actions
    */
@@ -5550,10 +5543,20 @@ var ResultComponent = function (_Component) {
     }, {
         key: 'render',
         value: function render() {
+            var items = this.state.items !== 0 ? this.state.items : [];
+
             return (0, _preact.h)(
-                'span',
+                'ul',
                 null,
-                this.state.query.q
+                items.map(function (item) {
+                    return (0, _preact.h)(
+                        'li',
+                        null,
+                        item.uuid.id,
+                        ' - ',
+                        item.uuid.type
+                    );
+                })
             );
         }
     }]);
