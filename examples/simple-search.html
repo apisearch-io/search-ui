@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Apisearch Javascript example</title>
+    <title>Apisearch UI</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
           rel="stylesheet"
           integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M"
@@ -10,64 +10,37 @@
 </head>
 
 <body>
-    <div class="container mt-3">
-        <h1>ApisearchUI</h1>
-        <hr>
-
+    <div class="container mt-5">
         <div class="row">
+            <!-- Logo -->
+            <div class="col-sm-12 text-center">
+                <img src="https://apisearch.io/bundles/apisearchweb/images/logo-.png" alt="Apisearch" width="400">
+            </div>
+            <!-- Search bar -->
+            <div class="col-sm-12 mt-5">
+                <div class="search mb-2"></div>
+            </div>
+            <!-- Result laie -->
             <div class="col-sm-12">
-                <div class="search-input mb-2"></div>
-                <div class="hits-container mb-1"></div>
-            </div>
-            <div class="col-sm-8">
-                <div class="results-container"></div>
-            </div>
-            <div class="col-sm-4">
-                <div class="filters-container"></div>
-                <div class="multiple-choice"></div>
+                <div class="result"></div>
             </div>
         </div>
     </div>
 
     <script>
         // UI Instance
-        let ui = apisearchUI('sandbox_comments_secret');
+        let ui = apisearchUI('laie_ca');
 
-        // Add widget setup
         ui.addWidgets(
-            ui.widgets.inputText('.search-input', {
-                placeholder: 'Type something...',
-                className: 'form-control'
+            ui.widgets.searchInput({
+                target: '.search'
             }),
-            ui.widgets.sortBy('.filters-container', {
-                className: 'form-control',
-                field: 'created_at',
-                options: [
-                    {title: 'Newest', value: 'asc'},
-                    {title: 'Oldest', value: 'desc'}
-                ]
-            }),
-//            ui.widgets.multipleChoice('.multiple-choice', {
-//                className: 'list-group-item',
-//                field: 'author_uuid',
-//                options: [
-//                    {title: 'Administrator', value: '11312__23131234', selected: false},
-//                    {title: 'Another author', value: '1234', selected: false},
-//                    {title: 'Unknown author', value: '123456', selected: false}
-//                ],
-//            }),
-
-            // results
-            ui.widgets.result('.results-container', {
-                className: 'list-group-item'
-            }),
-            ui.widgets.hits('.hits-container', {
-                className: 'badge badge-primary'
+            ui.widgets.result({
+                target: '.result'
             })
         );
 
-        // Initialize it!
-        ui.init()
+        ui.init();
     </script>
 </body>
 </html>

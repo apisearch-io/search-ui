@@ -70,45 +70,987 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return h; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createElement", function() { return h; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "cloneElement", function() { return cloneElement; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Component", function() { return Component; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "rerender", function() { return rerender; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "options", function() { return options; });
+/** Virtual DOM Node */
+function VNode() {}
 
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * Abstract widget class
- * It works as an interface
+/** Global options
+ *	@public
+ *	@namespace options {Object}
  */
-var AbstractReadWriteWidget = function AbstractReadWriteWidget(target) {
-    _classCallCheck(this, AbstractReadWriteWidget);
+var options = {
 
-    if (this.constructor.name === AbstractReadWriteWidget) {
-        throw TypeError('You can\'t instantiate an Abstract class');
-    }
+	/** If `true`, `prop` changes trigger synchronous component updates.
+  *	@name syncComponentUpdates
+  *	@type Boolean
+  *	@default true
+  */
+	//syncComponentUpdates: true,
 
-    if (typeof this.render === 'undefined') {
-        throw new TypeError('render() method must be implemented.');
-    }
+	/** Processes all created VNodes.
+  *	@param {VNode} vnode	A newly-created VNode to normalize/process
+  */
+	//vnode(vnode) { }
 
-    if (typeof this.updateQuery === 'undefined') {
-        throw new TypeError('updateQuery() method must be implemented.');
-    }
+	/** Hook invoked after a component is mounted. */
+	// afterMount(component) { }
 
-    this.target = target;
+	/** Hook invoked after the DOM is updated with a component's latest render. */
+	// afterUpdate(component) { }
+
+	/** Hook invoked immediately before a component is unmounted. */
+	// beforeUnmount(component) { }
 };
 
-exports.default = AbstractReadWriteWidget;
+var stack = [];
+
+var EMPTY_CHILDREN = [];
+
+/** JSX/hyperscript reviver
+*	Benchmarks: https://esbench.com/bench/57ee8f8e330ab09900a1a1a0
+ *	@see http://jasonformat.com/wtf-is-jsx
+ *	@public
+ */
+function h(nodeName, attributes) {
+	var children = EMPTY_CHILDREN,
+	    lastSimple,
+	    child,
+	    simple,
+	    i;
+	for (i = arguments.length; i-- > 2;) {
+		stack.push(arguments[i]);
+	}
+	if (attributes && attributes.children != null) {
+		if (!stack.length) stack.push(attributes.children);
+		delete attributes.children;
+	}
+	while (stack.length) {
+		if ((child = stack.pop()) && child.pop !== undefined) {
+			for (i = child.length; i--;) {
+				stack.push(child[i]);
+			}
+		} else {
+			if (typeof child === 'boolean') child = null;
+
+			if (simple = typeof nodeName !== 'function') {
+				if (child == null) child = '';else if (typeof child === 'number') child = String(child);else if (typeof child !== 'string') simple = false;
+			}
+
+			if (simple && lastSimple) {
+				children[children.length - 1] += child;
+			} else if (children === EMPTY_CHILDREN) {
+				children = [child];
+			} else {
+				children.push(child);
+			}
+
+			lastSimple = simple;
+		}
+	}
+
+	var p = new VNode();
+	p.nodeName = nodeName;
+	p.children = children;
+	p.attributes = attributes == null ? undefined : attributes;
+	p.key = attributes == null ? undefined : attributes.key;
+
+	// if a "vnode hook" is defined, pass every created VNode to it
+	if (options.vnode !== undefined) options.vnode(p);
+
+	return p;
+}
+
+/** Copy own-properties from `props` onto `obj`.
+ *	@returns obj
+ *	@private
+ */
+function extend(obj, props) {
+  for (var i in props) {
+    obj[i] = props[i];
+  }return obj;
+}
+
+/** Call a function asynchronously, as soon as possible.
+ *	@param {Function} callback
+ */
+var defer = typeof Promise == 'function' ? Promise.resolve().then.bind(Promise.resolve()) : setTimeout;
+
+function cloneElement(vnode, props) {
+	return h(vnode.nodeName, extend(extend({}, vnode.attributes), props), arguments.length > 2 ? [].slice.call(arguments, 2) : vnode.children);
+}
+
+// DOM properties that should NOT have "px" added when numeric
+var IS_NON_DIMENSIONAL = /acit|ex(?:s|g|n|p|$)|rph|ows|mnc|ntw|ine[ch]|zoo|^ord/i;
+
+/** Managed queue of dirty components to be re-rendered */
+
+var items = [];
+
+function enqueueRender(component) {
+	if (!component._dirty && (component._dirty = true) && items.push(component) == 1) {
+		(options.debounceRendering || defer)(rerender);
+	}
+}
+
+function rerender() {
+	var p,
+	    list = items;
+	items = [];
+	while (p = list.pop()) {
+		if (p._dirty) renderComponent(p);
+	}
+}
+
+/** Check if two nodes are equivalent.
+ *	@param {Element} node
+ *	@param {VNode} vnode
+ *	@private
+ */
+function isSameNodeType(node, vnode, hydrating) {
+	if (typeof vnode === 'string' || typeof vnode === 'number') {
+		return node.splitText !== undefined;
+	}
+	if (typeof vnode.nodeName === 'string') {
+		return !node._componentConstructor && isNamedNode(node, vnode.nodeName);
+	}
+	return hydrating || node._componentConstructor === vnode.nodeName;
+}
+
+/** Check if an Element has a given normalized name.
+*	@param {Element} node
+*	@param {String} nodeName
+ */
+function isNamedNode(node, nodeName) {
+	return node.normalizedNodeName === nodeName || node.nodeName.toLowerCase() === nodeName.toLowerCase();
+}
+
+/**
+ * Reconstruct Component-style `props` from a VNode.
+ * Ensures default/fallback values from `defaultProps`:
+ * Own-properties of `defaultProps` not present in `vnode.attributes` are added.
+ * @param {VNode} vnode
+ * @returns {Object} props
+ */
+function getNodeProps(vnode) {
+	var props = extend({}, vnode.attributes);
+	props.children = vnode.children;
+
+	var defaultProps = vnode.nodeName.defaultProps;
+	if (defaultProps !== undefined) {
+		for (var i in defaultProps) {
+			if (props[i] === undefined) {
+				props[i] = defaultProps[i];
+			}
+		}
+	}
+
+	return props;
+}
+
+/** Create an element with the given nodeName.
+ *	@param {String} nodeName
+ *	@param {Boolean} [isSvg=false]	If `true`, creates an element within the SVG namespace.
+ *	@returns {Element} node
+ */
+function createNode(nodeName, isSvg) {
+	var node = isSvg ? document.createElementNS('http://www.w3.org/2000/svg', nodeName) : document.createElement(nodeName);
+	node.normalizedNodeName = nodeName;
+	return node;
+}
+
+/** Remove a child node from its parent if attached.
+ *	@param {Element} node		The node to remove
+ */
+function removeNode(node) {
+	var parentNode = node.parentNode;
+	if (parentNode) parentNode.removeChild(node);
+}
+
+/** Set a named attribute on the given Node, with special behavior for some names and event handlers.
+ *	If `value` is `null`, the attribute/handler will be removed.
+ *	@param {Element} node	An element to mutate
+ *	@param {string} name	The name/key to set, such as an event or attribute name
+ *	@param {any} old	The last value that was set for this name/node pair
+ *	@param {any} value	An attribute value, such as a function to be used as an event handler
+ *	@param {Boolean} isSvg	Are we currently diffing inside an svg?
+ *	@private
+ */
+function setAccessor(node, name, old, value, isSvg) {
+	if (name === 'className') name = 'class';
+
+	if (name === 'key') {
+		// ignore
+	} else if (name === 'ref') {
+		if (old) old(null);
+		if (value) value(node);
+	} else if (name === 'class' && !isSvg) {
+		node.className = value || '';
+	} else if (name === 'style') {
+		if (!value || typeof value === 'string' || typeof old === 'string') {
+			node.style.cssText = value || '';
+		}
+		if (value && typeof value === 'object') {
+			if (typeof old !== 'string') {
+				for (var i in old) {
+					if (!(i in value)) node.style[i] = '';
+				}
+			}
+			for (var i in value) {
+				node.style[i] = typeof value[i] === 'number' && IS_NON_DIMENSIONAL.test(i) === false ? value[i] + 'px' : value[i];
+			}
+		}
+	} else if (name === 'dangerouslySetInnerHTML') {
+		if (value) node.innerHTML = value.__html || '';
+	} else if (name[0] == 'o' && name[1] == 'n') {
+		var useCapture = name !== (name = name.replace(/Capture$/, ''));
+		name = name.toLowerCase().substring(2);
+		if (value) {
+			if (!old) node.addEventListener(name, eventProxy, useCapture);
+		} else {
+			node.removeEventListener(name, eventProxy, useCapture);
+		}
+		(node._listeners || (node._listeners = {}))[name] = value;
+	} else if (name !== 'list' && name !== 'type' && !isSvg && name in node) {
+		setProperty(node, name, value == null ? '' : value);
+		if (value == null || value === false) node.removeAttribute(name);
+	} else {
+		var ns = isSvg && name !== (name = name.replace(/^xlink\:?/, ''));
+		if (value == null || value === false) {
+			if (ns) node.removeAttributeNS('http://www.w3.org/1999/xlink', name.toLowerCase());else node.removeAttribute(name);
+		} else if (typeof value !== 'function') {
+			if (ns) node.setAttributeNS('http://www.w3.org/1999/xlink', name.toLowerCase(), value);else node.setAttribute(name, value);
+		}
+	}
+}
+
+/** Attempt to set a DOM property to the given value.
+ *	IE & FF throw for certain property-value combinations.
+ */
+function setProperty(node, name, value) {
+	try {
+		node[name] = value;
+	} catch (e) {}
+}
+
+/** Proxy an event to hooked event handlers
+ *	@private
+ */
+function eventProxy(e) {
+	return this._listeners[e.type](options.event && options.event(e) || e);
+}
+
+/** Queue of components that have been mounted and are awaiting componentDidMount */
+var mounts = [];
+
+/** Diff recursion count, used to track the end of the diff cycle. */
+var diffLevel = 0;
+
+/** Global flag indicating if the diff is currently within an SVG */
+var isSvgMode = false;
+
+/** Global flag indicating if the diff is performing hydration */
+var hydrating = false;
+
+/** Invoke queued componentDidMount lifecycle methods */
+function flushMounts() {
+	var c;
+	while (c = mounts.pop()) {
+		if (options.afterMount) options.afterMount(c);
+		if (c.componentDidMount) c.componentDidMount();
+	}
+}
+
+/** Apply differences in a given vnode (and it's deep children) to a real DOM Node.
+ *	@param {Element} [dom=null]		A DOM node to mutate into the shape of the `vnode`
+ *	@param {VNode} vnode			A VNode (with descendants forming a tree) representing the desired DOM structure
+ *	@returns {Element} dom			The created/mutated element
+ *	@private
+ */
+function diff(dom, vnode, context, mountAll, parent, componentRoot) {
+	// diffLevel having been 0 here indicates initial entry into the diff (not a subdiff)
+	if (!diffLevel++) {
+		// when first starting the diff, check if we're diffing an SVG or within an SVG
+		isSvgMode = parent != null && parent.ownerSVGElement !== undefined;
+
+		// hydration is indicated by the existing element to be diffed not having a prop cache
+		hydrating = dom != null && !('__preactattr_' in dom);
+	}
+
+	var ret = idiff(dom, vnode, context, mountAll, componentRoot);
+
+	// append the element if its a new parent
+	if (parent && ret.parentNode !== parent) parent.appendChild(ret);
+
+	// diffLevel being reduced to 0 means we're exiting the diff
+	if (! --diffLevel) {
+		hydrating = false;
+		// invoke queued componentDidMount lifecycle methods
+		if (!componentRoot) flushMounts();
+	}
+
+	return ret;
+}
+
+/** Internals of `diff()`, separated to allow bypassing diffLevel / mount flushing. */
+function idiff(dom, vnode, context, mountAll, componentRoot) {
+	var out = dom,
+	    prevSvgMode = isSvgMode;
+
+	// empty values (null, undefined, booleans) render as empty Text nodes
+	if (vnode == null || typeof vnode === 'boolean') vnode = '';
+
+	// Fast case: Strings & Numbers create/update Text nodes.
+	if (typeof vnode === 'string' || typeof vnode === 'number') {
+
+		// update if it's already a Text node:
+		if (dom && dom.splitText !== undefined && dom.parentNode && (!dom._component || componentRoot)) {
+			/* istanbul ignore if */ /* Browser quirk that can't be covered: https://github.com/developit/preact/commit/fd4f21f5c45dfd75151bd27b4c217d8003aa5eb9 */
+			if (dom.nodeValue != vnode) {
+				dom.nodeValue = vnode;
+			}
+		} else {
+			// it wasn't a Text node: replace it with one and recycle the old Element
+			out = document.createTextNode(vnode);
+			if (dom) {
+				if (dom.parentNode) dom.parentNode.replaceChild(out, dom);
+				recollectNodeTree(dom, true);
+			}
+		}
+
+		out['__preactattr_'] = true;
+
+		return out;
+	}
+
+	// If the VNode represents a Component, perform a component diff:
+	var vnodeName = vnode.nodeName;
+	if (typeof vnodeName === 'function') {
+		return buildComponentFromVNode(dom, vnode, context, mountAll);
+	}
+
+	// Tracks entering and exiting SVG namespace when descending through the tree.
+	isSvgMode = vnodeName === 'svg' ? true : vnodeName === 'foreignObject' ? false : isSvgMode;
+
+	// If there's no existing element or it's the wrong type, create a new one:
+	vnodeName = String(vnodeName);
+	if (!dom || !isNamedNode(dom, vnodeName)) {
+		out = createNode(vnodeName, isSvgMode);
+
+		if (dom) {
+			// move children into the replacement node
+			while (dom.firstChild) {
+				out.appendChild(dom.firstChild);
+			} // if the previous Element was mounted into the DOM, replace it inline
+			if (dom.parentNode) dom.parentNode.replaceChild(out, dom);
+
+			// recycle the old element (skips non-Element node types)
+			recollectNodeTree(dom, true);
+		}
+	}
+
+	var fc = out.firstChild,
+	    props = out['__preactattr_'],
+	    vchildren = vnode.children;
+
+	if (props == null) {
+		props = out['__preactattr_'] = {};
+		for (var a = out.attributes, i = a.length; i--;) {
+			props[a[i].name] = a[i].value;
+		}
+	}
+
+	// Optimization: fast-path for elements containing a single TextNode:
+	if (!hydrating && vchildren && vchildren.length === 1 && typeof vchildren[0] === 'string' && fc != null && fc.splitText !== undefined && fc.nextSibling == null) {
+		if (fc.nodeValue != vchildren[0]) {
+			fc.nodeValue = vchildren[0];
+		}
+	}
+	// otherwise, if there are existing or new children, diff them:
+	else if (vchildren && vchildren.length || fc != null) {
+			innerDiffNode(out, vchildren, context, mountAll, hydrating || props.dangerouslySetInnerHTML != null);
+		}
+
+	// Apply attributes/props from VNode to the DOM Element:
+	diffAttributes(out, vnode.attributes, props);
+
+	// restore previous SVG mode: (in case we're exiting an SVG namespace)
+	isSvgMode = prevSvgMode;
+
+	return out;
+}
+
+/** Apply child and attribute changes between a VNode and a DOM Node to the DOM.
+ *	@param {Element} dom			Element whose children should be compared & mutated
+ *	@param {Array} vchildren		Array of VNodes to compare to `dom.childNodes`
+ *	@param {Object} context			Implicitly descendant context object (from most recent `getChildContext()`)
+ *	@param {Boolean} mountAll
+ *	@param {Boolean} isHydrating	If `true`, consumes externally created elements similar to hydration
+ */
+function innerDiffNode(dom, vchildren, context, mountAll, isHydrating) {
+	var originalChildren = dom.childNodes,
+	    children = [],
+	    keyed = {},
+	    keyedLen = 0,
+	    min = 0,
+	    len = originalChildren.length,
+	    childrenLen = 0,
+	    vlen = vchildren ? vchildren.length : 0,
+	    j,
+	    c,
+	    f,
+	    vchild,
+	    child;
+
+	// Build up a map of keyed children and an Array of unkeyed children:
+	if (len !== 0) {
+		for (var i = 0; i < len; i++) {
+			var _child = originalChildren[i],
+			    props = _child['__preactattr_'],
+			    key = vlen && props ? _child._component ? _child._component.__key : props.key : null;
+			if (key != null) {
+				keyedLen++;
+				keyed[key] = _child;
+			} else if (props || (_child.splitText !== undefined ? isHydrating ? _child.nodeValue.trim() : true : isHydrating)) {
+				children[childrenLen++] = _child;
+			}
+		}
+	}
+
+	if (vlen !== 0) {
+		for (var i = 0; i < vlen; i++) {
+			vchild = vchildren[i];
+			child = null;
+
+			// attempt to find a node based on key matching
+			var key = vchild.key;
+			if (key != null) {
+				if (keyedLen && keyed[key] !== undefined) {
+					child = keyed[key];
+					keyed[key] = undefined;
+					keyedLen--;
+				}
+			}
+			// attempt to pluck a node of the same type from the existing children
+			else if (!child && min < childrenLen) {
+					for (j = min; j < childrenLen; j++) {
+						if (children[j] !== undefined && isSameNodeType(c = children[j], vchild, isHydrating)) {
+							child = c;
+							children[j] = undefined;
+							if (j === childrenLen - 1) childrenLen--;
+							if (j === min) min++;
+							break;
+						}
+					}
+				}
+
+			// morph the matched/found/created DOM child to match vchild (deep)
+			child = idiff(child, vchild, context, mountAll);
+
+			f = originalChildren[i];
+			if (child && child !== dom && child !== f) {
+				if (f == null) {
+					dom.appendChild(child);
+				} else if (child === f.nextSibling) {
+					removeNode(f);
+				} else {
+					dom.insertBefore(child, f);
+				}
+			}
+		}
+	}
+
+	// remove unused keyed children:
+	if (keyedLen) {
+		for (var i in keyed) {
+			if (keyed[i] !== undefined) recollectNodeTree(keyed[i], false);
+		}
+	}
+
+	// remove orphaned unkeyed children:
+	while (min <= childrenLen) {
+		if ((child = children[childrenLen--]) !== undefined) recollectNodeTree(child, false);
+	}
+}
+
+/** Recursively recycle (or just unmount) a node and its descendants.
+ *	@param {Node} node						DOM node to start unmount/removal from
+ *	@param {Boolean} [unmountOnly=false]	If `true`, only triggers unmount lifecycle, skips removal
+ */
+function recollectNodeTree(node, unmountOnly) {
+	var component = node._component;
+	if (component) {
+		// if node is owned by a Component, unmount that component (ends up recursing back here)
+		unmountComponent(component);
+	} else {
+		// If the node's VNode had a ref function, invoke it with null here.
+		// (this is part of the React spec, and smart for unsetting references)
+		if (node['__preactattr_'] != null && node['__preactattr_'].ref) node['__preactattr_'].ref(null);
+
+		if (unmountOnly === false || node['__preactattr_'] == null) {
+			removeNode(node);
+		}
+
+		removeChildren(node);
+	}
+}
+
+/** Recollect/unmount all children.
+ *	- we use .lastChild here because it causes less reflow than .firstChild
+ *	- it's also cheaper than accessing the .childNodes Live NodeList
+ */
+function removeChildren(node) {
+	node = node.lastChild;
+	while (node) {
+		var next = node.previousSibling;
+		recollectNodeTree(node, true);
+		node = next;
+	}
+}
+
+/** Apply differences in attributes from a VNode to the given DOM Element.
+ *	@param {Element} dom		Element with attributes to diff `attrs` against
+ *	@param {Object} attrs		The desired end-state key-value attribute pairs
+ *	@param {Object} old			Current/previous attributes (from previous VNode or element's prop cache)
+ */
+function diffAttributes(dom, attrs, old) {
+	var name;
+
+	// remove attributes no longer present on the vnode by setting them to undefined
+	for (name in old) {
+		if (!(attrs && attrs[name] != null) && old[name] != null) {
+			setAccessor(dom, name, old[name], old[name] = undefined, isSvgMode);
+		}
+	}
+
+	// add new & update changed attributes
+	for (name in attrs) {
+		if (name !== 'children' && name !== 'innerHTML' && (!(name in old) || attrs[name] !== (name === 'value' || name === 'checked' ? dom[name] : old[name]))) {
+			setAccessor(dom, name, old[name], old[name] = attrs[name], isSvgMode);
+		}
+	}
+}
+
+/** Retains a pool of Components for re-use, keyed on component name.
+ *	Note: since component names are not unique or even necessarily available, these are primarily a form of sharding.
+ *	@private
+ */
+var components = {};
+
+/** Reclaim a component for later re-use by the recycler. */
+function collectComponent(component) {
+	var name = component.constructor.name;
+	(components[name] || (components[name] = [])).push(component);
+}
+
+/** Create a component. Normalizes differences between PFC's and classful Components. */
+function createComponent(Ctor, props, context) {
+	var list = components[Ctor.name],
+	    inst;
+
+	if (Ctor.prototype && Ctor.prototype.render) {
+		inst = new Ctor(props, context);
+		Component.call(inst, props, context);
+	} else {
+		inst = new Component(props, context);
+		inst.constructor = Ctor;
+		inst.render = doRender;
+	}
+
+	if (list) {
+		for (var i = list.length; i--;) {
+			if (list[i].constructor === Ctor) {
+				inst.nextBase = list[i].nextBase;
+				list.splice(i, 1);
+				break;
+			}
+		}
+	}
+	return inst;
+}
+
+/** The `.render()` method for a PFC backing instance. */
+function doRender(props, state, context) {
+	return this.constructor(props, context);
+}
+
+/** Set a component's `props` (generally derived from JSX attributes).
+ *	@param {Object} props
+ *	@param {Object} [opts]
+ *	@param {boolean} [opts.renderSync=false]	If `true` and {@link options.syncComponentUpdates} is `true`, triggers synchronous rendering.
+ *	@param {boolean} [opts.render=true]			If `false`, no render will be triggered.
+ */
+function setComponentProps(component, props, opts, context, mountAll) {
+	if (component._disable) return;
+	component._disable = true;
+
+	if (component.__ref = props.ref) delete props.ref;
+	if (component.__key = props.key) delete props.key;
+
+	if (!component.base || mountAll) {
+		if (component.componentWillMount) component.componentWillMount();
+	} else if (component.componentWillReceiveProps) {
+		component.componentWillReceiveProps(props, context);
+	}
+
+	if (context && context !== component.context) {
+		if (!component.prevContext) component.prevContext = component.context;
+		component.context = context;
+	}
+
+	if (!component.prevProps) component.prevProps = component.props;
+	component.props = props;
+
+	component._disable = false;
+
+	if (opts !== 0) {
+		if (opts === 1 || options.syncComponentUpdates !== false || !component.base) {
+			renderComponent(component, 1, mountAll);
+		} else {
+			enqueueRender(component);
+		}
+	}
+
+	if (component.__ref) component.__ref(component);
+}
+
+/** Render a Component, triggering necessary lifecycle events and taking High-Order Components into account.
+ *	@param {Component} component
+ *	@param {Object} [opts]
+ *	@param {boolean} [opts.build=false]		If `true`, component will build and store a DOM node if not already associated with one.
+ *	@private
+ */
+function renderComponent(component, opts, mountAll, isChild) {
+	if (component._disable) return;
+
+	var props = component.props,
+	    state = component.state,
+	    context = component.context,
+	    previousProps = component.prevProps || props,
+	    previousState = component.prevState || state,
+	    previousContext = component.prevContext || context,
+	    isUpdate = component.base,
+	    nextBase = component.nextBase,
+	    initialBase = isUpdate || nextBase,
+	    initialChildComponent = component._component,
+	    skip = false,
+	    rendered,
+	    inst,
+	    cbase;
+
+	// if updating
+	if (isUpdate) {
+		component.props = previousProps;
+		component.state = previousState;
+		component.context = previousContext;
+		if (opts !== 2 && component.shouldComponentUpdate && component.shouldComponentUpdate(props, state, context) === false) {
+			skip = true;
+		} else if (component.componentWillUpdate) {
+			component.componentWillUpdate(props, state, context);
+		}
+		component.props = props;
+		component.state = state;
+		component.context = context;
+	}
+
+	component.prevProps = component.prevState = component.prevContext = component.nextBase = null;
+	component._dirty = false;
+
+	if (!skip) {
+		rendered = component.render(props, state, context);
+
+		// context to pass to the child, can be updated via (grand-)parent component
+		if (component.getChildContext) {
+			context = extend(extend({}, context), component.getChildContext());
+		}
+
+		var childComponent = rendered && rendered.nodeName,
+		    toUnmount,
+		    base;
+
+		if (typeof childComponent === 'function') {
+			// set up high order component link
+
+			var childProps = getNodeProps(rendered);
+			inst = initialChildComponent;
+
+			if (inst && inst.constructor === childComponent && childProps.key == inst.__key) {
+				setComponentProps(inst, childProps, 1, context, false);
+			} else {
+				toUnmount = inst;
+
+				component._component = inst = createComponent(childComponent, childProps, context);
+				inst.nextBase = inst.nextBase || nextBase;
+				inst._parentComponent = component;
+				setComponentProps(inst, childProps, 0, context, false);
+				renderComponent(inst, 1, mountAll, true);
+			}
+
+			base = inst.base;
+		} else {
+			cbase = initialBase;
+
+			// destroy high order component link
+			toUnmount = initialChildComponent;
+			if (toUnmount) {
+				cbase = component._component = null;
+			}
+
+			if (initialBase || opts === 1) {
+				if (cbase) cbase._component = null;
+				base = diff(cbase, rendered, context, mountAll || !isUpdate, initialBase && initialBase.parentNode, true);
+			}
+		}
+
+		if (initialBase && base !== initialBase && inst !== initialChildComponent) {
+			var baseParent = initialBase.parentNode;
+			if (baseParent && base !== baseParent) {
+				baseParent.replaceChild(base, initialBase);
+
+				if (!toUnmount) {
+					initialBase._component = null;
+					recollectNodeTree(initialBase, false);
+				}
+			}
+		}
+
+		if (toUnmount) {
+			unmountComponent(toUnmount);
+		}
+
+		component.base = base;
+		if (base && !isChild) {
+			var componentRef = component,
+			    t = component;
+			while (t = t._parentComponent) {
+				(componentRef = t).base = base;
+			}
+			base._component = componentRef;
+			base._componentConstructor = componentRef.constructor;
+		}
+	}
+
+	if (!isUpdate || mountAll) {
+		mounts.unshift(component);
+	} else if (!skip) {
+		// Ensure that pending componentDidMount() hooks of child components
+		// are called before the componentDidUpdate() hook in the parent.
+		// Note: disabled as it causes duplicate hooks, see https://github.com/developit/preact/issues/750
+		// flushMounts();
+
+		if (component.componentDidUpdate) {
+			component.componentDidUpdate(previousProps, previousState, previousContext);
+		}
+		if (options.afterUpdate) options.afterUpdate(component);
+	}
+
+	if (component._renderCallbacks != null) {
+		while (component._renderCallbacks.length) {
+			component._renderCallbacks.pop().call(component);
+		}
+	}
+
+	if (!diffLevel && !isChild) flushMounts();
+}
+
+/** Apply the Component referenced by a VNode to the DOM.
+ *	@param {Element} dom	The DOM node to mutate
+ *	@param {VNode} vnode	A Component-referencing VNode
+ *	@returns {Element} dom	The created/mutated element
+ *	@private
+ */
+function buildComponentFromVNode(dom, vnode, context, mountAll) {
+	var c = dom && dom._component,
+	    originalComponent = c,
+	    oldDom = dom,
+	    isDirectOwner = c && dom._componentConstructor === vnode.nodeName,
+	    isOwner = isDirectOwner,
+	    props = getNodeProps(vnode);
+	while (c && !isOwner && (c = c._parentComponent)) {
+		isOwner = c.constructor === vnode.nodeName;
+	}
+
+	if (c && isOwner && (!mountAll || c._component)) {
+		setComponentProps(c, props, 3, context, mountAll);
+		dom = c.base;
+	} else {
+		if (originalComponent && !isDirectOwner) {
+			unmountComponent(originalComponent);
+			dom = oldDom = null;
+		}
+
+		c = createComponent(vnode.nodeName, props, context);
+		if (dom && !c.nextBase) {
+			c.nextBase = dom;
+			// passing dom/oldDom as nextBase will recycle it if unused, so bypass recycling on L229:
+			oldDom = null;
+		}
+		setComponentProps(c, props, 1, context, mountAll);
+		dom = c.base;
+
+		if (oldDom && dom !== oldDom) {
+			oldDom._component = null;
+			recollectNodeTree(oldDom, false);
+		}
+	}
+
+	return dom;
+}
+
+/** Remove a component from the DOM and recycle it.
+ *	@param {Component} component	The Component instance to unmount
+ *	@private
+ */
+function unmountComponent(component) {
+	if (options.beforeUnmount) options.beforeUnmount(component);
+
+	var base = component.base;
+
+	component._disable = true;
+
+	if (component.componentWillUnmount) component.componentWillUnmount();
+
+	component.base = null;
+
+	// recursively tear down & recollect high-order component children:
+	var inner = component._component;
+	if (inner) {
+		unmountComponent(inner);
+	} else if (base) {
+		if (base['__preactattr_'] && base['__preactattr_'].ref) base['__preactattr_'].ref(null);
+
+		component.nextBase = base;
+
+		removeNode(base);
+		collectComponent(component);
+
+		removeChildren(base);
+	}
+
+	if (component.__ref) component.__ref(null);
+}
+
+/** Base Component class.
+ *	Provides `setState()` and `forceUpdate()`, which trigger rendering.
+ *	@public
+ *
+ *	@example
+ *	class MyFoo extends Component {
+ *		render(props, state) {
+ *			return <div />;
+ *		}
+ *	}
+ */
+function Component(props, context) {
+	this._dirty = true;
+
+	/** @public
+  *	@type {object}
+  */
+	this.context = context;
+
+	/** @public
+  *	@type {object}
+  */
+	this.props = props;
+
+	/** @public
+  *	@type {object}
+  */
+	this.state = this.state || {};
+}
+
+extend(Component.prototype, {
+
+	/** Returns a `boolean` indicating if the component should re-render when receiving the given `props` and `state`.
+  *	@param {object} nextProps
+  *	@param {object} nextState
+  *	@param {object} nextContext
+  *	@returns {Boolean} should the component re-render
+  *	@name shouldComponentUpdate
+  *	@function
+  */
+
+	/** Update component state by copying properties from `state` to `this.state`.
+  *	@param {object} state		A hash of state properties to update with new values
+  *	@param {function} callback	A function to be called once component state is updated
+  */
+	setState: function setState(state, callback) {
+		var s = this.state;
+		if (!this.prevState) this.prevState = extend({}, s);
+		extend(s, typeof state === 'function' ? state(s, this.props) : state);
+		if (callback) (this._renderCallbacks = this._renderCallbacks || []).push(callback);
+		enqueueRender(this);
+	},
+
+
+	/** Immediately perform a synchronous re-render of the component.
+  *	@param {function} callback		A function to be called after component is re-rendered.
+  *	@private
+  */
+	forceUpdate: function forceUpdate(callback) {
+		if (callback) (this._renderCallbacks = this._renderCallbacks || []).push(callback);
+		renderComponent(this, 2);
+	},
+
+
+	/** Accepts `props` and `state`, and returns a new Virtual DOM tree to build.
+  *	Virtual DOM is generally constructed via [JSX](http://jasonformat.com/wtf-is-jsx).
+  *	@param {object} props		Props (eg: JSX attributes) received from parent element/component
+  *	@param {object} state		The component's current state
+  *	@param {object} context		Context object (if a parent component has provided context)
+  *	@returns VNode
+  */
+	render: function render() {}
+});
+
+/** Render JSX into a `parent` Element.
+ *	@param {VNode} vnode		A (JSX) VNode to render
+ *	@param {Element} parent		DOM element to render into
+ *	@param {Element} [merge]	Attempt to re-use an existing DOM tree rooted at `merge`
+ *	@public
+ *
+ *	@example
+ *	// render a div into <body>:
+ *	render(<div id="hello">hello!</div>, document.body);
+ *
+ *	@example
+ *	// render a "Thing" component into #foo:
+ *	const Thing = ({ name }) => <span>{ name }</span>;
+ *	render(<Thing name="one" />, document.querySelector('#foo'));
+ */
+function render(vnode, parent, merge) {
+  return diff(merge, vnode, {}, false, parent, false);
+}
+
+var preact = {
+	h: h,
+	createElement: h,
+	cloneElement: cloneElement,
+	Component: Component,
+	render: render,
+	rerender: rerender,
+	options: options
+};
+
+
+/* harmony default export */ __webpack_exports__["default"] = (preact);
+//# sourceMappingURL=preact.esm.js.map
+
 
 /***/ }),
 /* 1 */
@@ -121,27 +1063,71 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _events = __webpack_require__(9);
+
+var _dispatcher = __webpack_require__(2);
+
+var _dispatcher2 = _interopRequireDefault(_dispatcher);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-/**
- * Abstract component class
- * It works as an interface
- */
-var AbstractReadWidget = function AbstractReadWidget(target) {
-    _classCallCheck(this, AbstractReadWidget);
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-    if (this.constructor.name === AbstractReadWidget) {
-        throw TypeError('You can\'t instantiate an Abstract class');
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var ApisearchStore = function (_EventEmitter) {
+    _inherits(ApisearchStore, _EventEmitter);
+
+    function ApisearchStore() {
+        _classCallCheck(this, ApisearchStore);
+
+        var _this = _possibleConstructorReturn(this, (ApisearchStore.__proto__ || Object.getPrototypeOf(ApisearchStore)).call(this));
+
+        _this.data = {
+            query: {
+                q: ''
+            },
+            aggregations: {
+                total_elements: 0
+            },
+            items: [],
+            total_hits: 0,
+            total_items: 0
+        };
+        return _this;
     }
 
-    if (typeof this.render === 'undefined') {
-        throw new TypeError('render() method must be implemented.');
-    }
+    _createClass(ApisearchStore, [{
+        key: "getData",
+        value: function getData() {
+            return this.data;
+        }
+    }, {
+        key: "handleActions",
+        value: function handleActions(action) {
+            /**
+             * this is what we call a reducer
+             * on a redux architecture
+             */
+            if (action.type === 'FETCH_DATA') {
+                this.data = action.payload;
+            }
 
-    this.target = target;
-};
+            this.emit('change');
+        }
+    }]);
 
-exports.default = AbstractReadWidget;
+    return ApisearchStore;
+}(_events.EventEmitter);
+
+var apisearchStore = new ApisearchStore();
+_dispatcher2.default.register(apisearchStore.handleActions.bind(apisearchStore));
+
+exports.default = apisearchStore;
 
 /***/ }),
 /* 2 */
@@ -150,19 +1136,269 @@ exports.default = AbstractReadWidget;
 "use strict";
 
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
-var _apisearch = __webpack_require__(3);
+var _flux = __webpack_require__(10);
+
+exports.default = new _flux.Dispatcher();
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports) {
+
+// shim for using process in browser
+var process = module.exports = {};
+
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+} ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+};
+
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) { return [] }
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.keyupSearchAction = keyupSearchAction;
+
+var _dispatcher = __webpack_require__(2);
+
+var _dispatcher2 = _interopRequireDefault(_dispatcher);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Keyup search action
+ * @param text
+ * @param client
+ * @returns {{type: string, payload: *}}
+ */
+function keyupSearchAction(text, client) {
+    client.search(client.query.create(text), function (result) {
+        _dispatcher2.default.dispatch({
+            type: 'FETCH_DATA',
+            payload: result
+        });
+    });
+} /**
+   * Search actions
+   */
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * @jsx h
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
+
+/**
+ * Vendors
+ */
+
+
+/**
+ * Locals
+ */
+
+
+var _apisearch = __webpack_require__(6);
 
 var _apisearch2 = _interopRequireDefault(_apisearch);
 
-var _WidgetFactory = __webpack_require__(4);
+var _preact = __webpack_require__(0);
+
+var _WidgetFactory = __webpack_require__(7);
 
 var _WidgetFactory2 = _interopRequireDefault(_WidgetFactory);
-
-var _AbstractReadWidget = __webpack_require__(1);
-
-var _AbstractReadWidget2 = _interopRequireDefault(_AbstractReadWidget);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -171,62 +1407,25 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
- * ApisearchUI entry point
- *
- * @param apiKey
- * @returns {ApisearchUI}
+ * Apisearch UI
  */
-module.exports = function (apiKey) {
-    var api = (0, _apisearch2.default)(apiKey);
-
-    return new ApisearchUI(api);
-};
-
 var ApisearchUI = function () {
-    /**
-     * Constructor
-     * @param api
-     */
-    function ApisearchUI(api) {
+    function ApisearchUI(client) {
         _classCallCheck(this, ApisearchUI);
 
-        this.api = api;
+        this.client = client;
         this.widgets = _WidgetFactory2.default;
         this.activeWidgets = [];
-        this.currentQuery = this.api.query.createMatchAll();
     }
 
-    /**
-     * Adds single widget to
-     * the current activeWidgets Store
-     * @param widget
-     * @returns {ApisearchUI}
-     */
-
-
     _createClass(ApisearchUI, [{
-        key: "addWidget",
+        key: 'addWidget',
         value: function addWidget(widget) {
-            // @todo: this method needs to validate the widget types
-            // if (widget instanceof AbstractWidget === false) {
-            //     throw new TypeError(`Given widget must be type of "AbstractWidget".`);
-            // }
-
             this.activeWidgets = [].concat(_toConsumableArray(this.activeWidgets), [widget]);
-
             return this;
         }
-
-        /**
-         * Adds multiple widgets to
-         * the current activeWidgets store
-         *
-         * @param widgets
-         * @returns {ApisearchUI}
-         */
-
     }, {
-        key: "addWidgets",
+        key: 'addWidgets',
         value: function addWidgets() {
             var _this = this;
 
@@ -237,64 +1436,19 @@ var ApisearchUI = function () {
             widgets.map(function (widget) {
                 return _this.addWidget(widget);
             });
-
             return this;
         }
-
-        /**
-         * Renders the widget to its target container
-         * And attaches a DOM event
-         */
-
     }, {
-        key: "init",
+        key: 'init',
         value: function init() {
             var _this2 = this;
 
-            var widgets = this.activeWidgets || [];
-
-            // @todo Should update the initial empty query: widget.updateQuery();
-            // widgets.map(widget => widget.updateQuery())
-            this.api.search(this.currentQuery, function (res, err) {
-
-                // Loop all active widgets
-                widgets.map(function (widget) {
-                    // Request data to apisearch servers
-                    // Renders the initial state of the widget
-                    widget.render(res);
-
-                    document.querySelector(widget.target).addEventListener(widget.eventTrigger, function (event) {
-                        // Updating the current query object
-                        // with the widget method additions/variations
-                        // to the existing query
-                        _this2.currentQuery = widget.updateQuery(_this2.currentQuery, event.target.value);
-
-                        // Request data to apisearch servers
-                        // using the new updated query object
-                        _this2.reloadComponents();
-                    });
-                });
-            });
-        }
-
-        /**
-         * Reload DOM components
-         * here we should re-render all components
-         * --> result-container, some filters, pagination, total-hits etc
-         */
-
-    }, {
-        key: "reloadComponents",
-        value: function reloadComponents() {
-            var _this3 = this;
-
             this.activeWidgets.map(function (widget) {
-                // Only re-renders if the widget is read-only
-                if (widget instanceof _AbstractReadWidget2.default) {
-                    _this3.api.search(_this3.currentQuery, function (res, err) {
-                        widget.render(res);
-                    });
-                }
+                // pass apisearchClient as an component attribute
+                // this will be accessible on component props.
+                widget.attributes.client = _this2.client;
+
+                (0, _preact.render)(widget, document.querySelector(widget.attributes.target));
             });
         }
     }]);
@@ -302,8 +1456,22 @@ var ApisearchUI = function () {
     return ApisearchUI;
 }();
 
+/**
+ * Apisearch Entry Point
+ *
+ * @param apiKey
+ * @returns {ApisearchUI}
+ */
+
+
+module.exports = function (apiKey) {
+    var apisearchClient = (0, _apisearch2.default)(apiKey);
+
+    return new ApisearchUI(apisearchClient);
+};
+
 /***/ }),
-/* 3 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -1519,7 +2687,7 @@ module.exports = function (apiKey, endpoint) {
         throw new TypeError("ApiKey parameter must be defined.");
     }
 
-    return new Apisearch('apisearch-app-id', apiKey, endpoint);
+    return new Apisearch(apiKey, endpoint);
 };
 
 /**
@@ -1527,12 +2695,11 @@ module.exports = function (apiKey, endpoint) {
  */
 
 var Apisearch = function () {
-    function Apisearch(appId, apiKey) {
-        var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    function Apisearch(apiKey) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
         _classCallCheck(this, Apisearch);
 
-        this.appId = appId;
         this.apiKey = apiKey;
         this.endpoint = options.endpoint || 'http://127.0.0.1:9002/app.php';
 
@@ -3561,7 +4728,7 @@ var SORT_BY_LOCATION_MI_ASC = exports.SORT_BY_LOCATION_MI_ASC = {
 //# sourceMappingURL=apisearch.node.js.map
 
 /***/ }),
-/* 4 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3571,27 +4738,29 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * @jsx h
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 
-var _InputText = __webpack_require__(5);
+/**
+ * Vendors
+ */
 
-var _InputText2 = _interopRequireDefault(_InputText);
 
-var _Result = __webpack_require__(6);
+/**
+ * Locals
+ */
 
-var _Result2 = _interopRequireDefault(_Result);
 
-var _Hits = __webpack_require__(7);
+var _preact = __webpack_require__(0);
 
-var _Hits2 = _interopRequireDefault(_Hits);
+var _SearchComponent = __webpack_require__(8);
 
-var _SortBy = __webpack_require__(8);
+var _SearchComponent2 = _interopRequireDefault(_SearchComponent);
 
-var _SortBy2 = _interopRequireDefault(_SortBy);
+var _ResultComponent = __webpack_require__(13);
 
-var _MultipleChoice = __webpack_require__(9);
-
-var _MultipleChoice2 = _interopRequireDefault(_MultipleChoice);
+var _ResultComponent2 = _interopRequireDefault(_ResultComponent);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3606,29 +4775,22 @@ var WidgetFactory = function () {
     }
 
     _createClass(WidgetFactory, null, [{
-        key: "inputText",
-        value: function inputText(target, settings) {
-            return new _InputText2.default(target, settings);
-        }
-    }, {
-        key: "multipleChoice",
-        value: function multipleChoice(target, settings) {
-            return new _MultipleChoice2.default(target, settings);
-        }
-    }, {
-        key: "sortBy",
-        value: function sortBy(target, settings) {
-            return new _SortBy2.default(target, settings);
+        key: "searchInput",
+        value: function searchInput(_ref) {
+            var target = _ref.target;
+
+            return (0, _preact.h)(_SearchComponent2.default, {
+                target: target
+            });
         }
     }, {
         key: "result",
-        value: function result(target, settings) {
-            return new _Result2.default(target, settings);
-        }
-    }, {
-        key: "hits",
-        value: function hits(target, settings) {
-            return new _Hits2.default(target, settings);
+        value: function result(_ref2) {
+            var target = _ref2.target;
+
+            return (0, _preact.h)(_ResultComponent2.default, {
+                target: target
+            });
         }
     }]);
 
@@ -3638,7 +4800,7 @@ var WidgetFactory = function () {
 exports.default = WidgetFactory;
 
 /***/ }),
-/* 5 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3652,80 +4814,13 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _AbstractReadWriteWidget = __webpack_require__(0);
+var _preact = __webpack_require__(0);
 
-var _AbstractReadWriteWidget2 = _interopRequireDefault(_AbstractReadWriteWidget);
+var _ApisearchStore = __webpack_require__(1);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var _ApisearchStore2 = _interopRequireDefault(_ApisearchStore);
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var InputText = function (_AbstractReadWriteWid) {
-    _inherits(InputText, _AbstractReadWriteWid);
-
-    function InputText(target, _ref) {
-        var _ref$className = _ref.className,
-            className = _ref$className === undefined ? '' : _ref$className,
-            _ref$value = _ref.value,
-            value = _ref$value === undefined ? '' : _ref$value,
-            _ref$placeholder = _ref.placeholder,
-            placeholder = _ref$placeholder === undefined ? '' : _ref$placeholder,
-            _ref$eventTrigger = _ref.eventTrigger,
-            eventTrigger = _ref$eventTrigger === undefined ? 'keyup' : _ref$eventTrigger;
-
-        _classCallCheck(this, InputText);
-
-        var _this = _possibleConstructorReturn(this, (InputText.__proto__ || Object.getPrototypeOf(InputText)).call(this, target));
-
-        _this.type = 'text';
-        _this.className = className;
-        _this.value = value;
-        _this.placeholder = placeholder;
-        _this.eventTrigger = eventTrigger;
-        return _this;
-    }
-
-    _createClass(InputText, [{
-        key: 'render',
-        value: function render() {
-            var target = document.querySelector(this.target);
-
-            target.innerHTML = '<input\n            class="' + this.className + '" \n            type="' + this.type + '" \n            value="' + this.value + '" \n            placeholder="' + this.placeholder + '"\n        >';
-        }
-    }, {
-        key: 'updateQuery',
-        value: function updateQuery(query, value) {
-            return Object.assign(Object.create(query), _extends({}, query, {
-                q: value
-            }));
-        }
-    }]);
-
-    return InputText;
-}(_AbstractReadWriteWidget2.default);
-
-exports.default = InputText;
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _AbstractReadWidget2 = __webpack_require__(1);
-
-var _AbstractReadWidget3 = _interopRequireDefault(_AbstractReadWidget2);
+var _searchActions = __webpack_require__(4);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3733,190 +4828,678 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Result = function (_AbstractReadWidget) {
-    _inherits(Result, _AbstractReadWidget);
-
-    function Result(target, _ref) {
-        var _ref$className = _ref.className,
-            className = _ref$className === undefined ? '' : _ref$className;
-
-        _classCallCheck(this, Result);
-
-        var _this = _possibleConstructorReturn(this, (Result.__proto__ || Object.getPrototypeOf(Result)).call(this, target));
-
-        _this.className = className;
-        return _this;
-    }
-
-    _createClass(Result, [{
-        key: 'render',
-        value: function render(data) {
-            var _this2 = this;
-
-            var target = document.querySelector(this.target);
-
-            // clear result html block
-            target.innerHTML = null;
-
-            // render the new list of results
-            // or print a no-results message
-            if (typeof data.items !== 'undefined') {
-                data.items.map(function (item) {
-                    var itemNode = document.createElement('div');
-                    itemNode.className = _this2.className;
-                    itemNode.appendChild(document.createTextNode(item.metadata.content));
-
-                    // Render item
-                    target.appendChild(itemNode);
-                });
-            } else {
-                target.innerHTML = 'No results :\'(';
-            }
-        }
-    }]);
-
-    return Result;
-}(_AbstractReadWidget3.default);
-
-exports.default = Result;
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /** @jsx h */
 
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
+var SearchComponent = function (_Component) {
+    _inherits(SearchComponent, _Component);
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+    function SearchComponent() {
+        _classCallCheck(this, SearchComponent);
 
-var _AbstractReadWidget2 = __webpack_require__(1);
+        var _this = _possibleConstructorReturn(this, (SearchComponent.__proto__ || Object.getPrototypeOf(SearchComponent)).call(this));
 
-var _AbstractReadWidget3 = _interopRequireDefault(_AbstractReadWidget2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Hits = function (_AbstractReadWidget) {
-    _inherits(Hits, _AbstractReadWidget);
-
-    function Hits(target, _ref) {
-        var _ref$className = _ref.className,
-            className = _ref$className === undefined ? '' : _ref$className,
-            _ref$data = _ref.data,
-            data = _ref$data === undefined ? {} : _ref$data;
-
-        _classCallCheck(this, Hits);
-
-        var _this = _possibleConstructorReturn(this, (Hits.__proto__ || Object.getPrototypeOf(Hits)).call(this, target));
-
-        _this.className = className;
-        return _this;
-    }
-
-    _createClass(Hits, [{
-        key: "render",
-        value: function render(data) {
-            var target = document.querySelector(this.target);
-
-            target.innerHTML = "<span class=\"" + this.className + "\">" + (data.total_hits || 0) + " hits!</span>";
-        }
-    }]);
-
-    return Hits;
-}(_AbstractReadWidget3.default);
-
-exports.default = Hits;
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _AbstractReadWriteWidget = __webpack_require__(0);
-
-var _AbstractReadWriteWidget2 = _interopRequireDefault(_AbstractReadWriteWidget);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var SortBy = function (_AbstractReadWriteWid) {
-    _inherits(SortBy, _AbstractReadWriteWid);
-
-    function SortBy(target, _ref) {
-        var _ref$className = _ref.className,
-            className = _ref$className === undefined ? '' : _ref$className,
-            _ref$field = _ref.field,
-            field = _ref$field === undefined ? '' : _ref$field,
-            _ref$options = _ref.options,
-            options = _ref$options === undefined ? [] : _ref$options,
-            _ref$eventTrigger = _ref.eventTrigger,
-            eventTrigger = _ref$eventTrigger === undefined ? 'change' : _ref$eventTrigger;
-
-        _classCallCheck(this, SortBy);
-
-        var _this = _possibleConstructorReturn(this, (SortBy.__proto__ || Object.getPrototypeOf(SortBy)).call(this, target));
-
-        _this.className = className;
-        _this.field = field;
-        _this.options = options;
-        _this.eventTrigger = eventTrigger;
-        return _this;
-    }
-
-    _createClass(SortBy, [{
-        key: 'render',
-        value: function render(data) {
-            var target = document.querySelector(this.target);
-            var options = this.options.map(function (option) {
-                return '<option value="' + option.value + '">' + option.title + '</option>';
+        _this.handleSearch = function (e) {
+            _this.setState({
+                query: _extends({}, _this.state.query, {
+                    q: e.target.value
+                })
             });
 
-            target.innerHTML = '<select class="' + this.className + '">' + options + '</select>';
-        }
-    }, {
-        key: 'updateQuery',
-        value: function updateQuery(query, value) {
-            var clonedQuery = Object.assign(Object.create(query), query);
+            // Dispatch input search
+            (0, _searchActions.keyupSearchAction)(e.target.value, _this.props.client);
+        };
 
-            return clonedQuery.sortBy(_defineProperty({}, 'indexed_metadata.' + this.field, {
-                order: value
-            }));
+        _this.state = _ApisearchStore2.default.getData();
+        _this.handleSearch = _this.handleSearch.bind(_this);
+        return _this;
+    }
+
+    _createClass(SearchComponent, [{
+        key: "render",
+        value: function render() {
+            return (0, _preact.h)(
+                "div",
+                null,
+                (0, _preact.h)("input", {
+                    className: "form-control",
+                    placeholder: "Search something...",
+                    value: this.state.query.q,
+                    onKeyUp: this.handleSearch
+                })
+            );
         }
     }]);
 
-    return SortBy;
-}(_AbstractReadWriteWidget2.default);
+    return SearchComponent;
+}(_preact.Component);
 
-exports.default = SortBy;
+exports.default = SearchComponent;
 
 /***/ }),
 /* 9 */
+/***/ (function(module, exports) {
+
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+function EventEmitter() {
+  this._events = this._events || {};
+  this._maxListeners = this._maxListeners || undefined;
+}
+module.exports = EventEmitter;
+
+// Backwards-compat with node 0.10.x
+EventEmitter.EventEmitter = EventEmitter;
+
+EventEmitter.prototype._events = undefined;
+EventEmitter.prototype._maxListeners = undefined;
+
+// By default EventEmitters will print a warning if more than 10 listeners are
+// added to it. This is a useful default which helps finding memory leaks.
+EventEmitter.defaultMaxListeners = 10;
+
+// Obviously not all Emitters should be limited to 10. This function allows
+// that to be increased. Set to zero for unlimited.
+EventEmitter.prototype.setMaxListeners = function(n) {
+  if (!isNumber(n) || n < 0 || isNaN(n))
+    throw TypeError('n must be a positive number');
+  this._maxListeners = n;
+  return this;
+};
+
+EventEmitter.prototype.emit = function(type) {
+  var er, handler, len, args, i, listeners;
+
+  if (!this._events)
+    this._events = {};
+
+  // If there is no 'error' event listener then throw.
+  if (type === 'error') {
+    if (!this._events.error ||
+        (isObject(this._events.error) && !this._events.error.length)) {
+      er = arguments[1];
+      if (er instanceof Error) {
+        throw er; // Unhandled 'error' event
+      } else {
+        // At least give some kind of context to the user
+        var err = new Error('Uncaught, unspecified "error" event. (' + er + ')');
+        err.context = er;
+        throw err;
+      }
+    }
+  }
+
+  handler = this._events[type];
+
+  if (isUndefined(handler))
+    return false;
+
+  if (isFunction(handler)) {
+    switch (arguments.length) {
+      // fast cases
+      case 1:
+        handler.call(this);
+        break;
+      case 2:
+        handler.call(this, arguments[1]);
+        break;
+      case 3:
+        handler.call(this, arguments[1], arguments[2]);
+        break;
+      // slower
+      default:
+        args = Array.prototype.slice.call(arguments, 1);
+        handler.apply(this, args);
+    }
+  } else if (isObject(handler)) {
+    args = Array.prototype.slice.call(arguments, 1);
+    listeners = handler.slice();
+    len = listeners.length;
+    for (i = 0; i < len; i++)
+      listeners[i].apply(this, args);
+  }
+
+  return true;
+};
+
+EventEmitter.prototype.addListener = function(type, listener) {
+  var m;
+
+  if (!isFunction(listener))
+    throw TypeError('listener must be a function');
+
+  if (!this._events)
+    this._events = {};
+
+  // To avoid recursion in the case that type === "newListener"! Before
+  // adding it to the listeners, first emit "newListener".
+  if (this._events.newListener)
+    this.emit('newListener', type,
+              isFunction(listener.listener) ?
+              listener.listener : listener);
+
+  if (!this._events[type])
+    // Optimize the case of one listener. Don't need the extra array object.
+    this._events[type] = listener;
+  else if (isObject(this._events[type]))
+    // If we've already got an array, just append.
+    this._events[type].push(listener);
+  else
+    // Adding the second element, need to change to array.
+    this._events[type] = [this._events[type], listener];
+
+  // Check for listener leak
+  if (isObject(this._events[type]) && !this._events[type].warned) {
+    if (!isUndefined(this._maxListeners)) {
+      m = this._maxListeners;
+    } else {
+      m = EventEmitter.defaultMaxListeners;
+    }
+
+    if (m && m > 0 && this._events[type].length > m) {
+      this._events[type].warned = true;
+      console.error('(node) warning: possible EventEmitter memory ' +
+                    'leak detected. %d listeners added. ' +
+                    'Use emitter.setMaxListeners() to increase limit.',
+                    this._events[type].length);
+      if (typeof console.trace === 'function') {
+        // not supported in IE 10
+        console.trace();
+      }
+    }
+  }
+
+  return this;
+};
+
+EventEmitter.prototype.on = EventEmitter.prototype.addListener;
+
+EventEmitter.prototype.once = function(type, listener) {
+  if (!isFunction(listener))
+    throw TypeError('listener must be a function');
+
+  var fired = false;
+
+  function g() {
+    this.removeListener(type, g);
+
+    if (!fired) {
+      fired = true;
+      listener.apply(this, arguments);
+    }
+  }
+
+  g.listener = listener;
+  this.on(type, g);
+
+  return this;
+};
+
+// emits a 'removeListener' event iff the listener was removed
+EventEmitter.prototype.removeListener = function(type, listener) {
+  var list, position, length, i;
+
+  if (!isFunction(listener))
+    throw TypeError('listener must be a function');
+
+  if (!this._events || !this._events[type])
+    return this;
+
+  list = this._events[type];
+  length = list.length;
+  position = -1;
+
+  if (list === listener ||
+      (isFunction(list.listener) && list.listener === listener)) {
+    delete this._events[type];
+    if (this._events.removeListener)
+      this.emit('removeListener', type, listener);
+
+  } else if (isObject(list)) {
+    for (i = length; i-- > 0;) {
+      if (list[i] === listener ||
+          (list[i].listener && list[i].listener === listener)) {
+        position = i;
+        break;
+      }
+    }
+
+    if (position < 0)
+      return this;
+
+    if (list.length === 1) {
+      list.length = 0;
+      delete this._events[type];
+    } else {
+      list.splice(position, 1);
+    }
+
+    if (this._events.removeListener)
+      this.emit('removeListener', type, listener);
+  }
+
+  return this;
+};
+
+EventEmitter.prototype.removeAllListeners = function(type) {
+  var key, listeners;
+
+  if (!this._events)
+    return this;
+
+  // not listening for removeListener, no need to emit
+  if (!this._events.removeListener) {
+    if (arguments.length === 0)
+      this._events = {};
+    else if (this._events[type])
+      delete this._events[type];
+    return this;
+  }
+
+  // emit removeListener for all listeners on all events
+  if (arguments.length === 0) {
+    for (key in this._events) {
+      if (key === 'removeListener') continue;
+      this.removeAllListeners(key);
+    }
+    this.removeAllListeners('removeListener');
+    this._events = {};
+    return this;
+  }
+
+  listeners = this._events[type];
+
+  if (isFunction(listeners)) {
+    this.removeListener(type, listeners);
+  } else if (listeners) {
+    // LIFO order
+    while (listeners.length)
+      this.removeListener(type, listeners[listeners.length - 1]);
+  }
+  delete this._events[type];
+
+  return this;
+};
+
+EventEmitter.prototype.listeners = function(type) {
+  var ret;
+  if (!this._events || !this._events[type])
+    ret = [];
+  else if (isFunction(this._events[type]))
+    ret = [this._events[type]];
+  else
+    ret = this._events[type].slice();
+  return ret;
+};
+
+EventEmitter.prototype.listenerCount = function(type) {
+  if (this._events) {
+    var evlistener = this._events[type];
+
+    if (isFunction(evlistener))
+      return 1;
+    else if (evlistener)
+      return evlistener.length;
+  }
+  return 0;
+};
+
+EventEmitter.listenerCount = function(emitter, type) {
+  return emitter.listenerCount(type);
+};
+
+function isFunction(arg) {
+  return typeof arg === 'function';
+}
+
+function isNumber(arg) {
+  return typeof arg === 'number';
+}
+
+function isObject(arg) {
+  return typeof arg === 'object' && arg !== null;
+}
+
+function isUndefined(arg) {
+  return arg === void 0;
+}
+
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * Copyright (c) 2014-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ */
+
+module.exports.Dispatcher = __webpack_require__(11);
+
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(process) {/**
+ * Copyright (c) 2014-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * @providesModule Dispatcher
+ * 
+ * @preventMunge
+ */
+
+
+
+exports.__esModule = true;
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+var invariant = __webpack_require__(12);
+
+var _prefix = 'ID_';
+
+/**
+ * Dispatcher is used to broadcast payloads to registered callbacks. This is
+ * different from generic pub-sub systems in two ways:
+ *
+ *   1) Callbacks are not subscribed to particular events. Every payload is
+ *      dispatched to every registered callback.
+ *   2) Callbacks can be deferred in whole or part until other callbacks have
+ *      been executed.
+ *
+ * For example, consider this hypothetical flight destination form, which
+ * selects a default city when a country is selected:
+ *
+ *   var flightDispatcher = new Dispatcher();
+ *
+ *   // Keeps track of which country is selected
+ *   var CountryStore = {country: null};
+ *
+ *   // Keeps track of which city is selected
+ *   var CityStore = {city: null};
+ *
+ *   // Keeps track of the base flight price of the selected city
+ *   var FlightPriceStore = {price: null}
+ *
+ * When a user changes the selected city, we dispatch the payload:
+ *
+ *   flightDispatcher.dispatch({
+ *     actionType: 'city-update',
+ *     selectedCity: 'paris'
+ *   });
+ *
+ * This payload is digested by `CityStore`:
+ *
+ *   flightDispatcher.register(function(payload) {
+ *     if (payload.actionType === 'city-update') {
+ *       CityStore.city = payload.selectedCity;
+ *     }
+ *   });
+ *
+ * When the user selects a country, we dispatch the payload:
+ *
+ *   flightDispatcher.dispatch({
+ *     actionType: 'country-update',
+ *     selectedCountry: 'australia'
+ *   });
+ *
+ * This payload is digested by both stores:
+ *
+ *   CountryStore.dispatchToken = flightDispatcher.register(function(payload) {
+ *     if (payload.actionType === 'country-update') {
+ *       CountryStore.country = payload.selectedCountry;
+ *     }
+ *   });
+ *
+ * When the callback to update `CountryStore` is registered, we save a reference
+ * to the returned token. Using this token with `waitFor()`, we can guarantee
+ * that `CountryStore` is updated before the callback that updates `CityStore`
+ * needs to query its data.
+ *
+ *   CityStore.dispatchToken = flightDispatcher.register(function(payload) {
+ *     if (payload.actionType === 'country-update') {
+ *       // `CountryStore.country` may not be updated.
+ *       flightDispatcher.waitFor([CountryStore.dispatchToken]);
+ *       // `CountryStore.country` is now guaranteed to be updated.
+ *
+ *       // Select the default city for the new country
+ *       CityStore.city = getDefaultCityForCountry(CountryStore.country);
+ *     }
+ *   });
+ *
+ * The usage of `waitFor()` can be chained, for example:
+ *
+ *   FlightPriceStore.dispatchToken =
+ *     flightDispatcher.register(function(payload) {
+ *       switch (payload.actionType) {
+ *         case 'country-update':
+ *         case 'city-update':
+ *           flightDispatcher.waitFor([CityStore.dispatchToken]);
+ *           FlightPriceStore.price =
+ *             getFlightPriceStore(CountryStore.country, CityStore.city);
+ *           break;
+ *     }
+ *   });
+ *
+ * The `country-update` payload will be guaranteed to invoke the stores'
+ * registered callbacks in order: `CountryStore`, `CityStore`, then
+ * `FlightPriceStore`.
+ */
+
+var Dispatcher = (function () {
+  function Dispatcher() {
+    _classCallCheck(this, Dispatcher);
+
+    this._callbacks = {};
+    this._isDispatching = false;
+    this._isHandled = {};
+    this._isPending = {};
+    this._lastID = 1;
+  }
+
+  /**
+   * Registers a callback to be invoked with every dispatched payload. Returns
+   * a token that can be used with `waitFor()`.
+   */
+
+  Dispatcher.prototype.register = function register(callback) {
+    var id = _prefix + this._lastID++;
+    this._callbacks[id] = callback;
+    return id;
+  };
+
+  /**
+   * Removes a callback based on its token.
+   */
+
+  Dispatcher.prototype.unregister = function unregister(id) {
+    !this._callbacks[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.unregister(...): `%s` does not map to a registered callback.', id) : invariant(false) : undefined;
+    delete this._callbacks[id];
+  };
+
+  /**
+   * Waits for the callbacks specified to be invoked before continuing execution
+   * of the current callback. This method should only be used by a callback in
+   * response to a dispatched payload.
+   */
+
+  Dispatcher.prototype.waitFor = function waitFor(ids) {
+    !this._isDispatching ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): Must be invoked while dispatching.') : invariant(false) : undefined;
+    for (var ii = 0; ii < ids.length; ii++) {
+      var id = ids[ii];
+      if (this._isPending[id]) {
+        !this._isHandled[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): Circular dependency detected while ' + 'waiting for `%s`.', id) : invariant(false) : undefined;
+        continue;
+      }
+      !this._callbacks[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): `%s` does not map to a registered callback.', id) : invariant(false) : undefined;
+      this._invokeCallback(id);
+    }
+  };
+
+  /**
+   * Dispatches a payload to all registered callbacks.
+   */
+
+  Dispatcher.prototype.dispatch = function dispatch(payload) {
+    !!this._isDispatching ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatch.dispatch(...): Cannot dispatch in the middle of a dispatch.') : invariant(false) : undefined;
+    this._startDispatching(payload);
+    try {
+      for (var id in this._callbacks) {
+        if (this._isPending[id]) {
+          continue;
+        }
+        this._invokeCallback(id);
+      }
+    } finally {
+      this._stopDispatching();
+    }
+  };
+
+  /**
+   * Is this Dispatcher currently dispatching.
+   */
+
+  Dispatcher.prototype.isDispatching = function isDispatching() {
+    return this._isDispatching;
+  };
+
+  /**
+   * Call the callback stored with the given id. Also do some internal
+   * bookkeeping.
+   *
+   * @internal
+   */
+
+  Dispatcher.prototype._invokeCallback = function _invokeCallback(id) {
+    this._isPending[id] = true;
+    this._callbacks[id](this._pendingPayload);
+    this._isHandled[id] = true;
+  };
+
+  /**
+   * Set up bookkeeping needed when dispatching.
+   *
+   * @internal
+   */
+
+  Dispatcher.prototype._startDispatching = function _startDispatching(payload) {
+    for (var id in this._callbacks) {
+      this._isPending[id] = false;
+      this._isHandled[id] = false;
+    }
+    this._pendingPayload = payload;
+    this._isDispatching = true;
+  };
+
+  /**
+   * Clear bookkeeping used for dispatching.
+   *
+   * @internal
+   */
+
+  Dispatcher.prototype._stopDispatching = function _stopDispatching() {
+    delete this._pendingPayload;
+    this._isDispatching = false;
+  };
+
+  return Dispatcher;
+})();
+
+module.exports = Dispatcher;
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(process) {/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ */
+
+
+
+/**
+ * Use invariant() to assert state which your program assumes to be true.
+ *
+ * Provide sprintf-style format (only %s is supported) and arguments
+ * to provide information about what broke and what you were
+ * expecting.
+ *
+ * The invariant message will be stripped in production, but the invariant
+ * will remain to ensure logic does not differ in production.
+ */
+
+var validateFormat = function validateFormat(format) {};
+
+if (process.env.NODE_ENV !== 'production') {
+  validateFormat = function validateFormat(format) {
+    if (format === undefined) {
+      throw new Error('invariant requires an error message argument');
+    }
+  };
+}
+
+function invariant(condition, format, a, b, c, d, e, f) {
+  validateFormat(format);
+
+  if (!condition) {
+    var error;
+    if (format === undefined) {
+      error = new Error('Minified exception occurred; use the non-minified dev environment ' + 'for the full error message and additional helpful warnings.');
+    } else {
+      var args = [a, b, c, d, e, f];
+      var argIndex = 0;
+      error = new Error(format.replace(/%s/g, function () {
+        return args[argIndex++];
+      }));
+      error.name = 'Invariant Violation';
+    }
+
+    error.framesToPop = 1; // we don't care about invariant's own frame
+    throw error;
+  }
+}
+
+module.exports = invariant;
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+
+/***/ }),
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3928,9 +5511,11 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _AbstractReadWriteWidget = __webpack_require__(0);
+var _preact = __webpack_require__(0);
 
-var _AbstractReadWriteWidget2 = _interopRequireDefault(_AbstractReadWriteWidget);
+var _ApisearchStore = __webpack_require__(1);
+
+var _ApisearchStore2 = _interopRequireDefault(_ApisearchStore);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3938,66 +5523,57 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /** @jsx h */
 
-var MultipleChoice = function (_AbstractReadWriteWid) {
-    _inherits(MultipleChoice, _AbstractReadWriteWid);
 
-    function MultipleChoice(target, _ref) {
-        var _ref$className = _ref.className,
-            className = _ref$className === undefined ? '' : _ref$className,
-            _ref$field = _ref.field,
-            field = _ref$field === undefined ? '' : _ref$field,
-            _ref$options = _ref.options,
-            options = _ref$options === undefined ? [] : _ref$options,
-            _ref$eventTrigger = _ref.eventTrigger,
-            eventTrigger = _ref$eventTrigger === undefined ? 'change' : _ref$eventTrigger;
+var ResultComponent = function (_Component) {
+    _inherits(ResultComponent, _Component);
 
-        _classCallCheck(this, MultipleChoice);
+    function ResultComponent() {
+        _classCallCheck(this, ResultComponent);
 
-        var _this = _possibleConstructorReturn(this, (MultipleChoice.__proto__ || Object.getPrototypeOf(MultipleChoice)).call(this, target));
+        var _this = _possibleConstructorReturn(this, (ResultComponent.__proto__ || Object.getPrototypeOf(ResultComponent)).call(this));
 
-        _this.className = className;
-        _this.field = field;
-        _this.options = options;
-        _this.eventTrigger = eventTrigger;
+        _this.state = _ApisearchStore2.default.getData();
         return _this;
     }
 
-    _createClass(MultipleChoice, [{
-        key: 'render',
-        value: function render(data) {
+    _createClass(ResultComponent, [{
+        key: 'componentWillMount',
+        value: function componentWillMount() {
             var _this2 = this;
 
-            var target = document.querySelector(this.target);
-            var options = this.options.map(function (option) {
-                return '<label>\n                <input type="checkbox" \n                    name="' + _this2.field + '"\n                    value="' + option.value + '" \n                    ' + (option.selected ? 'checked' : '') + '\n                >\n                <span>' + option.title + '</span>\n            </label><br>';
+            _ApisearchStore2.default.on('change', function () {
+                return _this2.setState(_ApisearchStore2.default.getData());
             });
-
-            target.innerHTML = '<fieldset class="' + this.className + '">' + options.join('') + '</fieldset>';
         }
     }, {
-        key: 'updateQuery',
-        value: function updateQuery(query, value) {
-            var clonedQuery = Object.assign(Object.create(query), query);
+        key: 'render',
+        value: function render() {
+            var items = this.state.items !== 0 ? this.state.items : [];
 
-            clonedQuery.filterUniverseBy('indexed_metadata.' + this.field, [this.options.map(function (option) {
-                return option.value;
-            })]);
-            clonedQuery.filterBy('indexed_metadata.' + this.field, this.field, [this.options.map(function (option) {
-                return option.value;
-            })]);
-
-            console.log(clonedQuery);
-
-            return clonedQuery;
+            return (0, _preact.h)(
+                'ul',
+                null,
+                items.map(function (item) {
+                    return (0, _preact.h)(
+                        'li',
+                        null,
+                        item.uuid.id,
+                        ' - ',
+                        item.uuid.type
+                    );
+                })
+            );
         }
     }]);
 
-    return MultipleChoice;
-}(_AbstractReadWriteWidget2.default);
+    return ResultComponent;
+}(_preact.Component);
 
-exports.default = MultipleChoice;
+;
+
+exports.default = ResultComponent;
 
 /***/ })
 /******/ ]);
