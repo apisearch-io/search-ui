@@ -6,19 +6,15 @@
  * Vendors
  */
 import apisearch from 'apisearch';
-import { createStore } from 'redux';
 import { h, render, createElement } from 'preact';
 
 /**
  * Locals
  */
-import WidgetFactory from "./WidgetFactory";
-import {searchReducer} from 'Widgets/Search/searchReducer';
-
-/**
- * Redux Store
- */
-const store = createStore(searchReducer, {});
+import WidgetFactory from "./Factory/WidgetFactory";
+import Provider from "preact-redux";
+import SearchConnector from "./Widgets/Search/SearchConnector";
+import {store} from "./store";
 
 /**
  * Apisearch UI
@@ -28,28 +24,10 @@ class ApisearchUI {
         this.api = api;
         this.widgets = WidgetFactory;
         this.activeWidgets = [];
-
-        api.search(
-            api.query.create(''),
-            res => {
-                store.dispatch({
-                    type: 'SEARCH_KEY_UP',
-                    payload: res.query.q
-                });
-            }
-        );
-
-        // Subscribe current store for any change
-        store.subscribe(
-            () => this.reloadComponents()
-        );
     }
 
     addWidget(widget) {
-        this.activeWidgets = [
-            ...this.activeWidgets,
-            widget
-        ];
+        this.activeWidgets = [...this.activeWidgets, widget];
         return this;
     }
 
@@ -62,15 +40,11 @@ class ApisearchUI {
         this.activeWidgets.map(widget => {
             render(
                 widget,
-                document.querySelector('.search-input')
+                document.querySelector(
+                    widget.attributes.target
+                )
             )
-        })
-    }
-
-    reloadComponents() {
-        this.activeWidgets.map(widget => {
-            widget.render();
-        })
+        });
     }
 }
 

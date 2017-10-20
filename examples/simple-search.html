@@ -18,11 +18,11 @@
             </div>
             <!-- Search bar -->
             <div class="col-sm-12 mt-5">
-                <div class="search-input mb-2"></div>
+                <div class="search mb-2"></div>
             </div>
             <!-- Result laie -->
             <div class="col-sm-12">
-                <div class="results-container"></div>
+                <div class="result"></div>
             </div>
         </div>
     </div>
@@ -30,8 +30,14 @@
     <script>
         // UI Instance
         let ui = apisearchUI('sandbox_comments_secret');
-        ui.addWidget(
-            ui.widgets.searchInput()
+
+        ui.addWidgets(
+            ui.widgets.searchInput({
+                target: '.search'
+            }),
+            ui.widgets.result({
+                target: '.result'
+            })
         );
 
         ui.init();

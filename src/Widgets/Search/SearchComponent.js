@@ -1,7 +1,8 @@
 /** @jsx h */
 import { h, Component } from 'preact';
+import {keyupSearchAction} from "./searchActions";
 
-export default class SearchComponent extends Component {
+class SearchComponent extends Component {
     constructor() {
         super();
 
@@ -13,9 +14,12 @@ export default class SearchComponent extends Component {
     }
 
     handleSearch = (e) => {
-        this.setState({
-            q: e.target.value
-        })
+        this.setState({q: e.target.value});
+
+        // Dispatch input search
+        this.props.store.dispatch(
+            keyupSearchAction(e.target.value)
+        );
     };
 
     render() {
@@ -23,7 +27,7 @@ export default class SearchComponent extends Component {
             <div>
                 <input
                     className="form-control"
-                    placeholder=""
+                    placeholder="Search something..."
                     value={this.state.q}
                     onKeyUp={this.handleSearch}
                 />
@@ -32,3 +36,5 @@ export default class SearchComponent extends Component {
         );
     }
 }
+
+export default SearchComponent;
