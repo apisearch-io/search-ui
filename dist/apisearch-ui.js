@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 5);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -1065,7 +1065,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _events = __webpack_require__(9);
+var _events = __webpack_require__(8);
 
 var _dispatcher = __webpack_require__(2);
 
@@ -1109,10 +1109,12 @@ var ApisearchStore = function (_EventEmitter) {
     }, {
         key: "handleActions",
         value: function handleActions(action) {
+
             /**
              * this is what we call a reducer
              * on a redux architecture
              */
+
             if (action.type === 'FETCH_DATA') {
                 this.data = action.payload;
             }
@@ -1140,7 +1142,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _flux = __webpack_require__(10);
+var _flux = __webpack_require__(9);
 
 exports.default = new _flux.Dispatcher();
 
@@ -1341,41 +1343,6 @@ process.umask = function() { return 0; };
 "use strict";
 
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.keyupSearchAction = keyupSearchAction;
-
-var _dispatcher = __webpack_require__(2);
-
-var _dispatcher2 = _interopRequireDefault(_dispatcher);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Keyup search action
- * @param text
- * @param client
- * @returns {{type: string, payload: *}}
- */
-function keyupSearchAction(text, client) {
-    client.search(client.query.create(text), function (result) {
-        _dispatcher2.default.dispatch({
-            type: 'FETCH_DATA',
-            payload: result
-        });
-    });
-} /**
-   * Search actions
-   */
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       * @jsx h
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       */
@@ -1390,13 +1357,13 @@ var _createClass = function () { function defineProperties(target, props) { for 
  */
 
 
-var _apisearch = __webpack_require__(6);
+var _apisearch = __webpack_require__(5);
 
 var _apisearch2 = _interopRequireDefault(_apisearch);
 
 var _preact = __webpack_require__(0);
 
-var _WidgetFactory = __webpack_require__(7);
+var _WidgetFactory = __webpack_require__(6);
 
 var _WidgetFactory2 = _interopRequireDefault(_WidgetFactory);
 
@@ -1471,7 +1438,7 @@ module.exports = function (apiKey) {
 };
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -4728,7 +4695,7 @@ var SORT_BY_LOCATION_MI_ASC = exports.SORT_BY_LOCATION_MI_ASC = {
 //# sourceMappingURL=apisearch.node.js.map
 
 /***/ }),
-/* 7 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4754,7 +4721,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _SearchComponent = __webpack_require__(8);
+var _SearchComponent = __webpack_require__(7);
 
 var _SearchComponent2 = _interopRequireDefault(_SearchComponent);
 
@@ -4800,7 +4767,7 @@ var WidgetFactory = function () {
 exports.default = WidgetFactory;
 
 /***/ }),
-/* 8 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4820,7 +4787,7 @@ var _ApisearchStore = __webpack_require__(1);
 
 var _ApisearchStore2 = _interopRequireDefault(_ApisearchStore);
 
-var _searchActions = __webpack_require__(4);
+var _searchActions = __webpack_require__(12);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4877,7 +4844,7 @@ var SearchComponent = function (_Component) {
 exports.default = SearchComponent;
 
 /***/ }),
-/* 9 */
+/* 8 */
 /***/ (function(module, exports) {
 
 // Copyright Joyent, Inc. and other Node contributors.
@@ -5185,7 +5152,7 @@ function isUndefined(arg) {
 
 
 /***/ }),
-/* 10 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -5197,11 +5164,11 @@ function isUndefined(arg) {
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-module.exports.Dispatcher = __webpack_require__(11);
+module.exports.Dispatcher = __webpack_require__(10);
 
 
 /***/ }),
-/* 11 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5224,7 +5191,7 @@ exports.__esModule = true;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var invariant = __webpack_require__(12);
+var invariant = __webpack_require__(11);
 
 var _prefix = 'ID_';
 
@@ -5439,7 +5406,7 @@ module.exports = Dispatcher;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
-/* 12 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5497,6 +5464,41 @@ function invariant(condition, format, a, b, c, d, e, f) {
 
 module.exports = invariant;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.keyupSearchAction = keyupSearchAction;
+
+var _dispatcher = __webpack_require__(2);
+
+var _dispatcher2 = _interopRequireDefault(_dispatcher);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Keyup search action
+ * @param text
+ * @param client
+ * @returns {{type: string, payload: *}}
+ */
+function keyupSearchAction(text, client) {
+    client.search(client.query.create(text), function (result) {
+        _dispatcher2.default.dispatch({
+            type: 'FETCH_DATA',
+            payload: result
+        });
+    });
+} /**
+   * Search actions
+   */
 
 /***/ }),
 /* 13 */
@@ -5570,8 +5572,6 @@ var ResultComponent = function (_Component) {
 
     return ResultComponent;
 }(_preact.Component);
-
-;
 
 exports.default = ResultComponent;
 

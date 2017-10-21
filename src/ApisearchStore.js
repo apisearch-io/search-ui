@@ -23,10 +23,12 @@ class ApisearchStore extends EventEmitter {
     }
 
     handleActions(action) {
+
         /**
          * this is what we call a reducer
          * on a redux architecture
          */
+
         if (action.type === 'FETCH_DATA') {
             this.data = action.payload
         }

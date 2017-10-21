@@ -26,6 +26,6 @@ class ResultComponent extends Component {
             </ul>
         )
     }
-};
+}
 
 export default ResultComponent;
