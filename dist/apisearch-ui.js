@@ -5597,8 +5597,6 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _preact = __webpack_require__(0);
@@ -5621,35 +5619,34 @@ var SearchComponent = function (_Component) {
         var _this = _possibleConstructorReturn(this, (SearchComponent.__proto__ || Object.getPrototypeOf(SearchComponent)).call(this));
 
         _this.handleSearch = function (e) {
-            _this.setState({
-                query: _extends({}, _this.state.query, {
-                    q: e.target.value
-                })
-            });
+            _this.setState({ q: e.target.value });
 
             // Dispatch input search
             (0, _searchActions.keyupSearchAction)(e.target.value, _this.props.currentQuery, _this.props.client);
         };
 
+        _this.state = {
+            q: ''
+        };
         _this.handleSearch = _this.handleSearch.bind(_this);
         return _this;
     }
 
     _createClass(SearchComponent, [{
-        key: "componentWillMount",
-        value: function componentWillMount() {
-            this.setState(this.props.data);
+        key: 'shouldComponentUpdate',
+        value: function shouldComponentUpdate() {
+            return false;
         }
     }, {
-        key: "render",
+        key: 'render',
         value: function render() {
             return (0, _preact.h)(
-                "div",
+                'div',
                 null,
-                (0, _preact.h)("input", {
-                    className: "form-control",
-                    placeholder: "Search something...",
-                    value: this.state.query.q,
+                (0, _preact.h)('input', {
+                    className: 'form-control',
+                    placeholder: 'Search something...',
+                    value: this.state.q,
                     onKeyUp: this.handleSearch
                 })
             );
