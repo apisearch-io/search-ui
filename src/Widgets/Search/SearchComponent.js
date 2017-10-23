@@ -1,26 +1,27 @@
 /** @jsx h */
 import { h, Component } from 'preact';
-import ApisearchStore from "../../ApisearchStore";
 import {keyupSearchAction} from "./searchActions";
 
 class SearchComponent extends Component {
     constructor() {
         super();
-        this.state = ApisearchStore.getData();
+        this.state = {
+            q: ''
+        };
         this.handleSearch = this.handleSearch.bind(this);
     }
 
+    shouldComponentUpdate() {
+        return false;
+    }
+
     handleSearch = (e) => {
-        this.setState({
-            query: {
-                ...this.state.query,
-                q: e.target.value
-            }
-        });
+        this.setState({q: e.target.value});
 
         // Dispatch input search
         keyupSearchAction(
             e.target.value,
+            this.props.currentQuery,
             this.props.client
         )
     };
@@ -31,7 +32,7 @@ class SearchComponent extends Component {
                 <input
                     className="form-control"
                     placeholder="Search something..."
-                    value={this.state.query.q}
+                    value={this.state.q}
                     onKeyUp={this.handleSearch}
                 />
             </div>
