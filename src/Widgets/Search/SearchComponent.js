@@ -1,13 +1,15 @@
 /** @jsx h */
 import { h, Component } from 'preact';
-import ApisearchStore from "../../ApisearchStore";
 import {keyupSearchAction} from "./searchActions";
 
 class SearchComponent extends Component {
     constructor() {
         super();
-        this.state = ApisearchStore.getData();
         this.handleSearch = this.handleSearch.bind(this);
+    }
+
+    componentWillMount() {
+        this.setState(this.props.data);
     }
 
     handleSearch = (e) => {
@@ -21,6 +23,7 @@ class SearchComponent extends Component {
         // Dispatch input search
         keyupSearchAction(
             e.target.value,
+            this.props.currentQuery,
             this.props.client
         )
     };
