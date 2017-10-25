@@ -3,6 +3,9 @@ import { h, render, createElement } from 'preact';
 import { EventEmitter } from "events";
 import WidgetFactory from "./Factory/WidgetFactory";
 
+/**
+ * ApisearchUI class
+ */
 class ApisearchUI extends EventEmitter {
     constructor(client) {
         super();

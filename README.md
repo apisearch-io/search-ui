@@ -1,11 +1,10 @@
 Apisearch UI
 ============
+
 The ApisearchUI is an easy interface library to build searches
 the easy way. It provides a list of pre-built widgets to
-setup your custom search experience.
-
-A widget can be a search input, a result list, filters, pagination, 
-and many more explained below.
+setup your custom search experience. A widget can be a search input, 
+a result list, filters, pagination, and many more explained below.
 
 All Apisearch widgets are passed using `addWidget(widget)` method,
 or using `addWidgets(...widgets)` to add widgets in a bulk mode.
@@ -42,6 +41,8 @@ ui.init();
 The search input widget is to perform text based 
 searches.
 
+This widget points to `searchable_metadata` field.
+
 ```javascript
 const searchWidget = ui.widgets.search({ 
   target: string,
@@ -50,6 +51,26 @@ const searchWidget = ui.widgets.search({
       input: [string],
       container: [string]
   }
+});
+```
+
+### Sort By
+The sort by widget allows to order the result set as you like.
+
+This widget points to `indexed_metadata` field.
+
+```javascript
+const sortByWidget = ui.widgets.sortBy({
+  target: string,
+  classNames: {
+      container: [string],
+      select: [string]
+  },
+  options: [
+      {name: string, value: string},
+      {name: string, value: string},
+      // ...
+  ]
 });
 ```
 
@@ -92,13 +113,22 @@ const resultInformationWidget = ui.widgets.resultInformation({
 The variables `{{total_hits}}` and `{{total_items}}`
 can be passed on the template body.
 
+
 ## Todo's
   
- [x] Search input
- [ ] Suggestions
- [x] Result box 
- [x] Result Information
- [ ] SortBy filter
- [ ] Rating filter
- [ ] Range filter
- [ ] Pagination
+- [x] Search input
+- [ ] Suggestions
+- [x] Result box
+- [x] Result Information
+- [x] SortBy
+- [ ] Checkbox filter
+- [ ] Menu filter
+- [ ] Rating filter
+- [ ] Range filter
+- [ ] Pagination
+ 
+## Widget creation workflow
+ 1. Define widget properties
+ 2. Create component
+ 3. Create widget factory method
+ 4. Create widget action

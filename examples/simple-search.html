@@ -20,17 +20,23 @@
         <!-- Search -->
         <div class="search"></div>
 
-        <!-- Information -->
-        <div class="information column"></div>
-
         <!-- Result -->
-        <div class="result"></div>
+        <div class="columns">
+            <div class="column is-one-quarter">
+                <!-- Information -->
+                <div class="information column"></div>
+
+                <!-- Filters -->
+                <div class="sort-by column"></div>
+            </div>
+            <div class="result column is-three-quarters"></div>
+        </div>
     </div>
 
     <script type="text/template" id="result-search-tpl">
         <div class="columns is-multiline is-variable">
         {{#items}}
-            <div class="column is-narrow is-one-quarter">
+            <div class="column is-narrow is-one-third">
                 <div class="card">
                     <div class="card-content">
                         <div class="media">
@@ -39,6 +45,8 @@
                                 {{#metadata.author}}
                                 <p class="has-text-info is-size-7">@{{name}}</p>
                                 {{/metadata.author}}
+                                <hr />
+                                <p class="has-text-grey is-size-7">{{indexed_metadata.created_at}}</p>
                             </div>
                         </div>
                     </div>
@@ -63,6 +71,16 @@
                     container: 'column',
                     input: 'input'
                 }
+            }),
+            ui.widgets.sortBy({
+                target: '.sort-by',
+                classNames: {
+                    container: 'select',
+                },
+                options: [
+                    {name: 'Oldest', value: 'created_at:asc'},
+                    {name: 'Newest', value: 'created_at:desc'}
+                ]
             }),
             ui.widgets.result({
                 target: '.result',

@@ -11,13 +11,14 @@ import { h } from 'preact';
  * Locals
  */
 import SearchComponent from "../Widgets/Search/SearchComponent";
+import SortByComponent from "../Widgets/SortBy/SortByComponent";
 import ResultComponent from "../Widgets/Result/ResultComponent";
 import InformationComponent from "../Widgets/Information/InformationComponent";
 
 /**
  * Widgets factory class
  */
-export default class WidgetFactory {
+class WidgetFactory {
     static search({
         target,
         placeholder,
@@ -29,6 +30,18 @@ export default class WidgetFactory {
             classNames={classNames}
         />
     };
+
+    static sortBy({
+        target,
+        classNames,
+        options
+    }) {
+        return <SortByComponent
+            target={target}
+            classNames={classNames}
+            options={options}
+        />
+    }
 
     static result({
         target,
@@ -54,3 +67,5 @@ export default class WidgetFactory {
         />
     }
 }
+
+export default WidgetFactory;

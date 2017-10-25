@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 7);
+/******/ 	return __webpack_require__(__webpack_require__.s = 8);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -1063,7 +1063,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _flux = __webpack_require__(9);
+var _flux = __webpack_require__(10);
 
 exports.default = new _flux.Dispatcher();
 
@@ -1262,6 +1262,68 @@ process.umask = function() { return 0; };
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+
+
+/**
+ * Module dependenices
+ */
+
+var isObject = __webpack_require__(18);
+var clone = __webpack_require__(21);
+var typeOf = __webpack_require__(6);
+var forOwn = __webpack_require__(24);
+
+/**
+ * Recursively clone native types.
+ */
+
+function cloneDeep(val, instanceClone) {
+  switch (typeOf(val)) {
+    case 'object':
+      return cloneObjectDeep(val, instanceClone);
+    case 'array':
+      return cloneArrayDeep(val, instanceClone);
+    default: {
+      return clone(val);
+    }
+  }
+}
+
+function cloneObjectDeep(obj, instanceClone) {
+  if (isObject(obj)) {
+    var res = {};
+    forOwn(obj, function(obj, key) {
+      this[key] = cloneDeep(obj, instanceClone);
+    }, res);
+    return res;
+  } else if (instanceClone) {
+    return instanceClone(obj);
+  } else {
+    return obj;
+  }
+}
+
+function cloneArrayDeep(arr, instanceClone) {
+  var len = arr.length, res = [];
+  var i = -1;
+  while (++i < len) {
+    res[i] = cloneDeep(arr[i], instanceClone);
+  }
+  return res;
+}
+
+/**
+ * Expose `cloneDeep`
+ */
+
+module.exports = cloneDeep;
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 /*!
  * is-extendable <https://github.com/jonschlinkert/is-extendable>
  *
@@ -1278,7 +1340,7 @@ module.exports = function isExtendable(val) {
 
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1301,7 +1363,7 @@ module.exports = function forIn(obj, fn, thisArg) {
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var isBuffer = __webpack_require__(23);
@@ -1423,7 +1485,7 @@ module.exports = function kindOf(val) {
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1437,7 +1499,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _hogan = __webpack_require__(26);
+var _hogan = __webpack_require__(28);
 
 var _hogan2 = _interopRequireDefault(_hogan);
 
@@ -1496,13 +1558,13 @@ var Template = function (_Component) {
 exports.default = Template;
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _apisearch = __webpack_require__(8);
+var _apisearch = __webpack_require__(9);
 
 var _apisearch2 = _interopRequireDefault(_apisearch);
 
@@ -1510,7 +1572,7 @@ var _dispatcher = __webpack_require__(1);
 
 var _dispatcher2 = _interopRequireDefault(_dispatcher);
 
-var _ApisearchUI = __webpack_require__(12);
+var _ApisearchUI = __webpack_require__(13);
 
 var _ApisearchUI2 = _interopRequireDefault(_ApisearchUI);
 
@@ -1543,7 +1605,7 @@ module.exports = function (apiKey) {
  */
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -4807,7 +4869,7 @@ var SORT_BY_LOCATION_MI_ASC = exports.SORT_BY_LOCATION_MI_ASC = {
 //# sourceMappingURL=apisearch.node.js.map
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -4819,11 +4881,11 @@ var SORT_BY_LOCATION_MI_ASC = exports.SORT_BY_LOCATION_MI_ASC = {
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-module.exports.Dispatcher = __webpack_require__(10);
+module.exports.Dispatcher = __webpack_require__(11);
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4846,7 +4908,7 @@ exports.__esModule = true;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var invariant = __webpack_require__(11);
+var invariant = __webpack_require__(12);
 
 var _prefix = 'ID_';
 
@@ -5061,7 +5123,7 @@ module.exports = Dispatcher;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5121,7 +5183,7 @@ module.exports = invariant;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5135,9 +5197,9 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _events = __webpack_require__(13);
+var _events = __webpack_require__(14);
 
-var _WidgetFactory = __webpack_require__(14);
+var _WidgetFactory = __webpack_require__(15);
 
 var _WidgetFactory2 = _interopRequireDefault(_WidgetFactory);
 
@@ -5151,6 +5213,9 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+/**
+ * ApisearchUI class
+ */
 var ApisearchUI = function (_EventEmitter) {
     _inherits(ApisearchUI, _EventEmitter);
 
@@ -5280,7 +5345,7 @@ function hydrateWidget(currentStore, widget) {
 exports.default = ApisearchUI;
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports) {
 
 // Copyright Joyent, Inc. and other Node contributors.
@@ -5588,7 +5653,7 @@ function isUndefined(arg) {
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5614,15 +5679,19 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _SearchComponent = __webpack_require__(15);
+var _SearchComponent = __webpack_require__(16);
 
 var _SearchComponent2 = _interopRequireDefault(_SearchComponent);
 
-var _ResultComponent = __webpack_require__(25);
+var _SortByComponent = __webpack_require__(25);
+
+var _SortByComponent2 = _interopRequireDefault(_SortByComponent);
+
+var _ResultComponent = __webpack_require__(27);
 
 var _ResultComponent2 = _interopRequireDefault(_ResultComponent);
 
-var _InformationComponent = __webpack_require__(29);
+var _InformationComponent = __webpack_require__(31);
 
 var _InformationComponent2 = _interopRequireDefault(_InformationComponent);
 
@@ -5652,11 +5721,24 @@ var WidgetFactory = function () {
             });
         }
     }, {
-        key: "result",
-        value: function result(_ref2) {
+        key: "sortBy",
+        value: function sortBy(_ref2) {
             var target = _ref2.target,
                 classNames = _ref2.classNames,
-                template = _ref2.template;
+                options = _ref2.options;
+
+            return (0, _preact.h)(_SortByComponent2.default, {
+                target: target,
+                classNames: classNames,
+                options: options
+            });
+        }
+    }, {
+        key: "result",
+        value: function result(_ref3) {
+            var target = _ref3.target,
+                classNames = _ref3.classNames,
+                template = _ref3.template;
 
             return (0, _preact.h)(_ResultComponent2.default, {
                 target: target,
@@ -5666,10 +5748,10 @@ var WidgetFactory = function () {
         }
     }, {
         key: "information",
-        value: function information(_ref3) {
-            var target = _ref3.target,
-                classNames = _ref3.classNames,
-                template = _ref3.template;
+        value: function information(_ref4) {
+            var target = _ref4.target,
+                classNames = _ref4.classNames,
+                template = _ref4.template;
 
             return (0, _preact.h)(_InformationComponent2.default, {
                 target: target,
@@ -5685,7 +5767,7 @@ var WidgetFactory = function () {
 exports.default = WidgetFactory;
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5699,7 +5781,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _searchActions = __webpack_require__(16);
+var _searchActions = __webpack_require__(17);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -5776,7 +5858,7 @@ SearchComponent.defaultProps = {
 exports.default = SearchComponent;
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5787,7 +5869,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.keyupSearchAction = keyupSearchAction;
 
-var _cloneDeep = __webpack_require__(17);
+var _cloneDeep = __webpack_require__(3);
 
 var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
 
@@ -5833,68 +5915,6 @@ function keyupSearchAction(text, currentQuery, client) {
         });
     });
 }
-
-/***/ }),
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/**
- * Module dependenices
- */
-
-var isObject = __webpack_require__(18);
-var clone = __webpack_require__(21);
-var typeOf = __webpack_require__(5);
-var forOwn = __webpack_require__(24);
-
-/**
- * Recursively clone native types.
- */
-
-function cloneDeep(val, instanceClone) {
-  switch (typeOf(val)) {
-    case 'object':
-      return cloneObjectDeep(val, instanceClone);
-    case 'array':
-      return cloneArrayDeep(val, instanceClone);
-    default: {
-      return clone(val);
-    }
-  }
-}
-
-function cloneObjectDeep(obj, instanceClone) {
-  if (isObject(obj)) {
-    var res = {};
-    forOwn(obj, function(obj, key) {
-      this[key] = cloneDeep(obj, instanceClone);
-    }, res);
-    return res;
-  } else if (instanceClone) {
-    return instanceClone(obj);
-  } else {
-    return obj;
-  }
-}
-
-function cloneArrayDeep(arr, instanceClone) {
-  var len = arr.length, res = [];
-  var i = -1;
-  while (++i < len) {
-    res[i] = cloneDeep(arr[i], instanceClone);
-  }
-  return res;
-}
-
-/**
- * Expose `cloneDeep`
- */
-
-module.exports = cloneDeep;
-
 
 /***/ }),
 /* 18 */
@@ -5986,9 +6006,9 @@ module.exports = Array.isArray || function (arr) {
 
 
 
-var isObject = __webpack_require__(3);
+var isObject = __webpack_require__(4);
 var mixin = __webpack_require__(22);
-var typeOf = __webpack_require__(5);
+var typeOf = __webpack_require__(6);
 
 /**
  * Shallow copy an object, array or primitive.
@@ -6043,8 +6063,8 @@ module.exports = clone;
 "use strict";
 
 
-var isObject = __webpack_require__(3);
-var forIn = __webpack_require__(4);
+var isObject = __webpack_require__(4);
+var forIn = __webpack_require__(5);
 
 function mixin(target, objects) {
   if (!isObject(target)) {
@@ -6119,7 +6139,7 @@ function isSlowBuffer (obj) {
 
 
 
-var forIn = __webpack_require__(4);
+var forIn = __webpack_require__(5);
 var hasOwn = Object.prototype.hasOwnProperty;
 
 module.exports = function forOwn(obj, fn, thisArg) {
@@ -6146,7 +6166,167 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _Template = __webpack_require__(6);
+var _sortByActions = __webpack_require__(26);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+
+/**
+ * SortBy Filter Component
+ */
+var SortByComponent = function (_Component) {
+    _inherits(SortByComponent, _Component);
+
+    function SortByComponent() {
+        _classCallCheck(this, SortByComponent);
+
+        var _this = _possibleConstructorReturn(this, (SortByComponent.__proto__ || Object.getPrototypeOf(SortByComponent)).call(this));
+
+        _this.handleChange = function (e) {
+            (0, _sortByActions.onChangeSearchAction)(e.target.value, _this.props.currentQuery, _this.props.client);
+        };
+
+        _this.handleChange = _this.handleChange.bind(_this);
+        return _this;
+    }
+
+    _createClass(SortByComponent, [{
+        key: "shouldComponentUpdate",
+        value: function shouldComponentUpdate() {
+            return false;
+        }
+    }, {
+        key: "render",
+        value: function render() {
+            var _props = this.props,
+                _props$classNames = _props.classNames,
+                containerClassName = _props$classNames.container,
+                selectClassName = _props$classNames.select,
+                options = _props.options;
+
+
+            return (0, _preact.h)(
+                "div",
+                { className: "asui-sortBy " + containerClassName },
+                (0, _preact.h)(
+                    "select",
+                    {
+                        className: "asui-sortBy-selector " + selectClassName,
+                        onChange: this.handleChange
+                    },
+                    options.map(function (option) {
+                        return (0, _preact.h)(
+                            "option",
+                            { value: option.value },
+                            option.name
+                        );
+                    })
+                )
+            );
+        }
+    }]);
+
+    return SortByComponent;
+}(_preact.Component);
+
+exports.default = SortByComponent;
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.onChangeSearchAction = onChangeSearchAction;
+
+var _cloneDeep = __webpack_require__(3);
+
+var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
+
+var _dispatcher = __webpack_require__(1);
+
+var _dispatcher2 = _interopRequireDefault(_dispatcher);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; } /**
+                                                                                                                                                                                                                   * Search actions
+                                                                                                                                                                                                                   */
+
+
+/**
+ * On change action
+ *
+ * This action is triggered when a sortBy filter changes
+ * receives three parameters:
+ *   @param queryValue   -> the value for the filter (ex: "created_at:asc")
+ *   @param currentQuery -> current application query
+ *   @param client       -> apisearch client to trigger a search
+ *
+ * Finally dispatches an event with the search result and
+ * the modified query.
+ *   @returns {{
+ *     type: string,
+ *     payload: {
+ *        result,
+ *        updatedQuery
+ *     }
+ *   }}
+ */
+function onChangeSearchAction(queryValue, currentQuery, client) {
+    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+    var filterData = splitQueryValue(queryValue);
+
+    clonedQuery.sortBy(_defineProperty({}, 'indexed_metadata.' + filterData.field, {
+        order: filterData.value
+    }));
+
+    client.search(clonedQuery, function (result) {
+        _dispatcher2.default.dispatch({
+            type: 'FETCH_DATA',
+            payload: {
+                result: result,
+                updatedQuery: clonedQuery
+            }
+        });
+    });
+}
+
+function splitQueryValue(string) {
+    var queryValue = string.split(':');
+
+    return {
+        field: queryValue[0],
+        value: queryValue[1]
+    };
+}
+
+/***/ }),
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _preact = __webpack_require__(0);
+
+var _Template = __webpack_require__(7);
 
 var _Template2 = _interopRequireDefault(_Template);
 
@@ -6227,7 +6407,7 @@ ResultComponent.defaultProps = {
 exports.default = ResultComponent;
 
 /***/ }),
-/* 26 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -6247,14 +6427,14 @@ exports.default = ResultComponent;
 
 // This file is for use with Node.js. See dist/ for browser files.
 
-var Hogan = __webpack_require__(27);
-Hogan.Template = __webpack_require__(28).Template;
+var Hogan = __webpack_require__(29);
+Hogan.Template = __webpack_require__(30).Template;
 Hogan.template = Hogan.Template;
 module.exports = Hogan;
 
 
 /***/ }),
-/* 27 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -6683,7 +6863,7 @@ module.exports = Hogan;
 
 
 /***/ }),
-/* 28 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -7030,7 +7210,7 @@ var Hogan = {};
 
 
 /***/ }),
-/* 29 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7044,7 +7224,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _Template = __webpack_require__(6);
+var _Template = __webpack_require__(7);
 
 var _Template2 = _interopRequireDefault(_Template);
 
