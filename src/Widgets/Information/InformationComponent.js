@@ -7,14 +7,14 @@ import Template from "../Template";
 /**
  * Result Information Component
  */
-class ResultInformationComponent extends Component {
+class InformationComponent extends Component {
     render() {
         const {
             classNames: {
                 container: containerClassName
             },
             template: {
-                body: bodyTemplate
+                container: containerTemplate
             },
             data
         } = this.props;
@@ -28,21 +28,19 @@ class ResultInformationComponent extends Component {
         };
 
         return (
-            <div className={`asui-resultInformation ${containerClassName}`}>
-                <Template
-                    template={bodyTemplate}
-                    data={reducedTemplateData}
-                    className={`asui-resultInformation-body`}
-                />
-            </div>
+            <Template
+                template={containerTemplate}
+                data={reducedTemplateData}
+                className={`asui-resultInformation ${containerClassName}`}
+            />
         )
     }
 }
 
-ResultInformationComponent.defaultProps = {
+InformationComponent.defaultProps = {
     classNames: {
         container: ''
     }
 };
 
-export default ResultInformationComponent;
+export default InformationComponent;

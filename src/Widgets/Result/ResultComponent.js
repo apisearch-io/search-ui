@@ -16,9 +16,9 @@ class ResultComponent extends Component {
                 container: containerClassName
             },
             template: {
-                header: headerTemplate,
+                top: topTemplate,
                 body: bodyTemplate,
-                footer: footerTemplate
+                bottom: bottomTemplate
             },
             data
         } = this.props;
@@ -31,9 +31,9 @@ class ResultComponent extends Component {
         }
 
         return (
-            <div className={`asui-result ${containerClassName ? containerClassName : ''}`}>
+            <div className={`asui-result ${containerClassName}`}>
                 <Template
-                    template={headerTemplate}
+                    template={topTemplate}
                     className={`asui-result-header`}
                 />
 
@@ -44,7 +44,7 @@ class ResultComponent extends Component {
                 />
 
                 <Template
-                    template={footerTemplate}
+                    template={bottomTemplate}
                     className={`asui-result-footer`}
                 />
             </div>
@@ -57,8 +57,8 @@ ResultComponent.defaultProps = {
         container: ''
     },
     template: {
-        header: null,
-        footer: null
+        top: null,
+        bottom: null
     }
 };
 

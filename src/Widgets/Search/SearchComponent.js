@@ -44,7 +44,7 @@ class SearchComponent extends Component {
         return (
             <div className={`asui-search ${containerClassName}`}>
                 <input
-                    className={inputClassName}
+                    className={`asui-search-input ${inputClassName}`}
                     placeholder={placeholder}
                     value={this.state.q}
                     onKeyUp={this.handleSearch}

@@ -1,5 +1,17 @@
 Apisearch UI
 ============
+The ApisearchUI is an easy interface library to build searches
+the easy way. It provides a list of pre-built widgets to
+setup your custom search experience.
+
+A widget can be a search input, a result list, filters, pagination, 
+and many more explained below.
+
+All Apisearch widgets are passed using `addWidget(widget)` method,
+or using `addWidgets(...widgets)` to add widgets in a bulk mode.
+
+Once your setup is done, you just call the `init()` method to 
+start all the magic!
 
 ## Usage
 This simple setup allows you to build a full text search
@@ -52,9 +64,9 @@ const resultWidget = ui.widgets.result({
       container: [string]
   },
   template: {
-      header: [string],
+      top: [string],
       body: string,
-      footer: [string]
+      bottom: [string]
   }
 });
 ```
@@ -62,8 +74,8 @@ const resultWidget = ui.widgets.result({
 ### Result information
 The result information widget allows you to provide
 to a user some extra information about the search.
-Currently only shows the total number of hits of 
-the current search and the total number of items.
+Currently only can show the **number of hits** of 
+the current search and the total **number of items**.
 
 ```javascript
 const resultInformationWidget = ui.widgets.resultInformation({
@@ -72,10 +84,13 @@ const resultInformationWidget = ui.widgets.resultInformation({
       container: [string]
   },
   template: {
-      body: string,
+      container: string,
   }
 });
 ```
+
+The variables `{{total_hits}}` and `{{total_items}}`
+can be passed on the template body.
 
 ## Todo's
   

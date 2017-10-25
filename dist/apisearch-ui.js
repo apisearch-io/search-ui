@@ -5622,9 +5622,9 @@ var _ResultComponent = __webpack_require__(25);
 
 var _ResultComponent2 = _interopRequireDefault(_ResultComponent);
 
-var _ResultInformationComponent = __webpack_require__(29);
+var _InformationComponent = __webpack_require__(29);
 
-var _ResultInformationComponent2 = _interopRequireDefault(_ResultInformationComponent);
+var _InformationComponent2 = _interopRequireDefault(_InformationComponent);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -5665,13 +5665,13 @@ var WidgetFactory = function () {
             });
         }
     }, {
-        key: "resultInfo",
-        value: function resultInfo(_ref3) {
+        key: "information",
+        value: function information(_ref3) {
             var target = _ref3.target,
                 classNames = _ref3.classNames,
                 template = _ref3.template;
 
-            return (0, _preact.h)(_ResultInformationComponent2.default, {
+            return (0, _preact.h)(_InformationComponent2.default, {
                 target: target,
                 classNames: classNames,
                 template: template
@@ -5753,7 +5753,7 @@ var SearchComponent = function (_Component) {
                 'div',
                 { className: 'asui-search ' + containerClassName },
                 (0, _preact.h)('input', {
-                    className: inputClassName,
+                    className: 'asui-search-input ' + inputClassName,
                     placeholder: placeholder,
                     value: this.state.q,
                     onKeyUp: this.handleSearch
@@ -6178,9 +6178,9 @@ var ResultComponent = function (_Component) {
             var _props = this.props,
                 containerClassName = _props.classNames.container,
                 _props$template = _props.template,
-                headerTemplate = _props$template.header,
+                topTemplate = _props$template.top,
                 bodyTemplate = _props$template.body,
-                footerTemplate = _props$template.footer,
+                bottomTemplate = _props$template.bottom,
                 data = _props.data;
 
             /**
@@ -6193,9 +6193,9 @@ var ResultComponent = function (_Component) {
 
             return (0, _preact.h)(
                 'div',
-                { className: 'asui-result ' + (containerClassName ? containerClassName : '') },
+                { className: 'asui-result ' + containerClassName },
                 (0, _preact.h)(_Template2.default, {
-                    template: headerTemplate,
+                    template: topTemplate,
                     className: 'asui-result-header'
                 }),
                 (0, _preact.h)(_Template2.default, {
@@ -6204,7 +6204,7 @@ var ResultComponent = function (_Component) {
                     className: 'asui-result-body'
                 }),
                 (0, _preact.h)(_Template2.default, {
-                    template: footerTemplate,
+                    template: bottomTemplate,
                     className: 'asui-result-footer'
                 })
             );
@@ -6219,8 +6219,8 @@ ResultComponent.defaultProps = {
         container: ''
     },
     template: {
-        header: null,
-        footer: null
+        top: null,
+        bottom: null
     }
 };
 
@@ -7062,21 +7062,21 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 /**
  * Result Information Component
  */
-var ResultInformationComponent = function (_Component) {
-    _inherits(ResultInformationComponent, _Component);
+var InformationComponent = function (_Component) {
+    _inherits(InformationComponent, _Component);
 
-    function ResultInformationComponent() {
-        _classCallCheck(this, ResultInformationComponent);
+    function InformationComponent() {
+        _classCallCheck(this, InformationComponent);
 
-        return _possibleConstructorReturn(this, (ResultInformationComponent.__proto__ || Object.getPrototypeOf(ResultInformationComponent)).apply(this, arguments));
+        return _possibleConstructorReturn(this, (InformationComponent.__proto__ || Object.getPrototypeOf(InformationComponent)).apply(this, arguments));
     }
 
-    _createClass(ResultInformationComponent, [{
+    _createClass(InformationComponent, [{
         key: 'render',
         value: function render() {
             var _props = this.props,
                 containerClassName = _props.classNames.container,
-                bodyTemplate = _props.template.body,
+                containerTemplate = _props.template.container,
                 data = _props.data;
 
             /**
@@ -7088,28 +7088,24 @@ var ResultInformationComponent = function (_Component) {
                 total_items: data.total_items
             };
 
-            return (0, _preact.h)(
-                'div',
-                { className: 'asui-resultInformation ' + containerClassName },
-                (0, _preact.h)(_Template2.default, {
-                    template: bodyTemplate,
-                    data: reducedTemplateData,
-                    className: 'asui-resultInformation-body'
-                })
-            );
+            return (0, _preact.h)(_Template2.default, {
+                template: containerTemplate,
+                data: reducedTemplateData,
+                className: 'asui-resultInformation ' + containerClassName
+            });
         }
     }]);
 
-    return ResultInformationComponent;
+    return InformationComponent;
 }(_preact.Component);
 
-ResultInformationComponent.defaultProps = {
+InformationComponent.defaultProps = {
     classNames: {
         container: ''
     }
 };
 
-exports.default = ResultInformationComponent;
+exports.default = InformationComponent;
 
 /***/ })
 /******/ ]);

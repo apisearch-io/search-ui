@@ -70,15 +70,15 @@
                     container: 'column'
                 },
                 template: {
-                    header: '<strong>These are the results</strong><hr/>',
+                    top: '<strong>These are the results</strong><hr/>',
                     body: document.getElementById('result-search-tpl').text,
-                    footer: '<hr/><strong>Here comes the footer</strong>'
+                    bottom: '<hr/><strong>Here comes the footer</strong>'
                 }
             }),
-            ui.widgets.resultInfo({
+            ui.widgets.information({
                 target: '.information',
                 template: {
-                    body: 'Matched <b>{{total_hits}}</b> of <b>{{total_items}}</b>!'
+                    body: '<span class="tag is-info">Matched {{total_hits}} of {{total_items}}!</span>'
                 }
             })
         );

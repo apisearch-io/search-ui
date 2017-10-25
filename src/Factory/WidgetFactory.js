@@ -12,7 +12,7 @@ import { h } from 'preact';
  */
 import SearchComponent from "../Widgets/Search/SearchComponent";
 import ResultComponent from "../Widgets/Result/ResultComponent";
-import ResultInformationComponent from "../Widgets/ResultInformation/ResultInformationComponent";
+import InformationComponent from "../Widgets/Information/InformationComponent";
 
 /**
  * Widgets factory class
@@ -42,12 +42,12 @@ export default class WidgetFactory {
         />
     }
 
-    static resultInfo({
+    static information({
         target,
         classNames,
         template
     }) {
-        return <ResultInformationComponent
+        return <InformationComponent
             target={target}
             classNames={classNames}
             template={template}
