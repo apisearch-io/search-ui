@@ -27,8 +27,12 @@ class SearchComponent extends Component {
     };
 
     render() {
+        const {
+            className
+        } = this.props;
+
         return (
-            <div>
+            <div className={`asui-search ${className ? className : ''}`}>
                 <input
                     className="form-control"
                     placeholder="Search something..."

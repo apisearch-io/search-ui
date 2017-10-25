@@ -32,11 +32,16 @@
         let ui = apisearchUI('laie_ca');
 
         ui.addWidgets(
-            ui.widgets.searchInput({
-                target: '.search'
+            ui.widgets.search({
+                target: '.search',
             }),
             ui.widgets.result({
-                target: '.result'
+                target: '.result',
+                template: {
+                    header: '<h3>These are the results</h3>',
+                    body: '<ul>{{#items}} <li>{{metadata.name}}</li> {{/items}}</ul>',
+                    footer: '<span>Here comes the footer</span>'
+                }
             })
         );
 

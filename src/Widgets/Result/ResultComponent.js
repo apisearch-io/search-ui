@@ -1,5 +1,6 @@
 /** @jsx h */
 import { h, Component } from 'preact';
+import Template from "../Template";
 
 class ResultComponent extends Component {
     constructor() {
@@ -7,16 +8,27 @@ class ResultComponent extends Component {
     }
 
     render() {
-        if (typeof this.props.data.items === 'undefined') {
-            return null;
-        }
+        const {
+            className,
+            data,
+            template
+        } = this.props;
 
         return (
-            <ul>
-                {this.props.data.items.map(item =>
-                    <li>{item.uuid.id} - {item.uuid.type}</li>
-                )}
-            </ul>
+            <div className={`asui-result ${className ? className : ''}`}>
+                <Template
+                    template={template.header}
+                />
+
+                <Template
+                    template={template.body}
+                    data={data}
+                />
+
+                <Template
+                    template={template.footer}
+                />
+            </div>
         )
     }
 }

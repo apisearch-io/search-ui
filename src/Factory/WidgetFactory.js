@@ -17,15 +17,25 @@ import ResultComponent from "../Widgets/Result/ResultComponent";
  * Widgets factory class
  */
 export default class WidgetFactory {
-    static searchInput({ target }) {
+    static search({
+       target,
+       className
+    }) {
         return <SearchComponent
             target={target}
+            className={className}
         />
     };
 
-    static result({ target }) {
+    static result({
+        target,
+        className,
+        template
+    }) {
         return <ResultComponent
             target={target}
+            className={className}
+            template={template}
         />
     }
 }

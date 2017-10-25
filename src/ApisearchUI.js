@@ -17,7 +17,7 @@ class ApisearchUI extends EventEmitter {
         /**
          * Store related properties
          */
-        this.currentQuery = client.query.createMatchAll();
+        this.currentQuery = client.query.create('');
         this.data = {
             query: {
                 q: ''
