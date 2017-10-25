@@ -12,29 +12,44 @@ import { h } from 'preact';
  */
 import SearchComponent from "../Widgets/Search/SearchComponent";
 import ResultComponent from "../Widgets/Result/ResultComponent";
+import ResultInformationComponent from "../Widgets/ResultInformation/ResultInformationComponent";
 
 /**
  * Widgets factory class
  */
 export default class WidgetFactory {
     static search({
-       target,
-       className
+        target,
+        placeholder,
+        classNames
     }) {
         return <SearchComponent
             target={target}
-            className={className}
+            placeholder={placeholder}
+            classNames={classNames}
         />
     };
 
     static result({
         target,
-        className,
+        classNames,
         template
     }) {
         return <ResultComponent
             target={target}
-            className={className}
+            classNames={classNames}
+            template={template}
+        />
+    }
+
+    static resultInfo({
+        target,
+        classNames,
+        template
+    }) {
+        return <ResultInformationComponent
+            target={target}
+            classNames={classNames}
             template={template}
         />
     }

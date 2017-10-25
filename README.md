@@ -1,7 +1,7 @@
 Apisearch UI
 ============
 
-# Usage
+## Usage
 This simple setup allows you to build a full text search
 input with a result container using a custom template 
 engine.
@@ -24,16 +24,15 @@ ui.addWidgets(
 ui.init();
 ```
 
-# Widgets
+## Widgets
 
-## Search input
-
+### Search input
 The search input widget is to perform text based 
 searches.
 
 ```javascript
 const searchWidget = ui.widgets.search({ 
-  target: [string],
+  target: string,
   placeholder: [string],
   classNames: {
       input: [string],
@@ -42,28 +41,49 @@ const searchWidget = ui.widgets.search({
 });
 ```
 
-## Search result
+### Search result
 The result widget allows you to print a set of results
 based on the search.
 
 ```javascript
-const resultWidget = ui.widgets.result({ 
-  target: [string],
+const resultWidget = ui.widgets.result({
+  target: string,
   classNames: {
       container: [string]
   },
   template: {
       header: [string],
-      body: [string],
+      body: string,
       footer: [string]
   }
 });
 ```
 
-# Todo's
-- Search input
-- Filter rating
-- Filter range
-- Filter checkbox
-- Pagination
-- Suggestions
+### Result information
+The result information widget allows you to provide
+to a user some extra information about the search.
+Currently only shows the total number of hits of 
+the current search and the total number of items.
+
+```javascript
+const resultInformationWidget = ui.widgets.resultInformation({
+  target: string,
+  classNames: {
+      container: [string]
+  },
+  template: {
+      body: string,
+  }
+});
+```
+
+## Todo's
+  
+ [x] Search input
+ [ ] Suggestions
+ [x] Result box 
+ [x] Result Information
+ [ ] SortBy filter
+ [ ] Rating filter
+ [ ] Range filter
+ [ ] Pagination

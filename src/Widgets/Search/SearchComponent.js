@@ -1,7 +1,13 @@
-/** @jsx h */
+/**
+ * @jsx h
+ */
+
 import { h, Component } from 'preact';
 import {keyupSearchAction} from "./searchActions";
 
+/**
+ * Search Component
+ */
 class SearchComponent extends Component {
     constructor() {
         super();
@@ -28,14 +34,17 @@ class SearchComponent extends Component {
 
     render() {
         const {
-            className,
-            placeholder
+            placeholder,
+            classNames: {
+                container: containerClassName,
+                input: inputClassName
+            }
         } = this.props;
 
         return (
-            <div className={`asui-search ${className ? className : ''}`}>
+            <div className={`asui-search ${containerClassName}`}>
                 <input
-                    className={'input'}
+                    className={inputClassName}
                     placeholder={placeholder}
                     value={this.state.q}
                     onKeyUp={this.handleSearch}
@@ -44,5 +53,14 @@ class SearchComponent extends Component {
         );
     }
 }
+
+SearchComponent.defaultProps = {
+    placeholder: '',
+    classNames: {
+        container: '',
+        input: ''
+    }
+};
+
 
 export default SearchComponent;

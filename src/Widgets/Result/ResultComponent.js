@@ -1,39 +1,65 @@
-/** @jsx h */
+/**
+ * @jsx h
+ */
+
 import { h, Component } from 'preact';
 import Template from "../Template";
 
+/**
+ * Result Component
+ */
 class ResultComponent extends Component {
-    constructor() {
-        super();
-    }
 
     render() {
         const {
-            className,
-            data,
-            template
+            classNames: {
+                container: containerClassName
+            },
+            template: {
+                header: headerTemplate,
+                body: bodyTemplate,
+                footer: footerTemplate
+            },
+            data
         } = this.props;
 
+        /**
+         * Data accessible to the template
+         */
+        let reducedTemplateData = {
+            items: data.items
+        }
+
         return (
-            <div className={`asui-result ${className ? className : ''}`}>
+            <div className={`asui-result ${containerClassName ? containerClassName : ''}`}>
                 <Template
-                    template={template.header}
+                    template={headerTemplate}
                     className={`asui-result-header`}
                 />
 
                 <Template
-                    template={template.body}
-                    data={data}
+                    template={bodyTemplate}
+                    data={reducedTemplateData}
                     className={`asui-result-body`}
                 />
 
                 <Template
-                    template={template.footer}
+                    template={footerTemplate}
                     className={`asui-result-footer`}
                 />
             </div>
         )
     }
 }
+
+ResultComponent.defaultProps = {
+    classNames: {
+        container: ''
+    },
+    template: {
+        header: null,
+        footer: null
+    }
+};
 
 export default ResultComponent;

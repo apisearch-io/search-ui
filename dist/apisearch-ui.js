@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 6);
+/******/ 	return __webpack_require__(__webpack_require__.s = 7);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -1063,7 +1063,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _flux = __webpack_require__(8);
+var _flux = __webpack_require__(9);
 
 exports.default = new _flux.Dispatcher();
 
@@ -1304,7 +1304,7 @@ module.exports = function forIn(obj, fn, thisArg) {
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isBuffer = __webpack_require__(22);
+var isBuffer = __webpack_require__(23);
 var toString = Object.prototype.toString;
 
 /**
@@ -1429,7 +1429,80 @@ module.exports = function kindOf(val) {
 "use strict";
 
 
-var _apisearch = __webpack_require__(7);
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _preact = __webpack_require__(0);
+
+var _hogan = __webpack_require__(26);
+
+var _hogan2 = _interopRequireDefault(_hogan);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /** @jsx h */
+
+
+var Template = function (_Component) {
+    _inherits(Template, _Component);
+
+    function Template() {
+        var _ref;
+
+        var _temp, _this, _ret;
+
+        _classCallCheck(this, Template);
+
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+        }
+
+        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Template.__proto__ || Object.getPrototypeOf(Template)).call.apply(_ref, [this].concat(args))), _this), _this.renderTemplate = function (template, data) {
+            var compiledTemplate = _hogan2.default.compile(template);
+            var output = compiledTemplate.render(data);
+
+            return {
+                __html: output
+            };
+        }, _temp), _possibleConstructorReturn(_this, _ret);
+    }
+
+    _createClass(Template, [{
+        key: 'render',
+        value: function render() {
+            var _props = this.props,
+                template = _props.template,
+                data = _props.data,
+                className = _props.className;
+
+
+            return template ? (0, _preact.h)('div', {
+                className: className,
+                dangerouslySetInnerHTML: this.renderTemplate(template, data)
+            }) : null;
+        }
+    }]);
+
+    return Template;
+}(_preact.Component);
+
+exports.default = Template;
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _apisearch = __webpack_require__(8);
 
 var _apisearch2 = _interopRequireDefault(_apisearch);
 
@@ -1437,7 +1510,7 @@ var _dispatcher = __webpack_require__(1);
 
 var _dispatcher2 = _interopRequireDefault(_dispatcher);
 
-var _ApisearchUI = __webpack_require__(11);
+var _ApisearchUI = __webpack_require__(12);
 
 var _ApisearchUI2 = _interopRequireDefault(_ApisearchUI);
 
@@ -1470,7 +1543,7 @@ module.exports = function (apiKey) {
  */
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -4734,7 +4807,7 @@ var SORT_BY_LOCATION_MI_ASC = exports.SORT_BY_LOCATION_MI_ASC = {
 //# sourceMappingURL=apisearch.node.js.map
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -4746,11 +4819,11 @@ var SORT_BY_LOCATION_MI_ASC = exports.SORT_BY_LOCATION_MI_ASC = {
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-module.exports.Dispatcher = __webpack_require__(9);
+module.exports.Dispatcher = __webpack_require__(10);
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4773,7 +4846,7 @@ exports.__esModule = true;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var invariant = __webpack_require__(10);
+var invariant = __webpack_require__(11);
 
 var _prefix = 'ID_';
 
@@ -4988,7 +5061,7 @@ module.exports = Dispatcher;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5048,7 +5121,7 @@ module.exports = invariant;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5062,9 +5135,9 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _events = __webpack_require__(12);
+var _events = __webpack_require__(13);
 
-var _WidgetFactory = __webpack_require__(13);
+var _WidgetFactory = __webpack_require__(14);
 
 var _WidgetFactory2 = _interopRequireDefault(_WidgetFactory);
 
@@ -5207,7 +5280,7 @@ function hydrateWidget(currentStore, widget) {
 exports.default = ApisearchUI;
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports) {
 
 // Copyright Joyent, Inc. and other Node contributors.
@@ -5515,7 +5588,7 @@ function isUndefined(arg) {
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5541,13 +5614,17 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _SearchComponent = __webpack_require__(14);
+var _SearchComponent = __webpack_require__(15);
 
 var _SearchComponent2 = _interopRequireDefault(_SearchComponent);
 
-var _ResultComponent = __webpack_require__(24);
+var _ResultComponent = __webpack_require__(25);
 
 var _ResultComponent2 = _interopRequireDefault(_ResultComponent);
+
+var _ResultInformationComponent = __webpack_require__(29);
+
+var _ResultInformationComponent2 = _interopRequireDefault(_ResultInformationComponent);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -5565,23 +5642,38 @@ var WidgetFactory = function () {
         key: "search",
         value: function search(_ref) {
             var target = _ref.target,
-                className = _ref.className;
+                placeholder = _ref.placeholder,
+                classNames = _ref.classNames;
 
             return (0, _preact.h)(_SearchComponent2.default, {
                 target: target,
-                className: className
+                placeholder: placeholder,
+                classNames: classNames
             });
         }
     }, {
         key: "result",
         value: function result(_ref2) {
             var target = _ref2.target,
-                className = _ref2.className,
+                classNames = _ref2.classNames,
                 template = _ref2.template;
 
             return (0, _preact.h)(_ResultComponent2.default, {
                 target: target,
-                className: className,
+                classNames: classNames,
+                template: template
+            });
+        }
+    }, {
+        key: "resultInfo",
+        value: function resultInfo(_ref3) {
+            var target = _ref3.target,
+                classNames = _ref3.classNames,
+                template = _ref3.template;
+
+            return (0, _preact.h)(_ResultInformationComponent2.default, {
+                target: target,
+                classNames: classNames,
                 template: template
             });
         }
@@ -5593,7 +5685,7 @@ var WidgetFactory = function () {
 exports.default = WidgetFactory;
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5607,15 +5699,19 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _searchActions = __webpack_require__(15);
+var _searchActions = __webpack_require__(16);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /** @jsx h */
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
 
-
+/**
+ * Search Component
+ */
 var SearchComponent = function (_Component) {
     _inherits(SearchComponent, _Component);
 
@@ -5647,15 +5743,17 @@ var SearchComponent = function (_Component) {
         key: 'render',
         value: function render() {
             var _props = this.props,
-                className = _props.className,
-                placeholder = _props.placeholder;
+                placeholder = _props.placeholder,
+                _props$classNames = _props.classNames,
+                containerClassName = _props$classNames.container,
+                inputClassName = _props$classNames.input;
 
 
             return (0, _preact.h)(
                 'div',
-                { className: 'asui-search ' + (className ? className : '') },
+                { className: 'asui-search ' + containerClassName },
                 (0, _preact.h)('input', {
-                    className: 'input',
+                    className: inputClassName,
                     placeholder: placeholder,
                     value: this.state.q,
                     onKeyUp: this.handleSearch
@@ -5667,10 +5765,18 @@ var SearchComponent = function (_Component) {
     return SearchComponent;
 }(_preact.Component);
 
+SearchComponent.defaultProps = {
+    placeholder: '',
+    classNames: {
+        container: '',
+        input: ''
+    }
+};
+
 exports.default = SearchComponent;
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5681,7 +5787,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.keyupSearchAction = keyupSearchAction;
 
-var _cloneDeep = __webpack_require__(16);
+var _cloneDeep = __webpack_require__(17);
 
 var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
 
@@ -5729,7 +5835,7 @@ function keyupSearchAction(text, currentQuery, client) {
 }
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5739,10 +5845,10 @@ function keyupSearchAction(text, currentQuery, client) {
  * Module dependenices
  */
 
-var isObject = __webpack_require__(17);
-var clone = __webpack_require__(20);
+var isObject = __webpack_require__(18);
+var clone = __webpack_require__(21);
 var typeOf = __webpack_require__(5);
-var forOwn = __webpack_require__(23);
+var forOwn = __webpack_require__(24);
 
 /**
  * Recursively clone native types.
@@ -5791,7 +5897,7 @@ module.exports = cloneDeep;
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5804,7 +5910,7 @@ module.exports = cloneDeep;
 
 
 
-var isObject = __webpack_require__(18);
+var isObject = __webpack_require__(19);
 
 function isObjectObject(o) {
   return isObject(o) === true
@@ -5835,7 +5941,7 @@ module.exports = function isPlainObject(o) {
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5848,7 +5954,7 @@ module.exports = function isPlainObject(o) {
 
 
 
-var isArray = __webpack_require__(19);
+var isArray = __webpack_require__(20);
 
 module.exports = function isObject(val) {
   return val != null && typeof val === 'object' && isArray(val) === false;
@@ -5856,7 +5962,7 @@ module.exports = function isObject(val) {
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -5867,7 +5973,7 @@ module.exports = Array.isArray || function (arr) {
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5881,7 +5987,7 @@ module.exports = Array.isArray || function (arr) {
 
 
 var isObject = __webpack_require__(3);
-var mixin = __webpack_require__(21);
+var mixin = __webpack_require__(22);
 var typeOf = __webpack_require__(5);
 
 /**
@@ -5931,7 +6037,7 @@ module.exports = clone;
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5973,7 +6079,7 @@ function copy(value, key) {
 module.exports = mixin;
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports) {
 
 /*!
@@ -6000,7 +6106,7 @@ function isSlowBuffer (obj) {
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6026,77 +6132,6 @@ module.exports = function forOwn(obj, fn, thisArg) {
 
 
 /***/ }),
-/* 24 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _preact = __webpack_require__(0);
-
-var _Template = __webpack_require__(25);
-
-var _Template2 = _interopRequireDefault(_Template);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /** @jsx h */
-
-
-var ResultComponent = function (_Component) {
-    _inherits(ResultComponent, _Component);
-
-    function ResultComponent() {
-        _classCallCheck(this, ResultComponent);
-
-        return _possibleConstructorReturn(this, (ResultComponent.__proto__ || Object.getPrototypeOf(ResultComponent)).call(this));
-    }
-
-    _createClass(ResultComponent, [{
-        key: 'render',
-        value: function render() {
-            var _props = this.props,
-                className = _props.className,
-                data = _props.data,
-                template = _props.template;
-
-
-            return (0, _preact.h)(
-                'div',
-                { className: 'asui-result ' + (className ? className : '') },
-                (0, _preact.h)(_Template2.default, {
-                    template: template.header,
-                    className: 'asui-result-header'
-                }),
-                (0, _preact.h)(_Template2.default, {
-                    template: template.body,
-                    data: data,
-                    className: 'asui-result-body'
-                }),
-                (0, _preact.h)(_Template2.default, {
-                    template: template.footer,
-                    className: 'asui-result-footer'
-                })
-            );
-        }
-    }]);
-
-    return ResultComponent;
-}(_preact.Component);
-
-exports.default = ResultComponent;
-
-/***/ }),
 /* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6111,9 +6146,9 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _hogan = __webpack_require__(26);
+var _Template = __webpack_require__(6);
 
-var _hogan2 = _interopRequireDefault(_hogan);
+var _Template2 = _interopRequireDefault(_Template);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6121,53 +6156,75 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /** @jsx h */
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
 
+/**
+ * Result Component
+ */
+var ResultComponent = function (_Component) {
+    _inherits(ResultComponent, _Component);
 
-var Template = function (_Component) {
-    _inherits(Template, _Component);
+    function ResultComponent() {
+        _classCallCheck(this, ResultComponent);
 
-    function Template() {
-        var _ref;
-
-        var _temp, _this, _ret;
-
-        _classCallCheck(this, Template);
-
-        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-            args[_key] = arguments[_key];
-        }
-
-        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Template.__proto__ || Object.getPrototypeOf(Template)).call.apply(_ref, [this].concat(args))), _this), _this.renderTemplate = function (template, data) {
-            var compiledTemplate = _hogan2.default.compile(template);
-            var output = compiledTemplate.render(data);
-
-            return {
-                __html: output
-            };
-        }, _temp), _possibleConstructorReturn(_this, _ret);
+        return _possibleConstructorReturn(this, (ResultComponent.__proto__ || Object.getPrototypeOf(ResultComponent)).apply(this, arguments));
     }
 
-    _createClass(Template, [{
+    _createClass(ResultComponent, [{
         key: 'render',
         value: function render() {
             var _props = this.props,
-                template = _props.template,
-                data = _props.data,
-                className = _props.className;
+                containerClassName = _props.classNames.container,
+                _props$template = _props.template,
+                headerTemplate = _props$template.header,
+                bodyTemplate = _props$template.body,
+                footerTemplate = _props$template.footer,
+                data = _props.data;
 
+            /**
+             * Data accessible to the template
+             */
 
-            return template ? (0, _preact.h)('div', {
-                className: className,
-                dangerouslySetInnerHTML: this.renderTemplate(template, data)
-            }) : null;
+            var reducedTemplateData = {
+                items: data.items
+            };
+
+            return (0, _preact.h)(
+                'div',
+                { className: 'asui-result ' + (containerClassName ? containerClassName : '') },
+                (0, _preact.h)(_Template2.default, {
+                    template: headerTemplate,
+                    className: 'asui-result-header'
+                }),
+                (0, _preact.h)(_Template2.default, {
+                    template: bodyTemplate,
+                    data: reducedTemplateData,
+                    className: 'asui-result-body'
+                }),
+                (0, _preact.h)(_Template2.default, {
+                    template: footerTemplate,
+                    className: 'asui-result-footer'
+                })
+            );
         }
     }]);
 
-    return Template;
+    return ResultComponent;
 }(_preact.Component);
 
-exports.default = Template;
+ResultComponent.defaultProps = {
+    classNames: {
+        container: ''
+    },
+    template: {
+        header: null,
+        footer: null
+    }
+};
+
+exports.default = ResultComponent;
 
 /***/ }),
 /* 26 */
@@ -6971,6 +7028,88 @@ var Hogan = {};
 
 })( true ? exports : Hogan);
 
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _preact = __webpack_require__(0);
+
+var _Template = __webpack_require__(6);
+
+var _Template2 = _interopRequireDefault(_Template);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+
+/**
+ * Result Information Component
+ */
+var ResultInformationComponent = function (_Component) {
+    _inherits(ResultInformationComponent, _Component);
+
+    function ResultInformationComponent() {
+        _classCallCheck(this, ResultInformationComponent);
+
+        return _possibleConstructorReturn(this, (ResultInformationComponent.__proto__ || Object.getPrototypeOf(ResultInformationComponent)).apply(this, arguments));
+    }
+
+    _createClass(ResultInformationComponent, [{
+        key: 'render',
+        value: function render() {
+            var _props = this.props,
+                containerClassName = _props.classNames.container,
+                bodyTemplate = _props.template.body,
+                data = _props.data;
+
+            /**
+             * Data accessible to the template
+             */
+
+            var reducedTemplateData = {
+                total_hits: data.total_hits,
+                total_items: data.total_items
+            };
+
+            return (0, _preact.h)(
+                'div',
+                { className: 'asui-resultInformation ' + containerClassName },
+                (0, _preact.h)(_Template2.default, {
+                    template: bodyTemplate,
+                    data: reducedTemplateData,
+                    className: 'asui-resultInformation-body'
+                })
+            );
+        }
+    }]);
+
+    return ResultInformationComponent;
+}(_preact.Component);
+
+ResultInformationComponent.defaultProps = {
+    classNames: {
+        container: ''
+    }
+};
+
+exports.default = ResultInformationComponent;
 
 /***/ })
 /******/ ]);

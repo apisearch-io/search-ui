@@ -17,8 +17,11 @@
                  width="300">
         </div>
 
-        <!-- Search bar -->
+        <!-- Search -->
         <div class="search"></div>
+
+        <!-- Information -->
+        <div class="information"></div>
 
         <!-- Result -->
         <div class="result"></div>
@@ -42,10 +45,10 @@
                 </div>
             </div>
         {{/items}}
-        {{^items}}
-            <div>Empty set of results</div>
-        {{/items}}
         </div>
+        {{^items}}
+        <div class="notification">Empty set of results :(</div>
+        {{/items}}
     </script>
 
     <script>
@@ -55,16 +58,27 @@
         ui.addWidgets(
             ui.widgets.search({
                 target: '.search',
-                className: 'column',
-                placeholder: 'Search something...'
+                placeholder: 'Search something...',
+                classNames: {
+                    container: 'column',
+                    input: 'input'
+                }
             }),
             ui.widgets.result({
                 target: '.result',
-                className: 'column',
+                classNames: {
+                    container: 'column'
+                },
                 template: {
                     header: '<strong>These are the results</strong><hr/>',
                     body: document.getElementById('result-search-tpl').text,
                     footer: '<hr/><strong>Here comes the footer</strong>'
+                }
+            }),
+            ui.widgets.resultInfo({
+                target: '.information',
+                template: {
+                    body: 'Matched <b>{{total_hits}}</b> of <b>{{total_items}}</b>!'
                 }
             })
         );
