@@ -21,7 +21,7 @@
         <div class="search"></div>
 
         <!-- Information -->
-        <div class="information"></div>
+        <div class="information column"></div>
 
         <!-- Result -->
         <div class="result"></div>
@@ -78,7 +78,7 @@
             ui.widgets.information({
                 target: '.information',
                 template: {
-                    body: '<span class="tag is-info">Matched {{total_hits}} of {{total_items}}!</span>'
+                    container: '<span class="tag is-info">Matched {{total_hits}} of {{total_items}}!</span>'
                 }
             })
         );
