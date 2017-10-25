@@ -28,14 +28,15 @@ class SearchComponent extends Component {
 
     render() {
         const {
-            className
+            className,
+            placeholder
         } = this.props;
 
         return (
             <div className={`asui-search ${className ? className : ''}`}>
                 <input
-                    className="form-control"
-                    placeholder="Search something..."
+                    className={'input'}
+                    placeholder={placeholder}
                     value={this.state.q}
                     onKeyUp={this.handleSearch}
                 />

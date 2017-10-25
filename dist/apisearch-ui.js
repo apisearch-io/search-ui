@@ -5096,7 +5096,7 @@ var ApisearchUI = function (_EventEmitter) {
         /**
          * Store related properties
          */
-        _this.currentQuery = client.query.create('');
+        _this.currentQuery = client.query.create('', 1, 30);
         _this.data = {
             query: {
                 q: ''
@@ -5646,15 +5646,17 @@ var SearchComponent = function (_Component) {
     }, {
         key: 'render',
         value: function render() {
-            var className = this.props.className;
+            var _props = this.props,
+                className = _props.className,
+                placeholder = _props.placeholder;
 
 
             return (0, _preact.h)(
                 'div',
                 { className: 'asui-search ' + (className ? className : '') },
                 (0, _preact.h)('input', {
-                    className: 'form-control',
-                    placeholder: 'Search something...',
+                    className: 'input',
+                    placeholder: placeholder,
                     value: this.state.q,
                     onKeyUp: this.handleSearch
                 })
@@ -6073,14 +6075,17 @@ var ResultComponent = function (_Component) {
                 'div',
                 { className: 'asui-result ' + (className ? className : '') },
                 (0, _preact.h)(_Template2.default, {
-                    template: template.header
+                    template: template.header,
+                    className: 'asui-result-header'
                 }),
                 (0, _preact.h)(_Template2.default, {
                     template: template.body,
-                    data: data
+                    data: data,
+                    className: 'asui-result-body'
                 }),
                 (0, _preact.h)(_Template2.default, {
-                    template: template.footer
+                    template: template.footer,
+                    className: 'asui-result-footer'
                 })
             );
         }
@@ -6148,10 +6153,14 @@ var Template = function (_Component) {
         value: function render() {
             var _props = this.props,
                 template = _props.template,
-                data = _props.data;
+                data = _props.data,
+                className = _props.className;
 
 
-            return template ? (0, _preact.h)('div', { dangerouslySetInnerHTML: this.renderTemplate(template, data) }) : null;
+            return template ? (0, _preact.h)('div', {
+                className: className,
+                dangerouslySetInnerHTML: this.renderTemplate(template, data)
+            }) : null;
         }
     }]);
 

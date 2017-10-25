@@ -1,31 +1,52 @@
 <html>
 <head>
     <title>Apisearch UI</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
-          rel="stylesheet"
-          integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M"
-          crossorigin="anonymous"
-    >
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.0/css/bulma.min.css">
+
+    <!-- ApisearchUI library -->
     <script src="../dist/apisearch-ui.js"></script>
 </head>
 
 <body>
-    <div class="container mt-5">
-        <div class="row">
-            <!-- Logo -->
-            <div class="col-sm-12 text-center">
-                <img src="https://apisearch.io/bundles/apisearchweb/images/logo-.png" alt="Apisearch" width="400">
-            </div>
-            <!-- Search bar -->
-            <div class="col-sm-12 mt-5">
-                <div class="search mb-2"></div>
-            </div>
-            <!-- Result laie -->
-            <div class="col-sm-12">
-                <div class="result"></div>
-            </div>
+    <div class="container">
+        <!-- Logo -->
+        <div class="column">
+            <img class="has-text-centered"
+                 src="https://apisearch.io/bundles/apisearchweb/images/logo-.png"
+                 width="300">
         </div>
+
+        <!-- Search bar -->
+        <div class="search"></div>
+
+        <!-- Result -->
+        <div class="result"></div>
     </div>
+
+    <script type="text/template" id="result-search-tpl">
+        <div class="columns is-multiline is-variable">
+        {{#items}}
+            <div class="column is-narrow is-one-quarter">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="media">
+                            <div class="media-content">
+                                <strong>{{metadata.name}}</strong>
+                                {{#metadata.author}}
+                                <p class="has-text-info is-size-7">@{{name}}</p>
+                                {{/metadata.author}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {{/items}}
+        {{^items}}
+            <div>Empty set of results</div>
+        {{/items}}
+        </div>
+    </script>
 
     <script>
         // UI Instance
@@ -34,13 +55,16 @@
         ui.addWidgets(
             ui.widgets.search({
                 target: '.search',
+                className: 'column',
+                placeholder: 'Search something...'
             }),
             ui.widgets.result({
                 target: '.result',
+                className: 'column',
                 template: {
-                    header: '<h3>These are the results</h3>',
-                    body: '<ul>{{#items}} <li>{{metadata.name}}</li> {{/items}}</ul>',
-                    footer: '<span>Here comes the footer</span>'
+                    header: '<strong>These are the results</strong><hr/>',
+                    body: document.getElementById('result-search-tpl').text,
+                    footer: '<hr/><strong>Here comes the footer</strong>'
                 }
             })
         );

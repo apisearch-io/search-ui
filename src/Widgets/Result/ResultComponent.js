@@ -18,15 +18,18 @@ class ResultComponent extends Component {
             <div className={`asui-result ${className ? className : ''}`}>
                 <Template
                     template={template.header}
+                    className={`asui-result-header`}
                 />
 
                 <Template
                     template={template.body}
                     data={data}
+                    className={`asui-result-body`}
                 />
 
                 <Template
                     template={template.footer}
+                    className={`asui-result-footer`}
                 />
             </div>
         )

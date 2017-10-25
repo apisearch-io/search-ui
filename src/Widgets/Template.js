@@ -15,11 +15,15 @@ class Template extends Component {
     render() {
         const {
             template,
-            data
+            data,
+            className
         } = this.props;
 
         return (template)
-            ? <div dangerouslySetInnerHTML={this.renderTemplate(template, data)} />
+            ? <div
+                className={className}
+                dangerouslySetInnerHTML={this.renderTemplate(template, data)}
+            />
             : null
         ;
     }
