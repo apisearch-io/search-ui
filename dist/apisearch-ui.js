@@ -5234,7 +5234,7 @@ var ApisearchUI = function (_EventEmitter) {
         /**
          * Store related properties
          */
-        _this.currentQuery = client.query.create('', 1, 30);
+        _this.currentQuery = client.query.create('', 1, 15);
         _this.data = {
             query: {
                 q: ''
@@ -5310,7 +5310,6 @@ var ApisearchUI = function (_EventEmitter) {
     }, {
         key: "handleActions",
         value: function handleActions(action) {
-
             /**
              * this is what we call a reducer
              * on a redux architecture

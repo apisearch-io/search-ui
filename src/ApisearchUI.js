@@ -20,7 +20,7 @@ class ApisearchUI extends EventEmitter {
         /**
          * Store related properties
          */
-        this.currentQuery = client.query.create('', 1, 30);
+        this.currentQuery = client.query.create('', 1, 15);
         this.data = {
             query: {
                 q: ''
@@ -82,7 +82,6 @@ class ApisearchUI extends EventEmitter {
     }
 
     handleActions(action) {
-
         /**
          * this is what we call a reducer
          * on a redux architecture

@@ -68,6 +68,9 @@ const suggestedSearchWidget = ui.widgets.simpleSearch({
       container: [string],
       input: [string],
       box: [string]
+  },
+  template: {
+      box: [string]
   }
 });
 ```
@@ -143,7 +146,9 @@ can be passed on the template body.
    - [ ] Exclude results
    
 - [x] Simple Result box
+   - [ ] Highlighted result
 - [ ] Infinite Result box
+   - [ ] Highlighted result
 - [x] Result Information
 
 - [x] SortBy
@@ -153,6 +158,8 @@ can be passed on the template body.
 - [ ] Rating filter
 - [ ] Range filter
 - [ ] Pagination
+
+- [ ] Analytics / User analytics
  
 ## Widget creation workflow
  1. Define widget properties
