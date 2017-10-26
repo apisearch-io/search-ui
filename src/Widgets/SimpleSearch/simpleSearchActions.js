@@ -5,9 +5,9 @@ import cloneDeep from 'clone-deep';
 import dispatcher from '../../dispatcher';
 
 /**
- * Keyup search action
+ * Keyup simple search action
  *
- * This action is triggered when a text imput changes
+ * This action is triggered when a text input changes
  * receives three parameters:
  *   @param text         -> the text value for the search
  *   @param currentQuery -> current application query
@@ -23,7 +23,7 @@ import dispatcher from '../../dispatcher';
  *     }
  *   }}
  */
-export function keyupSearchAction(
+export function keyupSimpleSearchAction(
     text,
     currentQuery,
     client

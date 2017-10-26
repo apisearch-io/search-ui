@@ -10,27 +10,52 @@ import { h } from 'preact';
 /**
  * Locals
  */
-import SearchComponent from "../Widgets/Search/SearchComponent";
+import SimpleSearchComponent from "../Widgets/SimpleSearch/SimpleSearchComponent";
 import SortByComponent from "../Widgets/SortBy/SortByComponent";
 import ResultComponent from "../Widgets/Result/ResultComponent";
 import InformationComponent from "../Widgets/Information/InformationComponent";
+import SuggestedSearchComponent from "../Widgets/SuggestedSearch/SuggestedSearchComponent";
 
 /**
  * Widgets factory class
  */
 class WidgetFactory {
-    static search({
+
+    /**
+     * Simple search input
+     */
+    static simpleSearch({
         target,
         placeholder,
         classNames
     }) {
-        return <SearchComponent
+        return <SimpleSearchComponent
             target={target}
             placeholder={placeholder}
             classNames={classNames}
         />
     };
 
+    /**
+     * Suggested Search input
+     */
+    static suggestedSearch({
+        target,
+        placeholder,
+        classNames,
+        template
+    }) {
+        return <SuggestedSearchComponent
+            target={target}
+            placeholder={placeholder}
+            classNames={classNames}
+            template={template}
+        />
+    }
+
+    /**
+     * Sort By
+     */
     static sortBy({
         target,
         classNames,
@@ -43,6 +68,9 @@ class WidgetFactory {
         />
     }
 
+    /**
+     * Search result
+     */
     static result({
         target,
         classNames,
@@ -55,6 +83,9 @@ class WidgetFactory {
         />
     }
 
+    /**
+     * Search result information
+     */
     static information({
         target,
         classNames,

@@ -17,7 +17,7 @@
                  width="300">
         </div>
 
-        <!-- Search -->
+        <!-- SimpleSearch -->
         <div class="search"></div>
 
         <!-- Result -->
@@ -59,17 +59,28 @@
         {{/items}}
     </script>
 
+    <script type="text/template" id="suggestion-box-tpl">
+        <div class="panel">
+        {{#suggests}}
+            <a class="panel-block">{{.}}</a>
+        {{/suggests}}
+        </div>
+    </script>
+
     <script>
         // UI Instance
         let ui = apisearchUI('laie_ca');
 
         ui.addWidgets(
-            ui.widgets.search({
+            ui.widgets.suggestedSearch({
                 target: '.search',
-                placeholder: 'Search something...',
+                placeholder: 'Search something suggested...',
                 classNames: {
                     container: 'column',
                     input: 'input'
+                },
+                template: {
+                    box: document.getElementById('suggestion-box-tpl').text
                 }
             }),
             ui.widgets.sortBy({

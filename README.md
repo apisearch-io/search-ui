@@ -21,7 +21,7 @@ engine.
 const ui = apisearchUI('your_api_key');
 
 ui.addWidgets(
-    ui.widgets.search({
+    ui.widgets.simpleSearch({
         target: '.search-container',
     }),
     ui.widgets.result({
@@ -37,22 +37,41 @@ ui.init();
 
 ## Widgets
 
-### Search input
-The search input widget is to perform text based 
+### Simple Search
+The simple search input widget is to perform text based 
 searches.
 
-This widget points to `searchable_metadata` field.
+This widget points to `searchable_metadata` and 
+`exact_matching_metadata` field of the indexed items.
 
 ```javascript
-const searchWidget = ui.widgets.search({ 
+const simpleSearchWidget = ui.widgets.simpleSearch({ 
   target: string,
   placeholder: [string],
   classNames: {
-      input: [string],
-      container: [string]
+      container: [string],
+      input: [string]
   }
 });
 ```
+
+## Suggested Search
+The suggested search input goes one step further. You can
+get auto-completed suggestions list related to the text
+you are looking for.
+
+```javascript
+const suggestedSearchWidget = ui.widgets.simpleSearch({ 
+  target: string,
+  placeholder: [string],
+  classNames: {
+      container: [string],
+      input: [string],
+      box: [string]
+  }
+});
+```
+ 
 
 ### Sort By
 The sort by widget allows to order the result set as you like.
@@ -116,11 +135,19 @@ can be passed on the template body.
 
 ## Todo's
   
-- [x] Search input
-- [ ] Suggestions
-- [x] Result box
+- [x] Simple Search
+   - [ ] Promote results
+   - [ ] Exclude results
+- [ ] Suggested Search
+   - [ ] Promote results
+   - [ ] Exclude results
+   
+- [x] Simple Result box
+- [ ] Infinite Result box
 - [x] Result Information
+
 - [x] SortBy
+   - [ ] Random sort
 - [ ] Checkbox filter
 - [ ] Menu filter
 - [ ] Rating filter

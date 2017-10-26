@@ -34,18 +34,16 @@ class ResultComponent extends Component {
             <div className={`asui-result ${containerClassName}`}>
                 <Template
                     template={topTemplate}
-                    className={`asui-result-header`}
+                    className={`asui-result--header`}
                 />
-
                 <Template
                     template={bodyTemplate}
                     data={reducedTemplateData}
-                    className={`asui-result-body`}
+                    className={`asui-result--body`}
                 />
-
                 <Template
                     template={bottomTemplate}
-                    className={`asui-result-footer`}
+                    className={`asui-result--footer`}
                 />
             </div>
         )

@@ -1069,6 +1069,141 @@ exports.default = new _flux.Dispatcher();
 
 /***/ }),
 /* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * Module dependenices
+ */
+
+var isObject = __webpack_require__(18);
+var clone = __webpack_require__(21);
+var typeOf = __webpack_require__(7);
+var forOwn = __webpack_require__(24);
+
+/**
+ * Recursively clone native types.
+ */
+
+function cloneDeep(val, instanceClone) {
+  switch (typeOf(val)) {
+    case 'object':
+      return cloneObjectDeep(val, instanceClone);
+    case 'array':
+      return cloneArrayDeep(val, instanceClone);
+    default: {
+      return clone(val);
+    }
+  }
+}
+
+function cloneObjectDeep(obj, instanceClone) {
+  if (isObject(obj)) {
+    var res = {};
+    forOwn(obj, function(obj, key) {
+      this[key] = cloneDeep(obj, instanceClone);
+    }, res);
+    return res;
+  } else if (instanceClone) {
+    return instanceClone(obj);
+  } else {
+    return obj;
+  }
+}
+
+function cloneArrayDeep(arr, instanceClone) {
+  var len = arr.length, res = [];
+  var i = -1;
+  while (++i < len) {
+    res[i] = cloneDeep(arr[i], instanceClone);
+  }
+  return res;
+}
+
+/**
+ * Expose `cloneDeep`
+ */
+
+module.exports = cloneDeep;
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _preact = __webpack_require__(0);
+
+var _hogan = __webpack_require__(28);
+
+var _hogan2 = _interopRequireDefault(_hogan);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /** @jsx h */
+
+
+var Template = function (_Component) {
+    _inherits(Template, _Component);
+
+    function Template() {
+        var _ref;
+
+        var _temp, _this, _ret;
+
+        _classCallCheck(this, Template);
+
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+        }
+
+        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Template.__proto__ || Object.getPrototypeOf(Template)).call.apply(_ref, [this].concat(args))), _this), _this.renderTemplate = function (template, data) {
+            var compiledTemplate = _hogan2.default.compile(template);
+            var output = compiledTemplate.render(data);
+
+            return {
+                __html: output
+            };
+        }, _temp), _possibleConstructorReturn(_this, _ret);
+    }
+
+    _createClass(Template, [{
+        key: 'render',
+        value: function render() {
+            var _props = this.props,
+                template = _props.template,
+                data = _props.data,
+                className = _props.className;
+
+
+            return template ? (0, _preact.h)('div', {
+                className: className,
+                dangerouslySetInnerHTML: this.renderTemplate(template, data)
+            }) : null;
+        }
+    }]);
+
+    return Template;
+}(_preact.Component);
+
+exports.default = Template;
+
+/***/ }),
+/* 4 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -1258,69 +1393,7 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/**
- * Module dependenices
- */
-
-var isObject = __webpack_require__(18);
-var clone = __webpack_require__(21);
-var typeOf = __webpack_require__(6);
-var forOwn = __webpack_require__(24);
-
-/**
- * Recursively clone native types.
- */
-
-function cloneDeep(val, instanceClone) {
-  switch (typeOf(val)) {
-    case 'object':
-      return cloneObjectDeep(val, instanceClone);
-    case 'array':
-      return cloneArrayDeep(val, instanceClone);
-    default: {
-      return clone(val);
-    }
-  }
-}
-
-function cloneObjectDeep(obj, instanceClone) {
-  if (isObject(obj)) {
-    var res = {};
-    forOwn(obj, function(obj, key) {
-      this[key] = cloneDeep(obj, instanceClone);
-    }, res);
-    return res;
-  } else if (instanceClone) {
-    return instanceClone(obj);
-  } else {
-    return obj;
-  }
-}
-
-function cloneArrayDeep(arr, instanceClone) {
-  var len = arr.length, res = [];
-  var i = -1;
-  while (++i < len) {
-    res[i] = cloneDeep(arr[i], instanceClone);
-  }
-  return res;
-}
-
-/**
- * Expose `cloneDeep`
- */
-
-module.exports = cloneDeep;
-
-
-/***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1340,7 +1413,7 @@ module.exports = function isExtendable(val) {
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1363,7 +1436,7 @@ module.exports = function forIn(obj, fn, thisArg) {
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var isBuffer = __webpack_require__(23);
@@ -1483,79 +1556,6 @@ module.exports = function kindOf(val) {
   return 'object';
 };
 
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _preact = __webpack_require__(0);
-
-var _hogan = __webpack_require__(28);
-
-var _hogan2 = _interopRequireDefault(_hogan);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /** @jsx h */
-
-
-var Template = function (_Component) {
-    _inherits(Template, _Component);
-
-    function Template() {
-        var _ref;
-
-        var _temp, _this, _ret;
-
-        _classCallCheck(this, Template);
-
-        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-            args[_key] = arguments[_key];
-        }
-
-        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Template.__proto__ || Object.getPrototypeOf(Template)).call.apply(_ref, [this].concat(args))), _this), _this.renderTemplate = function (template, data) {
-            var compiledTemplate = _hogan2.default.compile(template);
-            var output = compiledTemplate.render(data);
-
-            return {
-                __html: output
-            };
-        }, _temp), _possibleConstructorReturn(_this, _ret);
-    }
-
-    _createClass(Template, [{
-        key: 'render',
-        value: function render() {
-            var _props = this.props,
-                template = _props.template,
-                data = _props.data,
-                className = _props.className;
-
-
-            return template ? (0, _preact.h)('div', {
-                className: className,
-                dangerouslySetInnerHTML: this.renderTemplate(template, data)
-            }) : null;
-        }
-    }]);
-
-    return Template;
-}(_preact.Component);
-
-exports.default = Template;
 
 /***/ }),
 /* 8 */
@@ -5120,7 +5120,7 @@ var Dispatcher = (function () {
 })();
 
 module.exports = Dispatcher;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ }),
 /* 12 */
@@ -5180,7 +5180,7 @@ function invariant(condition, format, a, b, c, d, e, f) {
 }
 
 module.exports = invariant;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ }),
 /* 13 */
@@ -5679,9 +5679,9 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _SearchComponent = __webpack_require__(16);
+var _SimpleSearchComponent = __webpack_require__(16);
 
-var _SearchComponent2 = _interopRequireDefault(_SearchComponent);
+var _SimpleSearchComponent2 = _interopRequireDefault(_SimpleSearchComponent);
 
 var _SortByComponent = __webpack_require__(25);
 
@@ -5694,6 +5694,10 @@ var _ResultComponent2 = _interopRequireDefault(_ResultComponent);
 var _InformationComponent = __webpack_require__(31);
 
 var _InformationComponent2 = _interopRequireDefault(_InformationComponent);
+
+var _SuggestedSearchComponent = __webpack_require__(32);
+
+var _SuggestedSearchComponent2 = _interopRequireDefault(_SuggestedSearchComponent);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -5708,24 +5712,54 @@ var WidgetFactory = function () {
     }
 
     _createClass(WidgetFactory, null, [{
-        key: "search",
-        value: function search(_ref) {
+        key: "simpleSearch",
+
+
+        /**
+         * Simple search input
+         */
+        value: function simpleSearch(_ref) {
             var target = _ref.target,
                 placeholder = _ref.placeholder,
                 classNames = _ref.classNames;
 
-            return (0, _preact.h)(_SearchComponent2.default, {
+            return (0, _preact.h)(_SimpleSearchComponent2.default, {
                 target: target,
                 placeholder: placeholder,
                 classNames: classNames
             });
         }
     }, {
-        key: "sortBy",
-        value: function sortBy(_ref2) {
+        key: "suggestedSearch",
+
+
+        /**
+         * Suggested Search input
+         */
+        value: function suggestedSearch(_ref2) {
             var target = _ref2.target,
+                placeholder = _ref2.placeholder,
                 classNames = _ref2.classNames,
-                options = _ref2.options;
+                template = _ref2.template;
+
+            return (0, _preact.h)(_SuggestedSearchComponent2.default, {
+                target: target,
+                placeholder: placeholder,
+                classNames: classNames,
+                template: template
+            });
+        }
+
+        /**
+         * Sort By
+         */
+
+    }, {
+        key: "sortBy",
+        value: function sortBy(_ref3) {
+            var target = _ref3.target,
+                classNames = _ref3.classNames,
+                options = _ref3.options;
 
             return (0, _preact.h)(_SortByComponent2.default, {
                 target: target,
@@ -5733,12 +5767,17 @@ var WidgetFactory = function () {
                 options: options
             });
         }
+
+        /**
+         * Search result
+         */
+
     }, {
         key: "result",
-        value: function result(_ref3) {
-            var target = _ref3.target,
-                classNames = _ref3.classNames,
-                template = _ref3.template;
+        value: function result(_ref4) {
+            var target = _ref4.target,
+                classNames = _ref4.classNames,
+                template = _ref4.template;
 
             return (0, _preact.h)(_ResultComponent2.default, {
                 target: target,
@@ -5746,12 +5785,17 @@ var WidgetFactory = function () {
                 template: template
             });
         }
+
+        /**
+         * Search result information
+         */
+
     }, {
         key: "information",
-        value: function information(_ref4) {
-            var target = _ref4.target,
-                classNames = _ref4.classNames,
-                template = _ref4.template;
+        value: function information(_ref5) {
+            var target = _ref5.target,
+                classNames = _ref5.classNames,
+                template = _ref5.template;
 
             return (0, _preact.h)(_InformationComponent2.default, {
                 target: target,
@@ -5781,7 +5825,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _searchActions = __webpack_require__(17);
+var _simpleSearchActions = __webpack_require__(17);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -5792,31 +5836,26 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 */
 
 /**
- * Search Component
+ * SimpleSearch Component
  */
-var SearchComponent = function (_Component) {
-    _inherits(SearchComponent, _Component);
+var SimpleSearchComponent = function (_Component) {
+    _inherits(SimpleSearchComponent, _Component);
 
-    function SearchComponent() {
-        _classCallCheck(this, SearchComponent);
+    function SimpleSearchComponent() {
+        _classCallCheck(this, SimpleSearchComponent);
 
-        var _this = _possibleConstructorReturn(this, (SearchComponent.__proto__ || Object.getPrototypeOf(SearchComponent)).call(this));
+        var _this = _possibleConstructorReturn(this, (SimpleSearchComponent.__proto__ || Object.getPrototypeOf(SimpleSearchComponent)).call(this));
 
         _this.handleSearch = function (e) {
-            _this.setState({ q: e.target.value });
-
-            // Dispatch input search
-            (0, _searchActions.keyupSearchAction)(e.target.value, _this.props.currentQuery, _this.props.client);
+            // Dispatch input search action
+            (0, _simpleSearchActions.keyupSimpleSearchAction)(e.target.value, _this.props.currentQuery, _this.props.client);
         };
 
-        _this.state = {
-            q: ''
-        };
         _this.handleSearch = _this.handleSearch.bind(_this);
         return _this;
     }
 
-    _createClass(SearchComponent, [{
+    _createClass(SimpleSearchComponent, [{
         key: 'shouldComponentUpdate',
         value: function shouldComponentUpdate() {
             return false;
@@ -5833,21 +5872,21 @@ var SearchComponent = function (_Component) {
 
             return (0, _preact.h)(
                 'div',
-                { className: 'asui-search ' + containerClassName },
+                { className: 'asui-simpleSearch ' + containerClassName },
                 (0, _preact.h)('input', {
-                    className: 'asui-search-input ' + inputClassName,
+                    type: 'text',
+                    className: 'asui-simpleSearch--input ' + inputClassName,
                     placeholder: placeholder,
-                    value: this.state.q,
                     onKeyUp: this.handleSearch
                 })
             );
         }
     }]);
 
-    return SearchComponent;
+    return SimpleSearchComponent;
 }(_preact.Component);
 
-SearchComponent.defaultProps = {
+SimpleSearchComponent.defaultProps = {
     placeholder: '',
     classNames: {
         container: '',
@@ -5855,7 +5894,7 @@ SearchComponent.defaultProps = {
     }
 };
 
-exports.default = SearchComponent;
+exports.default = SimpleSearchComponent;
 
 /***/ }),
 /* 17 */
@@ -5867,9 +5906,9 @@ exports.default = SearchComponent;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.keyupSearchAction = keyupSearchAction;
+exports.keyupSimpleSearchAction = keyupSimpleSearchAction;
 
-var _cloneDeep = __webpack_require__(3);
+var _cloneDeep = __webpack_require__(2);
 
 var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
 
@@ -5880,9 +5919,9 @@ var _dispatcher2 = _interopRequireDefault(_dispatcher);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
- * Keyup search action
+ * Keyup simple search action
  *
- * This action is triggered when a text imput changes
+ * This action is triggered when a text input changes
  * receives three parameters:
  *   @param text         -> the text value for the search
  *   @param currentQuery -> current application query
@@ -5901,7 +5940,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * Search actions
  */
-function keyupSearchAction(text, currentQuery, client) {
+function keyupSimpleSearchAction(text, currentQuery, client) {
     var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
     clonedQuery.setQueryText(text);
 
@@ -6006,9 +6045,9 @@ module.exports = Array.isArray || function (arr) {
 
 
 
-var isObject = __webpack_require__(4);
+var isObject = __webpack_require__(5);
 var mixin = __webpack_require__(22);
-var typeOf = __webpack_require__(6);
+var typeOf = __webpack_require__(7);
 
 /**
  * Shallow copy an object, array or primitive.
@@ -6063,8 +6102,8 @@ module.exports = clone;
 "use strict";
 
 
-var isObject = __webpack_require__(4);
-var forIn = __webpack_require__(5);
+var isObject = __webpack_require__(5);
+var forIn = __webpack_require__(6);
 
 function mixin(target, objects) {
   if (!isObject(target)) {
@@ -6139,7 +6178,7 @@ function isSlowBuffer (obj) {
 
 
 
-var forIn = __webpack_require__(5);
+var forIn = __webpack_require__(6);
 var hasOwn = Object.prototype.hasOwnProperty;
 
 module.exports = function forOwn(obj, fn, thisArg) {
@@ -6217,7 +6256,7 @@ var SortByComponent = function (_Component) {
                 (0, _preact.h)(
                     "select",
                     {
-                        className: "asui-sortBy-selector " + selectClassName,
+                        className: "asui-sortBy--selector " + selectClassName,
                         onChange: this.handleChange
                     },
                     options.map(function (option) {
@@ -6249,7 +6288,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.onChangeSearchAction = onChangeSearchAction;
 
-var _cloneDeep = __webpack_require__(3);
+var _cloneDeep = __webpack_require__(2);
 
 var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
 
@@ -6326,7 +6365,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _Template = __webpack_require__(7);
+var _Template = __webpack_require__(3);
 
 var _Template2 = _interopRequireDefault(_Template);
 
@@ -6376,16 +6415,16 @@ var ResultComponent = function (_Component) {
                 { className: 'asui-result ' + containerClassName },
                 (0, _preact.h)(_Template2.default, {
                     template: topTemplate,
-                    className: 'asui-result-header'
+                    className: 'asui-result--header'
                 }),
                 (0, _preact.h)(_Template2.default, {
                     template: bodyTemplate,
                     data: reducedTemplateData,
-                    className: 'asui-result-body'
+                    className: 'asui-result--body'
                 }),
                 (0, _preact.h)(_Template2.default, {
                     template: bottomTemplate,
-                    className: 'asui-result-footer'
+                    className: 'asui-result--footer'
                 })
             );
         }
@@ -7224,7 +7263,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _Template = __webpack_require__(7);
+var _Template = __webpack_require__(3);
 
 var _Template2 = _interopRequireDefault(_Template);
 
@@ -7286,6 +7325,188 @@ InformationComponent.defaultProps = {
 };
 
 exports.default = InformationComponent;
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _preact = __webpack_require__(0);
+
+var _Template = __webpack_require__(3);
+
+var _Template2 = _interopRequireDefault(_Template);
+
+var _suggestedSearchAction = __webpack_require__(33);
+
+var _suggestionBoxTemplate = __webpack_require__(34);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+/**
+ * Suggested Search Component
+ */
+var SuggestedSearchComponent = function (_Component) {
+    _inherits(SuggestedSearchComponent, _Component);
+
+    function SuggestedSearchComponent() {
+        _classCallCheck(this, SuggestedSearchComponent);
+
+        var _this = _possibleConstructorReturn(this, (SuggestedSearchComponent.__proto__ || Object.getPrototypeOf(SuggestedSearchComponent)).call(this));
+
+        _this.handleSearch = function (e) {
+            // Dispatch suggested search action
+            (0, _suggestedSearchAction.keyupSuggestedSearchAction)(e.target.value, _this.props.currentQuery, _this.props.client);
+        };
+
+        _this.handleSearch = _this.handleSearch.bind(_this);
+        return _this;
+    }
+
+    _createClass(SuggestedSearchComponent, [{
+        key: "render",
+        value: function render() {
+            var _props = this.props,
+                placeholder = _props.placeholder,
+                _props$classNames = _props.classNames,
+                containerClassName = _props$classNames.container,
+                inputClassName = _props$classNames.input,
+                boxClassName = _props$classNames.box,
+                boxTemplate = _props.template.box,
+                data = _props.data;
+
+            /**
+             * Data accessible to the template
+             */
+
+            var reducedTemplateData = {
+                suggests: data.suggests
+            };
+
+            return (0, _preact.h)(
+                "div",
+                { className: "asui-suggestedSearch " + containerClassName },
+                (0, _preact.h)("input", {
+                    type: "text",
+                    className: "asui-suggestedSearch--input " + inputClassName,
+                    placeholder: placeholder,
+                    onKeyUp: this.handleSearch
+                }),
+                (0, _preact.h)(_Template2.default, {
+                    template: boxTemplate,
+                    data: reducedTemplateData,
+                    className: "asui-suggestedSearch--box " + boxClassName
+                })
+            );
+        }
+    }]);
+
+    return SuggestedSearchComponent;
+}(_preact.Component);
+
+SuggestedSearchComponent.defaultProps = {
+    placeholder: '',
+    classNames: {
+        container: '',
+        input: '',
+        box: ''
+    },
+    template: {
+        box: null
+    }
+};
+
+exports.default = SuggestedSearchComponent;
+
+/***/ }),
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.keyupSuggestedSearchAction = keyupSuggestedSearchAction;
+
+var _cloneDeep = __webpack_require__(2);
+
+var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
+
+var _dispatcher = __webpack_require__(1);
+
+var _dispatcher2 = _interopRequireDefault(_dispatcher);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Keyup suggested search action
+ *
+ * This action is triggered when a text input changes
+ * receives three parameters:
+ *   @param text         -> the text value for the search
+ *   @param currentQuery -> current application query
+ *   @param client       -> apisearch client to trigger a search
+ *
+ * Finally dispatches an event with the search result and
+ * the modified query.
+ *   @returns {{
+ *     type: string,
+ *     payload: {
+ *        result,
+ *        updatedQuery
+ *     }
+ *   }}
+ */
+/**
+ * Search actions
+ */
+function keyupSuggestedSearchAction(text, currentQuery, client) {
+    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+    clonedQuery.setQueryText(text).enableSuggestions();
+
+    client.search(clonedQuery, function (result) {
+        _dispatcher2.default.dispatch({
+            type: 'FETCH_DATA',
+            payload: {
+                result: result,
+                updatedQuery: clonedQuery
+            }
+        });
+    });
+}
+
+/***/ }),
+/* 34 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+/**
+ * Default template for suggestions box
+ */
+var defaultTemplate = exports.defaultTemplate = "{{#suggests}}<span class=\"suggestion\">{{.}}</span><br/>{{/suggests}}";
 
 /***/ })
 /******/ ]);

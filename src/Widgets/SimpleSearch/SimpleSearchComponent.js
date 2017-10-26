@@ -3,17 +3,14 @@
  */
 
 import { h, Component } from 'preact';
-import {keyupSearchAction} from "./searchActions";
+import {keyupSimpleSearchAction} from "./simpleSearchActions";
 
 /**
- * Search Component
+ * SimpleSearch Component
  */
-class SearchComponent extends Component {
+class SimpleSearchComponent extends Component {
     constructor() {
         super();
-        this.state = {
-            q: ''
-        };
         this.handleSearch = this.handleSearch.bind(this);
     }
 
@@ -22,10 +19,8 @@ class SearchComponent extends Component {
     }
 
     handleSearch = (e) => {
-        this.setState({q: e.target.value});
-
-        // Dispatch input search
-        keyupSearchAction(
+        // Dispatch input search action
+        keyupSimpleSearchAction(
             e.target.value,
             this.props.currentQuery,
             this.props.client
@@ -42,11 +37,11 @@ class SearchComponent extends Component {
         } = this.props;
 
         return (
-            <div className={`asui-search ${containerClassName}`}>
+            <div className={`asui-simpleSearch ${containerClassName}`}>
                 <input
-                    className={`asui-search-input ${inputClassName}`}
+                    type='text'
+                    className={`asui-simpleSearch--input ${inputClassName}`}
                     placeholder={placeholder}
-                    value={this.state.q}
                     onKeyUp={this.handleSearch}
                 />
             </div>
@@ -54,7 +49,7 @@ class SearchComponent extends Component {
     }
 }
 
-SearchComponent.defaultProps = {
+SimpleSearchComponent.defaultProps = {
     placeholder: '',
     classNames: {
         container: '',
@@ -62,5 +57,4 @@ SearchComponent.defaultProps = {
     }
 };
 
-
-export default SearchComponent;
+export default SimpleSearchComponent;
