@@ -7,6 +7,7 @@ class Template extends Component {
         let compiledTemplate = Hogan.compile(template);
         let output = compiledTemplate.render(data);
 
+
         return {
             __html: output
         };

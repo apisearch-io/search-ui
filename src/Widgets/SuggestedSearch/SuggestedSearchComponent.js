@@ -13,10 +13,19 @@ import {defaultTemplate} from "./suggestionBoxTemplate";
 class SuggestedSearchComponent extends Component {
     constructor() {
         super();
+
+        this.state = {
+            q: ''
+        };
+
         this.handleSearch = this.handleSearch.bind(this);
+        this.handleSelectedSuggestion = this.handleSelectedSuggestion.bind(this);
     }
 
     handleSearch = (e) => {
+        // Set current query text
+        this.setState({q: e.target.value});
+
         // Dispatch suggested search action
         keyupSuggestedSearchAction(
             e.target.value,
@@ -25,16 +34,36 @@ class SuggestedSearchComponent extends Component {
         )
     };
 
+    handleSelectedSuggestion = (e) => {
+        // Set current query text
+        this.setState({q: e.target.innerText});
+
+        // Dispatch suggested search action
+        // @todo refactor this
+        keyupSuggestedSearchAction(
+            e.target.innerText,
+            this.props.currentQuery,
+            this.props.client
+        );
+    };
+
+    handleArrowNavigation = (e) => {
+        if (e.code === 'ArrowDown') {
+            console.log('down')
+        }
+        if (e.code === 'ArrowUp') {
+            console.log('up')
+        }
+    };
+
     render() {
         const {
             placeholder,
             classNames: {
                 container: containerClassName,
                 input: inputClassName,
-                box: boxClassName
-            },
-            template: {
-                box: boxTemplate
+                box: boxClassName,
+                suggestion: suggestionClassName
             },
             data
         } = this.props;
@@ -43,22 +72,33 @@ class SuggestedSearchComponent extends Component {
          * Data accessible to the template
          */
         let reducedTemplateData = {
-            suggests: data.suggests
+            suggests: data.suggests || []
         };
 
         return (
             <div className={`asui-suggestedSearch ${containerClassName}`}>
                 <input
                     type={`text`}
+                    value={this.state.q}
                     className={`asui-suggestedSearch--input ${inputClassName}`}
                     placeholder={placeholder}
-                    onKeyUp={this.handleSearch}
+                    onInput={this.handleSearch}
+                    onKeyDown={this.handleArrowNavigation}
                 />
-                <Template
-                    template={boxTemplate}
-                    data={reducedTemplateData}
+
+                <div
                     className={`asui-suggestedSearch--box ${boxClassName}`}
-                />
+                    style={{display: data.suggests ? 'block' : 'none'}}
+                >
+                    {reducedTemplateData.suggests.map(suggestion =>
+                        <div
+                            className={`asui-suggestedSearch--suggestion ${suggestionClassName}`}
+                            onClick={this.handleSelectedSuggestion}
+                        >
+                            {suggestion}
+                        </div>
+                    )}
+                </div>
             </div>
         )
     }
@@ -69,10 +109,8 @@ SuggestedSearchComponent.defaultProps = {
     classNames: {
         container: '',
         input: '',
-        box: ''
-    },
-    template: {
-        box: null
+        box: '',
+        suggestion: null
     }
 };
 

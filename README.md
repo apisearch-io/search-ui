@@ -67,10 +67,8 @@ const suggestedSearchWidget = ui.widgets.simpleSearch({
   classNames: {
       container: [string],
       input: [string],
-      box: [string]
-  },
-  template: {
-      box: [string]
+      box: [string],
+      suggestion: [string]
   }
 });
 ```

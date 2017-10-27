@@ -1,6 +1,7 @@
+<!DOCTYPE html>
 <html>
 <head>
-    <title>Apisearch UI</title>
+    <title>AS UI - Simple search</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.0/css/bulma.min.css">
 
@@ -66,14 +67,6 @@
         {{^items}}
         <div class="notification">Empty set of results 🙉</div>
         {{/items}}
-    </script>
-
-    <script type="text/template" id="suggestion-box-tpl">
-        <div class="panel">
-        {{#suggests}}
-            <a class="panel-block">{{.}}</a>
-        {{/suggests}}
-        </div>
     </script>
 
     <script type="text/javascript">

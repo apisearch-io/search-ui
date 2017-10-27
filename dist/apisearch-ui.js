@@ -7370,24 +7370,52 @@ var SuggestedSearchComponent = function (_Component) {
         var _this = _possibleConstructorReturn(this, (SuggestedSearchComponent.__proto__ || Object.getPrototypeOf(SuggestedSearchComponent)).call(this));
 
         _this.handleSearch = function (e) {
+            // Set current query text
+            _this.setState({ q: e.target.value });
+
             // Dispatch suggested search action
             (0, _suggestedSearchAction.keyupSuggestedSearchAction)(e.target.value, _this.props.currentQuery, _this.props.client);
         };
 
+        _this.handleSelectedSuggestion = function (e) {
+            // Set current query text
+            _this.setState({ q: e.target.innerText });
+
+            // Dispatch suggested search action
+            // @todo refactor this
+            (0, _suggestedSearchAction.keyupSuggestedSearchAction)(e.target.innerText, _this.props.currentQuery, _this.props.client);
+        };
+
+        _this.handleArrowNavigation = function (e) {
+            if (e.code === 'ArrowDown') {
+                console.log('down');
+            }
+            if (e.code === 'ArrowUp') {
+                console.log('up');
+            }
+        };
+
+        _this.state = {
+            q: ''
+        };
+
         _this.handleSearch = _this.handleSearch.bind(_this);
+        _this.handleSelectedSuggestion = _this.handleSelectedSuggestion.bind(_this);
         return _this;
     }
 
     _createClass(SuggestedSearchComponent, [{
         key: "render",
         value: function render() {
+            var _this2 = this;
+
             var _props = this.props,
                 placeholder = _props.placeholder,
                 _props$classNames = _props.classNames,
                 containerClassName = _props$classNames.container,
                 inputClassName = _props$classNames.input,
                 boxClassName = _props$classNames.box,
-                boxTemplate = _props.template.box,
+                suggestionClassName = _props$classNames.suggestion,
                 data = _props.data;
 
             /**
@@ -7395,7 +7423,7 @@ var SuggestedSearchComponent = function (_Component) {
              */
 
             var reducedTemplateData = {
-                suggests: data.suggests
+                suggests: data.suggests || []
             };
 
             return (0, _preact.h)(
@@ -7403,15 +7431,29 @@ var SuggestedSearchComponent = function (_Component) {
                 { className: "asui-suggestedSearch " + containerClassName },
                 (0, _preact.h)("input", {
                     type: "text",
+                    value: this.state.q,
                     className: "asui-suggestedSearch--input " + inputClassName,
                     placeholder: placeholder,
-                    onKeyUp: this.handleSearch
+                    onInput: this.handleSearch,
+                    onKeyDown: this.handleArrowNavigation
                 }),
-                (0, _preact.h)(_Template2.default, {
-                    template: boxTemplate,
-                    data: reducedTemplateData,
-                    className: "asui-suggestedSearch--box " + boxClassName
-                })
+                (0, _preact.h)(
+                    "div",
+                    {
+                        className: "asui-suggestedSearch--box " + boxClassName,
+                        style: { display: data.suggests ? 'block' : 'none' }
+                    },
+                    reducedTemplateData.suggests.map(function (suggestion) {
+                        return (0, _preact.h)(
+                            "div",
+                            {
+                                className: "asui-suggestedSearch--suggestion " + suggestionClassName,
+                                onClick: _this2.handleSelectedSuggestion
+                            },
+                            suggestion
+                        );
+                    })
+                )
             );
         }
     }]);
@@ -7424,10 +7466,8 @@ SuggestedSearchComponent.defaultProps = {
     classNames: {
         container: '',
         input: '',
-        box: ''
-    },
-    template: {
-        box: null
+        box: '',
+        suggestion: null
     }
 };
 
