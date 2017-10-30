@@ -55,7 +55,7 @@ const simpleSearchWidget = ui.widgets.simpleSearch({
 });
 ```
 
-## Suggested Search
+### Suggested Search
 The suggested search input goes one step further. You can
 get auto-completed suggestions list related to the text
 you are looking for.
