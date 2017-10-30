@@ -1080,7 +1080,7 @@ exports.default = new _flux.Dispatcher();
 
 var isObject = __webpack_require__(18);
 var clone = __webpack_require__(21);
-var typeOf = __webpack_require__(7);
+var typeOf = __webpack_require__(6);
 var forOwn = __webpack_require__(24);
 
 /**
@@ -1131,79 +1131,6 @@ module.exports = cloneDeep;
 
 /***/ }),
 /* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _preact = __webpack_require__(0);
-
-var _hogan = __webpack_require__(28);
-
-var _hogan2 = _interopRequireDefault(_hogan);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /** @jsx h */
-
-
-var Template = function (_Component) {
-    _inherits(Template, _Component);
-
-    function Template() {
-        var _ref;
-
-        var _temp, _this, _ret;
-
-        _classCallCheck(this, Template);
-
-        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-            args[_key] = arguments[_key];
-        }
-
-        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Template.__proto__ || Object.getPrototypeOf(Template)).call.apply(_ref, [this].concat(args))), _this), _this.renderTemplate = function (template, data) {
-            var compiledTemplate = _hogan2.default.compile(template);
-            var output = compiledTemplate.render(data);
-
-            return {
-                __html: output
-            };
-        }, _temp), _possibleConstructorReturn(_this, _ret);
-    }
-
-    _createClass(Template, [{
-        key: 'render',
-        value: function render() {
-            var _props = this.props,
-                template = _props.template,
-                data = _props.data,
-                className = _props.className;
-
-
-            return template ? (0, _preact.h)('div', {
-                className: className,
-                dangerouslySetInnerHTML: this.renderTemplate(template, data)
-            }) : null;
-        }
-    }]);
-
-    return Template;
-}(_preact.Component);
-
-exports.default = Template;
-
-/***/ }),
-/* 4 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -1393,7 +1320,7 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 5 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1413,7 +1340,7 @@ module.exports = function isExtendable(val) {
 
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1436,7 +1363,7 @@ module.exports = function forIn(obj, fn, thisArg) {
 
 
 /***/ }),
-/* 7 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var isBuffer = __webpack_require__(23);
@@ -1556,6 +1483,79 @@ module.exports = function kindOf(val) {
   return 'object';
 };
 
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _preact = __webpack_require__(0);
+
+var _hogan = __webpack_require__(28);
+
+var _hogan2 = _interopRequireDefault(_hogan);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /** @jsx h */
+
+
+var Template = function (_Component) {
+    _inherits(Template, _Component);
+
+    function Template() {
+        var _ref;
+
+        var _temp, _this, _ret;
+
+        _classCallCheck(this, Template);
+
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+        }
+
+        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Template.__proto__ || Object.getPrototypeOf(Template)).call.apply(_ref, [this].concat(args))), _this), _this.renderTemplate = function (template, data) {
+            var compiledTemplate = _hogan2.default.compile(template);
+            var output = compiledTemplate.render(data);
+
+            return {
+                __html: output
+            };
+        }, _temp), _possibleConstructorReturn(_this, _ret);
+    }
+
+    _createClass(Template, [{
+        key: 'render',
+        value: function render() {
+            var _props = this.props,
+                template = _props.template,
+                data = _props.data,
+                className = _props.className;
+
+
+            return template ? (0, _preact.h)('div', {
+                className: className,
+                dangerouslySetInnerHTML: this.renderTemplate(template, data)
+            }) : null;
+        }
+    }]);
+
+    return Template;
+}(_preact.Component);
+
+exports.default = Template;
 
 /***/ }),
 /* 8 */
@@ -5120,7 +5120,7 @@ var Dispatcher = (function () {
 })();
 
 module.exports = Dispatcher;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
 /* 12 */
@@ -5180,7 +5180,7 @@ function invariant(condition, format, a, b, c, d, e, f) {
 }
 
 module.exports = invariant;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
 /* 13 */
@@ -6044,9 +6044,9 @@ module.exports = Array.isArray || function (arr) {
 
 
 
-var isObject = __webpack_require__(5);
+var isObject = __webpack_require__(4);
 var mixin = __webpack_require__(22);
-var typeOf = __webpack_require__(7);
+var typeOf = __webpack_require__(6);
 
 /**
  * Shallow copy an object, array or primitive.
@@ -6101,8 +6101,8 @@ module.exports = clone;
 "use strict";
 
 
-var isObject = __webpack_require__(5);
-var forIn = __webpack_require__(6);
+var isObject = __webpack_require__(4);
+var forIn = __webpack_require__(5);
 
 function mixin(target, objects) {
   if (!isObject(target)) {
@@ -6177,7 +6177,7 @@ function isSlowBuffer (obj) {
 
 
 
-var forIn = __webpack_require__(6);
+var forIn = __webpack_require__(5);
 var hasOwn = Object.prototype.hasOwnProperty;
 
 module.exports = function forOwn(obj, fn, thisArg) {
@@ -6364,7 +6364,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _Template = __webpack_require__(3);
+var _Template = __webpack_require__(7);
 
 var _Template2 = _interopRequireDefault(_Template);
 
@@ -7262,7 +7262,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _Template = __webpack_require__(3);
+var _Template = __webpack_require__(7);
 
 var _Template2 = _interopRequireDefault(_Template);
 
@@ -7340,15 +7340,9 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _Template = __webpack_require__(3);
-
-var _Template2 = _interopRequireDefault(_Template);
-
 var _suggestedSearchAction = __webpack_require__(33);
 
-var _suggestionBoxTemplate = __webpack_require__(34);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var _helpers = __webpack_require__(34);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -7370,88 +7364,125 @@ var SuggestedSearchComponent = function (_Component) {
         var _this = _possibleConstructorReturn(this, (SuggestedSearchComponent.__proto__ || Object.getPrototypeOf(SuggestedSearchComponent)).call(this));
 
         _this.handleSearch = function (e) {
-            // Set current query text
+            /**
+             * Set the current query text
+             */
             _this.setState({ q: e.target.value });
 
-            // Dispatch suggested search action
+            /**
+             * Dispatch suggested search action
+             */
             (0, _suggestedSearchAction.keyupSuggestedSearchAction)(e.target.value, _this.props.currentQuery, _this.props.client);
         };
 
-        _this.handleSelectedSuggestion = function (e) {
-            // Set current query text
-            _this.setState({ q: e.target.innerText });
-
-            // Dispatch suggested search action
-            // @todo refactor this
-            (0, _suggestedSearchAction.keyupSuggestedSearchAction)(e.target.innerText, _this.props.currentQuery, _this.props.client);
-        };
-
-        _this.handleArrowNavigation = function (e) {
-            if (e.code === 'ArrowDown') {
-                console.log('down');
+        _this.handleSuggestionsNavigation = function (e) {
+            /**
+             * Return if no suggestions
+             */
+            if (_this.state.currentSuggestions.length === 0) {
+                return;
             }
+
+            /**
+             * When user hits arrow down
+             */
+            if (e.code === 'ArrowDown') {
+                _this.setState({
+                    currentSuggestions: (0, _helpers.selectNextSuggestion)(_this.state.currentSuggestions),
+                    q: (0, _helpers.selectActiveSuggestion)(_this.state.currentSuggestions)
+                });
+            }
+
+            /**
+             * When user hits arrow up
+             */
             if (e.code === 'ArrowUp') {
-                console.log('up');
+                _this.setState({
+                    currentSuggestions: (0, _helpers.selectPreviousSuggestion)(_this.state.currentSuggestions),
+                    q: (0, _helpers.selectActiveSuggestion)(_this.state.currentSuggestions)
+                });
+            }
+
+            /**
+             * When user hits enter
+             */
+            if (e.code === 'Enter') {
+                _this.setState({
+                    q: (0, _helpers.selectActiveSuggestion)(_this.state.currentSuggestions),
+                    currentSuggestions: []
+                });
             }
         };
 
         _this.state = {
-            q: ''
+            q: '',
+            currentSuggestions: []
         };
 
         _this.handleSearch = _this.handleSearch.bind(_this);
-        _this.handleSelectedSuggestion = _this.handleSelectedSuggestion.bind(_this);
+        _this.handleSuggestionsNavigation = _this.handleSuggestionsNavigation.bind(_this);
         return _this;
     }
 
     _createClass(SuggestedSearchComponent, [{
-        key: "render",
-        value: function render() {
+        key: 'componentWillReceiveProps',
+        value: function componentWillReceiveProps(props) {
             var _this2 = this;
 
+            var suggests = props.data.suggests || [];
+
+            /**
+             * Prepare suggestions array
+             */
+            this.setState({
+                currentSuggestions: suggests.map(function (suggest, key) {
+                    var isFirstSuggestion = key === 0;
+
+                    return {
+                        isActive: isFirstSuggestion,
+                        name: suggest,
+                        htmlName: (0, _helpers.highlightSuggestion)(_this2.state.q, suggest)
+                    };
+                })
+            });
+        }
+    }, {
+        key: 'render',
+        value: function render() {
             var _props = this.props,
                 placeholder = _props.placeholder,
                 _props$classNames = _props.classNames,
                 containerClassName = _props$classNames.container,
                 inputClassName = _props$classNames.input,
                 boxClassName = _props$classNames.box,
-                suggestionClassName = _props$classNames.suggestion,
-                data = _props.data;
+                suggestionClassName = _props$classNames.suggestion;
+            var currentSuggestions = this.state.currentSuggestions;
 
-            /**
-             * Data accessible to the template
-             */
-
-            var reducedTemplateData = {
-                suggests: data.suggests || []
-            };
 
             return (0, _preact.h)(
-                "div",
-                { className: "asui-suggestedSearch " + containerClassName },
-                (0, _preact.h)("input", {
-                    type: "text",
+                'div',
+                { className: 'asui-suggestedSearch ' + containerClassName },
+                (0, _preact.h)('input', {
+                    type: 'text',
                     value: this.state.q,
-                    className: "asui-suggestedSearch--input " + inputClassName,
+                    className: 'asui-suggestedSearch--input ' + inputClassName,
                     placeholder: placeholder,
                     onInput: this.handleSearch,
-                    onKeyDown: this.handleArrowNavigation
+                    onKeyDown: this.handleSuggestionsNavigation
                 }),
                 (0, _preact.h)(
-                    "div",
+                    'div',
                     {
-                        className: "asui-suggestedSearch--box " + boxClassName,
-                        style: { display: data.suggests ? 'block' : 'none' }
+                        className: 'asui-suggestedSearch--box ' + boxClassName,
+                        style: { display: currentSuggestions ? 'block' : 'none' }
                     },
-                    reducedTemplateData.suggests.map(function (suggestion) {
-                        return (0, _preact.h)(
-                            "div",
-                            {
-                                className: "asui-suggestedSearch--suggestion " + suggestionClassName,
-                                onClick: _this2.handleSelectedSuggestion
-                            },
-                            suggestion
-                        );
+                    currentSuggestions.map(function (suggestion) {
+                        return (0, _preact.h)('div', {
+                            className: 'asui-suggestedSearch--suggestion ' + (suggestionClassName + ' ') + ('' + (suggestion.isActive ? 'is-active' : '')),
+                            dangerouslySetInnerHTML: {
+                                __html: suggestion.htmlName
+                            }
+                        });
                     })
                 )
             );
@@ -7540,12 +7571,105 @@ function keyupSuggestedSearchAction(text, currentQuery, client) {
 
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
+exports.highlightSuggestion = highlightSuggestion;
+exports.selectNextSuggestion = selectNextSuggestion;
+exports.selectPreviousSuggestion = selectPreviousSuggestion;
+exports.selectActiveSuggestion = selectActiveSuggestion;
 /**
- * Default template for suggestions box
+ * Set of helpers for the suggestions widget
  */
-var defaultTemplate = exports.defaultTemplate = "{{#suggests}}<span class=\"suggestion\">{{.}}</span><br/>{{/suggests}}";
+
+/**
+ * Highlight text
+ */
+function highlightSuggestion(currentQueryText, suggestion) {
+    var regex = new RegExp('(' + currentQueryText + ')', 'gi');
+    var highlightedSuggestion = suggestion.replace(regex, "<strong>$1</strong>");
+    var sanitizedSpaces = highlightedSuggestion.split(' ');
+
+    return sanitizedSpaces.join('&nbsp;');
+}
+
+/**
+ * Mark as active the item next
+ * to the last active item
+ * on a given array of items
+ *
+ * @example when a user press a key arrow down
+ */
+function selectNextSuggestion(suggestionsArray) {
+    var currentActiveItemKey = void 0;
+
+    return suggestionsArray.map(function (suggestion, key) {
+        /**
+         * Detect current Active object
+         */
+        if (suggestion.isActive && key + 1 < suggestionsArray.length) {
+            currentActiveItemKey = key;
+            suggestion.isActive = false;
+        }
+        /**
+         * Modify the first next to
+         * the last active object
+         */
+        if (key === currentActiveItemKey + 1 && key + 1 <= suggestionsArray.length) {
+            suggestion.isActive = true;
+        }
+
+        return suggestion;
+    });
+}
+
+/**
+ * Mark as active the item previous
+ * to the last active item
+ * on a given array of items
+ *
+ * @example when a user press a key arrow up
+ */
+function selectPreviousSuggestion(suggestionsArray) {
+    /**
+     * Find the current active suggestion key
+     */
+    var currentActiveItemKey = void 0;
+    suggestionsArray.forEach(function (suggestion, key) {
+        if (suggestion.isActive) {
+            currentActiveItemKey = key;
+        }
+    });
+
+    return suggestionsArray.map(function (suggestion, key) {
+        /**
+         * Set the current active suggestion as false
+         */
+        if (suggestion.isActive) {
+            suggestion.isActive = false;
+        }
+        /**
+         * Set as active the previous active suggestion
+         */
+        if (key === currentActiveItemKey - 1 && currentActiveItemKey - 1 >= 0) {
+            suggestion.isActive = true;
+        }
+
+        return suggestion;
+    });
+}
+
+/**
+ * Return the active item of an array
+ */
+function selectActiveSuggestion(suggestionsArray) {
+    var selectedSuggestion = suggestionsArray.filter(function (suggestion) {
+        if (suggestion.isActive) {
+            return suggestion;
+        }
+    });
+
+    return selectedSuggestion[0].name;
+}
 
 /***/ })
 /******/ ]);

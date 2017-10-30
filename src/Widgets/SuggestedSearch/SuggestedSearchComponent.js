@@ -3,9 +3,13 @@
  */
 
 import { h, Component } from 'preact';
-import Template from "../Template";
 import {keyupSuggestedSearchAction} from "./suggestedSearchAction";
-import {defaultTemplate} from "./suggestionBoxTemplate";
+import {
+    highlightSuggestion,
+    selectNextSuggestion,
+    selectPreviousSuggestion,
+    selectActiveSuggestion
+} from './helpers';
 
 /**
  * Suggested Search Component
@@ -15,18 +19,42 @@ class SuggestedSearchComponent extends Component {
         super();
 
         this.state = {
-            q: ''
+            q: '',
+            currentSuggestions: []
         };
 
         this.handleSearch = this.handleSearch.bind(this);
-        this.handleSelectedSuggestion = this.handleSelectedSuggestion.bind(this);
+        this.handleSuggestionsNavigation = this.handleSuggestionsNavigation.bind(this);
+    }
+
+    componentWillReceiveProps(props) {
+        const suggests = props.data.suggests || [];
+
+        /**
+         * Prepare suggestions array
+         */
+        this.setState({
+            currentSuggestions: suggests.map((suggest, key) => {
+                let isFirstSuggestion = (key === 0);
+
+                return {
+                    isActive: isFirstSuggestion,
+                    name: suggest,
+                    htmlName: highlightSuggestion(this.state.q, suggest)
+                }
+            })
+        });
     }
 
     handleSearch = (e) => {
-        // Set current query text
+        /**
+         * Set the current query text
+         */
         this.setState({q: e.target.value});
 
-        // Dispatch suggested search action
+        /**
+         * Dispatch suggested search action
+         */
         keyupSuggestedSearchAction(
             e.target.value,
             this.props.currentQuery,
@@ -34,25 +62,52 @@ class SuggestedSearchComponent extends Component {
         )
     };
 
-    handleSelectedSuggestion = (e) => {
-        // Set current query text
-        this.setState({q: e.target.innerText});
-
-        // Dispatch suggested search action
-        // @todo refactor this
-        keyupSuggestedSearchAction(
-            e.target.innerText,
-            this.props.currentQuery,
-            this.props.client
-        );
-    };
-
-    handleArrowNavigation = (e) => {
-        if (e.code === 'ArrowDown') {
-            console.log('down')
+    handleSuggestionsNavigation = (e) => {
+        /**
+         * Return if no suggestions
+         */
+        if (this.state.currentSuggestions.length === 0) {
+            return;
         }
+
+        /**
+         * When user hits arrow down
+         */
+        if (e.code === 'ArrowDown') {
+            this.setState({
+                currentSuggestions: selectNextSuggestion(
+                    this.state.currentSuggestions
+                ),
+                q: selectActiveSuggestion(
+                    this.state.currentSuggestions
+                )
+            });
+        }
+
+        /**
+         * When user hits arrow up
+         */
         if (e.code === 'ArrowUp') {
-            console.log('up')
+            this.setState({
+                currentSuggestions: selectPreviousSuggestion(
+                    this.state.currentSuggestions
+                ),
+                q: selectActiveSuggestion(
+                    this.state.currentSuggestions
+                )
+            });
+        }
+
+        /**
+         * When user hits enter
+         */
+        if (e.code === 'Enter') {
+            this.setState({
+                q: selectActiveSuggestion(
+                    this.state.currentSuggestions
+                ),
+                currentSuggestions: []
+            })
         }
     };
 
@@ -64,16 +119,10 @@ class SuggestedSearchComponent extends Component {
                 input: inputClassName,
                 box: boxClassName,
                 suggestion: suggestionClassName
-            },
-            data
+            }
         } = this.props;
 
-        /**
-         * Data accessible to the template
-         */
-        let reducedTemplateData = {
-            suggests: data.suggests || []
-        };
+        const { currentSuggestions } = this.state;
 
         return (
             <div className={`asui-suggestedSearch ${containerClassName}`}>
@@ -83,20 +132,24 @@ class SuggestedSearchComponent extends Component {
                     className={`asui-suggestedSearch--input ${inputClassName}`}
                     placeholder={placeholder}
                     onInput={this.handleSearch}
-                    onKeyDown={this.handleArrowNavigation}
+                    onKeyDown={this.handleSuggestionsNavigation}
                 />
 
                 <div
                     className={`asui-suggestedSearch--box ${boxClassName}`}
-                    style={{display: data.suggests ? 'block' : 'none'}}
+                    style={{display: currentSuggestions ? 'block' : 'none'}}
                 >
-                    {reducedTemplateData.suggests.map(suggestion =>
+                    {currentSuggestions.map(suggestion =>
                         <div
-                            className={`asui-suggestedSearch--suggestion ${suggestionClassName}`}
-                            onClick={this.handleSelectedSuggestion}
-                        >
-                            {suggestion}
-                        </div>
+                            className={
+                                `asui-suggestedSearch--suggestion ` +
+                                `${suggestionClassName} ` +
+                                `${suggestion.isActive ? 'is-active' : ''}`
+                            }
+                            dangerouslySetInnerHTML={{
+                                __html: suggestion.htmlName
+                            }}
+                        />
                     )}
                 </div>
             </div>
