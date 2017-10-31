@@ -7,7 +7,7 @@
  */
 export function highlightSuggestion(currentQueryText, suggestion) {
     let regex = new RegExp(`(${currentQueryText})`, 'gi');
-    let highlightedSuggestion = suggestion.replace(regex, "<strong>$1</strong>");
+    let highlightedSuggestion = suggestion.replace(regex, "<em>$1</em>");
     let sanitizedSpaces = highlightedSuggestion.split(' ');
 
     return sanitizedSpaces.join('&nbsp;');
@@ -21,25 +21,39 @@ export function highlightSuggestion(currentQueryText, suggestion) {
  * @example when a user press a key arrow down
  */
 export function selectNextSuggestion(suggestionsArray) {
-    let currentActiveItemKey;
+    let currentActiveSuggestionKey;
+    let isAnySuggestionActive = suggestionsArray
+        .some(suggestion => suggestion.isActive);
 
     return suggestionsArray.map((suggestion, key) => {
         /**
-         * Detect current Active object
+         * If there are no previous suggestions active
+         * mark the first one
+         */
+        if (false === isAnySuggestionActive) {
+            suggestion.isActive = true;
+            isAnySuggestionActive = true;
+
+            return suggestion;
+        }
+
+        /**
+         * Detect current active suggestion
          */
         if (
             suggestion.isActive &&
             key + 1 < suggestionsArray.length
         ) {
-            currentActiveItemKey = key;
+            currentActiveSuggestionKey = key;
             suggestion.isActive = false;
         }
+
         /**
-         * Modify the first next to
-         * the last active object
+         * Modify the first suggestion next to
+         * the current active suggestion
          */
         if (
-            key === currentActiveItemKey + 1 &&
+            key === currentActiveSuggestionKey + 1 &&
             key + 1 <= suggestionsArray.length
         ) {
             suggestion.isActive = true;
@@ -60,29 +74,32 @@ export function selectPreviousSuggestion(suggestionsArray) {
     /**
      * Find the current active suggestion key
      */
-    let currentActiveItemKey;
+    let currentActiveSuggestionKey;
     suggestionsArray.forEach((suggestion, key) => {
         if (suggestion.isActive) {
-            currentActiveItemKey = key;
+            currentActiveSuggestionKey = key;
         }
     });
 
     return suggestionsArray.map((suggestion, key) => {
         /**
          * Set the current active suggestion as false
+         * if is Active AND is not the last one
          */
         if (
             suggestion.isActive &&
-            currentActiveItemKey - 1 >= 0
+            currentActiveSuggestionKey - 1 >= 0
         ) {
             suggestion.isActive = false;
         }
+
         /**
-         * Set as active the previous active suggestion
+         * Set active the suggestion previous to
+         * the current active suggestion
          */
         if (
-            key === currentActiveItemKey -1 &&
-            currentActiveItemKey - 1 >= 0
+            currentActiveSuggestionKey -1 === key &&
+            currentActiveSuggestionKey - 1 >= 0
         ) {
             suggestion.isActive = true;
         }

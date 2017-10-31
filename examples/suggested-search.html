@@ -7,6 +7,23 @@
 
     <!-- ApisearchUI library -->
     <script src="../dist/apisearch-ui.js"></script>
+    <style>
+        .asui-suggestedSearch--suggestion {
+            cursor: pointer;
+        }
+        .asui-suggestedSearch--suggestion:hover {
+            background-color: #f3f3f3;
+        }
+        .asui-suggestedSearch--suggestion.is-active {
+            background-color: #e6e6e6;
+            border-left-color: #dbdbdb;
+        }
+        .asui-suggestedSearch--suggestion em {
+            background-color: #bfbfff;
+            font-style: normal;
+            font-weight: bold;
+        }
+    </style>
 </head>
 
 <body>
@@ -30,7 +47,6 @@
         </div>
     </section>
 
-
     <script type="text/javascript">
         // UI Instance
         let ui = apisearchUI('laie_ca');
@@ -45,7 +61,7 @@
                     input: 'input is-large',
                     box: 'panel',
                     suggestion: 'panel-block',
-                    activeSuggestion: 'is-primary'
+                    activeSuggestion: 'is-active'
                 }
             })
         );

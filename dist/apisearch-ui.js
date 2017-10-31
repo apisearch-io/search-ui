@@ -7382,6 +7382,19 @@ var SuggestedSearchComponent = function (_Component) {
             });
         };
 
+        _this.handleSearchInputFocusedOut = function (e) {
+            /**
+             * It handles when a user focuses out the search input
+             * If is not clicking on the suggestions box
+             * The suggestions are cleared and panel closes
+             */
+            if (null === e.relatedTarget || false === e.relatedTarget.classList.contains('asui-suggestedSearch--box')) {
+                _this.setState({ currentSuggestions: [] });
+            }
+
+            return false;
+        };
+
         _this.handleSuggestionsNavigation = function (e) {
             /**
              * Return if no suggestions
@@ -7425,10 +7438,6 @@ var SuggestedSearchComponent = function (_Component) {
             q: '',
             currentSuggestions: []
         };
-
-        _this.handleSearch = _this.handleSearch.bind(_this);
-        _this.handleSuggestionsNavigation = _this.handleSuggestionsNavigation.bind(_this);
-        _this.handleSuggestionClick = _this.handleSuggestionClick.bind(_this);
         return _this;
     }
 
@@ -7443,11 +7452,9 @@ var SuggestedSearchComponent = function (_Component) {
              * Prepare suggestions array
              */
             this.setState({
-                currentSuggestions: suggests.map(function (suggest, key) {
-                    var isFirstSuggestion = key === 0;
-
+                currentSuggestions: suggests.map(function (suggest) {
                     return {
-                        isActive: isFirstSuggestion,
+                        isActive: false,
                         name: suggest,
                         htmlName: (0, _helpers.highlightSuggestion)(_this2.state.q, suggest)
                     };
@@ -7470,6 +7477,8 @@ var SuggestedSearchComponent = function (_Component) {
             var currentSuggestions = this.state.currentSuggestions;
 
 
+            console.log(this.state.currentSuggestions);
+
             return (0, _preact.h)(
                 'div',
                 { className: 'asui-suggestedSearch ' + containerClassName },
@@ -7478,14 +7487,19 @@ var SuggestedSearchComponent = function (_Component) {
                     value: this.state.q,
                     className: 'asui-suggestedSearch--input ' + inputClassName,
                     placeholder: placeholder,
+
                     onInput: this.handleSearch,
-                    onKeyDown: this.handleSuggestionsNavigation
+                    onKeyDown: this.handleSuggestionsNavigation,
+                    onBlur: this.handleSearchInputFocusedOut
                 }),
                 (0, _preact.h)(
                     'div',
                     {
+                        tabIndex: "0",
                         className: 'asui-suggestedSearch--box ' + boxClassName,
-                        style: { display: currentSuggestions ? 'block' : 'none' }
+                        style: {
+                            display: currentSuggestions ? 'block' : 'none'
+                        }
                     },
                     currentSuggestions.map(function (suggestion) {
                         return (0, _preact.h)('div', {
@@ -7599,7 +7613,7 @@ exports.selectActiveSuggestion = selectActiveSuggestion;
  */
 function highlightSuggestion(currentQueryText, suggestion) {
     var regex = new RegExp('(' + currentQueryText + ')', 'gi');
-    var highlightedSuggestion = suggestion.replace(regex, "<strong>$1</strong>");
+    var highlightedSuggestion = suggestion.replace(regex, "<em>$1</em>");
     var sanitizedSpaces = highlightedSuggestion.split(' ');
 
     return sanitizedSpaces.join('&nbsp;');
@@ -7613,21 +7627,36 @@ function highlightSuggestion(currentQueryText, suggestion) {
  * @example when a user press a key arrow down
  */
 function selectNextSuggestion(suggestionsArray) {
-    var currentActiveItemKey = void 0;
+    var currentActiveSuggestionKey = void 0;
+    var isAnySuggestionActive = suggestionsArray.some(function (suggestion) {
+        return suggestion.isActive;
+    });
 
     return suggestionsArray.map(function (suggestion, key) {
         /**
-         * Detect current Active object
+         * If there are no previous suggestions active
+         * mark the first one
+         */
+        if (false === isAnySuggestionActive) {
+            suggestion.isActive = true;
+            isAnySuggestionActive = true;
+
+            return suggestion;
+        }
+
+        /**
+         * Detect current active suggestion
          */
         if (suggestion.isActive && key + 1 < suggestionsArray.length) {
-            currentActiveItemKey = key;
+            currentActiveSuggestionKey = key;
             suggestion.isActive = false;
         }
+
         /**
-         * Modify the first next to
-         * the last active object
+         * Modify the first suggestion next to
+         * the current active suggestion
          */
-        if (key === currentActiveItemKey + 1 && key + 1 <= suggestionsArray.length) {
+        if (key === currentActiveSuggestionKey + 1 && key + 1 <= suggestionsArray.length) {
             suggestion.isActive = true;
         }
 
@@ -7646,24 +7675,27 @@ function selectPreviousSuggestion(suggestionsArray) {
     /**
      * Find the current active suggestion key
      */
-    var currentActiveItemKey = void 0;
+    var currentActiveSuggestionKey = void 0;
     suggestionsArray.forEach(function (suggestion, key) {
         if (suggestion.isActive) {
-            currentActiveItemKey = key;
+            currentActiveSuggestionKey = key;
         }
     });
 
     return suggestionsArray.map(function (suggestion, key) {
         /**
          * Set the current active suggestion as false
+         * if is Active AND is not the last one
          */
-        if (suggestion.isActive && currentActiveItemKey - 1 >= 0) {
+        if (suggestion.isActive && currentActiveSuggestionKey - 1 >= 0) {
             suggestion.isActive = false;
         }
+
         /**
-         * Set as active the previous active suggestion
+         * Set active the suggestion previous to
+         * the current active suggestion
          */
-        if (key === currentActiveItemKey - 1 && currentActiveItemKey - 1 >= 0) {
+        if (currentActiveSuggestionKey - 1 === key && currentActiveSuggestionKey - 1 >= 0) {
             suggestion.isActive = true;
         }
 

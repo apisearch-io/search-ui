@@ -22,10 +22,6 @@ class SuggestedSearchComponent extends Component {
             q: '',
             currentSuggestions: []
         };
-
-        this.handleSearch = this.handleSearch.bind(this);
-        this.handleSuggestionsNavigation = this.handleSuggestionsNavigation.bind(this);
-        this.handleSuggestionClick = this.handleSuggestionClick.bind(this);
     }
 
     componentWillReceiveProps(props) {
@@ -35,11 +31,9 @@ class SuggestedSearchComponent extends Component {
          * Prepare suggestions array
          */
         this.setState({
-            currentSuggestions: suggests.map((suggest, key) => {
-                let isFirstSuggestion = (key === 0);
-
+            currentSuggestions: suggests.map(suggest => {
                 return {
-                    isActive: isFirstSuggestion,
+                    isActive: false,
                     name: suggest,
                     htmlName: highlightSuggestion(this.state.q, suggest)
                 }
@@ -68,6 +62,22 @@ class SuggestedSearchComponent extends Component {
             q: e.target.innerText,
             currentSuggestions: []
         });
+    };
+
+    handleSearchInputFocusedOut = (e) => {
+        /**
+         * It handles when a user focuses out the search input
+         * If is not clicking on the suggestions box
+         * The suggestions are cleared and panel closes
+         */
+        if (
+            null === e.relatedTarget ||
+            false === e.relatedTarget.classList.contains('asui-suggestedSearch--box')
+        ) {
+            this.setState({currentSuggestions: []})
+        }
+
+        return false;
     };
 
     handleSuggestionsNavigation = (e) => {
@@ -135,6 +145,8 @@ class SuggestedSearchComponent extends Component {
             currentSuggestions
         } = this.state;
 
+        console.log(this.state.currentSuggestions)
+
         return (
             <div className={`asui-suggestedSearch ${containerClassName}`}>
                 <input
@@ -142,13 +154,20 @@ class SuggestedSearchComponent extends Component {
                     value={this.state.q}
                     className={`asui-suggestedSearch--input ${inputClassName}`}
                     placeholder={placeholder}
+
                     onInput={this.handleSearch}
                     onKeyDown={this.handleSuggestionsNavigation}
+                    onBlur={this.handleSearchInputFocusedOut}
                 />
 
                 <div
+                    tabIndex={"0"}
                     className={`asui-suggestedSearch--box ${boxClassName}`}
-                    style={{display: currentSuggestions ? 'block' : 'none'}}
+                    style={{
+                        display: currentSuggestions
+                            ? 'block'
+                            : 'none'
+                    }}
                 >
                     {currentSuggestions.map(suggestion =>
                         <div
