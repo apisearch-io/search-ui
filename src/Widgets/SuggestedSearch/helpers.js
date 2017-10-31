@@ -71,7 +71,10 @@ export function selectPreviousSuggestion(suggestionsArray) {
         /**
          * Set the current active suggestion as false
          */
-        if (suggestion.isActive) {
+        if (
+            suggestion.isActive &&
+            currentActiveItemKey - 1 >= 0
+        ) {
             suggestion.isActive = false;
         }
         /**

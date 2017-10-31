@@ -25,6 +25,7 @@ class SuggestedSearchComponent extends Component {
 
         this.handleSearch = this.handleSearch.bind(this);
         this.handleSuggestionsNavigation = this.handleSuggestionsNavigation.bind(this);
+        this.handleSuggestionClick = this.handleSuggestionClick.bind(this);
     }
 
     componentWillReceiveProps(props) {
@@ -60,6 +61,13 @@ class SuggestedSearchComponent extends Component {
             this.props.currentQuery,
             this.props.client
         )
+    };
+
+    handleSuggestionClick = (e) => {
+        this.setState({
+            q: e.target.innerText,
+            currentSuggestions: []
+        });
     };
 
     handleSuggestionsNavigation = (e) => {
@@ -118,11 +126,14 @@ class SuggestedSearchComponent extends Component {
                 container: containerClassName,
                 input: inputClassName,
                 box: boxClassName,
-                suggestion: suggestionClassName
+                suggestion: suggestionClassName,
+                activeSuggestion: activeSuggestionClassName
             }
         } = this.props;
 
-        const { currentSuggestions } = this.state;
+        const {
+            currentSuggestions
+        } = this.state;
 
         return (
             <div className={`asui-suggestedSearch ${containerClassName}`}>
@@ -144,11 +155,15 @@ class SuggestedSearchComponent extends Component {
                             className={
                                 `asui-suggestedSearch--suggestion ` +
                                 `${suggestionClassName} ` +
-                                `${suggestion.isActive ? 'is-active' : ''}`
+                                `${suggestion.isActive
+                                    ? activeSuggestionClassName
+                                    : ''
+                                }`
                             }
                             dangerouslySetInnerHTML={{
                                 __html: suggestion.htmlName
                             }}
+                            onClick={this.handleSuggestionClick}
                         />
                     )}
                 </div>
@@ -163,7 +178,8 @@ SuggestedSearchComponent.defaultProps = {
         container: '',
         input: '',
         box: '',
-        suggestion: null
+        suggestion: '',
+        activeSuggestion: 'is-active'
     }
 };
 

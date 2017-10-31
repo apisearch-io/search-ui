@@ -7375,6 +7375,13 @@ var SuggestedSearchComponent = function (_Component) {
             (0, _suggestedSearchAction.keyupSuggestedSearchAction)(e.target.value, _this.props.currentQuery, _this.props.client);
         };
 
+        _this.handleSuggestionClick = function (e) {
+            _this.setState({
+                q: e.target.innerText,
+                currentSuggestions: []
+            });
+        };
+
         _this.handleSuggestionsNavigation = function (e) {
             /**
              * Return if no suggestions
@@ -7421,6 +7428,7 @@ var SuggestedSearchComponent = function (_Component) {
 
         _this.handleSearch = _this.handleSearch.bind(_this);
         _this.handleSuggestionsNavigation = _this.handleSuggestionsNavigation.bind(_this);
+        _this.handleSuggestionClick = _this.handleSuggestionClick.bind(_this);
         return _this;
     }
 
@@ -7449,13 +7457,16 @@ var SuggestedSearchComponent = function (_Component) {
     }, {
         key: 'render',
         value: function render() {
+            var _this3 = this;
+
             var _props = this.props,
                 placeholder = _props.placeholder,
                 _props$classNames = _props.classNames,
                 containerClassName = _props$classNames.container,
                 inputClassName = _props$classNames.input,
                 boxClassName = _props$classNames.box,
-                suggestionClassName = _props$classNames.suggestion;
+                suggestionClassName = _props$classNames.suggestion,
+                activeSuggestionClassName = _props$classNames.activeSuggestion;
             var currentSuggestions = this.state.currentSuggestions;
 
 
@@ -7478,10 +7489,11 @@ var SuggestedSearchComponent = function (_Component) {
                     },
                     currentSuggestions.map(function (suggestion) {
                         return (0, _preact.h)('div', {
-                            className: 'asui-suggestedSearch--suggestion ' + (suggestionClassName + ' ') + ('' + (suggestion.isActive ? 'is-active' : '')),
+                            className: 'asui-suggestedSearch--suggestion ' + (suggestionClassName + ' ') + ('' + (suggestion.isActive ? activeSuggestionClassName : '')),
                             dangerouslySetInnerHTML: {
                                 __html: suggestion.htmlName
-                            }
+                            },
+                            onClick: _this3.handleSuggestionClick
                         });
                     })
                 )
@@ -7498,7 +7510,8 @@ SuggestedSearchComponent.defaultProps = {
         container: '',
         input: '',
         box: '',
-        suggestion: null
+        suggestion: '',
+        activeSuggestion: 'is-active'
     }
 };
 
@@ -7644,7 +7657,7 @@ function selectPreviousSuggestion(suggestionsArray) {
         /**
          * Set the current active suggestion as false
          */
-        if (suggestion.isActive) {
+        if (suggestion.isActive && currentActiveItemKey - 1 >= 0) {
             suggestion.isActive = false;
         }
         /**
