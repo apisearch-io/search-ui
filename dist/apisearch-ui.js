@@ -7477,8 +7477,6 @@ var SuggestedSearchComponent = function (_Component) {
             var currentSuggestions = this.state.currentSuggestions;
 
 
-            console.log(this.state.currentSuggestions);
-
             return (0, _preact.h)(
                 'div',
                 { className: 'asui-suggestedSearch ' + containerClassName },
@@ -7675,14 +7673,28 @@ function selectPreviousSuggestion(suggestionsArray) {
     /**
      * Find the current active suggestion key
      */
-    var currentActiveSuggestionKey = void 0;
-    suggestionsArray.forEach(function (suggestion, key) {
+    var currentActiveSuggestionKey = suggestionsArray.findIndex(function (suggestion) {
         if (suggestion.isActive) {
-            currentActiveSuggestionKey = key;
+            return suggestion;
         }
     });
 
+    var isAnySuggestionActive = suggestionsArray.some(function (suggestion) {
+        return suggestion.isActive;
+    });
+
     return suggestionsArray.map(function (suggestion, key) {
+        /**
+         * If there are no previous suggestions active
+         * mark the first one
+         */
+        if (false === isAnySuggestionActive) {
+            suggestion.isActive = true;
+            isAnySuggestionActive = true;
+
+            return suggestion;
+        }
+
         /**
          * Set the current active suggestion as false
          * if is Active AND is not the last one

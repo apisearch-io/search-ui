@@ -74,14 +74,28 @@ export function selectPreviousSuggestion(suggestionsArray) {
     /**
      * Find the current active suggestion key
      */
-    let currentActiveSuggestionKey;
-    suggestionsArray.forEach((suggestion, key) => {
-        if (suggestion.isActive) {
-            currentActiveSuggestionKey = key;
-        }
-    });
+    let currentActiveSuggestionKey = suggestionsArray
+        .findIndex((suggestion) => {
+            if (suggestion.isActive) {
+                return suggestion;
+            }
+        });
+
+    let isAnySuggestionActive = suggestionsArray
+        .some(suggestion => suggestion.isActive);
 
     return suggestionsArray.map((suggestion, key) => {
+        /**
+         * If there are no previous suggestions active
+         * mark the first one
+         */
+        if (false === isAnySuggestionActive) {
+            suggestion.isActive = true;
+            isAnySuggestionActive = true;
+
+            return suggestion;
+        }
+
         /**
          * Set the current active suggestion as false
          * if is Active AND is not the last one
@@ -112,11 +126,12 @@ export function selectPreviousSuggestion(suggestionsArray) {
  * Return the active item of an array
  */
 export function selectActiveSuggestion(suggestionsArray) {
-    let selectedSuggestion = suggestionsArray.filter(suggestion => {
-        if (suggestion.isActive) {
-            return suggestion;
-        }
-    });
+    let selectedSuggestion = suggestionsArray
+        .filter(suggestion => {
+            if (suggestion.isActive) {
+                return suggestion;
+            }
+        });
 
     return selectedSuggestion[0].name;
 }

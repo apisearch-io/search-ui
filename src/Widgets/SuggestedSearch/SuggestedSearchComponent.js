@@ -145,8 +145,6 @@ class SuggestedSearchComponent extends Component {
             currentSuggestions
         } = this.state;
 
-        console.log(this.state.currentSuggestions)
-
         return (
             <div className={`asui-suggestedSearch ${containerClassName}`}>
                 <input
