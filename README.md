@@ -58,7 +58,7 @@ const simpleSearchWidget = ui.widgets.simpleSearch({
 ### Suggested Search
 The suggested search input goes one step further. You can
 get auto-completed suggestions list related to the text
-you are looking for.
+you are looking for just below the search input.
 
 ```javascript
 const suggestedSearchWidget = ui.widgets.simpleSearch({ 
@@ -112,6 +112,61 @@ const resultWidget = ui.widgets.result({
 });
 ```
 
+You can customize your results template on the template 
+attribute section:
+ * `top`: (optional) will be placed as a header of the result set.
+ * `body`: (required) will be the iterable set of results.
+ * `bottom`: (optional) will be placed as a footer of your result set.
+ 
+The result items will be accessible on the body attribute using
+the `{{#items}}{{/items}}` iterable. For example, given this array 
+of results:
+
+```javascript
+{
+    items: [
+        {
+            uuid: {
+                source: 'Ba7XMhGh6yy',
+                type: 'marvel'
+            },
+            metadata: {
+                name: 'Tony Stark',
+                img: 'http://api.marvel.com/v2/characters/tony-stark'
+            }
+        },
+        {
+            uuid: {
+                source: 'Ba6mSyvhAJt',
+                type: 'marvel'
+            },
+            metadata: {
+                name: 'Peter Parker',
+                img: 'http://api.marvel.com/v2/characters/peter-parker'
+            }
+        }
+    ]
+}
+```
+
+You will be able to build your results like this, and
+passing the string to the `body` template attribute:
+
+```javascript
+const resultsTemplate = `<ul>
+{{#items}}
+    <li>
+        <img src="{{metadata.img}}" />
+        <h1>{{metadata.name}}</h1>
+    </li>
+{{/items}}
+</ul>`
+```
+
+For more information about how this templating system works,
+refer to the [twitter's hogan.js documentation](http://twitter.github.io/hogan.js/). 
+Or check the library examples.
+
 ### Result information
 The result information widget allows you to provide
 to a user some extra information about the search.
@@ -139,7 +194,7 @@ can be passed on the template body.
 - [x] Simple Search
    - [ ] Promote results
    - [ ] Exclude results
-- [ ] Suggested Search
+- [x] Suggested Search
    - [ ] Promote results
    - [ ] Exclude results
    

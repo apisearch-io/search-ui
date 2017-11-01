@@ -3,13 +3,18 @@
  */
 
 import { h, Component } from 'preact';
-import {keyupSuggestedSearchAction} from "./suggestedSearchAction";
 import {
     highlightSuggestion,
     selectNextSuggestion,
     selectPreviousSuggestion,
     selectActiveSuggestion
 } from './helpers';
+
+/**
+ * Actions
+ */
+import {keyupSuggestedSearchAction} from "./suggestedSearchActions";
+import {keyupSimpleSearchAction} from "../SimpleSearch/simpleSearchActions";
 
 /**
  * Suggested Search Component
@@ -62,22 +67,12 @@ class SuggestedSearchComponent extends Component {
             q: e.target.innerText,
             currentSuggestions: []
         });
-    };
 
-    handleSearchInputFocusedOut = (e) => {
-        /**
-         * It handles when a user focuses out the search input
-         * If is not clicking on the suggestions box
-         * The suggestions are cleared and panel closes
-         */
-        if (
-            null === e.relatedTarget ||
-            false === e.relatedTarget.classList.contains('asui-suggestedSearch--box')
-        ) {
-            this.setState({currentSuggestions: []})
-        }
-
-        return false;
+        keyupSimpleSearchAction(
+            e.target.innerText,
+            this.props.currentQuery,
+            this.props.client
+        )
     };
 
     handleSuggestionsNavigation = (e) => {
@@ -125,8 +120,30 @@ class SuggestedSearchComponent extends Component {
                     this.state.currentSuggestions
                 ),
                 currentSuggestions: []
-            })
+            });
+
+            keyupSimpleSearchAction(
+                this.state.q,
+                this.props.currentQuery,
+                this.props.client
+            )
         }
+    };
+
+    handleSearchInputFocusedOut = (e) => {
+        /**
+         * It handles when a user focuses out the search input
+         * If is not clicking on the suggestions box
+         * The suggestions are cleared and panel closes
+         */
+        if (
+            null === e.relatedTarget ||
+            false === e.relatedTarget.classList.contains('asui-suggestedSearch--box')
+        ) {
+            this.setState({currentSuggestions: []})
+        }
+
+        return false;
     };
 
     render() {

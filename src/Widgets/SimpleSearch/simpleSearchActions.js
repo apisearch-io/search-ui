@@ -29,7 +29,10 @@ export function keyupSimpleSearchAction(
     client
 ) {
     let clonedQuery = cloneDeep(currentQuery);
-    clonedQuery.setQueryText(text);
+    clonedQuery
+        .setQueryText(text)
+        .disableSuggestions()
+    ;
 
     client.search(clonedQuery, result => {
         dispatcher.dispatch({

@@ -59,6 +59,12 @@ class ApisearchUI extends EventEmitter {
             let hydratedWidget = hydrateWidget(this, widget);
             let targetNode = document.querySelector(widget.attributes.target);
 
+            if (null === targetNode) {
+                throw new Error(
+                    `Widget (${hydratedWidget.nodeName.name}) must have a valid DOM target`
+                )
+            }
+
             render(
                 hydratedWidget,
                 targetNode,

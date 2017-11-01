@@ -19,7 +19,9 @@ class SimpleSearchComponent extends Component {
     }
 
     handleSearch = (e) => {
-        // Dispatch input search action
+        /**
+         * Dispatch input search action
+         */
         keyupSimpleSearchAction(
             e.target.value,
             this.props.currentQuery,
