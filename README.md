@@ -132,7 +132,7 @@ of results:
             },
             metadata: {
                 name: 'Tony Stark',
-                img: 'http://api.marvel.com/v2/characters/tony-stark'
+                img: 'https://api.marvel.com/v2/characters/tony-stark'
             }
         },
         {
@@ -142,7 +142,7 @@ of results:
             },
             metadata: {
                 name: 'Peter Parker',
-                img: 'http://api.marvel.com/v2/characters/peter-parker'
+                img: 'https://api.marvel.com/v2/characters/peter-parker'
             }
         }
     ]
@@ -160,7 +160,7 @@ const resultsTemplate = `<ul>
         <h1>{{metadata.name}}</h1>
     </li>
 {{/items}}
-</ul>`
+</ul>`;
 ```
 
 For more information about how this templating system works,

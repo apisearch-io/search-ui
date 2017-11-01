@@ -3,7 +3,7 @@
  */
 
 import { h, Component } from 'preact';
-import {keyupSimpleSearchAction} from "./simpleSearchActions";
+import {simpleSearchAction} from "./simpleSearchActions";
 
 /**
  * SimpleSearch Component
@@ -22,7 +22,7 @@ class SimpleSearchComponent extends Component {
         /**
          * Dispatch input search action
          */
-        keyupSimpleSearchAction(
+        simpleSearchAction(
             e.target.value,
             this.props.currentQuery,
             this.props.client

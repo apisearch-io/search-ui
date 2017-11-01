@@ -13,8 +13,10 @@ import {
 /**
  * Actions
  */
-import {keyupSuggestedSearchAction} from "./suggestedSearchActions";
-import {keyupSimpleSearchAction} from "../SimpleSearch/simpleSearchActions";
+import {
+    simpleSearchAction,
+    suggestedSearchAction
+} from "./suggestedSearchActions";
 
 /**
  * Suggested Search Component
@@ -55,7 +57,7 @@ class SuggestedSearchComponent extends Component {
         /**
          * Dispatch suggested search action
          */
-        keyupSuggestedSearchAction(
+        suggestedSearchAction(
             e.target.value,
             this.props.currentQuery,
             this.props.client
@@ -68,7 +70,7 @@ class SuggestedSearchComponent extends Component {
             currentSuggestions: []
         });
 
-        keyupSimpleSearchAction(
+        simpleSearchAction(
             e.target.innerText,
             this.props.currentQuery,
             this.props.client
@@ -122,7 +124,7 @@ class SuggestedSearchComponent extends Component {
                 currentSuggestions: []
             });
 
-            keyupSimpleSearchAction(
+            simpleSearchAction(
                 this.state.q,
                 this.props.currentQuery,
                 this.props.client

@@ -5,9 +5,7 @@ import cloneDeep from 'clone-deep';
 import dispatcher from '../../dispatcher';
 
 /**
- * Keyup suggested search action
- *
- * This action is triggered when a text input changes
+ * This actions are triggered when a text input changes
  * receives three parameters:
  *   @param text         -> the text value for the search
  *   @param currentQuery -> current application query
@@ -23,7 +21,38 @@ import dispatcher from '../../dispatcher';
  *     }
  *   }}
  */
-export function keyupSuggestedSearchAction(
+
+/**
+ * Simple search action
+ * Builds a query disabling suggested searches flag
+ */
+export function simpleSearchAction(
+    text,
+    currentQuery,
+    client
+) {
+    let clonedQuery = cloneDeep(currentQuery);
+    clonedQuery
+        .setQueryText(text)
+        .disableSuggestions()
+    ;
+
+    client.search(clonedQuery, result => {
+        dispatcher.dispatch({
+            type: 'FETCH_DATA',
+            payload: {
+                result,
+                updatedQuery: clonedQuery
+            }
+        })
+    })
+}
+
+/**
+ * Suggested Search Action
+ * Builds a query using suggested search flag active
+ */
+export function suggestedSearchAction(
     text,
     currentQuery,
     client

@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 9);
+/******/ 	return __webpack_require__(__webpack_require__.s = 8);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -1063,7 +1063,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _flux = __webpack_require__(11);
+var _flux = __webpack_require__(10);
 
 exports.default = new _flux.Dispatcher();
 
@@ -1080,7 +1080,7 @@ exports.default = new _flux.Dispatcher();
 
 var isObject = __webpack_require__(18);
 var clone = __webpack_require__(21);
-var typeOf = __webpack_require__(7);
+var typeOf = __webpack_require__(6);
 var forOwn = __webpack_require__(24);
 
 /**
@@ -1324,65 +1324,6 @@ process.umask = function() { return 0; };
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.keyupSimpleSearchAction = keyupSimpleSearchAction;
-
-var _cloneDeep = __webpack_require__(2);
-
-var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
-
-var _dispatcher = __webpack_require__(1);
-
-var _dispatcher2 = _interopRequireDefault(_dispatcher);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Keyup simple search action
- *
- * This action is triggered when a text input changes
- * receives three parameters:
- *   @param text         -> the text value for the search
- *   @param currentQuery -> current application query
- *   @param client       -> apisearch client to trigger a search
- *
- * Finally dispatches an event with the search result and
- * the modified query.
- *   @returns {{
- *     type: string,
- *     payload: {
- *        result,
- *        updatedQuery
- *     }
- *   }}
- */
-/**
- * Search actions
- */
-function keyupSimpleSearchAction(text, currentQuery, client) {
-    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
-    clonedQuery.setQueryText(text).disableSuggestions();
-
-    client.search(clonedQuery, function (result) {
-        _dispatcher2.default.dispatch({
-            type: 'FETCH_DATA',
-            payload: {
-                result: result,
-                updatedQuery: clonedQuery
-            }
-        });
-    });
-}
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
 /*!
  * is-extendable <https://github.com/jonschlinkert/is-extendable>
  *
@@ -1399,7 +1340,7 @@ module.exports = function isExtendable(val) {
 
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1422,7 +1363,7 @@ module.exports = function forIn(obj, fn, thisArg) {
 
 
 /***/ }),
-/* 7 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var isBuffer = __webpack_require__(23);
@@ -1544,7 +1485,7 @@ module.exports = function kindOf(val) {
 
 
 /***/ }),
-/* 8 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1617,13 +1558,13 @@ var Template = function (_Component) {
 exports.default = Template;
 
 /***/ }),
-/* 9 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _apisearch = __webpack_require__(10);
+var _apisearch = __webpack_require__(9);
 
 var _apisearch2 = _interopRequireDefault(_apisearch);
 
@@ -1631,7 +1572,7 @@ var _dispatcher = __webpack_require__(1);
 
 var _dispatcher2 = _interopRequireDefault(_dispatcher);
 
-var _ApisearchUI = __webpack_require__(14);
+var _ApisearchUI = __webpack_require__(13);
 
 var _ApisearchUI2 = _interopRequireDefault(_ApisearchUI);
 
@@ -1664,7 +1605,7 @@ module.exports = function (apiKey) {
  */
 
 /***/ }),
-/* 10 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -4928,7 +4869,7 @@ var SORT_BY_LOCATION_MI_ASC = exports.SORT_BY_LOCATION_MI_ASC = {
 //# sourceMappingURL=apisearch.node.js.map
 
 /***/ }),
-/* 11 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -4940,11 +4881,11 @@ var SORT_BY_LOCATION_MI_ASC = exports.SORT_BY_LOCATION_MI_ASC = {
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-module.exports.Dispatcher = __webpack_require__(12);
+module.exports.Dispatcher = __webpack_require__(11);
 
 
 /***/ }),
-/* 12 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4967,7 +4908,7 @@ exports.__esModule = true;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var invariant = __webpack_require__(13);
+var invariant = __webpack_require__(12);
 
 var _prefix = 'ID_';
 
@@ -5182,7 +5123,7 @@ module.exports = Dispatcher;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
-/* 13 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5242,7 +5183,7 @@ module.exports = invariant;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
-/* 14 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5256,9 +5197,9 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _events = __webpack_require__(15);
+var _events = __webpack_require__(14);
 
-var _WidgetFactory = __webpack_require__(16);
+var _WidgetFactory = __webpack_require__(15);
 
 var _WidgetFactory2 = _interopRequireDefault(_WidgetFactory);
 
@@ -5407,7 +5348,7 @@ function hydrateWidget(currentStore, widget) {
 exports.default = ApisearchUI;
 
 /***/ }),
-/* 15 */
+/* 14 */
 /***/ (function(module, exports) {
 
 // Copyright Joyent, Inc. and other Node contributors.
@@ -5715,7 +5656,7 @@ function isUndefined(arg) {
 
 
 /***/ }),
-/* 16 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5741,7 +5682,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _SimpleSearchComponent = __webpack_require__(17);
+var _SimpleSearchComponent = __webpack_require__(16);
 
 var _SimpleSearchComponent2 = _interopRequireDefault(_SimpleSearchComponent);
 
@@ -5873,7 +5814,7 @@ var WidgetFactory = function () {
 exports.default = WidgetFactory;
 
 /***/ }),
-/* 17 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5887,7 +5828,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _simpleSearchActions = __webpack_require__(4);
+var _simpleSearchActions = __webpack_require__(17);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -5912,7 +5853,7 @@ var SimpleSearchComponent = function (_Component) {
             /**
              * Dispatch input search action
              */
-            (0, _simpleSearchActions.keyupSimpleSearchAction)(e.target.value, _this.props.currentQuery, _this.props.client);
+            (0, _simpleSearchActions.simpleSearchAction)(e.target.value, _this.props.currentQuery, _this.props.client);
         };
 
         _this.handleSearch = _this.handleSearch.bind(_this);
@@ -5959,6 +5900,65 @@ SimpleSearchComponent.defaultProps = {
 };
 
 exports.default = SimpleSearchComponent;
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.simpleSearchAction = simpleSearchAction;
+
+var _cloneDeep = __webpack_require__(2);
+
+var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
+
+var _dispatcher = __webpack_require__(1);
+
+var _dispatcher2 = _interopRequireDefault(_dispatcher);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Keyup simple search action
+ *
+ * This action is triggered when a text input changes
+ * receives three parameters:
+ *   @param text         -> the text value for the search
+ *   @param currentQuery -> current application query
+ *   @param client       -> apisearch client to trigger a search
+ *
+ * Finally dispatches an event with the search result and
+ * the modified query.
+ *   @returns {{
+ *     type: string,
+ *     payload: {
+ *        result,
+ *        updatedQuery
+ *     }
+ *   }}
+ */
+/**
+ * Search actions
+ */
+function simpleSearchAction(text, currentQuery, client) {
+    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+    clonedQuery.setQueryText(text);
+
+    client.search(clonedQuery, function (result) {
+        _dispatcher2.default.dispatch({
+            type: 'FETCH_DATA',
+            payload: {
+                result: result,
+                updatedQuery: clonedQuery
+            }
+        });
+    });
+}
 
 /***/ }),
 /* 18 */
@@ -6050,9 +6050,9 @@ module.exports = Array.isArray || function (arr) {
 
 
 
-var isObject = __webpack_require__(5);
+var isObject = __webpack_require__(4);
 var mixin = __webpack_require__(22);
-var typeOf = __webpack_require__(7);
+var typeOf = __webpack_require__(6);
 
 /**
  * Shallow copy an object, array or primitive.
@@ -6107,8 +6107,8 @@ module.exports = clone;
 "use strict";
 
 
-var isObject = __webpack_require__(5);
-var forIn = __webpack_require__(6);
+var isObject = __webpack_require__(4);
+var forIn = __webpack_require__(5);
 
 function mixin(target, objects) {
   if (!isObject(target)) {
@@ -6183,7 +6183,7 @@ function isSlowBuffer (obj) {
 
 
 
-var forIn = __webpack_require__(6);
+var forIn = __webpack_require__(5);
 var hasOwn = Object.prototype.hasOwnProperty;
 
 module.exports = function forOwn(obj, fn, thisArg) {
@@ -6370,7 +6370,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _Template = __webpack_require__(8);
+var _Template = __webpack_require__(7);
 
 var _Template2 = _interopRequireDefault(_Template);
 
@@ -7268,7 +7268,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _Template = __webpack_require__(8);
+var _Template = __webpack_require__(7);
 
 var _Template2 = _interopRequireDefault(_Template);
 
@@ -7350,8 +7350,6 @@ var _helpers = __webpack_require__(33);
 
 var _suggestedSearchActions = __webpack_require__(34);
 
-var _simpleSearchActions = __webpack_require__(4);
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -7385,7 +7383,7 @@ var SuggestedSearchComponent = function (_Component) {
             /**
              * Dispatch suggested search action
              */
-            (0, _suggestedSearchActions.keyupSuggestedSearchAction)(e.target.value, _this.props.currentQuery, _this.props.client);
+            (0, _suggestedSearchActions.suggestedSearchAction)(e.target.value, _this.props.currentQuery, _this.props.client);
         };
 
         _this.handleSuggestionClick = function (e) {
@@ -7394,7 +7392,7 @@ var SuggestedSearchComponent = function (_Component) {
                 currentSuggestions: []
             });
 
-            (0, _simpleSearchActions.keyupSimpleSearchAction)(e.target.innerText, _this.props.currentQuery, _this.props.client);
+            (0, _suggestedSearchActions.simpleSearchAction)(e.target.innerText, _this.props.currentQuery, _this.props.client);
         };
 
         _this.handleSuggestionsNavigation = function (e) {
@@ -7434,7 +7432,7 @@ var SuggestedSearchComponent = function (_Component) {
                     currentSuggestions: []
                 });
 
-                (0, _simpleSearchActions.keyupSimpleSearchAction)(_this.state.q, _this.props.currentQuery, _this.props.client);
+                (0, _suggestedSearchActions.simpleSearchAction)(_this.state.q, _this.props.currentQuery, _this.props.client);
             }
         };
 
@@ -7696,7 +7694,8 @@ function selectActiveSuggestion(suggestionsArray) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.keyupSuggestedSearchAction = keyupSuggestedSearchAction;
+exports.simpleSearchAction = simpleSearchAction;
+exports.suggestedSearchAction = suggestedSearchAction;
 
 var _cloneDeep = __webpack_require__(2);
 
@@ -7709,9 +7708,7 @@ var _dispatcher2 = _interopRequireDefault(_dispatcher);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
- * Keyup suggested search action
- *
- * This action is triggered when a text input changes
+ * This actions are triggered when a text input changes
  * receives three parameters:
  *   @param text         -> the text value for the search
  *   @param currentQuery -> current application query
@@ -7727,10 +7724,34 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  *     }
  *   }}
  */
+
+/**
+ * Simple search action
+ * Builds a query disabling suggested searches flag
+ */
 /**
  * Search actions
  */
-function keyupSuggestedSearchAction(text, currentQuery, client) {
+function simpleSearchAction(text, currentQuery, client) {
+    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+    clonedQuery.setQueryText(text).disableSuggestions();
+
+    client.search(clonedQuery, function (result) {
+        _dispatcher2.default.dispatch({
+            type: 'FETCH_DATA',
+            payload: {
+                result: result,
+                updatedQuery: clonedQuery
+            }
+        });
+    });
+}
+
+/**
+ * Suggested Search Action
+ * Builds a query using suggested search flag active
+ */
+function suggestedSearchAction(text, currentQuery, client) {
     var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
     clonedQuery.setQueryText(text).enableSuggestions();
 

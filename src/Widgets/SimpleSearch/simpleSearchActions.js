@@ -23,7 +23,7 @@ import dispatcher from '../../dispatcher';
  *     }
  *   }}
  */
-export function keyupSimpleSearchAction(
+export function simpleSearchAction(
     text,
     currentQuery,
     client
@@ -31,7 +31,6 @@ export function keyupSimpleSearchAction(
     let clonedQuery = cloneDeep(currentQuery);
     clonedQuery
         .setQueryText(text)
-        .disableSuggestions()
     ;
 
     client.search(clonedQuery, result => {
