@@ -10,7 +10,6 @@ import {onChangeSearchAction} from "./sortByActions";
 class SortByComponent extends Component {
     constructor() {
         super();
-        this.handleChange = this.handleChange.bind(this);
     }
 
     shouldComponentUpdate() {

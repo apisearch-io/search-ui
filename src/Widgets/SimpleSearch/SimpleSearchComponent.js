@@ -11,7 +11,6 @@ import {simpleSearchAction} from "./simpleSearchActions";
 class SimpleSearchComponent extends Component {
     constructor() {
         super();
-        this.handleSearch = this.handleSearch.bind(this);
     }
 
     shouldComponentUpdate() {

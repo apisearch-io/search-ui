@@ -5856,7 +5856,6 @@ var SimpleSearchComponent = function (_Component) {
             (0, _simpleSearchActions.simpleSearchAction)(e.target.value, _this.props.currentQuery, _this.props.client);
         };
 
-        _this.handleSearch = _this.handleSearch.bind(_this);
         return _this;
     }
 
@@ -6236,7 +6235,6 @@ var SortByComponent = function (_Component) {
             (0, _sortByActions.onChangeSearchAction)(e.target.value, _this.props.currentQuery, _this.props.client);
         };
 
-        _this.handleChange = _this.handleChange.bind(_this);
         return _this;
     }
 
