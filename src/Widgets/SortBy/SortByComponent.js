@@ -48,4 +48,11 @@ class SortByComponent extends Component {
     }
 }
 
+SortByComponent.defaultProps = {
+    classNames: {
+        container: '',
+        select: ''
+    }
+};
+
 export default SortByComponent;

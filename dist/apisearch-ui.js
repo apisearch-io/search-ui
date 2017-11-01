@@ -1527,6 +1527,9 @@ var Template = function (_Component) {
         }
 
         return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Template.__proto__ || Object.getPrototypeOf(Template)).call.apply(_ref, [this].concat(args))), _this), _this.renderTemplate = function (template, data) {
+            /**
+             * Compile template using hogan.js
+             */
             var compiledTemplate = _hogan2.default.compile(template);
             var output = compiledTemplate.render(data);
 
@@ -5666,6 +5669,8 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       * @jsx h
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       */
@@ -5708,6 +5713,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 /**
  * Widgets factory class
+ *
+ * @info
+ *   The className object merge is because react does not
+ *   merge the defaultProps deep objects with the custom
+ *   props object passed to the component.
+ *     @see https://github.com/facebook/react/issues/2568
+ *     @see https://stackoverflow.com/questions/40428847/react-component-defaultprops-objects-are-overridden-not-merged
  */
 var WidgetFactory = function () {
     function WidgetFactory() {
@@ -5729,7 +5741,7 @@ var WidgetFactory = function () {
             return (0, _preact.h)(_SimpleSearchComponent2.default, {
                 target: target,
                 placeholder: placeholder,
-                classNames: classNames
+                classNames: _extends({}, _SimpleSearchComponent2.default.defaultProps.classNames, classNames)
             });
         }
     }, {
@@ -5748,7 +5760,7 @@ var WidgetFactory = function () {
             return (0, _preact.h)(_SuggestedSearchComponent2.default, {
                 target: target,
                 placeholder: placeholder,
-                classNames: classNames,
+                classNames: _extends({}, _SuggestedSearchComponent2.default.defaultProps.classNames, classNames),
                 template: template
             });
         }
@@ -5766,7 +5778,7 @@ var WidgetFactory = function () {
 
             return (0, _preact.h)(_SortByComponent2.default, {
                 target: target,
-                classNames: classNames,
+                classNames: _extends({}, _SortByComponent2.default.defaultProps.classNames, classNames),
                 options: options
             });
         }
@@ -5784,7 +5796,7 @@ var WidgetFactory = function () {
 
             return (0, _preact.h)(_ResultComponent2.default, {
                 target: target,
-                classNames: classNames,
+                classNames: _extends({}, _ResultComponent2.default.defaultProps.classNames, classNames),
                 template: template
             });
         }
@@ -5802,7 +5814,7 @@ var WidgetFactory = function () {
 
             return (0, _preact.h)(_InformationComponent2.default, {
                 target: target,
-                classNames: classNames,
+                classNames: _extends({}, _InformationComponent2.default.defaultProps.classNames, classNames),
                 template: template
             });
         }
@@ -5845,18 +5857,22 @@ var SimpleSearchComponent = function (_Component) {
     _inherits(SimpleSearchComponent, _Component);
 
     function SimpleSearchComponent() {
+        var _ref;
+
+        var _temp, _this, _ret;
+
         _classCallCheck(this, SimpleSearchComponent);
 
-        var _this = _possibleConstructorReturn(this, (SimpleSearchComponent.__proto__ || Object.getPrototypeOf(SimpleSearchComponent)).call(this));
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+        }
 
-        _this.handleSearch = function (e) {
+        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = SimpleSearchComponent.__proto__ || Object.getPrototypeOf(SimpleSearchComponent)).call.apply(_ref, [this].concat(args))), _this), _this.handleSearch = function (e) {
             /**
              * Dispatch input search action
              */
             (0, _simpleSearchActions.simpleSearchAction)(e.target.value, _this.props.currentQuery, _this.props.client);
-        };
-
-        return _this;
+        }, _temp), _possibleConstructorReturn(_this, _ret);
     }
 
     _createClass(SimpleSearchComponent, [{
@@ -6239,12 +6255,12 @@ var SortByComponent = function (_Component) {
     }
 
     _createClass(SortByComponent, [{
-        key: "shouldComponentUpdate",
+        key: 'shouldComponentUpdate',
         value: function shouldComponentUpdate() {
             return false;
         }
     }, {
-        key: "render",
+        key: 'render',
         value: function render() {
             var _props = this.props,
                 _props$classNames = _props.classNames,
@@ -6254,17 +6270,17 @@ var SortByComponent = function (_Component) {
 
 
             return (0, _preact.h)(
-                "div",
-                { className: "asui-sortBy " + containerClassName },
+                'div',
+                { className: 'asui-sortBy ' + containerClassName },
                 (0, _preact.h)(
-                    "select",
+                    'select',
                     {
-                        className: "asui-sortBy--selector " + selectClassName,
+                        className: 'asui-sortBy--selector ' + selectClassName,
                         onChange: this.handleChange
                     },
                     options.map(function (option) {
                         return (0, _preact.h)(
-                            "option",
+                            'option',
                             { value: option.value },
                             option.name
                         );
@@ -6276,6 +6292,13 @@ var SortByComponent = function (_Component) {
 
     return SortByComponent;
 }(_preact.Component);
+
+SortByComponent.defaultProps = {
+    classNames: {
+        container: '',
+        select: ''
+    }
+};
 
 exports.default = SortByComponent;
 

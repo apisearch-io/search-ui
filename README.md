@@ -214,6 +214,11 @@ can be passed on the template body.
 - [ ] Pagination
 
 - [ ] Analytics / User analytics
+
+Extra todo list:
+- [ ] Add callbacks before and after a widget action
+to execute customized anonymous functions.
+- [ ] Work with propTypes?
  
 ## Widget creation workflow
  1. Define widget properties

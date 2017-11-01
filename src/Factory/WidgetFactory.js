@@ -5,7 +5,7 @@
 /**
  * Vendors
  */
-import { h } from 'preact';
+import { h, createElement } from 'preact';
 
 /**
  * Locals
@@ -18,6 +18,13 @@ import SuggestedSearchComponent from "../Widgets/SuggestedSearch/SuggestedSearch
 
 /**
  * Widgets factory class
+ *
+ * @info
+ *   The className object merge is because react does not
+ *   merge the defaultProps deep objects with the custom
+ *   props object passed to the component.
+ *     @see https://github.com/facebook/react/issues/2568
+ *     @see https://stackoverflow.com/questions/40428847/react-component-defaultprops-objects-are-overridden-not-merged
  */
 class WidgetFactory {
 
@@ -32,7 +39,10 @@ class WidgetFactory {
         return <SimpleSearchComponent
             target={target}
             placeholder={placeholder}
-            classNames={classNames}
+            classNames={{
+                ...SimpleSearchComponent.defaultProps.classNames,
+                ...classNames
+            }}
         />
     };
 
@@ -48,7 +58,10 @@ class WidgetFactory {
         return <SuggestedSearchComponent
             target={target}
             placeholder={placeholder}
-            classNames={classNames}
+            classNames={{
+                ...SuggestedSearchComponent.defaultProps.classNames,
+                ...classNames
+            }}
             template={template}
         />
     }
@@ -63,7 +76,10 @@ class WidgetFactory {
     }) {
         return <SortByComponent
             target={target}
-            classNames={classNames}
+            classNames={{
+                ...SortByComponent.defaultProps.classNames,
+                ...classNames
+            }}
             options={options}
         />
     }
@@ -78,7 +94,10 @@ class WidgetFactory {
     }) {
         return <ResultComponent
             target={target}
-            classNames={classNames}
+            classNames={{
+                ...ResultComponent.defaultProps.classNames,
+                ...classNames
+            }}
             template={template}
         />
     }
@@ -93,7 +112,10 @@ class WidgetFactory {
     }) {
         return <InformationComponent
             target={target}
-            classNames={classNames}
+            classNames={{
+                ...InformationComponent.defaultProps.classNames,
+                ...classNames
+            }}
             template={template}
         />
     }

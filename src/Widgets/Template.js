@@ -4,9 +4,11 @@ import Hogan from 'hogan.js';
 
 class Template extends Component {
     renderTemplate = (template, data) => {
+        /**
+         * Compile template using hogan.js
+         */
         let compiledTemplate = Hogan.compile(template);
         let output = compiledTemplate.render(data);
-
 
         return {
             __html: output

@@ -9,10 +9,6 @@ import {simpleSearchAction} from "./simpleSearchActions";
  * SimpleSearch Component
  */
 class SimpleSearchComponent extends Component {
-    constructor() {
-        super();
-    }
-
     shouldComponentUpdate() {
         return false;
     }
