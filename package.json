@@ -39,20 +39,20 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
     "chai": "^4.1.2",
-    "eslint": "^4.6.1",
+    "eslint": "^4.10.0",
     "eslint-loader": "^1.9.0",
     "mocha": "^3.5.3",
-    "nyc": "^11.2.1",
-    "webpack": "^3.5.5",
-    "webpack-dev-server": "^2.9.1",
-    "webpack-merge": "^4.1.0",
+    "nyc": "^11.3.0",
+    "webpack": "^3.8.1",
+    "webpack-dev-server": "^2.9.3",
+    "webpack-merge": "^4.1.1",
     "yargs": "^8.0.2"
   },
   "dependencies": {
-    "apisearch": "^0.1.6",
+    "apisearch": "^0.1.7",
     "clone-deep": "^1.0.0",
     "flux": "^3.1.3",
     "hogan.js": "^3.0.2",
-    "preact": "^8.2.5"
+    "preact": "^8.2.6"
   }
 }

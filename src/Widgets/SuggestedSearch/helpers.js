@@ -22,21 +22,8 @@ export function highlightSuggestion(currentQueryText, suggestion) {
  */
 export function selectNextSuggestion(suggestionsArray) {
     let currentActiveSuggestionKey;
-    let isAnySuggestionActive = suggestionsArray
-        .some(suggestion => suggestion.isActive);
 
     return suggestionsArray.map((suggestion, key) => {
-        /**
-         * If there are no previous suggestions active
-         * mark the first one
-         */
-        if (false === isAnySuggestionActive) {
-            suggestion.isActive = true;
-            isAnySuggestionActive = true;
-
-            return suggestion;
-        }
-
         /**
          * Detect current active suggestion
          */
@@ -81,21 +68,7 @@ export function selectPreviousSuggestion(suggestionsArray) {
             }
         });
 
-    let isAnySuggestionActive = suggestionsArray
-        .some(suggestion => suggestion.isActive);
-
     return suggestionsArray.map((suggestion, key) => {
-        /**
-         * If there are no previous suggestions active
-         * mark the first one
-         */
-        if (false === isAnySuggestionActive) {
-            suggestion.isActive = true;
-            isAnySuggestionActive = true;
-
-            return suggestion;
-        }
-
         /**
          * Set the current active suggestion as false
          * if is Active AND is not the last one

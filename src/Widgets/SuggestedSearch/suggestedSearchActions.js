@@ -34,6 +34,7 @@ export function simpleSearchAction(
     let clonedQuery = cloneDeep(currentQuery);
     clonedQuery
         .setQueryText(text)
+        .setResultSize(30)
         .disableSuggestions()
     ;
 
@@ -57,9 +58,12 @@ export function suggestedSearchAction(
     currentQuery,
     client
 ) {
+    const emptyResultSize = 0;
+
     let clonedQuery = cloneDeep(currentQuery);
     clonedQuery
         .setQueryText(text)
+        .setResultSize(emptyResultSize)
         .enableSuggestions()
     ;
 

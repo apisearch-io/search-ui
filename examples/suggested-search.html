@@ -38,14 +38,40 @@
                     >
                 </h1>
                 <!-- Search bar -->
-                <div class="columns">
+                <div class="columns" style="margin-bottom: 2rem">
                     <div class="column is-one-quarter"></div>
                     <div class="search column is-two-quarters"></div>
                     <div class="column is-one-quarter"></div>
                 </div>
+                <div class="columns">
+                    <div class="result"></div>
+                </div>
             </div>
         </div>
     </section>
+
+    <script type="text/template" id="result-search-tpl">
+        <div class="columns is-multiline is-variable">
+            {{#items}}
+            <div class="column is-narrow is-one-quarter">
+                <div class="card" style="border-radius: .2rem">
+                    <div class="card-content">
+                        <div class="media">
+                            <div class="media-content">
+                                <strong>{{metadata.name}}</strong>
+                                {{#metadata.author}}
+                                <p class="has-text-info is-size-7">@{{name}}</p>
+                                {{/metadata.author}}
+                                <hr />
+                                <p class="has-text-grey is-size-7">{{indexed_metadata.created_at}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/items}}
+        </div>
+    </script>
 
     <script type="text/javascript">
         // UI Instance
@@ -62,6 +88,12 @@
                     box: 'panel',
                     suggestion: 'panel-block',
                     activeSuggestion: 'is-active'
+                }
+            }),
+            ui.widgets.result({
+                target: '.result',
+                template: {
+                    body: document.getElementById('result-search-tpl').text,
                 }
             })
         );

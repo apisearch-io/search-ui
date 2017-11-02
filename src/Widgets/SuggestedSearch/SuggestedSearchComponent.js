@@ -32,15 +32,23 @@ class SuggestedSearchComponent extends Component {
     }
 
     componentWillReceiveProps(props) {
-        const suggests = props.data.suggests || [];
+        /**
+         * Check suggestions available
+         * if some, prepend the current query to the other suggestions array
+         * else, only append the current query to the suggestions array
+         */
+        const suggests = (props.data && props.data.suggests)
+            ? [this.state.q, ...props.data.suggests]
+            : [this.state.q]
+        ;
 
         /**
          * Prepare suggestions array
          */
         this.setState({
-            currentSuggestions: suggests.map(suggest => {
+            currentSuggestions: suggests.map((suggest, key) => {
                 return {
-                    isActive: false,
+                    isActive: (0 === key),
                     name: suggest,
                     htmlName: highlightSuggestion(this.state.q, suggest)
                 }
@@ -103,6 +111,8 @@ class SuggestedSearchComponent extends Component {
          * When user hits arrow up
          */
         if (e.code === 'ArrowUp') {
+            e.preventDefault();
+
             this.setState({
                 currentSuggestions: selectPreviousSuggestion(
                     this.state.currentSuggestions
@@ -178,7 +188,7 @@ class SuggestedSearchComponent extends Component {
                 />
 
                 <div
-                    tabIndex={"0"}
+                    tabIndex={`0`}
                     className={`asui-suggestedSearch--box ${boxClassName}`}
                     style={{
                         display: currentSuggestions
@@ -186,22 +196,24 @@ class SuggestedSearchComponent extends Component {
                             : 'none'
                     }}
                 >
-                    {currentSuggestions.map(suggestion =>
-                        <div
-                            className={
-                                `asui-suggestedSearch--suggestion ` +
-                                `${suggestionClassName} ` +
-                                `${suggestion.isActive
-                                    ? activeSuggestionClassName
-                                    : ''
-                                }`
-                            }
-                            dangerouslySetInnerHTML={{
-                                __html: suggestion.htmlName
-                            }}
-                            onClick={this.handleSuggestionClick}
-                        />
-                    )}
+                    {currentSuggestions.map((suggestion, key) => {
+                        return (0 !== key)
+                            ? <div
+                                className={
+                                    `asui-suggestedSearch--suggestion ` +
+                                    `${suggestionClassName} ` +
+                                    `${suggestion.isActive
+                                        ? activeSuggestionClassName
+                                        : ''
+                                        }`
+                                }
+                                dangerouslySetInnerHTML={{
+                                    __html: suggestion.htmlName
+                                }}
+                                onClick={this.handleSuggestionClick}
+                            />
+                            : null
+                    })}
                 </div>
             </div>
         )

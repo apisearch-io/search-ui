@@ -4386,6 +4386,14 @@ var Query = function () {
             return this;
         }
     }, {
+        key: "setResultSize",
+        value: function setResultSize(size) {
+            _TypeChecker2.default.isInteger(size);
+            this.size = size;
+
+            return this;
+        }
+    }, {
         key: "filterBy",
         value: function filterBy(filterName, field, values) {
             var applicationType = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : _Filter.FILTER_AT_LEAST_ONE;
@@ -6433,7 +6441,7 @@ var ResultComponent = function (_Component) {
              */
 
             var reducedTemplateData = {
-                items: data.items
+                items: data ? data.items : []
             };
 
             return (0, _preact.h)(
@@ -7371,6 +7379,8 @@ var _helpers = __webpack_require__(33);
 
 var _suggestedSearchActions = __webpack_require__(34);
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -7438,6 +7448,8 @@ var SuggestedSearchComponent = function (_Component) {
              * When user hits arrow up
              */
             if (e.code === 'ArrowUp') {
+                e.preventDefault();
+
                 _this.setState({
                     currentSuggestions: (0, _helpers.selectPreviousSuggestion)(_this.state.currentSuggestions),
                     q: (0, _helpers.selectActiveSuggestion)(_this.state.currentSuggestions)
@@ -7482,15 +7494,20 @@ var SuggestedSearchComponent = function (_Component) {
         value: function componentWillReceiveProps(props) {
             var _this2 = this;
 
-            var suggests = props.data.suggests || [];
+            /**
+             * Check suggestions available
+             * if some, prepend the current query to the other suggestions array
+             * else, only append the current query to the suggestions array
+             */
+            var suggests = props.data && props.data.suggests ? [this.state.q].concat(_toConsumableArray(props.data.suggests)) : [this.state.q];
 
             /**
              * Prepare suggestions array
              */
             this.setState({
-                currentSuggestions: suggests.map(function (suggest) {
+                currentSuggestions: suggests.map(function (suggest, key) {
                     return {
-                        isActive: false,
+                        isActive: 0 === key,
                         name: suggest,
                         htmlName: (0, _helpers.highlightSuggestion)(_this2.state.q, suggest)
                     };
@@ -7529,20 +7546,20 @@ var SuggestedSearchComponent = function (_Component) {
                 (0, _preact.h)(
                     'div',
                     {
-                        tabIndex: "0",
+                        tabIndex: '0',
                         className: 'asui-suggestedSearch--box ' + boxClassName,
                         style: {
                             display: currentSuggestions ? 'block' : 'none'
                         }
                     },
-                    currentSuggestions.map(function (suggestion) {
-                        return (0, _preact.h)('div', {
+                    currentSuggestions.map(function (suggestion, key) {
+                        return 0 !== key ? (0, _preact.h)('div', {
                             className: 'asui-suggestedSearch--suggestion ' + (suggestionClassName + ' ') + ('' + (suggestion.isActive ? activeSuggestionClassName : '')),
                             dangerouslySetInnerHTML: {
                                 __html: suggestion.htmlName
                             },
                             onClick: _this3.handleSuggestionClick
-                        });
+                        }) : null;
                     })
                 )
             );
@@ -7603,22 +7620,8 @@ function highlightSuggestion(currentQueryText, suggestion) {
  */
 function selectNextSuggestion(suggestionsArray) {
     var currentActiveSuggestionKey = void 0;
-    var isAnySuggestionActive = suggestionsArray.some(function (suggestion) {
-        return suggestion.isActive;
-    });
 
     return suggestionsArray.map(function (suggestion, key) {
-        /**
-         * If there are no previous suggestions active
-         * mark the first one
-         */
-        if (false === isAnySuggestionActive) {
-            suggestion.isActive = true;
-            isAnySuggestionActive = true;
-
-            return suggestion;
-        }
-
         /**
          * Detect current active suggestion
          */
@@ -7656,22 +7659,7 @@ function selectPreviousSuggestion(suggestionsArray) {
         }
     });
 
-    var isAnySuggestionActive = suggestionsArray.some(function (suggestion) {
-        return suggestion.isActive;
-    });
-
     return suggestionsArray.map(function (suggestion, key) {
-        /**
-         * If there are no previous suggestions active
-         * mark the first one
-         */
-        if (false === isAnySuggestionActive) {
-            suggestion.isActive = true;
-            isAnySuggestionActive = true;
-
-            return suggestion;
-        }
-
         /**
          * Set the current active suggestion as false
          * if is Active AND is not the last one
@@ -7755,7 +7743,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 function simpleSearchAction(text, currentQuery, client) {
     var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
-    clonedQuery.setQueryText(text).disableSuggestions();
+    clonedQuery.setQueryText(text).setResultSize(30).disableSuggestions();
 
     client.search(clonedQuery, function (result) {
         _dispatcher2.default.dispatch({
@@ -7773,8 +7761,10 @@ function simpleSearchAction(text, currentQuery, client) {
  * Builds a query using suggested search flag active
  */
 function suggestedSearchAction(text, currentQuery, client) {
+    var emptyResultSize = 0;
+
     var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
-    clonedQuery.setQueryText(text).enableSuggestions();
+    clonedQuery.setQueryText(text).setResultSize(emptyResultSize).enableSuggestions();
 
     client.search(clonedQuery, function (result) {
         _dispatcher2.default.dispatch({

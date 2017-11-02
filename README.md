@@ -61,7 +61,7 @@ get auto-completed suggestions list related to the text
 you are looking for just below the search input.
 
 ```javascript
-const suggestedSearchWidget = ui.widgets.simpleSearch({ 
+const suggestedSearchWidget = ui.widgets.suggestedSearch({ 
   target: string,
   placeholder: [string],
   classNames: {

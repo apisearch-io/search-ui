@@ -27,7 +27,7 @@ class ResultComponent extends Component {
          * Data accessible to the template
          */
         let reducedTemplateData = {
-            items: data.items
+            items: data ? data.items : []
         }
 
         return (
