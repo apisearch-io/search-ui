@@ -46,11 +46,11 @@ This widget points to `searchable_metadata` and
 
 ```javascript
 const simpleSearchWidget = ui.widgets.simpleSearch({ 
-  target: string,
-  placeholder: [string],
+  target: !string,
+  placeholder: ?string,
   classNames: {
-      container: [string],
-      input: [string]
+      container: ?string,
+      input: string
   }
 });
 ```
@@ -62,18 +62,17 @@ you are looking for just below the search input.
 
 ```javascript
 const suggestedSearchWidget = ui.widgets.suggestedSearch({ 
-  target: string,
-  placeholder: [string],
+  target: !string,
+  placeholder: ?string,
   classNames: {
-      container: [string],
-      input: [string],
-      box: [string],
-      suggestion: [string],
-      activeSuggestion: [string]
+      container: ?string,
+      input: ?string,
+      box: ?string,
+      suggestion: ?string,
+      activeSuggestion: ?string
   }
 });
 ```
- 
 
 ### Sort By
 The sort by widget allows to order the result set as you like.
@@ -82,14 +81,14 @@ This widget points to `indexed_metadata` field.
 
 ```javascript
 const sortByWidget = ui.widgets.sortBy({
-  target: string,
+  target: !string,
   classNames: {
-      container: [string],
-      select: [string]
+      container: ?string,
+      select: ?string
   },
   options: [
-      {name: string, value: string},
-      {name: string, value: string},
+      {name: !string, value: !string},
+      {name: !string, value: !string},
       // ...
   ]
 });
@@ -101,14 +100,14 @@ based on the search.
 
 ```javascript
 const resultWidget = ui.widgets.result({
-  target: string,
+  target: !string,
   classNames: {
-      container: [string]
+      container: ?string
   },
   template: {
-      top: [string],
-      body: string,
-      bottom: [string]
+      top: ?string,
+      body: !string,
+      bottom: ?string
   }
 });
 ```
@@ -176,12 +175,12 @@ the current search and the total **number of items**.
 
 ```javascript
 const resultInformationWidget = ui.widgets.resultInformation({
-  target: string,
+  target: !string,
   classNames: {
-      container: [string]
+      container: ?string
   },
   template: {
-      container: string,
+      container: !string,
   }
 });
 ```

@@ -7448,6 +7448,9 @@ var SuggestedSearchComponent = function (_Component) {
              * When user hits arrow up
              */
             if (e.code === 'ArrowUp') {
+                /**
+                 * Prevent cursor to go at the starting point of the line
+                 */
                 e.preventDefault();
 
                 _this.setState({
