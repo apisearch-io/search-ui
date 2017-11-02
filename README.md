@@ -1,6 +1,10 @@
 Apisearch UI
 ============
 
+> This repository is part of the ApiSearch project. To get more 
+> information about it, please visit [http://apisearch.io](http://apisearch.io). 
+> This a project created with love by [Puntmig Development SLU](http://puntmig.com).
+
 The ApisearchUI is an easy interface library to build searches
 the easy way. It provides a list of pre-built widgets to
 setup your custom search experience. A widget can be a search input, 
@@ -12,7 +16,21 @@ or using `addWidgets(...widgets)` to add widgets in a bulk mode.
 Once your setup is done, you just call the `init()` method to 
 start all the magic!
 
-## Usage
+# Install
+
+## npm
+```shell
+npm install apisearch --save
+```
+
+## html tag \<script\>
+You can either download the library and use a relative path to your assets folder, 
+or use a CDN like jsDelivr. 
+```html
+<script src="https://cdn.jsdelivr.net/npm/apisearch-ui/dist/apisearch-ui.min.js"></script>
+``````
+
+# Usage
 This simple setup allows you to build a full text search
 input with a result container using a custom template 
 engine.
@@ -35,9 +53,9 @@ ui.addWidgets(
 ui.init();
 ```
 
-## Widgets
+# Widgets
 
-### Simple Search
+## Simple Search
 The simple search input widget is to perform text based 
 searches.
 
@@ -55,7 +73,7 @@ const simpleSearchWidget = ui.widgets.simpleSearch({
 });
 ```
 
-### Suggested Search
+## Suggested Search
 The suggested search input goes one step further. You can
 get auto-completed suggestions list related to the text
 you are looking for just below the search input.
@@ -74,7 +92,7 @@ const suggestedSearchWidget = ui.widgets.suggestedSearch({
 });
 ```
 
-### Sort By
+## Sort By
 The sort by widget allows to order the result set as you like.
 
 This widget points to `indexed_metadata` field.
@@ -94,7 +112,7 @@ const sortByWidget = ui.widgets.sortBy({
 });
 ```
 
-### Search result
+## Search result
 The result widget allows you to print a set of results
 based on the search.
 
@@ -167,7 +185,7 @@ For more information about how this templating system works,
 refer to the [twitter's hogan.js documentation](http://twitter.github.io/hogan.js/). 
 Or check the library examples.
 
-### Result information
+## Result information
 The result information widget allows you to provide
 to a user some extra information about the search.
 Currently only can show the **number of hits** of 
@@ -189,7 +207,7 @@ The variables `{{total_hits}}` and `{{total_items}}`
 can be passed on the template body.
 
 
-## Todo's
+# Todo's
   
 - [x] Simple Search
    - [ ] Promote results
@@ -219,7 +237,7 @@ Extra todo list:
 to execute customized anonymous functions.
 - [ ] Work with propTypes?
  
-## Widget creation workflow
+# Widget creation workflow
  1. Define widget properties
  2. Create component
  3. Create widget factory method
