@@ -20,7 +20,7 @@ start all the magic!
 
 ## npm
 ```shell
-npm install apisearch --save
+npm install apisearch-ui --save
 ```
 
 ## html tag \<script\>
