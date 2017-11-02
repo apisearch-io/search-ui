@@ -17,11 +17,18 @@ import ApisearchUI from "./ApisearchUI";
 /**
  * Apisearch Entry Point
  *
+ * @param appId
  * @param apiKey
+ * @param options
+ *
  * @returns {ApisearchUI}
  */
-module.exports = function(apiKey) {
-    const apisearchClient = apisearch(apiKey);
+module.exports = function({
+    appId,
+    apiKey,
+    options
+}) {
+    const apisearchClient = apisearch(appId, apiKey, options);
     const apisearchUI = new ApisearchUI(
         apisearchClient
     );

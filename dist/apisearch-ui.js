@@ -1584,7 +1584,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * Apisearch Entry Point
  *
+ * @param appId
  * @param apiKey
+ * @param options
+ *
  * @returns {ApisearchUI}
  */
 
@@ -1592,8 +1595,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * Locals
  */
-module.exports = function (apiKey) {
-  var apisearchClient = (0, _apisearch2.default)(apiKey);
+module.exports = function (_ref) {
+  var appId = _ref.appId,
+      apiKey = _ref.apiKey,
+      options = _ref.options;
+
+  var apisearchClient = (0, _apisearch2.default)(appId, apiKey, options);
   var apisearchUI = new _ApisearchUI2.default(apisearchClient);
 
   _dispatcher2.default.register(apisearchUI.handleActions.bind(apisearchUI));
@@ -2814,17 +2821,21 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 /**
  * Entry point for the Apisearch client
  *
+ * @param appId
  * @param apiKey
- * @param endpoint
+ * @param options
  *
  * @returns {Apisearch}
  */
-module.exports = function (apiKey, endpoint) {
+module.exports = function (appId, apiKey, options) {
+    if (typeof appId === 'undefined') {
+        throw new TypeError("AppId parameter must be defined.");
+    }
     if (typeof apiKey === 'undefined') {
         throw new TypeError("ApiKey parameter must be defined.");
     }
 
-    return new Apisearch(apiKey, endpoint);
+    return new Apisearch(appId, apiKey, options);
 };
 
 /**
@@ -2832,11 +2843,12 @@ module.exports = function (apiKey, endpoint) {
  */
 
 var Apisearch = function () {
-    function Apisearch(apiKey) {
-        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    function Apisearch(appId, apiKey) {
+        var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
         _classCallCheck(this, Apisearch);
 
+        this.appId = appId;
         this.apiKey = apiKey;
         this.endpoint = options.endpoint || 'http://127.0.0.1:9002/app.php';
 
@@ -2850,7 +2862,7 @@ var Apisearch = function () {
         key: "search",
         value: function search(query, callback) {
             var encodedQuery = encodeURIComponent(JSON.stringify(query));
-            var composedQuery = this.endpoint + "?key=" + this.apiKey + "&query=" + encodedQuery;
+            var composedQuery = this.endpoint + "?app_id=" + this.appId + "&key=" + this.apiKey + "&query=" + encodedQuery;
 
             return this.repository.query(composedQuery).then(function (response) {
                 return callback(response, null);

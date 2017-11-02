@@ -57,13 +57,18 @@
                 <div class="card" style="border-radius: .2rem">
                     <div class="card-content">
                         <div class="media">
+                            <div class="media-left">
+                                <img src="{{metadata.img}}" width="60px">
+                            </div>
                             <div class="media-content">
-                                <strong>{{metadata.name}}</strong>
+                                <strong>{{metadata.title}}</strong>
                                 {{#metadata.author}}
                                 <p class="has-text-info is-size-7">@{{name}}</p>
                                 {{/metadata.author}}
-                                <hr />
-                                <p class="has-text-grey is-size-7">{{indexed_metadata.created_at}}</p>
+                                <span class="has-text-grey is-size-7">
+                                    <strong>Year: </strong>
+                                    {{indexed_metadata.year}}
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -75,7 +80,13 @@
 
     <script type="text/javascript">
         // UI Instance
-        let ui = apisearchUI('laie_ca');
+        let ui = apisearchUI({
+            appId: 'music',
+            apiKey: '1cc7a3e0-bda5-11e7-abc4-cec278b6b50a',
+            options: {
+                endpoint: 'http://search.puntmig.net'
+            }
+        });
 
         // Widgets setup
         ui.addWidgets(
