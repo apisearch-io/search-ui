@@ -54,7 +54,9 @@ class ApisearchUI extends EventEmitter {
      * Initialize components
      */
     init() {
-        // initial rendering + initial widget state
+        /**
+         * Initial rendering + initial widget state
+         */
         this.activeWidgets.map(widget => {
             let hydratedWidget = hydrateWidget(this, widget);
             let targetNode = document.querySelector(widget.attributes.target);
@@ -72,8 +74,10 @@ class ApisearchUI extends EventEmitter {
             )
         });
 
-        // rendering on store changes
-        this.on('change', () =>
+        /**
+         * Re-render widgets
+         */
+        this.on('render', () =>
             this.activeWidgets.map(widget => {
                 let hydratedWidget = hydrateWidget(this, widget);
                 let targetNode = document.querySelector(widget.attributes.target);
@@ -89,20 +93,33 @@ class ApisearchUI extends EventEmitter {
 
     handleActions(action) {
         /**
-         * this is what we call a reducer
-         * on a redux architecture
+         * This is what we call a reducer
+         * on a Redux architecture
          */
-        const {
-            result,
-            updatedQuery
-        } = action.payload;
 
-        if (action.type === 'FETCH_DATA') {
-            this.data = result;
-            this.currentQuery = updatedQuery
+        /**
+         * When action only sets up store definitions
+         * Does not dispatch any event
+         */
+        if (action.type === 'UPDATE_APISEARCH_SETUP') {
+            this.currentQuery = action.payload.updatedQuery;
         }
 
-        this.emit('change');
+        /**
+         * When action triggers a re-rendering
+         * Dispatches a 'render' event
+         */
+        if (action.type === 'RENDER_FETCHED_DATA') {
+            const {
+                result,
+                updatedQuery
+            } = action.payload;
+
+            this.data = result;
+            this.currentQuery = updatedQuery;
+
+            this.emit('render');
+        }
     }
 }
 

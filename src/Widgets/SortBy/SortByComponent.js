@@ -17,10 +17,15 @@ class SortByComponent extends Component {
     }
 
     handleChange = (e) => {
+        const {
+            currentQuery,
+            client
+        } = this.props;
+
         onChangeSearchAction(
             e.target.value,
-            this.props.currentQuery,
-            this.props.client
+            currentQuery,
+            client
         )
     };
 

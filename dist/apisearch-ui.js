@@ -5312,7 +5312,9 @@ var ApisearchUI = function (_EventEmitter) {
         value: function init() {
             var _this3 = this;
 
-            // initial rendering + initial widget state
+            /**
+             * Initial rendering + initial widget state
+             */
             this.activeWidgets.map(function (widget) {
                 var hydratedWidget = hydrateWidget(_this3, widget);
                 var targetNode = document.querySelector(widget.attributes.target);
@@ -5324,8 +5326,10 @@ var ApisearchUI = function (_EventEmitter) {
                 (0, _preact.render)(hydratedWidget, targetNode, targetNode.lastChild);
             });
 
-            // rendering on store changes
-            this.on('change', function () {
+            /**
+             * Re-render widgets
+             */
+            this.on('render', function () {
                 return _this3.activeWidgets.map(function (widget) {
                     var hydratedWidget = hydrateWidget(_this3, widget);
                     var targetNode = document.querySelector(widget.attributes.target);
@@ -5338,20 +5342,33 @@ var ApisearchUI = function (_EventEmitter) {
         key: "handleActions",
         value: function handleActions(action) {
             /**
-             * this is what we call a reducer
-             * on a redux architecture
+             * This is what we call a reducer
+             * on a Redux architecture
              */
-            var _action$payload = action.payload,
-                result = _action$payload.result,
-                updatedQuery = _action$payload.updatedQuery;
 
-
-            if (action.type === 'FETCH_DATA') {
-                this.data = result;
-                this.currentQuery = updatedQuery;
+            /**
+             * When action only sets up store definitions
+             * Does not dispatch any event
+             */
+            if (action.type === 'UPDATE_APISEARCH_SETUP') {
+                this.currentQuery = action.payload.updatedQuery;
             }
 
-            this.emit('change');
+            /**
+             * When action triggers a re-rendering
+             * Dispatches a 'render' event
+             */
+            if (action.type === 'RENDER_FETCHED_DATA') {
+                var _action$payload = action.payload,
+                    result = _action$payload.result,
+                    updatedQuery = _action$payload.updatedQuery;
+
+
+                this.data = result;
+                this.currentQuery = updatedQuery;
+
+                this.emit('render');
+            }
         }
     }]);
 
@@ -5722,11 +5739,11 @@ var _ResultComponent = __webpack_require__(27);
 
 var _ResultComponent2 = _interopRequireDefault(_ResultComponent);
 
-var _InformationComponent = __webpack_require__(31);
+var _InformationComponent = __webpack_require__(32);
 
 var _InformationComponent2 = _interopRequireDefault(_InformationComponent);
 
-var _SuggestedSearchComponent = __webpack_require__(32);
+var _SuggestedSearchComponent = __webpack_require__(33);
 
 var _SuggestedSearchComponent2 = _interopRequireDefault(_SuggestedSearchComponent);
 
@@ -5818,11 +5835,13 @@ var WidgetFactory = function () {
         key: "result",
         value: function result(_ref4) {
             var target = _ref4.target,
+                itemsPerPage = _ref4.itemsPerPage,
                 classNames = _ref4.classNames,
                 template = _ref4.template;
 
             return (0, _preact.h)(_ResultComponent2.default, {
                 target: target,
+                itemsPerPage: itemsPerPage,
                 classNames: _extends({}, _ResultComponent2.default.defaultProps.classNames, classNames),
                 template: template
             });
@@ -5895,10 +5914,15 @@ var SimpleSearchComponent = function (_Component) {
         }
 
         return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = SimpleSearchComponent.__proto__ || Object.getPrototypeOf(SimpleSearchComponent)).call.apply(_ref, [this].concat(args))), _this), _this.handleSearch = function (e) {
+            var _this$props = _this.props,
+                currentQuery = _this$props.currentQuery,
+                client = _this$props.client;
+
             /**
              * Dispatch input search action
              */
-            (0, _simpleSearchActions.simpleSearchAction)(e.target.value, _this.props.currentQuery, _this.props.client);
+
+            (0, _simpleSearchActions.simpleSearchAction)(e.target.value, currentQuery, client);
         }, _temp), _possibleConstructorReturn(_this, _ret);
     }
 
@@ -5996,7 +6020,7 @@ function simpleSearchAction(text, currentQuery, client) {
 
     client.search(clonedQuery, function (result) {
         _dispatcher2.default.dispatch({
-            type: 'FETCH_DATA',
+            type: 'RENDER_FETCHED_DATA',
             payload: {
                 result: result,
                 updatedQuery: clonedQuery
@@ -6278,7 +6302,12 @@ var SortByComponent = function (_Component) {
         var _this = _possibleConstructorReturn(this, (SortByComponent.__proto__ || Object.getPrototypeOf(SortByComponent)).call(this));
 
         _this.handleChange = function (e) {
-            (0, _sortByActions.onChangeSearchAction)(e.target.value, _this.props.currentQuery, _this.props.client);
+            var _this$props = _this.props,
+                currentQuery = _this$props.currentQuery,
+                client = _this$props.client;
+
+
+            (0, _sortByActions.onChangeSearchAction)(e.target.value, currentQuery, client);
         };
 
         return _this;
@@ -6388,7 +6417,7 @@ function onChangeSearchAction(queryValue, currentQuery, client) {
 
     client.search(clonedQuery, function (result) {
         _dispatcher2.default.dispatch({
-            type: 'FETCH_DATA',
+            type: 'RENDER_FETCHED_DATA',
             payload: {
                 result: result,
                 updatedQuery: clonedQuery
@@ -6425,6 +6454,8 @@ var _Template = __webpack_require__(7);
 
 var _Template2 = _interopRequireDefault(_Template);
 
+var _resultActions = __webpack_require__(31);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -6434,6 +6465,11 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 * @jsx h
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 */
+
+/**
+ * Actions
+ */
+
 
 /**
  * Result Component
@@ -6448,15 +6484,27 @@ var ResultComponent = function (_Component) {
     }
 
     _createClass(ResultComponent, [{
-        key: 'render',
-        value: function render() {
+        key: "componentWillMount",
+        value: function componentWillMount() {
+            /**
+             * Define the items per result page
+             */
+
             var _props = this.props,
-                containerClassName = _props.classNames.container,
-                _props$template = _props.template,
-                topTemplate = _props$template.top,
-                bodyTemplate = _props$template.body,
-                bottomTemplate = _props$template.bottom,
-                data = _props.data;
+                itemsPerPage = _props.itemsPerPage,
+                currentQuery = _props.currentQuery,
+                client = _props.client;
+
+
+            (0, _resultActions.changeItemsPerResultPageSetup)(itemsPerPage, currentQuery, client);
+        }
+    }, {
+        key: "render",
+        value: function render() {
+            var _props2 = this.props,
+                containerClassName = _props2.classNames.container,
+                bodyTemplate = _props2.template.itemsList,
+                data = _props2.data;
 
             /**
              * Data accessible to the template
@@ -6467,20 +6515,12 @@ var ResultComponent = function (_Component) {
             };
 
             return (0, _preact.h)(
-                'div',
-                { className: 'asui-result ' + containerClassName },
-                (0, _preact.h)(_Template2.default, {
-                    template: topTemplate,
-                    className: 'asui-result--header'
-                }),
+                "div",
+                { className: "asui-result " + containerClassName },
                 (0, _preact.h)(_Template2.default, {
                     template: bodyTemplate,
                     data: reducedTemplateData,
-                    className: 'asui-result--body'
-                }),
-                (0, _preact.h)(_Template2.default, {
-                    template: bottomTemplate,
-                    className: 'asui-result--footer'
+                    className: "asui-result--itemsList"
                 })
             );
         }
@@ -6490,12 +6530,9 @@ var ResultComponent = function (_Component) {
 }(_preact.Component);
 
 ResultComponent.defaultProps = {
+    itemsPerPage: 10,
     classNames: {
         container: ''
-    },
-    template: {
-        top: null,
-        bottom: null
     }
 };
 
@@ -7314,6 +7351,59 @@ var Hogan = {};
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.changeItemsPerResultPageSetup = changeItemsPerResultPageSetup;
+
+var _cloneDeep = __webpack_require__(2);
+
+var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
+
+var _dispatcher = __webpack_require__(1);
+
+var _dispatcher2 = _interopRequireDefault(_dispatcher);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Define items per page on result
+ *
+ * This action is triggered when mounting a component
+ * receives three parameters:
+ *   @param itemsPerPage -> the itemsPerPage to be displayed on the result container
+ *   @param currentQuery -> current application query
+ *
+ * Finally dispatches an event with the modified query.
+ *   @returns {{
+ *     type: string,
+ *     payload: {
+ *        updatedQuery
+ *     }
+ *   }}
+ */
+/**
+ * Search actions
+ */
+function changeItemsPerResultPageSetup(itemsPerPage, currentQuery) {
+    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+    clonedQuery.setResultSize(itemsPerPage);
+
+    _dispatcher2.default.dispatch({
+        type: 'UPDATE_APISEARCH_SETUP',
+        payload: {
+            updatedQuery: clonedQuery
+        }
+    });
+}
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -7383,7 +7473,7 @@ InformationComponent.defaultProps = {
 exports.default = InformationComponent;
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7397,9 +7487,9 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _helpers = __webpack_require__(33);
+var _helpers = __webpack_require__(34);
 
-var _suggestedSearchActions = __webpack_require__(34);
+var _suggestedSearchActions = __webpack_require__(35);
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
@@ -7490,7 +7580,12 @@ var SuggestedSearchComponent = function (_Component) {
                     currentSuggestions: []
                 });
 
-                (0, _suggestedSearchActions.simpleSearchAction)(_this.state.q, _this.props.currentQuery, _this.props.client);
+                var _this$props = _this.props,
+                    currentQuery = _this$props.currentQuery,
+                    client = _this$props.client;
+
+
+                (0, _suggestedSearchActions.simpleSearchAction)(_this.state.q, currentQuery, client);
             }
         };
 
@@ -7611,7 +7706,7 @@ SuggestedSearchComponent.defaultProps = {
 exports.default = SuggestedSearchComponent;
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7722,7 +7817,7 @@ function selectActiveSuggestion(suggestionsArray) {
 }
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7775,7 +7870,7 @@ function simpleSearchAction(text, currentQuery, client) {
 
     client.search(clonedQuery, function (result) {
         _dispatcher2.default.dispatch({
-            type: 'FETCH_DATA',
+            type: 'RENDER_FETCHED_DATA',
             payload: {
                 result: result,
                 updatedQuery: clonedQuery
@@ -7796,7 +7891,7 @@ function suggestedSearchAction(text, currentQuery, client) {
 
     client.search(clonedQuery, function (result) {
         _dispatcher2.default.dispatch({
-            type: 'FETCH_DATA',
+            type: 'RENDER_FETCHED_DATA',
             payload: {
                 result: result,
                 updatedQuery: clonedQuery

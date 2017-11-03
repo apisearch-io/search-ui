@@ -40,7 +40,7 @@ export function simpleSearchAction(
 
     client.search(clonedQuery, result => {
         dispatcher.dispatch({
-            type: 'FETCH_DATA',
+            type: 'RENDER_FETCHED_DATA',
             payload: {
                 result,
                 updatedQuery: clonedQuery
@@ -69,7 +69,7 @@ export function suggestedSearchAction(
 
     client.search(clonedQuery, result => {
         dispatcher.dispatch({
-            type: 'FETCH_DATA',
+            type: 'RENDER_FETCHED_DATA',
             payload: {
                 result,
                 updatedQuery: clonedQuery

@@ -137,10 +137,15 @@ class SuggestedSearchComponent extends Component {
                 currentSuggestions: []
             });
 
+            const {
+                currentQuery,
+                client
+            } = this.props;
+
             simpleSearchAction(
                 this.state.q,
-                this.props.currentQuery,
-                this.props.client
+                currentQuery,
+                client
             )
         }
     };

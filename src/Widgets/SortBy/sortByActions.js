@@ -39,7 +39,7 @@ export function onChangeSearchAction(
 
     client.search(clonedQuery, result => {
         dispatcher.dispatch({
-            type: 'FETCH_DATA',
+            type: 'RENDER_FETCHED_DATA',
             payload: {
                 result,
                 updatedQuery: clonedQuery

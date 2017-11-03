@@ -6,9 +6,31 @@ import { h, Component } from 'preact';
 import Template from "../Template";
 
 /**
+ * Actions
+ */
+import {changeItemsPerResultPageSetup} from "./resultActions";
+
+/**
  * Result Component
  */
 class ResultComponent extends Component {
+    componentWillMount() {
+        /**
+         * Define the items per result page
+         */
+
+        const {
+            itemsPerPage,
+            currentQuery,
+            client
+        } = this.props;
+
+        changeItemsPerResultPageSetup(
+            itemsPerPage,
+            currentQuery,
+            client
+        )
+    }
 
     render() {
         const {
@@ -16,9 +38,7 @@ class ResultComponent extends Component {
                 container: containerClassName
             },
             template: {
-                top: topTemplate,
-                body: bodyTemplate,
-                bottom: bottomTemplate
+                itemsList: bodyTemplate
             },
             data
         } = this.props;
@@ -32,18 +52,15 @@ class ResultComponent extends Component {
 
         return (
             <div className={`asui-result ${containerClassName}`}>
-                <Template
-                    template={topTemplate}
-                    className={`asui-result--header`}
-                />
+                {
+                 /**
+                  * @todo: add initial message template
+                  */
+                }
                 <Template
                     template={bodyTemplate}
                     data={reducedTemplateData}
-                    className={`asui-result--body`}
-                />
-                <Template
-                    template={bottomTemplate}
-                    className={`asui-result--footer`}
+                    className={`asui-result--itemsList`}
                 />
             </div>
         )
@@ -51,12 +68,9 @@ class ResultComponent extends Component {
 }
 
 ResultComponent.defaultProps = {
+    itemsPerPage: 10,
     classNames: {
         container: ''
-    },
-    template: {
-        top: null,
-        bottom: null
     }
 };
 

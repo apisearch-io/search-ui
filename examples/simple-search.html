@@ -107,11 +107,12 @@
             }),
             ui.widgets.result({
                 target: '.result',
+                itemsPerPage: 5,
                 classNames: {
                     container: 'column'
                 },
                 template: {
-                    body: document.getElementById('result-search-tpl').text,
+                    itemsList: document.getElementById('result-search-tpl').text,
                 }
             }),
             ui.widgets.information({

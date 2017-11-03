@@ -93,11 +93,13 @@ class WidgetFactory {
      */
     static result({
         target,
+        itemsPerPage,
         classNames,
         template
     }) {
         return <ResultComponent
             target={target}
+            itemsPerPage={itemsPerPage}
             classNames={{
                 ...ResultComponent.defaultProps.classNames,
                 ...classNames
