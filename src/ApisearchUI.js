@@ -20,7 +20,7 @@ class ApisearchUI extends EventEmitter {
         /**
          * Store related properties
          */
-        this.currentQuery = client.query.create('', 1, 15);
+        this.currentQuery = client.query.create('');
         this.data = {
             query: {
                 q: ''
@@ -107,8 +107,11 @@ class ApisearchUI extends EventEmitter {
 }
 
 function hydrateWidget(currentStore, widget) {
-    // pass apisearchClient as an component attribute
-    // this will be accessible on component props.
+    /**
+     * Pass ApisearchClient, current Query, and data received
+     * as a component attributes. There will be accessible
+     * on component props.
+     */
     widget.attributes.data = currentStore.data;
     widget.attributes.client = currentStore.client;
     widget.attributes.currentQuery = currentStore.currentQuery;

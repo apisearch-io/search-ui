@@ -27,6 +27,7 @@ class SimpleSearchComponent extends Component {
     render() {
         const {
             placeholder,
+            autofocus,
             classNames: {
                 container: containerClassName,
                 input: inputClassName
@@ -38,6 +39,7 @@ class SimpleSearchComponent extends Component {
                 <input
                     type='text'
                     className={`asui-simpleSearch--input ${inputClassName}`}
+                    autofocus={autofocus}
                     placeholder={placeholder}
                     onKeyUp={this.handleSearch}
                 />
@@ -48,6 +50,7 @@ class SimpleSearchComponent extends Component {
 
 SimpleSearchComponent.defaultProps = {
     placeholder: '',
+    autofocus: false,
     classNames: {
         container: '',
         input: ''

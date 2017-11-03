@@ -164,6 +164,7 @@ class SuggestedSearchComponent extends Component {
     render() {
         const {
             placeholder,
+            autofocus,
             classNames: {
                 container: containerClassName,
                 input: inputClassName,
@@ -184,6 +185,7 @@ class SuggestedSearchComponent extends Component {
                     value={this.state.q}
                     className={`asui-suggestedSearch--input ${inputClassName}`}
                     placeholder={placeholder}
+                    autofocus={autofocus}
 
                     onInput={this.handleSearch}
                     onKeyDown={this.handleSuggestionsNavigation}
@@ -225,6 +227,7 @@ class SuggestedSearchComponent extends Component {
 
 SuggestedSearchComponent.defaultProps = {
     placeholder: '',
+    autofocus: false,
     classNames: {
         container: '',
         input: '',

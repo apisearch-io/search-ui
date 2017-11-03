@@ -5257,7 +5257,7 @@ var ApisearchUI = function (_EventEmitter) {
         /**
          * Store related properties
          */
-        _this.currentQuery = client.query.create('', 1, 15);
+        _this.currentQuery = client.query.create('');
         _this.data = {
             query: {
                 q: ''
@@ -5359,8 +5359,11 @@ var ApisearchUI = function (_EventEmitter) {
 }(_events.EventEmitter);
 
 function hydrateWidget(currentStore, widget) {
-    // pass apisearchClient as an component attribute
-    // this will be accessible on component props.
+    /**
+     * Pass ApisearchClient, current Query, and data received
+     * as a component attributes. There will be accessible
+     * on component props.
+     */
     widget.attributes.data = currentStore.data;
     widget.attributes.client = currentStore.client;
     widget.attributes.currentQuery = currentStore.currentQuery;
@@ -5756,11 +5759,13 @@ var WidgetFactory = function () {
         value: function simpleSearch(_ref) {
             var target = _ref.target,
                 placeholder = _ref.placeholder,
+                autofocus = _ref.autofocus,
                 classNames = _ref.classNames;
 
             return (0, _preact.h)(_SimpleSearchComponent2.default, {
                 target: target,
                 placeholder: placeholder,
+                autofocus: autofocus,
                 classNames: _extends({}, _SimpleSearchComponent2.default.defaultProps.classNames, classNames)
             });
         }
@@ -5774,12 +5779,14 @@ var WidgetFactory = function () {
         value: function suggestedSearch(_ref2) {
             var target = _ref2.target,
                 placeholder = _ref2.placeholder,
+                autofocus = _ref2.autofocus,
                 classNames = _ref2.classNames,
                 template = _ref2.template;
 
             return (0, _preact.h)(_SuggestedSearchComponent2.default, {
                 target: target,
                 placeholder: placeholder,
+                autofocus: autofocus,
                 classNames: _extends({}, _SuggestedSearchComponent2.default.defaultProps.classNames, classNames),
                 template: template
             });
@@ -5905,6 +5912,7 @@ var SimpleSearchComponent = function (_Component) {
         value: function render() {
             var _props = this.props,
                 placeholder = _props.placeholder,
+                autofocus = _props.autofocus,
                 _props$classNames = _props.classNames,
                 containerClassName = _props$classNames.container,
                 inputClassName = _props$classNames.input;
@@ -5916,6 +5924,7 @@ var SimpleSearchComponent = function (_Component) {
                 (0, _preact.h)('input', {
                     type: 'text',
                     className: 'asui-simpleSearch--input ' + inputClassName,
+                    autofocus: autofocus,
                     placeholder: placeholder,
                     onKeyUp: this.handleSearch
                 })
@@ -5928,6 +5937,7 @@ var SimpleSearchComponent = function (_Component) {
 
 SimpleSearchComponent.defaultProps = {
     placeholder: '',
+    autofocus: false,
     classNames: {
         container: '',
         input: ''
@@ -7536,6 +7546,7 @@ var SuggestedSearchComponent = function (_Component) {
 
             var _props = this.props,
                 placeholder = _props.placeholder,
+                autofocus = _props.autofocus,
                 _props$classNames = _props.classNames,
                 containerClassName = _props$classNames.container,
                 inputClassName = _props$classNames.input,
@@ -7553,6 +7564,7 @@ var SuggestedSearchComponent = function (_Component) {
                     value: this.state.q,
                     className: 'asui-suggestedSearch--input ' + inputClassName,
                     placeholder: placeholder,
+                    autofocus: autofocus,
 
                     onInput: this.handleSearch,
                     onKeyDown: this.handleSuggestionsNavigation,
@@ -7586,6 +7598,7 @@ var SuggestedSearchComponent = function (_Component) {
 
 SuggestedSearchComponent.defaultProps = {
     placeholder: '',
+    autofocus: false,
     classNames: {
         container: '',
         input: '',
