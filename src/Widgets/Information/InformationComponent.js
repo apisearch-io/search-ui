@@ -23,8 +23,8 @@ class InformationComponent extends Component {
          * Data accessible to the template
          */
         let reducedTemplateData = {
-            total_hits: data.total_hits,
-            total_items: data.total_items
+            total_hits: parseInt(data.total_hits).toLocaleString('de-DE'),
+            total_items: parseInt(data.total_items).toLocaleString('de-DE')
         };
 
         return (

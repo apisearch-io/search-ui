@@ -7450,8 +7450,8 @@ var InformationComponent = function (_Component) {
              */
 
             var reducedTemplateData = {
-                total_hits: data.total_hits,
-                total_items: data.total_items
+                total_hits: parseInt(data.total_hits).toLocaleString('de-DE'),
+                total_items: parseInt(data.total_items).toLocaleString('de-DE')
             };
 
             return (0, _preact.h)(_Template2.default, {

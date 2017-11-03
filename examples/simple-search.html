@@ -118,7 +118,9 @@
             ui.widgets.information({
                 target: '.information',
                 template: {
-                    container: '<span class="tag is-primary">Matched {{total_hits}} of {{total_items}}!</span>'
+                    container: '<span class="tag is-primary">' +
+                        '<i class="fa fa-bolt"></i> &nbsp; Matched {{total_hits}} of {{total_items}}!' +
+                    '</span>'
                 }
             })
         );
