@@ -66,10 +66,10 @@ This widget points to `searchable_metadata` and
 const simpleSearchWidget = ui.widgets.simpleSearch({ 
   target: !string,
   placeholder: ?string,
-  autofocus: ?bool[default:false],
+  autofocus: ?bool[false],
   classNames: {
       container: ?string,
-      input: string
+      input: ?string
   }
 });
 ```
@@ -83,7 +83,7 @@ you are looking for just below the search input.
 const suggestedSearchWidget = ui.widgets.suggestedSearch({ 
   target: !string,
   placeholder: ?string,
-  autofocus: ?bool[default:false],
+  autofocus: ?bool[false],
   classNames: {
       container: ?string,
       input: ?string,
@@ -121,7 +121,8 @@ based on the search.
 ```javascript
 const resultWidget = ui.widgets.result({
   target: !string,
-  itemsPerPage: ?integer[default:10],
+  itemsPerPage: ?integer[10],
+  showInitialResult: ?bool[false],
   classNames: {
       container: ?string
   },

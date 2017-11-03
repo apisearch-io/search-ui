@@ -16,19 +16,19 @@ import {changeItemsPerResultPageSetup} from "./resultActions";
 class ResultComponent extends Component {
     componentWillMount() {
         /**
-         * Define the items per result page
+         * Define initial Setup on component mounting
+         * that refers to the store configuration
+         * and affects other widgets
          */
 
         const {
             itemsPerPage,
-            currentQuery,
-            client
+            currentQuery
         } = this.props;
 
         changeItemsPerResultPageSetup(
             itemsPerPage,
-            currentQuery,
-            client
+            currentQuery
         )
     }
 

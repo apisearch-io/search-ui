@@ -8,7 +8,7 @@ import dispatcher from '../../dispatcher';
  * Define items per page on result
  *
  * This action is triggered when mounting a component
- * receives three parameters:
+ * receives two parameters:
  *   @param itemsPerPage -> the itemsPerPage to be displayed on the result container
  *   @param currentQuery -> current application query
  *

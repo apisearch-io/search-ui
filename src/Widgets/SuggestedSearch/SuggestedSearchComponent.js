@@ -87,13 +87,6 @@ class SuggestedSearchComponent extends Component {
 
     handleSuggestionsNavigation = (e) => {
         /**
-         * Return if no suggestions
-         */
-        if (this.state.currentSuggestions.length === 0) {
-            return;
-        }
-
-        /**
          * When user hits arrow down
          */
         if (e.code === 'ArrowDown') {

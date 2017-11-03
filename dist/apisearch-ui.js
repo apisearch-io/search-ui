@@ -6487,16 +6487,17 @@ var ResultComponent = function (_Component) {
         key: "componentWillMount",
         value: function componentWillMount() {
             /**
-             * Define the items per result page
+             * Define initial Setup on component mounting
+             * that refers to the store configuration
+             * and affects other widgets
              */
 
             var _props = this.props,
                 itemsPerPage = _props.itemsPerPage,
-                currentQuery = _props.currentQuery,
-                client = _props.client;
+                currentQuery = _props.currentQuery;
 
 
-            (0, _resultActions.changeItemsPerResultPageSetup)(itemsPerPage, currentQuery, client);
+            (0, _resultActions.changeItemsPerResultPageSetup)(itemsPerPage, currentQuery);
         }
     }, {
         key: "render",
@@ -7367,7 +7368,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Define items per page on result
  *
  * This action is triggered when mounting a component
- * receives three parameters:
+ * receives two parameters:
  *   @param itemsPerPage -> the itemsPerPage to be displayed on the result container
  *   @param currentQuery -> current application query
  *
@@ -7539,13 +7540,6 @@ var SuggestedSearchComponent = function (_Component) {
         };
 
         _this.handleSuggestionsNavigation = function (e) {
-            /**
-             * Return if no suggestions
-             */
-            if (_this.state.currentSuggestions.length === 0) {
-                return;
-            }
-
             /**
              * When user hits arrow down
              */
@@ -7866,7 +7860,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 function simpleSearchAction(text, currentQuery, client) {
     var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
-    clonedQuery.setQueryText(text).setResultSize(30).disableSuggestions();
+    clonedQuery.setQueryText(text).disableSuggestions();
 
     client.search(clonedQuery, function (result) {
         _dispatcher2.default.dispatch({
@@ -7884,10 +7878,8 @@ function simpleSearchAction(text, currentQuery, client) {
  * Builds a query using suggested search flag active
  */
 function suggestedSearchAction(text, currentQuery, client) {
-    var emptyResultSize = 0;
-
     var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
-    clonedQuery.setQueryText(text).setResultSize(emptyResultSize).enableSuggestions();
+    clonedQuery.setQueryText(text).enableSuggestions();
 
     client.search(clonedQuery, function (result) {
         _dispatcher2.default.dispatch({

@@ -86,6 +86,16 @@
 
         // Widgets setup
         ui.addWidgets(
+            ui.widgets.result({
+                target: '.result',
+                itemsPerPage: 16,
+                classNames: {
+                    container: 'column'
+                },
+                template: {
+                    itemsList: document.getElementById('result-search-tpl').text,
+                }
+            }),
             ui.widgets.simpleSearch({
                 target: '.search',
                 placeholder: 'Search something...',
@@ -104,16 +114,6 @@
                     {name: 'Oldest', value: 'year:asc'},
                     {name: 'Newest', value: 'year:desc'}
                 ]
-            }),
-            ui.widgets.result({
-                target: '.result',
-                itemsPerPage: 5,
-                classNames: {
-                    container: 'column'
-                },
-                template: {
-                    itemsList: document.getElementById('result-search-tpl').text,
-                }
             }),
             ui.widgets.information({
                 target: '.information',
