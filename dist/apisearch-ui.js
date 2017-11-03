@@ -7457,7 +7457,7 @@ var InformationComponent = function (_Component) {
             return (0, _preact.h)(_Template2.default, {
                 template: containerTemplate,
                 data: reducedTemplateData,
-                className: 'asui-resultInformation ' + containerClassName
+                className: 'asui-information ' + containerClassName
             });
         }
     }]);

@@ -31,7 +31,7 @@ class InformationComponent extends Component {
             <Template
                 template={containerTemplate}
                 data={reducedTemplateData}
-                className={`asui-resultInformation ${containerClassName}`}
+                className={`asui-information ${containerClassName}`}
             />
         )
     }
