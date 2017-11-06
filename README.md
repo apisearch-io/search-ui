@@ -122,7 +122,6 @@ based on the search.
 const resultWidget = ui.widgets.result({
   target: !string,
   itemsPerPage: ?integer[10],
-  showInitialResult: ?bool[false],
   classNames: {
       container: ?string
   },
@@ -194,7 +193,7 @@ Currently only can show the **number of hits** of
 the current search and the total **number of items**.
 
 ```javascript
-const resultInformationWidget = ui.widgets.resultInformation({
+const resultInformationWidget = ui.widgets.information({
   target: !string,
   classNames: {
       container: ?string

@@ -5,6 +5,7 @@ import SortByComponent from './../SortByComponent';
 
 describe('<SortByComponent />',() => {
     const defaultProps = {
+        target: '#some-tagret',
         options: [
             {name: 'Oldest', value: 'year:asc'},
             {name: 'Newest', value: 'year:desc'}
@@ -12,10 +13,9 @@ describe('<SortByComponent />',() => {
     }
 
     it('should render with default props', () => {
-        const tree = shallow(<SortByComponent
-            target={'#some-tagret'}
-            {...defaultProps}
-        />);
+        const tree = shallow(
+            <SortByComponent {...defaultProps} />
+        );
 
         expect(tree).toMatchSnapshot();
     });
@@ -25,33 +25,30 @@ describe('<SortByComponent />',() => {
          * Full custom props available object
          */
         const customProps = {
-            options: [
-                {name: 'Oldest', value: 'year:asc'},
-                {name: 'Newest', value: 'year:desc'}
-            ],
             classNames: {
                 container: 'custom-container-class'
             }
         }
 
-        const tree = shallow(<SortByComponent
-            target={'#some-tagret'}
-            {...customProps}
-        />);
+        const tree = shallow(
+            <SortByComponent
+                {...defaultProps}
+                {...customProps}
+            />
+        );
 
         expect(tree).toMatchSnapshot();
     });
 
     it('should handleChange()', () => {
-        const tree = shallow(<SortByComponent
-            target={'#some-tagret'}
-            {...defaultProps}
-        />);
+        const tree = shallow(
+            <SortByComponent {...defaultProps} />
+        );
 
         const trigger = jest.fn();
         tree.find('select')[0].attributes.onChange = trigger
         tree.find('select').simulate('change');
 
-        expect(trigger).toBeCalled()
+        expect(trigger).toBeCalled();
     });
 });

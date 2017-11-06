@@ -1,0 +1,121 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<ResultComponent /> should render with custom props 1`] = `
+Object {
+  "children": Array [],
+  "classNames": Object {
+    "container": "custom-container-class",
+  },
+  "data": Object {
+    "items": Array [
+      Object {
+        "metadata": Object {
+          "img": "https://api.marvel.com/v2/characters/tony-stark",
+          "name": "Tony Stark",
+        },
+      },
+      Object {
+        "metadata": Object {
+          "img": "https://api.marvel.com/v2/characters/peter-parker",
+          "name": "Peter Parker",
+        },
+      },
+    ],
+  },
+  "itemsPerPage": 20,
+  "target": "#some-target",
+  "template": Object {
+    "itemsList": "
+                <ul>
+                {{#items}} 
+                    <li>{{metadata.name}}</li> 
+                {{/items}}
+                </ul>
+            ",
+  },
+}
+`;
+
+exports[`<ResultComponent /> should render with custom props 2`] = `
+preact-render-spy (1 nodes)
+-------
+<div class="asui-result custom-container-class">
+  <div class="asui-result--itemsList">
+    
+                    <ul>
+                        <li>Tony Stark</li> 
+                        <li>Peter Parker</li> 
+                    </ul>
+                
+  </div>
+</div>
+
+`;
+
+exports[`<ResultComponent /> should render with default props 1`] = `
+Object {
+  "children": Array [],
+  "classNames": Object {
+    "container": "",
+  },
+  "data": Object {
+    "items": Array [
+      Object {
+        "metadata": Object {
+          "img": "https://api.marvel.com/v2/characters/tony-stark",
+          "name": "Tony Stark",
+        },
+      },
+      Object {
+        "metadata": Object {
+          "img": "https://api.marvel.com/v2/characters/peter-parker",
+          "name": "Peter Parker",
+        },
+      },
+    ],
+  },
+  "itemsPerPage": 10,
+  "target": "#some-target",
+  "template": Object {
+    "itemsList": "
+                <ul>
+                {{#items}} 
+                    <li>{{metadata.name}}</li> 
+                {{/items}}
+                </ul>
+            ",
+  },
+}
+`;
+
+exports[`<ResultComponent /> should render with default props 2`] = `
+preact-render-spy (1 nodes)
+-------
+<div class="asui-result ">
+  <div class="asui-result--itemsList">
+    
+                    <ul>
+                        <li>Tony Stark</li> 
+                        <li>Peter Parker</li> 
+                    </ul>
+                
+  </div>
+</div>
+
+`;
+
+exports[`<ResultComponent /> should update content when passing new data 1`] = `
+preact-render-spy (1 nodes)
+-------
+<div class="asui-result ">
+  <div class="asui-result--itemsList">
+    
+                    <ul>
+                        <li>Robert Bruce Banner</li> 
+                        <li>Thor Odinson</li> 
+                    </ul>
+                
+  </div>
+</div>
+
+`;
