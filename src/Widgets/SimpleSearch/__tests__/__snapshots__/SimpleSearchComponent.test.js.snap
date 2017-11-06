@@ -6,9 +6,9 @@ preact-render-spy (1 nodes)
 <div class="asui-simpleSearch custom-container-class">
   <input
     type="text"
-    class="asui-simpleSearch--input custom-input-class"
-    autofocus={true}
-    placeholder="Write something..."
+    class="asui-simpleSearch--input undefined"
+    autofocus={false}
+    placeholder=""
     onInput={[Function anonymous]}
    />
 </div>

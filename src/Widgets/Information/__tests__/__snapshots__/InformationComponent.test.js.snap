@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<InformationComponent /> should render with custom props 1`] = `
+preact-render-spy (1 nodes)
+-------
+<div class="asui-information custom-container-class">
+  
+              <span class="total-hits">12</span>
+              <span class="total-items">32</span>
+          
+</div>
+
+`;
+
+exports[`<InformationComponent /> should render with default props 1`] = `
+preact-render-spy (1 nodes)
+-------
+<div class="asui-information ">
+  
+              <span class="total-hits">12</span>
+              <span class="total-items">32</span>
+          
+</div>
+
+`;

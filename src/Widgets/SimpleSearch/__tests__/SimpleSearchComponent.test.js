@@ -13,12 +13,12 @@ describe('<SimpleSearchComponent />',() => {
     });
 
     it('should render with custom props', () => {
+        /**
+         * Full custom props available object
+         */
         const customProps = {
-            placeholder: 'Write something...',
-            autofocus: true,
             classNames: {
-                container: 'custom-container-class',
-                input: 'custom-input-class'
+                container: 'custom-container-class'
             }
         }
 
@@ -29,15 +29,4 @@ describe('<SimpleSearchComponent />',() => {
 
         expect(tree).toMatchSnapshot();
     });
-    //
-    // it('should do something', () => {
-    //     const trigger = jest.fn();
-    //     const tree = shallow(<SimpleSearchComponent
-    //         target={'#some-tagret'}
-    //         onInput={trigger}
-    //     />);
-    //
-    //     tree.find('input').simulate('input', 'Some query text');
-    //     expect(trigger).toHaveBeenCalled();
-    // });
 });
