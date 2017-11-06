@@ -5950,7 +5950,7 @@ var SimpleSearchComponent = function (_Component) {
                     className: 'asui-simpleSearch--input ' + inputClassName,
                     autofocus: autofocus,
                     placeholder: placeholder,
-                    onKeyUp: this.handleSearch
+                    onInput: this.handleSearch
                 })
             );
         }

@@ -1,5 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`<InformationComponent /> should change values when props change 1`] = `
+preact-render-spy (1 nodes)
+-------
+<div class="asui-information ">
+  
+              <span class="total-hits">34</span>
+              <span class="total-items">67</span>
+          
+</div>
+
+`;
+
 exports[`<InformationComponent /> should render with custom props 1`] = `
 preact-render-spy (1 nodes)
 -------

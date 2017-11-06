@@ -44,4 +44,23 @@ describe('<InformationComponent />',() => {
 
         expect(tree).toMatchSnapshot();
     });
+    it('should change values when props change', () => {
+        const tree = deep(<InformationComponent
+            target={'#some-tagret'}
+            template={templateString}
+            data={data}
+        />);
+
+        const updatedDataProps = {
+            total_hits: 34,
+            total_items: 67
+        }
+        tree.render(<InformationComponent
+            target={'#some-tagret'}
+            template={templateString}
+            data={updatedDataProps}
+        />)
+
+        expect(tree).toMatchSnapshot();
+    });
 });
