@@ -8,10 +8,6 @@ import {onChangeSearchAction} from "./sortByActions";
  * SortBy Filter Component
  */
 class SortByComponent extends Component {
-    constructor() {
-        super();
-    }
-
     shouldComponentUpdate() {
         return false;
     }
@@ -22,6 +18,9 @@ class SortByComponent extends Component {
             client
         } = this.props;
 
+        /**
+         * Dispatch action
+         */
         onChangeSearchAction(
             e.target.value,
             currentQuery,

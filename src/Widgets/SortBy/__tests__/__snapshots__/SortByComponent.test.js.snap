@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<SortByComponent /> should render with custom props 1`] = `
+preact-render-spy (1 nodes)
+-------
+<div class="asui-sortBy custom-container-class">
+  <select
+    class="asui-sortBy--selector undefined"
+    onChange={[Function anonymous]}
+  >
+    <option value="year:asc">Oldest</option>
+    <option value="year:desc">Newest</option>
+  </select>
+</div>
+
+`;
+
+exports[`<SortByComponent /> should render with default props 1`] = `
+preact-render-spy (1 nodes)
+-------
+<div class="asui-sortBy ">
+  <select
+    class="asui-sortBy--selector "
+    onChange={[Function anonymous]}
+  >
+    <option value="year:asc">Oldest</option>
+    <option value="year:desc">Newest</option>
+  </select>
+</div>
+
+`;

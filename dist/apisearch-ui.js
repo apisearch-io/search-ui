@@ -6284,20 +6284,27 @@ var SortByComponent = function (_Component) {
     _inherits(SortByComponent, _Component);
 
     function SortByComponent() {
+        var _ref;
+
+        var _temp, _this, _ret;
+
         _classCallCheck(this, SortByComponent);
 
-        var _this = _possibleConstructorReturn(this, (SortByComponent.__proto__ || Object.getPrototypeOf(SortByComponent)).call(this));
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+        }
 
-        _this.handleChange = function (e) {
+        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = SortByComponent.__proto__ || Object.getPrototypeOf(SortByComponent)).call.apply(_ref, [this].concat(args))), _this), _this.handleChange = function (e) {
             var _this$props = _this.props,
                 currentQuery = _this$props.currentQuery,
                 client = _this$props.client;
 
+            /**
+             * Dispatch action
+             */
 
             (0, _sortByActions.onChangeSearchAction)(e.target.value, currentQuery, client);
-        };
-
-        return _this;
+        }, _temp), _possibleConstructorReturn(_this, _ret);
     }
 
     _createClass(SortByComponent, [{
