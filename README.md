@@ -238,6 +238,9 @@ Extra todo list:
 - [ ] Add callbacks before and after a widget action
 to execute customized anonymous functions.
 - [ ] Work with propTypes?
+
+# Testing
+
  
 # Widget creation workflow
  1. Define widget properties

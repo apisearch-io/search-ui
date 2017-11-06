@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<SimpleSearchComponent /> should render with custom props 1`] = `
+preact-render-spy (1 nodes)
+-------
+<div class="asui-simpleSearch custom-container-class">
+  <input
+    type="text"
+    class="asui-simpleSearch--input custom-input-class"
+    autofocus={true}
+    placeholder="Write something..."
+    onInput={[Function anonymous]}
+   />
+</div>
+
+`;
+
+exports[`<SimpleSearchComponent /> should render with default props 1`] = `
+preact-render-spy (1 nodes)
+-------
+<div class="asui-simpleSearch ">
+  <input
+    type="text"
+    class="asui-simpleSearch--input "
+    autofocus={false}
+    placeholder=""
+    onInput={[Function anonymous]}
+   />
+</div>
+
+`;

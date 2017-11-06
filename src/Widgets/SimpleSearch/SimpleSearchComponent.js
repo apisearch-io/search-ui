@@ -46,7 +46,7 @@ class SimpleSearchComponent extends Component {
                     className={`asui-simpleSearch--input ${inputClassName}`}
                     autofocus={autofocus}
                     placeholder={placeholder}
-                    onKeyUp={this.handleSearch}
+                    onInput={this.handleSearch}
                 />
             </div>
         );

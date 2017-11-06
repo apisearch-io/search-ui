@@ -1079,9 +1079,9 @@ exports.default = new _flux.Dispatcher();
  */
 
 var isObject = __webpack_require__(18);
-var clone = __webpack_require__(21);
+var clone = __webpack_require__(20);
 var typeOf = __webpack_require__(6);
-var forOwn = __webpack_require__(24);
+var forOwn = __webpack_require__(23);
 
 /**
  * Recursively clone native types.
@@ -1366,7 +1366,7 @@ module.exports = function forIn(obj, fn, thisArg) {
 /* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isBuffer = __webpack_require__(23);
+var isBuffer = __webpack_require__(22);
 var toString = Object.prototype.toString;
 
 /**
@@ -1499,7 +1499,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _hogan = __webpack_require__(28);
+var _hogan = __webpack_require__(27);
 
 var _hogan2 = _interopRequireDefault(_hogan);
 
@@ -5731,19 +5731,19 @@ var _SimpleSearchComponent = __webpack_require__(16);
 
 var _SimpleSearchComponent2 = _interopRequireDefault(_SimpleSearchComponent);
 
-var _SortByComponent = __webpack_require__(25);
+var _SortByComponent = __webpack_require__(24);
 
 var _SortByComponent2 = _interopRequireDefault(_SortByComponent);
 
-var _ResultComponent = __webpack_require__(27);
+var _ResultComponent = __webpack_require__(26);
 
 var _ResultComponent2 = _interopRequireDefault(_ResultComponent);
 
-var _InformationComponent = __webpack_require__(32);
+var _InformationComponent = __webpack_require__(31);
 
 var _InformationComponent2 = _interopRequireDefault(_InformationComponent);
 
-var _SuggestedSearchComponent = __webpack_require__(33);
+var _SuggestedSearchComponent = __webpack_require__(32);
 
 var _SuggestedSearchComponent2 = _interopRequireDefault(_SuggestedSearchComponent);
 
@@ -6081,32 +6081,19 @@ module.exports = function isPlainObject(o) {
 /*!
  * isobject <https://github.com/jonschlinkert/isobject>
  *
- * Copyright (c) 2014-2015, Jon Schlinkert.
- * Licensed under the MIT License.
+ * Copyright (c) 2014-2017, Jon Schlinkert.
+ * Released under the MIT License.
  */
 
 
 
-var isArray = __webpack_require__(20);
-
 module.exports = function isObject(val) {
-  return val != null && typeof val === 'object' && isArray(val) === false;
+  return val != null && typeof val === 'object' && Array.isArray(val) === false;
 };
 
 
 /***/ }),
 /* 20 */
-/***/ (function(module, exports) {
-
-var toString = {}.toString;
-
-module.exports = Array.isArray || function (arr) {
-  return toString.call(arr) == '[object Array]';
-};
-
-
-/***/ }),
-/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6120,7 +6107,7 @@ module.exports = Array.isArray || function (arr) {
 
 
 var isObject = __webpack_require__(4);
-var mixin = __webpack_require__(22);
+var mixin = __webpack_require__(21);
 var typeOf = __webpack_require__(6);
 
 /**
@@ -6170,7 +6157,7 @@ module.exports = clone;
 
 
 /***/ }),
-/* 22 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6212,13 +6199,13 @@ function copy(value, key) {
 module.exports = mixin;
 
 /***/ }),
-/* 23 */
+/* 22 */
 /***/ (function(module, exports) {
 
 /*!
  * Determine if an object is a Buffer
  *
- * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
+ * @author   Feross Aboukhadijeh <https://feross.org>
  * @license  MIT
  */
 
@@ -6239,7 +6226,7 @@ function isSlowBuffer (obj) {
 
 
 /***/ }),
-/* 24 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6265,7 +6252,7 @@ module.exports = function forOwn(obj, fn, thisArg) {
 
 
 /***/ }),
-/* 25 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6279,7 +6266,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _sortByActions = __webpack_require__(26);
+var _sortByActions = __webpack_require__(25);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -6362,7 +6349,7 @@ SortByComponent.defaultProps = {
 exports.default = SortByComponent;
 
 /***/ }),
-/* 26 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6436,7 +6423,7 @@ function splitQueryValue(string) {
 }
 
 /***/ }),
-/* 27 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6454,7 +6441,7 @@ var _Template = __webpack_require__(7);
 
 var _Template2 = _interopRequireDefault(_Template);
 
-var _resultActions = __webpack_require__(31);
+var _resultActions = __webpack_require__(30);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6540,7 +6527,7 @@ ResultComponent.defaultProps = {
 exports.default = ResultComponent;
 
 /***/ }),
-/* 28 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -6560,14 +6547,14 @@ exports.default = ResultComponent;
 
 // This file is for use with Node.js. See dist/ for browser files.
 
-var Hogan = __webpack_require__(29);
-Hogan.Template = __webpack_require__(30).Template;
+var Hogan = __webpack_require__(28);
+Hogan.Template = __webpack_require__(29).Template;
 Hogan.template = Hogan.Template;
 module.exports = Hogan;
 
 
 /***/ }),
-/* 29 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -6996,7 +6983,7 @@ module.exports = Hogan;
 
 
 /***/ }),
-/* 30 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -7343,7 +7330,7 @@ var Hogan = {};
 
 
 /***/ }),
-/* 31 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7396,7 +7383,7 @@ function changeItemsPerResultPageSetup(itemsPerPage, currentQuery) {
 }
 
 /***/ }),
-/* 32 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7474,7 +7461,7 @@ InformationComponent.defaultProps = {
 exports.default = InformationComponent;
 
 /***/ }),
-/* 33 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7488,9 +7475,9 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _helpers = __webpack_require__(34);
+var _helpers = __webpack_require__(33);
 
-var _suggestedSearchActions = __webpack_require__(35);
+var _suggestedSearchActions = __webpack_require__(34);
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
@@ -7700,7 +7687,7 @@ SuggestedSearchComponent.defaultProps = {
 exports.default = SuggestedSearchComponent;
 
 /***/ }),
-/* 34 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7811,7 +7798,7 @@ function selectActiveSuggestion(suggestionsArray) {
 }
 
 /***/ }),
-/* 35 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
