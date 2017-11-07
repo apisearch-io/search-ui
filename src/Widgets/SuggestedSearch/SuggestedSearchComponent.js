@@ -194,7 +194,7 @@ class SuggestedSearchComponent extends Component {
                     tabIndex={`0`}
                     className={`asui-suggestedSearch--box ${boxClassName}`}
                     style={{
-                        display: currentSuggestions
+                        display: currentSuggestions.length !== 0
                             ? 'block'
                             : 'none'
                     }}
@@ -208,7 +208,7 @@ class SuggestedSearchComponent extends Component {
                                     `${suggestion.isActive
                                         ? activeSuggestionClassName
                                         : ''
-                                        }`
+                                    }`
                                 }
                                 dangerouslySetInnerHTML={{
                                     __html: suggestion.htmlName
@@ -231,7 +231,7 @@ SuggestedSearchComponent.defaultProps = {
         input: '',
         box: '',
         suggestion: '',
-        activeSuggestion: 'is-active'
+        activeSuggestion: 'asui-active'
     }
 };
 

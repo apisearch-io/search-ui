@@ -1,0 +1,81 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<SuggestedSearchComponent /> should render with custom props 1`] = `
+Object {
+  "autofocus": true,
+  "children": Array [],
+  "classNames": Object {
+    "activeSuggestion": "custom-active-suggestion-class",
+    "box": "custom-box-class",
+    "container": "custom-container-class",
+    "input": "custom-input-class",
+    "suggestion": "custom-suggestion-class",
+  },
+  "placeholder": "Type to get suggestions...",
+  "target": "#some-tagret",
+}
+`;
+
+exports[`<SuggestedSearchComponent /> should render with custom props 2`] = `
+preact-render-spy (1 nodes)
+-------
+<div class="asui-suggestedSearch custom-container-class">
+  <input
+    type="text"
+    value=""
+    class="asui-suggestedSearch--input custom-input-class"
+    placeholder="Type to get suggestions..."
+    autofocus={true}
+    onInput={[Function anonymous]}
+    onKeyDown={[Function anonymous]}
+    onBlur={[Function anonymous]}
+   />
+  <div
+    tabIndex="0"
+    class="asui-suggestedSearch--box custom-box-class"
+    style="display: none;"
+  >
+  </div>
+</div>
+
+`;
+
+exports[`<SuggestedSearchComponent /> should render with default props 1`] = `
+Object {
+  "autofocus": false,
+  "children": Array [],
+  "classNames": Object {
+    "activeSuggestion": "asui-active",
+    "box": "",
+    "container": "",
+    "input": "",
+    "suggestion": "",
+  },
+  "placeholder": "",
+  "target": "#some-tagret",
+}
+`;
+
+exports[`<SuggestedSearchComponent /> should render with default props 2`] = `
+preact-render-spy (1 nodes)
+-------
+<div class="asui-suggestedSearch ">
+  <input
+    type="text"
+    value=""
+    class="asui-suggestedSearch--input "
+    placeholder=""
+    autofocus={false}
+    onInput={[Function anonymous]}
+    onKeyDown={[Function anonymous]}
+    onBlur={[Function anonymous]}
+   />
+  <div
+    tabIndex="0"
+    class="asui-suggestedSearch--box "
+    style="display: none;"
+  >
+  </div>
+</div>
+
+`;
