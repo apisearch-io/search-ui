@@ -34,7 +34,7 @@ describe('<SimpleSearchComponent />',() => {
 
         expect(tree).toMatchSnapshot();
     });
-    it('should handleSearch()', () => {
+    it('should handleSearch() on input event', () => {
         const tree = shallow(
             <SimpleSearchComponent {...defaultProps} />
         );

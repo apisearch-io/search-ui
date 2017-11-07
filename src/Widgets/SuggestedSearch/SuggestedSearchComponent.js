@@ -72,19 +72,6 @@ class SuggestedSearchComponent extends Component {
         )
     };
 
-    handleSuggestionClick = (e) => {
-        this.setState({
-            q: e.target.innerText,
-            currentSuggestions: []
-        });
-
-        simpleSearchAction(
-            e.target.innerText,
-            this.props.currentQuery,
-            this.props.client
-        )
-    };
-
     handleSuggestionsNavigation = (e) => {
         /**
          * When user hits arrow down
@@ -141,6 +128,19 @@ class SuggestedSearchComponent extends Component {
                 client
             )
         }
+    };
+
+    handleSuggestionClick = (e) => {
+        this.setState({
+            q: e.target.innerText,
+            currentSuggestions: []
+        });
+
+        simpleSearchAction(
+            e.target.innerText,
+            this.props.currentQuery,
+            this.props.client
+        )
     };
 
     handleSearchInputFocusedOut = (e) => {

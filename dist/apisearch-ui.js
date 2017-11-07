@@ -7524,15 +7524,6 @@ var SuggestedSearchComponent = function (_Component) {
             (0, _suggestedSearchActions.suggestedSearchAction)(e.target.value, _this.props.currentQuery, _this.props.client);
         };
 
-        _this.handleSuggestionClick = function (e) {
-            _this.setState({
-                q: e.target.innerText,
-                currentSuggestions: []
-            });
-
-            (0, _suggestedSearchActions.simpleSearchAction)(e.target.innerText, _this.props.currentQuery, _this.props.client);
-        };
-
         _this.handleSuggestionsNavigation = function (e) {
             /**
              * When user hits arrow down
@@ -7575,6 +7566,15 @@ var SuggestedSearchComponent = function (_Component) {
 
                 (0, _suggestedSearchActions.simpleSearchAction)(_this.state.q, currentQuery, client);
             }
+        };
+
+        _this.handleSuggestionClick = function (e) {
+            _this.setState({
+                q: e.target.innerText,
+                currentSuggestions: []
+            });
+
+            (0, _suggestedSearchActions.simpleSearchAction)(e.target.innerText, _this.props.currentQuery, _this.props.client);
         };
 
         _this.handleSearchInputFocusedOut = function (e) {
@@ -7659,7 +7659,7 @@ var SuggestedSearchComponent = function (_Component) {
                         tabIndex: '0',
                         className: 'asui-suggestedSearch--box ' + boxClassName,
                         style: {
-                            display: currentSuggestions ? 'block' : 'none'
+                            display: currentSuggestions.length !== 0 ? 'block' : 'none'
                         }
                     },
                     currentSuggestions.map(function (suggestion, key) {
@@ -7687,7 +7687,7 @@ SuggestedSearchComponent.defaultProps = {
         input: '',
         box: '',
         suggestion: '',
-        activeSuggestion: 'is-active'
+        activeSuggestion: 'asui-active'
     }
 };
 

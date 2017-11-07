@@ -1,5 +1,245 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`<SuggestedSearchComponent /> should componentWillReceiveProps() with suggestions and render it 1`] = `
+Array [
+  Object {
+    "htmlName": "<em>i&nbsp;want&nbsp;to&nbsp;get&nbsp;suggestions</em>",
+    "isActive": true,
+    "name": "i want to get suggestions",
+  },
+  Object {
+    "htmlName": "suggestion&nbsp;1",
+    "isActive": false,
+    "name": "suggestion 1",
+  },
+  Object {
+    "htmlName": "suggestion&nbsp;2",
+    "isActive": false,
+    "name": "suggestion 2",
+  },
+  Object {
+    "htmlName": "suggestion&nbsp;3",
+    "isActive": false,
+    "name": "suggestion 3",
+  },
+]
+`;
+
+exports[`<SuggestedSearchComponent /> should componentWillReceiveProps() with suggestions and render it 2`] = `
+preact-render-spy (1 nodes)
+-------
+<div class="asui-suggestedSearch ">
+  <input
+    type="text"
+    value="i want to get suggestions"
+    class="asui-suggestedSearch--input "
+    placeholder=""
+    autofocus={false}
+    onInput={[Function anonymous]}
+    onKeyDown={[Function anonymous]}
+    onBlur={[Function anonymous]}
+   />
+  <div
+    tabIndex="0"
+    class="asui-suggestedSearch--box "
+    style="display: block;"
+  >
+    <div
+      class="asui-suggestedSearch--suggestion  "
+      onClick={[Function anonymous]}
+    >suggestion&nbsp;1
+    </div>
+    <div
+      class="asui-suggestedSearch--suggestion  "
+      onClick={[Function anonymous]}
+    >suggestion&nbsp;2
+    </div>
+    <div
+      class="asui-suggestedSearch--suggestion  "
+      onClick={[Function anonymous]}
+    >suggestion&nbsp;3
+    </div>
+  </div>
+</div>
+
+`;
+
+exports[`<SuggestedSearchComponent /> should handleSearchInputFocusedOut() and close the suggestions box 1`] = `
+preact-render-spy (1 nodes)
+-------
+<div class="asui-suggestedSearch ">
+  <input
+    type="text"
+    value="i want to get suggestions"
+    class="asui-suggestedSearch--input "
+    placeholder=""
+    autofocus={false}
+    onInput={[Function anonymous]}
+    onKeyDown={[Function anonymous]}
+    onBlur={[Function anonymous]}
+   />
+  <div
+    tabIndex="0"
+    class="asui-suggestedSearch--box "
+    style="display: none;"
+  >
+  </div>
+</div>
+
+`;
+
+exports[`<SuggestedSearchComponent /> should handleSuggestionClick(), select the clicked suggestion and close the box 1`] = `
+preact-render-spy (1 nodes)
+-------
+<div class="asui-suggestedSearch ">
+  <input
+    type="text"
+    value=""
+    class="asui-suggestedSearch--input "
+    placeholder=""
+    autofocus={false}
+    onInput={[Function anonymous]}
+    onKeyDown={[Function anonymous]}
+    onBlur={[Function anonymous]}
+   />
+  <div
+    tabIndex="0"
+    class="asui-suggestedSearch--box "
+    style="display: none;"
+  >
+  </div>
+</div>
+
+`;
+
+exports[`<SuggestedSearchComponent /> should handleSuggestionsNavigation() and re-render the list being the first suggestion the active one 1`] = `
+Array [
+  Object {
+    "htmlName": "<em>i&nbsp;want&nbsp;to&nbsp;get&nbsp;suggestions</em>",
+    "isActive": false,
+    "name": "i want to get suggestions",
+  },
+  Object {
+    "htmlName": "suggestion&nbsp;1",
+    "isActive": true,
+    "name": "suggestion 1",
+  },
+  Object {
+    "htmlName": "suggestion&nbsp;2",
+    "isActive": false,
+    "name": "suggestion 2",
+  },
+  Object {
+    "htmlName": "suggestion&nbsp;3",
+    "isActive": false,
+    "name": "suggestion 3",
+  },
+]
+`;
+
+exports[`<SuggestedSearchComponent /> should handleSuggestionsNavigation() and re-render the list being the first suggestion the active one 2`] = `
+preact-render-spy (1 nodes)
+-------
+<div class="asui-suggestedSearch ">
+  <input
+    type="text"
+    value="suggestion 1"
+    class="asui-suggestedSearch--input "
+    placeholder=""
+    autofocus={false}
+    onInput={[Function anonymous]}
+    onKeyDown={[Function anonymous]}
+    onBlur={[Function anonymous]}
+   />
+  <div
+    tabIndex="0"
+    class="asui-suggestedSearch--box "
+    style="display: block;"
+  >
+    <div
+      class="asui-suggestedSearch--suggestion  asui-active"
+      onClick={[Function anonymous]}
+    >suggestion&nbsp;1
+    </div>
+    <div
+      class="asui-suggestedSearch--suggestion  "
+      onClick={[Function anonymous]}
+    >suggestion&nbsp;2
+    </div>
+    <div
+      class="asui-suggestedSearch--suggestion  "
+      onClick={[Function anonymous]}
+    >suggestion&nbsp;3
+    </div>
+  </div>
+</div>
+
+`;
+
+exports[`<SuggestedSearchComponent /> should handleSuggestionsNavigation() and re-render the list being the last suggestion the active one 1`] = `
+Array [
+  Object {
+    "htmlName": "<em>i&nbsp;want&nbsp;to&nbsp;get&nbsp;suggestions</em>",
+    "isActive": false,
+    "name": "i want to get suggestions",
+  },
+  Object {
+    "htmlName": "suggestion&nbsp;1",
+    "isActive": false,
+    "name": "suggestion 1",
+  },
+  Object {
+    "htmlName": "suggestion&nbsp;2",
+    "isActive": false,
+    "name": "suggestion 2",
+  },
+  Object {
+    "htmlName": "suggestion&nbsp;3",
+    "isActive": true,
+    "name": "suggestion 3",
+  },
+]
+`;
+
+exports[`<SuggestedSearchComponent /> should handleSuggestionsNavigation() and re-render the list being the last suggestion the active one 2`] = `
+preact-render-spy (1 nodes)
+-------
+<div class="asui-suggestedSearch ">
+  <input
+    type="text"
+    value="suggestion 3"
+    class="asui-suggestedSearch--input "
+    placeholder=""
+    autofocus={false}
+    onInput={[Function anonymous]}
+    onKeyDown={[Function anonymous]}
+    onBlur={[Function anonymous]}
+   />
+  <div
+    tabIndex="0"
+    class="asui-suggestedSearch--box "
+    style="display: block;"
+  >
+    <div
+      class="asui-suggestedSearch--suggestion  "
+      onClick={[Function anonymous]}
+    >suggestion&nbsp;1
+    </div>
+    <div
+      class="asui-suggestedSearch--suggestion  "
+      onClick={[Function anonymous]}
+    >suggestion&nbsp;2
+    </div>
+    <div
+      class="asui-suggestedSearch--suggestion  asui-active"
+      onClick={[Function anonymous]}
+    >suggestion&nbsp;3
+    </div>
+  </div>
+</div>
+
+`;
+
 exports[`<SuggestedSearchComponent /> should render with custom props 1`] = `
 Object {
   "autofocus": true,
