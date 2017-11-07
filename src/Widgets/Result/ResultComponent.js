@@ -14,6 +14,13 @@ import {changeItemsPerResultPageSetup} from "./resultActions";
  * Result Component
  */
 class ResultComponent extends Component {
+    constructor() {
+        super();
+        this.state = {
+            isInitialState: true
+        }
+    }
+
     componentWillMount() {
         /**
          * Define initial Setup on component mounting
@@ -32,13 +39,20 @@ class ResultComponent extends Component {
         )
     }
 
+    componentWillReceiveProps() {
+        this.setState({
+            isInitialState: false
+        })
+    }
+
     render() {
         const {
             classNames: {
                 container: containerClassName
             },
             template: {
-                itemsList: bodyTemplate
+                itemsList: bodyTemplate,
+                placeholder: placeholderTemplate
             },
             data
         } = this.props;
@@ -52,16 +66,17 @@ class ResultComponent extends Component {
 
         return (
             <div className={`asui-result ${containerClassName}`}>
-                {
-                 /**
-                  * @todo: add initial message template
-                  */
+                {(placeholderTemplate && this.state.isInitialState)
+                    ? <Template
+                        template={placeholderTemplate}
+                        className={`asui-result--placeholder`}
+                    />
+                    : <Template
+                        template={bodyTemplate}
+                        data={reducedTemplateData}
+                        className={`asui-result--itemsList`}
+                    />
                 }
-                <Template
-                    template={bodyTemplate}
-                    data={reducedTemplateData}
-                    className={`asui-result--itemsList`}
-                />
             </div>
         )
     }
@@ -71,6 +86,9 @@ ResultComponent.defaultProps = {
     itemsPerPage: 10,
     classNames: {
         container: ''
+    },
+    template: {
+        placeholder: null
     }
 };
 

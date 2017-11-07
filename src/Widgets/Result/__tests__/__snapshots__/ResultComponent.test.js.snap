@@ -104,6 +104,17 @@ preact-render-spy (1 nodes)
 
 `;
 
+exports[`<ResultComponent /> should show placeholder if is set in custom properties and no data is passed 1`] = `
+preact-render-spy (1 nodes)
+-------
+<div class="asui-result ">
+  <div class="asui-result--placeholder">
+    This is the results placeholder, search something!
+  </div>
+</div>
+
+`;
+
 exports[`<ResultComponent /> should update content when passing new data 1`] = `
 preact-render-spy (1 nodes)
 -------

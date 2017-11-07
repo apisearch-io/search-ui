@@ -6487,7 +6487,12 @@ var ResultComponent = function (_Component) {
     function ResultComponent() {
         _classCallCheck(this, ResultComponent);
 
-        return _possibleConstructorReturn(this, (ResultComponent.__proto__ || Object.getPrototypeOf(ResultComponent)).apply(this, arguments));
+        var _this = _possibleConstructorReturn(this, (ResultComponent.__proto__ || Object.getPrototypeOf(ResultComponent)).call(this));
+
+        _this.state = {
+            isInitialState: true
+        };
+        return _this;
     }
 
     _createClass(ResultComponent, [{
@@ -6507,11 +6512,20 @@ var ResultComponent = function (_Component) {
             (0, _resultActions.changeItemsPerResultPageSetup)(itemsPerPage, currentQuery);
         }
     }, {
+        key: "componentWillReceiveProps",
+        value: function componentWillReceiveProps() {
+            this.setState({
+                isInitialState: false
+            });
+        }
+    }, {
         key: "render",
         value: function render() {
             var _props2 = this.props,
                 containerClassName = _props2.classNames.container,
-                bodyTemplate = _props2.template.itemsList,
+                _props2$template = _props2.template,
+                bodyTemplate = _props2$template.itemsList,
+                placeholderTemplate = _props2$template.placeholder,
                 data = _props2.data;
 
             /**
@@ -6525,7 +6539,10 @@ var ResultComponent = function (_Component) {
             return (0, _preact.h)(
                 "div",
                 { className: "asui-result " + containerClassName },
-                (0, _preact.h)(_Template2.default, {
+                placeholderTemplate && this.state.isInitialState ? (0, _preact.h)(_Template2.default, {
+                    template: placeholderTemplate,
+                    className: "asui-result--placeholder"
+                }) : (0, _preact.h)(_Template2.default, {
                     template: bodyTemplate,
                     data: reducedTemplateData,
                     className: "asui-result--itemsList"
@@ -6541,6 +6558,9 @@ ResultComponent.defaultProps = {
     itemsPerPage: 10,
     classNames: {
         container: ''
+    },
+    template: {
+        placeholder: null
     }
 };
 

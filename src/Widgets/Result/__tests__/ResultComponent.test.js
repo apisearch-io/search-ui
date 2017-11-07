@@ -36,7 +36,6 @@ describe('<ResultComponent />',() => {
 
     it('should render with default props', () => {
         ResultComponent.prototype.componentWillMount = jest.fn();
-
         const tree = deep(
             <ResultComponent
                 {...defaultProps}
@@ -56,12 +55,11 @@ describe('<ResultComponent />',() => {
     });
     it('should render with custom props', () => {
         ResultComponent.prototype.componentWillMount = jest.fn();
-
         const customProps = {
             itemsPerPage: 20,
             classNames: {
                 container: 'custom-container-class'
-            },
+            }
         };
 
         const tree = deep(
@@ -76,12 +74,28 @@ describe('<ResultComponent />',() => {
          * Testing the default props tree
          */
         expect(tree.component().props).toMatchSnapshot();
-
         /**
          * Testing rendered html
          */
         expect(tree).toMatchSnapshot();
     });
+    it('should show placeholder if is set in custom properties and no data is passed', () => {
+        ResultComponent.prototype.componentWillMount = jest.fn();
+        const customProps = {
+            template: {
+                placeholder: 'This is the results placeholder, search something!'
+            }
+        };
+
+        const tree = deep(
+            <ResultComponent
+                {...defaultProps}
+                {...customProps}
+            />
+        );
+
+        expect(tree).toMatchSnapshot();
+    })
     it('should update content when passing new data', () => {
         const tree = deep(
             <ResultComponent

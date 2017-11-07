@@ -126,16 +126,17 @@ const resultWidget = ui.widgets.result({
       container: ?string
   },
   template: {
-      itemsList: !string
+      itemsList: !string,
+      placeholder: ?string
   }
 });
 ```
 
-You can customize your results template on the template 
+You can customize your results template on the `template` 
 attribute section:
- * `top`: (optional) will be placed as a header of the result set.
- * `body`: (required) will be the iterable set of results.
- * `bottom`: (optional) will be placed as a footer of your result set.
+ * `itemsList`: (required) will be the iterable set of results.
+ * `placeholder`: (optional) will be placed on initial widget render.
+ Once a search is performed, this placeholder will disappear.
  
 The result items will be accessible on the body attribute using
 the `{{#items}}{{/items}}` iterable. For example, given this array 
@@ -172,14 +173,19 @@ You will be able to build your results like this, and
 passing the string to the `body` template attribute:
 
 ```javascript
-const resultsTemplate = `<ul>
+const resultsTemplate = `
+<ul>
 {{#items}}
     <li>
         <img src="{{metadata.img}}" />
         <h1>{{metadata.name}}</h1>
     </li>
 {{/items}}
-</ul>`;
+</ul>
+{{^items}}
+    No results found :(
+{{^items}}
+`;
 ```
 
 For more information about how this templating system works,
@@ -208,19 +214,29 @@ The variables `{{total_hits}}` and `{{total_items}}`
 can be passed on the template body.
 
 
+# Testing
+
+The test suite is build on top of [Jest](https://facebook.github.io/jest/) 
+and [preact-render-spy](https://github.com/mzgoddard/preact-render-spy), a 
+simplified clone of Enzyme for Preact.
+
+To run test type:
+```shell
+npm t
+// or
+yarn test
+```
+
 # Todo's
   
 - [x] Simple Search
-   - [ ] Promote results
-   - [ ] Exclude results
 - [x] Suggested Search
-   - [ ] Promote results
-   - [ ] Exclude results
    
 - [x] Simple Result box
    - [ ] Highlighted result
+   - [ ] Promote results
+   - [ ] Exclude results
 - [ ] Infinite Result box
-   - [ ] Highlighted result
 - [x] Result Information
 
 - [x] SortBy
@@ -237,9 +253,6 @@ Extra todo list:
 - [ ] Add callbacks before and after a widget action
 to execute customized anonymous functions.
 - [ ] Work with propTypes?
-
-# Testing
-
  
 # Widget creation workflow
  1. Define widget properties
