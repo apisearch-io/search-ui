@@ -18,9 +18,11 @@ start all the magic!
 
 # Install
 
-## npm
+## npm & yarn
 ```shell
 npm install apisearch-ui --save
+# or
+yarn add apisearch-ui
 ```
 
 ## html tag \<script\>
@@ -36,7 +38,14 @@ input with a result container using a custom template
 engine.
 
 ```javascript
-const ui = apisearchUI('your_api_key');
+const ui = apisearchUI({
+    appId: 'music',
+    apiKey: '1cc7a3e0-bda5-11e7-abc4-cec278b6b50a',
+    options: {
+        endpoint: 'http://search.puntmig.net',
+        cache: true
+    }
+});
 
 ui.addWidgets(
     ui.widgets.simpleSearch({
@@ -45,13 +54,15 @@ ui.addWidgets(
     ui.widgets.result({
         target: '.result-container',
         template: {
-            body: '<ul>{{#items}} <li>{{metadata.name}}</li> {{/items}}</ul>',
+            itemsList: '<ul>{{#items}} <li>{{metadata.name}}</li> {{/items}}</ul>',
         }
     })
 );
 
 ui.init();
 ```
+> Check more examples 
+> [here](https://github.com/puntmig/javascript-search-ui/tree/master/examples)!
 
 # Widgets
 
@@ -223,13 +234,14 @@ simplified clone of Enzyme for Preact.
 To run test type:
 ```shell
 npm t
-// or
+# or
 yarn test
 ```
 
 # Todo's
   
 - [x] Simple Search
+   - [ ] Clear search
 - [x] Suggested Search
    
 - [x] Simple Result box
@@ -242,10 +254,12 @@ yarn test
 - [x] SortBy
    - [ ] Random sort
 - [ ] Checkbox filter
+- [ ] Select filter
 - [ ] Menu filter
 - [ ] Rating filter
 - [ ] Range filter
 - [ ] Pagination
+- [ ] Clear filters
 
 - [ ] Analytics / User analytics
 
