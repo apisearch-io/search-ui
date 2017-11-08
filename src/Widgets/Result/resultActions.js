@@ -21,13 +21,23 @@ import dispatcher from '../../dispatcher';
  *   }}
  */
 export function changeItemsPerResultPageSetup(
-    itemsPerPage,
+    queryOptions,
     currentQuery
 ) {
+    const {
+        itemsPerPage,
+        highlightsEnabled
+    } = queryOptions;
+
     let clonedQuery = cloneDeep(currentQuery);
-    clonedQuery
-        .setResultSize(itemsPerPage)
-    ;
+    clonedQuery.setResultSize(itemsPerPage);
+
+    /**
+     * Enabling highlights on query result
+     */
+    if (highlightsEnabled) {
+        clonedQuery.enableHighlights();
+    }
 
     dispatcher.dispatch({
         type: 'UPDATE_APISEARCH_SETUP',

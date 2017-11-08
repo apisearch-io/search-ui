@@ -7,6 +7,14 @@
 
     <!-- ApisearchUI library -->
     <script src="../dist/apisearch-ui.js"></script>
+
+    <!-- custom styles -->
+    <style>
+        em {
+            background: #b4acff;
+            font-style: inherit;
+        }
+    </style>
 </head>
 
 <body>
@@ -54,7 +62,14 @@
                                 <img src="{{metadata.img}}" width="60px">
                             </div>
                             <div class="media-content">
-                                <strong>{{metadata.title}}</strong>
+                                <strong>
+                                    {{#highlights.title}}
+                                        {{{highlights.title}}}
+                                    {{/highlights.title}}
+                                    {{^highlights.title}}
+                                        {{metadata.title}}
+                                    {{/highlights.title}}
+                                </strong>
                                 {{#metadata.author}}
                                 <p class="has-text-info is-size-7">@{{name}}</p>
                                 {{/metadata.author}}
@@ -89,6 +104,7 @@
             ui.widgets.result({
                 target: '.result',
                 itemsPerPage: 16,
+                highlightsEnabled: true,
                 classNames: {
                     container: 'column'
                 },

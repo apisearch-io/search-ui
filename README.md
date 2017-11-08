@@ -133,6 +133,7 @@ based on the search.
 const resultWidget = ui.widgets.result({
   target: !string,
   itemsPerPage: ?integer[10],
+  highlightsEnabled: ?bool[false],
   classNames: {
       container: ?string
   },
@@ -203,7 +204,7 @@ For more information about how this templating system works,
 refer to the [twitter's hogan.js documentation](http://twitter.github.io/hogan.js/). 
 Or check the library examples.
 
-## Result information
+## Information (Result info)
 The result information widget allows you to provide
 to a user some extra information about the search.
 Currently only can show the **number of hits** of 
@@ -245,7 +246,7 @@ yarn test
 - [x] Suggested Search
    
 - [x] Simple Result box
-   - [ ] Highlighted result
+   - [x] Highlighted result
    - [ ] Promote results
    - [ ] Exclude results
 - [ ] Infinite Result box

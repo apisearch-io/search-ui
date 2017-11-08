@@ -30,11 +30,15 @@ class ResultComponent extends Component {
 
         const {
             itemsPerPage,
+            highlightsEnabled,
             currentQuery
         } = this.props;
 
         changeItemsPerResultPageSetup(
-            itemsPerPage,
+            {
+                itemsPerPage,
+                highlightsEnabled
+            },
             currentQuery
         )
     }
@@ -84,6 +88,7 @@ class ResultComponent extends Component {
 
 ResultComponent.defaultProps = {
     itemsPerPage: 10,
+    enableHighlights: false,
     classNames: {
         container: ''
     },

@@ -57,6 +57,7 @@ describe('<ResultComponent />',() => {
         ResultComponent.prototype.componentWillMount = jest.fn();
         const customProps = {
             itemsPerPage: 20,
+            highlightsEnabled: true,
             classNames: {
                 container: 'custom-container-class'
             }

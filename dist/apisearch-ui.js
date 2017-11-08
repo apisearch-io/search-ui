@@ -5849,12 +5849,14 @@ var WidgetFactory = function () {
         value: function result(_ref4) {
             var target = _ref4.target,
                 itemsPerPage = _ref4.itemsPerPage,
+                highlightsEnabled = _ref4.highlightsEnabled,
                 classNames = _ref4.classNames,
                 template = _ref4.template;
 
             return (0, _preact.h)(_ResultComponent2.default, {
                 target: target,
                 itemsPerPage: itemsPerPage,
+                highlightsEnabled: highlightsEnabled,
                 classNames: _extends({}, _ResultComponent2.default.defaultProps.classNames, classNames),
                 template: template
             });
@@ -6506,10 +6508,14 @@ var ResultComponent = function (_Component) {
 
             var _props = this.props,
                 itemsPerPage = _props.itemsPerPage,
+                highlightsEnabled = _props.highlightsEnabled,
                 currentQuery = _props.currentQuery;
 
 
-            (0, _resultActions.changeItemsPerResultPageSetup)(itemsPerPage, currentQuery);
+            (0, _resultActions.changeItemsPerResultPageSetup)({
+                itemsPerPage: itemsPerPage,
+                highlightsEnabled: highlightsEnabled
+            }, currentQuery);
         }
     }, {
         key: "componentWillReceiveProps",
@@ -6556,6 +6562,7 @@ var ResultComponent = function (_Component) {
 
 ResultComponent.defaultProps = {
     itemsPerPage: 10,
+    enableHighlights: false,
     classNames: {
         container: ''
     },
@@ -7410,9 +7417,20 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * Search actions
  */
-function changeItemsPerResultPageSetup(itemsPerPage, currentQuery) {
+function changeItemsPerResultPageSetup(queryOptions, currentQuery) {
+    var itemsPerPage = queryOptions.itemsPerPage,
+        highlightsEnabled = queryOptions.highlightsEnabled;
+
+
     var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
     clonedQuery.setResultSize(itemsPerPage);
+
+    /**
+     * Enabling highlights on query result
+     */
+    if (highlightsEnabled) {
+        clonedQuery.enableHighlights();
+    }
 
     _dispatcher2.default.dispatch({
         type: 'UPDATE_APISEARCH_SETUP',
