@@ -2,6 +2,8 @@ import { h, render, createElement } from 'preact';
 
 import { EventEmitter } from "events";
 import WidgetFactory from "./Factory/WidgetFactory";
+import dispatcher from "./dispatcher";
+import {initialDataFetchAction} from "./apisearchActions";
 
 /**
  * ApisearchUI class
@@ -35,6 +37,24 @@ class ApisearchUI extends EventEmitter {
     }
 
     /**
+     * Initialize components
+     */
+    init() {
+        /**
+         * Register all events
+         */
+        this.on('render', () => this.render());
+
+        /**
+         * Trigger the initial render: (Mount the components)
+         *   -> To let components setup its configuration on componentWillMount()
+         *   -> And fetch the initial data with the given configuration
+         */
+        this.render();
+        initialDataFetchAction(this.currentQuery, this.client);
+    }
+
+    /**
      * Add new widget
      */
     addWidget(widget) {
@@ -51,12 +71,13 @@ class ApisearchUI extends EventEmitter {
     }
 
     /**
-     * Initialize components
+     * Render.
+     *
+     * Loop all active widgets
+     * Hydrate them with new props
+     * And render them.
      */
-    init() {
-        /**
-         * Initial rendering + initial widget state
-         */
+    render() {
         this.activeWidgets.map(widget => {
             let hydratedWidget = hydrateWidget(this, widget);
             let targetNode = document.querySelector(widget.attributes.target);
@@ -74,29 +95,16 @@ class ApisearchUI extends EventEmitter {
             )
         });
 
-        /**
-         * Re-render widgets
-         */
-        this.on('render', () =>
-            this.activeWidgets.map(widget => {
-                let hydratedWidget = hydrateWidget(this, widget);
-                let targetNode = document.querySelector(widget.attributes.target);
-
-                render(
-                    hydratedWidget,
-                    targetNode,
-                    targetNode.lastChild
-                )
-            })
-        )
+        console.log('Render!')
     }
 
+    /**
+     * Handle Dispatched actions
+     *
+     * This is what we call a reducer
+     * on a Redux architecture
+     */
     handleActions(action) {
-        /**
-         * This is what we call a reducer
-         * on a Redux architecture
-         */
-
         /**
          * When action only sets up store definitions
          * Does not dispatch any event

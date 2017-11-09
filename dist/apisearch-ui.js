@@ -1499,7 +1499,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _hogan = __webpack_require__(27);
+var _hogan = __webpack_require__(31);
 
 var _hogan2 = _interopRequireDefault(_hogan);
 
@@ -5239,6 +5239,12 @@ var _WidgetFactory = __webpack_require__(15);
 
 var _WidgetFactory2 = _interopRequireDefault(_WidgetFactory);
 
+var _dispatcher = __webpack_require__(1);
+
+var _dispatcher2 = _interopRequireDefault(_dispatcher);
+
+var _apisearchActions = __webpack_require__(36);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -5286,11 +5292,36 @@ var ApisearchUI = function (_EventEmitter) {
     }
 
     /**
-     * Add new widget
+     * Initialize components
      */
 
 
     _createClass(ApisearchUI, [{
+        key: "init",
+        value: function init() {
+            var _this2 = this;
+
+            /**
+             * Register all events
+             */
+            this.on('render', function () {
+                return _this2.render();
+            });
+
+            /**
+             * Trigger the initial render: (Mount the components)
+             *   -> To let components setup its configuration on componentWillMount()
+             *   -> And fetch the initial data with the given configuration
+             */
+            this.render();
+            (0, _apisearchActions.initialDataFetchAction)(this.currentQuery, this.client);
+        }
+
+        /**
+         * Add new widget
+         */
+
+    }, {
         key: "addWidget",
         value: function addWidget(widget) {
             this.activeWidgets = [].concat(_toConsumableArray(this.activeWidgets), [widget]);
@@ -5304,32 +5335,33 @@ var ApisearchUI = function (_EventEmitter) {
     }, {
         key: "addWidgets",
         value: function addWidgets() {
-            var _this2 = this;
+            var _this3 = this;
 
             for (var _len = arguments.length, widgets = Array(_len), _key = 0; _key < _len; _key++) {
                 widgets[_key] = arguments[_key];
             }
 
             widgets.map(function (widget) {
-                return _this2.addWidget(widget);
+                return _this3.addWidget(widget);
             });
             return this;
         }
 
         /**
-         * Initialize components
+         * Render.
+         *
+         * Loop all active widgets
+         * Hydrate them with new props
+         * And render them.
          */
 
     }, {
-        key: "init",
-        value: function init() {
-            var _this3 = this;
+        key: "render",
+        value: function render() {
+            var _this4 = this;
 
-            /**
-             * Initial rendering + initial widget state
-             */
             this.activeWidgets.map(function (widget) {
-                var hydratedWidget = hydrateWidget(_this3, widget);
+                var hydratedWidget = hydrateWidget(_this4, widget);
                 var targetNode = document.querySelector(widget.attributes.target);
 
                 if (null === targetNode) {
@@ -5339,26 +5371,19 @@ var ApisearchUI = function (_EventEmitter) {
                 (0, _preact.render)(hydratedWidget, targetNode, targetNode.lastChild);
             });
 
-            /**
-             * Re-render widgets
-             */
-            this.on('render', function () {
-                return _this3.activeWidgets.map(function (widget) {
-                    var hydratedWidget = hydrateWidget(_this3, widget);
-                    var targetNode = document.querySelector(widget.attributes.target);
-
-                    (0, _preact.render)(hydratedWidget, targetNode, targetNode.lastChild);
-                });
-            });
+            console.log('Render!');
         }
+
+        /**
+         * Handle Dispatched actions
+         *
+         * This is what we call a reducer
+         * on a Redux architecture
+         */
+
     }, {
         key: "handleActions",
         value: function handleActions(action) {
-            /**
-             * This is what we call a reducer
-             * on a Redux architecture
-             */
-
             /**
              * When action only sets up store definitions
              * Does not dispatch any event
@@ -5744,21 +5769,25 @@ var _SimpleSearchComponent = __webpack_require__(16);
 
 var _SimpleSearchComponent2 = _interopRequireDefault(_SimpleSearchComponent);
 
-var _SortByComponent = __webpack_require__(24);
+var _SuggestedSearchComponent = __webpack_require__(24);
+
+var _SuggestedSearchComponent2 = _interopRequireDefault(_SuggestedSearchComponent);
+
+var _SortByComponent = __webpack_require__(27);
 
 var _SortByComponent2 = _interopRequireDefault(_SortByComponent);
 
-var _ResultComponent = __webpack_require__(26);
+var _MultipleFilterComponent = __webpack_require__(29);
+
+var _MultipleFilterComponent2 = _interopRequireDefault(_MultipleFilterComponent);
+
+var _ResultComponent = __webpack_require__(30);
 
 var _ResultComponent2 = _interopRequireDefault(_ResultComponent);
 
-var _InformationComponent = __webpack_require__(31);
+var _InformationComponent = __webpack_require__(35);
 
 var _InformationComponent2 = _interopRequireDefault(_InformationComponent);
-
-var _SuggestedSearchComponent = __webpack_require__(32);
-
-var _SuggestedSearchComponent2 = _interopRequireDefault(_SuggestedSearchComponent);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -5841,17 +5870,47 @@ var WidgetFactory = function () {
         }
 
         /**
+         * Multiple filter
+         */
+
+    }, {
+        key: "multipleFilter",
+        value: function multipleFilter(_ref4) {
+            var target = _ref4.target,
+                name = _ref4.name,
+                field = _ref4.field,
+                type = _ref4.type,
+                limit = _ref4.limit,
+                classNames = _ref4.classNames,
+                _ref4$template = _ref4.template,
+                template = _ref4$template === undefined ? {
+                top: top,
+                item: item
+            } : _ref4$template;
+
+            return (0, _preact.h)(_MultipleFilterComponent2.default, {
+                target: target,
+                name: name,
+                field: field,
+                type: type,
+                limit: limit,
+                classNames: _extends({}, _SortByComponent2.default.defaultProps.classNames, classNames),
+                template: template
+            });
+        }
+
+        /**
          * Search result
          */
 
     }, {
         key: "result",
-        value: function result(_ref4) {
-            var target = _ref4.target,
-                itemsPerPage = _ref4.itemsPerPage,
-                highlightsEnabled = _ref4.highlightsEnabled,
-                classNames = _ref4.classNames,
-                template = _ref4.template;
+        value: function result(_ref5) {
+            var target = _ref5.target,
+                itemsPerPage = _ref5.itemsPerPage,
+                highlightsEnabled = _ref5.highlightsEnabled,
+                classNames = _ref5.classNames,
+                template = _ref5.template;
 
             return (0, _preact.h)(_ResultComponent2.default, {
                 target: target,
@@ -5868,10 +5927,10 @@ var WidgetFactory = function () {
 
     }, {
         key: "information",
-        value: function information(_ref5) {
-            var target = _ref5.target,
-                classNames = _ref5.classNames,
-                template = _ref5.template;
+        value: function information(_ref6) {
+            var target = _ref6.target,
+                classNames = _ref6.classNames,
+                template = _ref6.template;
 
             return (0, _preact.h)(_InformationComponent2.default, {
                 target: target,
@@ -6281,7 +6340,426 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _sortByActions = __webpack_require__(25);
+var _helpers = __webpack_require__(25);
+
+var _suggestedSearchActions = __webpack_require__(26);
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+/**
+ * Actions
+ */
+
+
+/**
+ * Suggested Search Component
+ */
+var SuggestedSearchComponent = function (_Component) {
+    _inherits(SuggestedSearchComponent, _Component);
+
+    function SuggestedSearchComponent() {
+        _classCallCheck(this, SuggestedSearchComponent);
+
+        var _this = _possibleConstructorReturn(this, (SuggestedSearchComponent.__proto__ || Object.getPrototypeOf(SuggestedSearchComponent)).call(this));
+
+        _this.handleSearch = function (e) {
+            /**
+             * Set the current query text
+             */
+            _this.setState({ q: e.target.value });
+
+            /**
+             * Dispatch suggested search action
+             */
+            (0, _suggestedSearchActions.suggestedSearchAction)(e.target.value, _this.props.currentQuery, _this.props.client);
+        };
+
+        _this.handleSuggestionsNavigation = function (e) {
+            /**
+             * When user hits arrow down
+             */
+            if (e.code === 'ArrowDown') {
+                _this.setState({
+                    currentSuggestions: (0, _helpers.selectNextSuggestion)(_this.state.currentSuggestions),
+                    q: (0, _helpers.selectActiveSuggestion)(_this.state.currentSuggestions)
+                });
+            }
+
+            /**
+             * When user hits arrow up
+             */
+            if (e.code === 'ArrowUp') {
+                /**
+                 * Prevent cursor to go at the starting point of the line
+                 */
+                e.preventDefault();
+
+                _this.setState({
+                    currentSuggestions: (0, _helpers.selectPreviousSuggestion)(_this.state.currentSuggestions),
+                    q: (0, _helpers.selectActiveSuggestion)(_this.state.currentSuggestions)
+                });
+            }
+
+            /**
+             * When user hits enter
+             */
+            if (e.code === 'Enter') {
+                _this.setState({
+                    q: (0, _helpers.selectActiveSuggestion)(_this.state.currentSuggestions),
+                    currentSuggestions: []
+                });
+
+                var _this$props = _this.props,
+                    currentQuery = _this$props.currentQuery,
+                    client = _this$props.client;
+
+
+                (0, _suggestedSearchActions.simpleSearchAction)(_this.state.q, currentQuery, client);
+            }
+        };
+
+        _this.handleSuggestionClick = function (e) {
+            _this.setState({
+                q: e.target.innerText,
+                currentSuggestions: []
+            });
+
+            (0, _suggestedSearchActions.simpleSearchAction)(e.target.innerText, _this.props.currentQuery, _this.props.client);
+        };
+
+        _this.handleSearchInputFocusedOut = function (e) {
+            /**
+             * It handles when a user focuses out the search input
+             * If is not clicking on the suggestions box
+             * The suggestions are cleared and panel closes
+             */
+            if (null === e.relatedTarget || false === e.relatedTarget.classList.contains('asui-suggestedSearch--box')) {
+                _this.setState({ currentSuggestions: [] });
+            }
+
+            return false;
+        };
+
+        _this.state = {
+            q: '',
+            currentSuggestions: []
+        };
+        return _this;
+    }
+
+    _createClass(SuggestedSearchComponent, [{
+        key: 'componentWillReceiveProps',
+        value: function componentWillReceiveProps(props) {
+            var _this2 = this;
+
+            /**
+             * Check suggestions available
+             * if some, prepend the current query to the other suggestions array
+             * else, only append the current query to the suggestions array
+             */
+            var suggests = props.data && props.data.suggests ? [this.state.q].concat(_toConsumableArray(props.data.suggests)) : [this.state.q];
+
+            /**
+             * Prepare suggestions array
+             */
+            this.setState({
+                currentSuggestions: suggests.map(function (suggest, key) {
+                    return {
+                        isActive: 0 === key,
+                        name: suggest,
+                        htmlName: (0, _helpers.highlightSuggestion)(_this2.state.q, suggest)
+                    };
+                })
+            });
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var _this3 = this;
+
+            var _props = this.props,
+                placeholder = _props.placeholder,
+                autofocus = _props.autofocus,
+                _props$classNames = _props.classNames,
+                containerClassName = _props$classNames.container,
+                inputClassName = _props$classNames.input,
+                boxClassName = _props$classNames.box,
+                suggestionClassName = _props$classNames.suggestion,
+                activeSuggestionClassName = _props$classNames.activeSuggestion;
+            var currentSuggestions = this.state.currentSuggestions;
+
+
+            return (0, _preact.h)(
+                'div',
+                { className: 'asui-suggestedSearch ' + containerClassName },
+                (0, _preact.h)('input', {
+                    type: 'text',
+                    value: this.state.q,
+                    className: 'asui-suggestedSearch--input ' + inputClassName,
+                    placeholder: placeholder,
+                    autofocus: autofocus,
+
+                    onInput: this.handleSearch,
+                    onKeyDown: this.handleSuggestionsNavigation,
+                    onBlur: this.handleSearchInputFocusedOut
+                }),
+                (0, _preact.h)(
+                    'div',
+                    {
+                        tabIndex: '0',
+                        className: 'asui-suggestedSearch--box ' + boxClassName,
+                        style: {
+                            display: currentSuggestions.length !== 0 ? 'block' : 'none'
+                        }
+                    },
+                    currentSuggestions.map(function (suggestion, key) {
+                        return 0 !== key ? (0, _preact.h)('div', {
+                            className: 'asui-suggestedSearch--suggestion ' + (suggestionClassName + ' ') + ('' + (suggestion.isActive ? activeSuggestionClassName : '')),
+                            dangerouslySetInnerHTML: {
+                                __html: suggestion.htmlName
+                            },
+                            onClick: _this3.handleSuggestionClick
+                        }) : null;
+                    })
+                )
+            );
+        }
+    }]);
+
+    return SuggestedSearchComponent;
+}(_preact.Component);
+
+SuggestedSearchComponent.defaultProps = {
+    placeholder: '',
+    autofocus: false,
+    classNames: {
+        container: '',
+        input: '',
+        box: '',
+        suggestion: '',
+        activeSuggestion: 'asui-active'
+    }
+};
+
+exports.default = SuggestedSearchComponent;
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.highlightSuggestion = highlightSuggestion;
+exports.selectNextSuggestion = selectNextSuggestion;
+exports.selectPreviousSuggestion = selectPreviousSuggestion;
+exports.selectActiveSuggestion = selectActiveSuggestion;
+/**
+ * Set of helpers for the suggestions widget
+ */
+
+/**
+ * Highlight text
+ */
+function highlightSuggestion(currentQueryText, suggestion) {
+    var regex = new RegExp('(' + currentQueryText + ')', 'gi');
+    var highlightedSuggestion = suggestion.replace(regex, "<em>$1</em>");
+    var sanitizedSpaces = highlightedSuggestion.split(' ');
+
+    return sanitizedSpaces.join('&nbsp;');
+}
+
+/**
+ * Mark as active the item next
+ * to the last active item
+ * on a given array of items
+ *
+ * @example when a user press a key arrow down
+ */
+function selectNextSuggestion(suggestionsArray) {
+    var currentActiveSuggestionKey = void 0;
+
+    return suggestionsArray.map(function (suggestion, key) {
+        /**
+         * Detect current active suggestion
+         */
+        if (suggestion.isActive && key + 1 < suggestionsArray.length) {
+            currentActiveSuggestionKey = key;
+            suggestion.isActive = false;
+        }
+
+        /**
+         * Modify the first suggestion next to
+         * the current active suggestion
+         */
+        if (key === currentActiveSuggestionKey + 1 && key + 1 <= suggestionsArray.length) {
+            suggestion.isActive = true;
+        }
+
+        return suggestion;
+    });
+}
+
+/**
+ * Mark as active the item previous
+ * to the last active item
+ * on a given array of items
+ *
+ * @example when a user press a key arrow up
+ */
+function selectPreviousSuggestion(suggestionsArray) {
+    /**
+     * Find the current active suggestion key
+     */
+    var currentActiveSuggestionKey = suggestionsArray.findIndex(function (suggestion) {
+        if (suggestion.isActive) {
+            return suggestion;
+        }
+    });
+
+    return suggestionsArray.map(function (suggestion, key) {
+        /**
+         * Set the current active suggestion as false
+         * if is Active AND is not the last one
+         */
+        if (suggestion.isActive && currentActiveSuggestionKey - 1 >= 0) {
+            suggestion.isActive = false;
+        }
+
+        /**
+         * Set active the suggestion previous to
+         * the current active suggestion
+         */
+        if (currentActiveSuggestionKey - 1 === key && currentActiveSuggestionKey - 1 >= 0) {
+            suggestion.isActive = true;
+        }
+
+        return suggestion;
+    });
+}
+
+/**
+ * Return the active item of an array
+ */
+function selectActiveSuggestion(suggestionsArray) {
+    var selectedSuggestion = suggestionsArray.filter(function (suggestion) {
+        if (suggestion.isActive) {
+            return suggestion;
+        }
+    });
+
+    return selectedSuggestion[0].name;
+}
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.simpleSearchAction = simpleSearchAction;
+exports.suggestedSearchAction = suggestedSearchAction;
+
+var _cloneDeep = __webpack_require__(2);
+
+var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
+
+var _dispatcher = __webpack_require__(1);
+
+var _dispatcher2 = _interopRequireDefault(_dispatcher);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * This actions are triggered when a text input changes
+ * receives three parameters:
+ *   @param text         -> the text value for the search
+ *   @param currentQuery -> current application query
+ *   @param client       -> apisearch client to trigger a search
+ *
+ * Finally dispatches an event with the search result and
+ * the modified query.
+ *   @returns {{
+ *     type: string,
+ *     payload: {
+ *        result,
+ *        updatedQuery
+ *     }
+ *   }}
+ */
+
+/**
+ * Simple search action
+ * Builds a query disabling suggested searches flag
+ */
+/**
+ * Search actions
+ */
+function simpleSearchAction(text, currentQuery, client) {
+    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+    clonedQuery.setQueryText(text).disableResults().disableSuggestions();
+
+    client.search(clonedQuery, function (result) {
+        _dispatcher2.default.dispatch({
+            type: 'RENDER_FETCHED_DATA',
+            payload: {
+                result: result,
+                updatedQuery: clonedQuery
+            }
+        });
+    });
+}
+
+/**
+ * Suggested Search Action
+ * Builds a query using suggested search flag active
+ */
+function suggestedSearchAction(text, currentQuery, client) {
+    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+    clonedQuery.setQueryText(text).enableResults().enableSuggestions();
+
+    client.search(clonedQuery, function (result) {
+        _dispatcher2.default.dispatch({
+            type: 'RENDER_FETCHED_DATA',
+            payload: {
+                result: result,
+                updatedQuery: clonedQuery
+            }
+        });
+    });
+}
+
+/***/ }),
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _preact = __webpack_require__(0);
+
+var _sortByActions = __webpack_require__(28);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -6371,7 +6849,7 @@ SortByComponent.defaultProps = {
 exports.default = SortByComponent;
 
 /***/ }),
-/* 25 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6445,7 +6923,89 @@ function splitQueryValue(string) {
 }
 
 /***/ }),
-/* 26 */
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _preact = __webpack_require__(0);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+
+/**
+ * Filter Component
+ */
+var MultipleFilterComponent = function (_Component) {
+    _inherits(MultipleFilterComponent, _Component);
+
+    function MultipleFilterComponent() {
+        _classCallCheck(this, MultipleFilterComponent);
+
+        return _possibleConstructorReturn(this, (MultipleFilterComponent.__proto__ || Object.getPrototypeOf(MultipleFilterComponent)).apply(this, arguments));
+    }
+
+    _createClass(MultipleFilterComponent, [{
+        key: 'componentWillMount',
+        value: function componentWillMount() {}
+    }, {
+        key: 'render',
+        value: function render() {
+            var _props = this.props,
+                limit = _props.limit,
+                _props$classNames = _props.classNames,
+                containerClassName = _props$classNames.container,
+                topClassName = _props$classNames.top,
+                itemsListClassName = _props$classNames.itemsList,
+                itemClassName = _props$classNames.item,
+                _props$template = _props.template,
+                topTemplate = _props$template.top,
+                itemTemplate = _props$template.item;
+
+
+            return (0, _preact.h)(
+                'div',
+                { className: 'asui-multipleFilter ' + containerClassName },
+                'Hello'
+            );
+        }
+    }]);
+
+    return MultipleFilterComponent;
+}(_preact.Component);
+
+MultipleFilterComponent.defaultProps = {
+    type: 'FILTER_MUST_ALL',
+    limit: 10,
+    classNames: {
+        container: '',
+        top: '',
+        itemList: '',
+        item: ''
+    },
+    template: {
+        top: null,
+        item: null
+    }
+};
+
+exports.default = MultipleFilterComponent;
+
+/***/ }),
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6463,7 +7023,7 @@ var _Template = __webpack_require__(7);
 
 var _Template2 = _interopRequireDefault(_Template);
 
-var _resultActions = __webpack_require__(30);
+var _resultActions = __webpack_require__(34);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6574,7 +7134,7 @@ ResultComponent.defaultProps = {
 exports.default = ResultComponent;
 
 /***/ }),
-/* 27 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -6594,14 +7154,14 @@ exports.default = ResultComponent;
 
 // This file is for use with Node.js. See dist/ for browser files.
 
-var Hogan = __webpack_require__(28);
-Hogan.Template = __webpack_require__(29).Template;
+var Hogan = __webpack_require__(32);
+Hogan.Template = __webpack_require__(33).Template;
 Hogan.template = Hogan.Template;
 module.exports = Hogan;
 
 
 /***/ }),
-/* 28 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -7030,7 +7590,7 @@ module.exports = Hogan;
 
 
 /***/ }),
-/* 29 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -7377,7 +7937,7 @@ var Hogan = {};
 
 
 /***/ }),
-/* 30 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7441,7 +8001,7 @@ function changeItemsPerResultPageSetup(queryOptions, currentQuery) {
 }
 
 /***/ }),
-/* 31 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7519,7 +8079,7 @@ InformationComponent.defaultProps = {
 exports.default = InformationComponent;
 
 /***/ }),
-/* 32 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7528,349 +8088,7 @@ exports.default = InformationComponent;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _preact = __webpack_require__(0);
-
-var _helpers = __webpack_require__(33);
-
-var _suggestedSearchActions = __webpack_require__(34);
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
-/**
- * Actions
- */
-
-
-/**
- * Suggested Search Component
- */
-var SuggestedSearchComponent = function (_Component) {
-    _inherits(SuggestedSearchComponent, _Component);
-
-    function SuggestedSearchComponent() {
-        _classCallCheck(this, SuggestedSearchComponent);
-
-        var _this = _possibleConstructorReturn(this, (SuggestedSearchComponent.__proto__ || Object.getPrototypeOf(SuggestedSearchComponent)).call(this));
-
-        _this.handleSearch = function (e) {
-            /**
-             * Set the current query text
-             */
-            _this.setState({ q: e.target.value });
-
-            /**
-             * Dispatch suggested search action
-             */
-            (0, _suggestedSearchActions.suggestedSearchAction)(e.target.value, _this.props.currentQuery, _this.props.client);
-        };
-
-        _this.handleSuggestionsNavigation = function (e) {
-            /**
-             * When user hits arrow down
-             */
-            if (e.code === 'ArrowDown') {
-                _this.setState({
-                    currentSuggestions: (0, _helpers.selectNextSuggestion)(_this.state.currentSuggestions),
-                    q: (0, _helpers.selectActiveSuggestion)(_this.state.currentSuggestions)
-                });
-            }
-
-            /**
-             * When user hits arrow up
-             */
-            if (e.code === 'ArrowUp') {
-                /**
-                 * Prevent cursor to go at the starting point of the line
-                 */
-                e.preventDefault();
-
-                _this.setState({
-                    currentSuggestions: (0, _helpers.selectPreviousSuggestion)(_this.state.currentSuggestions),
-                    q: (0, _helpers.selectActiveSuggestion)(_this.state.currentSuggestions)
-                });
-            }
-
-            /**
-             * When user hits enter
-             */
-            if (e.code === 'Enter') {
-                _this.setState({
-                    q: (0, _helpers.selectActiveSuggestion)(_this.state.currentSuggestions),
-                    currentSuggestions: []
-                });
-
-                var _this$props = _this.props,
-                    currentQuery = _this$props.currentQuery,
-                    client = _this$props.client;
-
-
-                (0, _suggestedSearchActions.simpleSearchAction)(_this.state.q, currentQuery, client);
-            }
-        };
-
-        _this.handleSuggestionClick = function (e) {
-            _this.setState({
-                q: e.target.innerText,
-                currentSuggestions: []
-            });
-
-            (0, _suggestedSearchActions.simpleSearchAction)(e.target.innerText, _this.props.currentQuery, _this.props.client);
-        };
-
-        _this.handleSearchInputFocusedOut = function (e) {
-            /**
-             * It handles when a user focuses out the search input
-             * If is not clicking on the suggestions box
-             * The suggestions are cleared and panel closes
-             */
-            if (null === e.relatedTarget || false === e.relatedTarget.classList.contains('asui-suggestedSearch--box')) {
-                _this.setState({ currentSuggestions: [] });
-            }
-
-            return false;
-        };
-
-        _this.state = {
-            q: '',
-            currentSuggestions: []
-        };
-        return _this;
-    }
-
-    _createClass(SuggestedSearchComponent, [{
-        key: 'componentWillReceiveProps',
-        value: function componentWillReceiveProps(props) {
-            var _this2 = this;
-
-            /**
-             * Check suggestions available
-             * if some, prepend the current query to the other suggestions array
-             * else, only append the current query to the suggestions array
-             */
-            var suggests = props.data && props.data.suggests ? [this.state.q].concat(_toConsumableArray(props.data.suggests)) : [this.state.q];
-
-            /**
-             * Prepare suggestions array
-             */
-            this.setState({
-                currentSuggestions: suggests.map(function (suggest, key) {
-                    return {
-                        isActive: 0 === key,
-                        name: suggest,
-                        htmlName: (0, _helpers.highlightSuggestion)(_this2.state.q, suggest)
-                    };
-                })
-            });
-        }
-    }, {
-        key: 'render',
-        value: function render() {
-            var _this3 = this;
-
-            var _props = this.props,
-                placeholder = _props.placeholder,
-                autofocus = _props.autofocus,
-                _props$classNames = _props.classNames,
-                containerClassName = _props$classNames.container,
-                inputClassName = _props$classNames.input,
-                boxClassName = _props$classNames.box,
-                suggestionClassName = _props$classNames.suggestion,
-                activeSuggestionClassName = _props$classNames.activeSuggestion;
-            var currentSuggestions = this.state.currentSuggestions;
-
-
-            return (0, _preact.h)(
-                'div',
-                { className: 'asui-suggestedSearch ' + containerClassName },
-                (0, _preact.h)('input', {
-                    type: 'text',
-                    value: this.state.q,
-                    className: 'asui-suggestedSearch--input ' + inputClassName,
-                    placeholder: placeholder,
-                    autofocus: autofocus,
-
-                    onInput: this.handleSearch,
-                    onKeyDown: this.handleSuggestionsNavigation,
-                    onBlur: this.handleSearchInputFocusedOut
-                }),
-                (0, _preact.h)(
-                    'div',
-                    {
-                        tabIndex: '0',
-                        className: 'asui-suggestedSearch--box ' + boxClassName,
-                        style: {
-                            display: currentSuggestions.length !== 0 ? 'block' : 'none'
-                        }
-                    },
-                    currentSuggestions.map(function (suggestion, key) {
-                        return 0 !== key ? (0, _preact.h)('div', {
-                            className: 'asui-suggestedSearch--suggestion ' + (suggestionClassName + ' ') + ('' + (suggestion.isActive ? activeSuggestionClassName : '')),
-                            dangerouslySetInnerHTML: {
-                                __html: suggestion.htmlName
-                            },
-                            onClick: _this3.handleSuggestionClick
-                        }) : null;
-                    })
-                )
-            );
-        }
-    }]);
-
-    return SuggestedSearchComponent;
-}(_preact.Component);
-
-SuggestedSearchComponent.defaultProps = {
-    placeholder: '',
-    autofocus: false,
-    classNames: {
-        container: '',
-        input: '',
-        box: '',
-        suggestion: '',
-        activeSuggestion: 'asui-active'
-    }
-};
-
-exports.default = SuggestedSearchComponent;
-
-/***/ }),
-/* 33 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.highlightSuggestion = highlightSuggestion;
-exports.selectNextSuggestion = selectNextSuggestion;
-exports.selectPreviousSuggestion = selectPreviousSuggestion;
-exports.selectActiveSuggestion = selectActiveSuggestion;
-/**
- * Set of helpers for the suggestions widget
- */
-
-/**
- * Highlight text
- */
-function highlightSuggestion(currentQueryText, suggestion) {
-    var regex = new RegExp('(' + currentQueryText + ')', 'gi');
-    var highlightedSuggestion = suggestion.replace(regex, "<em>$1</em>");
-    var sanitizedSpaces = highlightedSuggestion.split(' ');
-
-    return sanitizedSpaces.join('&nbsp;');
-}
-
-/**
- * Mark as active the item next
- * to the last active item
- * on a given array of items
- *
- * @example when a user press a key arrow down
- */
-function selectNextSuggestion(suggestionsArray) {
-    var currentActiveSuggestionKey = void 0;
-
-    return suggestionsArray.map(function (suggestion, key) {
-        /**
-         * Detect current active suggestion
-         */
-        if (suggestion.isActive && key + 1 < suggestionsArray.length) {
-            currentActiveSuggestionKey = key;
-            suggestion.isActive = false;
-        }
-
-        /**
-         * Modify the first suggestion next to
-         * the current active suggestion
-         */
-        if (key === currentActiveSuggestionKey + 1 && key + 1 <= suggestionsArray.length) {
-            suggestion.isActive = true;
-        }
-
-        return suggestion;
-    });
-}
-
-/**
- * Mark as active the item previous
- * to the last active item
- * on a given array of items
- *
- * @example when a user press a key arrow up
- */
-function selectPreviousSuggestion(suggestionsArray) {
-    /**
-     * Find the current active suggestion key
-     */
-    var currentActiveSuggestionKey = suggestionsArray.findIndex(function (suggestion) {
-        if (suggestion.isActive) {
-            return suggestion;
-        }
-    });
-
-    return suggestionsArray.map(function (suggestion, key) {
-        /**
-         * Set the current active suggestion as false
-         * if is Active AND is not the last one
-         */
-        if (suggestion.isActive && currentActiveSuggestionKey - 1 >= 0) {
-            suggestion.isActive = false;
-        }
-
-        /**
-         * Set active the suggestion previous to
-         * the current active suggestion
-         */
-        if (currentActiveSuggestionKey - 1 === key && currentActiveSuggestionKey - 1 >= 0) {
-            suggestion.isActive = true;
-        }
-
-        return suggestion;
-    });
-}
-
-/**
- * Return the active item of an array
- */
-function selectActiveSuggestion(suggestionsArray) {
-    var selectedSuggestion = suggestionsArray.filter(function (suggestion) {
-        if (suggestion.isActive) {
-            return suggestion;
-        }
-    });
-
-    return selectedSuggestion[0].name;
-}
-
-/***/ }),
-/* 34 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.simpleSearchAction = simpleSearchAction;
-exports.suggestedSearchAction = suggestedSearchAction;
-
-var _cloneDeep = __webpack_require__(2);
-
-var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
+exports.initialDataFetchAction = initialDataFetchAction;
 
 var _dispatcher = __webpack_require__(1);
 
@@ -7879,9 +8097,9 @@ var _dispatcher2 = _interopRequireDefault(_dispatcher);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
- * This actions are triggered when a text input changes
- * receives three parameters:
- *   @param text         -> the text value for the search
+ * Initial data fetching action
+ *
+ * This action is triggered on the first time ApisearchUI is initialized:
  *   @param currentQuery -> current application query
  *   @param client       -> apisearch client to trigger a search
  *
@@ -7895,43 +8113,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  *     }
  *   }}
  */
-
-/**
- * Simple search action
- * Builds a query disabling suggested searches flag
- */
-/**
- * Search actions
- */
-function simpleSearchAction(text, currentQuery, client) {
-    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
-    clonedQuery.setQueryText(text).disableResults().disableSuggestions();
-
-    client.search(clonedQuery, function (result) {
+function initialDataFetchAction(currentQuery, client) {
+    client.search(currentQuery, function (result) {
         _dispatcher2.default.dispatch({
             type: 'RENDER_FETCHED_DATA',
             payload: {
                 result: result,
-                updatedQuery: clonedQuery
-            }
-        });
-    });
-}
-
-/**
- * Suggested Search Action
- * Builds a query using suggested search flag active
- */
-function suggestedSearchAction(text, currentQuery, client) {
-    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
-    clonedQuery.setQueryText(text).enableResults().enableSuggestions();
-
-    client.search(clonedQuery, function (result) {
-        _dispatcher2.default.dispatch({
-            type: 'RENDER_FETCHED_DATA',
-            payload: {
-                result: result,
-                updatedQuery: clonedQuery
+                updatedQuery: currentQuery
             }
         });
     });

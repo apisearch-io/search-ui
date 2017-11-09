@@ -5,10 +5,11 @@
   "main": "./dist/apisearch-ui.node.js",
   "scripts": {
     "examples": "webpack-dev-server --content-base examples/ --port 1234 --history-api-fallback index.html",
-    "build": "rm -rf ./dist/*; webpack --config ./webpack.prod.js --progress --colors",
     "dev": "webpack --config ./webpack.dev.js --progress --colors --watch",
-    "dist": "rm -rf ./dist/*; npm run build && npm run dev",
     "test": "jest --config jest.config.js",
+    "build": "webpack --config ./webpack.dev.js",
+    "build:min": "webpack --config ./webpack.prod.js",
+    "dist": "npm t; rm -rf ./dist/*; npm run build && npm run build:min",
     "cover": "nyc npm test"
   },
   "license": "MIT",

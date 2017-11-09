@@ -125,6 +125,25 @@ const sortByWidget = ui.widgets.sortBy({
 });
 ```
 
+## Multiple Filter
+The filter widget allows you to refine your search.
+```javascript
+const multipleFilterWidget = ui.widgets.multipleFilter({
+    target: !string,
+    name: !string,
+    field: !string,
+    type: ![and|or],
+    limit: ?integer[10],
+    classNames: {
+        
+    },
+    template: {
+        top: ?string,
+        item: !string
+    }
+})
+```
+
 ## Search result
 The result widget allows you to print a set of results
 based on the search.
@@ -251,15 +270,17 @@ yarn test
    - [ ] Exclude results
 - [ ] Infinite Result box
 - [x] Result Information
+- [ ] Pagination
+- [ ] Results per page selector
 
 - [x] SortBy
    - [ ] Random sort
-- [ ] Checkbox filter
+- [ ] Simple filter
+- [ ] Multiple filter (and || or)
 - [ ] Select filter
 - [ ] Menu filter
 - [ ] Rating filter
 - [ ] Range filter
-- [ ] Pagination
 - [ ] Clear filters
 
 - [ ] Analytics / User analytics

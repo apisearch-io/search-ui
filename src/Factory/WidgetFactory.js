@@ -11,10 +11,11 @@ import { h, createElement } from 'preact';
  * Locals
  */
 import SimpleSearchComponent from "../Widgets/SimpleSearch/SimpleSearchComponent";
+import SuggestedSearchComponent from "../Widgets/SuggestedSearch/SuggestedSearchComponent";
 import SortByComponent from "../Widgets/SortBy/SortByComponent";
+import MultipleFilterComponent from "../Widgets/MultipleFilter/MultipleFilterComponent";
 import ResultComponent from "../Widgets/Result/ResultComponent";
 import InformationComponent from "../Widgets/Information/InformationComponent";
-import SuggestedSearchComponent from "../Widgets/SuggestedSearch/SuggestedSearchComponent";
 
 /**
  * Widgets factory class
@@ -85,6 +86,35 @@ class WidgetFactory {
                 ...classNames
             }}
             options={options}
+        />
+    }
+
+    /**
+     * Multiple filter
+     */
+    static multipleFilter({
+        target,
+        name,
+        field,
+        type,
+        limit,
+        classNames,
+        template = {
+            top,
+            item
+        }
+    }) {
+        return <MultipleFilterComponent
+            target={target}
+            name={name}
+            field={field}
+            type={type}
+            limit={limit}
+            classNames={{
+                ...SortByComponent.defaultProps.classNames,
+                ...classNames
+            }}
+            template={template}
         />
     }
 
