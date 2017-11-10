@@ -107,7 +107,7 @@ preact-render-spy (1 nodes)
 
 `;
 
-exports[`<ResultComponent /> should show placeholder if is set in custom properties and no data is passed 1`] = `
+exports[`<ResultComponent /> should show placeholder if is set in custom properties and ApisearchUI state is dirty 1`] = `
 preact-render-spy (1 nodes)
 -------
 <div class="asui-result ">

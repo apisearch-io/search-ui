@@ -1,9 +1,8 @@
 import { h, render, createElement } from 'preact';
 
 import { EventEmitter } from "events";
+import { initialDataFetchAction } from "./apisearchActions";
 import WidgetFactory from "./Factory/WidgetFactory";
-import dispatcher from "./dispatcher";
-import {initialDataFetchAction} from "./apisearchActions";
 
 /**
  * ApisearchUI class
@@ -22,6 +21,7 @@ class ApisearchUI extends EventEmitter {
         /**
          * Store related properties
          */
+        this.dirty = true;
         this.currentQuery = client.query.create('');
         this.data = {
             query: {
@@ -94,8 +94,6 @@ class ApisearchUI extends EventEmitter {
                 targetNode.lastChild
             )
         });
-
-        console.log('Render!')
     }
 
     /**
@@ -114,15 +112,26 @@ class ApisearchUI extends EventEmitter {
         }
 
         /**
+         * Is triggered when a initial data is received
+         * Dispatches an 'render' event
+         */
+        if (action.type === 'RENDER_INITIAL_DATA') {
+            const { initialResult, initialQuery } = action.payload;
+
+            this.data = initialResult;
+            this.currentQuery = initialQuery;
+
+            this.emit('render');
+        }
+
+        /**
          * When action triggers a re-rendering
          * Dispatches a 'render' event
          */
         if (action.type === 'RENDER_FETCHED_DATA') {
-            const {
-                result,
-                updatedQuery
-            } = action.payload;
+            const { result, updatedQuery } = action.payload;
 
+            this.dirty = false;
             this.data = result;
             this.currentQuery = updatedQuery;
 
@@ -137,6 +146,7 @@ function hydrateWidget(currentStore, widget) {
      * as a component attributes. There will be accessible
      * on component props.
      */
+    widget.attributes.dirty = currentStore.dirty;
     widget.attributes.data = currentStore.data;
     widget.attributes.client = currentStore.client;
     widget.attributes.currentQuery = currentStore.currentQuery;

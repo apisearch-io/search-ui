@@ -5235,15 +5235,11 @@ var _preact = __webpack_require__(0);
 
 var _events = __webpack_require__(14);
 
+var _apisearchActions = __webpack_require__(36);
+
 var _WidgetFactory = __webpack_require__(15);
 
 var _WidgetFactory2 = _interopRequireDefault(_WidgetFactory);
-
-var _dispatcher = __webpack_require__(1);
-
-var _dispatcher2 = _interopRequireDefault(_dispatcher);
-
-var _apisearchActions = __webpack_require__(36);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -5276,6 +5272,7 @@ var ApisearchUI = function (_EventEmitter) {
         /**
          * Store related properties
          */
+        _this.dirty = true;
         _this.currentQuery = client.query.create('');
         _this.data = {
             query: {
@@ -5370,8 +5367,6 @@ var ApisearchUI = function (_EventEmitter) {
 
                 (0, _preact.render)(hydratedWidget, targetNode, targetNode.lastChild);
             });
-
-            console.log('Render!');
         }
 
         /**
@@ -5393,15 +5388,32 @@ var ApisearchUI = function (_EventEmitter) {
             }
 
             /**
+             * Is triggered when a initial data is received
+             * Dispatches an 'render' event
+             */
+            if (action.type === 'RENDER_INITIAL_DATA') {
+                var _action$payload = action.payload,
+                    initialResult = _action$payload.initialResult,
+                    initialQuery = _action$payload.initialQuery;
+
+
+                this.data = initialResult;
+                this.currentQuery = initialQuery;
+
+                this.emit('render');
+            }
+
+            /**
              * When action triggers a re-rendering
              * Dispatches a 'render' event
              */
             if (action.type === 'RENDER_FETCHED_DATA') {
-                var _action$payload = action.payload,
-                    result = _action$payload.result,
-                    updatedQuery = _action$payload.updatedQuery;
+                var _action$payload2 = action.payload,
+                    result = _action$payload2.result,
+                    updatedQuery = _action$payload2.updatedQuery;
 
 
+                this.dirty = false;
                 this.data = result;
                 this.currentQuery = updatedQuery;
 
@@ -5419,6 +5431,7 @@ function hydrateWidget(currentStore, widget) {
      * as a component attributes. There will be accessible
      * on component props.
      */
+    widget.attributes.dirty = currentStore.dirty;
     widget.attributes.data = currentStore.data;
     widget.attributes.client = currentStore.client;
     widget.attributes.currentQuery = currentStore.currentQuery;
@@ -7049,12 +7062,7 @@ var ResultComponent = function (_Component) {
     function ResultComponent() {
         _classCallCheck(this, ResultComponent);
 
-        var _this = _possibleConstructorReturn(this, (ResultComponent.__proto__ || Object.getPrototypeOf(ResultComponent)).call(this));
-
-        _this.state = {
-            isInitialState: true
-        };
-        return _this;
+        return _possibleConstructorReturn(this, (ResultComponent.__proto__ || Object.getPrototypeOf(ResultComponent)).apply(this, arguments));
     }
 
     _createClass(ResultComponent, [{
@@ -7071,6 +7079,9 @@ var ResultComponent = function (_Component) {
                 highlightsEnabled = _props.highlightsEnabled,
                 currentQuery = _props.currentQuery;
 
+            /**
+             * Dispatch action
+             */
 
             (0, _resultActions.changeItemsPerResultPageSetup)({
                 itemsPerPage: itemsPerPage,
@@ -7078,16 +7089,11 @@ var ResultComponent = function (_Component) {
             }, currentQuery);
         }
     }, {
-        key: "componentWillReceiveProps",
-        value: function componentWillReceiveProps() {
-            this.setState({
-                isInitialState: false
-            });
-        }
-    }, {
         key: "render",
         value: function render() {
             var _props2 = this.props,
+                dirty = _props2.dirty,
+                showInitialResults = _props2.showInitialResults,
                 containerClassName = _props2.classNames.container,
                 _props2$template = _props2.template,
                 bodyTemplate = _props2$template.itemsList,
@@ -7105,7 +7111,7 @@ var ResultComponent = function (_Component) {
             return (0, _preact.h)(
                 "div",
                 { className: "asui-result " + containerClassName },
-                placeholderTemplate && this.state.isInitialState ? (0, _preact.h)(_Template2.default, {
+                placeholderTemplate && dirty ? (0, _preact.h)(_Template2.default, {
                     template: placeholderTemplate,
                     className: "asui-result--placeholder"
                 }) : (0, _preact.h)(_Template2.default, {
@@ -8100,7 +8106,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Initial data fetching action
  *
  * This action is triggered on the first time ApisearchUI is initialized:
- *   @param currentQuery -> current application query
+ *   @param initialQuery -> initial application query
  *   @param client       -> apisearch client to trigger a search
  *
  * Finally dispatches an event with the search result and
@@ -8113,13 +8119,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  *     }
  *   }}
  */
-function initialDataFetchAction(currentQuery, client) {
-    client.search(currentQuery, function (result) {
+function initialDataFetchAction(initialQuery, client) {
+    client.search(initialQuery, function (initialResult) {
         _dispatcher2.default.dispatch({
-            type: 'RENDER_FETCHED_DATA',
+            type: 'RENDER_INITIAL_DATA',
             payload: {
-                result: result,
-                updatedQuery: currentQuery
+                initialResult: initialResult,
+                initialQuery: initialQuery
             }
         });
     });

@@ -14,13 +14,6 @@ import {changeItemsPerResultPageSetup} from "./resultActions";
  * Result Component
  */
 class ResultComponent extends Component {
-    constructor() {
-        super();
-        this.state = {
-            isInitialState: true
-        }
-    }
-
     componentWillMount() {
         /**
          * Define initial Setup on component mounting
@@ -34,6 +27,9 @@ class ResultComponent extends Component {
             currentQuery
         } = this.props;
 
+        /**
+         * Dispatch action
+         */
         changeItemsPerResultPageSetup(
             {
                 itemsPerPage,
@@ -43,14 +39,10 @@ class ResultComponent extends Component {
         )
     }
 
-    componentWillReceiveProps() {
-        this.setState({
-            isInitialState: false
-        })
-    }
-
     render() {
         const {
+            dirty,
+            showInitialResults,
             classNames: {
                 container: containerClassName
             },
@@ -70,7 +62,7 @@ class ResultComponent extends Component {
 
         return (
             <div className={`asui-result ${containerClassName}`}>
-                {(placeholderTemplate && this.state.isInitialState)
+                {(placeholderTemplate && dirty)
                     ? <Template
                         template={placeholderTemplate}
                         className={`asui-result--placeholder`}

@@ -4,7 +4,7 @@ import dispatcher from "./dispatcher";
  * Initial data fetching action
  *
  * This action is triggered on the first time ApisearchUI is initialized:
- *   @param currentQuery -> current application query
+ *   @param initialQuery -> initial application query
  *   @param client       -> apisearch client to trigger a search
  *
  * Finally dispatches an event with the search result and
@@ -18,15 +18,15 @@ import dispatcher from "./dispatcher";
  *   }}
  */
 export function initialDataFetchAction(
-    currentQuery,
+    initialQuery,
     client
 ) {
-    client.search(currentQuery, result => {
+    client.search(initialQuery, initialResult => {
         dispatcher.dispatch({
-            type: 'RENDER_FETCHED_DATA',
+            type: 'RENDER_INITIAL_DATA',
             payload: {
-                result,
-                updatedQuery: currentQuery
+                initialResult,
+                initialQuery
             }
         })
     })

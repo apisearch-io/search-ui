@@ -80,7 +80,7 @@ describe('<ResultComponent />',() => {
          */
         expect(tree).toMatchSnapshot();
     });
-    it('should show placeholder if is set in custom properties and no data is passed', () => {
+    it('should show placeholder if is set in custom properties and ApisearchUI state is dirty', () => {
         ResultComponent.prototype.componentWillMount = jest.fn();
         const customProps = {
             template: {
@@ -90,6 +90,7 @@ describe('<ResultComponent />',() => {
 
         const tree = deep(
             <ResultComponent
+                dirty={true}
                 {...defaultProps}
                 {...customProps}
             />
