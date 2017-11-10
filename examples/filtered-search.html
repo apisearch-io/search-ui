@@ -145,9 +145,11 @@
             }),
             ui.widgets.multipleFilter({
                 target: '.multiple-filter',
+                name: 'year',
+                field: 'year',
                 template: {
-                    top: 'Multiple filter',
-                    item: 'An item'
+                    top: '<h5 class="title is-5">Multiple filter</h5><hr/>',
+                    item: '<b>{{values.name}}</b> ({{n}})'
                 }
             }),
             ui.widgets.result({
@@ -156,7 +158,6 @@
                 highlightsEnabled: true,
                 template: {
                     itemsList: document.getElementById('result-search-tpl').text,
-                    placeholder: '<span></span>',
                 }
             })
         );

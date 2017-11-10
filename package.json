@@ -9,8 +9,7 @@
     "test": "jest --config jest.config.js",
     "build": "webpack --config ./webpack.dev.js",
     "build:min": "webpack --config ./webpack.prod.js",
-    "dist": "npm t; rm -rf ./dist/*; npm run build && npm run build:min",
-    "cover": "nyc npm test"
+    "dist": "npm t; rm -rf ./dist/*; npm run build && npm run build:min"
   },
   "license": "MIT",
   "author": "alexhoma <alexcm.14@gmail.com>",

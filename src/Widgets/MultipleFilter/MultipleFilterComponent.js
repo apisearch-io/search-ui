@@ -2,18 +2,38 @@
  * @jsx h
  */
 import { h, Component } from 'preact';
+import {aggregateAction} from "./multipleFilterActions";
+import Template from "../Template";
 
 /**
  * Filter Component
  */
 class MultipleFilterComponent extends Component {
     componentWillMount() {
+        const {
+            field: filterField,
+            name: filterName,
+            type: filterType,
+            currentQuery
+        } = this.props;
 
+        /**
+         * Dispatach action
+         */
+        aggregateAction(
+            {
+                filterField,
+                filterName
+            },
+            currentQuery
+        )
     }
 
     render() {
         const {
             limit,
+            field: filterField,
+            name: filterName,
             classNames: {
                 container: containerClassName,
                 top: topClassName,
@@ -23,12 +43,46 @@ class MultipleFilterComponent extends Component {
             template: {
                 top: topTemplate,
                 item: itemTemplate
+            },
+            data: {
+                aggregations: {
+                    aggregations
+                }
             }
         } = this.props;
 
+        if (typeof aggregations === 'undefined') return false;
+
+        /**
+         * Get aggregation items
+         */
+        let counters = aggregations[filterName].counters;
+        let items = Object
+            .keys(counters)
+            .map(key => counters[key])
+        ;
+
         return (
             <div className={`asui-multipleFilter ${containerClassName}`}>
-                Hello
+                <Template
+                    template={topTemplate}
+                    className={`asui-multipleFilter--top ${topClassName}`}
+                />
+
+                <div className={itemsListClassName}>
+                {items.map(item => {
+                    const reducedTemplateData = {
+                        n: item.n,
+                        values: item.values
+                    };
+
+                    return <Template
+                        template={itemTemplate}
+                        data={reducedTemplateData}
+                        className={`asui-multipleFilter ${itemClassName}`}
+                    />
+                })}
+                </div>
             </div>
         )
     }

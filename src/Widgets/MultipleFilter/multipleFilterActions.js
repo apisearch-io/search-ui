@@ -1,5 +1,5 @@
 /**
- * Search actions
+ * Multiple filter actions
  */
 import cloneDeep from 'clone-deep';
 import dispatcher from '../../dispatcher';
@@ -20,28 +20,21 @@ import dispatcher from '../../dispatcher';
  *     }
  *   }}
  */
-export function changeItemsPerResultPageSetup(
+export function aggregateAction(
     queryOptions,
     currentQuery
 ) {
     const {
-        itemsPerPage,
-        highlightsEnabled
+        filterName,
+        filterField
     } = queryOptions;
-
     let clonedQuery = cloneDeep(currentQuery);
 
-    /**
-     * Set result size
-     */
-    clonedQuery.setResultSize(itemsPerPage);
-
-    /**
-     * Enabling highlights on query result
-     */
-    if (highlightsEnabled) {
-        clonedQuery.enableHighlights();
-    }
+    clonedQuery.aggregateBy(
+        filterName,
+        filterField,
+        8
+    );
 
     dispatcher.dispatch({
         type: 'UPDATE_APISEARCH_SETUP',

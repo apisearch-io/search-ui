@@ -132,10 +132,12 @@ const multipleFilterWidget = ui.widgets.multipleFilter({
     target: !string,
     name: !string,
     field: !string,
-    type: ![and|or],
     limit: ?integer[10],
     classNames: {
-        
+        container: ?string,
+        top: ?string,
+        itemsList: ?string,
+        item: ?string
     },
     template: {
         top: ?string,

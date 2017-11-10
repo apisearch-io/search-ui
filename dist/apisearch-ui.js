@@ -6950,6 +6950,14 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
+var _multipleFilterActions = __webpack_require__(37);
+
+var _Template = __webpack_require__(7);
+
+var _Template2 = _interopRequireDefault(_Template);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -6972,27 +6980,74 @@ var MultipleFilterComponent = function (_Component) {
     }
 
     _createClass(MultipleFilterComponent, [{
-        key: 'componentWillMount',
-        value: function componentWillMount() {}
-    }, {
-        key: 'render',
-        value: function render() {
+        key: "componentWillMount",
+        value: function componentWillMount() {
             var _props = this.props,
-                limit = _props.limit,
-                _props$classNames = _props.classNames,
-                containerClassName = _props$classNames.container,
-                topClassName = _props$classNames.top,
-                itemsListClassName = _props$classNames.itemsList,
-                itemClassName = _props$classNames.item,
-                _props$template = _props.template,
-                topTemplate = _props$template.top,
-                itemTemplate = _props$template.item;
+                filterField = _props.field,
+                filterName = _props.name,
+                filterType = _props.type,
+                currentQuery = _props.currentQuery;
 
+            /**
+             * Dispatach action
+             */
+
+            (0, _multipleFilterActions.aggregateAction)({
+                filterField: filterField,
+                filterName: filterName
+            }, currentQuery);
+        }
+    }, {
+        key: "render",
+        value: function render() {
+            var _props2 = this.props,
+                limit = _props2.limit,
+                filterField = _props2.field,
+                filterName = _props2.name,
+                _props2$classNames = _props2.classNames,
+                containerClassName = _props2$classNames.container,
+                topClassName = _props2$classNames.top,
+                itemsListClassName = _props2$classNames.itemsList,
+                itemClassName = _props2$classNames.item,
+                _props2$template = _props2.template,
+                topTemplate = _props2$template.top,
+                itemTemplate = _props2$template.item,
+                aggregations = _props2.data.aggregations.aggregations;
+
+
+            if (typeof aggregations === 'undefined') return false;
+
+            /**
+             * Get aggregation items
+             */
+            var counters = aggregations[filterName].counters;
+            var items = Object.keys(counters).map(function (key) {
+                return counters[key];
+            });
 
             return (0, _preact.h)(
-                'div',
-                { className: 'asui-multipleFilter ' + containerClassName },
-                'Hello'
+                "div",
+                { className: "asui-multipleFilter " + containerClassName },
+                (0, _preact.h)(_Template2.default, {
+                    template: topTemplate,
+                    className: "asui-multipleFilter--top " + topClassName
+                }),
+                (0, _preact.h)(
+                    "div",
+                    { className: itemsListClassName },
+                    items.map(function (item) {
+                        var reducedTemplateData = {
+                            n: item.n,
+                            values: item.values
+                        };
+
+                        return (0, _preact.h)(_Template2.default, {
+                            template: itemTemplate,
+                            data: reducedTemplateData,
+                            className: "asui-multipleFilter " + itemClassName
+                        });
+                    })
+                )
             );
         }
     }]);
@@ -7969,7 +8024,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  *
  * This action is triggered when mounting a component
  * receives two parameters:
- *   @param itemsPerPage -> the itemsPerPage to be displayed on the result container
+ *   @param queryOptions -> the itemsPerPage to be displayed on the result container
  *   @param currentQuery -> current application query
  *
  * Finally dispatches an event with the modified query.
@@ -7989,6 +8044,10 @@ function changeItemsPerResultPageSetup(queryOptions, currentQuery) {
 
 
     var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+
+    /**
+     * Set result size
+     */
     clonedQuery.setResultSize(itemsPerPage);
 
     /**
@@ -8128,6 +8187,63 @@ function initialDataFetchAction(initialQuery, client) {
                 initialQuery: initialQuery
             }
         });
+    });
+}
+
+/***/ }),
+/* 37 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.aggregateAction = aggregateAction;
+
+var _cloneDeep = __webpack_require__(2);
+
+var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
+
+var _dispatcher = __webpack_require__(1);
+
+var _dispatcher2 = _interopRequireDefault(_dispatcher);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Define items per page on result
+ *
+ * This action is triggered when mounting a component
+ * receives two parameters:
+ *   @param queryOptions -> the itemsPerPage to be displayed on the result container
+ *   @param currentQuery -> current application query
+ *
+ * Finally dispatches an event with the modified query.
+ *   @returns {{
+ *     type: string,
+ *     payload: {
+ *        updatedQuery
+ *     }
+ *   }}
+ */
+/**
+ * Multiple filter actions
+ */
+function aggregateAction(queryOptions, currentQuery) {
+    var filterName = queryOptions.filterName,
+        filterField = queryOptions.filterField;
+
+    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+
+    clonedQuery.aggregateBy(filterName, filterField, 8);
+
+    _dispatcher2.default.dispatch({
+        type: 'UPDATE_APISEARCH_SETUP',
+        payload: {
+            updatedQuery: clonedQuery
+        }
     });
 }
 
