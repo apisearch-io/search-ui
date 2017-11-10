@@ -1078,10 +1078,10 @@ exports.default = new _flux.Dispatcher();
  * Module dependenices
  */
 
-var isObject = __webpack_require__(18);
-var clone = __webpack_require__(20);
+var isObject = __webpack_require__(19);
+var clone = __webpack_require__(21);
 var typeOf = __webpack_require__(6);
-var forOwn = __webpack_require__(23);
+var forOwn = __webpack_require__(24);
 
 /**
  * Recursively clone native types.
@@ -1366,7 +1366,7 @@ module.exports = function forIn(obj, fn, thisArg) {
 /* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isBuffer = __webpack_require__(22);
+var isBuffer = __webpack_require__(23);
 var toString = Object.prototype.toString;
 
 /**
@@ -1499,7 +1499,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _hogan = __webpack_require__(31);
+var _hogan = __webpack_require__(32);
 
 var _hogan2 = _interopRequireDefault(_hogan);
 
@@ -5235,9 +5235,9 @@ var _preact = __webpack_require__(0);
 
 var _events = __webpack_require__(14);
 
-var _apisearchActions = __webpack_require__(36);
+var _apisearchActions = __webpack_require__(15);
 
-var _WidgetFactory = __webpack_require__(15);
+var _WidgetFactory = __webpack_require__(16);
 
 var _WidgetFactory2 = _interopRequireDefault(_WidgetFactory);
 
@@ -5759,6 +5759,53 @@ function isUndefined(arg) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.initialDataFetchAction = initialDataFetchAction;
+
+var _dispatcher = __webpack_require__(1);
+
+var _dispatcher2 = _interopRequireDefault(_dispatcher);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Initial data fetching action
+ *
+ * This action is triggered on the first time ApisearchUI is initialized:
+ *   @param initialQuery -> initial application query
+ *   @param client       -> apisearch client to trigger a search
+ *
+ * Finally dispatches an event with the search result and
+ * the modified query.
+ *   @returns {{
+ *     type: string,
+ *     payload: {
+ *        result,
+ *        updatedQuery
+ *     }
+ *   }}
+ */
+function initialDataFetchAction(initialQuery, client) {
+    client.search(initialQuery, function (initialResult) {
+        _dispatcher2.default.dispatch({
+            type: 'RENDER_INITIAL_DATA',
+            payload: {
+                initialResult: initialResult,
+                initialQuery: initialQuery
+            }
+        });
+    });
+}
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -5778,27 +5825,27 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _SimpleSearchComponent = __webpack_require__(16);
+var _SimpleSearchComponent = __webpack_require__(17);
 
 var _SimpleSearchComponent2 = _interopRequireDefault(_SimpleSearchComponent);
 
-var _SuggestedSearchComponent = __webpack_require__(24);
+var _SuggestedSearchComponent = __webpack_require__(25);
 
 var _SuggestedSearchComponent2 = _interopRequireDefault(_SuggestedSearchComponent);
 
-var _SortByComponent = __webpack_require__(27);
+var _SortByComponent = __webpack_require__(28);
 
 var _SortByComponent2 = _interopRequireDefault(_SortByComponent);
 
-var _MultipleFilterComponent = __webpack_require__(29);
+var _MultipleFilterComponent = __webpack_require__(30);
 
 var _MultipleFilterComponent2 = _interopRequireDefault(_MultipleFilterComponent);
 
-var _ResultComponent = __webpack_require__(30);
+var _ResultComponent = __webpack_require__(31);
 
 var _ResultComponent2 = _interopRequireDefault(_ResultComponent);
 
-var _InformationComponent = __webpack_require__(35);
+var _InformationComponent = __webpack_require__(36);
 
 var _InformationComponent2 = _interopRequireDefault(_InformationComponent);
 
@@ -5907,7 +5954,7 @@ var WidgetFactory = function () {
                 field: field,
                 type: type,
                 limit: limit,
-                classNames: _extends({}, _SortByComponent2.default.defaultProps.classNames, classNames),
+                classNames: _extends({}, _MultipleFilterComponent2.default.defaultProps.classNames, classNames),
                 template: template
             });
         }
@@ -5959,7 +6006,7 @@ var WidgetFactory = function () {
 exports.default = WidgetFactory;
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5973,7 +6020,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _simpleSearchActions = __webpack_require__(17);
+var _simpleSearchActions = __webpack_require__(18);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -6058,7 +6105,7 @@ SimpleSearchComponent.defaultProps = {
 exports.default = SimpleSearchComponent;
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6117,7 +6164,7 @@ function simpleSearchAction(text, currentQuery, client) {
 }
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6130,7 +6177,7 @@ function simpleSearchAction(text, currentQuery, client) {
 
 
 
-var isObject = __webpack_require__(19);
+var isObject = __webpack_require__(20);
 
 function isObjectObject(o) {
   return isObject(o) === true
@@ -6161,7 +6208,7 @@ module.exports = function isPlainObject(o) {
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6180,7 +6227,7 @@ module.exports = function isObject(val) {
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6194,7 +6241,7 @@ module.exports = function isObject(val) {
 
 
 var isObject = __webpack_require__(4);
-var mixin = __webpack_require__(21);
+var mixin = __webpack_require__(22);
 var typeOf = __webpack_require__(6);
 
 /**
@@ -6244,7 +6291,7 @@ module.exports = clone;
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6286,7 +6333,7 @@ function copy(value, key) {
 module.exports = mixin;
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports) {
 
 /*!
@@ -6313,7 +6360,7 @@ function isSlowBuffer (obj) {
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6339,7 +6386,7 @@ module.exports = function forOwn(obj, fn, thisArg) {
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6353,9 +6400,9 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _helpers = __webpack_require__(25);
+var _helpers = __webpack_require__(26);
 
-var _suggestedSearchActions = __webpack_require__(26);
+var _suggestedSearchActions = __webpack_require__(27);
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
@@ -6565,7 +6612,7 @@ SuggestedSearchComponent.defaultProps = {
 exports.default = SuggestedSearchComponent;
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6676,7 +6723,7 @@ function selectActiveSuggestion(suggestionsArray) {
 }
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6758,7 +6805,7 @@ function suggestedSearchAction(text, currentQuery, client) {
 }
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6772,7 +6819,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _sortByActions = __webpack_require__(28);
+var _sortByActions = __webpack_require__(29);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -6862,7 +6909,7 @@ SortByComponent.defaultProps = {
 exports.default = SortByComponent;
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6936,7 +6983,7 @@ function splitQueryValue(string) {
 }
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6956,7 +7003,11 @@ var _Template = __webpack_require__(7);
 
 var _Template2 = _interopRequireDefault(_Template);
 
+var _helpers = __webpack_require__(38);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -6974,9 +7025,34 @@ var MultipleFilterComponent = function (_Component) {
     _inherits(MultipleFilterComponent, _Component);
 
     function MultipleFilterComponent() {
+        var _ref;
+
+        var _temp, _this, _ret;
+
         _classCallCheck(this, MultipleFilterComponent);
 
-        return _possibleConstructorReturn(this, (MultipleFilterComponent.__proto__ || Object.getPrototypeOf(MultipleFilterComponent)).apply(this, arguments));
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+        }
+
+        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = MultipleFilterComponent.__proto__ || Object.getPrototypeOf(MultipleFilterComponent)).call.apply(_ref, [this].concat(args))), _this), _this.handleClick = function (e) {
+            var _this$props = _this.props,
+                filterField = _this$props.field,
+                filterName = _this$props.name,
+                currentQuery = _this$props.currentQuery,
+                client = _this$props.client,
+                aggregations = _this$props.data.aggregations.aggregations;
+
+
+            var activeElements = aggregations[filterName].active_elements;
+            var currentActiveFilterValues = typeof activeElements !== 'undefined' ? (0, _helpers.simpleObjectToArray)() : [];
+
+            (0, _multipleFilterActions.filterAction)({
+                filterName: filterName,
+                filterField: filterField,
+                filterValues: [].concat(_toConsumableArray(currentActiveFilterValues), [e])
+            }, currentQuery, client);
+        }, _temp), _possibleConstructorReturn(_this, _ret);
     }
 
     _createClass(MultipleFilterComponent, [{
@@ -6985,14 +7061,13 @@ var MultipleFilterComponent = function (_Component) {
             var _props = this.props,
                 filterField = _props.field,
                 filterName = _props.name,
-                filterType = _props.type,
                 currentQuery = _props.currentQuery;
 
             /**
              * Dispatach action
              */
 
-            (0, _multipleFilterActions.aggregateAction)({
+            (0, _multipleFilterActions.aggregationSetup)({
                 filterField: filterField,
                 filterName: filterName
             }, currentQuery);
@@ -7000,9 +7075,9 @@ var MultipleFilterComponent = function (_Component) {
     }, {
         key: "render",
         value: function render() {
+            var _this2 = this;
+
             var _props2 = this.props,
-                limit = _props2.limit,
-                filterField = _props2.field,
                 filterName = _props2.name,
                 _props2$classNames = _props2.classNames,
                 containerClassName = _props2$classNames.container,
@@ -7021,9 +7096,7 @@ var MultipleFilterComponent = function (_Component) {
              * Get aggregation items
              */
             var counters = aggregations[filterName].counters;
-            var items = Object.keys(counters).map(function (key) {
-                return counters[key];
-            });
+            var items = (0, _helpers.aggregationsObjectToArray)(counters);
 
             return (0, _preact.h)(
                 "div",
@@ -7037,15 +7110,24 @@ var MultipleFilterComponent = function (_Component) {
                     { className: itemsListClassName },
                     items.map(function (item) {
                         var reducedTemplateData = {
-                            n: item.n,
+                            n: parseInt(item.n).toLocaleString('de-DE'),
+                            isActive: item.used,
                             values: item.values
                         };
 
-                        return (0, _preact.h)(_Template2.default, {
-                            template: itemTemplate,
-                            data: reducedTemplateData,
-                            className: "asui-multipleFilter " + itemClassName
-                        });
+                        return (0, _preact.h)(
+                            "div",
+                            {
+                                className: "asui-multipleFilter--item " + itemClassName,
+                                onClick: function onClick() {
+                                    return _this2.handleClick(item.__key);
+                                }
+                            },
+                            (0, _preact.h)(_Template2.default, {
+                                template: itemTemplate,
+                                data: reducedTemplateData
+                            })
+                        );
                     })
                 )
             );
@@ -7073,7 +7155,7 @@ MultipleFilterComponent.defaultProps = {
 exports.default = MultipleFilterComponent;
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7091,7 +7173,7 @@ var _Template = __webpack_require__(7);
 
 var _Template2 = _interopRequireDefault(_Template);
 
-var _resultActions = __webpack_require__(34);
+var _resultActions = __webpack_require__(35);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -7195,7 +7277,7 @@ ResultComponent.defaultProps = {
 exports.default = ResultComponent;
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -7215,14 +7297,14 @@ exports.default = ResultComponent;
 
 // This file is for use with Node.js. See dist/ for browser files.
 
-var Hogan = __webpack_require__(32);
-Hogan.Template = __webpack_require__(33).Template;
+var Hogan = __webpack_require__(33);
+Hogan.Template = __webpack_require__(34).Template;
 Hogan.template = Hogan.Template;
 module.exports = Hogan;
 
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -7651,7 +7733,7 @@ module.exports = Hogan;
 
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -7998,7 +8080,7 @@ var Hogan = {};
 
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8066,7 +8148,7 @@ function changeItemsPerResultPageSetup(queryOptions, currentQuery) {
 }
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8144,53 +8226,6 @@ InformationComponent.defaultProps = {
 exports.default = InformationComponent;
 
 /***/ }),
-/* 36 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.initialDataFetchAction = initialDataFetchAction;
-
-var _dispatcher = __webpack_require__(1);
-
-var _dispatcher2 = _interopRequireDefault(_dispatcher);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Initial data fetching action
- *
- * This action is triggered on the first time ApisearchUI is initialized:
- *   @param initialQuery -> initial application query
- *   @param client       -> apisearch client to trigger a search
- *
- * Finally dispatches an event with the search result and
- * the modified query.
- *   @returns {{
- *     type: string,
- *     payload: {
- *        result,
- *        updatedQuery
- *     }
- *   }}
- */
-function initialDataFetchAction(initialQuery, client) {
-    client.search(initialQuery, function (initialResult) {
-        _dispatcher2.default.dispatch({
-            type: 'RENDER_INITIAL_DATA',
-            payload: {
-                initialResult: initialResult,
-                initialQuery: initialQuery
-            }
-        });
-    });
-}
-
-/***/ }),
 /* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8200,7 +8235,8 @@ function initialDataFetchAction(initialQuery, client) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.aggregateAction = aggregateAction;
+exports.aggregationSetup = aggregationSetup;
+exports.filterAction = filterAction;
 
 var _cloneDeep = __webpack_require__(2);
 
@@ -8213,9 +8249,9 @@ var _dispatcher2 = _interopRequireDefault(_dispatcher);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
- * Define items per page on result
+ * Define aggregations setup
  *
- * This action is triggered when mounting a component
+ * This setup action is triggered when mounting a component
  * receives two parameters:
  *   @param queryOptions -> the itemsPerPage to be displayed on the result container
  *   @param currentQuery -> current application query
@@ -8231,7 +8267,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * Multiple filter actions
  */
-function aggregateAction(queryOptions, currentQuery) {
+function aggregationSetup(queryOptions, currentQuery) {
     var filterName = queryOptions.filterName,
         filterField = queryOptions.filterField;
 
@@ -8244,6 +8280,85 @@ function aggregateAction(queryOptions, currentQuery) {
         payload: {
             updatedQuery: clonedQuery
         }
+    });
+}
+
+/**
+ * Define aggregations setup
+ *
+ * This setup action is triggered when mounting a component
+ * receives two parameters:
+ *   @param queryOptions -> the itemsPerPage to be displayed on the result container
+ *   @param currentQuery -> current application query
+ *   @param client       -> Apisearch client
+ *
+ * Finally dispatches an event with the modified query.
+ *   @returns {{
+ *     type: string,
+ *     payload: {
+ *        updatedQuery
+ *     }
+ *   }}
+ */
+function filterAction(queryOptions, currentQuery, client) {
+    var filterName = queryOptions.filterName,
+        filterField = queryOptions.filterField,
+        filterValues = queryOptions.filterValues;
+
+    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+
+    clonedQuery.filterBy(filterName, filterField, filterValues);
+
+    client.search(clonedQuery, function (result) {
+        _dispatcher2.default.dispatch({
+            type: 'RENDER_FETCHED_DATA',
+            payload: {
+                updatedQuery: clonedQuery,
+                result: result
+            }
+        });
+    });
+}
+
+/***/ }),
+/* 38 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+exports.simpleObjectToArray = simpleObjectToArray;
+exports.aggregationsObjectToArray = aggregationsObjectToArray;
+
+/**
+ * Simple object to array
+ *
+ * @param object
+ * @returns {Array}
+ */
+function simpleObjectToArray(object) {
+    return Object.keys(object).map(function (key) {
+        return object[key];
+    });
+}
+
+/**
+ * Export the aggregations object to an array of items
+ *
+ * @param object
+ * @returns {Array}
+ */
+function aggregationsObjectToArray(object) {
+    return Object.keys(object).map(function (key) {
+        return object[key] = _extends({}, object[key], {
+            __key: key
+        });
     });
 }
 

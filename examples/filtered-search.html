@@ -47,12 +47,10 @@
     </nav>
 
     <!-- Result -->
-    <div class="container">
+    <div class="container is-fluid">
         <div class="columns" style="margin-top: 1rem">
-            <div class="column is-one-quarter">
-                <div class="multiple-filter column"></div>
-            </div>
-            <div class="result column is-three-quarters"></div>
+            <div class="multiple-filter column is-one-quarter"></div>
+            <div class="result column"></div>
         </div>
     </div>
 
@@ -94,34 +92,6 @@
         {{/items}}
     </script>
 
-    <script type="text/template" id="result-search-tpl">
-        <div class="columns is-multiline is-variable">
-            {{#items}}
-            <div class="column is-narrow is-one-quarter">
-                <div class="card" style="border-radius: .2rem">
-                    <div class="card-content">
-                        <div class="media">
-                            <div class="media-left">
-                                <img src="{{metadata.img}}" width="60px">
-                            </div>
-                            <div class="media-content">
-                                <strong>{{metadata.title}}</strong>
-                                {{#metadata.author}}
-                                <p class="has-text-info is-size-7">@{{name}}</p>
-                                {{/metadata.author}}
-                                <span class="has-text-grey is-size-7">
-                                    <strong>Year: </strong>
-                                    {{indexed_metadata.year}}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {{/items}}
-        </div>
-    </script>
-
     <script type="text/javascript">
         // UI Instance
         let ui = apisearchUI({
@@ -148,8 +118,18 @@
                 name: 'year',
                 field: 'year',
                 template: {
-                    top: '<h5 class="title is-5">Multiple filter</h5><hr/>',
-                    item: '<b>{{values.name}}</b> ({{n}})'
+                    top: 'Years',
+                    item: `
+                        <a class="aggregation {{#isActive}}is-active{{/isActive}}">
+                            <input type="checkbox" name="check" {{#isActive}}checked="checked"{{/isActive}}>
+                            <label for="check">{{values.name}} ({{n}})</label>
+                        </a>
+                    `
+                },
+                classNames: {
+                    container: 'panel',
+                    top: 'panel-heading',
+                    item: 'panel-block'
                 }
             }),
             ui.widgets.result({

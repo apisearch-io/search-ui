@@ -111,7 +111,7 @@ class WidgetFactory {
             type={type}
             limit={limit}
             classNames={{
-                ...SortByComponent.defaultProps.classNames,
+                ...MultipleFilterComponent.defaultProps.classNames,
                 ...classNames
             }}
             template={template}
