@@ -7007,8 +7007,6 @@ var _helpers = __webpack_require__(35);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -7035,7 +7033,7 @@ var MultipleFilterComponent = function (_Component) {
             args[_key] = arguments[_key];
         }
 
-        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = MultipleFilterComponent.__proto__ || Object.getPrototypeOf(MultipleFilterComponent)).call.apply(_ref, [this].concat(args))), _this), _this.handleClick = function (element) {
+        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = MultipleFilterComponent.__proto__ || Object.getPrototypeOf(MultipleFilterComponent)).call.apply(_ref, [this].concat(args))), _this), _this.handleClick = function (selectedFilter) {
             var _this$props = _this.props,
                 filterField = _this$props.field,
                 filterName = _this$props.name,
@@ -7053,7 +7051,7 @@ var MultipleFilterComponent = function (_Component) {
             (0, _multipleFilterActions.filterAction)({
                 filterName: filterName,
                 filterField: filterField,
-                filterValues: [].concat(_toConsumableArray(currentActiveFilterValues), [element])
+                filterValues: (0, _helpers.manageCurrentFilterItems)(selectedFilter, currentActiveFilterValues)
             }, currentQuery, client);
         }, _temp), _possibleConstructorReturn(_this, _ret);
     }
@@ -8070,6 +8068,9 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 exports.simpleObjectToArray = simpleObjectToArray;
 exports.aggregationsObjectToArray = aggregationsObjectToArray;
+exports.manageCurrentFilterItems = manageCurrentFilterItems;
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 /**
  * Simple object to array
@@ -8096,6 +8097,20 @@ function aggregationsObjectToArray(object) {
         });
     });
 }
+
+function manageCurrentFilterItems(selectedItem, currentItems) {
+    var isElementActive = currentItems.some(function (item) {
+        return item === selectedItem;
+    });
+
+    if (isElementActive) {
+        return currentItems.filter(function (item) {
+            return item !== selectedItem;
+        });
+    } else {
+        return [].concat(_toConsumableArray(currentItems), [selectedItem]);
+    }
+};
 
 /***/ }),
 /* 36 */

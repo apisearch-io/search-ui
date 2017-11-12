@@ -4,7 +4,10 @@
 import { h, Component } from 'preact';
 import {aggregationSetup, filterAction} from "./multipleFilterActions";
 import Template from "../Template";
-import {aggregationsObjectToArray, simpleObjectToArray} from "./helpers";
+import {
+    aggregationsObjectToArray, manageCurrentFilterItems,
+    simpleObjectToArray
+} from "./helpers";
 
 /**
  * Filter Component
@@ -29,7 +32,7 @@ class MultipleFilterComponent extends Component {
         )
     }
 
-    handleClick = (element) => {
+    handleClick = (selectedFilter) => {
         const {
             field: filterField,
             name: filterName,
@@ -55,14 +58,14 @@ class MultipleFilterComponent extends Component {
             {
                 filterName,
                 filterField,
-                filterValues: [
-                    ...currentActiveFilterValues,
-                    element
-                ]
+                filterValues: manageCurrentFilterItems(
+                    selectedFilter,
+                    currentActiveFilterValues
+                )
             },
             currentQuery,
             client
-        )
+        );
     };
 
     render() {

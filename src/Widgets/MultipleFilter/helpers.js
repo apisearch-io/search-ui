@@ -29,3 +29,20 @@ export function aggregationsObjectToArray(object) {
         })
     ;
 }
+
+export function manageCurrentFilterItems(selectedItem, currentItems) {
+    let isElementActive = currentItems
+        .some(item => item === selectedItem)
+    ;
+
+    if (isElementActive) {
+        return currentItems
+            .filter(item => item !== selectedItem)
+        ;
+    } else {
+        return [
+            ...currentItems,
+            selectedItem
+        ];
+    }
+};
