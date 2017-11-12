@@ -14,6 +14,12 @@
             background: #b4acff;
             font-style: inherit;
         }
+        .asui-multipleFilter--item {
+            cursor: pointer;
+        }
+        .asui-multipleFilter--item:hover {
+            background: whitesmoke;
+        }
     </style>
 </head>
 
@@ -91,7 +97,9 @@
             {{/items}}
         </div>
         {{^items}}
-        <div class="notification">Empty set of results 🙉</div>
+        <div class="notification">
+            Empty set of results for <b>{{query}}</b> 🙉
+        </div>
         {{/items}}
     </script>
 
@@ -101,7 +109,8 @@
             appId: 'music',
             apiKey: '1cc7a3e0-bda5-11e7-abc4-cec278b6b50a',
             options: {
-                endpoint: 'http://search.puntmig.net'
+                endpoint: 'http://search.puntmig.net',
+                cache: false
             }
         });
 

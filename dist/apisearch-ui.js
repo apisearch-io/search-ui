@@ -6772,7 +6772,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 function simpleSearchAction(text, currentQuery, client) {
     var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
-    clonedQuery.setQueryText(text).disableResults().disableSuggestions();
+    clonedQuery.setQueryText(text).enableResults().disableSuggestions();
 
     client.search(clonedQuery, function (result) {
         _dispatcher2.default.dispatch({
@@ -6791,7 +6791,7 @@ function simpleSearchAction(text, currentQuery, client) {
  */
 function suggestedSearchAction(text, currentQuery, client) {
     var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
-    clonedQuery.setQueryText(text).enableResults().enableSuggestions();
+    clonedQuery.setQueryText(text).disableResults().enableSuggestions();
 
     client.search(clonedQuery, function (result) {
         _dispatcher2.default.dispatch({
@@ -7007,6 +7007,8 @@ var _helpers = __webpack_require__(35);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -7023,20 +7025,14 @@ var MultipleFilterComponent = function (_Component) {
     _inherits(MultipleFilterComponent, _Component);
 
     function MultipleFilterComponent() {
-        var _ref;
-
-        var _temp, _this, _ret;
-
         _classCallCheck(this, MultipleFilterComponent);
 
-        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-            args[_key] = arguments[_key];
-        }
+        var _this = _possibleConstructorReturn(this, (MultipleFilterComponent.__proto__ || Object.getPrototypeOf(MultipleFilterComponent)).call(this));
 
-        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = MultipleFilterComponent.__proto__ || Object.getPrototypeOf(MultipleFilterComponent)).call.apply(_ref, [this].concat(args))), _this), _this.handleClick = function (selectedFilter) {
+        _this.handleClick = function (selectedFilter) {
             var _this$props = _this.props,
-                filterField = _this$props.field,
                 filterName = _this$props.name,
+                filterField = _this$props.field,
                 currentQuery = _this$props.currentQuery,
                 client = _this$props.client,
                 aggregations = _this$props.data.aggregations.aggregations;
@@ -7053,7 +7049,13 @@ var MultipleFilterComponent = function (_Component) {
                 filterField: filterField,
                 filterValues: (0, _helpers.manageCurrentFilterItems)(selectedFilter, currentActiveFilterValues)
             }, currentQuery, client);
-        }, _temp), _possibleConstructorReturn(_this, _ret);
+        };
+
+        _this.state = {
+            activeAggregations: [],
+            currentAggregations: []
+        };
+        return _this;
     }
 
     _createClass(MultipleFilterComponent, [{
@@ -7074,12 +7076,40 @@ var MultipleFilterComponent = function (_Component) {
             }, currentQuery);
         }
     }, {
+        key: "componentWillReceiveProps",
+        value: function componentWillReceiveProps(props) {
+            var filterName = props.name,
+                aggregations = props.data.aggregations.aggregations;
+
+
+            if (typeof aggregations[filterName] !== 'undefined') {
+
+                /** @todo: handle when counters are not defined */
+                var counters = aggregations[filterName].counters;
+                var aggregationsArray = (0, _helpers.aggregationsObjectToArray)(counters);
+
+                this.setState({
+                    /**
+                     * Current used aggregations
+                     */
+                    activeAggregations: aggregationsArray.filter(function (item) {
+                        return item.used;
+                    }),
+                    /**
+                     * Current inactive aggregations
+                     */
+                    currentAggregations: aggregationsArray.filter(function (item) {
+                        return null === item.used;
+                    })
+                });
+            }
+        }
+    }, {
         key: "render",
         value: function render() {
             var _this2 = this;
 
             var _props2 = this.props,
-                filterName = _props2.name,
                 _props2$classNames = _props2.classNames,
                 containerClassName = _props2$classNames.container,
                 topClassName = _props2$classNames.top,
@@ -7087,17 +7117,13 @@ var MultipleFilterComponent = function (_Component) {
                 itemClassName = _props2$classNames.item,
                 _props2$template = _props2.template,
                 topTemplate = _props2$template.top,
-                itemTemplate = _props2$template.item,
-                aggregations = _props2.data.aggregations.aggregations;
-
-
-            if (typeof aggregations === 'undefined') return false;
+                itemTemplate = _props2$template.item;
 
             /**
              * Get aggregation items
              */
-            var counters = aggregations[filterName].counters;
-            var items = (0, _helpers.aggregationsObjectToArray)(counters);
+
+            var items = [].concat(_toConsumableArray(this.state.activeAggregations), _toConsumableArray(this.state.currentAggregations));
 
             return (0, _preact.h)(
                 "div",
@@ -8200,7 +8226,7 @@ var ResultComponent = function (_Component) {
              */
 
             var reducedTemplateData = {
-                query: data.query.q,
+                query: data ? data.query.q : '',
                 items: data ? data.items : []
             };
 

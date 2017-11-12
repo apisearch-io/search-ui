@@ -13,6 +13,14 @@ import {
  * Filter Component
  */
 class MultipleFilterComponent extends Component {
+    constructor() {
+        super();
+        this.state = {
+            activeAggregations: [],
+            currentAggregations: []
+        }
+    }
+
     componentWillMount() {
         const {
             field: filterField,
@@ -32,10 +40,43 @@ class MultipleFilterComponent extends Component {
         )
     }
 
+    componentWillReceiveProps(props) {
+        const {
+            name: filterName,
+            data: {
+                aggregations: {
+                    aggregations
+                }
+            }
+        } = props;
+
+        if (typeof aggregations[filterName] !== 'undefined') {
+
+            /** @todo: handle when counters are not defined */
+            let counters = aggregations[filterName].counters;
+            let aggregationsArray = aggregationsObjectToArray(counters);
+
+            this.setState({
+                /**
+                 * Current used aggregations
+                 */
+                activeAggregations: aggregationsArray.filter(
+                    item => item.used
+                ),
+                /**
+                 * Current inactive aggregations
+                 */
+                currentAggregations: aggregationsArray.filter(
+                    item => null === item.used
+                )
+            })
+        }
+    }
+
     handleClick = (selectedFilter) => {
         const {
-            field: filterField,
             name: filterName,
+            field: filterField,
             currentQuery,
             client,
             data: {
@@ -70,7 +111,6 @@ class MultipleFilterComponent extends Component {
 
     render() {
         const {
-            name: filterName,
             classNames: {
                 container: containerClassName,
                 top: topClassName,
@@ -80,21 +120,16 @@ class MultipleFilterComponent extends Component {
             template: {
                 top: topTemplate,
                 item: itemTemplate
-            },
-            data: {
-                aggregations: {
-                    aggregations
-                }
             }
         } = this.props;
-
-        if (typeof aggregations === 'undefined') return false;
 
         /**
          * Get aggregation items
          */
-        let counters = aggregations[filterName].counters;
-        const items = aggregationsObjectToArray(counters);
+        const items = [
+            ...this.state.activeAggregations,
+            ...this.state.currentAggregations
+        ];
 
         return (
             <div className={`asui-multipleFilter ${containerClassName}`}>
