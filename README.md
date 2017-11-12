@@ -170,8 +170,12 @@ attribute section:
  * `itemsList`: (required) will be the iterable set of results.
  * `placeholder`: (optional) will be placed on initial widget render.
  Once a search is performed, this placeholder will disappear.
+
+On the `itemsList` template you have access to this two variables:
+ * `items`: an array of resulted items.
+ * `query`: the query text made for the search.
  
-The result items will be accessible on the body attribute using
+The variable `items` will be accessible on the body attribute using
 the `{{#items}}{{/items}}` iterable. For example, given this array 
 of results:
 
@@ -216,7 +220,7 @@ const resultsTemplate = `
 {{/items}}
 </ul>
 {{^items}}
-    No results found :(
+    No results found for this search: <b>{{query}}</b> :(
 {{^items}}
 `;
 ```

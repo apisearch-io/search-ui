@@ -35,6 +35,9 @@
 
         <!-- End -->
         <div class="navbar-end">
+            <!-- SortBy -->
+            <div class="navbar-item sort-by"></div>
+
             <a class="navbar-item is-hidden-desktop-only"
                href="https://github.com/alexhoma/javascript-search-ui"
                target="_blank"
@@ -112,6 +115,16 @@
                     container: 'column',
                     input: 'input'
                 }
+            }),
+            ui.widgets.sortBy({
+                target: '.sort-by',
+                classNames: {
+                    container: 'select'
+                },
+                options: [
+                    {name: 'Oldest', value: 'year:asc'},
+                    {name: 'Newest', value: 'year:desc'}
+                ]
             }),
             ui.widgets.multipleFilter({
                 target: '.multiple-filter',

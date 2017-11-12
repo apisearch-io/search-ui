@@ -1080,7 +1080,7 @@ exports.default = new _flux.Dispatcher();
 
 var isObject = __webpack_require__(19);
 var clone = __webpack_require__(21);
-var typeOf = __webpack_require__(6);
+var typeOf = __webpack_require__(7);
 var forOwn = __webpack_require__(24);
 
 /**
@@ -1131,6 +1131,82 @@ module.exports = cloneDeep;
 
 /***/ }),
 /* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _preact = __webpack_require__(0);
+
+var _hogan = __webpack_require__(32);
+
+var _hogan2 = _interopRequireDefault(_hogan);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /** @jsx h */
+
+
+var Template = function (_Component) {
+    _inherits(Template, _Component);
+
+    function Template() {
+        var _ref;
+
+        var _temp, _this, _ret;
+
+        _classCallCheck(this, Template);
+
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+        }
+
+        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Template.__proto__ || Object.getPrototypeOf(Template)).call.apply(_ref, [this].concat(args))), _this), _this.renderTemplate = function (template, data) {
+            /**
+             * Compile template using hogan.js
+             */
+            var compiledTemplate = _hogan2.default.compile(template);
+            var output = compiledTemplate.render(data);
+
+            return {
+                __html: output
+            };
+        }, _temp), _possibleConstructorReturn(_this, _ret);
+    }
+
+    _createClass(Template, [{
+        key: 'render',
+        value: function render() {
+            var _props = this.props,
+                template = _props.template,
+                data = _props.data,
+                className = _props.className;
+
+
+            return template ? (0, _preact.h)('div', {
+                className: className,
+                dangerouslySetInnerHTML: this.renderTemplate(template, data)
+            }) : null;
+        }
+    }]);
+
+    return Template;
+}(_preact.Component);
+
+exports.default = Template;
+
+/***/ }),
+/* 4 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -1320,7 +1396,7 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1340,7 +1416,7 @@ module.exports = function isExtendable(val) {
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1363,7 +1439,7 @@ module.exports = function forIn(obj, fn, thisArg) {
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var isBuffer = __webpack_require__(23);
@@ -1483,82 +1559,6 @@ module.exports = function kindOf(val) {
   return 'object';
 };
 
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _preact = __webpack_require__(0);
-
-var _hogan = __webpack_require__(32);
-
-var _hogan2 = _interopRequireDefault(_hogan);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /** @jsx h */
-
-
-var Template = function (_Component) {
-    _inherits(Template, _Component);
-
-    function Template() {
-        var _ref;
-
-        var _temp, _this, _ret;
-
-        _classCallCheck(this, Template);
-
-        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-            args[_key] = arguments[_key];
-        }
-
-        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Template.__proto__ || Object.getPrototypeOf(Template)).call.apply(_ref, [this].concat(args))), _this), _this.renderTemplate = function (template, data) {
-            /**
-             * Compile template using hogan.js
-             */
-            var compiledTemplate = _hogan2.default.compile(template);
-            var output = compiledTemplate.render(data);
-
-            return {
-                __html: output
-            };
-        }, _temp), _possibleConstructorReturn(_this, _ret);
-    }
-
-    _createClass(Template, [{
-        key: 'render',
-        value: function render() {
-            var _props = this.props,
-                template = _props.template,
-                data = _props.data,
-                className = _props.className;
-
-
-            return template ? (0, _preact.h)('div', {
-                className: className,
-                dangerouslySetInnerHTML: this.renderTemplate(template, data)
-            }) : null;
-        }
-    }]);
-
-    return Template;
-}(_preact.Component);
-
-exports.default = Template;
 
 /***/ }),
 /* 8 */
@@ -5156,7 +5156,7 @@ var Dispatcher = (function () {
 })();
 
 module.exports = Dispatcher;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ }),
 /* 12 */
@@ -5216,7 +5216,7 @@ function invariant(condition, format, a, b, c, d, e, f) {
 }
 
 module.exports = invariant;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ }),
 /* 13 */
@@ -5841,11 +5841,11 @@ var _MultipleFilterComponent = __webpack_require__(30);
 
 var _MultipleFilterComponent2 = _interopRequireDefault(_MultipleFilterComponent);
 
-var _ResultComponent = __webpack_require__(31);
+var _ResultComponent = __webpack_require__(36);
 
 var _ResultComponent2 = _interopRequireDefault(_ResultComponent);
 
-var _InformationComponent = __webpack_require__(36);
+var _InformationComponent = __webpack_require__(38);
 
 var _InformationComponent2 = _interopRequireDefault(_InformationComponent);
 
@@ -6240,9 +6240,9 @@ module.exports = function isObject(val) {
 
 
 
-var isObject = __webpack_require__(4);
+var isObject = __webpack_require__(5);
 var mixin = __webpack_require__(22);
-var typeOf = __webpack_require__(6);
+var typeOf = __webpack_require__(7);
 
 /**
  * Shallow copy an object, array or primitive.
@@ -6297,8 +6297,8 @@ module.exports = clone;
 "use strict";
 
 
-var isObject = __webpack_require__(4);
-var forIn = __webpack_require__(5);
+var isObject = __webpack_require__(5);
+var forIn = __webpack_require__(6);
 
 function mixin(target, objects) {
   if (!isObject(target)) {
@@ -6373,7 +6373,7 @@ function isSlowBuffer (obj) {
 
 
 
-var forIn = __webpack_require__(5);
+var forIn = __webpack_require__(6);
 var hasOwn = Object.prototype.hasOwnProperty;
 
 module.exports = function forOwn(obj, fn, thisArg) {
@@ -6997,13 +6997,13 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _multipleFilterActions = __webpack_require__(37);
+var _multipleFilterActions = __webpack_require__(31);
 
-var _Template = __webpack_require__(7);
+var _Template = __webpack_require__(3);
 
 var _Template2 = _interopRequireDefault(_Template);
 
-var _helpers = __webpack_require__(38);
+var _helpers = __webpack_require__(35);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -7035,7 +7035,7 @@ var MultipleFilterComponent = function (_Component) {
             args[_key] = arguments[_key];
         }
 
-        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = MultipleFilterComponent.__proto__ || Object.getPrototypeOf(MultipleFilterComponent)).call.apply(_ref, [this].concat(args))), _this), _this.handleClick = function (e) {
+        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = MultipleFilterComponent.__proto__ || Object.getPrototypeOf(MultipleFilterComponent)).call.apply(_ref, [this].concat(args))), _this), _this.handleClick = function (element) {
             var _this$props = _this.props,
                 filterField = _this$props.field,
                 filterName = _this$props.name,
@@ -7045,12 +7045,15 @@ var MultipleFilterComponent = function (_Component) {
 
 
             var activeElements = aggregations[filterName].active_elements;
-            var currentActiveFilterValues = typeof activeElements !== 'undefined' ? (0, _helpers.simpleObjectToArray)() : [];
+            var currentActiveFilterValues = typeof activeElements !== 'undefined' ? (0, _helpers.simpleObjectToArray)(activeElements) : [];
 
+            /**
+             * Dispatch action
+             */
             (0, _multipleFilterActions.filterAction)({
                 filterName: filterName,
                 filterField: filterField,
-                filterValues: [].concat(_toConsumableArray(currentActiveFilterValues), [e])
+                filterValues: [].concat(_toConsumableArray(currentActiveFilterValues), [element])
             }, currentQuery, client);
         }, _temp), _possibleConstructorReturn(_this, _ret);
     }
@@ -7164,117 +7167,90 @@ exports.default = MultipleFilterComponent;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.aggregationSetup = aggregationSetup;
+exports.filterAction = filterAction;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _cloneDeep = __webpack_require__(2);
 
-var _preact = __webpack_require__(0);
+var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
 
-var _Template = __webpack_require__(7);
+var _dispatcher = __webpack_require__(1);
 
-var _Template2 = _interopRequireDefault(_Template);
-
-var _resultActions = __webpack_require__(35);
+var _dispatcher2 = _interopRequireDefault(_dispatcher);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+/**
+ * Define aggregations setup
+ *
+ * This setup action is triggered when mounting a component
+ * receives two parameters:
+ *   @param queryOptions -> the itemsPerPage to be displayed on the result container
+ *   @param currentQuery -> current application query
+ *
+ * Finally dispatches an event with the modified query.
+ *   @returns {{
+ *     type: string,
+ *     payload: {
+ *        updatedQuery
+ *     }
+ *   }}
+ */
+/**
+ * Multiple filter actions
+ */
+function aggregationSetup(queryOptions, currentQuery) {
+    var filterName = queryOptions.filterName,
+        filterField = queryOptions.filterField;
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+    clonedQuery.aggregateBy(filterName, filterField, 8);
+
+    _dispatcher2.default.dispatch({
+        type: 'UPDATE_APISEARCH_SETUP',
+        payload: {
+            updatedQuery: clonedQuery
+        }
+    });
+}
 
 /**
- * Actions
+ * Define aggregations setup
+ *
+ * This setup action is triggered when mounting a component
+ * receives two parameters:
+ *   @param queryOptions -> the itemsPerPage to be displayed on the result container
+ *   @param currentQuery -> current application query
+ *   @param client       -> Apisearch client
+ *
+ * Finally dispatches an event with the modified query.
+ *   @returns {{
+ *     type: string,
+ *     payload: {
+ *        updatedQuery
+ *     }
+ *   }}
  */
+function filterAction(queryOptions, currentQuery, client) {
+    var filterName = queryOptions.filterName,
+        filterField = queryOptions.filterField,
+        filterValues = queryOptions.filterValues;
 
+    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
 
-/**
- * Result Component
- */
-var ResultComponent = function (_Component) {
-    _inherits(ResultComponent, _Component);
+    clonedQuery.filterBy(filterName, filterField, filterValues);
 
-    function ResultComponent() {
-        _classCallCheck(this, ResultComponent);
-
-        return _possibleConstructorReturn(this, (ResultComponent.__proto__ || Object.getPrototypeOf(ResultComponent)).apply(this, arguments));
-    }
-
-    _createClass(ResultComponent, [{
-        key: "componentWillMount",
-        value: function componentWillMount() {
-            /**
-             * Define initial Setup on component mounting
-             * that refers to the store configuration
-             * and affects other widgets
-             */
-
-            var _props = this.props,
-                itemsPerPage = _props.itemsPerPage,
-                highlightsEnabled = _props.highlightsEnabled,
-                currentQuery = _props.currentQuery;
-
-            /**
-             * Dispatch action
-             */
-
-            (0, _resultActions.changeItemsPerResultPageSetup)({
-                itemsPerPage: itemsPerPage,
-                highlightsEnabled: highlightsEnabled
-            }, currentQuery);
-        }
-    }, {
-        key: "render",
-        value: function render() {
-            var _props2 = this.props,
-                dirty = _props2.dirty,
-                showInitialResults = _props2.showInitialResults,
-                containerClassName = _props2.classNames.container,
-                _props2$template = _props2.template,
-                bodyTemplate = _props2$template.itemsList,
-                placeholderTemplate = _props2$template.placeholder,
-                data = _props2.data;
-
-            /**
-             * Data accessible to the template
-             */
-
-            var reducedTemplateData = {
-                items: data ? data.items : []
-            };
-
-            return (0, _preact.h)(
-                "div",
-                { className: "asui-result " + containerClassName },
-                placeholderTemplate && dirty ? (0, _preact.h)(_Template2.default, {
-                    template: placeholderTemplate,
-                    className: "asui-result--placeholder"
-                }) : (0, _preact.h)(_Template2.default, {
-                    template: bodyTemplate,
-                    data: reducedTemplateData,
-                    className: "asui-result--itemsList"
-                })
-            );
-        }
-    }]);
-
-    return ResultComponent;
-}(_preact.Component);
-
-ResultComponent.defaultProps = {
-    itemsPerPage: 10,
-    enableHighlights: false,
-    classNames: {
-        container: ''
-    },
-    template: {
-        placeholder: null
-    }
-};
-
-exports.default = ResultComponent;
+    client.search(clonedQuery, function (result) {
+        _dispatcher2.default.dispatch({
+            type: 'RENDER_FETCHED_DATA',
+            payload: {
+                updatedQuery: clonedQuery,
+                result: result
+            }
+        });
+    });
+}
 
 /***/ }),
 /* 32 */
@@ -8089,6 +8065,171 @@ var Hogan = {};
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+exports.simpleObjectToArray = simpleObjectToArray;
+exports.aggregationsObjectToArray = aggregationsObjectToArray;
+
+/**
+ * Simple object to array
+ *
+ * @param object
+ * @returns {Array}
+ */
+function simpleObjectToArray(object) {
+    return Object.keys(object).map(function (key) {
+        return object[key];
+    });
+}
+
+/**
+ * Export the aggregations object to an array of items
+ *
+ * @param object
+ * @returns {Array}
+ */
+function aggregationsObjectToArray(object) {
+    return Object.keys(object).map(function (key) {
+        return object[key] = _extends({}, object[key], {
+            __key: key
+        });
+    });
+}
+
+/***/ }),
+/* 36 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _preact = __webpack_require__(0);
+
+var _Template = __webpack_require__(3);
+
+var _Template2 = _interopRequireDefault(_Template);
+
+var _resultActions = __webpack_require__(37);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+/**
+ * Actions
+ */
+
+
+/**
+ * Result Component
+ */
+var ResultComponent = function (_Component) {
+    _inherits(ResultComponent, _Component);
+
+    function ResultComponent() {
+        _classCallCheck(this, ResultComponent);
+
+        return _possibleConstructorReturn(this, (ResultComponent.__proto__ || Object.getPrototypeOf(ResultComponent)).apply(this, arguments));
+    }
+
+    _createClass(ResultComponent, [{
+        key: "componentWillMount",
+        value: function componentWillMount() {
+            /**
+             * Define initial Setup on component mounting
+             * that refers to the store configuration
+             * and affects other widgets
+             */
+
+            var _props = this.props,
+                itemsPerPage = _props.itemsPerPage,
+                highlightsEnabled = _props.highlightsEnabled,
+                currentQuery = _props.currentQuery;
+
+            /**
+             * Dispatch action
+             */
+
+            (0, _resultActions.changeItemsPerResultPageSetup)({
+                itemsPerPage: itemsPerPage,
+                highlightsEnabled: highlightsEnabled
+            }, currentQuery);
+        }
+    }, {
+        key: "render",
+        value: function render() {
+            var _props2 = this.props,
+                dirty = _props2.dirty,
+                showInitialResults = _props2.showInitialResults,
+                containerClassName = _props2.classNames.container,
+                _props2$template = _props2.template,
+                bodyTemplate = _props2$template.itemsList,
+                placeholderTemplate = _props2$template.placeholder,
+                data = _props2.data;
+
+            /**
+             * Data accessible to the template
+             */
+
+            var reducedTemplateData = {
+                query: data.query.q,
+                items: data ? data.items : []
+            };
+
+            return (0, _preact.h)(
+                "div",
+                { className: "asui-result " + containerClassName },
+                placeholderTemplate && dirty ? (0, _preact.h)(_Template2.default, {
+                    template: placeholderTemplate,
+                    className: "asui-result--placeholder"
+                }) : (0, _preact.h)(_Template2.default, {
+                    template: bodyTemplate,
+                    data: reducedTemplateData,
+                    className: "asui-result--itemsList"
+                })
+            );
+        }
+    }]);
+
+    return ResultComponent;
+}(_preact.Component);
+
+ResultComponent.defaultProps = {
+    itemsPerPage: 10,
+    enableHighlights: false,
+    classNames: {
+        container: ''
+    },
+    template: {
+        placeholder: null
+    }
+};
+
+exports.default = ResultComponent;
+
+/***/ }),
+/* 37 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 exports.changeItemsPerResultPageSetup = changeItemsPerResultPageSetup;
 
 var _cloneDeep = __webpack_require__(2);
@@ -8148,7 +8289,7 @@ function changeItemsPerResultPageSetup(queryOptions, currentQuery) {
 }
 
 /***/ }),
-/* 36 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8162,7 +8303,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _Template = __webpack_require__(7);
+var _Template = __webpack_require__(3);
 
 var _Template2 = _interopRequireDefault(_Template);
 
@@ -8224,143 +8365,6 @@ InformationComponent.defaultProps = {
 };
 
 exports.default = InformationComponent;
-
-/***/ }),
-/* 37 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.aggregationSetup = aggregationSetup;
-exports.filterAction = filterAction;
-
-var _cloneDeep = __webpack_require__(2);
-
-var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
-
-var _dispatcher = __webpack_require__(1);
-
-var _dispatcher2 = _interopRequireDefault(_dispatcher);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Define aggregations setup
- *
- * This setup action is triggered when mounting a component
- * receives two parameters:
- *   @param queryOptions -> the itemsPerPage to be displayed on the result container
- *   @param currentQuery -> current application query
- *
- * Finally dispatches an event with the modified query.
- *   @returns {{
- *     type: string,
- *     payload: {
- *        updatedQuery
- *     }
- *   }}
- */
-/**
- * Multiple filter actions
- */
-function aggregationSetup(queryOptions, currentQuery) {
-    var filterName = queryOptions.filterName,
-        filterField = queryOptions.filterField;
-
-    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
-
-    clonedQuery.aggregateBy(filterName, filterField, 8);
-
-    _dispatcher2.default.dispatch({
-        type: 'UPDATE_APISEARCH_SETUP',
-        payload: {
-            updatedQuery: clonedQuery
-        }
-    });
-}
-
-/**
- * Define aggregations setup
- *
- * This setup action is triggered when mounting a component
- * receives two parameters:
- *   @param queryOptions -> the itemsPerPage to be displayed on the result container
- *   @param currentQuery -> current application query
- *   @param client       -> Apisearch client
- *
- * Finally dispatches an event with the modified query.
- *   @returns {{
- *     type: string,
- *     payload: {
- *        updatedQuery
- *     }
- *   }}
- */
-function filterAction(queryOptions, currentQuery, client) {
-    var filterName = queryOptions.filterName,
-        filterField = queryOptions.filterField,
-        filterValues = queryOptions.filterValues;
-
-    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
-
-    clonedQuery.filterBy(filterName, filterField, filterValues);
-
-    client.search(clonedQuery, function (result) {
-        _dispatcher2.default.dispatch({
-            type: 'RENDER_FETCHED_DATA',
-            payload: {
-                updatedQuery: clonedQuery,
-                result: result
-            }
-        });
-    });
-}
-
-/***/ }),
-/* 38 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-exports.simpleObjectToArray = simpleObjectToArray;
-exports.aggregationsObjectToArray = aggregationsObjectToArray;
-
-/**
- * Simple object to array
- *
- * @param object
- * @returns {Array}
- */
-function simpleObjectToArray(object) {
-    return Object.keys(object).map(function (key) {
-        return object[key];
-    });
-}
-
-/**
- * Export the aggregations object to an array of items
- *
- * @param object
- * @returns {Array}
- */
-function aggregationsObjectToArray(object) {
-    return Object.keys(object).map(function (key) {
-        return object[key] = _extends({}, object[key], {
-            __key: key
-        });
-    });
-}
 
 /***/ })
 /******/ ]);

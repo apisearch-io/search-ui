@@ -21,6 +21,9 @@ Object {
         },
       },
     ],
+    "query": Object {
+      "q": "Marvel",
+    },
   },
   "enableHighlights": false,
   "highlightsEnabled": true,
@@ -75,6 +78,9 @@ Object {
         },
       },
     ],
+    "query": Object {
+      "q": "Marvel",
+    },
   },
   "enableHighlights": false,
   "itemsPerPage": 10,

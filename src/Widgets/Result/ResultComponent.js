@@ -57,6 +57,7 @@ class ResultComponent extends Component {
          * Data accessible to the template
          */
         let reducedTemplateData = {
+            query: data.query.q,
             items: data ? data.items : []
         }
 

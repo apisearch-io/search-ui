@@ -29,7 +29,7 @@ class MultipleFilterComponent extends Component {
         )
     }
 
-    handleClick = (e) => {
+    handleClick = (element) => {
         const {
             field: filterField,
             name: filterName,
@@ -44,17 +44,20 @@ class MultipleFilterComponent extends Component {
 
         let activeElements = aggregations[filterName].active_elements;
         let currentActiveFilterValues = (typeof activeElements !== 'undefined')
-            ? simpleObjectToArray()
+            ? simpleObjectToArray(activeElements)
             : []
         ;
 
+        /**
+         * Dispatch action
+         */
         filterAction(
             {
                 filterName,
                 filterField,
                 filterValues: [
                     ...currentActiveFilterValues,
-                    e
+                    element
                 ]
             },
             currentQuery,

@@ -18,6 +18,9 @@ describe('<ResultComponent />',() => {
         }
     };
     const data = {
+        query: {
+            q: 'Marvel'
+        },
         items: [
             {
                 metadata: {
@@ -82,6 +85,11 @@ describe('<ResultComponent />',() => {
     });
     it('should show placeholder if is set in custom properties and ApisearchUI state is dirty', () => {
         ResultComponent.prototype.componentWillMount = jest.fn();
+        const initialQueryTextData = {
+            query: {
+                q: ''
+            }
+        };
         const customProps = {
             template: {
                 placeholder: 'This is the results placeholder, search something!'
@@ -91,6 +99,7 @@ describe('<ResultComponent />',() => {
         const tree = deep(
             <ResultComponent
                 dirty={true}
+                data={initialQueryTextData}
                 {...defaultProps}
                 {...customProps}
             />
@@ -107,6 +116,9 @@ describe('<ResultComponent />',() => {
         );
 
         const updatedDataProps = {
+            query: {
+                q: 'Robert and thor'
+            },
             items: [
                 {
                     metadata: {
