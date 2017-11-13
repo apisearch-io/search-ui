@@ -103,6 +103,13 @@
         {{/items}}
     </script>
 
+    <script type="text/template" id="multiple-filter-item-template">
+        <a class="aggregation {{#isActive}}is-active{{/isActive}}">
+            <input type="checkbox" id="filter_{{values.id}}" {{#isActive}}checked="checked"{{/isActive}}>
+            <label for="filter_{{values.id}}">{{values.name}} ({{n}})</label>
+        </a>
+    </script>
+
     <script type="text/javascript">
         // UI Instance
         let ui = apisearchUI({
@@ -139,14 +146,10 @@
                 target: '.multiple-filter',
                 name: 'year',
                 field: 'year',
+                limit: 6,
                 template: {
                     top: 'Years',
-                    item: `
-                        <a class="aggregation {{#isActive}}is-active{{/isActive}}">
-                            <input type="checkbox" name="check" {{#isActive}}checked="checked"{{/isActive}}>
-                            <label for="check">{{values.name}} ({{n}})</label>
-                        </a>
-                    `
+                    item: document.getElementById('multiple-filter-item-template').text
                 },
                 classNames: {
                     container: 'panel',

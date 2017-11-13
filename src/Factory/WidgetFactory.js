@@ -114,7 +114,10 @@ class WidgetFactory {
                 ...MultipleFilterComponent.defaultProps.classNames,
                 ...classNames
             }}
-            template={template}
+            template={{
+                ...MultipleFilterComponent.defaultProps.template,
+                ...template
+            }}
         />
     }
 

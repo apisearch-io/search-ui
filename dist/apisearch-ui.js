@@ -5841,11 +5841,11 @@ var _MultipleFilterComponent = __webpack_require__(30);
 
 var _MultipleFilterComponent2 = _interopRequireDefault(_MultipleFilterComponent);
 
-var _ResultComponent = __webpack_require__(36);
+var _ResultComponent = __webpack_require__(37);
 
 var _ResultComponent2 = _interopRequireDefault(_ResultComponent);
 
-var _InformationComponent = __webpack_require__(38);
+var _InformationComponent = __webpack_require__(39);
 
 var _InformationComponent2 = _interopRequireDefault(_InformationComponent);
 
@@ -5955,7 +5955,7 @@ var WidgetFactory = function () {
                 applicationType: applicationType,
                 limit: limit,
                 classNames: _extends({}, _MultipleFilterComponent2.default.defaultProps.classNames, classNames),
-                template: template
+                template: _extends({}, _MultipleFilterComponent2.default.defaultProps.template, template)
             });
         }
 
@@ -7005,6 +7005,10 @@ var _Template2 = _interopRequireDefault(_Template);
 
 var _helpers = __webpack_require__(35);
 
+var _ShowMoreComponent = __webpack_require__(36);
+
+var _ShowMoreComponent2 = _interopRequireDefault(_ShowMoreComponent);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -7055,7 +7059,24 @@ var MultipleFilterComponent = function (_Component) {
             }, currentQuery, client);
         };
 
+        _this.handleShowMore = function () {
+            var _this$state = _this.state,
+                activeAggregations = _this$state.activeAggregations,
+                currentAggregations = _this$state.currentAggregations;
+
+            var limit = activeAggregations.length + currentAggregations.length;
+
+            _this.setState({ limit: limit });
+        };
+
+        _this.handleShowLess = function () {
+            _this.setState({
+                limit: _this.props.limit
+            });
+        };
+
         _this.state = {
+            limit: 0,
             activeAggregations: [],
             currentAggregations: []
         };
@@ -7070,12 +7091,15 @@ var MultipleFilterComponent = function (_Component) {
                 filterName = _props.name,
                 applicationType = _props.applicationType,
                 sortBy = _props.sortBy,
+                limit = _props.limit,
                 currentQuery = _props.currentQuery;
+
+
+            this.setState({ limit: limit });
 
             /**
              * Dispatch action
              */
-
             (0, _multipleFilterActions.aggregationSetup)({
                 filterField: filterField,
                 filterName: filterName,
@@ -7117,7 +7141,6 @@ var MultipleFilterComponent = function (_Component) {
             var _this2 = this;
 
             var _props2 = this.props,
-                limit = _props2.limit,
                 _props2$classNames = _props2.classNames,
                 containerClassName = _props2$classNames.container,
                 topClassName = _props2$classNames.top,
@@ -7125,13 +7148,16 @@ var MultipleFilterComponent = function (_Component) {
                 itemClassName = _props2$classNames.item,
                 _props2$template = _props2.template,
                 topTemplate = _props2$template.top,
-                itemTemplate = _props2$template.item;
+                itemTemplate = _props2$template.item,
+                showMoreTemplate = _props2$template.showMore,
+                showLessTemplate = _props2$template.showLess;
 
             /**
              * Get aggregation items
              */
 
-            var items = [].concat(_toConsumableArray(this.state.activeAggregations), _toConsumableArray(this.state.currentAggregations)).slice(0, limit);
+            var allItems = [].concat(_toConsumableArray(this.state.activeAggregations), _toConsumableArray(this.state.currentAggregations));
+            var items = allItems.slice(0, this.state.limit);
 
             return (0, _preact.h)(
                 "div",
@@ -7142,7 +7168,7 @@ var MultipleFilterComponent = function (_Component) {
                 }),
                 (0, _preact.h)(
                     "div",
-                    { className: itemsListClassName },
+                    { className: "asui-multipleFilter--itemsList " + itemsListClassName },
                     items.map(function (item) {
                         var reducedTemplateData = {
                             n: parseInt(item.n).toLocaleString('de-DE'),
@@ -7164,7 +7190,15 @@ var MultipleFilterComponent = function (_Component) {
                             })
                         );
                     })
-                )
+                ),
+                (0, _preact.h)(_ShowMoreComponent2.default, {
+                    allItems: allItems,
+                    currentLimit: this.state.limit,
+                    handleShowMore: this.handleShowMore,
+                    handleShowLess: this.handleShowLess,
+                    showMoreTemplate: showMoreTemplate,
+                    showLessTemplate: showLessTemplate
+                })
             );
         }
     }]);
@@ -7184,7 +7218,9 @@ MultipleFilterComponent.defaultProps = {
     },
     template: {
         top: null,
-        item: null
+        item: null,
+        showMore: '+ Show more',
+        showLess: '- Show less'
     }
 };
 
@@ -7236,11 +7272,12 @@ function aggregationSetup(queryOptions, currentQuery) {
     var filterName = queryOptions.filterName,
         filterField = queryOptions.filterField,
         applicationType = queryOptions.applicationType,
-        sortBy = queryOptions.sortBy;
+        sortBy = queryOptions.sortBy,
+        limit = queryOptions.limit;
 
     var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
 
-    clonedQuery.aggregateBy(filterName, filterField, applicationType, sortBy);
+    clonedQuery.aggregateBy(filterName, filterField, applicationType, sortBy, limit);
 
     _dispatcher2.default.dispatch({
         type: 'UPDATE_APISEARCH_SETUP',
@@ -8162,6 +8199,64 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _preact = __webpack_require__(0);
+
+var _Template = __webpack_require__(3);
+
+var _Template2 = _interopRequireDefault(_Template);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Show more component
+ *
+ * Provides two items
+ *   -> Show more element
+ *   -> Show less element
+ */
+
+var ShowMoreComponent = function ShowMoreComponent(_ref) {
+    var allItems = _ref.allItems,
+        currentLimit = _ref.currentLimit,
+        handleShowMore = _ref.handleShowMore,
+        handleShowLess = _ref.handleShowLess,
+        showMoreTemplate = _ref.showMoreTemplate,
+        showLessTemplate = _ref.showLessTemplate;
+
+    return allItems.length > currentLimit ? (0, _preact.h)(
+        "div",
+        { className: "asui-showMore",
+            onClick: handleShowMore
+        },
+        (0, _preact.h)(_Template2.default, {
+            template: showMoreTemplate,
+            className: "asui-showMore--more"
+        })
+    ) : (0, _preact.h)(
+        "div",
+        { className: "asui-showMore",
+            onClick: handleShowLess
+        },
+        (0, _preact.h)(_Template2.default, {
+            template: showLessTemplate,
+            className: "asui-showMore--less"
+        })
+    );
+};
+
+exports.default = ShowMoreComponent;
+
+/***/ }),
+/* 37 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _preact = __webpack_require__(0);
@@ -8170,7 +8265,7 @@ var _Template = __webpack_require__(3);
 
 var _Template2 = _interopRequireDefault(_Template);
 
-var _resultActions = __webpack_require__(37);
+var _resultActions = __webpack_require__(38);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -8275,7 +8370,7 @@ ResultComponent.defaultProps = {
 exports.default = ResultComponent;
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8343,7 +8438,7 @@ function changeItemsPerResultPageSetup(queryOptions, currentQuery) {
 }
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

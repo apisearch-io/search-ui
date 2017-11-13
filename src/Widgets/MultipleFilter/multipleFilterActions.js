@@ -28,7 +28,8 @@ export function aggregationSetup(
         filterName,
         filterField,
         applicationType,
-        sortBy
+        sortBy,
+        limit
     } = queryOptions;
     let clonedQuery = cloneDeep(currentQuery);
 
@@ -36,7 +37,8 @@ export function aggregationSetup(
         filterName,
         filterField,
         applicationType,
-        sortBy
+        sortBy,
+        limit
     );
 
     dispatcher.dispatch({

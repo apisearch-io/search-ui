@@ -8,6 +8,7 @@ import {
     aggregationsObjectToArray, manageCurrentFilterItems,
     simpleObjectToArray
 } from "./helpers";
+import ShowMoreComponent from "./ShowMoreComponent";
 
 /**
  * Filter Component
@@ -16,6 +17,7 @@ class MultipleFilterComponent extends Component {
     constructor() {
         super();
         this.state = {
+            limit: 0,
             activeAggregations: [],
             currentAggregations: []
         }
@@ -27,8 +29,11 @@ class MultipleFilterComponent extends Component {
             name: filterName,
             applicationType,
             sortBy,
+            limit,
             currentQuery
         } = this.props;
+
+        this.setState({limit});
 
         /**
          * Dispatch action
@@ -116,9 +121,21 @@ class MultipleFilterComponent extends Component {
         );
     };
 
+    handleShowMore = () => {
+        const {activeAggregations, currentAggregations} = this.state;
+        const limit = activeAggregations.length + currentAggregations.length;
+
+        this.setState({limit})
+    };
+
+    handleShowLess = () => {
+        this.setState({
+            limit: this.props.limit
+        })
+    };
+
     render() {
         const {
-            limit,
             classNames: {
                 container: containerClassName,
                 top: topClassName,
@@ -127,19 +144,20 @@ class MultipleFilterComponent extends Component {
             },
             template: {
                 top: topTemplate,
-                item: itemTemplate
+                item: itemTemplate,
+                showMore: showMoreTemplate,
+                showLess: showLessTemplate
             }
         } = this.props;
 
         /**
          * Get aggregation items
          */
-        const items = [
+        const allItems = [
             ...this.state.activeAggregations,
             ...this.state.currentAggregations
-        ].slice(
-            0, limit
-        );
+        ];
+        const items = allItems.slice(0, this.state.limit);
 
         return (
             <div className={`asui-multipleFilter ${containerClassName}`}>
@@ -148,7 +166,7 @@ class MultipleFilterComponent extends Component {
                     className={`asui-multipleFilter--top ${topClassName}`}
                 />
 
-                <div className={itemsListClassName}>
+                <div className={`asui-multipleFilter--itemsList ${itemsListClassName}`}>
                 {items.map(item => {
                     const reducedTemplateData = {
                         n: parseInt(item.n).toLocaleString('de-DE'),
@@ -169,6 +187,15 @@ class MultipleFilterComponent extends Component {
                     )
                 })}
                 </div>
+
+                <ShowMoreComponent
+                    allItems={allItems}
+                    currentLimit={this.state.limit}
+                    handleShowMore={this.handleShowMore}
+                    handleShowLess={this.handleShowLess}
+                    showMoreTemplate={showMoreTemplate}
+                    showLessTemplate={showLessTemplate}
+                />
             </div>
         )
     }
@@ -186,7 +213,9 @@ MultipleFilterComponent.defaultProps = {
     },
     template: {
         top: null,
-        item: null
+        item: null,
+        showMore: '+ Show more',
+        showLess: '- Show less'
     }
 };
 
