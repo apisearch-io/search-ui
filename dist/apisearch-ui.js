@@ -7083,9 +7083,8 @@ var MultipleFilterComponent = function (_Component) {
 
 
             if (typeof aggregations[filterName] !== 'undefined') {
-
-                /** @todo: handle when counters are not defined */
-                var counters = aggregations[filterName].counters;
+                var aggregation = aggregations[filterName];
+                var counters = aggregation.counters ? aggregation.counters : {};
                 var aggregationsArray = (0, _helpers.aggregationsObjectToArray)(counters);
 
                 this.setState({

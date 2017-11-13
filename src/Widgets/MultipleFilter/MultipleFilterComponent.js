@@ -51,9 +51,8 @@ class MultipleFilterComponent extends Component {
         } = props;
 
         if (typeof aggregations[filterName] !== 'undefined') {
-
-            /** @todo: handle when counters are not defined */
-            let counters = aggregations[filterName].counters;
+            let aggregation = aggregations[filterName];
+            let counters = (aggregation.counters) ? aggregation.counters : {};
             let aggregationsArray = aggregationsObjectToArray(counters);
 
             this.setState({
