@@ -7109,6 +7109,7 @@ var MultipleFilterComponent = function (_Component) {
             var _this2 = this;
 
             var _props2 = this.props,
+                limit = _props2.limit,
                 _props2$classNames = _props2.classNames,
                 containerClassName = _props2$classNames.container,
                 topClassName = _props2$classNames.top,
@@ -7122,7 +7123,7 @@ var MultipleFilterComponent = function (_Component) {
              * Get aggregation items
              */
 
-            var items = [].concat(_toConsumableArray(this.state.activeAggregations), _toConsumableArray(this.state.currentAggregations));
+            var items = [].concat(_toConsumableArray(this.state.activeAggregations), _toConsumableArray(this.state.currentAggregations)).slice(0, limit);
 
             return (0, _preact.h)(
                 "div",

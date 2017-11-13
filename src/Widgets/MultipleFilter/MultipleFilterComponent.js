@@ -110,6 +110,7 @@ class MultipleFilterComponent extends Component {
 
     render() {
         const {
+            limit,
             classNames: {
                 container: containerClassName,
                 top: topClassName,
@@ -128,7 +129,9 @@ class MultipleFilterComponent extends Component {
         const items = [
             ...this.state.activeAggregations,
             ...this.state.currentAggregations
-        ];
+        ].slice(
+            0, limit
+        );
 
         return (
             <div className={`asui-multipleFilter ${containerClassName}`}>

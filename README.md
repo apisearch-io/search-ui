@@ -125,6 +125,8 @@ const sortByWidget = ui.widgets.sortBy({
 });
 ```
 
+@todo: describe attributes.
+
 ## Multiple Filter
 The filter widget allows you to refine your search.
 ```javascript
@@ -145,6 +147,8 @@ const multipleFilterWidget = ui.widgets.multipleFilter({
     }
 })
 ```
+
+@todo: describe attributes.
 
 ## Search result
 The result widget allows you to print a set of results
