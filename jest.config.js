@@ -4,6 +4,9 @@ module.exports = {
         "<rootDir>/dist*",
         "<rootDir>/examples*"
     ],
+    "testMatch": [
+        "**/__tests__/**/*.test.js?(x)"
+    ],
     "snapshotSerializers": [
         "preact-render-spy/snapshot"
     ],

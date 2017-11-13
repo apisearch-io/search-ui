@@ -5942,11 +5942,7 @@ var WidgetFactory = function () {
                 applicationType = _ref4.applicationType,
                 limit = _ref4.limit,
                 classNames = _ref4.classNames,
-                _ref4$template = _ref4.template,
-                template = _ref4$template === undefined ? {
-                top: top,
-                item: item
-            } : _ref4$template;
+                template = _ref4.template;
 
             return (0, _preact.h)(_MultipleFilterComponent2.default, {
                 target: target,
@@ -7217,7 +7213,7 @@ MultipleFilterComponent.defaultProps = {
     classNames: {
         container: '',
         top: '',
-        itemList: '',
+        itemsList: '',
         item: '',
         showMoreContainer: ''
     },

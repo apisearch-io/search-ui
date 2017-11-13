@@ -99,10 +99,7 @@ class WidgetFactory {
         applicationType,
         limit,
         classNames,
-        template = {
-            top,
-            item
-        }
+        template
     }) {
         return <MultipleFilterComponent
             target={target}

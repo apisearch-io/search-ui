@@ -1,0 +1,310 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<MultipleFilterComponent /> should handleCLick() given a selected aggregation and set it as active 1`] = `
+preact-render-spy (1 nodes)
+-------
+<div class="asui-multipleFilter container-custom-class">
+  <div class="asui-multipleFilter--top top-custom-class">Filter top header template:</div>
+  <div class="asui-multipleFilter--itemsList itemsList-custom-class">
+    <div
+      class="asui-multipleFilter--item item-custom-class"
+      onClick={[Function onClick]}
+    >
+      <div>
+        
+                <a class="aggregation is-active">
+                    <input type="checkbox" id="filter_2000" checked="checked">
+                    <label for="filter_2000">Year 2000 (30)</label>
+                </a>           
+            
+      </div>
+    </div>
+    <div
+      class="asui-multipleFilter--item item-custom-class"
+      onClick={[Function onClick]}
+    >
+      <div>
+        
+                <a class="aggregation ">
+                    <input type="checkbox" id="filter_1999" >
+                    <label for="filter_1999">Year 1999 (12)</label>
+                </a>           
+            
+      </div>
+    </div>
+  </div>
+  <div
+    class="asui-showMore showMoreContainer-custom-class"
+    onClick={[Function anonymous]}
+  >
+    <div class="asui-showMore--more">
+      <b>+ Show more</b>
+    </div>
+  </div>
+</div>
+
+`;
+
+exports[`<MultipleFilterComponent /> should handleShowMore() and handleShowLess() 1`] = `
+preact-render-spy (1 nodes)
+-------
+<div class="asui-multipleFilter container-custom-class">
+  <div class="asui-multipleFilter--top top-custom-class">Filter top header template:</div>
+  <div class="asui-multipleFilter--itemsList itemsList-custom-class">
+    <div
+      class="asui-multipleFilter--item item-custom-class"
+      onClick={[Function onClick]}
+    >
+      <div>
+        
+                <a class="aggregation ">
+                    <input type="checkbox" id="filter_1999" >
+                    <label for="filter_1999">Year 1999 (12)</label>
+                </a>           
+            
+      </div>
+    </div>
+    <div
+      class="asui-multipleFilter--item item-custom-class"
+      onClick={[Function onClick]}
+    >
+      <div>
+        
+                <a class="aggregation ">
+                    <input type="checkbox" id="filter_2000" >
+                    <label for="filter_2000">Year 2000 (30)</label>
+                </a>           
+            
+      </div>
+    </div>
+    <div
+      class="asui-multipleFilter--item item-custom-class"
+      onClick={[Function onClick]}
+    >
+      <div>
+        
+                <a class="aggregation ">
+                    <input type="checkbox" id="filter_2001" >
+                    <label for="filter_2001">Year 2001 (5)</label>
+                </a>           
+            
+      </div>
+    </div>
+  </div>
+  <div
+    class="asui-showMore showMoreContainer-custom-class"
+    onClick={[Function anonymous]}
+  >
+    <div class="asui-showMore--less">
+      <b>- Show less</b>
+    </div>
+  </div>
+</div>
+
+`;
+
+exports[`<MultipleFilterComponent /> should handleShowMore() and handleShowLess() 2`] = `
+preact-render-spy (1 nodes)
+-------
+<div class="asui-multipleFilter container-custom-class">
+  <div class="asui-multipleFilter--top top-custom-class">Filter top header template:</div>
+  <div class="asui-multipleFilter--itemsList itemsList-custom-class">
+    <div
+      class="asui-multipleFilter--item item-custom-class"
+      onClick={[Function onClick]}
+    >
+      <div>
+        
+                <a class="aggregation ">
+                    <input type="checkbox" id="filter_1999" >
+                    <label for="filter_1999">Year 1999 (12)</label>
+                </a>           
+            
+      </div>
+    </div>
+    <div
+      class="asui-multipleFilter--item item-custom-class"
+      onClick={[Function onClick]}
+    >
+      <div>
+        
+                <a class="aggregation ">
+                    <input type="checkbox" id="filter_2000" >
+                    <label for="filter_2000">Year 2000 (30)</label>
+                </a>           
+            
+      </div>
+    </div>
+  </div>
+  <div
+    class="asui-showMore showMoreContainer-custom-class"
+    onClick={[Function anonymous]}
+  >
+    <div class="asui-showMore--more">
+      <b>+ Show more</b>
+    </div>
+  </div>
+</div>
+
+`;
+
+exports[`<MultipleFilterComponent /> should render with custom props, and re-render with aggregations 1`] = `
+Object {
+  "applicationType": 4,
+  "children": Array [],
+  "classNames": Object {
+    "container": "container-custom-class",
+    "item": "item-custom-class",
+    "itemsList": "itemsList-custom-class",
+    "showMoreContainer": "showMoreContainer-custom-class",
+    "top": "top-custom-class",
+  },
+  "dirty": true,
+  "field": "year",
+  "limit": 2,
+  "name": "year",
+  "showMoreActive": true,
+  "sortBy": Array [
+    "_count",
+    "asc",
+  ],
+  "target": "#some-target",
+  "template": Object {
+    "item": "
+        <a class=\\"aggregation {{#isActive}}is-active{{/isActive}}\\">
+            <input type=\\"checkbox\\" id=\\"filter_{{values.id}}\\" {{#isActive}}checked=\\"checked\\"{{/isActive}}>
+            <label for=\\"filter_{{values.id}}\\">{{values.name}} ({{n}})</label>
+        </a>           
+    ",
+    "showLess": "<b>- Show less</b>",
+    "showMore": "<b>+ Show more</b>",
+    "top": "Filter top header template:",
+  },
+}
+`;
+
+exports[`<MultipleFilterComponent /> should render with custom props, and re-render with aggregations 2`] = `
+preact-render-spy (1 nodes)
+-------
+<div class="asui-multipleFilter container-custom-class">
+  <div class="asui-multipleFilter--top top-custom-class">Filter top header template:</div>
+  <div class="asui-multipleFilter--itemsList itemsList-custom-class">
+    <div
+      class="asui-multipleFilter--item item-custom-class"
+      onClick={[Function onClick]}
+    >
+      <div>
+        
+                <a class="aggregation ">
+                    <input type="checkbox" id="filter_1999" >
+                    <label for="filter_1999">Year 1999 (12)</label>
+                </a>           
+            
+      </div>
+    </div>
+    <div
+      class="asui-multipleFilter--item item-custom-class"
+      onClick={[Function onClick]}
+    >
+      <div>
+        
+                <a class="aggregation ">
+                    <input type="checkbox" id="filter_2000" >
+                    <label for="filter_2000">Year 2000 (30)</label>
+                </a>           
+            
+      </div>
+    </div>
+  </div>
+  <div
+    class="asui-showMore showMoreContainer-custom-class"
+    onClick={[Function anonymous]}
+  >
+    <div class="asui-showMore--more">
+      <b>+ Show more</b>
+    </div>
+  </div>
+</div>
+
+`;
+
+exports[`<MultipleFilterComponent /> should render with default props 1`] = `
+Object {
+  "applicationType": 8,
+  "children": Array [],
+  "classNames": Object {
+    "container": "",
+    "item": "",
+    "itemsList": "",
+    "showMoreContainer": "",
+    "top": "",
+  },
+  "dirty": true,
+  "field": "year",
+  "limit": 10,
+  "name": "year",
+  "showMoreActive": true,
+  "sortBy": Array [
+    "_count",
+    "asc",
+  ],
+  "target": "#some-target",
+  "template": Object {
+    "item": "
+        <a class=\\"aggregation {{#isActive}}is-active{{/isActive}}\\">
+            <input type=\\"checkbox\\" id=\\"filter_{{values.id}}\\" {{#isActive}}checked=\\"checked\\"{{/isActive}}>
+            <label for=\\"filter_{{values.id}}\\">{{values.name}} ({{n}})</label>
+        </a>           
+    ",
+  },
+}
+`;
+
+exports[`<MultipleFilterComponent /> should render with default props 2`] = `
+preact-render-spy (1 nodes)
+-------
+<div class="asui-multipleFilter ">
+  <div class="asui-multipleFilter--itemsList ">
+    <div
+      class="asui-multipleFilter--item "
+      onClick={[Function onClick]}
+    >
+      <div>
+        
+                <a class="aggregation ">
+                    <input type="checkbox" id="filter_1999" >
+                    <label for="filter_1999">Year 1999 (12)</label>
+                </a>           
+            
+      </div>
+    </div>
+    <div
+      class="asui-multipleFilter--item "
+      onClick={[Function onClick]}
+    >
+      <div>
+        
+                <a class="aggregation ">
+                    <input type="checkbox" id="filter_2000" >
+                    <label for="filter_2000">Year 2000 (30)</label>
+                </a>           
+            
+      </div>
+    </div>
+    <div
+      class="asui-multipleFilter--item "
+      onClick={[Function onClick]}
+    >
+      <div>
+        
+                <a class="aggregation ">
+                    <input type="checkbox" id="filter_2001" >
+                    <label for="filter_2001">Year 2001 (5)</label>
+                </a>           
+            
+      </div>
+    </div>
+  </div>
+</div>
+
+`;

@@ -104,10 +104,8 @@
     </script>
 
     <script type="text/template" id="multiple-filter-item-template">
-        <a class="aggregation {{#isActive}}is-active{{/isActive}}">
-            <input type="checkbox" id="filter_{{values.id}}" {{#isActive}}checked="checked"{{/isActive}}>
-            <label for="filter_{{values.id}}">{{values.name}} ({{n}})</label>
-        </a>
+        <input type="checkbox" id="filter_{{values.id}}" {{#isActive}}checked="checked"{{/isActive}}>
+        <label for="filter_{{values.id}}">{{values.name}} ({{n}})</label>
     </script>
 
     <script type="text/javascript">
@@ -146,6 +144,7 @@
                 target: '.multiple-filter',
                 name: 'year',
                 field: 'year',
+                sortBy: ['_term', 'desc'],
                 limit: 6,
                 template: {
                     top: 'Years',

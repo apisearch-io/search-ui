@@ -205,7 +205,6 @@ class MultipleFilterComponent extends Component {
                         showLessTemplate={showLessTemplate}
                     /> : null
                 }
-
             </div>
         )
     }
@@ -219,7 +218,7 @@ MultipleFilterComponent.defaultProps = {
     classNames: {
         container: '',
         top: '',
-        itemList: '',
+        itemsList: '',
         item: '',
         showMoreContainer: ''
     },
