@@ -39,6 +39,9 @@
         <!-- SimpleSearch -->
         <div class="search navbar-item"></div>
 
+        <!-- Information -->
+        <div class="information navbar-item"></div>
+
         <!-- End -->
         <div class="navbar-end">
             <!-- SortBy -->
@@ -58,7 +61,10 @@
     <!-- Result -->
     <div class="container is-fluid">
         <div class="columns" style="margin-top: 1rem">
-            <div class="multiple-filter column is-one-quarter"></div>
+            <div class="column is-one-quarter">
+                <div class="multiple-filter-year column"></div>
+                <div class="multiple-filter-genre column"></div>
+            </div>
             <div class="result column"></div>
         </div>
     </div>
@@ -108,6 +114,12 @@
         <label for="filter_{{values.id}}">{{values.name}} ({{n}})</label>
     </script>
 
+    <script type="text/template" id="information-container-template">
+        <span class="tag is-primary">
+            <i class="fa fa-bolt"></i> &nbsp; Found {{total_hits}}!
+        </span>
+    </script>
+
     <script type="text/javascript">
         // UI Instance
         let ui = apisearchUI({
@@ -141,11 +153,11 @@
                 ]
             }),
             ui.widgets.multipleFilter({
-                target: '.multiple-filter',
+                target: '.multiple-filter-year',
                 name: 'year',
                 field: 'year',
                 sortBy: ['_term', 'desc'],
-                limit: 6,
+                limit: 4,
                 template: {
                     top: 'Years',
                     item: document.getElementById('multiple-filter-item-template').text,
@@ -157,6 +169,31 @@
                     top: 'panel-heading',
                     item: 'panel-block',
                     showMoreContainer: 'panel-block'
+                }
+            }),
+            ui.widgets.multipleFilter({
+                target: '.multiple-filter-genre',
+                name: 'genre',
+                field: 'genre_id',
+                sortBy: ['_term', 'desc'],
+                limit: 4,
+                template: {
+                    top: 'Genre',
+                    item: document.getElementById('multiple-filter-item-template').text,
+                    showMore: '<button class="button"><i class="fa fa-smile-o"></i>&nbsp;Show more</button>',
+                    showLess: '<button class="button"><i class="fa fa-frown-o"></i>&nbsp;Show less</button>',
+                },
+                classNames: {
+                    container: 'panel',
+                    top: 'panel-heading',
+                    item: 'panel-block',
+                    showMoreContainer: 'panel-block'
+                }
+            }),
+            ui.widgets.information({
+                target: '.information',
+                template: {
+                    container: document.getElementById('information-container-template').text
                 }
             }),
             ui.widgets.result({

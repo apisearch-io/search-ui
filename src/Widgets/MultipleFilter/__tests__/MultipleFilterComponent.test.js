@@ -1,7 +1,7 @@
 /** @jsx h */
 import {h} from 'preact';
 import {deep} from 'preact-render-spy';
-import {initialDataProvider, updatedDataProvider} from './__providers__/data.js';
+import {initialDataProvider, updatedDataProvider} from './dataProvider.js';
 import MultipleFilterComponent from './../MultipleFilterComponent';
 
 describe('<MultipleFilterComponent />', () => {
