@@ -96,7 +96,7 @@ class WidgetFactory {
         target,
         name,
         field,
-        type,
+        applicationType,
         limit,
         classNames,
         template = {
@@ -108,7 +108,7 @@ class WidgetFactory {
             target={target}
             name={name}
             field={field}
-            type={type}
+            applicationType={applicationType}
             limit={limit}
             classNames={{
                 ...MultipleFilterComponent.defaultProps.classNames,

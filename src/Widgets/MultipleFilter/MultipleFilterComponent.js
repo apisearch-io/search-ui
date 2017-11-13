@@ -25,16 +25,20 @@ class MultipleFilterComponent extends Component {
         const {
             field: filterField,
             name: filterName,
+            applicationType,
+            sortBy,
             currentQuery
         } = this.props;
 
         /**
-         * Dispatach action
+         * Dispatch action
          */
         aggregationSetup(
             {
                 filterField,
-                filterName
+                filterName,
+                applicationType,
+                sortBy
             },
             currentQuery
         )
@@ -76,6 +80,8 @@ class MultipleFilterComponent extends Component {
         const {
             name: filterName,
             field: filterField,
+            applicationType,
+            sortBy,
             currentQuery,
             client,
             data: {
@@ -98,10 +104,12 @@ class MultipleFilterComponent extends Component {
             {
                 filterName,
                 filterField,
+                applicationType,
                 filterValues: manageCurrentFilterItems(
                     selectedFilter,
                     currentActiveFilterValues
-                )
+                ),
+                sortBy
             },
             currentQuery,
             client
@@ -167,8 +175,9 @@ class MultipleFilterComponent extends Component {
 }
 
 MultipleFilterComponent.defaultProps = {
-    type: 'FILTER_MUST_ALL',
+    applicationType: 8, // FILTER_MUST_ALL
     limit: 10,
+    sortBy: ['_count', 'asc'],
     classNames: {
         container: '',
         top: '',

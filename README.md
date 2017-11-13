@@ -135,6 +135,7 @@ const multipleFilterWidget = ui.widgets.multipleFilter({
     name: !string,
     field: !string,
     limit: ?integer[10],
+    sortBy: ?string['_count:desc'],
     classNames: {
         container: ?string,
         top: ?string,
