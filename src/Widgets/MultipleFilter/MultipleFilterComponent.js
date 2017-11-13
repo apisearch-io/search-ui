@@ -2,13 +2,17 @@
  * @jsx h
  */
 import { h, Component } from 'preact';
-import {aggregationSetup, filterAction} from "./multipleFilterActions";
 import Template from "../Template";
+import ShowMoreComponent from "./ShowMoreComponent";
 import {
-    aggregationsObjectToArray, manageCurrentFilterItems,
+    aggregationSetup,
+    filterAction
+} from "./multipleFilterActions";
+import {
+    aggregationsObjectToArray,
+    manageCurrentFilterItems,
     simpleObjectToArray
 } from "./helpers";
-import ShowMoreComponent from "./ShowMoreComponent";
 
 /**
  * Filter Component
@@ -136,11 +140,13 @@ class MultipleFilterComponent extends Component {
 
     render() {
         const {
+            showMoreActive,
             classNames: {
                 container: containerClassName,
                 top: topClassName,
                 itemsList: itemsListClassName,
-                item: itemClassName
+                item: itemClassName,
+                showMoreContainer: showMoreContainerClassName
             },
             template: {
                 top: topTemplate,
@@ -188,14 +194,18 @@ class MultipleFilterComponent extends Component {
                 })}
                 </div>
 
-                <ShowMoreComponent
-                    allItems={allItems}
-                    currentLimit={this.state.limit}
-                    handleShowMore={this.handleShowMore}
-                    handleShowLess={this.handleShowLess}
-                    showMoreTemplate={showMoreTemplate}
-                    showLessTemplate={showLessTemplate}
-                />
+                {(showMoreActive)
+                    ? <ShowMoreComponent
+                        allItems={allItems}
+                        currentLimit={this.state.limit}
+                        handleShowMore={this.handleShowMore}
+                        handleShowLess={this.handleShowLess}
+                        showMoreContainerClassName={showMoreContainerClassName}
+                        showMoreTemplate={showMoreTemplate}
+                        showLessTemplate={showLessTemplate}
+                    /> : null
+                }
+
             </div>
         )
     }
@@ -205,11 +215,13 @@ MultipleFilterComponent.defaultProps = {
     applicationType: 8, // FILTER_MUST_ALL
     limit: 10,
     sortBy: ['_count', 'asc'],
+    showMoreActive: true,
     classNames: {
         container: '',
         top: '',
         itemList: '',
-        item: ''
+        item: '',
+        showMoreContainer: ''
     },
     template: {
         top: null,

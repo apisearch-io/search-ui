@@ -1,3 +1,6 @@
+/**
+ * @jsx h
+ */
 import { h } from 'preact';
 import Template from "../Template";
 
@@ -8,18 +11,18 @@ import Template from "../Template";
  *   -> Show more element
  *   -> Show less element
  */
-
 const ShowMoreComponent = ({
     allItems,
     currentLimit,
     handleShowMore,
     handleShowLess,
+    showMoreContainerClassName,
     showMoreTemplate,
     showLessTemplate
 }) => {
     return (allItems.length > currentLimit)
         ? (
-            <div className={`asui-showMore`}
+            <div className={`asui-showMore ${showMoreContainerClassName}`}
                  onClick={handleShowMore}
             >
                 <Template
@@ -28,16 +31,18 @@ const ShowMoreComponent = ({
                 />
             </div>
         )
-        : (
-            <div className={`asui-showMore`}
-                 onClick={handleShowLess}
-            >
-                <Template
-                    template={showLessTemplate}
-                    className={`asui-showMore--less`}
-                />
-            </div>
-        )
+        : (allItems.length === currentLimit)
+            ? (
+                <div className={`asui-showMore ${showMoreContainerClassName}`}
+                     onClick={handleShowLess}
+                >
+                    <Template
+                        template={showLessTemplate}
+                        className={`asui-showMore--less`}
+                    />
+                </div>
+            )
+        : null
 };
 
 export default ShowMoreComponent;

@@ -1144,7 +1144,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _hogan = __webpack_require__(32);
+var _hogan = __webpack_require__(31);
 
 var _hogan2 = _interopRequireDefault(_hogan);
 
@@ -6997,17 +6997,17 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _multipleFilterActions = __webpack_require__(31);
-
 var _Template = __webpack_require__(3);
 
 var _Template2 = _interopRequireDefault(_Template);
 
-var _helpers = __webpack_require__(35);
-
-var _ShowMoreComponent = __webpack_require__(36);
+var _ShowMoreComponent = __webpack_require__(34);
 
 var _ShowMoreComponent2 = _interopRequireDefault(_ShowMoreComponent);
+
+var _multipleFilterActions = __webpack_require__(35);
+
+var _helpers = __webpack_require__(36);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -7141,11 +7141,13 @@ var MultipleFilterComponent = function (_Component) {
             var _this2 = this;
 
             var _props2 = this.props,
+                showMoreActive = _props2.showMoreActive,
                 _props2$classNames = _props2.classNames,
                 containerClassName = _props2$classNames.container,
                 topClassName = _props2$classNames.top,
                 itemsListClassName = _props2$classNames.itemsList,
                 itemClassName = _props2$classNames.item,
+                showMoreContainerClassName = _props2$classNames.showMoreContainer,
                 _props2$template = _props2.template,
                 topTemplate = _props2$template.top,
                 itemTemplate = _props2$template.item,
@@ -7191,14 +7193,15 @@ var MultipleFilterComponent = function (_Component) {
                         );
                     })
                 ),
-                (0, _preact.h)(_ShowMoreComponent2.default, {
+                showMoreActive ? (0, _preact.h)(_ShowMoreComponent2.default, {
                     allItems: allItems,
                     currentLimit: this.state.limit,
                     handleShowMore: this.handleShowMore,
                     handleShowLess: this.handleShowLess,
+                    showMoreContainerClassName: showMoreContainerClassName,
                     showMoreTemplate: showMoreTemplate,
                     showLessTemplate: showLessTemplate
-                })
+                }) : null
             );
         }
     }]);
@@ -7210,11 +7213,13 @@ MultipleFilterComponent.defaultProps = {
     applicationType: 8, // FILTER_MUST_ALL
     limit: 10,
     sortBy: ['_count', 'asc'],
+    showMoreActive: true,
     classNames: {
         container: '',
         top: '',
         itemList: '',
-        item: ''
+        item: '',
+        showMoreContainer: ''
     },
     template: {
         top: null,
@@ -7228,106 +7233,6 @@ exports.default = MultipleFilterComponent;
 
 /***/ }),
 /* 31 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.aggregationSetup = aggregationSetup;
-exports.filterAction = filterAction;
-
-var _cloneDeep = __webpack_require__(2);
-
-var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
-
-var _dispatcher = __webpack_require__(1);
-
-var _dispatcher2 = _interopRequireDefault(_dispatcher);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Define aggregations setup
- *
- * This setup action is triggered when mounting a component
- * receives two parameters:
- *   @param queryOptions -> the itemsPerPage to be displayed on the result container
- *   @param currentQuery -> current application query
- *
- * Finally dispatches an event with the modified query.
- *   @returns {{
- *     type: string,
- *     payload: {
- *        updatedQuery
- *     }
- *   }}
- */
-/**
- * Multiple filter actions
- */
-function aggregationSetup(queryOptions, currentQuery) {
-    var filterName = queryOptions.filterName,
-        filterField = queryOptions.filterField,
-        applicationType = queryOptions.applicationType,
-        sortBy = queryOptions.sortBy,
-        limit = queryOptions.limit;
-
-    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
-
-    clonedQuery.aggregateBy(filterName, filterField, applicationType, sortBy, limit);
-
-    _dispatcher2.default.dispatch({
-        type: 'UPDATE_APISEARCH_SETUP',
-        payload: {
-            updatedQuery: clonedQuery
-        }
-    });
-}
-
-/**
- * Define aggregations setup
- *
- * This setup action is triggered when mounting a component
- * receives two parameters:
- *   @param queryOptions -> the itemsPerPage to be displayed on the result container
- *   @param currentQuery -> current application query
- *   @param client       -> Apisearch client
- *
- * Finally dispatches an event with the modified query.
- *   @returns {{
- *     type: string,
- *     payload: {
- *        updatedQuery
- *     }
- *   }}
- */
-function filterAction(queryOptions, currentQuery, client) {
-    var filterName = queryOptions.filterName,
-        filterField = queryOptions.filterField,
-        filterValues = queryOptions.filterValues,
-        applicationType = queryOptions.applicationType,
-        sortBy = queryOptions.sortBy;
-
-    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
-
-    clonedQuery.filterBy(filterName, filterField, filterValues, applicationType, true, sortBy);
-
-    client.search(clonedQuery, function (result) {
-        _dispatcher2.default.dispatch({
-            type: 'RENDER_FETCHED_DATA',
-            payload: {
-                updatedQuery: clonedQuery,
-                result: result
-            }
-        });
-    });
-}
-
-/***/ }),
-/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -7347,14 +7252,14 @@ function filterAction(queryOptions, currentQuery, client) {
 
 // This file is for use with Node.js. See dist/ for browser files.
 
-var Hogan = __webpack_require__(33);
-Hogan.Template = __webpack_require__(34).Template;
+var Hogan = __webpack_require__(32);
+Hogan.Template = __webpack_require__(33).Template;
 Hogan.template = Hogan.Template;
 module.exports = Hogan;
 
 
 /***/ }),
-/* 33 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -7783,7 +7688,7 @@ module.exports = Hogan;
 
 
 /***/ }),
-/* 34 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -8130,7 +8035,168 @@ var Hogan = {};
 
 
 /***/ }),
+/* 34 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _preact = __webpack_require__(0);
+
+var _Template = __webpack_require__(3);
+
+var _Template2 = _interopRequireDefault(_Template);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Show more component
+ *
+ * Provides two items
+ *   -> Show more element
+ *   -> Show less element
+ */
+/**
+ * @jsx h
+ */
+var ShowMoreComponent = function ShowMoreComponent(_ref) {
+    var allItems = _ref.allItems,
+        currentLimit = _ref.currentLimit,
+        handleShowMore = _ref.handleShowMore,
+        handleShowLess = _ref.handleShowLess,
+        showMoreContainerClassName = _ref.showMoreContainerClassName,
+        showMoreTemplate = _ref.showMoreTemplate,
+        showLessTemplate = _ref.showLessTemplate;
+
+    return allItems.length > currentLimit ? (0, _preact.h)(
+        "div",
+        { className: "asui-showMore " + showMoreContainerClassName,
+            onClick: handleShowMore
+        },
+        (0, _preact.h)(_Template2.default, {
+            template: showMoreTemplate,
+            className: "asui-showMore--more"
+        })
+    ) : allItems.length === currentLimit ? (0, _preact.h)(
+        "div",
+        { className: "asui-showMore " + showMoreContainerClassName,
+            onClick: handleShowLess
+        },
+        (0, _preact.h)(_Template2.default, {
+            template: showLessTemplate,
+            className: "asui-showMore--less"
+        })
+    ) : null;
+};
+
+exports.default = ShowMoreComponent;
+
+/***/ }),
 /* 35 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.aggregationSetup = aggregationSetup;
+exports.filterAction = filterAction;
+
+var _cloneDeep = __webpack_require__(2);
+
+var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
+
+var _dispatcher = __webpack_require__(1);
+
+var _dispatcher2 = _interopRequireDefault(_dispatcher);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Define aggregations setup
+ *
+ * This setup action is triggered when mounting a component
+ * receives two parameters:
+ *   @param queryOptions -> the itemsPerPage to be displayed on the result container
+ *   @param currentQuery -> current application query
+ *
+ * Finally dispatches an event with the modified query.
+ *   @returns {{
+ *     type: string,
+ *     payload: {
+ *        updatedQuery
+ *     }
+ *   }}
+ */
+/**
+ * Multiple filter actions
+ */
+function aggregationSetup(queryOptions, currentQuery) {
+    var filterName = queryOptions.filterName,
+        filterField = queryOptions.filterField,
+        applicationType = queryOptions.applicationType,
+        sortBy = queryOptions.sortBy,
+        limit = queryOptions.limit;
+
+    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+
+    clonedQuery.aggregateBy(filterName, filterField, applicationType, sortBy, limit);
+
+    _dispatcher2.default.dispatch({
+        type: 'UPDATE_APISEARCH_SETUP',
+        payload: {
+            updatedQuery: clonedQuery
+        }
+    });
+}
+
+/**
+ * Define aggregations setup
+ *
+ * This setup action is triggered when mounting a component
+ * receives two parameters:
+ *   @param queryOptions -> the itemsPerPage to be displayed on the result container
+ *   @param currentQuery -> current application query
+ *   @param client       -> Apisearch client
+ *
+ * Finally dispatches an event with the modified query.
+ *   @returns {{
+ *     type: string,
+ *     payload: {
+ *        updatedQuery
+ *     }
+ *   }}
+ */
+function filterAction(queryOptions, currentQuery, client) {
+    var filterName = queryOptions.filterName,
+        filterField = queryOptions.filterField,
+        filterValues = queryOptions.filterValues,
+        applicationType = queryOptions.applicationType,
+        sortBy = queryOptions.sortBy;
+
+    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+
+    clonedQuery.filterBy(filterName, filterField, filterValues, applicationType, true, sortBy);
+
+    client.search(clonedQuery, function (result) {
+        _dispatcher2.default.dispatch({
+            type: 'RENDER_FETCHED_DATA',
+            payload: {
+                updatedQuery: clonedQuery,
+                result: result
+            }
+        });
+    });
+}
+
+/***/ }),
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8187,64 +8253,6 @@ function manageCurrentFilterItems(selectedItem, currentItems) {
         return [].concat(_toConsumableArray(currentItems), [selectedItem]);
     }
 };
-
-/***/ }),
-/* 36 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _preact = __webpack_require__(0);
-
-var _Template = __webpack_require__(3);
-
-var _Template2 = _interopRequireDefault(_Template);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Show more component
- *
- * Provides two items
- *   -> Show more element
- *   -> Show less element
- */
-
-var ShowMoreComponent = function ShowMoreComponent(_ref) {
-    var allItems = _ref.allItems,
-        currentLimit = _ref.currentLimit,
-        handleShowMore = _ref.handleShowMore,
-        handleShowLess = _ref.handleShowLess,
-        showMoreTemplate = _ref.showMoreTemplate,
-        showLessTemplate = _ref.showLessTemplate;
-
-    return allItems.length > currentLimit ? (0, _preact.h)(
-        "div",
-        { className: "asui-showMore",
-            onClick: handleShowMore
-        },
-        (0, _preact.h)(_Template2.default, {
-            template: showMoreTemplate,
-            className: "asui-showMore--more"
-        })
-    ) : (0, _preact.h)(
-        "div",
-        { className: "asui-showMore",
-            onClick: handleShowLess
-        },
-        (0, _preact.h)(_Template2.default, {
-            template: showLessTemplate,
-            className: "asui-showMore--less"
-        })
-    );
-};
-
-exports.default = ShowMoreComponent;
 
 /***/ }),
 /* 37 */

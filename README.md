@@ -129,22 +129,28 @@ const sortByWidget = ui.widgets.sortBy({
 
 ## Multiple Filter
 The filter widget allows you to refine your search.
+
 ```javascript
 const multipleFilterWidget = ui.widgets.multipleFilter({
     target: !string,
     name: !string,
     field: !string,
+    applicationType: ?integer[8],
     limit: ?integer[10],
     sortBy: ?string['_count:desc'],
+    showMoreActive: ?bool[true],
     classNames: {
         container: ?string,
         top: ?string,
         itemsList: ?string,
-        item: ?string
+        item: ?string,
+        showMoreContainer: ?string
     },
     template: {
         top: ?string,
-        item: !string
+        item: !string,
+        showMore: ?string['+ Show more'],
+        showLess: ?string['- Show less']
     }
 })
 ```

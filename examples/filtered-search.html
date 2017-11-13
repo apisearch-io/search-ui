@@ -149,12 +149,15 @@
                 limit: 6,
                 template: {
                     top: 'Years',
-                    item: document.getElementById('multiple-filter-item-template').text
+                    item: document.getElementById('multiple-filter-item-template').text,
+                    showMore: '<button class="button"><i class="fa fa-smile-o"></i>&nbsp;Show more</button>',
+                    showLess: '<button class="button"><i class="fa fa-frown-o"></i>&nbsp;Show less</button>',
                 },
                 classNames: {
                     container: 'panel',
                     top: 'panel-heading',
-                    item: 'panel-block'
+                    item: 'panel-block',
+                    showMoreContainer: 'panel-block'
                 }
             }),
             ui.widgets.result({
