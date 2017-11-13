@@ -7155,6 +7155,7 @@ var MultipleFilterComponent = function (_Component) {
              */
 
             var allItems = [].concat(_toConsumableArray(this.state.activeAggregations), _toConsumableArray(this.state.currentAggregations));
+            var allItemsLength = allItems.length;
             var items = allItems.slice(0, this.state.limit);
 
             return (0, _preact.h)(
@@ -7190,7 +7191,7 @@ var MultipleFilterComponent = function (_Component) {
                     })
                 ),
                 showMoreActive ? (0, _preact.h)(_ShowMoreComponent2.default, {
-                    allItems: allItems,
+                    allItemsLength: allItemsLength,
                     currentLimit: this.state.limit,
                     handleShowMore: this.handleShowMore,
                     handleShowLess: this.handleShowLess,
@@ -8060,7 +8061,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * @jsx h
  */
 var ShowMoreComponent = function ShowMoreComponent(_ref) {
-    var allItems = _ref.allItems,
+    var allItemsLength = _ref.allItemsLength,
         currentLimit = _ref.currentLimit,
         handleShowMore = _ref.handleShowMore,
         handleShowLess = _ref.handleShowLess,
@@ -8068,7 +8069,7 @@ var ShowMoreComponent = function ShowMoreComponent(_ref) {
         showMoreTemplate = _ref.showMoreTemplate,
         showLessTemplate = _ref.showLessTemplate;
 
-    return allItems.length > currentLimit ? (0, _preact.h)(
+    return allItemsLength > currentLimit ? (0, _preact.h)(
         "div",
         { className: "asui-showMore " + showMoreContainerClassName,
             onClick: handleShowMore
@@ -8077,7 +8078,7 @@ var ShowMoreComponent = function ShowMoreComponent(_ref) {
             template: showMoreTemplate,
             className: "asui-showMore--more"
         })
-    ) : allItems.length === currentLimit ? (0, _preact.h)(
+    ) : allItemsLength === currentLimit ? (0, _preact.h)(
         "div",
         { className: "asui-showMore " + showMoreContainerClassName,
             onClick: handleShowLess

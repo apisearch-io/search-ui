@@ -12,7 +12,7 @@ import Template from "../Template";
  *   -> Show less element
  */
 const ShowMoreComponent = ({
-    allItems,
+    allItemsLength,
     currentLimit,
     handleShowMore,
     handleShowLess,
@@ -20,7 +20,7 @@ const ShowMoreComponent = ({
     showMoreTemplate,
     showLessTemplate
 }) => {
-    return (allItems.length > currentLimit)
+    return (allItemsLength > currentLimit)
         ? (
             <div className={`asui-showMore ${showMoreContainerClassName}`}
                  onClick={handleShowMore}
@@ -31,7 +31,7 @@ const ShowMoreComponent = ({
                 />
             </div>
         )
-        : (allItems.length === currentLimit)
+        : (allItemsLength === currentLimit)
             ? (
                 <div className={`asui-showMore ${showMoreContainerClassName}`}
                      onClick={handleShowLess}

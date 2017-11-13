@@ -163,6 +163,7 @@ class MultipleFilterComponent extends Component {
             ...this.state.activeAggregations,
             ...this.state.currentAggregations
         ];
+        const allItemsLength = allItems.length;
         const items = allItems.slice(0, this.state.limit);
 
         return (
@@ -196,7 +197,7 @@ class MultipleFilterComponent extends Component {
 
                 {(showMoreActive)
                     ? <ShowMoreComponent
-                        allItems={allItems}
+                        allItemsLength={allItemsLength}
                         currentLimit={this.state.limit}
                         handleShowMore={this.handleShowMore}
                         handleShowLess={this.handleShowLess}

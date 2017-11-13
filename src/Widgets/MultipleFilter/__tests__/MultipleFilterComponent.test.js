@@ -4,7 +4,7 @@ import {deep} from 'preact-render-spy';
 import {initialDataProvider, updatedDataProvider} from './__providers__/data.js';
 import MultipleFilterComponent from './../MultipleFilterComponent';
 
-describe('<MultipleFilterComponent />',() => {
+describe('<MultipleFilterComponent />', () => {
     const itemTemplate = `
         <a class="aggregation {{#isActive}}is-active{{/isActive}}">
             <input type="checkbox" id="filter_{{values.id}}" {{#isActive}}checked="checked"{{/isActive}}>
