@@ -72,20 +72,19 @@ class MultipleFilterComponent extends Component {
              * Getting aggregation from aggregations
              */
             let aggregation = aggregations[filterName];
-            let counters = (aggregation.counters) ? aggregation.counters : {};
-            let aggregationsArray = aggregationsObjectToArray(counters);
+            let counters = (aggregation.counters) ? aggregation.counters : [];
 
             this.setState({
                 /**
                  * Current used aggregations
                  */
-                activeAggregations: aggregationsArray.filter(
+                activeAggregations: counters.filter(
                     item => item.used
                 ),
                 /**
                  * Current inactive aggregations
                  */
-                currentAggregations: aggregationsArray.filter(
+                currentAggregations: counters.filter(
                     item => null === item.used
                 )
             })
@@ -110,7 +109,7 @@ class MultipleFilterComponent extends Component {
 
         let activeElements = aggregations[filterName].active_elements;
         let currentActiveFilterValues = (typeof activeElements !== 'undefined')
-            ? simpleObjectToArray(activeElements)
+            ? activeElements
             : []
         ;
 
@@ -194,7 +193,7 @@ class MultipleFilterComponent extends Component {
                     return (
                         <div
                             className={`asui-multipleFilter--item ${itemClassName}`}
-                            onClick={() => this.handleClick(item.__key)}
+                            onClick={() => this.handleClick(item.values.id)}
                         >
                             <Template
                                 template={itemTemplate}
@@ -225,7 +224,7 @@ MultipleFilterComponent.defaultProps = {
     aggregationField: null,
     applicationType: 8, // FILTER_MUST_ALL
     limit: 10,
-    sortBy: ['_count', 'asc'],
+    sortBy: ['_term', 'desc'],
     showMoreActive: true,
     classNames: {
         container: '',

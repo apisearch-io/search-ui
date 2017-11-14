@@ -166,8 +166,8 @@ Object {
   "name": "year",
   "showMoreActive": true,
   "sortBy": Array [
-    "_count",
-    "asc",
+    "_term",
+    "desc",
   ],
   "target": "#some-target",
   "template": Object {
@@ -247,8 +247,8 @@ Object {
   "name": "year",
   "showMoreActive": true,
   "sortBy": Array [
-    "_count",
-    "asc",
+    "_term",
+    "desc",
   ],
   "target": "#some-target",
   "template": Object {

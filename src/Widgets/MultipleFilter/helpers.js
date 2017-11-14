@@ -1,35 +1,13 @@
-
 /**
- * Simple object to array
+ * Manage filter items
  *
- * @param object
- * @returns {Array}
- */
-export function simpleObjectToArray(object) {
-    return Object
-        .keys(object)
-        .map(key => object[key])
-    ;
-}
-
-/**
- * Export the aggregations object to an array of items
+ * If an item is on the list, remove it
+ * else, add it!
  *
- * @param object
- * @returns {Array}
+ * @param selectedItem
+ * @param currentItems
+ * @returns {[null,null]}
  */
-export function aggregationsObjectToArray(object) {
-    return Object
-        .keys(object)
-        .map(key => {
-            return object[key] = {
-                ...object[key],
-                __key: key
-            };
-        })
-    ;
-}
-
 export function manageCurrentFilterItems(selectedItem, currentItems) {
     let isElementActive = currentItems
         .some(item => item === selectedItem)
@@ -45,4 +23,4 @@ export function manageCurrentFilterItems(selectedItem, currentItems) {
             selectedItem
         ];
     }
-};
+}

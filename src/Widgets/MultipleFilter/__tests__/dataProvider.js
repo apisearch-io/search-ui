@@ -7,8 +7,8 @@ export const initialDataProvider = {
             "year": {
                 name: "year",
                 total_elements: 3,
-                counters: {
-                    1999: {
+                counters: [
+                    {
                         n: 12,
                         used: null,
                         values: {
@@ -16,7 +16,7 @@ export const initialDataProvider = {
                             name: 'Year 1999'
                         }
                     },
-                    2000: {
+                    {
                         n: 30,
                         used: null,
                         values: {
@@ -24,7 +24,7 @@ export const initialDataProvider = {
                             name: 'Year 2000'
                         }
                     },
-                    2001: {
+                    {
                         n: 5,
                         used: null,
                         values: {
@@ -32,7 +32,7 @@ export const initialDataProvider = {
                             name: 'Year 2001'
                         }
                     }
-                }
+                ]
             }
         }
     }
@@ -50,8 +50,8 @@ export const updatedDataProvider = {
                 active_elements: {
                     2000: "2000"
                 },
-                counters: {
-                    1999: {
+                counters: [
+                    {
                         n: 12,
                         used: null,
                         values: {
@@ -59,7 +59,7 @@ export const updatedDataProvider = {
                             name: 'Year 1999'
                         }
                     },
-                    2000: {
+                    {
                         n: 30,
                         used: true,
                         values: {
@@ -67,7 +67,7 @@ export const updatedDataProvider = {
                             name: 'Year 2000'
                         }
                     },
-                    2001: {
+                    {
                         n: 5,
                         used: null,
                         values: {
@@ -75,7 +75,7 @@ export const updatedDataProvider = {
                             name: 'Year 2001'
                         }
                     }
-                }
+                ]
             }
         }
     }

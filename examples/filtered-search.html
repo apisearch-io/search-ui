@@ -125,9 +125,9 @@
         // UI Instance
         let ui = apisearchUI({
             appId: 'music',
-            apiKey: '1cc7a3e0-bda5-11e7-abc4-cec278b6b50a',
+            apiKey: '12caf76c-bd9f-11e7-abc4-cec278b6b50a',
             options: {
-                endpoint: 'http://search.puntmig.net',
+                endpoint: 'http://192.168.0.102:8020',
                 cache: false
             }
         });
@@ -159,6 +159,7 @@
                 filterField: 'year',
                 applicationType: 8,
                 limit: 3,
+                sortBy: ['_count', 'desc'],
                 template: {
                     top: '<i class="fa fa-cog"></i>&nbsp;Years',
                     item: document.getElementById('multiple-filter-item-template').text,
@@ -179,6 +180,7 @@
                 aggregationField: 'genre_data',
                 applicationType: 8,
                 limit: 3,
+                sortBy: ['_count', 'asc'],
                 template: {
                     top: '<i class="fa fa-user"></i>&nbsp; Genre',
                     item: document.getElementById('multiple-filter-item-template').text,
@@ -196,7 +198,7 @@
                 target: '.multiple-filter-rating',
                 name: 'rating',
                 filterField: 'rating',
-                sortBy: ['_count', 'asc'],
+                sortBy: ['_term', 'desc'],
                 applicationType: 4,
                 limit: 5,
                 showMoreActive: false,

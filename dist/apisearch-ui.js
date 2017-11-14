@@ -5962,6 +5962,7 @@ var WidgetFactory = function () {
                 aggregationField = _ref4.aggregationField,
                 applicationType = _ref4.applicationType,
                 limit = _ref4.limit,
+                sortBy = _ref4.sortBy,
                 showMoreActive = _ref4.showMoreActive,
                 classNames = _ref4.classNames,
                 template = _ref4.template;
@@ -5973,6 +5974,7 @@ var WidgetFactory = function () {
                 aggregationField: aggregationField,
                 applicationType: applicationType,
                 limit: limit,
+                sortBy: sortBy,
                 showMoreActive: showMoreActive,
                 classNames: _extends({}, _MultipleFilterComponent2.default.defaultProps.classNames, classNames),
                 template: _extends({}, _MultipleFilterComponent2.default.defaultProps.template, template)
@@ -7066,7 +7068,7 @@ var MultipleFilterComponent = function (_Component) {
 
 
             var activeElements = aggregations[filterName].active_elements;
-            var currentActiveFilterValues = typeof activeElements !== 'undefined' ? (0, _helpers.simpleObjectToArray)(activeElements) : [];
+            var currentActiveFilterValues = typeof activeElements !== 'undefined' ? activeElements : [];
 
             /**
              * Dispatch action
@@ -7143,20 +7145,19 @@ var MultipleFilterComponent = function (_Component) {
                  * Getting aggregation from aggregations
                  */
                 var aggregation = aggregations[filterName];
-                var counters = aggregation.counters ? aggregation.counters : {};
-                var aggregationsArray = (0, _helpers.aggregationsObjectToArray)(counters);
+                var counters = aggregation.counters ? aggregation.counters : [];
 
                 this.setState({
                     /**
                      * Current used aggregations
                      */
-                    activeAggregations: aggregationsArray.filter(function (item) {
+                    activeAggregations: counters.filter(function (item) {
                         return item.used;
                     }),
                     /**
                      * Current inactive aggregations
                      */
-                    currentAggregations: aggregationsArray.filter(function (item) {
+                    currentAggregations: counters.filter(function (item) {
                         return null === item.used;
                     })
                 });
@@ -7211,7 +7212,7 @@ var MultipleFilterComponent = function (_Component) {
                             {
                                 className: "asui-multipleFilter--item " + itemClassName,
                                 onClick: function onClick() {
-                                    return _this2.handleClick(item.__key);
+                                    return _this2.handleClick(item.values.id);
                                 }
                             },
                             (0, _preact.h)(_Template2.default, {
@@ -7241,7 +7242,7 @@ MultipleFilterComponent.defaultProps = {
     aggregationField: null,
     applicationType: 8, // FILTER_MUST_ALL
     limit: 10,
-    sortBy: ['_count', 'asc'],
+    sortBy: ['_term', 'desc'],
     showMoreActive: true,
     classNames: {
         container: '',
@@ -8235,41 +8236,20 @@ function filterAction(queryOptions, currentQuery, client) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-exports.simpleObjectToArray = simpleObjectToArray;
-exports.aggregationsObjectToArray = aggregationsObjectToArray;
 exports.manageCurrentFilterItems = manageCurrentFilterItems;
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 /**
- * Simple object to array
+ * Manage filter items
  *
- * @param object
- * @returns {Array}
- */
-function simpleObjectToArray(object) {
-    return Object.keys(object).map(function (key) {
-        return object[key];
-    });
-}
-
-/**
- * Export the aggregations object to an array of items
+ * If an item is on the list, remove it
+ * else, add it!
  *
- * @param object
- * @returns {Array}
+ * @param selectedItem
+ * @param currentItems
+ * @returns {[null,null]}
  */
-function aggregationsObjectToArray(object) {
-    return Object.keys(object).map(function (key) {
-        return object[key] = _extends({}, object[key], {
-            __key: key
-        });
-    });
-}
-
 function manageCurrentFilterItems(selectedItem, currentItems) {
     var isElementActive = currentItems.some(function (item) {
         return item === selectedItem;
@@ -8282,7 +8262,7 @@ function manageCurrentFilterItems(selectedItem, currentItems) {
     } else {
         return [].concat(_toConsumableArray(currentItems), [selectedItem]);
     }
-};
+}
 
 /***/ }),
 /* 37 */
