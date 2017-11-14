@@ -99,6 +99,7 @@ class WidgetFactory {
         aggregationField,
         applicationType,
         limit,
+        showMoreActive,
         classNames,
         template
     }) {
@@ -109,6 +110,7 @@ class WidgetFactory {
             aggregationField={aggregationField}
             applicationType={applicationType}
             limit={limit}
+            showMoreActive={showMoreActive}
             classNames={{
                 ...MultipleFilterComponent.defaultProps.classNames,
                 ...classNames

@@ -84,7 +84,7 @@ export function filterAction(
         filterField,
         filterValues,
         applicationType,
-        true,
+        false,
         sortBy
     );
     clonedQuery.aggregateBy(

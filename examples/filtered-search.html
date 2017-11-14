@@ -63,7 +63,8 @@
         <div class="columns" style="margin-top: 1rem">
             <div class="column is-one-quarter">
                 <div class="multiple-filter-year" style="margin-bottom: 1rem"></div>
-                <div class="multiple-filter-genre"></div>
+                <div class="multiple-filter-genre" style="margin-bottom: 1rem"></div>
+                <div class="multiple-filter-rating"></div>
             </div>
             <div class="result column"></div>
         </div>
@@ -157,13 +158,12 @@
                 name: 'year',
                 filterField: 'year',
                 applicationType: 8,
-                sortBy: ['_term', 'desc'],
-                limit: 4,
+                limit: 3,
                 template: {
                     top: '<i class="fa fa-cog"></i>&nbsp;Years',
                     item: document.getElementById('multiple-filter-item-template').text,
-                    showMore: '<button class="button"><i class="fa fa-smile-o"></i>&nbsp;Show more</button>',
-                    showLess: '<button class="button"><i class="fa fa-frown-o"></i>&nbsp;Show less</button>',
+                    showMore: '<button class="button"><i class="fa fa-plus"></i>&nbsp;Show more</button>',
+                    showLess: '<button class="button"><i class="fa fa-minus"></i>&nbsp;Show less</button>',
                 },
                 classNames: {
                     container: 'panel',
@@ -177,14 +177,32 @@
                 name: 'genre',
                 filterField: 'genre_id',
                 aggregationField: 'genre_data',
-                sortBy: ['_term', 'desc'],
-                applicationType: 4,
-                limit: 4,
+                applicationType: 8,
+                limit: 3,
                 template: {
-                    top: '<i class="fa fa-cog"></i>&nbsp; Genre',
+                    top: '<i class="fa fa-user"></i>&nbsp; Genre',
                     item: document.getElementById('multiple-filter-item-template').text,
-                    showMore: '<button class="button"><i class="fa fa-smile-o"></i>&nbsp;Show more</button>',
-                    showLess: '<button class="button"><i class="fa fa-frown-o"></i>&nbsp;Show less</button>',
+                    showMore: '<button class="button"><i class="fa fa-plus"></i>&nbsp;Show more</button>',
+                    showLess: '<button class="button"><i class="fa fa-minus"></i>&nbsp;Show less</button>',
+                },
+                classNames: {
+                    container: 'panel',
+                    top: 'panel-heading',
+                    item: 'panel-block',
+                    showMoreContainer: 'panel-block'
+                }
+            }),
+            ui.widgets.multipleFilter({
+                target: '.multiple-filter-rating',
+                name: 'rating',
+                filterField: 'rating',
+                sortBy: ['_count', 'asc'],
+                applicationType: 4,
+                limit: 5,
+                showMoreActive: false,
+                template: {
+                    top: '<i class="fa fa-star"></i>&nbsp; Rating',
+                    item: document.getElementById('multiple-filter-item-template').text
                 },
                 classNames: {
                     container: 'panel',
