@@ -26,19 +26,17 @@ export function aggregationSetup(
 ) {
     const {
         filterName,
-        filterField,
+        aggregationField,
         applicationType,
-        sortBy,
-        limit
+        sortBy
     } = queryOptions;
     let clonedQuery = cloneDeep(currentQuery);
 
     clonedQuery.aggregateBy(
         filterName,
-        filterField,
+        aggregationField,
         applicationType,
-        sortBy,
-        limit
+        sortBy
     );
 
     dispatcher.dispatch({
@@ -74,6 +72,7 @@ export function filterAction(
     const {
         filterName,
         filterField,
+        aggregationField,
         filterValues,
         applicationType,
         sortBy
@@ -86,6 +85,12 @@ export function filterAction(
         filterValues,
         applicationType,
         true,
+        sortBy
+    );
+    clonedQuery.aggregateBy(
+        filterName,
+        aggregationField,
+        applicationType,
         sortBy
     );
 

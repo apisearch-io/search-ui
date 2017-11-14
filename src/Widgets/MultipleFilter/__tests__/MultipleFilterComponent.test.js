@@ -14,7 +14,7 @@ describe('<MultipleFilterComponent />', () => {
     const defaultProps = {
         target: '#some-target',
         name: 'year',
-        field: 'year',
+        filterField: 'year_id',
         template: {
             item: itemTemplate
         }
@@ -22,7 +22,8 @@ describe('<MultipleFilterComponent />', () => {
     const customProps = {
         target: '#some-target',
         name: 'year',
-        field: 'year',
+        filterField: 'year_id',
+        aggregationField: 'year_data',
         applicationType: 4,
         limit: 2,
         showMoreActive: true,

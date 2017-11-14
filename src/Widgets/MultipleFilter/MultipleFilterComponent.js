@@ -29,8 +29,9 @@ class MultipleFilterComponent extends Component {
 
     componentWillMount() {
         const {
-            field: filterField,
             name: filterName,
+            filterField,
+            aggregationField,
             applicationType,
             sortBy,
             limit,
@@ -44,10 +45,13 @@ class MultipleFilterComponent extends Component {
          */
         aggregationSetup(
             {
-                filterField,
                 filterName,
+                filterField,
                 applicationType,
-                sortBy
+                sortBy,
+                aggregationField: aggregationField
+                    ? aggregationField
+                    : filterField
             },
             currentQuery
         )
@@ -64,6 +68,9 @@ class MultipleFilterComponent extends Component {
         } = props;
 
         if (typeof aggregations[filterName] !== 'undefined') {
+            /**
+             * Getting aggregation from aggregations
+             */
             let aggregation = aggregations[filterName];
             let counters = (aggregation.counters) ? aggregation.counters : {};
             let aggregationsArray = aggregationsObjectToArray(counters);
@@ -88,7 +95,8 @@ class MultipleFilterComponent extends Component {
     handleClick = (selectedFilter) => {
         const {
             name: filterName,
-            field: filterField,
+            filterField,
+            aggregationField,
             applicationType,
             sortBy,
             currentQuery,
@@ -114,11 +122,15 @@ class MultipleFilterComponent extends Component {
                 filterName,
                 filterField,
                 applicationType,
+                sortBy,
+                aggregationField: aggregationField
+                    ? aggregationField
+                    : filterField
+                ,
                 filterValues: manageCurrentFilterItems(
                     selectedFilter,
                     currentActiveFilterValues
-                ),
-                sortBy
+                )
             },
             currentQuery,
             client
@@ -128,14 +140,12 @@ class MultipleFilterComponent extends Component {
     handleShowMore = () => {
         const {activeAggregations, currentAggregations} = this.state;
         const limit = activeAggregations.length + currentAggregations.length;
-
         this.setState({limit})
     };
 
     handleShowLess = () => {
-        this.setState({
-            limit: this.props.limit
-        })
+        const {limit} = this.props;
+        this.setState({limit});
     };
 
     render() {
@@ -212,6 +222,7 @@ class MultipleFilterComponent extends Component {
 }
 
 MultipleFilterComponent.defaultProps = {
+    aggregationField: null,
     applicationType: 8, // FILTER_MUST_ALL
     limit: 10,
     sortBy: ['_count', 'asc'],

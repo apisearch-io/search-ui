@@ -134,7 +134,8 @@ The filter widget allows you to refine your search.
 const multipleFilterWidget = ui.widgets.multipleFilter({
     target: !string,
     name: !string,
-    field: !string,
+    filterField: !string,
+    aggregationField: ?string[filterField],
     applicationType: ?integer[8],
     limit: ?integer[10],
     sortBy: ?string['_count:desc'],

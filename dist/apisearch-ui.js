@@ -5938,7 +5938,8 @@ var WidgetFactory = function () {
         value: function multipleFilter(_ref4) {
             var target = _ref4.target,
                 name = _ref4.name,
-                field = _ref4.field,
+                filterField = _ref4.filterField,
+                aggregationField = _ref4.aggregationField,
                 applicationType = _ref4.applicationType,
                 limit = _ref4.limit,
                 classNames = _ref4.classNames,
@@ -5947,7 +5948,8 @@ var WidgetFactory = function () {
             return (0, _preact.h)(_MultipleFilterComponent2.default, {
                 target: target,
                 name: name,
-                field: field,
+                filterField: filterField,
+                aggregationField: aggregationField,
                 applicationType: applicationType,
                 limit: limit,
                 classNames: _extends({}, _MultipleFilterComponent2.default.defaultProps.classNames, classNames),
@@ -7032,7 +7034,8 @@ var MultipleFilterComponent = function (_Component) {
         _this.handleClick = function (selectedFilter) {
             var _this$props = _this.props,
                 filterName = _this$props.name,
-                filterField = _this$props.field,
+                filterField = _this$props.filterField,
+                aggregationField = _this$props.aggregationField,
                 applicationType = _this$props.applicationType,
                 sortBy = _this$props.sortBy,
                 currentQuery = _this$props.currentQuery,
@@ -7050,8 +7053,10 @@ var MultipleFilterComponent = function (_Component) {
                 filterName: filterName,
                 filterField: filterField,
                 applicationType: applicationType,
-                filterValues: (0, _helpers.manageCurrentFilterItems)(selectedFilter, currentActiveFilterValues),
-                sortBy: sortBy
+                sortBy: sortBy,
+                aggregationField: aggregationField ? aggregationField : filterField,
+
+                filterValues: (0, _helpers.manageCurrentFilterItems)(selectedFilter, currentActiveFilterValues)
             }, currentQuery, client);
         };
 
@@ -7061,14 +7066,13 @@ var MultipleFilterComponent = function (_Component) {
                 currentAggregations = _this$state.currentAggregations;
 
             var limit = activeAggregations.length + currentAggregations.length;
-
             _this.setState({ limit: limit });
         };
 
         _this.handleShowLess = function () {
-            _this.setState({
-                limit: _this.props.limit
-            });
+            var limit = _this.props.limit;
+
+            _this.setState({ limit: limit });
         };
 
         _this.state = {
@@ -7083,8 +7087,9 @@ var MultipleFilterComponent = function (_Component) {
         key: "componentWillMount",
         value: function componentWillMount() {
             var _props = this.props,
-                filterField = _props.field,
                 filterName = _props.name,
+                filterField = _props.filterField,
+                aggregationField = _props.aggregationField,
                 applicationType = _props.applicationType,
                 sortBy = _props.sortBy,
                 limit = _props.limit,
@@ -7097,10 +7102,11 @@ var MultipleFilterComponent = function (_Component) {
              * Dispatch action
              */
             (0, _multipleFilterActions.aggregationSetup)({
-                filterField: filterField,
                 filterName: filterName,
+                filterField: filterField,
                 applicationType: applicationType,
-                sortBy: sortBy
+                sortBy: sortBy,
+                aggregationField: aggregationField ? aggregationField : filterField
             }, currentQuery);
         }
     }, {
@@ -7111,6 +7117,9 @@ var MultipleFilterComponent = function (_Component) {
 
 
             if (typeof aggregations[filterName] !== 'undefined') {
+                /**
+                 * Getting aggregation from aggregations
+                 */
                 var aggregation = aggregations[filterName];
                 var counters = aggregation.counters ? aggregation.counters : {};
                 var aggregationsArray = (0, _helpers.aggregationsObjectToArray)(counters);
@@ -7207,6 +7216,7 @@ var MultipleFilterComponent = function (_Component) {
 }(_preact.Component);
 
 MultipleFilterComponent.defaultProps = {
+    aggregationField: null,
     applicationType: 8, // FILTER_MUST_ALL
     limit: 10,
     sortBy: ['_count', 'asc'],
@@ -8136,14 +8146,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 function aggregationSetup(queryOptions, currentQuery) {
     var filterName = queryOptions.filterName,
-        filterField = queryOptions.filterField,
+        aggregationField = queryOptions.aggregationField,
         applicationType = queryOptions.applicationType,
-        sortBy = queryOptions.sortBy,
-        limit = queryOptions.limit;
+        sortBy = queryOptions.sortBy;
 
     var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
 
-    clonedQuery.aggregateBy(filterName, filterField, applicationType, sortBy, limit);
+    clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy);
 
     _dispatcher2.default.dispatch({
         type: 'UPDATE_APISEARCH_SETUP',
@@ -8173,6 +8182,7 @@ function aggregationSetup(queryOptions, currentQuery) {
 function filterAction(queryOptions, currentQuery, client) {
     var filterName = queryOptions.filterName,
         filterField = queryOptions.filterField,
+        aggregationField = queryOptions.aggregationField,
         filterValues = queryOptions.filterValues,
         applicationType = queryOptions.applicationType,
         sortBy = queryOptions.sortBy;
@@ -8180,6 +8190,7 @@ function filterAction(queryOptions, currentQuery, client) {
     var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
 
     clonedQuery.filterBy(filterName, filterField, filterValues, applicationType, true, sortBy);
+    clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy);
 
     client.search(clonedQuery, function (result) {
         _dispatcher2.default.dispatch({

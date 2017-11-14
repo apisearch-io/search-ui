@@ -150,6 +150,7 @@ preact-render-spy (1 nodes)
 
 exports[`<MultipleFilterComponent /> should render with custom props, and re-render with aggregations 1`] = `
 Object {
+  "aggregationField": "year_data",
   "applicationType": 4,
   "children": Array [],
   "classNames": Object {
@@ -160,7 +161,7 @@ Object {
     "top": "top-custom-class",
   },
   "dirty": true,
-  "field": "year",
+  "filterField": "year_id",
   "limit": 2,
   "name": "year",
   "showMoreActive": true,
@@ -230,6 +231,7 @@ preact-render-spy (1 nodes)
 
 exports[`<MultipleFilterComponent /> should render with default props 1`] = `
 Object {
+  "aggregationField": null,
   "applicationType": 8,
   "children": Array [],
   "classNames": Object {
@@ -240,7 +242,7 @@ Object {
     "top": "",
   },
   "dirty": true,
-  "field": "year",
+  "filterField": "year_id",
   "limit": 10,
   "name": "year",
   "showMoreActive": true,

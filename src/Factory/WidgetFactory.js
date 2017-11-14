@@ -95,7 +95,8 @@ class WidgetFactory {
     static multipleFilter({
         target,
         name,
-        field,
+        filterField,
+        aggregationField,
         applicationType,
         limit,
         classNames,
@@ -104,7 +105,8 @@ class WidgetFactory {
         return <MultipleFilterComponent
             target={target}
             name={name}
-            field={field}
+            filterField={filterField}
+            aggregationField={aggregationField}
             applicationType={applicationType}
             limit={limit}
             classNames={{
