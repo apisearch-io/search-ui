@@ -81,7 +81,7 @@ class ResultComponent extends Component {
 
 ResultComponent.defaultProps = {
     itemsPerPage: 10,
-    enableHighlights: false,
+    highlightsEnabled: false,
     classNames: {
         container: ''
     },

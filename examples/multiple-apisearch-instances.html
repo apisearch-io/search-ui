@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AS UI - Simple search</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.0/css/bulma.min.css">
+
+    <!-- ApisearchUI library -->
+    <script src="../dist/apisearch-ui.js"></script>
+
+    <!-- custom styles -->
+    <style>
+        em {
+            background: #b4acff;
+            font-style: inherit;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar is-light" role="navigation" aria-label="main navigation">
+        <!-- Logo -->
+        <div class="navbar-brand">
+            <a class="navbar-item" href="https://apisearch.io">
+                <img class="has-text-centered"
+                     src="https://apisearch.io/bundles/apisearchweb/images/logo-.png"
+                     height="28px"
+                >
+            </a>
+        </div>
+
+        <!-- End -->
+        <div class="navbar-end">
+            <a class="navbar-item is-hidden-desktop-only" href="https://github.com/alexhoma/javascript-search-ui" target="_blank">
+                    <span class="icon" style="color: #333;">
+                      <i class="fa fa-lg fa-github"></i>
+                    </span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Container -->
+    <div class="container is-fluid">
+        <section class="section">
+            <div class="columns">
+                <!-- Apisearch Instance 1 -->
+                <div class="column is-half">
+                    <h1 class="title has-text-info">First instance</h1>
+                    <hr>
+                    <div class="input-instance-one"></div>
+                    <div class="result-instance-one"></div>
+                </div>
+
+                <!-- Apisearch Instance 2 -->
+                <div class="column is-half">
+                    <h1 class="title has-text-danger">Second instance</h1>
+                    <hr>
+                    <div class="input-instance-two"></div>
+                    <div class="result-instance-two"></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script type="text/template" id="result-template">
+        {{#items}}
+        <div class="card" style="border-radius: .2rem; margin-top: .5rem">
+            <div class="card-content">
+                <strong>{{metadata.title}}</strong>
+            </div>
+        </div>
+        {{/items}}
+    </script>
+
+    <script type="text/javascript">
+        // UI Instance 1
+        const firstUI = apisearchUI({
+            appId: 'music',
+            apiKey: '1cc7a3e0-bda5-11e7-abc4-cec278b6b50a',
+            options: {
+                endpoint: 'http://search.puntmig.net'
+            }
+        });
+
+        firstUI.addWidgets(
+            firstUI.widgets.simpleSearch({
+                target: '.input-instance-one',
+                placeholder: 'Type something on instance one...',
+                classNames: {
+                    input: 'input'
+                }
+            }),
+            firstUI.widgets.result({
+                target: '.result-instance-one',
+                itemsPerPage: 5,
+                template: {
+                    itemsList: document.getElementById('result-template').text,
+                }
+            })
+        );
+
+        firstUI.init();
+    </script>
+
+    <script type="text/javascript">
+        // UI Instance 2
+        const secondUI = apisearchUI({
+            appId: 'music',
+            apiKey: '1cc7a3e0-bda5-11e7-abc4-cec278b6b50a',
+            options: {
+                endpoint: 'http://search.puntmig.net'
+            }
+        });
+
+        secondUI.addWidgets(
+            secondUI.widgets.simpleSearch({
+                target: '.input-instance-two',
+                placeholder: 'Type something on instance two...',
+                classNames: {
+                    input: 'input'
+                }
+            }),
+            secondUI.widgets.result({
+                target: '.result-instance-two',
+                itemsPerPage: 5,
+                template: {
+                    itemsList: document.getElementById('result-template').text,
+                }
+            })
+        );
+
+        secondUI.init();
+    </script>
+</body>
+</html>

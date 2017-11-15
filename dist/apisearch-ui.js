@@ -1078,10 +1078,10 @@ exports.default = new _flux.Dispatcher();
  * Module dependenices
  */
 
-var isObject = __webpack_require__(19);
-var clone = __webpack_require__(21);
+var isObject = __webpack_require__(18);
+var clone = __webpack_require__(20);
 var typeOf = __webpack_require__(7);
-var forOwn = __webpack_require__(24);
+var forOwn = __webpack_require__(23);
 
 /**
  * Recursively clone native types.
@@ -1144,7 +1144,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _hogan = __webpack_require__(31);
+var _hogan = __webpack_require__(30);
 
 var _hogan2 = _interopRequireDefault(_hogan);
 
@@ -1442,7 +1442,7 @@ module.exports = function forIn(obj, fn, thisArg) {
 /* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isBuffer = __webpack_require__(23);
+var isBuffer = __webpack_require__(22);
 var toString = Object.prototype.toString;
 
 /**
@@ -1603,7 +1603,7 @@ module.exports = function (_ref) {
   var apisearchClient = (0, _apisearch2.default)(appId, apiKey, options);
   var apisearchUI = new _ApisearchUI2.default(apisearchClient);
 
-  _dispatcher2.default.register(apisearchUI.handleActions.bind(apisearchUI));
+  _dispatcher2.default.register(apisearchUI.store.handleActions.bind(apisearchUI.store));
 
   return apisearchUI;
 }; /**
@@ -5253,13 +5253,15 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _events = __webpack_require__(14);
+var _apisearchActions = __webpack_require__(14);
 
-var _apisearchActions = __webpack_require__(15);
-
-var _WidgetFactory = __webpack_require__(16);
+var _WidgetFactory = __webpack_require__(15);
 
 var _WidgetFactory2 = _interopRequireDefault(_WidgetFactory);
+
+var _Store = __webpack_require__(39);
+
+var _Store2 = _interopRequireDefault(_Store);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -5267,45 +5269,27 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
 /**
  * ApisearchUI class
  */
-var ApisearchUI = function (_EventEmitter) {
-    _inherits(ApisearchUI, _EventEmitter);
-
+var ApisearchUI = function () {
+    /**
+     * Constructor.
+     */
     function ApisearchUI(client) {
         _classCallCheck(this, ApisearchUI);
 
         /**
          * UI related properties
          */
-        var _this = _possibleConstructorReturn(this, (ApisearchUI.__proto__ || Object.getPrototypeOf(ApisearchUI)).call(this));
-
-        _this.client = client;
-        _this.widgets = _WidgetFactory2.default;
-        _this.activeWidgets = [];
+        this.client = client;
+        this.widgets = _WidgetFactory2.default;
+        this.activeWidgets = [];
 
         /**
          * Store related properties
          */
-        _this.dirty = true;
-        _this.currentQuery = client.query.create('');
-        _this.data = {
-            query: {
-                q: ''
-            },
-            aggregations: {
-                total_elements: 0
-            },
-            items: [],
-            total_hits: 0,
-            total_items: 0
-        };
-        return _this;
+        this.store = new _Store2.default(client);
     }
 
     /**
@@ -5316,13 +5300,13 @@ var ApisearchUI = function (_EventEmitter) {
     _createClass(ApisearchUI, [{
         key: "init",
         value: function init() {
-            var _this2 = this;
+            var _this = this;
 
             /**
-             * Register all events
+             * Register all events on the store
              */
-            this.on('render', function () {
-                return _this2.render();
+            this.store.on('render', function () {
+                return _this.render();
             });
 
             /**
@@ -5331,7 +5315,7 @@ var ApisearchUI = function (_EventEmitter) {
              *   -> And fetch the initial data with the given configuration
              */
             this.render();
-            (0, _apisearchActions.initialDataFetchAction)(this.currentQuery, this.client);
+            (0, _apisearchActions.initialDataFetchAction)(this.store.currentQuery, this.client);
         }
 
         /**
@@ -5352,14 +5336,14 @@ var ApisearchUI = function (_EventEmitter) {
     }, {
         key: "addWidgets",
         value: function addWidgets() {
-            var _this3 = this;
+            var _this2 = this;
 
             for (var _len = arguments.length, widgets = Array(_len), _key = 0; _key < _len; _key++) {
                 widgets[_key] = arguments[_key];
             }
 
             widgets.map(function (widget) {
-                return _this3.addWidget(widget);
+                return _this2.addWidget(widget);
             });
             return this;
         }
@@ -5375,10 +5359,10 @@ var ApisearchUI = function (_EventEmitter) {
     }, {
         key: "render",
         value: function render() {
-            var _this4 = this;
+            var _this3 = this;
 
             this.activeWidgets.map(function (widget) {
-                var hydratedWidget = hydrateWidget(_this4, widget);
+                var hydratedWidget = hydrateWidget(_this3.store, _this3.client, widget);
                 var targetNode = document.querySelector(widget.attributes.target);
 
                 if (null === targetNode) {
@@ -5388,64 +5372,12 @@ var ApisearchUI = function (_EventEmitter) {
                 (0, _preact.render)(hydratedWidget, targetNode, targetNode.lastChild);
             });
         }
-
-        /**
-         * Handle Dispatched actions
-         *
-         * This is what we call a reducer
-         * on a Redux architecture
-         */
-
-    }, {
-        key: "handleActions",
-        value: function handleActions(action) {
-            /**
-             * When action only sets up store definitions
-             * Does not dispatch any event
-             */
-            if (action.type === 'UPDATE_APISEARCH_SETUP') {
-                this.currentQuery = action.payload.updatedQuery;
-            }
-
-            /**
-             * Is triggered when a initial data is received
-             * Dispatches an 'render' event
-             */
-            if (action.type === 'RENDER_INITIAL_DATA') {
-                var _action$payload = action.payload,
-                    initialResult = _action$payload.initialResult,
-                    initialQuery = _action$payload.initialQuery;
-
-
-                this.data = initialResult;
-                this.currentQuery = initialQuery;
-
-                this.emit('render');
-            }
-
-            /**
-             * When action triggers a re-rendering
-             * Dispatches a 'render' event
-             */
-            if (action.type === 'RENDER_FETCHED_DATA') {
-                var _action$payload2 = action.payload,
-                    result = _action$payload2.result,
-                    updatedQuery = _action$payload2.updatedQuery;
-
-
-                this.dirty = false;
-                this.data = result;
-                this.currentQuery = updatedQuery;
-
-                this.emit('render');
-            }
-        }
     }]);
 
     return ApisearchUI;
-}(_events.EventEmitter);
+}();
 
-function hydrateWidget(currentStore, widget) {
+function hydrateWidget(currentStore, client, widget) {
     /**
      * Pass ApisearchClient, current Query, and data received
      * as a component attributes. There will be accessible
@@ -5453,8 +5385,8 @@ function hydrateWidget(currentStore, widget) {
      */
     widget.attributes.dirty = currentStore.dirty;
     widget.attributes.data = currentStore.data;
-    widget.attributes.client = currentStore.client;
     widget.attributes.currentQuery = currentStore.currentQuery;
+    widget.attributes.client = client;
 
     return widget;
 }
@@ -5463,314 +5395,6 @@ exports.default = ApisearchUI;
 
 /***/ }),
 /* 14 */
-/***/ (function(module, exports) {
-
-// Copyright Joyent, Inc. and other Node contributors.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-function EventEmitter() {
-  this._events = this._events || {};
-  this._maxListeners = this._maxListeners || undefined;
-}
-module.exports = EventEmitter;
-
-// Backwards-compat with node 0.10.x
-EventEmitter.EventEmitter = EventEmitter;
-
-EventEmitter.prototype._events = undefined;
-EventEmitter.prototype._maxListeners = undefined;
-
-// By default EventEmitters will print a warning if more than 10 listeners are
-// added to it. This is a useful default which helps finding memory leaks.
-EventEmitter.defaultMaxListeners = 10;
-
-// Obviously not all Emitters should be limited to 10. This function allows
-// that to be increased. Set to zero for unlimited.
-EventEmitter.prototype.setMaxListeners = function(n) {
-  if (!isNumber(n) || n < 0 || isNaN(n))
-    throw TypeError('n must be a positive number');
-  this._maxListeners = n;
-  return this;
-};
-
-EventEmitter.prototype.emit = function(type) {
-  var er, handler, len, args, i, listeners;
-
-  if (!this._events)
-    this._events = {};
-
-  // If there is no 'error' event listener then throw.
-  if (type === 'error') {
-    if (!this._events.error ||
-        (isObject(this._events.error) && !this._events.error.length)) {
-      er = arguments[1];
-      if (er instanceof Error) {
-        throw er; // Unhandled 'error' event
-      } else {
-        // At least give some kind of context to the user
-        var err = new Error('Uncaught, unspecified "error" event. (' + er + ')');
-        err.context = er;
-        throw err;
-      }
-    }
-  }
-
-  handler = this._events[type];
-
-  if (isUndefined(handler))
-    return false;
-
-  if (isFunction(handler)) {
-    switch (arguments.length) {
-      // fast cases
-      case 1:
-        handler.call(this);
-        break;
-      case 2:
-        handler.call(this, arguments[1]);
-        break;
-      case 3:
-        handler.call(this, arguments[1], arguments[2]);
-        break;
-      // slower
-      default:
-        args = Array.prototype.slice.call(arguments, 1);
-        handler.apply(this, args);
-    }
-  } else if (isObject(handler)) {
-    args = Array.prototype.slice.call(arguments, 1);
-    listeners = handler.slice();
-    len = listeners.length;
-    for (i = 0; i < len; i++)
-      listeners[i].apply(this, args);
-  }
-
-  return true;
-};
-
-EventEmitter.prototype.addListener = function(type, listener) {
-  var m;
-
-  if (!isFunction(listener))
-    throw TypeError('listener must be a function');
-
-  if (!this._events)
-    this._events = {};
-
-  // To avoid recursion in the case that type === "newListener"! Before
-  // adding it to the listeners, first emit "newListener".
-  if (this._events.newListener)
-    this.emit('newListener', type,
-              isFunction(listener.listener) ?
-              listener.listener : listener);
-
-  if (!this._events[type])
-    // Optimize the case of one listener. Don't need the extra array object.
-    this._events[type] = listener;
-  else if (isObject(this._events[type]))
-    // If we've already got an array, just append.
-    this._events[type].push(listener);
-  else
-    // Adding the second element, need to change to array.
-    this._events[type] = [this._events[type], listener];
-
-  // Check for listener leak
-  if (isObject(this._events[type]) && !this._events[type].warned) {
-    if (!isUndefined(this._maxListeners)) {
-      m = this._maxListeners;
-    } else {
-      m = EventEmitter.defaultMaxListeners;
-    }
-
-    if (m && m > 0 && this._events[type].length > m) {
-      this._events[type].warned = true;
-      console.error('(node) warning: possible EventEmitter memory ' +
-                    'leak detected. %d listeners added. ' +
-                    'Use emitter.setMaxListeners() to increase limit.',
-                    this._events[type].length);
-      if (typeof console.trace === 'function') {
-        // not supported in IE 10
-        console.trace();
-      }
-    }
-  }
-
-  return this;
-};
-
-EventEmitter.prototype.on = EventEmitter.prototype.addListener;
-
-EventEmitter.prototype.once = function(type, listener) {
-  if (!isFunction(listener))
-    throw TypeError('listener must be a function');
-
-  var fired = false;
-
-  function g() {
-    this.removeListener(type, g);
-
-    if (!fired) {
-      fired = true;
-      listener.apply(this, arguments);
-    }
-  }
-
-  g.listener = listener;
-  this.on(type, g);
-
-  return this;
-};
-
-// emits a 'removeListener' event iff the listener was removed
-EventEmitter.prototype.removeListener = function(type, listener) {
-  var list, position, length, i;
-
-  if (!isFunction(listener))
-    throw TypeError('listener must be a function');
-
-  if (!this._events || !this._events[type])
-    return this;
-
-  list = this._events[type];
-  length = list.length;
-  position = -1;
-
-  if (list === listener ||
-      (isFunction(list.listener) && list.listener === listener)) {
-    delete this._events[type];
-    if (this._events.removeListener)
-      this.emit('removeListener', type, listener);
-
-  } else if (isObject(list)) {
-    for (i = length; i-- > 0;) {
-      if (list[i] === listener ||
-          (list[i].listener && list[i].listener === listener)) {
-        position = i;
-        break;
-      }
-    }
-
-    if (position < 0)
-      return this;
-
-    if (list.length === 1) {
-      list.length = 0;
-      delete this._events[type];
-    } else {
-      list.splice(position, 1);
-    }
-
-    if (this._events.removeListener)
-      this.emit('removeListener', type, listener);
-  }
-
-  return this;
-};
-
-EventEmitter.prototype.removeAllListeners = function(type) {
-  var key, listeners;
-
-  if (!this._events)
-    return this;
-
-  // not listening for removeListener, no need to emit
-  if (!this._events.removeListener) {
-    if (arguments.length === 0)
-      this._events = {};
-    else if (this._events[type])
-      delete this._events[type];
-    return this;
-  }
-
-  // emit removeListener for all listeners on all events
-  if (arguments.length === 0) {
-    for (key in this._events) {
-      if (key === 'removeListener') continue;
-      this.removeAllListeners(key);
-    }
-    this.removeAllListeners('removeListener');
-    this._events = {};
-    return this;
-  }
-
-  listeners = this._events[type];
-
-  if (isFunction(listeners)) {
-    this.removeListener(type, listeners);
-  } else if (listeners) {
-    // LIFO order
-    while (listeners.length)
-      this.removeListener(type, listeners[listeners.length - 1]);
-  }
-  delete this._events[type];
-
-  return this;
-};
-
-EventEmitter.prototype.listeners = function(type) {
-  var ret;
-  if (!this._events || !this._events[type])
-    ret = [];
-  else if (isFunction(this._events[type]))
-    ret = [this._events[type]];
-  else
-    ret = this._events[type].slice();
-  return ret;
-};
-
-EventEmitter.prototype.listenerCount = function(type) {
-  if (this._events) {
-    var evlistener = this._events[type];
-
-    if (isFunction(evlistener))
-      return 1;
-    else if (evlistener)
-      return evlistener.length;
-  }
-  return 0;
-};
-
-EventEmitter.listenerCount = function(emitter, type) {
-  return emitter.listenerCount(type);
-};
-
-function isFunction(arg) {
-  return typeof arg === 'function';
-}
-
-function isNumber(arg) {
-  return typeof arg === 'number';
-}
-
-function isObject(arg) {
-  return typeof arg === 'object' && arg !== null;
-}
-
-function isUndefined(arg) {
-  return arg === void 0;
-}
-
-
-/***/ }),
-/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5817,7 +5441,7 @@ function initialDataFetchAction(initialQuery, client) {
 }
 
 /***/ }),
-/* 16 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5845,27 +5469,27 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _SimpleSearchComponent = __webpack_require__(17);
+var _SimpleSearchComponent = __webpack_require__(16);
 
 var _SimpleSearchComponent2 = _interopRequireDefault(_SimpleSearchComponent);
 
-var _SuggestedSearchComponent = __webpack_require__(25);
+var _SuggestedSearchComponent = __webpack_require__(24);
 
 var _SuggestedSearchComponent2 = _interopRequireDefault(_SuggestedSearchComponent);
 
-var _SortByComponent = __webpack_require__(28);
+var _SortByComponent = __webpack_require__(27);
 
 var _SortByComponent2 = _interopRequireDefault(_SortByComponent);
 
-var _MultipleFilterComponent = __webpack_require__(30);
+var _MultipleFilterComponent = __webpack_require__(29);
 
 var _MultipleFilterComponent2 = _interopRequireDefault(_MultipleFilterComponent);
 
-var _ResultComponent = __webpack_require__(37);
+var _ResultComponent = __webpack_require__(36);
 
 var _ResultComponent2 = _interopRequireDefault(_ResultComponent);
 
-var _InformationComponent = __webpack_require__(39);
+var _InformationComponent = __webpack_require__(38);
 
 var _InformationComponent2 = _interopRequireDefault(_InformationComponent);
 
@@ -6028,7 +5652,7 @@ var WidgetFactory = function () {
 exports.default = WidgetFactory;
 
 /***/ }),
-/* 17 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6042,7 +5666,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _simpleSearchActions = __webpack_require__(18);
+var _simpleSearchActions = __webpack_require__(17);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -6127,7 +5751,7 @@ SimpleSearchComponent.defaultProps = {
 exports.default = SimpleSearchComponent;
 
 /***/ }),
-/* 18 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6186,7 +5810,7 @@ function simpleSearchAction(text, currentQuery, client) {
 }
 
 /***/ }),
-/* 19 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6199,7 +5823,7 @@ function simpleSearchAction(text, currentQuery, client) {
 
 
 
-var isObject = __webpack_require__(20);
+var isObject = __webpack_require__(19);
 
 function isObjectObject(o) {
   return isObject(o) === true
@@ -6230,7 +5854,7 @@ module.exports = function isPlainObject(o) {
 
 
 /***/ }),
-/* 20 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6249,7 +5873,7 @@ module.exports = function isObject(val) {
 
 
 /***/ }),
-/* 21 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6263,7 +5887,7 @@ module.exports = function isObject(val) {
 
 
 var isObject = __webpack_require__(5);
-var mixin = __webpack_require__(22);
+var mixin = __webpack_require__(21);
 var typeOf = __webpack_require__(7);
 
 /**
@@ -6313,7 +5937,7 @@ module.exports = clone;
 
 
 /***/ }),
-/* 22 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6355,7 +5979,7 @@ function copy(value, key) {
 module.exports = mixin;
 
 /***/ }),
-/* 23 */
+/* 22 */
 /***/ (function(module, exports) {
 
 /*!
@@ -6382,7 +6006,7 @@ function isSlowBuffer (obj) {
 
 
 /***/ }),
-/* 24 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6408,7 +6032,7 @@ module.exports = function forOwn(obj, fn, thisArg) {
 
 
 /***/ }),
-/* 25 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6422,9 +6046,9 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _helpers = __webpack_require__(26);
+var _helpers = __webpack_require__(25);
 
-var _suggestedSearchActions = __webpack_require__(27);
+var _suggestedSearchActions = __webpack_require__(26);
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
@@ -6634,7 +6258,7 @@ SuggestedSearchComponent.defaultProps = {
 exports.default = SuggestedSearchComponent;
 
 /***/ }),
-/* 26 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6745,7 +6369,7 @@ function selectActiveSuggestion(suggestionsArray) {
 }
 
 /***/ }),
-/* 27 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6827,7 +6451,7 @@ function suggestedSearchAction(text, currentQuery, client) {
 }
 
 /***/ }),
-/* 28 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6841,7 +6465,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _sortByActions = __webpack_require__(29);
+var _sortByActions = __webpack_require__(28);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -6931,7 +6555,7 @@ SortByComponent.defaultProps = {
 exports.default = SortByComponent;
 
 /***/ }),
-/* 29 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7005,7 +6629,7 @@ function splitQueryValue(string) {
 }
 
 /***/ }),
-/* 30 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7023,13 +6647,13 @@ var _Template = __webpack_require__(3);
 
 var _Template2 = _interopRequireDefault(_Template);
 
-var _ShowMoreComponent = __webpack_require__(34);
+var _ShowMoreComponent = __webpack_require__(33);
 
 var _ShowMoreComponent2 = _interopRequireDefault(_ShowMoreComponent);
 
-var _multipleFilterActions = __webpack_require__(35);
+var _multipleFilterActions = __webpack_require__(34);
 
-var _helpers = __webpack_require__(36);
+var _helpers = __webpack_require__(35);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -7262,7 +6886,7 @@ MultipleFilterComponent.defaultProps = {
 exports.default = MultipleFilterComponent;
 
 /***/ }),
-/* 31 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -7282,14 +6906,14 @@ exports.default = MultipleFilterComponent;
 
 // This file is for use with Node.js. See dist/ for browser files.
 
-var Hogan = __webpack_require__(32);
-Hogan.Template = __webpack_require__(33).Template;
+var Hogan = __webpack_require__(31);
+Hogan.Template = __webpack_require__(32).Template;
 Hogan.template = Hogan.Template;
 module.exports = Hogan;
 
 
 /***/ }),
-/* 32 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -7718,7 +7342,7 @@ module.exports = Hogan;
 
 
 /***/ }),
-/* 33 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -8065,7 +7689,7 @@ var Hogan = {};
 
 
 /***/ }),
-/* 34 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8126,7 +7750,7 @@ var ShowMoreComponent = function ShowMoreComponent(_ref) {
 exports.default = ShowMoreComponent;
 
 /***/ }),
-/* 35 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8227,7 +7851,7 @@ function filterAction(queryOptions, currentQuery, client) {
 }
 
 /***/ }),
-/* 36 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8265,7 +7889,7 @@ function manageCurrentFilterItems(selectedItem, currentItems) {
 }
 
 /***/ }),
-/* 37 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8283,7 +7907,7 @@ var _Template = __webpack_require__(3);
 
 var _Template2 = _interopRequireDefault(_Template);
 
-var _resultActions = __webpack_require__(38);
+var _resultActions = __webpack_require__(37);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -8376,7 +8000,7 @@ var ResultComponent = function (_Component) {
 
 ResultComponent.defaultProps = {
     itemsPerPage: 10,
-    enableHighlights: false,
+    highlightsEnabled: false,
     classNames: {
         container: ''
     },
@@ -8388,7 +8012,7 @@ ResultComponent.defaultProps = {
 exports.default = ResultComponent;
 
 /***/ }),
-/* 38 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8456,7 +8080,7 @@ function changeItemsPerResultPageSetup(queryOptions, currentQuery) {
 }
 
 /***/ }),
-/* 39 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8532,6 +8156,425 @@ InformationComponent.defaultProps = {
 };
 
 exports.default = InformationComponent;
+
+/***/ }),
+/* 39 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _events = __webpack_require__(40);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Store = function (_EventEmitter) {
+  _inherits(Store, _EventEmitter);
+
+  function Store(client) {
+    _classCallCheck(this, Store);
+
+    /**
+     * Store initial state
+     */
+    var _this = _possibleConstructorReturn(this, (Store.__proto__ || Object.getPrototypeOf(Store)).call(this));
+
+    _this.dirty = true;
+
+    /**
+     * Current query instance
+     */
+    _this.currentQuery = client.query.create('');
+
+    /**
+     * Data received
+     */
+    _this.data = {
+      query: { q: '' },
+      aggregations: { total_elements: 0 },
+      items: [],
+      total_hits: 0,
+      total_items: 0
+    };
+    return _this;
+  }
+
+  /**
+   * Handle Dispatched actions
+   *
+   * This is what we call a reducer
+   * on a Redux architecture
+   */
+
+
+  _createClass(Store, [{
+    key: 'handleActions',
+    value: function handleActions(action) {
+      /**
+       * When action only sets up store definitions
+       * Does not dispatch any event
+       */
+      if (action.type === 'UPDATE_APISEARCH_SETUP') {
+        this.currentQuery = action.payload.updatedQuery;
+      }
+
+      /**
+       * Is triggered when a initial data is received
+       * Dispatches an 'render' event
+       */
+      if (action.type === 'RENDER_INITIAL_DATA') {
+        var _action$payload = action.payload,
+            initialResult = _action$payload.initialResult,
+            initialQuery = _action$payload.initialQuery;
+
+
+        this.data = initialResult;
+        this.currentQuery = initialQuery;
+
+        this.emit('render');
+      }
+
+      /**
+       * When action triggers a re-rendering
+       * Dispatches a 'render' event
+       */
+      if (action.type === 'RENDER_FETCHED_DATA') {
+        var _action$payload2 = action.payload,
+            result = _action$payload2.result,
+            updatedQuery = _action$payload2.updatedQuery;
+
+
+        this.dirty = false;
+        this.data = result;
+        this.currentQuery = updatedQuery;
+
+        this.emit('render');
+      }
+    }
+  }]);
+
+  return Store;
+}(_events.EventEmitter);
+
+exports.default = Store;
+
+/***/ }),
+/* 40 */
+/***/ (function(module, exports) {
+
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+function EventEmitter() {
+  this._events = this._events || {};
+  this._maxListeners = this._maxListeners || undefined;
+}
+module.exports = EventEmitter;
+
+// Backwards-compat with node 0.10.x
+EventEmitter.EventEmitter = EventEmitter;
+
+EventEmitter.prototype._events = undefined;
+EventEmitter.prototype._maxListeners = undefined;
+
+// By default EventEmitters will print a warning if more than 10 listeners are
+// added to it. This is a useful default which helps finding memory leaks.
+EventEmitter.defaultMaxListeners = 10;
+
+// Obviously not all Emitters should be limited to 10. This function allows
+// that to be increased. Set to zero for unlimited.
+EventEmitter.prototype.setMaxListeners = function(n) {
+  if (!isNumber(n) || n < 0 || isNaN(n))
+    throw TypeError('n must be a positive number');
+  this._maxListeners = n;
+  return this;
+};
+
+EventEmitter.prototype.emit = function(type) {
+  var er, handler, len, args, i, listeners;
+
+  if (!this._events)
+    this._events = {};
+
+  // If there is no 'error' event listener then throw.
+  if (type === 'error') {
+    if (!this._events.error ||
+        (isObject(this._events.error) && !this._events.error.length)) {
+      er = arguments[1];
+      if (er instanceof Error) {
+        throw er; // Unhandled 'error' event
+      } else {
+        // At least give some kind of context to the user
+        var err = new Error('Uncaught, unspecified "error" event. (' + er + ')');
+        err.context = er;
+        throw err;
+      }
+    }
+  }
+
+  handler = this._events[type];
+
+  if (isUndefined(handler))
+    return false;
+
+  if (isFunction(handler)) {
+    switch (arguments.length) {
+      // fast cases
+      case 1:
+        handler.call(this);
+        break;
+      case 2:
+        handler.call(this, arguments[1]);
+        break;
+      case 3:
+        handler.call(this, arguments[1], arguments[2]);
+        break;
+      // slower
+      default:
+        args = Array.prototype.slice.call(arguments, 1);
+        handler.apply(this, args);
+    }
+  } else if (isObject(handler)) {
+    args = Array.prototype.slice.call(arguments, 1);
+    listeners = handler.slice();
+    len = listeners.length;
+    for (i = 0; i < len; i++)
+      listeners[i].apply(this, args);
+  }
+
+  return true;
+};
+
+EventEmitter.prototype.addListener = function(type, listener) {
+  var m;
+
+  if (!isFunction(listener))
+    throw TypeError('listener must be a function');
+
+  if (!this._events)
+    this._events = {};
+
+  // To avoid recursion in the case that type === "newListener"! Before
+  // adding it to the listeners, first emit "newListener".
+  if (this._events.newListener)
+    this.emit('newListener', type,
+              isFunction(listener.listener) ?
+              listener.listener : listener);
+
+  if (!this._events[type])
+    // Optimize the case of one listener. Don't need the extra array object.
+    this._events[type] = listener;
+  else if (isObject(this._events[type]))
+    // If we've already got an array, just append.
+    this._events[type].push(listener);
+  else
+    // Adding the second element, need to change to array.
+    this._events[type] = [this._events[type], listener];
+
+  // Check for listener leak
+  if (isObject(this._events[type]) && !this._events[type].warned) {
+    if (!isUndefined(this._maxListeners)) {
+      m = this._maxListeners;
+    } else {
+      m = EventEmitter.defaultMaxListeners;
+    }
+
+    if (m && m > 0 && this._events[type].length > m) {
+      this._events[type].warned = true;
+      console.error('(node) warning: possible EventEmitter memory ' +
+                    'leak detected. %d listeners added. ' +
+                    'Use emitter.setMaxListeners() to increase limit.',
+                    this._events[type].length);
+      if (typeof console.trace === 'function') {
+        // not supported in IE 10
+        console.trace();
+      }
+    }
+  }
+
+  return this;
+};
+
+EventEmitter.prototype.on = EventEmitter.prototype.addListener;
+
+EventEmitter.prototype.once = function(type, listener) {
+  if (!isFunction(listener))
+    throw TypeError('listener must be a function');
+
+  var fired = false;
+
+  function g() {
+    this.removeListener(type, g);
+
+    if (!fired) {
+      fired = true;
+      listener.apply(this, arguments);
+    }
+  }
+
+  g.listener = listener;
+  this.on(type, g);
+
+  return this;
+};
+
+// emits a 'removeListener' event iff the listener was removed
+EventEmitter.prototype.removeListener = function(type, listener) {
+  var list, position, length, i;
+
+  if (!isFunction(listener))
+    throw TypeError('listener must be a function');
+
+  if (!this._events || !this._events[type])
+    return this;
+
+  list = this._events[type];
+  length = list.length;
+  position = -1;
+
+  if (list === listener ||
+      (isFunction(list.listener) && list.listener === listener)) {
+    delete this._events[type];
+    if (this._events.removeListener)
+      this.emit('removeListener', type, listener);
+
+  } else if (isObject(list)) {
+    for (i = length; i-- > 0;) {
+      if (list[i] === listener ||
+          (list[i].listener && list[i].listener === listener)) {
+        position = i;
+        break;
+      }
+    }
+
+    if (position < 0)
+      return this;
+
+    if (list.length === 1) {
+      list.length = 0;
+      delete this._events[type];
+    } else {
+      list.splice(position, 1);
+    }
+
+    if (this._events.removeListener)
+      this.emit('removeListener', type, listener);
+  }
+
+  return this;
+};
+
+EventEmitter.prototype.removeAllListeners = function(type) {
+  var key, listeners;
+
+  if (!this._events)
+    return this;
+
+  // not listening for removeListener, no need to emit
+  if (!this._events.removeListener) {
+    if (arguments.length === 0)
+      this._events = {};
+    else if (this._events[type])
+      delete this._events[type];
+    return this;
+  }
+
+  // emit removeListener for all listeners on all events
+  if (arguments.length === 0) {
+    for (key in this._events) {
+      if (key === 'removeListener') continue;
+      this.removeAllListeners(key);
+    }
+    this.removeAllListeners('removeListener');
+    this._events = {};
+    return this;
+  }
+
+  listeners = this._events[type];
+
+  if (isFunction(listeners)) {
+    this.removeListener(type, listeners);
+  } else if (listeners) {
+    // LIFO order
+    while (listeners.length)
+      this.removeListener(type, listeners[listeners.length - 1]);
+  }
+  delete this._events[type];
+
+  return this;
+};
+
+EventEmitter.prototype.listeners = function(type) {
+  var ret;
+  if (!this._events || !this._events[type])
+    ret = [];
+  else if (isFunction(this._events[type]))
+    ret = [this._events[type]];
+  else
+    ret = this._events[type].slice();
+  return ret;
+};
+
+EventEmitter.prototype.listenerCount = function(type) {
+  if (this._events) {
+    var evlistener = this._events[type];
+
+    if (isFunction(evlistener))
+      return 1;
+    else if (evlistener)
+      return evlistener.length;
+  }
+  return 0;
+};
+
+EventEmitter.listenerCount = function(emitter, type) {
+  return emitter.listenerCount(type);
+};
+
+function isFunction(arg) {
+  return typeof arg === 'function';
+}
+
+function isNumber(arg) {
+  return typeof arg === 'number';
+}
+
+function isObject(arg) {
+  return typeof arg === 'object' && arg !== null;
+}
+
+function isUndefined(arg) {
+  return arg === void 0;
+}
+
 
 /***/ })
 /******/ ]);

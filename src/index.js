@@ -34,7 +34,7 @@ module.exports = function({
     );
 
     dispatcher.register(
-        apisearchUI.handleActions.bind(apisearchUI)
+        apisearchUI.store.handleActions.bind(apisearchUI.store)
     );
 
     return apisearchUI;

@@ -1,16 +1,17 @@
 import { h, render, createElement } from 'preact';
 
-import { EventEmitter } from "events";
 import { initialDataFetchAction } from "./apisearchActions";
 import WidgetFactory from "./Factory/WidgetFactory";
+import Store from './Store';
 
 /**
  * ApisearchUI class
  */
-class ApisearchUI extends EventEmitter {
+class ApisearchUI {
+    /**
+     * Constructor.
+     */
     constructor(client) {
-        super();
-
         /**
          * UI related properties
          */
@@ -21,19 +22,7 @@ class ApisearchUI extends EventEmitter {
         /**
          * Store related properties
          */
-        this.dirty = true;
-        this.currentQuery = client.query.create('');
-        this.data = {
-            query: {
-                q: ''
-            },
-            aggregations: {
-                total_elements: 0
-            },
-            items: [],
-            total_hits: 0,
-            total_items: 0
-        }
+        this.store = new Store(client);
     }
 
     /**
@@ -41,9 +30,9 @@ class ApisearchUI extends EventEmitter {
      */
     init() {
         /**
-         * Register all events
+         * Register all events on the store
          */
-        this.on('render', () => this.render());
+        this.store.on('render', () => this.render());
 
         /**
          * Trigger the initial render: (Mount the components)
@@ -51,7 +40,7 @@ class ApisearchUI extends EventEmitter {
          *   -> And fetch the initial data with the given configuration
          */
         this.render();
-        initialDataFetchAction(this.currentQuery, this.client);
+        initialDataFetchAction(this.store.currentQuery, this.client);
     }
 
     /**
@@ -79,7 +68,7 @@ class ApisearchUI extends EventEmitter {
      */
     render() {
         this.activeWidgets.map(widget => {
-            let hydratedWidget = hydrateWidget(this, widget);
+            let hydratedWidget = hydrateWidget(this.store, this.client, widget);
             let targetNode = document.querySelector(widget.attributes.target);
 
             if (null === targetNode) {
@@ -95,52 +84,13 @@ class ApisearchUI extends EventEmitter {
             )
         });
     }
-
-    /**
-     * Handle Dispatched actions
-     *
-     * This is what we call a reducer
-     * on a Redux architecture
-     */
-    handleActions(action) {
-        /**
-         * When action only sets up store definitions
-         * Does not dispatch any event
-         */
-        if (action.type === 'UPDATE_APISEARCH_SETUP') {
-            this.currentQuery = action.payload.updatedQuery;
-        }
-
-        /**
-         * Is triggered when a initial data is received
-         * Dispatches an 'render' event
-         */
-        if (action.type === 'RENDER_INITIAL_DATA') {
-            const { initialResult, initialQuery } = action.payload;
-
-            this.data = initialResult;
-            this.currentQuery = initialQuery;
-
-            this.emit('render');
-        }
-
-        /**
-         * When action triggers a re-rendering
-         * Dispatches a 'render' event
-         */
-        if (action.type === 'RENDER_FETCHED_DATA') {
-            const { result, updatedQuery } = action.payload;
-
-            this.dirty = false;
-            this.data = result;
-            this.currentQuery = updatedQuery;
-
-            this.emit('render');
-        }
-    }
 }
 
-function hydrateWidget(currentStore, widget) {
+function hydrateWidget(
+    currentStore,
+    client,
+    widget
+) {
     /**
      * Pass ApisearchClient, current Query, and data received
      * as a component attributes. There will be accessible
@@ -148,8 +98,8 @@ function hydrateWidget(currentStore, widget) {
      */
     widget.attributes.dirty = currentStore.dirty;
     widget.attributes.data = currentStore.data;
-    widget.attributes.client = currentStore.client;
     widget.attributes.currentQuery = currentStore.currentQuery;
+    widget.attributes.client = client;
 
     return widget;
 }
