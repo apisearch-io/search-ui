@@ -1,6 +1,8 @@
 import { EventEmitter } from "events";
 
-
+/**
+ * Flux pattern store class
+ */
 class Store extends EventEmitter {
     constructor(client) {
         super();

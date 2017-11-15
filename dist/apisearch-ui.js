@@ -1078,10 +1078,10 @@ exports.default = new _flux.Dispatcher();
  * Module dependenices
  */
 
-var isObject = __webpack_require__(18);
-var clone = __webpack_require__(20);
+var isObject = __webpack_require__(19);
+var clone = __webpack_require__(21);
 var typeOf = __webpack_require__(7);
-var forOwn = __webpack_require__(23);
+var forOwn = __webpack_require__(24);
 
 /**
  * Recursively clone native types.
@@ -1144,7 +1144,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _hogan = __webpack_require__(30);
+var _hogan = __webpack_require__(31);
 
 var _hogan2 = _interopRequireDefault(_hogan);
 
@@ -1442,7 +1442,7 @@ module.exports = function forIn(obj, fn, thisArg) {
 /* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isBuffer = __webpack_require__(22);
+var isBuffer = __webpack_require__(23);
 var toString = Object.prototype.toString;
 
 /**
@@ -1575,14 +1575,26 @@ var _dispatcher = __webpack_require__(1);
 
 var _dispatcher2 = _interopRequireDefault(_dispatcher);
 
-var _ApisearchUI = __webpack_require__(13);
+var _container = __webpack_require__(13);
+
+var _container2 = _interopRequireDefault(_container);
+
+var _ApisearchUI = __webpack_require__(14);
 
 var _ApisearchUI2 = _interopRequireDefault(_ApisearchUI);
+
+var _Store = __webpack_require__(40);
+
+var _Store2 = _interopRequireDefault(_Store);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
- * Apisearch Entry Point
+ * Apisearch Entry point
+ */
+
+/**
+ * Bootstrapping
  *
  * @param appId
  * @param apiKey
@@ -1595,24 +1607,43 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * Locals
  */
-module.exports = function (_ref) {
+function bootstrap(_ref) {
   var appId = _ref.appId,
       apiKey = _ref.apiKey,
       options = _ref.options;
 
-  var apisearchClient = (0, _apisearch2.default)(appId, apiKey, options);
-  var apisearchUI = new _ApisearchUI2.default(apisearchClient);
+  /**
+   * Register apisearch dependencies
+   */
+  var apisearchClientServiceId = "apisearch_client_" + appId + "_" + apiKey;
+  _container2.default.register(apisearchClientServiceId, function () {
+    return (0, _apisearch2.default)(appId, apiKey, options);
+  });
+  _container2.default.register('apisearch_store', function () {
+    return new _Store2.default(_container2.default.get(apisearchClientServiceId));
+  });
 
+  /**
+   * Instance UI
+   */
+  var apisearchUI = new _ApisearchUI2.default(_container2.default.get(apisearchClientServiceId), _container2.default.get('apisearch_store'));
+
+  /**
+   * Register the store
+   */
   _dispatcher2.default.register(apisearchUI.store.handleActions.bind(apisearchUI.store));
 
   return apisearchUI;
-}; /**
-    * @jsx h
-    */
+} /**
+   * @jsx h
+   */
 
 /**
  * Vendors
  */
+
+
+module.exports = bootstrap;
 
 /***/ }),
 /* 9 */
@@ -5249,19 +5280,86 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * Micro Dependency Injection Container
+ */
+var Container = function () {
+    /**
+     * Constructor.
+     */
+    function Container() {
+        _classCallCheck(this, Container);
+
+        this.services = {};
+    }
+
+    /**
+     * Get service
+     */
+
+
+    _createClass(Container, [{
+        key: "get",
+        value: function get(id) {
+            if (this.services[id]) {
+                return this.services[id];
+            }
+
+            throw new Error("Service with id (" + id + ") is not registered.");
+        }
+
+        /**
+         * Register service
+         */
+
+    }, {
+        key: "register",
+        value: function register(id, serviceCallback) {
+            var currentServiceIds = Object.keys(this.services);
+            var serviceExists = currentServiceIds.some(function (serviceId) {
+                return id === serviceId;
+            });
+
+            if (false === serviceExists) {
+                this.services = _extends({}, this.services, _defineProperty({}, id, serviceCallback()));
+            }
+        }
+    }]);
+
+    return Container;
+}();
+
+var container = new Container();
+exports.default = container;
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _preact = __webpack_require__(0);
 
-var _apisearchActions = __webpack_require__(14);
+var _apisearchActions = __webpack_require__(15);
 
-var _WidgetFactory = __webpack_require__(15);
+var _WidgetFactory = __webpack_require__(16);
 
 var _WidgetFactory2 = _interopRequireDefault(_WidgetFactory);
-
-var _Store = __webpack_require__(39);
-
-var _Store2 = _interopRequireDefault(_Store);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -5276,7 +5374,7 @@ var ApisearchUI = function () {
     /**
      * Constructor.
      */
-    function ApisearchUI(client) {
+    function ApisearchUI(client, store) {
         _classCallCheck(this, ApisearchUI);
 
         /**
@@ -5289,7 +5387,7 @@ var ApisearchUI = function () {
         /**
          * Store related properties
          */
-        this.store = new _Store2.default(client);
+        this.store = store;
     }
 
     /**
@@ -5394,7 +5492,7 @@ function hydrateWidget(currentStore, client, widget) {
 exports.default = ApisearchUI;
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5441,7 +5539,7 @@ function initialDataFetchAction(initialQuery, client) {
 }
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5469,27 +5567,27 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _SimpleSearchComponent = __webpack_require__(16);
+var _SimpleSearchComponent = __webpack_require__(17);
 
 var _SimpleSearchComponent2 = _interopRequireDefault(_SimpleSearchComponent);
 
-var _SuggestedSearchComponent = __webpack_require__(24);
+var _SuggestedSearchComponent = __webpack_require__(25);
 
 var _SuggestedSearchComponent2 = _interopRequireDefault(_SuggestedSearchComponent);
 
-var _SortByComponent = __webpack_require__(27);
+var _SortByComponent = __webpack_require__(28);
 
 var _SortByComponent2 = _interopRequireDefault(_SortByComponent);
 
-var _MultipleFilterComponent = __webpack_require__(29);
+var _MultipleFilterComponent = __webpack_require__(30);
 
 var _MultipleFilterComponent2 = _interopRequireDefault(_MultipleFilterComponent);
 
-var _ResultComponent = __webpack_require__(36);
+var _ResultComponent = __webpack_require__(37);
 
 var _ResultComponent2 = _interopRequireDefault(_ResultComponent);
 
-var _InformationComponent = __webpack_require__(38);
+var _InformationComponent = __webpack_require__(39);
 
 var _InformationComponent2 = _interopRequireDefault(_InformationComponent);
 
@@ -5652,7 +5750,7 @@ var WidgetFactory = function () {
 exports.default = WidgetFactory;
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5666,7 +5764,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _simpleSearchActions = __webpack_require__(17);
+var _simpleSearchActions = __webpack_require__(18);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -5751,7 +5849,7 @@ SimpleSearchComponent.defaultProps = {
 exports.default = SimpleSearchComponent;
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5810,7 +5908,7 @@ function simpleSearchAction(text, currentQuery, client) {
 }
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5823,7 +5921,7 @@ function simpleSearchAction(text, currentQuery, client) {
 
 
 
-var isObject = __webpack_require__(19);
+var isObject = __webpack_require__(20);
 
 function isObjectObject(o) {
   return isObject(o) === true
@@ -5854,7 +5952,7 @@ module.exports = function isPlainObject(o) {
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5873,7 +5971,7 @@ module.exports = function isObject(val) {
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5887,7 +5985,7 @@ module.exports = function isObject(val) {
 
 
 var isObject = __webpack_require__(5);
-var mixin = __webpack_require__(21);
+var mixin = __webpack_require__(22);
 var typeOf = __webpack_require__(7);
 
 /**
@@ -5937,7 +6035,7 @@ module.exports = clone;
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5979,7 +6077,7 @@ function copy(value, key) {
 module.exports = mixin;
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports) {
 
 /*!
@@ -6006,7 +6104,7 @@ function isSlowBuffer (obj) {
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6032,7 +6130,7 @@ module.exports = function forOwn(obj, fn, thisArg) {
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6046,9 +6144,9 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _helpers = __webpack_require__(25);
+var _helpers = __webpack_require__(26);
 
-var _suggestedSearchActions = __webpack_require__(26);
+var _suggestedSearchActions = __webpack_require__(27);
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
@@ -6258,7 +6356,7 @@ SuggestedSearchComponent.defaultProps = {
 exports.default = SuggestedSearchComponent;
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6369,7 +6467,7 @@ function selectActiveSuggestion(suggestionsArray) {
 }
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6451,7 +6549,7 @@ function suggestedSearchAction(text, currentQuery, client) {
 }
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6465,7 +6563,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _sortByActions = __webpack_require__(28);
+var _sortByActions = __webpack_require__(29);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -6555,7 +6653,7 @@ SortByComponent.defaultProps = {
 exports.default = SortByComponent;
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6629,7 +6727,7 @@ function splitQueryValue(string) {
 }
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6647,13 +6745,13 @@ var _Template = __webpack_require__(3);
 
 var _Template2 = _interopRequireDefault(_Template);
 
-var _ShowMoreComponent = __webpack_require__(33);
+var _ShowMoreComponent = __webpack_require__(34);
 
 var _ShowMoreComponent2 = _interopRequireDefault(_ShowMoreComponent);
 
-var _multipleFilterActions = __webpack_require__(34);
+var _multipleFilterActions = __webpack_require__(35);
 
-var _helpers = __webpack_require__(35);
+var _helpers = __webpack_require__(36);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6886,7 +6984,7 @@ MultipleFilterComponent.defaultProps = {
 exports.default = MultipleFilterComponent;
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -6906,14 +7004,14 @@ exports.default = MultipleFilterComponent;
 
 // This file is for use with Node.js. See dist/ for browser files.
 
-var Hogan = __webpack_require__(31);
-Hogan.Template = __webpack_require__(32).Template;
+var Hogan = __webpack_require__(32);
+Hogan.Template = __webpack_require__(33).Template;
 Hogan.template = Hogan.Template;
 module.exports = Hogan;
 
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -7342,7 +7440,7 @@ module.exports = Hogan;
 
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -7689,7 +7787,7 @@ var Hogan = {};
 
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7750,7 +7848,7 @@ var ShowMoreComponent = function ShowMoreComponent(_ref) {
 exports.default = ShowMoreComponent;
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7851,7 +7949,7 @@ function filterAction(queryOptions, currentQuery, client) {
 }
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7889,7 +7987,7 @@ function manageCurrentFilterItems(selectedItem, currentItems) {
 }
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7907,7 +8005,7 @@ var _Template = __webpack_require__(3);
 
 var _Template2 = _interopRequireDefault(_Template);
 
-var _resultActions = __webpack_require__(37);
+var _resultActions = __webpack_require__(38);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -8012,7 +8110,7 @@ ResultComponent.defaultProps = {
 exports.default = ResultComponent;
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8080,7 +8178,7 @@ function changeItemsPerResultPageSetup(queryOptions, currentQuery) {
 }
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8158,7 +8256,7 @@ InformationComponent.defaultProps = {
 exports.default = InformationComponent;
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8170,7 +8268,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _events = __webpack_require__(40);
+var _events = __webpack_require__(41);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -8178,6 +8276,9 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+/**
+ * Flux pattern store class
+ */
 var Store = function (_EventEmitter) {
   _inherits(Store, _EventEmitter);
 
@@ -8269,7 +8370,7 @@ var Store = function (_EventEmitter) {
 exports.default = Store;
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, exports) {
 
 // Copyright Joyent, Inc. and other Node contributors.
