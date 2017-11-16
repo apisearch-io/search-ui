@@ -14,6 +14,7 @@ class SortByComponent extends Component {
 
     handleChange = (e) => {
         const {
+            environmentId,
             currentQuery,
             client
         } = this.props;
@@ -22,7 +23,10 @@ class SortByComponent extends Component {
          * Dispatch action
          */
         onChangeSearchAction(
-            e.target.value,
+            {
+                environmentId,
+                selectedOption: e.target.value
+            },
             currentQuery,
             client
         )

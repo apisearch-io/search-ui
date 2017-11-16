@@ -2,7 +2,8 @@
  * Search actions
  */
 import cloneDeep from 'clone-deep';
-import dispatcher from '../../dispatcher';
+import container from '../../app/container';
+import {APISEARCH_DISPATCHER} from "../../app/constants";
 
 /**
  * On change action
@@ -24,12 +25,17 @@ import dispatcher from '../../dispatcher';
  *   }}
  */
 export function onChangeSearchAction(
-    queryValue,
+    queryOptions,
     currentQuery,
     client
 ) {
+    const {
+        environmentId,
+        selectedOption
+    } = queryOptions;
+
     let clonedQuery = cloneDeep(currentQuery);
-    let filterData = splitQueryValue(queryValue);
+    let filterData = splitQueryValue(selectedOption);
 
     clonedQuery.sortBy({
         [`indexed_metadata.${filterData.field}`]: {
@@ -38,6 +44,10 @@ export function onChangeSearchAction(
     });
 
     client.search(clonedQuery, result => {
+        const dispatcher = container
+            .get(`${APISEARCH_DISPATCHER}__${environmentId}`)
+        ;
+
         dispatcher.dispatch({
             type: 'RENDER_FETCHED_DATA',
             payload: {
