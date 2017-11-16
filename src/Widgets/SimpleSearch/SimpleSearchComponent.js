@@ -24,12 +24,14 @@ class SimpleSearchComponent extends Component {
          * Dispatch input search action
          */
         simpleSearchAction(
-            {
-                environmentId,
+            {   // queryOptions
                 queryText: e.target.value
             },
-            currentQuery,
-            client
+            {   // appOptions
+                environmentId,
+                currentQuery,
+                client
+            }
         )
     };
 

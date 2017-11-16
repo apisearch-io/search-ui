@@ -41,7 +41,6 @@ class MultipleFilterComponent extends Component {
          */
         aggregationSetup(
             {
-                environmentId,
                 filterName,
                 filterField,
                 applicationType,
@@ -50,7 +49,10 @@ class MultipleFilterComponent extends Component {
                     ? aggregationField
                     : filterField
             },
-            currentQuery
+            {
+                environmentId,
+                currentQuery
+            }
         )
     }
 
@@ -112,11 +114,10 @@ class MultipleFilterComponent extends Component {
         ;
 
         /**
-         * Dispatch action
+         * Dispatch filter action
          */
         filterAction(
             {
-                environmentId,
                 filterName,
                 filterField,
                 applicationType,
@@ -130,8 +131,11 @@ class MultipleFilterComponent extends Component {
                     currentActiveFilterValues
                 )
             },
-            currentQuery,
-            client
+            {
+                environmentId,
+                currentQuery,
+                client
+            }
         );
     };
 

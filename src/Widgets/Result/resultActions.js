@@ -10,8 +10,8 @@ import {APISEARCH_DISPATCHER} from "../../constants";
  *
  * This action is triggered when mounting a component
  * receives two parameters:
- *   @param queryOptions -> the itemsPerPage to be displayed on the result container
- *   @param currentQuery -> current application query
+ *   @param queryOptions -> given new query options
+ *   @param appOptions   -> current application options
  *
  * Finally dispatches an event with the modified query.
  *   @returns {{
@@ -22,15 +22,15 @@ import {APISEARCH_DISPATCHER} from "../../constants";
  *   }}
  */
 export function changeItemsPerResultPageSetup(
-    queryOptions,
-    currentQuery
-) {
-    const {
-        environmentId,
+    {
         itemsPerPage,
         highlightsEnabled
-    } = queryOptions;
-
+    },
+    {
+        environmentId,
+        currentQuery
+    }
+) {
     const clonedQuery = cloneDeep(currentQuery);
 
     /**

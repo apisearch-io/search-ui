@@ -9,10 +9,9 @@ import {APISEARCH_DISPATCHER} from "../../constants";
  * On change action
  *
  * This action is triggered when a sortBy filter changes
- * receives three parameters:
- *   @param queryValue   -> the value for the filter (ex: "created_at:asc")
- *   @param currentQuery -> current application query
- *   @param client       -> apisearch client to trigger a search
+ * receives two parameters:
+ *   @param queryOptions -> query given options
+ *   @param appOptions   -> current application options
  *
  * Finally dispatches an event with the search result and
  * the modified query.
@@ -25,17 +24,17 @@ import {APISEARCH_DISPATCHER} from "../../constants";
  *   }}
  */
 export function onChangeSearchAction(
-    queryOptions,
-    currentQuery,
-    client
-) {
-    const {
-        environmentId,
+    {
         selectedOption
-    } = queryOptions;
-
-    let clonedQuery = cloneDeep(currentQuery);
-    let filterData = splitQueryValue(selectedOption);
+    },
+    {
+        environmentId,
+        currentQuery,
+        client
+    }
+) {
+    const clonedQuery = cloneDeep(currentQuery);
+    const filterData = splitQueryValue(selectedOption);
 
     clonedQuery.sortBy({
         [`indexed_metadata.${filterData.field}`]: {

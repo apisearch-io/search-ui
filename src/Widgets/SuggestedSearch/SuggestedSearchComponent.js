@@ -62,16 +62,24 @@ class SuggestedSearchComponent extends Component {
          */
         this.setState({q: e.target.value});
 
+        const {
+            environmentId,
+            currentQuery,
+            client
+        } = this.props;
+
         /**
          * Dispatch suggested search action
          */
         suggestedSearchAction(
             {
-                environmentId: this.props.environmentId,
                 queryText: e.target.value
             },
-            this.props.currentQuery,
-            this.props.client
+            {
+                environmentId,
+                currentQuery,
+                client
+            }
         )
     };
 
@@ -128,11 +136,13 @@ class SuggestedSearchComponent extends Component {
 
             simpleSearchAction(
                 {
-                    environmentId,
                     queryText: this.state.q
                 },
-                currentQuery,
-                client
+                {
+                    environmentId,
+                    currentQuery,
+                    client
+                }
             )
         }
     };
@@ -143,13 +153,21 @@ class SuggestedSearchComponent extends Component {
             currentSuggestions: []
         });
 
+        const {
+            environmentId,
+            currentQuery,
+            client
+        } = this.props;
+
         simpleSearchAction(
             {
-                environmentId: this.props.environmentId,
                 queryText: e.target.innerText
             },
-            this.props.currentQuery,
-            this.props.client
+            {
+                environmentId,
+                currentQuery,
+                client
+            }
         )
     };
 

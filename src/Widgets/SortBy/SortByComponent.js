@@ -24,11 +24,13 @@ class SortByComponent extends Component {
          */
         onChangeSearchAction(
             {
-                environmentId,
                 selectedOption: e.target.value
             },
-            currentQuery,
-            client
+            {
+                environmentId,
+                currentQuery,
+                client
+            }
         )
     };
 

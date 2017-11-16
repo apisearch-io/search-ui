@@ -10,8 +10,8 @@ import {APISEARCH_DISPATCHER} from "../../constants";
  *
  * This setup action is triggered when mounting a component
  * receives two parameters:
- *   @param queryOptions -> the itemsPerPage to be displayed on the result container
- *   @param currentQuery -> current application query
+ *   @param queryOptions -> query given options
+ *   @param appOptions   -> current application options
  *
  * Finally dispatches an event with the modified query.
  *   @returns {{
@@ -22,17 +22,18 @@ import {APISEARCH_DISPATCHER} from "../../constants";
  *   }}
  */
 export function aggregationSetup(
-    queryOptions,
-    currentQuery
-) {
-    const {
-        environmentId,
+    {
         filterName,
         aggregationField,
         applicationType,
         sortBy
-    } = queryOptions;
-    let clonedQuery = cloneDeep(currentQuery);
+    },
+    {
+        environmentId,
+        currentQuery
+    }
+) {
+    const clonedQuery = cloneDeep(currentQuery);
 
     clonedQuery.aggregateBy(
         filterName,
@@ -53,37 +54,38 @@ export function aggregationSetup(
 }
 
 /**
- * Define aggregations setup
+ * Filter action
  *
  * This setup action is triggered when mounting a component
  * receives two parameters:
- *   @param queryOptions -> the itemsPerPage to be displayed on the result container
- *   @param currentQuery -> current application query
- *   @param client       -> Apisearch client
+ *   @param queryOptions -> query given options
+ *   @param appOptions   -> current application options
  *
  * Finally dispatches an event with the modified query.
  *   @returns {{
  *     type: string,
  *     payload: {
- *        updatedQuery
+ *        updatedQuery,
+ *        result
  *     }
  *   }}
  */
 export function filterAction(
-    queryOptions,
-    currentQuery,
-    client
-) {
-    const {
-        environmentId,
+    {
         filterName,
         filterField,
         aggregationField,
         filterValues,
         applicationType,
         sortBy
-    } = queryOptions;
-    let clonedQuery = cloneDeep(currentQuery);
+    },
+    {
+        environmentId,
+        currentQuery,
+        client
+    }
+) {
+    const clonedQuery = cloneDeep(currentQuery);
 
     clonedQuery.filterBy(
         filterName,

@@ -7,10 +7,9 @@ import {APISEARCH_DISPATCHER} from "../../constants";
 
 /**
  * This actions are triggered when a text input changes
- * receives three parameters:
- *   @param text         -> the text value for the search
- *   @param currentQuery -> current application query
- *   @param client       -> apisearch client to trigger a search
+ * receives two parameters:
+ *   @param queryOptions -> query given options
+ *   @param appOptions   -> current application options
  *
  * Finally dispatches an event with the search result and
  * the modified query.
@@ -28,16 +27,17 @@ import {APISEARCH_DISPATCHER} from "../../constants";
  * Builds a query disabling suggested searches flag
  */
 export function simpleSearchAction(
-    queryOptions,
-    currentQuery,
-    client
-) {
-    const {
-        environmentId,
+    {
         queryText
-    } = queryOptions;
+    },
+    {
+        environmentId,
+        currentQuery,
+        client
+    },
+) {
+    const clonedQuery = cloneDeep(currentQuery);
 
-    let clonedQuery = cloneDeep(currentQuery);
     clonedQuery
         .setQueryText(queryText)
         .enableResults()
@@ -63,16 +63,17 @@ export function simpleSearchAction(
  * Builds a query using suggested search flag active
  */
 export function suggestedSearchAction(
-    queryOptions,
-    currentQuery,
-    client
-) {
-    const {
-        environmentId,
+    {
         queryText
-    } = queryOptions;
+    },
+    {
+        environmentId,
+        currentQuery,
+        client
+    }
+) {
+    const clonedQuery = cloneDeep(currentQuery);
 
-    let clonedQuery = cloneDeep(currentQuery);
     clonedQuery
         .setQueryText(queryText)
         .disableResults()

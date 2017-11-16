@@ -32,12 +32,14 @@ class ResultComponent extends Component {
          * Dispatch action
          */
         changeItemsPerResultPageSetup(
-            {
-                environmentId,
+            {   // queryOptions
                 itemsPerPage,
                 highlightsEnabled
             },
-            currentQuery
+            {   // appOptions
+                environmentId,
+                currentQuery
+            }
         )
     }
 

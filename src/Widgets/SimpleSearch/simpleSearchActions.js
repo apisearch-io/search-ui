@@ -9,10 +9,9 @@ import {APISEARCH_DISPATCHER} from "../../constants";
  * Keyup simple search action
  *
  * This action is triggered when a text input changes
- * receives three parameters:
- *   @param queryOptions -> the queryOptions for the search
- *   @param currentQuery -> current application query
- *   @param client       -> apisearch client to trigger a search
+ * receives two parameters:
+ *   @param queryOptions -> query given options
+ *   @param appOptions   -> current application options
  *
  * Finally dispatches an event with the search result and
  * the modified query.
@@ -25,16 +24,17 @@ import {APISEARCH_DISPATCHER} from "../../constants";
  *   }}
  */
 export function simpleSearchAction(
-    queryOptions,
-    currentQuery,
-    client
-) {
-    const {
-        environmentId,
+    {
         queryText
-    } = queryOptions;
-
+    },
+    {
+        environmentId,
+        client,
+        currentQuery
+    }
+) {
     const clonedQuery = cloneDeep(currentQuery);
+
     clonedQuery
         .setQueryText(queryText)
     ;

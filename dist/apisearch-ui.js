@@ -2566,10 +2566,13 @@ var SimpleSearchComponent = function (_Component) {
              * Dispatch input search action
              */
 
-            (0, _simpleSearchActions.simpleSearchAction)({
-                environmentId: environmentId,
+            (0, _simpleSearchActions.simpleSearchAction)({ // queryOptions
                 queryText: e.target.value
-            }, currentQuery, client);
+            }, { // appOptions
+                environmentId: environmentId,
+                currentQuery: currentQuery,
+                client: client
+            });
         }, _temp), _possibleConstructorReturn(_this, _ret);
     }
 
@@ -2645,10 +2648,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Keyup simple search action
  *
  * This action is triggered when a text input changes
- * receives three parameters:
- *   @param queryOptions -> the queryOptions for the search
- *   @param currentQuery -> current application query
- *   @param client       -> apisearch client to trigger a search
+ * receives two parameters:
+ *   @param queryOptions -> query given options
+ *   @param appOptions   -> current application options
  *
  * Finally dispatches an event with the search result and
  * the modified query.
@@ -2660,12 +2662,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  *     }
  *   }}
  */
-function simpleSearchAction(queryOptions, currentQuery, client) {
-    var environmentId = queryOptions.environmentId,
-        queryText = queryOptions.queryText;
-
+function simpleSearchAction(_ref, _ref2) {
+    var queryText = _ref.queryText;
+    var environmentId = _ref2.environmentId,
+        client = _ref2.client,
+        currentQuery = _ref2.currentQuery;
 
     var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+
     clonedQuery.setQueryText(queryText);
 
     var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
@@ -2955,13 +2959,22 @@ var SuggestedSearchComponent = function (_Component) {
              */
             _this.setState({ q: e.target.value });
 
+            var _this$props = _this.props,
+                environmentId = _this$props.environmentId,
+                currentQuery = _this$props.currentQuery,
+                client = _this$props.client;
+
             /**
              * Dispatch suggested search action
              */
+
             (0, _suggestedSearchActions.suggestedSearchAction)({
-                environmentId: _this.props.environmentId,
                 queryText: e.target.value
-            }, _this.props.currentQuery, _this.props.client);
+            }, {
+                environmentId: environmentId,
+                currentQuery: currentQuery,
+                client: client
+            });
         };
 
         _this.handleSuggestionsNavigation = function (e) {
@@ -2999,16 +3012,19 @@ var SuggestedSearchComponent = function (_Component) {
                     currentSuggestions: []
                 });
 
-                var _this$props = _this.props,
-                    environmentId = _this$props.environmentId,
-                    currentQuery = _this$props.currentQuery,
-                    client = _this$props.client;
+                var _this$props2 = _this.props,
+                    environmentId = _this$props2.environmentId,
+                    currentQuery = _this$props2.currentQuery,
+                    client = _this$props2.client;
 
 
                 (0, _suggestedSearchActions.simpleSearchAction)({
-                    environmentId: environmentId,
                     queryText: _this.state.q
-                }, currentQuery, client);
+                }, {
+                    environmentId: environmentId,
+                    currentQuery: currentQuery,
+                    client: client
+                });
             }
         };
 
@@ -3018,10 +3034,19 @@ var SuggestedSearchComponent = function (_Component) {
                 currentSuggestions: []
             });
 
+            var _this$props3 = _this.props,
+                environmentId = _this$props3.environmentId,
+                currentQuery = _this$props3.currentQuery,
+                client = _this$props3.client;
+
+
             (0, _suggestedSearchActions.simpleSearchAction)({
-                environmentId: _this.props.environmentId,
                 queryText: e.target.innerText
-            }, _this.props.currentQuery, _this.props.client);
+            }, {
+                environmentId: environmentId,
+                currentQuery: currentQuery,
+                client: client
+            });
         };
 
         _this.handleSearchInputFocusedOut = function (e) {
@@ -3278,10 +3303,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 /**
  * This actions are triggered when a text input changes
- * receives three parameters:
- *   @param text         -> the text value for the search
- *   @param currentQuery -> current application query
- *   @param client       -> apisearch client to trigger a search
+ * receives two parameters:
+ *   @param queryOptions -> query given options
+ *   @param appOptions   -> current application options
  *
  * Finally dispatches an event with the search result and
  * the modified query.
@@ -3298,12 +3322,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Simple search action
  * Builds a query disabling suggested searches flag
  */
-function simpleSearchAction(queryOptions, currentQuery, client) {
-    var environmentId = queryOptions.environmentId,
-        queryText = queryOptions.queryText;
-
+function simpleSearchAction(_ref, _ref2) {
+    var queryText = _ref.queryText;
+    var environmentId = _ref2.environmentId,
+        currentQuery = _ref2.currentQuery,
+        client = _ref2.client;
 
     var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+
     clonedQuery.setQueryText(queryText).enableResults().disableSuggestions();
 
     client.search(clonedQuery, function (result) {
@@ -3325,12 +3351,14 @@ function simpleSearchAction(queryOptions, currentQuery, client) {
 /**
  * Search actions
  */
-function suggestedSearchAction(queryOptions, currentQuery, client) {
-    var environmentId = queryOptions.environmentId,
-        queryText = queryOptions.queryText;
-
+function suggestedSearchAction(_ref3, _ref4) {
+    var queryText = _ref3.queryText;
+    var environmentId = _ref4.environmentId,
+        currentQuery = _ref4.currentQuery,
+        client = _ref4.client;
 
     var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+
     clonedQuery.setQueryText(queryText).disableResults().enableSuggestions();
 
     client.search(clonedQuery, function (result) {
@@ -3399,9 +3427,12 @@ var SortByComponent = function (_Component) {
              */
 
             (0, _sortByActions.onChangeSearchAction)({
-                environmentId: environmentId,
                 selectedOption: e.target.value
-            }, currentQuery, client);
+            }, {
+                environmentId: environmentId,
+                currentQuery: currentQuery,
+                client: client
+            });
         }, _temp), _possibleConstructorReturn(_this, _ret);
     }
 
@@ -3486,10 +3517,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
  * On change action
  *
  * This action is triggered when a sortBy filter changes
- * receives three parameters:
- *   @param queryValue   -> the value for the filter (ex: "created_at:asc")
- *   @param currentQuery -> current application query
- *   @param client       -> apisearch client to trigger a search
+ * receives two parameters:
+ *   @param queryOptions -> query given options
+ *   @param appOptions   -> current application options
  *
  * Finally dispatches an event with the search result and
  * the modified query.
@@ -3501,10 +3531,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
  *     }
  *   }}
  */
-function onChangeSearchAction(queryOptions, currentQuery, client) {
-    var environmentId = queryOptions.environmentId,
-        selectedOption = queryOptions.selectedOption;
-
+function onChangeSearchAction(_ref, _ref2) {
+    var selectedOption = _ref.selectedOption;
+    var environmentId = _ref2.environmentId,
+        currentQuery = _ref2.currentQuery,
+        client = _ref2.client;
 
     var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
     var filterData = splitQueryValue(selectedOption);
@@ -3602,10 +3633,9 @@ var MultipleFilterComponent = function (_Component) {
             var currentActiveFilterValues = typeof activeElements !== 'undefined' ? activeElements : [];
 
             /**
-             * Dispatch action
+             * Dispatch filter action
              */
             (0, _multipleFilterActions.filterAction)({
-                environmentId: environmentId,
                 filterName: filterName,
                 filterField: filterField,
                 applicationType: applicationType,
@@ -3613,7 +3643,11 @@ var MultipleFilterComponent = function (_Component) {
                 aggregationField: aggregationField ? aggregationField : filterField,
 
                 filterValues: (0, _helpers.manageCurrentFilterItems)(selectedFilter, currentActiveFilterValues)
-            }, currentQuery, client);
+            }, {
+                environmentId: environmentId,
+                currentQuery: currentQuery,
+                client: client
+            });
         };
 
         _this.handleShowMore = function () {
@@ -3659,13 +3693,15 @@ var MultipleFilterComponent = function (_Component) {
              * Dispatch action
              */
             (0, _multipleFilterActions.aggregationSetup)({
-                environmentId: environmentId,
                 filterName: filterName,
                 filterField: filterField,
                 applicationType: applicationType,
                 sortBy: sortBy,
                 aggregationField: aggregationField ? aggregationField : filterField
-            }, currentQuery);
+            }, {
+                environmentId: environmentId,
+                currentQuery: currentQuery
+            });
         }
     }, {
         key: "componentWillReceiveProps",
@@ -3825,8 +3861,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  *
  * This setup action is triggered when mounting a component
  * receives two parameters:
- *   @param queryOptions -> the itemsPerPage to be displayed on the result container
- *   @param currentQuery -> current application query
+ *   @param queryOptions -> query given options
+ *   @param appOptions   -> current application options
  *
  * Finally dispatches an event with the modified query.
  *   @returns {{
@@ -3836,12 +3872,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  *     }
  *   }}
  */
-function aggregationSetup(queryOptions, currentQuery) {
-    var environmentId = queryOptions.environmentId,
-        filterName = queryOptions.filterName,
-        aggregationField = queryOptions.aggregationField,
-        applicationType = queryOptions.applicationType,
-        sortBy = queryOptions.sortBy;
+function aggregationSetup(_ref, _ref2) {
+    var filterName = _ref.filterName,
+        aggregationField = _ref.aggregationField,
+        applicationType = _ref.applicationType,
+        sortBy = _ref.sortBy;
+    var environmentId = _ref2.environmentId,
+        currentQuery = _ref2.currentQuery;
 
     var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
 
@@ -3857,33 +3894,35 @@ function aggregationSetup(queryOptions, currentQuery) {
 }
 
 /**
- * Define aggregations setup
+ * Filter action
  *
  * This setup action is triggered when mounting a component
  * receives two parameters:
- *   @param queryOptions -> the itemsPerPage to be displayed on the result container
- *   @param currentQuery -> current application query
- *   @param client       -> Apisearch client
+ *   @param queryOptions -> query given options
+ *   @param appOptions   -> current application options
  *
  * Finally dispatches an event with the modified query.
  *   @returns {{
  *     type: string,
  *     payload: {
- *        updatedQuery
+ *        updatedQuery,
+ *        result
  *     }
  *   }}
  */
 /**
  * Multiple filter actions
  */
-function filterAction(queryOptions, currentQuery, client) {
-    var environmentId = queryOptions.environmentId,
-        filterName = queryOptions.filterName,
-        filterField = queryOptions.filterField,
-        aggregationField = queryOptions.aggregationField,
-        filterValues = queryOptions.filterValues,
-        applicationType = queryOptions.applicationType,
-        sortBy = queryOptions.sortBy;
+function filterAction(_ref3, _ref4) {
+    var filterName = _ref3.filterName,
+        filterField = _ref3.filterField,
+        aggregationField = _ref3.aggregationField,
+        filterValues = _ref3.filterValues,
+        applicationType = _ref3.applicationType,
+        sortBy = _ref3.sortBy;
+    var environmentId = _ref4.environmentId,
+        currentQuery = _ref4.currentQuery,
+        client = _ref4.client;
 
     var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
 
@@ -4871,11 +4910,13 @@ var ResultComponent = function (_Component) {
              * Dispatch action
              */
 
-            (0, _resultActions.changeItemsPerResultPageSetup)({
-                environmentId: environmentId,
+            (0, _resultActions.changeItemsPerResultPageSetup)({ // queryOptions
                 itemsPerPage: itemsPerPage,
                 highlightsEnabled: highlightsEnabled
-            }, currentQuery);
+            }, { // appOptions
+                environmentId: environmentId,
+                currentQuery: currentQuery
+            });
         }
     }, {
         key: "render",
@@ -4958,8 +4999,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  *
  * This action is triggered when mounting a component
  * receives two parameters:
- *   @param queryOptions -> the itemsPerPage to be displayed on the result container
- *   @param currentQuery -> current application query
+ *   @param queryOptions -> given new query options
+ *   @param appOptions   -> current application options
  *
  * Finally dispatches an event with the modified query.
  *   @returns {{
@@ -4969,11 +5010,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  *     }
  *   }}
  */
-function changeItemsPerResultPageSetup(queryOptions, currentQuery) {
-    var environmentId = queryOptions.environmentId,
-        itemsPerPage = queryOptions.itemsPerPage,
-        highlightsEnabled = queryOptions.highlightsEnabled;
-
+function changeItemsPerResultPageSetup(_ref, _ref2) {
+    var itemsPerPage = _ref.itemsPerPage,
+        highlightsEnabled = _ref.highlightsEnabled;
+    var environmentId = _ref2.environmentId,
+        currentQuery = _ref2.currentQuery;
 
     var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
 
