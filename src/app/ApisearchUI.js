@@ -34,17 +34,25 @@ class ApisearchUI {
      */
     init() {
         /**
-         * Register all events on the store
+         * 1.- Register all events on the store
          */
         this.store.on('render', () => this.render());
 
         /**
-         * Trigger the initial render: (Mount the components)
-         *   -> To let components setup its configuration on componentWillMount()
-         *   -> And fetch the initial data with the given configuration
+         * 2.- Trigger the initial render: (Mount the components)
+         *     To let components setup its configuration on componentWillMount()
          */
         this.render();
-        initialDataFetchAction(this.store.currentQuery, this.client);
+
+        /**
+         * 3.- Dispatch the initial data request
+         *     With all widget previous initial configurations
+         */
+        initialDataFetchAction(
+            this.environmentId,
+            this.store.currentQuery,
+            this.client
+        );
     }
 
     /**

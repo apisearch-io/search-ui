@@ -1,11 +1,13 @@
-import dispatcher from "../dispatcher";
+import container from './container';
+import {APISEARCH_DISPATCHER} from "./constants";
 
 /**
  * Initial data fetching action
  *
  * This action is triggered on the first time ApisearchUI is initialized:
- *   @param initialQuery -> initial application query
- *   @param client       -> apisearch client to trigger a search
+ *   @param environmentId -> the environment identifier of the ApisearchUI instance
+ *   @param initialQuery  -> initial application query
+ *   @param client        -> apisearch client to trigger a search
  *
  * Finally dispatches an event with the search result and
  * the modified query.
@@ -18,10 +20,15 @@ import dispatcher from "../dispatcher";
  *   }}
  */
 export function initialDataFetchAction(
+    environmentId,
     initialQuery,
     client
 ) {
     client.search(initialQuery, initialResult => {
+        const dispatcher = container
+            .get(`${APISEARCH_DISPATCHER}__${environmentId}`)
+        ;
+
         dispatcher.dispatch({
             type: 'RENDER_INITIAL_DATA',
             payload: {

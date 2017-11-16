@@ -2,7 +2,8 @@
  * Search actions
  */
 import cloneDeep from 'clone-deep';
-import dispatcher from '../../dispatcher';
+import container from '../../app/container';
+import {APISEARCH_DISPATCHER} from "../../app/constants";
 
 /**
  * This actions are triggered when a text input changes
@@ -27,18 +28,26 @@ import dispatcher from '../../dispatcher';
  * Builds a query disabling suggested searches flag
  */
 export function simpleSearchAction(
-    text,
+    queryOptions,
     currentQuery,
     client
 ) {
+    const {
+        environmentId,
+        queryText
+    } = queryOptions;
+
     let clonedQuery = cloneDeep(currentQuery);
     clonedQuery
-        .setQueryText(text)
+        .setQueryText(queryText)
         .enableResults()
         .disableSuggestions()
     ;
 
     client.search(clonedQuery, result => {
+        const dispatcher = container
+            .get(`${APISEARCH_DISPATCHER}__${environmentId}`)
+        ;
         dispatcher.dispatch({
             type: 'RENDER_FETCHED_DATA',
             payload: {
@@ -54,18 +63,26 @@ export function simpleSearchAction(
  * Builds a query using suggested search flag active
  */
 export function suggestedSearchAction(
-    text,
+    queryOptions,
     currentQuery,
     client
 ) {
+    const {
+        environmentId,
+        queryText
+    } = queryOptions;
+
     let clonedQuery = cloneDeep(currentQuery);
     clonedQuery
-        .setQueryText(text)
+        .setQueryText(queryText)
         .disableResults()
         .enableSuggestions()
     ;
 
     client.search(clonedQuery, result => {
+        const dispatcher = container
+            .get(`${APISEARCH_DISPATCHER}__${environmentId}`)
+        ;
         dispatcher.dispatch({
             type: 'RENDER_FETCHED_DATA',
             payload: {

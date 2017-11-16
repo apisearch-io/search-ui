@@ -66,7 +66,10 @@ class SuggestedSearchComponent extends Component {
          * Dispatch suggested search action
          */
         suggestedSearchAction(
-            e.target.value,
+            {
+                environmentId: this.props.environmentId,
+                queryText: e.target.value
+            },
             this.props.currentQuery,
             this.props.client
         )
@@ -118,12 +121,16 @@ class SuggestedSearchComponent extends Component {
             });
 
             const {
+                environmentId,
                 currentQuery,
                 client
             } = this.props;
 
             simpleSearchAction(
-                this.state.q,
+                {
+                    environmentId,
+                    queryText: this.state.q
+                },
                 currentQuery,
                 client
             )

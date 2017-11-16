@@ -39,7 +39,9 @@ export function simpleSearchAction(
         .setQueryText(queryText)
     ;
 
-    const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
+    const dispatcher = container
+        .get(`${APISEARCH_DISPATCHER}__${environmentId}`)
+    ;
     client.search(clonedQuery, result => {
         dispatcher.dispatch({
             type: 'RENDER_FETCHED_DATA',
