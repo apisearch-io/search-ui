@@ -2,19 +2,9 @@
  * @jsx h
  */
 
-/**
- * Vendors
- */
-import apisearch from 'apisearch';
-
-/**
- * Locals
- */
-import container from "./container";
-import ApisearchUI from "./ApisearchUI";
-import Store from "./Store";
-import { Dispatcher } from 'flux';
-
+import {bootstrap} from "./app/bootstrap";
+import container from "./app/container";
+import {APISEARCH_DISPATCHER, APISEARCH_UI} from "./app/constants";
 
 /**
  * Apisearch Entry point
@@ -40,16 +30,21 @@ module.exports = function ({
     const environmentId = `env_${Math.ceil(Math.random() * (9999999 - 1) + 1)}`;
 
     /**
-     * Bootstrapping ApisearchUI Services
+     * Bootstrapping ApisearchUI application
      */
-    bootstrap({environmentId, appId, apiKey, options});
+    bootstrap({
+        environmentId,
+        appId,
+        apiKey,
+        options
+    });
 
     /**
-     * Bind store reducer to the dispatcher
+     * Register handleActions method (store reducer)
+     * into the event dispatcher
      */
-    const apisearchUI = container.get(`apisearch_ui--${environmentId}`);
-    const dispatcher = container.get(`apisearch_dispatcher--${environmentId}`);
-
+    const apisearchUI = container.get(`${APISEARCH_UI}__${environmentId}`);
+    const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
     dispatcher.register(
         apisearchUI.store.handleActions.bind(
             apisearchUI.store
@@ -61,58 +56,3 @@ module.exports = function ({
      */
     return apisearchUI;
 };
-
-/**
- * Bootstrap application
- */
-function bootstrap({
-    environmentId,
-    appId,
-    apiKey,
-    options
-}) {
-    const clientId = `apisearch_client--${appId}_${apiKey}`;
-    const storeId = `apisearch_store--${environmentId}`;
-    const dispatcherId = `apisearch_dispatcher--${environmentId}`;
-    const asuiId = `apisearch_ui--${environmentId}`;
-
-    /**
-     * Register Apisearch client
-     */
-    container.register(clientId, () => {
-        return apisearch(
-            appId,
-            apiKey,
-            options
-        )
-    });
-
-    /**
-     * Register apisearch store
-     */
-    container.register(storeId, () => {
-        return new Store(
-            container.get(clientId)
-        )
-    });
-
-    /**
-     * Register an event dispatcher
-     */
-    container.register(dispatcherId, () => {
-        return new Dispatcher();
-    });
-
-    /**
-     * Apisearch UI Instance
-     */
-    container.register(asuiId, () => {
-        return new ApisearchUI(
-            environmentId,
-            container.get(clientId),
-            container.get(storeId)
-        );
-    });
-
-    console.log(container)
-}

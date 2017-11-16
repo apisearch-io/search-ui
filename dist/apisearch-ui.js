@@ -1140,6 +1140,76 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * Apisearch Dependency Injection Container
+ */
+var Container = function () {
+    /**
+     * Constructor.
+     */
+    function Container() {
+        _classCallCheck(this, Container);
+
+        this.services = {};
+    }
+
+    /**
+     * Get service
+     */
+
+
+    _createClass(Container, [{
+        key: "get",
+        value: function get(id) {
+            if (this.services[id]) {
+                return this.services[id];
+            }
+
+            throw new Error("Service with id (" + id + ") is not registered.");
+        }
+
+        /**
+         * Register service
+         */
+
+    }, {
+        key: "register",
+        value: function register(id, serviceCallback) {
+            var currentServiceIds = Object.keys(this.services);
+            var serviceExists = currentServiceIds.some(function (serviceId) {
+                return id === serviceId;
+            });
+
+            if (false === serviceExists) {
+                this.services = _extends({}, this.services, _defineProperty({}, id, serviceCallback()));
+            }
+        }
+    }]);
+
+    return Container;
+}();
+
+exports.default = new Container();
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _preact = __webpack_require__(0);
@@ -1206,76 +1276,6 @@ var Template = function (_Component) {
 exports.default = Template;
 
 /***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * Apisearch Dependency Injection Container
- */
-var Container = function () {
-    /**
-     * Constructor.
-     */
-    function Container() {
-        _classCallCheck(this, Container);
-
-        this.services = {};
-    }
-
-    /**
-     * Get service
-     */
-
-
-    _createClass(Container, [{
-        key: "get",
-        value: function get(id) {
-            if (this.services[id]) {
-                return this.services[id];
-            }
-
-            throw new Error("Service with id (" + id + ") is not registered.");
-        }
-
-        /**
-         * Register service
-         */
-
-    }, {
-        key: "register",
-        value: function register(id, serviceCallback) {
-            var currentServiceIds = Object.keys(this.services);
-            var serviceExists = currentServiceIds.some(function (serviceId) {
-                return id === serviceId;
-            });
-
-            if (false === serviceExists) {
-                this.services = _extends({}, this.services, _defineProperty({}, id, serviceCallback()));
-            }
-        }
-    }]);
-
-    return Container;
-}();
-
-exports.default = new Container();
-
-/***/ }),
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1288,7 +1288,7 @@ exports.default = new Container();
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-module.exports.Dispatcher = __webpack_require__(14);
+module.exports.Dispatcher = __webpack_require__(12);
 
 
 /***/ }),
@@ -1653,23 +1653,13 @@ module.exports = function kindOf(val) {
 "use strict";
 
 
-var _apisearch = __webpack_require__(11);
+var _bootstrap = __webpack_require__(11);
 
-var _apisearch2 = _interopRequireDefault(_apisearch);
-
-var _container = __webpack_require__(4);
+var _container = __webpack_require__(3);
 
 var _container2 = _interopRequireDefault(_container);
 
-var _ApisearchUI = __webpack_require__(12);
-
-var _ApisearchUI2 = _interopRequireDefault(_ApisearchUI);
-
-var _Store = __webpack_require__(40);
-
-var _Store2 = _interopRequireDefault(_Store);
-
-var _flux = __webpack_require__(5);
+var _constants = __webpack_require__(44);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1686,11 +1676,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  *
  * @returns {ApisearchUI}
  */
-
-
-/**
- * Locals
- */
 module.exports = function (_ref) {
   var appId = _ref.appId,
       apiKey = _ref.apiKey,
@@ -1702,78 +1687,3344 @@ module.exports = function (_ref) {
   var environmentId = "env_" + Math.ceil(Math.random() * (9999999 - 1) + 1);
 
   /**
-   * Bootstrapping ApisearchUI Services
+   * Bootstrapping ApisearchUI application
    */
-  bootstrap({ environmentId: environmentId, appId: appId, apiKey: apiKey, options: options });
+  (0, _bootstrap.bootstrap)({
+    environmentId: environmentId,
+    appId: appId,
+    apiKey: apiKey,
+    options: options
+  });
 
   /**
-   * Bind store reducer to the dispatcher
+   * Register handleActions method (store reducer)
+   * into the event dispatcher
    */
-  var apisearchUI = _container2.default.get("apisearch_ui--" + environmentId);
-  var dispatcher = _container2.default.get("apisearch_dispatcher--" + environmentId);
-
+  var apisearchUI = _container2.default.get(_constants.APISEARCH_UI + "__" + environmentId);
+  var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + "__" + environmentId);
   dispatcher.register(apisearchUI.store.handleActions.bind(apisearchUI.store));
 
   /**
    * Return ApisearchUI instance
    */
   return apisearchUI;
-};
+}; /**
+    * @jsx h
+    */
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.bootstrap = bootstrap;
+
+var _flux = __webpack_require__(5);
+
+var _ApisearchUI = __webpack_require__(14);
+
+var _ApisearchUI2 = _interopRequireDefault(_ApisearchUI);
+
+var _apisearch = __webpack_require__(40);
+
+var _apisearch2 = _interopRequireDefault(_apisearch);
+
+var _Store = __webpack_require__(41);
+
+var _Store2 = _interopRequireDefault(_Store);
+
+var _container = __webpack_require__(3);
+
+var _container2 = _interopRequireDefault(_container);
+
+var _constants = __webpack_require__(44);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * Bootstrap application
  */
-/**
- * @jsx h
+function bootstrap(_ref) {
+    var environmentId = _ref.environmentId,
+        appId = _ref.appId,
+        apiKey = _ref.apiKey,
+        options = _ref.options;
+
+    var clientId = _constants.APISEARCH_CLIENT + '__' + appId + '_' + apiKey;
+    var storeId = _constants.APISEARCH_STORE + '__' + environmentId;
+    var dispatcherId = _constants.APISEARCH_DISPATCHER + '__' + environmentId;
+    var asuiId = _constants.APISEARCH_UI + '__' + environmentId;
+
+    /**
+     * Register Apisearch client
+     */
+    _container2.default.register(clientId, function () {
+        return (0, _apisearch2.default)(appId, apiKey, options);
+    });
+
+    /**
+     * Register apisearch store
+     */
+    _container2.default.register(storeId, function () {
+        return new _Store2.default(_container2.default.get(clientId));
+    });
+
+    /**
+     * Register an event dispatcher
+     */
+    _container2.default.register(dispatcherId, function () {
+        return new _flux.Dispatcher();
+    });
+
+    /**
+     * Apisearch UI Instance
+     */
+    _container2.default.register(asuiId, function () {
+        return new _ApisearchUI2.default(environmentId, _container2.default.get(clientId), _container2.default.get(storeId));
+    });
+}
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(process) {/**
+ * Copyright (c) 2014-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * @providesModule Dispatcher
+ * 
+ * @preventMunge
  */
+
+
+
+exports.__esModule = true;
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+var invariant = __webpack_require__(13);
+
+var _prefix = 'ID_';
+
+/**
+ * Dispatcher is used to broadcast payloads to registered callbacks. This is
+ * different from generic pub-sub systems in two ways:
+ *
+ *   1) Callbacks are not subscribed to particular events. Every payload is
+ *      dispatched to every registered callback.
+ *   2) Callbacks can be deferred in whole or part until other callbacks have
+ *      been executed.
+ *
+ * For example, consider this hypothetical flight destination form, which
+ * selects a default city when a country is selected:
+ *
+ *   var flightDispatcher = new Dispatcher();
+ *
+ *   // Keeps track of which country is selected
+ *   var CountryStore = {country: null};
+ *
+ *   // Keeps track of which city is selected
+ *   var CityStore = {city: null};
+ *
+ *   // Keeps track of the base flight price of the selected city
+ *   var FlightPriceStore = {price: null}
+ *
+ * When a user changes the selected city, we dispatch the payload:
+ *
+ *   flightDispatcher.dispatch({
+ *     actionType: 'city-update',
+ *     selectedCity: 'paris'
+ *   });
+ *
+ * This payload is digested by `CityStore`:
+ *
+ *   flightDispatcher.register(function(payload) {
+ *     if (payload.actionType === 'city-update') {
+ *       CityStore.city = payload.selectedCity;
+ *     }
+ *   });
+ *
+ * When the user selects a country, we dispatch the payload:
+ *
+ *   flightDispatcher.dispatch({
+ *     actionType: 'country-update',
+ *     selectedCountry: 'australia'
+ *   });
+ *
+ * This payload is digested by both stores:
+ *
+ *   CountryStore.dispatchToken = flightDispatcher.register(function(payload) {
+ *     if (payload.actionType === 'country-update') {
+ *       CountryStore.country = payload.selectedCountry;
+ *     }
+ *   });
+ *
+ * When the callback to update `CountryStore` is registered, we save a reference
+ * to the returned token. Using this token with `waitFor()`, we can guarantee
+ * that `CountryStore` is updated before the callback that updates `CityStore`
+ * needs to query its data.
+ *
+ *   CityStore.dispatchToken = flightDispatcher.register(function(payload) {
+ *     if (payload.actionType === 'country-update') {
+ *       // `CountryStore.country` may not be updated.
+ *       flightDispatcher.waitFor([CountryStore.dispatchToken]);
+ *       // `CountryStore.country` is now guaranteed to be updated.
+ *
+ *       // Select the default city for the new country
+ *       CityStore.city = getDefaultCityForCountry(CountryStore.country);
+ *     }
+ *   });
+ *
+ * The usage of `waitFor()` can be chained, for example:
+ *
+ *   FlightPriceStore.dispatchToken =
+ *     flightDispatcher.register(function(payload) {
+ *       switch (payload.actionType) {
+ *         case 'country-update':
+ *         case 'city-update':
+ *           flightDispatcher.waitFor([CityStore.dispatchToken]);
+ *           FlightPriceStore.price =
+ *             getFlightPriceStore(CountryStore.country, CityStore.city);
+ *           break;
+ *     }
+ *   });
+ *
+ * The `country-update` payload will be guaranteed to invoke the stores'
+ * registered callbacks in order: `CountryStore`, `CityStore`, then
+ * `FlightPriceStore`.
+ */
+
+var Dispatcher = (function () {
+  function Dispatcher() {
+    _classCallCheck(this, Dispatcher);
+
+    this._callbacks = {};
+    this._isDispatching = false;
+    this._isHandled = {};
+    this._isPending = {};
+    this._lastID = 1;
+  }
+
+  /**
+   * Registers a callback to be invoked with every dispatched payload. Returns
+   * a token that can be used with `waitFor()`.
+   */
+
+  Dispatcher.prototype.register = function register(callback) {
+    var id = _prefix + this._lastID++;
+    this._callbacks[id] = callback;
+    return id;
+  };
+
+  /**
+   * Removes a callback based on its token.
+   */
+
+  Dispatcher.prototype.unregister = function unregister(id) {
+    !this._callbacks[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.unregister(...): `%s` does not map to a registered callback.', id) : invariant(false) : undefined;
+    delete this._callbacks[id];
+  };
+
+  /**
+   * Waits for the callbacks specified to be invoked before continuing execution
+   * of the current callback. This method should only be used by a callback in
+   * response to a dispatched payload.
+   */
+
+  Dispatcher.prototype.waitFor = function waitFor(ids) {
+    !this._isDispatching ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): Must be invoked while dispatching.') : invariant(false) : undefined;
+    for (var ii = 0; ii < ids.length; ii++) {
+      var id = ids[ii];
+      if (this._isPending[id]) {
+        !this._isHandled[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): Circular dependency detected while ' + 'waiting for `%s`.', id) : invariant(false) : undefined;
+        continue;
+      }
+      !this._callbacks[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): `%s` does not map to a registered callback.', id) : invariant(false) : undefined;
+      this._invokeCallback(id);
+    }
+  };
+
+  /**
+   * Dispatches a payload to all registered callbacks.
+   */
+
+  Dispatcher.prototype.dispatch = function dispatch(payload) {
+    !!this._isDispatching ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatch.dispatch(...): Cannot dispatch in the middle of a dispatch.') : invariant(false) : undefined;
+    this._startDispatching(payload);
+    try {
+      for (var id in this._callbacks) {
+        if (this._isPending[id]) {
+          continue;
+        }
+        this._invokeCallback(id);
+      }
+    } finally {
+      this._stopDispatching();
+    }
+  };
+
+  /**
+   * Is this Dispatcher currently dispatching.
+   */
+
+  Dispatcher.prototype.isDispatching = function isDispatching() {
+    return this._isDispatching;
+  };
+
+  /**
+   * Call the callback stored with the given id. Also do some internal
+   * bookkeeping.
+   *
+   * @internal
+   */
+
+  Dispatcher.prototype._invokeCallback = function _invokeCallback(id) {
+    this._isPending[id] = true;
+    this._callbacks[id](this._pendingPayload);
+    this._isHandled[id] = true;
+  };
+
+  /**
+   * Set up bookkeeping needed when dispatching.
+   *
+   * @internal
+   */
+
+  Dispatcher.prototype._startDispatching = function _startDispatching(payload) {
+    for (var id in this._callbacks) {
+      this._isPending[id] = false;
+      this._isHandled[id] = false;
+    }
+    this._pendingPayload = payload;
+    this._isDispatching = true;
+  };
+
+  /**
+   * Clear bookkeeping used for dispatching.
+   *
+   * @internal
+   */
+
+  Dispatcher.prototype._stopDispatching = function _stopDispatching() {
+    delete this._pendingPayload;
+    this._isDispatching = false;
+  };
+
+  return Dispatcher;
+})();
+
+module.exports = Dispatcher;
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(process) {/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ */
+
+
+
+/**
+ * Use invariant() to assert state which your program assumes to be true.
+ *
+ * Provide sprintf-style format (only %s is supported) and arguments
+ * to provide information about what broke and what you were
+ * expecting.
+ *
+ * The invariant message will be stripped in production, but the invariant
+ * will remain to ensure logic does not differ in production.
+ */
+
+var validateFormat = function validateFormat(format) {};
+
+if (process.env.NODE_ENV !== 'production') {
+  validateFormat = function validateFormat(format) {
+    if (format === undefined) {
+      throw new Error('invariant requires an error message argument');
+    }
+  };
+}
+
+function invariant(condition, format, a, b, c, d, e, f) {
+  validateFormat(format);
+
+  if (!condition) {
+    var error;
+    if (format === undefined) {
+      error = new Error('Minified exception occurred; use the non-minified dev environment ' + 'for the full error message and additional helpful warnings.');
+    } else {
+      var args = [a, b, c, d, e, f];
+      var argIndex = 0;
+      error = new Error(format.replace(/%s/g, function () {
+        return args[argIndex++];
+      }));
+      error.name = 'Invariant Violation';
+    }
+
+    error.framesToPop = 1; // we don't care about invariant's own frame
+    throw error;
+  }
+}
+
+module.exports = invariant;
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _preact = __webpack_require__(0);
+
+var _apisearchActions = __webpack_require__(15);
+
+var _WidgetFactory = __webpack_require__(16);
+
+var _WidgetFactory2 = _interopRequireDefault(_WidgetFactory);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * ApisearchUI class
+ */
+var ApisearchUI = function () {
+    /**
+     * Constructor.
+     */
+    function ApisearchUI(environmentId, client, store) {
+        _classCallCheck(this, ApisearchUI);
+
+        /**
+         * Environment Id
+         */
+        this.environmentId = environmentId;
+
+        /**
+         * UI related properties
+         */
+        this.client = client;
+        this.widgets = _WidgetFactory2.default;
+        this.activeWidgets = [];
+
+        /**
+         * Store related properties
+         */
+        this.store = store;
+    }
+
+    /**
+     * Initialize components
+     */
+
+
+    _createClass(ApisearchUI, [{
+        key: "init",
+        value: function init() {
+            var _this = this;
+
+            /**
+             * Register all events on the store
+             */
+            this.store.on('render', function () {
+                return _this.render();
+            });
+
+            /**
+             * Trigger the initial render: (Mount the components)
+             *   -> To let components setup its configuration on componentWillMount()
+             *   -> And fetch the initial data with the given configuration
+             */
+            this.render();
+            (0, _apisearchActions.initialDataFetchAction)(this.store.currentQuery, this.client);
+        }
+
+        /**
+         * Add new widget
+         */
+
+    }, {
+        key: "addWidget",
+        value: function addWidget(widget) {
+            this.activeWidgets = [].concat(_toConsumableArray(this.activeWidgets), [widget]);
+            return this;
+        }
+
+        /**
+         * Add widgets in bulk mode
+         */
+
+    }, {
+        key: "addWidgets",
+        value: function addWidgets() {
+            var _this2 = this;
+
+            for (var _len = arguments.length, widgets = Array(_len), _key = 0; _key < _len; _key++) {
+                widgets[_key] = arguments[_key];
+            }
+
+            widgets.map(function (widget) {
+                return _this2.addWidget(widget);
+            });
+            return this;
+        }
+
+        /**
+         * Render.
+         *
+         * Loop all active widgets
+         * Hydrate them with new props
+         * And render them.
+         */
+
+    }, {
+        key: "render",
+        value: function render() {
+            var _this3 = this;
+
+            this.activeWidgets.map(function (widget) {
+                var hydratedWidget = hydrateWidget(_this3.environmentId, _this3.store, _this3.client, widget);
+                var targetNode = document.querySelector(widget.attributes.target);
+
+                if (null === targetNode) {
+                    throw new Error("Widget (" + hydratedWidget.nodeName.name + ") must have a valid DOM target");
+                }
+
+                (0, _preact.render)(hydratedWidget, targetNode, targetNode.lastChild);
+            });
+        }
+    }]);
+
+    return ApisearchUI;
+}();
+
+function hydrateWidget(environmentId, currentStore, client, widget) {
+    /**
+     * Pass ApisearchClient, current Query, and data received
+     * as a component attributes. There will be accessible
+     * on component props.
+     */
+    widget.attributes.environmentId = environmentId;
+    widget.attributes.dirty = currentStore.dirty;
+    widget.attributes.data = currentStore.data;
+    widget.attributes.currentQuery = currentStore.currentQuery;
+    widget.attributes.client = client;
+
+    return widget;
+}
+
+exports.default = ApisearchUI;
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.initialDataFetchAction = initialDataFetchAction;
+
+var _dispatcher = __webpack_require__(2);
+
+var _dispatcher2 = _interopRequireDefault(_dispatcher);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Initial data fetching action
+ *
+ * This action is triggered on the first time ApisearchUI is initialized:
+ *   @param initialQuery -> initial application query
+ *   @param client       -> apisearch client to trigger a search
+ *
+ * Finally dispatches an event with the search result and
+ * the modified query.
+ *   @returns {{
+ *     type: string,
+ *     payload: {
+ *        result,
+ *        updatedQuery
+ *     }
+ *   }}
+ */
+function initialDataFetchAction(initialQuery, client) {
+    client.search(initialQuery, function (initialResult) {
+        _dispatcher2.default.dispatch({
+            type: 'RENDER_INITIAL_DATA',
+            payload: {
+                initialResult: initialResult,
+                initialQuery: initialQuery
+            }
+        });
+    });
+}
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * @jsx h
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 
 /**
  * Vendors
  */
-function bootstrap(_ref2) {
-  var environmentId = _ref2.environmentId,
-      appId = _ref2.appId,
-      apiKey = _ref2.apiKey,
-      options = _ref2.options;
 
-  var clientId = "apisearch_client--" + appId + "_" + apiKey;
-  var storeId = "apisearch_store--" + environmentId;
-  var dispatcherId = "apisearch_dispatcher--" + environmentId;
-  var asuiId = "apisearch_ui--" + environmentId;
 
-  /**
-   * Register Apisearch client
+/**
+ * Locals
+ */
+
+
+var _preact = __webpack_require__(0);
+
+var _SimpleSearchComponent = __webpack_require__(17);
+
+var _SimpleSearchComponent2 = _interopRequireDefault(_SimpleSearchComponent);
+
+var _SuggestedSearchComponent = __webpack_require__(25);
+
+var _SuggestedSearchComponent2 = _interopRequireDefault(_SuggestedSearchComponent);
+
+var _SortByComponent = __webpack_require__(28);
+
+var _SortByComponent2 = _interopRequireDefault(_SortByComponent);
+
+var _MultipleFilterComponent = __webpack_require__(30);
+
+var _MultipleFilterComponent2 = _interopRequireDefault(_MultipleFilterComponent);
+
+var _ResultComponent = __webpack_require__(37);
+
+var _ResultComponent2 = _interopRequireDefault(_ResultComponent);
+
+var _InformationComponent = __webpack_require__(39);
+
+var _InformationComponent2 = _interopRequireDefault(_InformationComponent);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * Widgets factory class
+ *
+ * @info
+ *   The className object merge is because react does not
+ *   merge the defaultProps deep objects with the custom
+ *   props object passed to the component.
+ *     @see https://github.com/facebook/react/issues/2568
+ *     @see https://stackoverflow.com/questions/40428847/react-component-defaultprops-objects-are-overridden-not-merged
+ */
+var WidgetFactory = function () {
+    function WidgetFactory() {
+        _classCallCheck(this, WidgetFactory);
+    }
+
+    _createClass(WidgetFactory, null, [{
+        key: "simpleSearch",
+
+
+        /**
+         * Simple search input
+         */
+        value: function simpleSearch(_ref) {
+            var target = _ref.target,
+                placeholder = _ref.placeholder,
+                autofocus = _ref.autofocus,
+                classNames = _ref.classNames;
+
+            return (0, _preact.h)(_SimpleSearchComponent2.default, {
+                target: target,
+                placeholder: placeholder,
+                autofocus: autofocus,
+                classNames: _extends({}, _SimpleSearchComponent2.default.defaultProps.classNames, classNames)
+            });
+        }
+    }, {
+        key: "suggestedSearch",
+
+
+        /**
+         * Suggested Search input
+         */
+        value: function suggestedSearch(_ref2) {
+            var target = _ref2.target,
+                placeholder = _ref2.placeholder,
+                autofocus = _ref2.autofocus,
+                classNames = _ref2.classNames,
+                template = _ref2.template;
+
+            return (0, _preact.h)(_SuggestedSearchComponent2.default, {
+                target: target,
+                placeholder: placeholder,
+                autofocus: autofocus,
+                classNames: _extends({}, _SuggestedSearchComponent2.default.defaultProps.classNames, classNames),
+                template: template
+            });
+        }
+
+        /**
+         * Sort By
+         */
+
+    }, {
+        key: "sortBy",
+        value: function sortBy(_ref3) {
+            var target = _ref3.target,
+                classNames = _ref3.classNames,
+                options = _ref3.options;
+
+            return (0, _preact.h)(_SortByComponent2.default, {
+                target: target,
+                classNames: _extends({}, _SortByComponent2.default.defaultProps.classNames, classNames),
+                options: options
+            });
+        }
+
+        /**
+         * Multiple filter
+         */
+
+    }, {
+        key: "multipleFilter",
+        value: function multipleFilter(_ref4) {
+            var target = _ref4.target,
+                name = _ref4.name,
+                filterField = _ref4.filterField,
+                aggregationField = _ref4.aggregationField,
+                applicationType = _ref4.applicationType,
+                limit = _ref4.limit,
+                sortBy = _ref4.sortBy,
+                showMoreActive = _ref4.showMoreActive,
+                classNames = _ref4.classNames,
+                template = _ref4.template;
+
+            return (0, _preact.h)(_MultipleFilterComponent2.default, {
+                target: target,
+                name: name,
+                filterField: filterField,
+                aggregationField: aggregationField,
+                applicationType: applicationType,
+                limit: limit,
+                sortBy: sortBy,
+                showMoreActive: showMoreActive,
+                classNames: _extends({}, _MultipleFilterComponent2.default.defaultProps.classNames, classNames),
+                template: _extends({}, _MultipleFilterComponent2.default.defaultProps.template, template)
+            });
+        }
+
+        /**
+         * Search result
+         */
+
+    }, {
+        key: "result",
+        value: function result(_ref5) {
+            var target = _ref5.target,
+                itemsPerPage = _ref5.itemsPerPage,
+                highlightsEnabled = _ref5.highlightsEnabled,
+                classNames = _ref5.classNames,
+                template = _ref5.template;
+
+            return (0, _preact.h)(_ResultComponent2.default, {
+                target: target,
+                itemsPerPage: itemsPerPage,
+                highlightsEnabled: highlightsEnabled,
+                classNames: _extends({}, _ResultComponent2.default.defaultProps.classNames, classNames),
+                template: template
+            });
+        }
+
+        /**
+         * Search result information
+         */
+
+    }, {
+        key: "information",
+        value: function information(_ref6) {
+            var target = _ref6.target,
+                classNames = _ref6.classNames,
+                template = _ref6.template;
+
+            return (0, _preact.h)(_InformationComponent2.default, {
+                target: target,
+                classNames: _extends({}, _InformationComponent2.default.defaultProps.classNames, classNames),
+                template: template
+            });
+        }
+    }]);
+
+    return WidgetFactory;
+}();
+
+exports.default = WidgetFactory;
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _preact = __webpack_require__(0);
+
+var _simpleSearchActions = __webpack_require__(18);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+/**
+ * SimpleSearch Component
+ */
+var SimpleSearchComponent = function (_Component) {
+    _inherits(SimpleSearchComponent, _Component);
+
+    function SimpleSearchComponent() {
+        var _ref;
+
+        var _temp, _this, _ret;
+
+        _classCallCheck(this, SimpleSearchComponent);
+
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+        }
+
+        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = SimpleSearchComponent.__proto__ || Object.getPrototypeOf(SimpleSearchComponent)).call.apply(_ref, [this].concat(args))), _this), _this.handleSearch = function (e) {
+            var _this$props = _this.props,
+                environmentId = _this$props.environmentId,
+                currentQuery = _this$props.currentQuery,
+                client = _this$props.client;
+
+            /**
+             * Dispatch input search action
+             */
+
+            (0, _simpleSearchActions.simpleSearchAction)({
+                environmentId: environmentId,
+                queryText: e.target.value
+            }, currentQuery, client);
+        }, _temp), _possibleConstructorReturn(_this, _ret);
+    }
+
+    _createClass(SimpleSearchComponent, [{
+        key: 'shouldComponentUpdate',
+        value: function shouldComponentUpdate() {
+            return false;
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var _props = this.props,
+                placeholder = _props.placeholder,
+                autofocus = _props.autofocus,
+                _props$classNames = _props.classNames,
+                containerClassName = _props$classNames.container,
+                inputClassName = _props$classNames.input;
+
+
+            return (0, _preact.h)(
+                'div',
+                { className: 'asui-simpleSearch ' + containerClassName },
+                (0, _preact.h)('input', {
+                    type: 'text',
+                    className: 'asui-simpleSearch--input ' + inputClassName,
+                    autofocus: autofocus,
+                    placeholder: placeholder,
+                    onInput: this.handleSearch
+                })
+            );
+        }
+    }]);
+
+    return SimpleSearchComponent;
+}(_preact.Component);
+
+SimpleSearchComponent.defaultProps = {
+    placeholder: '',
+    autofocus: false,
+    classNames: {
+        container: '',
+        input: ''
+    }
+};
+
+exports.default = SimpleSearchComponent;
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.simpleSearchAction = simpleSearchAction;
+
+var _cloneDeep = __webpack_require__(1);
+
+var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
+
+var _container = __webpack_require__(3);
+
+var _container2 = _interopRequireDefault(_container);
+
+var _constants = __webpack_require__(44);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Keyup simple search action
+ *
+ * This action is triggered when a text input changes
+ * receives three parameters:
+ *   @param queryOptions -> the queryOptions for the search
+ *   @param currentQuery -> current application query
+ *   @param client       -> apisearch client to trigger a search
+ *
+ * Finally dispatches an event with the search result and
+ * the modified query.
+ *   @returns {{
+ *     type: string,
+ *     payload: {
+ *        result,
+ *        updatedQuery
+ *     }
+ *   }}
+ */
+function simpleSearchAction(queryOptions, currentQuery, client) {
+    var environmentId = queryOptions.environmentId,
+        queryText = queryOptions.queryText;
+
+
+    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+    clonedQuery.setQueryText(queryText);
+
+    var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
+    client.search(clonedQuery, function (result) {
+        dispatcher.dispatch({
+            type: 'RENDER_FETCHED_DATA',
+            payload: {
+                result: result,
+                updatedQuery: clonedQuery
+            }
+        });
+    });
+} /**
+   * Search actions
    */
-  _container2.default.register(clientId, function () {
-    return (0, _apisearch2.default)(appId, apiKey, options);
-  });
 
-  /**
-   * Register apisearch store
-   */
-  _container2.default.register(storeId, function () {
-    return new _Store2.default(_container2.default.get(clientId));
-  });
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
 
-  /**
-   * Register an event dispatcher
-   */
-  _container2.default.register(dispatcherId, function () {
-    return new _flux.Dispatcher();
-  });
+"use strict";
+/*!
+ * is-plain-object <https://github.com/jonschlinkert/is-plain-object>
+ *
+ * Copyright (c) 2014-2017, Jon Schlinkert.
+ * Released under the MIT License.
+ */
 
-  /**
-   * Apisearch UI Instance
-   */
-  _container2.default.register(asuiId, function () {
-    return new _ApisearchUI2.default(environmentId, _container2.default.get(clientId), _container2.default.get(storeId));
-  });
 
-  console.log(_container2.default);
+
+var isObject = __webpack_require__(20);
+
+function isObjectObject(o) {
+  return isObject(o) === true
+    && Object.prototype.toString.call(o) === '[object Object]';
+}
+
+module.exports = function isPlainObject(o) {
+  var ctor,prot;
+
+  if (isObjectObject(o) === false) return false;
+
+  // If has modified constructor
+  ctor = o.constructor;
+  if (typeof ctor !== 'function') return false;
+
+  // If has modified prototype
+  prot = ctor.prototype;
+  if (isObjectObject(prot) === false) return false;
+
+  // If constructor does not have an Object-specific method
+  if (prot.hasOwnProperty('isPrototypeOf') === false) {
+    return false;
+  }
+
+  // Most likely a plain Object
+  return true;
+};
+
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * isobject <https://github.com/jonschlinkert/isobject>
+ *
+ * Copyright (c) 2014-2017, Jon Schlinkert.
+ * Released under the MIT License.
+ */
+
+
+
+module.exports = function isObject(val) {
+  return val != null && typeof val === 'object' && Array.isArray(val) === false;
+};
+
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * shallow-clone <https://github.com/jonschlinkert/shallow-clone>
+ *
+ * Copyright (c) 2015-2017, Jon Schlinkert.
+ * Released under the MIT License.
+ */
+
+
+
+var isObject = __webpack_require__(7);
+var mixin = __webpack_require__(22);
+var typeOf = __webpack_require__(9);
+
+/**
+ * Shallow copy an object, array or primitive.
+ *
+ * @param  {any} `val`
+ * @return {any}
+ */
+
+function clone(val) {
+  var type = typeOf(val);
+  if (clone.hasOwnProperty(type)) {
+    return clone[type](val);
+  }
+  return val;
+}
+
+clone.array = function cloneArray(arr) {
+  return arr.slice();
+};
+
+clone.date = function cloneDate(date) {
+  return new Date(+date);
+};
+
+clone.object = function cloneObject(obj) {
+  if (isObject(obj)) {
+    return mixin({}, obj);
+  } else {
+    return obj;
+  }
+};
+
+clone.regexp = function cloneRegExp(re) {
+  var flags = '';
+  flags += re.multiline ? 'm' : '';
+  flags += re.global ? 'g' : '';
+  flags += re.ignorecase ? 'i' : '';
+  return new RegExp(re.source, flags);
+};
+
+/**
+ * Expose `clone`
+ */
+
+module.exports = clone;
+
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var isObject = __webpack_require__(7);
+var forIn = __webpack_require__(8);
+
+function mixin(target, objects) {
+  if (!isObject(target)) {
+    throw new TypeError('mixin-object expects the first argument to be an object.');
+  }
+  var len = arguments.length, i = 0;
+  while (++i < len) {
+    var obj = arguments[i];
+    if (isObject(obj)) {
+      forIn(obj, copy, target);
+    }
+  }
+  return target;
+}
+
+/**
+ * copy properties from the source object to the
+ * target object.
+ *
+ * @param  {*} `value`
+ * @param  {String} `key`
+ */
+
+function copy(value, key) {
+  this[key] = value;
+}
+
+/**
+ * Expose `mixin`
+ */
+
+module.exports = mixin;
+
+/***/ }),
+/* 23 */
+/***/ (function(module, exports) {
+
+/*!
+ * Determine if an object is a Buffer
+ *
+ * @author   Feross Aboukhadijeh <https://feross.org>
+ * @license  MIT
+ */
+
+// The _isBuffer check is for Safari 5-7 support, because it's missing
+// Object.prototype.constructor. Remove this eventually
+module.exports = function (obj) {
+  return obj != null && (isBuffer(obj) || isSlowBuffer(obj) || !!obj._isBuffer)
+}
+
+function isBuffer (obj) {
+  return !!obj.constructor && typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
+}
+
+// For Node v0.10 support. Remove this eventually.
+function isSlowBuffer (obj) {
+  return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
+}
+
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * for-own <https://github.com/jonschlinkert/for-own>
+ *
+ * Copyright (c) 2014-2017, Jon Schlinkert.
+ * Released under the MIT License.
+ */
+
+
+
+var forIn = __webpack_require__(8);
+var hasOwn = Object.prototype.hasOwnProperty;
+
+module.exports = function forOwn(obj, fn, thisArg) {
+  forIn(obj, function(val, key) {
+    if (hasOwn.call(obj, key)) {
+      return fn.call(thisArg, obj[key], key, obj);
+    }
+  });
+};
+
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _preact = __webpack_require__(0);
+
+var _helpers = __webpack_require__(26);
+
+var _suggestedSearchActions = __webpack_require__(27);
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+/**
+ * Actions
+ */
+
+
+/**
+ * Suggested Search Component
+ */
+var SuggestedSearchComponent = function (_Component) {
+    _inherits(SuggestedSearchComponent, _Component);
+
+    function SuggestedSearchComponent() {
+        _classCallCheck(this, SuggestedSearchComponent);
+
+        var _this = _possibleConstructorReturn(this, (SuggestedSearchComponent.__proto__ || Object.getPrototypeOf(SuggestedSearchComponent)).call(this));
+
+        _this.handleSearch = function (e) {
+            /**
+             * Set the current query text
+             */
+            _this.setState({ q: e.target.value });
+
+            /**
+             * Dispatch suggested search action
+             */
+            (0, _suggestedSearchActions.suggestedSearchAction)(e.target.value, _this.props.currentQuery, _this.props.client);
+        };
+
+        _this.handleSuggestionsNavigation = function (e) {
+            /**
+             * When user hits arrow down
+             */
+            if (e.code === 'ArrowDown') {
+                _this.setState({
+                    currentSuggestions: (0, _helpers.selectNextSuggestion)(_this.state.currentSuggestions),
+                    q: (0, _helpers.selectActiveSuggestion)(_this.state.currentSuggestions)
+                });
+            }
+
+            /**
+             * When user hits arrow up
+             */
+            if (e.code === 'ArrowUp') {
+                /**
+                 * Prevent cursor to go at the starting point of the line
+                 */
+                e.preventDefault();
+
+                _this.setState({
+                    currentSuggestions: (0, _helpers.selectPreviousSuggestion)(_this.state.currentSuggestions),
+                    q: (0, _helpers.selectActiveSuggestion)(_this.state.currentSuggestions)
+                });
+            }
+
+            /**
+             * When user hits enter
+             */
+            if (e.code === 'Enter') {
+                _this.setState({
+                    q: (0, _helpers.selectActiveSuggestion)(_this.state.currentSuggestions),
+                    currentSuggestions: []
+                });
+
+                var _this$props = _this.props,
+                    currentQuery = _this$props.currentQuery,
+                    client = _this$props.client;
+
+
+                (0, _suggestedSearchActions.simpleSearchAction)(_this.state.q, currentQuery, client);
+            }
+        };
+
+        _this.handleSuggestionClick = function (e) {
+            _this.setState({
+                q: e.target.innerText,
+                currentSuggestions: []
+            });
+
+            (0, _suggestedSearchActions.simpleSearchAction)(e.target.innerText, _this.props.currentQuery, _this.props.client);
+        };
+
+        _this.handleSearchInputFocusedOut = function (e) {
+            /**
+             * It handles when a user focuses out the search input
+             * If is not clicking on the suggestions box
+             * The suggestions are cleared and panel closes
+             */
+            if (null === e.relatedTarget || false === e.relatedTarget.classList.contains('asui-suggestedSearch--box')) {
+                _this.setState({ currentSuggestions: [] });
+            }
+
+            return false;
+        };
+
+        _this.state = {
+            q: '',
+            currentSuggestions: []
+        };
+        return _this;
+    }
+
+    _createClass(SuggestedSearchComponent, [{
+        key: 'componentWillReceiveProps',
+        value: function componentWillReceiveProps(props) {
+            var _this2 = this;
+
+            /**
+             * Check suggestions available
+             * if some, prepend the current query to the other suggestions array
+             * else, only append the current query to the suggestions array
+             */
+            var suggests = props.data && props.data.suggests ? [this.state.q].concat(_toConsumableArray(props.data.suggests)) : [this.state.q];
+
+            /**
+             * Prepare suggestions array
+             */
+            this.setState({
+                currentSuggestions: suggests.map(function (suggest, key) {
+                    return {
+                        isActive: 0 === key,
+                        name: suggest,
+                        htmlName: (0, _helpers.highlightSuggestion)(_this2.state.q, suggest)
+                    };
+                })
+            });
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var _this3 = this;
+
+            var _props = this.props,
+                placeholder = _props.placeholder,
+                autofocus = _props.autofocus,
+                _props$classNames = _props.classNames,
+                containerClassName = _props$classNames.container,
+                inputClassName = _props$classNames.input,
+                boxClassName = _props$classNames.box,
+                suggestionClassName = _props$classNames.suggestion,
+                activeSuggestionClassName = _props$classNames.activeSuggestion;
+            var currentSuggestions = this.state.currentSuggestions;
+
+
+            return (0, _preact.h)(
+                'div',
+                { className: 'asui-suggestedSearch ' + containerClassName },
+                (0, _preact.h)('input', {
+                    type: 'text',
+                    value: this.state.q,
+                    className: 'asui-suggestedSearch--input ' + inputClassName,
+                    placeholder: placeholder,
+                    autofocus: autofocus,
+
+                    onInput: this.handleSearch,
+                    onKeyDown: this.handleSuggestionsNavigation,
+                    onBlur: this.handleSearchInputFocusedOut
+                }),
+                (0, _preact.h)(
+                    'div',
+                    {
+                        tabIndex: '0',
+                        className: 'asui-suggestedSearch--box ' + boxClassName,
+                        style: {
+                            display: currentSuggestions.length !== 0 ? 'block' : 'none'
+                        }
+                    },
+                    currentSuggestions.map(function (suggestion, key) {
+                        return 0 !== key ? (0, _preact.h)('div', {
+                            className: 'asui-suggestedSearch--suggestion ' + (suggestionClassName + ' ') + ('' + (suggestion.isActive ? activeSuggestionClassName : '')),
+                            dangerouslySetInnerHTML: {
+                                __html: suggestion.htmlName
+                            },
+                            onClick: _this3.handleSuggestionClick
+                        }) : null;
+                    })
+                )
+            );
+        }
+    }]);
+
+    return SuggestedSearchComponent;
+}(_preact.Component);
+
+SuggestedSearchComponent.defaultProps = {
+    placeholder: '',
+    autofocus: false,
+    classNames: {
+        container: '',
+        input: '',
+        box: '',
+        suggestion: '',
+        activeSuggestion: 'asui-active'
+    }
+};
+
+exports.default = SuggestedSearchComponent;
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.highlightSuggestion = highlightSuggestion;
+exports.selectNextSuggestion = selectNextSuggestion;
+exports.selectPreviousSuggestion = selectPreviousSuggestion;
+exports.selectActiveSuggestion = selectActiveSuggestion;
+/**
+ * Set of helpers for the suggestions widget
+ */
+
+/**
+ * Highlight text
+ */
+function highlightSuggestion(currentQueryText, suggestion) {
+    var regex = new RegExp('(' + currentQueryText + ')', 'gi');
+    var highlightedSuggestion = suggestion.replace(regex, "<em>$1</em>");
+    var sanitizedSpaces = highlightedSuggestion.split(' ');
+
+    return sanitizedSpaces.join('&nbsp;');
+}
+
+/**
+ * Mark as active the item next
+ * to the last active item
+ * on a given array of items
+ *
+ * @example when a user press a key arrow down
+ */
+function selectNextSuggestion(suggestionsArray) {
+    var currentActiveSuggestionKey = void 0;
+
+    return suggestionsArray.map(function (suggestion, key) {
+        /**
+         * Detect current active suggestion
+         */
+        if (suggestion.isActive && key + 1 < suggestionsArray.length) {
+            currentActiveSuggestionKey = key;
+            suggestion.isActive = false;
+        }
+
+        /**
+         * Modify the first suggestion next to
+         * the current active suggestion
+         */
+        if (key === currentActiveSuggestionKey + 1 && key + 1 <= suggestionsArray.length) {
+            suggestion.isActive = true;
+        }
+
+        return suggestion;
+    });
+}
+
+/**
+ * Mark as active the item previous
+ * to the last active item
+ * on a given array of items
+ *
+ * @example when a user press a key arrow up
+ */
+function selectPreviousSuggestion(suggestionsArray) {
+    /**
+     * Find the current active suggestion key
+     */
+    var currentActiveSuggestionKey = suggestionsArray.findIndex(function (suggestion) {
+        if (suggestion.isActive) {
+            return suggestion;
+        }
+    });
+
+    return suggestionsArray.map(function (suggestion, key) {
+        /**
+         * Set the current active suggestion as false
+         * if is Active AND is not the last one
+         */
+        if (suggestion.isActive && currentActiveSuggestionKey - 1 >= 0) {
+            suggestion.isActive = false;
+        }
+
+        /**
+         * Set active the suggestion previous to
+         * the current active suggestion
+         */
+        if (currentActiveSuggestionKey - 1 === key && currentActiveSuggestionKey - 1 >= 0) {
+            suggestion.isActive = true;
+        }
+
+        return suggestion;
+    });
+}
+
+/**
+ * Return the active item of an array
+ */
+function selectActiveSuggestion(suggestionsArray) {
+    var selectedSuggestion = suggestionsArray.filter(function (suggestion) {
+        if (suggestion.isActive) {
+            return suggestion;
+        }
+    });
+
+    return selectedSuggestion[0].name;
 }
 
 /***/ }),
-/* 11 */
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.simpleSearchAction = simpleSearchAction;
+exports.suggestedSearchAction = suggestedSearchAction;
+
+var _cloneDeep = __webpack_require__(1);
+
+var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
+
+var _dispatcher = __webpack_require__(2);
+
+var _dispatcher2 = _interopRequireDefault(_dispatcher);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * This actions are triggered when a text input changes
+ * receives three parameters:
+ *   @param text         -> the text value for the search
+ *   @param currentQuery -> current application query
+ *   @param client       -> apisearch client to trigger a search
+ *
+ * Finally dispatches an event with the search result and
+ * the modified query.
+ *   @returns {{
+ *     type: string,
+ *     payload: {
+ *        result,
+ *        updatedQuery
+ *     }
+ *   }}
+ */
+
+/**
+ * Simple search action
+ * Builds a query disabling suggested searches flag
+ */
+/**
+ * Search actions
+ */
+function simpleSearchAction(text, currentQuery, client) {
+    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+    clonedQuery.setQueryText(text).enableResults().disableSuggestions();
+
+    client.search(clonedQuery, function (result) {
+        _dispatcher2.default.dispatch({
+            type: 'RENDER_FETCHED_DATA',
+            payload: {
+                result: result,
+                updatedQuery: clonedQuery
+            }
+        });
+    });
+}
+
+/**
+ * Suggested Search Action
+ * Builds a query using suggested search flag active
+ */
+function suggestedSearchAction(text, currentQuery, client) {
+    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+    clonedQuery.setQueryText(text).disableResults().enableSuggestions();
+
+    client.search(clonedQuery, function (result) {
+        _dispatcher2.default.dispatch({
+            type: 'RENDER_FETCHED_DATA',
+            payload: {
+                result: result,
+                updatedQuery: clonedQuery
+            }
+        });
+    });
+}
+
+/***/ }),
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _preact = __webpack_require__(0);
+
+var _sortByActions = __webpack_require__(29);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+
+/**
+ * SortBy Filter Component
+ */
+var SortByComponent = function (_Component) {
+    _inherits(SortByComponent, _Component);
+
+    function SortByComponent() {
+        var _ref;
+
+        var _temp, _this, _ret;
+
+        _classCallCheck(this, SortByComponent);
+
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+        }
+
+        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = SortByComponent.__proto__ || Object.getPrototypeOf(SortByComponent)).call.apply(_ref, [this].concat(args))), _this), _this.handleChange = function (e) {
+            var _this$props = _this.props,
+                currentQuery = _this$props.currentQuery,
+                client = _this$props.client;
+
+            /**
+             * Dispatch action
+             */
+
+            (0, _sortByActions.onChangeSearchAction)(e.target.value, currentQuery, client);
+        }, _temp), _possibleConstructorReturn(_this, _ret);
+    }
+
+    _createClass(SortByComponent, [{
+        key: 'shouldComponentUpdate',
+        value: function shouldComponentUpdate() {
+            return false;
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var _props = this.props,
+                _props$classNames = _props.classNames,
+                containerClassName = _props$classNames.container,
+                selectClassName = _props$classNames.select,
+                options = _props.options;
+
+
+            return (0, _preact.h)(
+                'div',
+                { className: 'asui-sortBy ' + containerClassName },
+                (0, _preact.h)(
+                    'select',
+                    {
+                        className: 'asui-sortBy--selector ' + selectClassName,
+                        onChange: this.handleChange
+                    },
+                    options.map(function (option) {
+                        return (0, _preact.h)(
+                            'option',
+                            { value: option.value },
+                            option.name
+                        );
+                    })
+                )
+            );
+        }
+    }]);
+
+    return SortByComponent;
+}(_preact.Component);
+
+SortByComponent.defaultProps = {
+    classNames: {
+        container: '',
+        select: ''
+    }
+};
+
+exports.default = SortByComponent;
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.onChangeSearchAction = onChangeSearchAction;
+
+var _cloneDeep = __webpack_require__(1);
+
+var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
+
+var _dispatcher = __webpack_require__(2);
+
+var _dispatcher2 = _interopRequireDefault(_dispatcher);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; } /**
+                                                                                                                                                                                                                   * Search actions
+                                                                                                                                                                                                                   */
+
+
+/**
+ * On change action
+ *
+ * This action is triggered when a sortBy filter changes
+ * receives three parameters:
+ *   @param queryValue   -> the value for the filter (ex: "created_at:asc")
+ *   @param currentQuery -> current application query
+ *   @param client       -> apisearch client to trigger a search
+ *
+ * Finally dispatches an event with the search result and
+ * the modified query.
+ *   @returns {{
+ *     type: string,
+ *     payload: {
+ *        result,
+ *        updatedQuery
+ *     }
+ *   }}
+ */
+function onChangeSearchAction(queryValue, currentQuery, client) {
+    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+    var filterData = splitQueryValue(queryValue);
+
+    clonedQuery.sortBy(_defineProperty({}, 'indexed_metadata.' + filterData.field, {
+        order: filterData.value
+    }));
+
+    client.search(clonedQuery, function (result) {
+        _dispatcher2.default.dispatch({
+            type: 'RENDER_FETCHED_DATA',
+            payload: {
+                result: result,
+                updatedQuery: clonedQuery
+            }
+        });
+    });
+}
+
+function splitQueryValue(string) {
+    var queryValue = string.split(':');
+
+    return {
+        field: queryValue[0],
+        value: queryValue[1]
+    };
+}
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _preact = __webpack_require__(0);
+
+var _Template = __webpack_require__(4);
+
+var _Template2 = _interopRequireDefault(_Template);
+
+var _ShowMoreComponent = __webpack_require__(34);
+
+var _ShowMoreComponent2 = _interopRequireDefault(_ShowMoreComponent);
+
+var _multipleFilterActions = __webpack_require__(35);
+
+var _helpers = __webpack_require__(36);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+
+/**
+ * Filter Component
+ */
+var MultipleFilterComponent = function (_Component) {
+    _inherits(MultipleFilterComponent, _Component);
+
+    function MultipleFilterComponent() {
+        _classCallCheck(this, MultipleFilterComponent);
+
+        var _this = _possibleConstructorReturn(this, (MultipleFilterComponent.__proto__ || Object.getPrototypeOf(MultipleFilterComponent)).call(this));
+
+        _this.handleClick = function (selectedFilter) {
+            var _this$props = _this.props,
+                filterName = _this$props.name,
+                filterField = _this$props.filterField,
+                aggregationField = _this$props.aggregationField,
+                applicationType = _this$props.applicationType,
+                sortBy = _this$props.sortBy,
+                currentQuery = _this$props.currentQuery,
+                client = _this$props.client,
+                aggregations = _this$props.data.aggregations.aggregations;
+
+
+            var activeElements = aggregations[filterName].active_elements;
+            var currentActiveFilterValues = typeof activeElements !== 'undefined' ? activeElements : [];
+
+            /**
+             * Dispatch action
+             */
+            (0, _multipleFilterActions.filterAction)({
+                filterName: filterName,
+                filterField: filterField,
+                applicationType: applicationType,
+                sortBy: sortBy,
+                aggregationField: aggregationField ? aggregationField : filterField,
+
+                filterValues: (0, _helpers.manageCurrentFilterItems)(selectedFilter, currentActiveFilterValues)
+            }, currentQuery, client);
+        };
+
+        _this.handleShowMore = function () {
+            var _this$state = _this.state,
+                activeAggregations = _this$state.activeAggregations,
+                currentAggregations = _this$state.currentAggregations;
+
+            var limit = activeAggregations.length + currentAggregations.length;
+            _this.setState({ limit: limit });
+        };
+
+        _this.handleShowLess = function () {
+            var limit = _this.props.limit;
+
+            _this.setState({ limit: limit });
+        };
+
+        _this.state = {
+            limit: 0,
+            activeAggregations: [],
+            currentAggregations: []
+        };
+        return _this;
+    }
+
+    _createClass(MultipleFilterComponent, [{
+        key: "componentWillMount",
+        value: function componentWillMount() {
+            var _props = this.props,
+                filterName = _props.name,
+                filterField = _props.filterField,
+                aggregationField = _props.aggregationField,
+                applicationType = _props.applicationType,
+                sortBy = _props.sortBy,
+                limit = _props.limit,
+                currentQuery = _props.currentQuery;
+
+
+            this.setState({ limit: limit });
+
+            /**
+             * Dispatch action
+             */
+            (0, _multipleFilterActions.aggregationSetup)({
+                filterName: filterName,
+                filterField: filterField,
+                applicationType: applicationType,
+                sortBy: sortBy,
+                aggregationField: aggregationField ? aggregationField : filterField
+            }, currentQuery);
+        }
+    }, {
+        key: "componentWillReceiveProps",
+        value: function componentWillReceiveProps(props) {
+            var filterName = props.name,
+                aggregations = props.data.aggregations.aggregations;
+
+
+            if (typeof aggregations[filterName] !== 'undefined') {
+                /**
+                 * Getting aggregation from aggregations
+                 */
+                var aggregation = aggregations[filterName];
+                var counters = aggregation.counters ? aggregation.counters : [];
+
+                this.setState({
+                    /**
+                     * Current used aggregations
+                     */
+                    activeAggregations: counters.filter(function (item) {
+                        return item.used;
+                    }),
+                    /**
+                     * Current inactive aggregations
+                     */
+                    currentAggregations: counters.filter(function (item) {
+                        return null === item.used;
+                    })
+                });
+            }
+        }
+    }, {
+        key: "render",
+        value: function render() {
+            var _this2 = this;
+
+            var _props2 = this.props,
+                showMoreActive = _props2.showMoreActive,
+                _props2$classNames = _props2.classNames,
+                containerClassName = _props2$classNames.container,
+                topClassName = _props2$classNames.top,
+                itemsListClassName = _props2$classNames.itemsList,
+                itemClassName = _props2$classNames.item,
+                showMoreContainerClassName = _props2$classNames.showMoreContainer,
+                _props2$template = _props2.template,
+                topTemplate = _props2$template.top,
+                itemTemplate = _props2$template.item,
+                showMoreTemplate = _props2$template.showMore,
+                showLessTemplate = _props2$template.showLess;
+
+            /**
+             * Get aggregation items
+             */
+
+            var allItems = [].concat(_toConsumableArray(this.state.activeAggregations), _toConsumableArray(this.state.currentAggregations));
+            var allItemsLength = allItems.length;
+            var items = allItems.slice(0, this.state.limit);
+
+            return (0, _preact.h)(
+                "div",
+                { className: "asui-multipleFilter " + containerClassName },
+                (0, _preact.h)(_Template2.default, {
+                    template: topTemplate,
+                    className: "asui-multipleFilter--top " + topClassName
+                }),
+                (0, _preact.h)(
+                    "div",
+                    { className: "asui-multipleFilter--itemsList " + itemsListClassName },
+                    items.map(function (item) {
+                        var reducedTemplateData = {
+                            n: parseInt(item.n).toLocaleString('de-DE'),
+                            isActive: item.used,
+                            values: item.values
+                        };
+
+                        return (0, _preact.h)(
+                            "div",
+                            {
+                                className: "asui-multipleFilter--item " + itemClassName,
+                                onClick: function onClick() {
+                                    return _this2.handleClick(item.values.id);
+                                }
+                            },
+                            (0, _preact.h)(_Template2.default, {
+                                template: itemTemplate,
+                                data: reducedTemplateData
+                            })
+                        );
+                    })
+                ),
+                showMoreActive ? (0, _preact.h)(_ShowMoreComponent2.default, {
+                    allItemsLength: allItemsLength,
+                    currentLimit: this.state.limit,
+                    handleShowMore: this.handleShowMore,
+                    handleShowLess: this.handleShowLess,
+                    showMoreContainerClassName: showMoreContainerClassName,
+                    showMoreTemplate: showMoreTemplate,
+                    showLessTemplate: showLessTemplate
+                }) : null
+            );
+        }
+    }]);
+
+    return MultipleFilterComponent;
+}(_preact.Component);
+
+MultipleFilterComponent.defaultProps = {
+    aggregationField: null,
+    applicationType: 8, // FILTER_MUST_ALL
+    limit: 10,
+    sortBy: ['_term', 'desc'],
+    showMoreActive: true,
+    classNames: {
+        container: '',
+        top: '',
+        itemsList: '',
+        item: '',
+        showMoreContainer: ''
+    },
+    template: {
+        top: null,
+        item: null,
+        showMore: '+ Show more',
+        showLess: '- Show less'
+    }
+};
+
+exports.default = MultipleFilterComponent;
+
+/***/ }),
+/* 31 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+ *  Copyright 2011 Twitter, Inc.
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+// This file is for use with Node.js. See dist/ for browser files.
+
+var Hogan = __webpack_require__(32);
+Hogan.Template = __webpack_require__(33).Template;
+Hogan.template = Hogan.Template;
+module.exports = Hogan;
+
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+ *  Copyright 2011 Twitter, Inc.
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+(function (Hogan) {
+  // Setup regex  assignments
+  // remove whitespace according to Mustache spec
+  var rIsWhitespace = /\S/,
+      rQuot = /\"/g,
+      rNewline =  /\n/g,
+      rCr = /\r/g,
+      rSlash = /\\/g,
+      rLineSep = /\u2028/,
+      rParagraphSep = /\u2029/;
+
+  Hogan.tags = {
+    '#': 1, '^': 2, '<': 3, '$': 4,
+    '/': 5, '!': 6, '>': 7, '=': 8, '_v': 9,
+    '{': 10, '&': 11, '_t': 12
+  };
+
+  Hogan.scan = function scan(text, delimiters) {
+    var len = text.length,
+        IN_TEXT = 0,
+        IN_TAG_TYPE = 1,
+        IN_TAG = 2,
+        state = IN_TEXT,
+        tagType = null,
+        tag = null,
+        buf = '',
+        tokens = [],
+        seenTag = false,
+        i = 0,
+        lineStart = 0,
+        otag = '{{',
+        ctag = '}}';
+
+    function addBuf() {
+      if (buf.length > 0) {
+        tokens.push({tag: '_t', text: new String(buf)});
+        buf = '';
+      }
+    }
+
+    function lineIsWhitespace() {
+      var isAllWhitespace = true;
+      for (var j = lineStart; j < tokens.length; j++) {
+        isAllWhitespace =
+          (Hogan.tags[tokens[j].tag] < Hogan.tags['_v']) ||
+          (tokens[j].tag == '_t' && tokens[j].text.match(rIsWhitespace) === null);
+        if (!isAllWhitespace) {
+          return false;
+        }
+      }
+
+      return isAllWhitespace;
+    }
+
+    function filterLine(haveSeenTag, noNewLine) {
+      addBuf();
+
+      if (haveSeenTag && lineIsWhitespace()) {
+        for (var j = lineStart, next; j < tokens.length; j++) {
+          if (tokens[j].text) {
+            if ((next = tokens[j+1]) && next.tag == '>') {
+              // set indent to token value
+              next.indent = tokens[j].text.toString()
+            }
+            tokens.splice(j, 1);
+          }
+        }
+      } else if (!noNewLine) {
+        tokens.push({tag:'\n'});
+      }
+
+      seenTag = false;
+      lineStart = tokens.length;
+    }
+
+    function changeDelimiters(text, index) {
+      var close = '=' + ctag,
+          closeIndex = text.indexOf(close, index),
+          delimiters = trim(
+            text.substring(text.indexOf('=', index) + 1, closeIndex)
+          ).split(' ');
+
+      otag = delimiters[0];
+      ctag = delimiters[delimiters.length - 1];
+
+      return closeIndex + close.length - 1;
+    }
+
+    if (delimiters) {
+      delimiters = delimiters.split(' ');
+      otag = delimiters[0];
+      ctag = delimiters[1];
+    }
+
+    for (i = 0; i < len; i++) {
+      if (state == IN_TEXT) {
+        if (tagChange(otag, text, i)) {
+          --i;
+          addBuf();
+          state = IN_TAG_TYPE;
+        } else {
+          if (text.charAt(i) == '\n') {
+            filterLine(seenTag);
+          } else {
+            buf += text.charAt(i);
+          }
+        }
+      } else if (state == IN_TAG_TYPE) {
+        i += otag.length - 1;
+        tag = Hogan.tags[text.charAt(i + 1)];
+        tagType = tag ? text.charAt(i + 1) : '_v';
+        if (tagType == '=') {
+          i = changeDelimiters(text, i);
+          state = IN_TEXT;
+        } else {
+          if (tag) {
+            i++;
+          }
+          state = IN_TAG;
+        }
+        seenTag = i;
+      } else {
+        if (tagChange(ctag, text, i)) {
+          tokens.push({tag: tagType, n: trim(buf), otag: otag, ctag: ctag,
+                       i: (tagType == '/') ? seenTag - otag.length : i + ctag.length});
+          buf = '';
+          i += ctag.length - 1;
+          state = IN_TEXT;
+          if (tagType == '{') {
+            if (ctag == '}}') {
+              i++;
+            } else {
+              cleanTripleStache(tokens[tokens.length - 1]);
+            }
+          }
+        } else {
+          buf += text.charAt(i);
+        }
+      }
+    }
+
+    filterLine(seenTag, true);
+
+    return tokens;
+  }
+
+  function cleanTripleStache(token) {
+    if (token.n.substr(token.n.length - 1) === '}') {
+      token.n = token.n.substring(0, token.n.length - 1);
+    }
+  }
+
+  function trim(s) {
+    if (s.trim) {
+      return s.trim();
+    }
+
+    return s.replace(/^\s*|\s*$/g, '');
+  }
+
+  function tagChange(tag, text, index) {
+    if (text.charAt(index) != tag.charAt(0)) {
+      return false;
+    }
+
+    for (var i = 1, l = tag.length; i < l; i++) {
+      if (text.charAt(index + i) != tag.charAt(i)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  // the tags allowed inside super templates
+  var allowedInSuper = {'_t': true, '\n': true, '$': true, '/': true};
+
+  function buildTree(tokens, kind, stack, customTags) {
+    var instructions = [],
+        opener = null,
+        tail = null,
+        token = null;
+
+    tail = stack[stack.length - 1];
+
+    while (tokens.length > 0) {
+      token = tokens.shift();
+
+      if (tail && tail.tag == '<' && !(token.tag in allowedInSuper)) {
+        throw new Error('Illegal content in < super tag.');
+      }
+
+      if (Hogan.tags[token.tag] <= Hogan.tags['$'] || isOpener(token, customTags)) {
+        stack.push(token);
+        token.nodes = buildTree(tokens, token.tag, stack, customTags);
+      } else if (token.tag == '/') {
+        if (stack.length === 0) {
+          throw new Error('Closing tag without opener: /' + token.n);
+        }
+        opener = stack.pop();
+        if (token.n != opener.n && !isCloser(token.n, opener.n, customTags)) {
+          throw new Error('Nesting error: ' + opener.n + ' vs. ' + token.n);
+        }
+        opener.end = token.i;
+        return instructions;
+      } else if (token.tag == '\n') {
+        token.last = (tokens.length == 0) || (tokens[0].tag == '\n');
+      }
+
+      instructions.push(token);
+    }
+
+    if (stack.length > 0) {
+      throw new Error('missing closing tag: ' + stack.pop().n);
+    }
+
+    return instructions;
+  }
+
+  function isOpener(token, tags) {
+    for (var i = 0, l = tags.length; i < l; i++) {
+      if (tags[i].o == token.n) {
+        token.tag = '#';
+        return true;
+      }
+    }
+  }
+
+  function isCloser(close, open, tags) {
+    for (var i = 0, l = tags.length; i < l; i++) {
+      if (tags[i].c == close && tags[i].o == open) {
+        return true;
+      }
+    }
+  }
+
+  function stringifySubstitutions(obj) {
+    var items = [];
+    for (var key in obj) {
+      items.push('"' + esc(key) + '": function(c,p,t,i) {' + obj[key] + '}');
+    }
+    return "{ " + items.join(",") + " }";
+  }
+
+  function stringifyPartials(codeObj) {
+    var partials = [];
+    for (var key in codeObj.partials) {
+      partials.push('"' + esc(key) + '":{name:"' + esc(codeObj.partials[key].name) + '", ' + stringifyPartials(codeObj.partials[key]) + "}");
+    }
+    return "partials: {" + partials.join(",") + "}, subs: " + stringifySubstitutions(codeObj.subs);
+  }
+
+  Hogan.stringify = function(codeObj, text, options) {
+    return "{code: function (c,p,i) { " + Hogan.wrapMain(codeObj.code) + " }," + stringifyPartials(codeObj) +  "}";
+  }
+
+  var serialNo = 0;
+  Hogan.generate = function(tree, text, options) {
+    serialNo = 0;
+    var context = { code: '', subs: {}, partials: {} };
+    Hogan.walk(tree, context);
+
+    if (options.asString) {
+      return this.stringify(context, text, options);
+    }
+
+    return this.makeTemplate(context, text, options);
+  }
+
+  Hogan.wrapMain = function(code) {
+    return 'var t=this;t.b(i=i||"");' + code + 'return t.fl();';
+  }
+
+  Hogan.template = Hogan.Template;
+
+  Hogan.makeTemplate = function(codeObj, text, options) {
+    var template = this.makePartials(codeObj);
+    template.code = new Function('c', 'p', 'i', this.wrapMain(codeObj.code));
+    return new this.template(template, text, this, options);
+  }
+
+  Hogan.makePartials = function(codeObj) {
+    var key, template = {subs: {}, partials: codeObj.partials, name: codeObj.name};
+    for (key in template.partials) {
+      template.partials[key] = this.makePartials(template.partials[key]);
+    }
+    for (key in codeObj.subs) {
+      template.subs[key] = new Function('c', 'p', 't', 'i', codeObj.subs[key]);
+    }
+    return template;
+  }
+
+  function esc(s) {
+    return s.replace(rSlash, '\\\\')
+            .replace(rQuot, '\\\"')
+            .replace(rNewline, '\\n')
+            .replace(rCr, '\\r')
+            .replace(rLineSep, '\\u2028')
+            .replace(rParagraphSep, '\\u2029');
+  }
+
+  function chooseMethod(s) {
+    return (~s.indexOf('.')) ? 'd' : 'f';
+  }
+
+  function createPartial(node, context) {
+    var prefix = "<" + (context.prefix || "");
+    var sym = prefix + node.n + serialNo++;
+    context.partials[sym] = {name: node.n, partials: {}};
+    context.code += 't.b(t.rp("' +  esc(sym) + '",c,p,"' + (node.indent || '') + '"));';
+    return sym;
+  }
+
+  Hogan.codegen = {
+    '#': function(node, context) {
+      context.code += 'if(t.s(t.' + chooseMethod(node.n) + '("' + esc(node.n) + '",c,p,1),' +
+                      'c,p,0,' + node.i + ',' + node.end + ',"' + node.otag + " " + node.ctag + '")){' +
+                      't.rs(c,p,' + 'function(c,p,t){';
+      Hogan.walk(node.nodes, context);
+      context.code += '});c.pop();}';
+    },
+
+    '^': function(node, context) {
+      context.code += 'if(!t.s(t.' + chooseMethod(node.n) + '("' + esc(node.n) + '",c,p,1),c,p,1,0,0,"")){';
+      Hogan.walk(node.nodes, context);
+      context.code += '};';
+    },
+
+    '>': createPartial,
+    '<': function(node, context) {
+      var ctx = {partials: {}, code: '', subs: {}, inPartial: true};
+      Hogan.walk(node.nodes, ctx);
+      var template = context.partials[createPartial(node, context)];
+      template.subs = ctx.subs;
+      template.partials = ctx.partials;
+    },
+
+    '$': function(node, context) {
+      var ctx = {subs: {}, code: '', partials: context.partials, prefix: node.n};
+      Hogan.walk(node.nodes, ctx);
+      context.subs[node.n] = ctx.code;
+      if (!context.inPartial) {
+        context.code += 't.sub("' + esc(node.n) + '",c,p,i);';
+      }
+    },
+
+    '\n': function(node, context) {
+      context.code += write('"\\n"' + (node.last ? '' : ' + i'));
+    },
+
+    '_v': function(node, context) {
+      context.code += 't.b(t.v(t.' + chooseMethod(node.n) + '("' + esc(node.n) + '",c,p,0)));';
+    },
+
+    '_t': function(node, context) {
+      context.code += write('"' + esc(node.text) + '"');
+    },
+
+    '{': tripleStache,
+
+    '&': tripleStache
+  }
+
+  function tripleStache(node, context) {
+    context.code += 't.b(t.t(t.' + chooseMethod(node.n) + '("' + esc(node.n) + '",c,p,0)));';
+  }
+
+  function write(s) {
+    return 't.b(' + s + ');';
+  }
+
+  Hogan.walk = function(nodelist, context) {
+    var func;
+    for (var i = 0, l = nodelist.length; i < l; i++) {
+      func = Hogan.codegen[nodelist[i].tag];
+      func && func(nodelist[i], context);
+    }
+    return context;
+  }
+
+  Hogan.parse = function(tokens, text, options) {
+    options = options || {};
+    return buildTree(tokens, '', [], options.sectionTags || []);
+  }
+
+  Hogan.cache = {};
+
+  Hogan.cacheKey = function(text, options) {
+    return [text, !!options.asString, !!options.disableLambda, options.delimiters, !!options.modelGet].join('||');
+  }
+
+  Hogan.compile = function(text, options) {
+    options = options || {};
+    var key = Hogan.cacheKey(text, options);
+    var template = this.cache[key];
+
+    if (template) {
+      var partials = template.partials;
+      for (var name in partials) {
+        delete partials[name].instance;
+      }
+      return template;
+    }
+
+    template = this.generate(this.parse(this.scan(text, options.delimiters), text, options), text, options);
+    return this.cache[key] = template;
+  }
+})( true ? exports : Hogan);
+
+
+/***/ }),
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+ *  Copyright 2011 Twitter, Inc.
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+var Hogan = {};
+
+(function (Hogan) {
+  Hogan.Template = function (codeObj, text, compiler, options) {
+    codeObj = codeObj || {};
+    this.r = codeObj.code || this.r;
+    this.c = compiler;
+    this.options = options || {};
+    this.text = text || '';
+    this.partials = codeObj.partials || {};
+    this.subs = codeObj.subs || {};
+    this.buf = '';
+  }
+
+  Hogan.Template.prototype = {
+    // render: replaced by generated code.
+    r: function (context, partials, indent) { return ''; },
+
+    // variable escaping
+    v: hoganEscape,
+
+    // triple stache
+    t: coerceToString,
+
+    render: function render(context, partials, indent) {
+      return this.ri([context], partials || {}, indent);
+    },
+
+    // render internal -- a hook for overrides that catches partials too
+    ri: function (context, partials, indent) {
+      return this.r(context, partials, indent);
+    },
+
+    // ensurePartial
+    ep: function(symbol, partials) {
+      var partial = this.partials[symbol];
+
+      // check to see that if we've instantiated this partial before
+      var template = partials[partial.name];
+      if (partial.instance && partial.base == template) {
+        return partial.instance;
+      }
+
+      if (typeof template == 'string') {
+        if (!this.c) {
+          throw new Error("No compiler available.");
+        }
+        template = this.c.compile(template, this.options);
+      }
+
+      if (!template) {
+        return null;
+      }
+
+      // We use this to check whether the partials dictionary has changed
+      this.partials[symbol].base = template;
+
+      if (partial.subs) {
+        // Make sure we consider parent template now
+        if (!partials.stackText) partials.stackText = {};
+        for (key in partial.subs) {
+          if (!partials.stackText[key]) {
+            partials.stackText[key] = (this.activeSub !== undefined && partials.stackText[this.activeSub]) ? partials.stackText[this.activeSub] : this.text;
+          }
+        }
+        template = createSpecializedPartial(template, partial.subs, partial.partials,
+          this.stackSubs, this.stackPartials, partials.stackText);
+      }
+      this.partials[symbol].instance = template;
+
+      return template;
+    },
+
+    // tries to find a partial in the current scope and render it
+    rp: function(symbol, context, partials, indent) {
+      var partial = this.ep(symbol, partials);
+      if (!partial) {
+        return '';
+      }
+
+      return partial.ri(context, partials, indent);
+    },
+
+    // render a section
+    rs: function(context, partials, section) {
+      var tail = context[context.length - 1];
+
+      if (!isArray(tail)) {
+        section(context, partials, this);
+        return;
+      }
+
+      for (var i = 0; i < tail.length; i++) {
+        context.push(tail[i]);
+        section(context, partials, this);
+        context.pop();
+      }
+    },
+
+    // maybe start a section
+    s: function(val, ctx, partials, inverted, start, end, tags) {
+      var pass;
+
+      if (isArray(val) && val.length === 0) {
+        return false;
+      }
+
+      if (typeof val == 'function') {
+        val = this.ms(val, ctx, partials, inverted, start, end, tags);
+      }
+
+      pass = !!val;
+
+      if (!inverted && pass && ctx) {
+        ctx.push((typeof val == 'object') ? val : ctx[ctx.length - 1]);
+      }
+
+      return pass;
+    },
+
+    // find values with dotted names
+    d: function(key, ctx, partials, returnFound) {
+      var found,
+          names = key.split('.'),
+          val = this.f(names[0], ctx, partials, returnFound),
+          doModelGet = this.options.modelGet,
+          cx = null;
+
+      if (key === '.' && isArray(ctx[ctx.length - 2])) {
+        val = ctx[ctx.length - 1];
+      } else {
+        for (var i = 1; i < names.length; i++) {
+          found = findInScope(names[i], val, doModelGet);
+          if (found !== undefined) {
+            cx = val;
+            val = found;
+          } else {
+            val = '';
+          }
+        }
+      }
+
+      if (returnFound && !val) {
+        return false;
+      }
+
+      if (!returnFound && typeof val == 'function') {
+        ctx.push(cx);
+        val = this.mv(val, ctx, partials);
+        ctx.pop();
+      }
+
+      return val;
+    },
+
+    // find values with normal names
+    f: function(key, ctx, partials, returnFound) {
+      var val = false,
+          v = null,
+          found = false,
+          doModelGet = this.options.modelGet;
+
+      for (var i = ctx.length - 1; i >= 0; i--) {
+        v = ctx[i];
+        val = findInScope(key, v, doModelGet);
+        if (val !== undefined) {
+          found = true;
+          break;
+        }
+      }
+
+      if (!found) {
+        return (returnFound) ? false : "";
+      }
+
+      if (!returnFound && typeof val == 'function') {
+        val = this.mv(val, ctx, partials);
+      }
+
+      return val;
+    },
+
+    // higher order templates
+    ls: function(func, cx, partials, text, tags) {
+      var oldTags = this.options.delimiters;
+
+      this.options.delimiters = tags;
+      this.b(this.ct(coerceToString(func.call(cx, text)), cx, partials));
+      this.options.delimiters = oldTags;
+
+      return false;
+    },
+
+    // compile text
+    ct: function(text, cx, partials) {
+      if (this.options.disableLambda) {
+        throw new Error('Lambda features disabled.');
+      }
+      return this.c.compile(text, this.options).render(cx, partials);
+    },
+
+    // template result buffering
+    b: function(s) { this.buf += s; },
+
+    fl: function() { var r = this.buf; this.buf = ''; return r; },
+
+    // method replace section
+    ms: function(func, ctx, partials, inverted, start, end, tags) {
+      var textSource,
+          cx = ctx[ctx.length - 1],
+          result = func.call(cx);
+
+      if (typeof result == 'function') {
+        if (inverted) {
+          return true;
+        } else {
+          textSource = (this.activeSub && this.subsText && this.subsText[this.activeSub]) ? this.subsText[this.activeSub] : this.text;
+          return this.ls(result, cx, partials, textSource.substring(start, end), tags);
+        }
+      }
+
+      return result;
+    },
+
+    // method replace variable
+    mv: function(func, ctx, partials) {
+      var cx = ctx[ctx.length - 1];
+      var result = func.call(cx);
+
+      if (typeof result == 'function') {
+        return this.ct(coerceToString(result.call(cx)), cx, partials);
+      }
+
+      return result;
+    },
+
+    sub: function(name, context, partials, indent) {
+      var f = this.subs[name];
+      if (f) {
+        this.activeSub = name;
+        f(context, partials, this, indent);
+        this.activeSub = false;
+      }
+    }
+
+  };
+
+  //Find a key in an object
+  function findInScope(key, scope, doModelGet) {
+    var val;
+
+    if (scope && typeof scope == 'object') {
+
+      if (scope[key] !== undefined) {
+        val = scope[key];
+
+      // try lookup with get for backbone or similar model data
+      } else if (doModelGet && scope.get && typeof scope.get == 'function') {
+        val = scope.get(key);
+      }
+    }
+
+    return val;
+  }
+
+  function createSpecializedPartial(instance, subs, partials, stackSubs, stackPartials, stackText) {
+    function PartialTemplate() {};
+    PartialTemplate.prototype = instance;
+    function Substitutions() {};
+    Substitutions.prototype = instance.subs;
+    var key;
+    var partial = new PartialTemplate();
+    partial.subs = new Substitutions();
+    partial.subsText = {};  //hehe. substext.
+    partial.buf = '';
+
+    stackSubs = stackSubs || {};
+    partial.stackSubs = stackSubs;
+    partial.subsText = stackText;
+    for (key in subs) {
+      if (!stackSubs[key]) stackSubs[key] = subs[key];
+    }
+    for (key in stackSubs) {
+      partial.subs[key] = stackSubs[key];
+    }
+
+    stackPartials = stackPartials || {};
+    partial.stackPartials = stackPartials;
+    for (key in partials) {
+      if (!stackPartials[key]) stackPartials[key] = partials[key];
+    }
+    for (key in stackPartials) {
+      partial.partials[key] = stackPartials[key];
+    }
+
+    return partial;
+  }
+
+  var rAmp = /&/g,
+      rLt = /</g,
+      rGt = />/g,
+      rApos = /\'/g,
+      rQuot = /\"/g,
+      hChars = /[&<>\"\']/;
+
+  function coerceToString(val) {
+    return String((val === null || val === undefined) ? '' : val);
+  }
+
+  function hoganEscape(str) {
+    str = coerceToString(str);
+    return hChars.test(str) ?
+      str
+        .replace(rAmp, '&amp;')
+        .replace(rLt, '&lt;')
+        .replace(rGt, '&gt;')
+        .replace(rApos, '&#39;')
+        .replace(rQuot, '&quot;') :
+      str;
+  }
+
+  var isArray = Array.isArray || function(a) {
+    return Object.prototype.toString.call(a) === '[object Array]';
+  };
+
+})( true ? exports : Hogan);
+
+
+/***/ }),
+/* 34 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _preact = __webpack_require__(0);
+
+var _Template = __webpack_require__(4);
+
+var _Template2 = _interopRequireDefault(_Template);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Show more component
+ *
+ * Provides two items
+ *   -> Show more element
+ *   -> Show less element
+ */
+/**
+ * @jsx h
+ */
+var ShowMoreComponent = function ShowMoreComponent(_ref) {
+    var allItemsLength = _ref.allItemsLength,
+        currentLimit = _ref.currentLimit,
+        handleShowMore = _ref.handleShowMore,
+        handleShowLess = _ref.handleShowLess,
+        showMoreContainerClassName = _ref.showMoreContainerClassName,
+        showMoreTemplate = _ref.showMoreTemplate,
+        showLessTemplate = _ref.showLessTemplate;
+
+    return allItemsLength > currentLimit ? (0, _preact.h)(
+        "div",
+        { className: "asui-showMore " + showMoreContainerClassName,
+            onClick: handleShowMore
+        },
+        (0, _preact.h)(_Template2.default, {
+            template: showMoreTemplate,
+            className: "asui-showMore--more"
+        })
+    ) : allItemsLength === currentLimit ? (0, _preact.h)(
+        "div",
+        { className: "asui-showMore " + showMoreContainerClassName,
+            onClick: handleShowLess
+        },
+        (0, _preact.h)(_Template2.default, {
+            template: showLessTemplate,
+            className: "asui-showMore--less"
+        })
+    ) : null;
+};
+
+exports.default = ShowMoreComponent;
+
+/***/ }),
+/* 35 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.aggregationSetup = aggregationSetup;
+exports.filterAction = filterAction;
+
+var _cloneDeep = __webpack_require__(1);
+
+var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
+
+var _dispatcher = __webpack_require__(2);
+
+var _dispatcher2 = _interopRequireDefault(_dispatcher);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Define aggregations setup
+ *
+ * This setup action is triggered when mounting a component
+ * receives two parameters:
+ *   @param queryOptions -> the itemsPerPage to be displayed on the result container
+ *   @param currentQuery -> current application query
+ *
+ * Finally dispatches an event with the modified query.
+ *   @returns {{
+ *     type: string,
+ *     payload: {
+ *        updatedQuery
+ *     }
+ *   }}
+ */
+/**
+ * Multiple filter actions
+ */
+function aggregationSetup(queryOptions, currentQuery) {
+    var filterName = queryOptions.filterName,
+        aggregationField = queryOptions.aggregationField,
+        applicationType = queryOptions.applicationType,
+        sortBy = queryOptions.sortBy;
+
+    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+
+    clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy);
+
+    _dispatcher2.default.dispatch({
+        type: 'UPDATE_APISEARCH_SETUP',
+        payload: {
+            updatedQuery: clonedQuery
+        }
+    });
+}
+
+/**
+ * Define aggregations setup
+ *
+ * This setup action is triggered when mounting a component
+ * receives two parameters:
+ *   @param queryOptions -> the itemsPerPage to be displayed on the result container
+ *   @param currentQuery -> current application query
+ *   @param client       -> Apisearch client
+ *
+ * Finally dispatches an event with the modified query.
+ *   @returns {{
+ *     type: string,
+ *     payload: {
+ *        updatedQuery
+ *     }
+ *   }}
+ */
+function filterAction(queryOptions, currentQuery, client) {
+    var filterName = queryOptions.filterName,
+        filterField = queryOptions.filterField,
+        aggregationField = queryOptions.aggregationField,
+        filterValues = queryOptions.filterValues,
+        applicationType = queryOptions.applicationType,
+        sortBy = queryOptions.sortBy;
+
+    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+
+    clonedQuery.filterBy(filterName, filterField, filterValues, applicationType, false, sortBy);
+    clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy);
+
+    client.search(clonedQuery, function (result) {
+        _dispatcher2.default.dispatch({
+            type: 'RENDER_FETCHED_DATA',
+            payload: {
+                updatedQuery: clonedQuery,
+                result: result
+            }
+        });
+    });
+}
+
+/***/ }),
+/* 36 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.manageCurrentFilterItems = manageCurrentFilterItems;
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+/**
+ * Manage filter items
+ *
+ * If an item is on the list, remove it
+ * else, add it!
+ *
+ * @param selectedItem
+ * @param currentItems
+ * @returns {[null,null]}
+ */
+function manageCurrentFilterItems(selectedItem, currentItems) {
+    var isElementActive = currentItems.some(function (item) {
+        return item === selectedItem;
+    });
+
+    if (isElementActive) {
+        return currentItems.filter(function (item) {
+            return item !== selectedItem;
+        });
+    } else {
+        return [].concat(_toConsumableArray(currentItems), [selectedItem]);
+    }
+}
+
+/***/ }),
+/* 37 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _preact = __webpack_require__(0);
+
+var _Template = __webpack_require__(4);
+
+var _Template2 = _interopRequireDefault(_Template);
+
+var _resultActions = __webpack_require__(38);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+/**
+ * Actions
+ */
+
+
+/**
+ * Result Component
+ */
+var ResultComponent = function (_Component) {
+    _inherits(ResultComponent, _Component);
+
+    function ResultComponent() {
+        _classCallCheck(this, ResultComponent);
+
+        return _possibleConstructorReturn(this, (ResultComponent.__proto__ || Object.getPrototypeOf(ResultComponent)).apply(this, arguments));
+    }
+
+    _createClass(ResultComponent, [{
+        key: "componentWillMount",
+        value: function componentWillMount() {
+            /**
+             * Define initial Setup on component mounting
+             * that refers to the store configuration
+             * and affects other widgets
+             */
+
+            var _props = this.props,
+                environmentId = _props.environmentId,
+                itemsPerPage = _props.itemsPerPage,
+                highlightsEnabled = _props.highlightsEnabled,
+                currentQuery = _props.currentQuery;
+
+            /**
+             * Dispatch action
+             */
+
+            (0, _resultActions.changeItemsPerResultPageSetup)({
+                environmentId: environmentId,
+                itemsPerPage: itemsPerPage,
+                highlightsEnabled: highlightsEnabled
+            }, currentQuery);
+        }
+    }, {
+        key: "render",
+        value: function render() {
+            var _props2 = this.props,
+                dirty = _props2.dirty,
+                showInitialResults = _props2.showInitialResults,
+                containerClassName = _props2.classNames.container,
+                _props2$template = _props2.template,
+                bodyTemplate = _props2$template.itemsList,
+                placeholderTemplate = _props2$template.placeholder,
+                data = _props2.data;
+
+            /**
+             * Data accessible to the template
+             */
+
+            var reducedTemplateData = {
+                query: data ? data.query.q : '',
+                items: data ? data.items : []
+            };
+
+            return (0, _preact.h)(
+                "div",
+                { className: "asui-result " + containerClassName },
+                placeholderTemplate && dirty ? (0, _preact.h)(_Template2.default, {
+                    template: placeholderTemplate,
+                    className: "asui-result--placeholder"
+                }) : (0, _preact.h)(_Template2.default, {
+                    template: bodyTemplate,
+                    data: reducedTemplateData,
+                    className: "asui-result--itemsList"
+                })
+            );
+        }
+    }]);
+
+    return ResultComponent;
+}(_preact.Component);
+
+ResultComponent.defaultProps = {
+    itemsPerPage: 10,
+    highlightsEnabled: false,
+    classNames: {
+        container: ''
+    },
+    template: {
+        placeholder: null
+    }
+};
+
+exports.default = ResultComponent;
+
+/***/ }),
+/* 38 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.changeItemsPerResultPageSetup = changeItemsPerResultPageSetup;
+
+var _cloneDeep = __webpack_require__(1);
+
+var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
+
+var _container = __webpack_require__(3);
+
+var _container2 = _interopRequireDefault(_container);
+
+var _constants = __webpack_require__(44);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Define items per page on result
+ *
+ * This action is triggered when mounting a component
+ * receives two parameters:
+ *   @param queryOptions -> the itemsPerPage to be displayed on the result container
+ *   @param currentQuery -> current application query
+ *
+ * Finally dispatches an event with the modified query.
+ *   @returns {{
+ *     type: string,
+ *     payload: {
+ *        updatedQuery
+ *     }
+ *   }}
+ */
+function changeItemsPerResultPageSetup(queryOptions, currentQuery) {
+    var environmentId = queryOptions.environmentId,
+        itemsPerPage = queryOptions.itemsPerPage,
+        highlightsEnabled = queryOptions.highlightsEnabled;
+
+
+    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+
+    /**
+     * Set result size
+     */
+    clonedQuery.setResultSize(itemsPerPage);
+
+    /**
+     * Enabling highlights on query result
+     */
+    if (highlightsEnabled) {
+        clonedQuery.enableHighlights();
+    }
+
+    var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
+    dispatcher.dispatch({
+        type: 'UPDATE_APISEARCH_SETUP',
+        payload: {
+            updatedQuery: clonedQuery
+        }
+    });
+} /**
+   * Search actions
+   */
+
+/***/ }),
+/* 39 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _preact = __webpack_require__(0);
+
+var _Template = __webpack_require__(4);
+
+var _Template2 = _interopRequireDefault(_Template);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+
+/**
+ * Result Information Component
+ */
+var InformationComponent = function (_Component) {
+    _inherits(InformationComponent, _Component);
+
+    function InformationComponent() {
+        _classCallCheck(this, InformationComponent);
+
+        return _possibleConstructorReturn(this, (InformationComponent.__proto__ || Object.getPrototypeOf(InformationComponent)).apply(this, arguments));
+    }
+
+    _createClass(InformationComponent, [{
+        key: 'render',
+        value: function render() {
+            var _props = this.props,
+                containerClassName = _props.classNames.container,
+                containerTemplate = _props.template.container,
+                data = _props.data;
+
+            /**
+             * Data accessible to the template
+             */
+
+            var reducedTemplateData = {
+                total_hits: parseInt(data.total_hits).toLocaleString('de-DE'),
+                total_items: parseInt(data.total_items).toLocaleString('de-DE')
+            };
+
+            return (0, _preact.h)(_Template2.default, {
+                template: containerTemplate,
+                data: reducedTemplateData,
+                className: 'asui-information ' + containerClassName
+            });
+        }
+    }]);
+
+    return InformationComponent;
+}(_preact.Component);
+
+InformationComponent.defaultProps = {
+    classNames: {
+        container: ''
+    }
+};
+
+exports.default = InformationComponent;
+
+/***/ }),
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -5083,3239 +8334,7 @@ var SORT_BY_LOCATION_MI_ASC = exports.SORT_BY_LOCATION_MI_ASC = {
 //# sourceMappingURL=apisearch.node.js.map
 
 /***/ }),
-/* 12 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _preact = __webpack_require__(0);
-
-var _apisearchActions = __webpack_require__(13);
-
-var _WidgetFactory = __webpack_require__(16);
-
-var _WidgetFactory2 = _interopRequireDefault(_WidgetFactory);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * ApisearchUI class
- */
-var ApisearchUI = function () {
-    /**
-     * Constructor.
-     */
-    function ApisearchUI(environmentId, client, store) {
-        _classCallCheck(this, ApisearchUI);
-
-        /**
-         * Environment Id
-         */
-        this.environmentId = environmentId;
-
-        /**
-         * UI related properties
-         */
-        this.client = client;
-        this.widgets = _WidgetFactory2.default;
-        this.activeWidgets = [];
-
-        /**
-         * Store related properties
-         */
-        this.store = store;
-    }
-
-    /**
-     * Initialize components
-     */
-
-
-    _createClass(ApisearchUI, [{
-        key: "init",
-        value: function init() {
-            var _this = this;
-
-            /**
-             * Register all events on the store
-             */
-            this.store.on('render', function () {
-                return _this.render();
-            });
-
-            /**
-             * Trigger the initial render: (Mount the components)
-             *   -> To let components setup its configuration on componentWillMount()
-             *   -> And fetch the initial data with the given configuration
-             */
-            this.render();
-            (0, _apisearchActions.initialDataFetchAction)(this.store.currentQuery, this.client);
-        }
-
-        /**
-         * Add new widget
-         */
-
-    }, {
-        key: "addWidget",
-        value: function addWidget(widget) {
-            this.activeWidgets = [].concat(_toConsumableArray(this.activeWidgets), [widget]);
-            return this;
-        }
-
-        /**
-         * Add widgets in bulk mode
-         */
-
-    }, {
-        key: "addWidgets",
-        value: function addWidgets() {
-            var _this2 = this;
-
-            for (var _len = arguments.length, widgets = Array(_len), _key = 0; _key < _len; _key++) {
-                widgets[_key] = arguments[_key];
-            }
-
-            widgets.map(function (widget) {
-                return _this2.addWidget(widget);
-            });
-            return this;
-        }
-
-        /**
-         * Render.
-         *
-         * Loop all active widgets
-         * Hydrate them with new props
-         * And render them.
-         */
-
-    }, {
-        key: "render",
-        value: function render() {
-            var _this3 = this;
-
-            this.activeWidgets.map(function (widget) {
-                var hydratedWidget = hydrateWidget(_this3.environmentId, _this3.store, _this3.client, widget);
-                var targetNode = document.querySelector(widget.attributes.target);
-
-                if (null === targetNode) {
-                    throw new Error("Widget (" + hydratedWidget.nodeName.name + ") must have a valid DOM target");
-                }
-
-                (0, _preact.render)(hydratedWidget, targetNode, targetNode.lastChild);
-            });
-        }
-    }]);
-
-    return ApisearchUI;
-}();
-
-function hydrateWidget(environmentId, currentStore, client, widget) {
-    /**
-     * Pass ApisearchClient, current Query, and data received
-     * as a component attributes. There will be accessible
-     * on component props.
-     */
-    widget.attributes.environmentId = environmentId;
-    widget.attributes.dirty = currentStore.dirty;
-    widget.attributes.data = currentStore.data;
-    widget.attributes.currentQuery = currentStore.currentQuery;
-    widget.attributes.client = client;
-
-    return widget;
-}
-
-exports.default = ApisearchUI;
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.initialDataFetchAction = initialDataFetchAction;
-
-var _dispatcher = __webpack_require__(2);
-
-var _dispatcher2 = _interopRequireDefault(_dispatcher);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Initial data fetching action
- *
- * This action is triggered on the first time ApisearchUI is initialized:
- *   @param initialQuery -> initial application query
- *   @param client       -> apisearch client to trigger a search
- *
- * Finally dispatches an event with the search result and
- * the modified query.
- *   @returns {{
- *     type: string,
- *     payload: {
- *        result,
- *        updatedQuery
- *     }
- *   }}
- */
-function initialDataFetchAction(initialQuery, client) {
-    client.search(initialQuery, function (initialResult) {
-        _dispatcher2.default.dispatch({
-            type: 'RENDER_INITIAL_DATA',
-            payload: {
-                initialResult: initialResult,
-                initialQuery: initialQuery
-            }
-        });
-    });
-}
-
-/***/ }),
-/* 14 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(process) {/**
- * Copyright (c) 2014-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * @providesModule Dispatcher
- * 
- * @preventMunge
- */
-
-
-
-exports.__esModule = true;
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-var invariant = __webpack_require__(15);
-
-var _prefix = 'ID_';
-
-/**
- * Dispatcher is used to broadcast payloads to registered callbacks. This is
- * different from generic pub-sub systems in two ways:
- *
- *   1) Callbacks are not subscribed to particular events. Every payload is
- *      dispatched to every registered callback.
- *   2) Callbacks can be deferred in whole or part until other callbacks have
- *      been executed.
- *
- * For example, consider this hypothetical flight destination form, which
- * selects a default city when a country is selected:
- *
- *   var flightDispatcher = new Dispatcher();
- *
- *   // Keeps track of which country is selected
- *   var CountryStore = {country: null};
- *
- *   // Keeps track of which city is selected
- *   var CityStore = {city: null};
- *
- *   // Keeps track of the base flight price of the selected city
- *   var FlightPriceStore = {price: null}
- *
- * When a user changes the selected city, we dispatch the payload:
- *
- *   flightDispatcher.dispatch({
- *     actionType: 'city-update',
- *     selectedCity: 'paris'
- *   });
- *
- * This payload is digested by `CityStore`:
- *
- *   flightDispatcher.register(function(payload) {
- *     if (payload.actionType === 'city-update') {
- *       CityStore.city = payload.selectedCity;
- *     }
- *   });
- *
- * When the user selects a country, we dispatch the payload:
- *
- *   flightDispatcher.dispatch({
- *     actionType: 'country-update',
- *     selectedCountry: 'australia'
- *   });
- *
- * This payload is digested by both stores:
- *
- *   CountryStore.dispatchToken = flightDispatcher.register(function(payload) {
- *     if (payload.actionType === 'country-update') {
- *       CountryStore.country = payload.selectedCountry;
- *     }
- *   });
- *
- * When the callback to update `CountryStore` is registered, we save a reference
- * to the returned token. Using this token with `waitFor()`, we can guarantee
- * that `CountryStore` is updated before the callback that updates `CityStore`
- * needs to query its data.
- *
- *   CityStore.dispatchToken = flightDispatcher.register(function(payload) {
- *     if (payload.actionType === 'country-update') {
- *       // `CountryStore.country` may not be updated.
- *       flightDispatcher.waitFor([CountryStore.dispatchToken]);
- *       // `CountryStore.country` is now guaranteed to be updated.
- *
- *       // Select the default city for the new country
- *       CityStore.city = getDefaultCityForCountry(CountryStore.country);
- *     }
- *   });
- *
- * The usage of `waitFor()` can be chained, for example:
- *
- *   FlightPriceStore.dispatchToken =
- *     flightDispatcher.register(function(payload) {
- *       switch (payload.actionType) {
- *         case 'country-update':
- *         case 'city-update':
- *           flightDispatcher.waitFor([CityStore.dispatchToken]);
- *           FlightPriceStore.price =
- *             getFlightPriceStore(CountryStore.country, CityStore.city);
- *           break;
- *     }
- *   });
- *
- * The `country-update` payload will be guaranteed to invoke the stores'
- * registered callbacks in order: `CountryStore`, `CityStore`, then
- * `FlightPriceStore`.
- */
-
-var Dispatcher = (function () {
-  function Dispatcher() {
-    _classCallCheck(this, Dispatcher);
-
-    this._callbacks = {};
-    this._isDispatching = false;
-    this._isHandled = {};
-    this._isPending = {};
-    this._lastID = 1;
-  }
-
-  /**
-   * Registers a callback to be invoked with every dispatched payload. Returns
-   * a token that can be used with `waitFor()`.
-   */
-
-  Dispatcher.prototype.register = function register(callback) {
-    var id = _prefix + this._lastID++;
-    this._callbacks[id] = callback;
-    return id;
-  };
-
-  /**
-   * Removes a callback based on its token.
-   */
-
-  Dispatcher.prototype.unregister = function unregister(id) {
-    !this._callbacks[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.unregister(...): `%s` does not map to a registered callback.', id) : invariant(false) : undefined;
-    delete this._callbacks[id];
-  };
-
-  /**
-   * Waits for the callbacks specified to be invoked before continuing execution
-   * of the current callback. This method should only be used by a callback in
-   * response to a dispatched payload.
-   */
-
-  Dispatcher.prototype.waitFor = function waitFor(ids) {
-    !this._isDispatching ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): Must be invoked while dispatching.') : invariant(false) : undefined;
-    for (var ii = 0; ii < ids.length; ii++) {
-      var id = ids[ii];
-      if (this._isPending[id]) {
-        !this._isHandled[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): Circular dependency detected while ' + 'waiting for `%s`.', id) : invariant(false) : undefined;
-        continue;
-      }
-      !this._callbacks[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): `%s` does not map to a registered callback.', id) : invariant(false) : undefined;
-      this._invokeCallback(id);
-    }
-  };
-
-  /**
-   * Dispatches a payload to all registered callbacks.
-   */
-
-  Dispatcher.prototype.dispatch = function dispatch(payload) {
-    !!this._isDispatching ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatch.dispatch(...): Cannot dispatch in the middle of a dispatch.') : invariant(false) : undefined;
-    this._startDispatching(payload);
-    try {
-      for (var id in this._callbacks) {
-        if (this._isPending[id]) {
-          continue;
-        }
-        this._invokeCallback(id);
-      }
-    } finally {
-      this._stopDispatching();
-    }
-  };
-
-  /**
-   * Is this Dispatcher currently dispatching.
-   */
-
-  Dispatcher.prototype.isDispatching = function isDispatching() {
-    return this._isDispatching;
-  };
-
-  /**
-   * Call the callback stored with the given id. Also do some internal
-   * bookkeeping.
-   *
-   * @internal
-   */
-
-  Dispatcher.prototype._invokeCallback = function _invokeCallback(id) {
-    this._isPending[id] = true;
-    this._callbacks[id](this._pendingPayload);
-    this._isHandled[id] = true;
-  };
-
-  /**
-   * Set up bookkeeping needed when dispatching.
-   *
-   * @internal
-   */
-
-  Dispatcher.prototype._startDispatching = function _startDispatching(payload) {
-    for (var id in this._callbacks) {
-      this._isPending[id] = false;
-      this._isHandled[id] = false;
-    }
-    this._pendingPayload = payload;
-    this._isDispatching = true;
-  };
-
-  /**
-   * Clear bookkeeping used for dispatching.
-   *
-   * @internal
-   */
-
-  Dispatcher.prototype._stopDispatching = function _stopDispatching() {
-    delete this._pendingPayload;
-    this._isDispatching = false;
-  };
-
-  return Dispatcher;
-})();
-
-module.exports = Dispatcher;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
-
-/***/ }),
-/* 15 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(process) {/**
- * Copyright (c) 2013-present, Facebook, Inc.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- *
- */
-
-
-
-/**
- * Use invariant() to assert state which your program assumes to be true.
- *
- * Provide sprintf-style format (only %s is supported) and arguments
- * to provide information about what broke and what you were
- * expecting.
- *
- * The invariant message will be stripped in production, but the invariant
- * will remain to ensure logic does not differ in production.
- */
-
-var validateFormat = function validateFormat(format) {};
-
-if (process.env.NODE_ENV !== 'production') {
-  validateFormat = function validateFormat(format) {
-    if (format === undefined) {
-      throw new Error('invariant requires an error message argument');
-    }
-  };
-}
-
-function invariant(condition, format, a, b, c, d, e, f) {
-  validateFormat(format);
-
-  if (!condition) {
-    var error;
-    if (format === undefined) {
-      error = new Error('Minified exception occurred; use the non-minified dev environment ' + 'for the full error message and additional helpful warnings.');
-    } else {
-      var args = [a, b, c, d, e, f];
-      var argIndex = 0;
-      error = new Error(format.replace(/%s/g, function () {
-        return args[argIndex++];
-      }));
-      error.name = 'Invariant Violation';
-    }
-
-    error.framesToPop = 1; // we don't care about invariant's own frame
-    throw error;
-  }
-}
-
-module.exports = invariant;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
-
-/***/ }),
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * @jsx h
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
-
-/**
- * Vendors
- */
-
-
-/**
- * Locals
- */
-
-
-var _preact = __webpack_require__(0);
-
-var _SimpleSearchComponent = __webpack_require__(17);
-
-var _SimpleSearchComponent2 = _interopRequireDefault(_SimpleSearchComponent);
-
-var _SuggestedSearchComponent = __webpack_require__(25);
-
-var _SuggestedSearchComponent2 = _interopRequireDefault(_SuggestedSearchComponent);
-
-var _SortByComponent = __webpack_require__(28);
-
-var _SortByComponent2 = _interopRequireDefault(_SortByComponent);
-
-var _MultipleFilterComponent = __webpack_require__(30);
-
-var _MultipleFilterComponent2 = _interopRequireDefault(_MultipleFilterComponent);
-
-var _ResultComponent = __webpack_require__(37);
-
-var _ResultComponent2 = _interopRequireDefault(_ResultComponent);
-
-var _InformationComponent = __webpack_require__(39);
-
-var _InformationComponent2 = _interopRequireDefault(_InformationComponent);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * Widgets factory class
- *
- * @info
- *   The className object merge is because react does not
- *   merge the defaultProps deep objects with the custom
- *   props object passed to the component.
- *     @see https://github.com/facebook/react/issues/2568
- *     @see https://stackoverflow.com/questions/40428847/react-component-defaultprops-objects-are-overridden-not-merged
- */
-var WidgetFactory = function () {
-    function WidgetFactory() {
-        _classCallCheck(this, WidgetFactory);
-    }
-
-    _createClass(WidgetFactory, null, [{
-        key: "simpleSearch",
-
-
-        /**
-         * Simple search input
-         */
-        value: function simpleSearch(_ref) {
-            var target = _ref.target,
-                placeholder = _ref.placeholder,
-                autofocus = _ref.autofocus,
-                classNames = _ref.classNames;
-
-            return (0, _preact.h)(_SimpleSearchComponent2.default, {
-                target: target,
-                placeholder: placeholder,
-                autofocus: autofocus,
-                classNames: _extends({}, _SimpleSearchComponent2.default.defaultProps.classNames, classNames)
-            });
-        }
-    }, {
-        key: "suggestedSearch",
-
-
-        /**
-         * Suggested Search input
-         */
-        value: function suggestedSearch(_ref2) {
-            var target = _ref2.target,
-                placeholder = _ref2.placeholder,
-                autofocus = _ref2.autofocus,
-                classNames = _ref2.classNames,
-                template = _ref2.template;
-
-            return (0, _preact.h)(_SuggestedSearchComponent2.default, {
-                target: target,
-                placeholder: placeholder,
-                autofocus: autofocus,
-                classNames: _extends({}, _SuggestedSearchComponent2.default.defaultProps.classNames, classNames),
-                template: template
-            });
-        }
-
-        /**
-         * Sort By
-         */
-
-    }, {
-        key: "sortBy",
-        value: function sortBy(_ref3) {
-            var target = _ref3.target,
-                classNames = _ref3.classNames,
-                options = _ref3.options;
-
-            return (0, _preact.h)(_SortByComponent2.default, {
-                target: target,
-                classNames: _extends({}, _SortByComponent2.default.defaultProps.classNames, classNames),
-                options: options
-            });
-        }
-
-        /**
-         * Multiple filter
-         */
-
-    }, {
-        key: "multipleFilter",
-        value: function multipleFilter(_ref4) {
-            var target = _ref4.target,
-                name = _ref4.name,
-                filterField = _ref4.filterField,
-                aggregationField = _ref4.aggregationField,
-                applicationType = _ref4.applicationType,
-                limit = _ref4.limit,
-                sortBy = _ref4.sortBy,
-                showMoreActive = _ref4.showMoreActive,
-                classNames = _ref4.classNames,
-                template = _ref4.template;
-
-            return (0, _preact.h)(_MultipleFilterComponent2.default, {
-                target: target,
-                name: name,
-                filterField: filterField,
-                aggregationField: aggregationField,
-                applicationType: applicationType,
-                limit: limit,
-                sortBy: sortBy,
-                showMoreActive: showMoreActive,
-                classNames: _extends({}, _MultipleFilterComponent2.default.defaultProps.classNames, classNames),
-                template: _extends({}, _MultipleFilterComponent2.default.defaultProps.template, template)
-            });
-        }
-
-        /**
-         * Search result
-         */
-
-    }, {
-        key: "result",
-        value: function result(_ref5) {
-            var target = _ref5.target,
-                itemsPerPage = _ref5.itemsPerPage,
-                highlightsEnabled = _ref5.highlightsEnabled,
-                classNames = _ref5.classNames,
-                template = _ref5.template;
-
-            return (0, _preact.h)(_ResultComponent2.default, {
-                target: target,
-                itemsPerPage: itemsPerPage,
-                highlightsEnabled: highlightsEnabled,
-                classNames: _extends({}, _ResultComponent2.default.defaultProps.classNames, classNames),
-                template: template
-            });
-        }
-
-        /**
-         * Search result information
-         */
-
-    }, {
-        key: "information",
-        value: function information(_ref6) {
-            var target = _ref6.target,
-                classNames = _ref6.classNames,
-                template = _ref6.template;
-
-            return (0, _preact.h)(_InformationComponent2.default, {
-                target: target,
-                classNames: _extends({}, _InformationComponent2.default.defaultProps.classNames, classNames),
-                template: template
-            });
-        }
-    }]);
-
-    return WidgetFactory;
-}();
-
-exports.default = WidgetFactory;
-
-/***/ }),
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _preact = __webpack_require__(0);
-
-var _simpleSearchActions = __webpack_require__(18);
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
-/**
- * SimpleSearch Component
- */
-var SimpleSearchComponent = function (_Component) {
-    _inherits(SimpleSearchComponent, _Component);
-
-    function SimpleSearchComponent() {
-        var _ref;
-
-        var _temp, _this, _ret;
-
-        _classCallCheck(this, SimpleSearchComponent);
-
-        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-            args[_key] = arguments[_key];
-        }
-
-        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = SimpleSearchComponent.__proto__ || Object.getPrototypeOf(SimpleSearchComponent)).call.apply(_ref, [this].concat(args))), _this), _this.handleSearch = function (e) {
-            var _this$props = _this.props,
-                environmentId = _this$props.environmentId,
-                currentQuery = _this$props.currentQuery,
-                client = _this$props.client;
-
-            /**
-             * Dispatch input search action
-             */
-
-            (0, _simpleSearchActions.simpleSearchAction)({
-                environmentId: environmentId,
-                queryText: e.target.value
-            }, currentQuery, client);
-        }, _temp), _possibleConstructorReturn(_this, _ret);
-    }
-
-    _createClass(SimpleSearchComponent, [{
-        key: 'shouldComponentUpdate',
-        value: function shouldComponentUpdate() {
-            return false;
-        }
-    }, {
-        key: 'render',
-        value: function render() {
-            var _props = this.props,
-                placeholder = _props.placeholder,
-                autofocus = _props.autofocus,
-                _props$classNames = _props.classNames,
-                containerClassName = _props$classNames.container,
-                inputClassName = _props$classNames.input;
-
-
-            return (0, _preact.h)(
-                'div',
-                { className: 'asui-simpleSearch ' + containerClassName },
-                (0, _preact.h)('input', {
-                    type: 'text',
-                    className: 'asui-simpleSearch--input ' + inputClassName,
-                    autofocus: autofocus,
-                    placeholder: placeholder,
-                    onInput: this.handleSearch
-                })
-            );
-        }
-    }]);
-
-    return SimpleSearchComponent;
-}(_preact.Component);
-
-SimpleSearchComponent.defaultProps = {
-    placeholder: '',
-    autofocus: false,
-    classNames: {
-        container: '',
-        input: ''
-    }
-};
-
-exports.default = SimpleSearchComponent;
-
-/***/ }),
-/* 18 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.simpleSearchAction = simpleSearchAction;
-
-var _cloneDeep = __webpack_require__(1);
-
-var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
-
-var _container = __webpack_require__(4);
-
-var _container2 = _interopRequireDefault(_container);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Keyup simple search action
- *
- * This action is triggered when a text input changes
- * receives three parameters:
- *   @param queryOptions -> the queryOptions for the search
- *   @param currentQuery -> current application query
- *   @param client       -> apisearch client to trigger a search
- *
- * Finally dispatches an event with the search result and
- * the modified query.
- *   @returns {{
- *     type: string,
- *     payload: {
- *        result,
- *        updatedQuery
- *     }
- *   }}
- */
-/**
- * Search actions
- */
-function simpleSearchAction(queryOptions, currentQuery, client) {
-    var environmentId = queryOptions.environmentId,
-        queryText = queryOptions.queryText;
-
-
-    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
-    clonedQuery.setQueryText(queryText);
-
-    var dispatcher = _container2.default.get('apisearch_dispatcher--' + environmentId);
-    client.search(clonedQuery, function (result) {
-        dispatcher.dispatch({
-            type: 'RENDER_FETCHED_DATA',
-            payload: {
-                result: result,
-                updatedQuery: clonedQuery
-            }
-        });
-    });
-}
-
-/***/ }),
-/* 19 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/*!
- * is-plain-object <https://github.com/jonschlinkert/is-plain-object>
- *
- * Copyright (c) 2014-2017, Jon Schlinkert.
- * Released under the MIT License.
- */
-
-
-
-var isObject = __webpack_require__(20);
-
-function isObjectObject(o) {
-  return isObject(o) === true
-    && Object.prototype.toString.call(o) === '[object Object]';
-}
-
-module.exports = function isPlainObject(o) {
-  var ctor,prot;
-
-  if (isObjectObject(o) === false) return false;
-
-  // If has modified constructor
-  ctor = o.constructor;
-  if (typeof ctor !== 'function') return false;
-
-  // If has modified prototype
-  prot = ctor.prototype;
-  if (isObjectObject(prot) === false) return false;
-
-  // If constructor does not have an Object-specific method
-  if (prot.hasOwnProperty('isPrototypeOf') === false) {
-    return false;
-  }
-
-  // Most likely a plain Object
-  return true;
-};
-
-
-/***/ }),
-/* 20 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/*!
- * isobject <https://github.com/jonschlinkert/isobject>
- *
- * Copyright (c) 2014-2017, Jon Schlinkert.
- * Released under the MIT License.
- */
-
-
-
-module.exports = function isObject(val) {
-  return val != null && typeof val === 'object' && Array.isArray(val) === false;
-};
-
-
-/***/ }),
-/* 21 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/*!
- * shallow-clone <https://github.com/jonschlinkert/shallow-clone>
- *
- * Copyright (c) 2015-2017, Jon Schlinkert.
- * Released under the MIT License.
- */
-
-
-
-var isObject = __webpack_require__(7);
-var mixin = __webpack_require__(22);
-var typeOf = __webpack_require__(9);
-
-/**
- * Shallow copy an object, array or primitive.
- *
- * @param  {any} `val`
- * @return {any}
- */
-
-function clone(val) {
-  var type = typeOf(val);
-  if (clone.hasOwnProperty(type)) {
-    return clone[type](val);
-  }
-  return val;
-}
-
-clone.array = function cloneArray(arr) {
-  return arr.slice();
-};
-
-clone.date = function cloneDate(date) {
-  return new Date(+date);
-};
-
-clone.object = function cloneObject(obj) {
-  if (isObject(obj)) {
-    return mixin({}, obj);
-  } else {
-    return obj;
-  }
-};
-
-clone.regexp = function cloneRegExp(re) {
-  var flags = '';
-  flags += re.multiline ? 'm' : '';
-  flags += re.global ? 'g' : '';
-  flags += re.ignorecase ? 'i' : '';
-  return new RegExp(re.source, flags);
-};
-
-/**
- * Expose `clone`
- */
-
-module.exports = clone;
-
-
-/***/ }),
-/* 22 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var isObject = __webpack_require__(7);
-var forIn = __webpack_require__(8);
-
-function mixin(target, objects) {
-  if (!isObject(target)) {
-    throw new TypeError('mixin-object expects the first argument to be an object.');
-  }
-  var len = arguments.length, i = 0;
-  while (++i < len) {
-    var obj = arguments[i];
-    if (isObject(obj)) {
-      forIn(obj, copy, target);
-    }
-  }
-  return target;
-}
-
-/**
- * copy properties from the source object to the
- * target object.
- *
- * @param  {*} `value`
- * @param  {String} `key`
- */
-
-function copy(value, key) {
-  this[key] = value;
-}
-
-/**
- * Expose `mixin`
- */
-
-module.exports = mixin;
-
-/***/ }),
-/* 23 */
-/***/ (function(module, exports) {
-
-/*!
- * Determine if an object is a Buffer
- *
- * @author   Feross Aboukhadijeh <https://feross.org>
- * @license  MIT
- */
-
-// The _isBuffer check is for Safari 5-7 support, because it's missing
-// Object.prototype.constructor. Remove this eventually
-module.exports = function (obj) {
-  return obj != null && (isBuffer(obj) || isSlowBuffer(obj) || !!obj._isBuffer)
-}
-
-function isBuffer (obj) {
-  return !!obj.constructor && typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
-}
-
-// For Node v0.10 support. Remove this eventually.
-function isSlowBuffer (obj) {
-  return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
-}
-
-
-/***/ }),
-/* 24 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/*!
- * for-own <https://github.com/jonschlinkert/for-own>
- *
- * Copyright (c) 2014-2017, Jon Schlinkert.
- * Released under the MIT License.
- */
-
-
-
-var forIn = __webpack_require__(8);
-var hasOwn = Object.prototype.hasOwnProperty;
-
-module.exports = function forOwn(obj, fn, thisArg) {
-  forIn(obj, function(val, key) {
-    if (hasOwn.call(obj, key)) {
-      return fn.call(thisArg, obj[key], key, obj);
-    }
-  });
-};
-
-
-/***/ }),
-/* 25 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _preact = __webpack_require__(0);
-
-var _helpers = __webpack_require__(26);
-
-var _suggestedSearchActions = __webpack_require__(27);
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
-/**
- * Actions
- */
-
-
-/**
- * Suggested Search Component
- */
-var SuggestedSearchComponent = function (_Component) {
-    _inherits(SuggestedSearchComponent, _Component);
-
-    function SuggestedSearchComponent() {
-        _classCallCheck(this, SuggestedSearchComponent);
-
-        var _this = _possibleConstructorReturn(this, (SuggestedSearchComponent.__proto__ || Object.getPrototypeOf(SuggestedSearchComponent)).call(this));
-
-        _this.handleSearch = function (e) {
-            /**
-             * Set the current query text
-             */
-            _this.setState({ q: e.target.value });
-
-            /**
-             * Dispatch suggested search action
-             */
-            (0, _suggestedSearchActions.suggestedSearchAction)(e.target.value, _this.props.currentQuery, _this.props.client);
-        };
-
-        _this.handleSuggestionsNavigation = function (e) {
-            /**
-             * When user hits arrow down
-             */
-            if (e.code === 'ArrowDown') {
-                _this.setState({
-                    currentSuggestions: (0, _helpers.selectNextSuggestion)(_this.state.currentSuggestions),
-                    q: (0, _helpers.selectActiveSuggestion)(_this.state.currentSuggestions)
-                });
-            }
-
-            /**
-             * When user hits arrow up
-             */
-            if (e.code === 'ArrowUp') {
-                /**
-                 * Prevent cursor to go at the starting point of the line
-                 */
-                e.preventDefault();
-
-                _this.setState({
-                    currentSuggestions: (0, _helpers.selectPreviousSuggestion)(_this.state.currentSuggestions),
-                    q: (0, _helpers.selectActiveSuggestion)(_this.state.currentSuggestions)
-                });
-            }
-
-            /**
-             * When user hits enter
-             */
-            if (e.code === 'Enter') {
-                _this.setState({
-                    q: (0, _helpers.selectActiveSuggestion)(_this.state.currentSuggestions),
-                    currentSuggestions: []
-                });
-
-                var _this$props = _this.props,
-                    currentQuery = _this$props.currentQuery,
-                    client = _this$props.client;
-
-
-                (0, _suggestedSearchActions.simpleSearchAction)(_this.state.q, currentQuery, client);
-            }
-        };
-
-        _this.handleSuggestionClick = function (e) {
-            _this.setState({
-                q: e.target.innerText,
-                currentSuggestions: []
-            });
-
-            (0, _suggestedSearchActions.simpleSearchAction)(e.target.innerText, _this.props.currentQuery, _this.props.client);
-        };
-
-        _this.handleSearchInputFocusedOut = function (e) {
-            /**
-             * It handles when a user focuses out the search input
-             * If is not clicking on the suggestions box
-             * The suggestions are cleared and panel closes
-             */
-            if (null === e.relatedTarget || false === e.relatedTarget.classList.contains('asui-suggestedSearch--box')) {
-                _this.setState({ currentSuggestions: [] });
-            }
-
-            return false;
-        };
-
-        _this.state = {
-            q: '',
-            currentSuggestions: []
-        };
-        return _this;
-    }
-
-    _createClass(SuggestedSearchComponent, [{
-        key: 'componentWillReceiveProps',
-        value: function componentWillReceiveProps(props) {
-            var _this2 = this;
-
-            /**
-             * Check suggestions available
-             * if some, prepend the current query to the other suggestions array
-             * else, only append the current query to the suggestions array
-             */
-            var suggests = props.data && props.data.suggests ? [this.state.q].concat(_toConsumableArray(props.data.suggests)) : [this.state.q];
-
-            /**
-             * Prepare suggestions array
-             */
-            this.setState({
-                currentSuggestions: suggests.map(function (suggest, key) {
-                    return {
-                        isActive: 0 === key,
-                        name: suggest,
-                        htmlName: (0, _helpers.highlightSuggestion)(_this2.state.q, suggest)
-                    };
-                })
-            });
-        }
-    }, {
-        key: 'render',
-        value: function render() {
-            var _this3 = this;
-
-            var _props = this.props,
-                placeholder = _props.placeholder,
-                autofocus = _props.autofocus,
-                _props$classNames = _props.classNames,
-                containerClassName = _props$classNames.container,
-                inputClassName = _props$classNames.input,
-                boxClassName = _props$classNames.box,
-                suggestionClassName = _props$classNames.suggestion,
-                activeSuggestionClassName = _props$classNames.activeSuggestion;
-            var currentSuggestions = this.state.currentSuggestions;
-
-
-            return (0, _preact.h)(
-                'div',
-                { className: 'asui-suggestedSearch ' + containerClassName },
-                (0, _preact.h)('input', {
-                    type: 'text',
-                    value: this.state.q,
-                    className: 'asui-suggestedSearch--input ' + inputClassName,
-                    placeholder: placeholder,
-                    autofocus: autofocus,
-
-                    onInput: this.handleSearch,
-                    onKeyDown: this.handleSuggestionsNavigation,
-                    onBlur: this.handleSearchInputFocusedOut
-                }),
-                (0, _preact.h)(
-                    'div',
-                    {
-                        tabIndex: '0',
-                        className: 'asui-suggestedSearch--box ' + boxClassName,
-                        style: {
-                            display: currentSuggestions.length !== 0 ? 'block' : 'none'
-                        }
-                    },
-                    currentSuggestions.map(function (suggestion, key) {
-                        return 0 !== key ? (0, _preact.h)('div', {
-                            className: 'asui-suggestedSearch--suggestion ' + (suggestionClassName + ' ') + ('' + (suggestion.isActive ? activeSuggestionClassName : '')),
-                            dangerouslySetInnerHTML: {
-                                __html: suggestion.htmlName
-                            },
-                            onClick: _this3.handleSuggestionClick
-                        }) : null;
-                    })
-                )
-            );
-        }
-    }]);
-
-    return SuggestedSearchComponent;
-}(_preact.Component);
-
-SuggestedSearchComponent.defaultProps = {
-    placeholder: '',
-    autofocus: false,
-    classNames: {
-        container: '',
-        input: '',
-        box: '',
-        suggestion: '',
-        activeSuggestion: 'asui-active'
-    }
-};
-
-exports.default = SuggestedSearchComponent;
-
-/***/ }),
-/* 26 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.highlightSuggestion = highlightSuggestion;
-exports.selectNextSuggestion = selectNextSuggestion;
-exports.selectPreviousSuggestion = selectPreviousSuggestion;
-exports.selectActiveSuggestion = selectActiveSuggestion;
-/**
- * Set of helpers for the suggestions widget
- */
-
-/**
- * Highlight text
- */
-function highlightSuggestion(currentQueryText, suggestion) {
-    var regex = new RegExp('(' + currentQueryText + ')', 'gi');
-    var highlightedSuggestion = suggestion.replace(regex, "<em>$1</em>");
-    var sanitizedSpaces = highlightedSuggestion.split(' ');
-
-    return sanitizedSpaces.join('&nbsp;');
-}
-
-/**
- * Mark as active the item next
- * to the last active item
- * on a given array of items
- *
- * @example when a user press a key arrow down
- */
-function selectNextSuggestion(suggestionsArray) {
-    var currentActiveSuggestionKey = void 0;
-
-    return suggestionsArray.map(function (suggestion, key) {
-        /**
-         * Detect current active suggestion
-         */
-        if (suggestion.isActive && key + 1 < suggestionsArray.length) {
-            currentActiveSuggestionKey = key;
-            suggestion.isActive = false;
-        }
-
-        /**
-         * Modify the first suggestion next to
-         * the current active suggestion
-         */
-        if (key === currentActiveSuggestionKey + 1 && key + 1 <= suggestionsArray.length) {
-            suggestion.isActive = true;
-        }
-
-        return suggestion;
-    });
-}
-
-/**
- * Mark as active the item previous
- * to the last active item
- * on a given array of items
- *
- * @example when a user press a key arrow up
- */
-function selectPreviousSuggestion(suggestionsArray) {
-    /**
-     * Find the current active suggestion key
-     */
-    var currentActiveSuggestionKey = suggestionsArray.findIndex(function (suggestion) {
-        if (suggestion.isActive) {
-            return suggestion;
-        }
-    });
-
-    return suggestionsArray.map(function (suggestion, key) {
-        /**
-         * Set the current active suggestion as false
-         * if is Active AND is not the last one
-         */
-        if (suggestion.isActive && currentActiveSuggestionKey - 1 >= 0) {
-            suggestion.isActive = false;
-        }
-
-        /**
-         * Set active the suggestion previous to
-         * the current active suggestion
-         */
-        if (currentActiveSuggestionKey - 1 === key && currentActiveSuggestionKey - 1 >= 0) {
-            suggestion.isActive = true;
-        }
-
-        return suggestion;
-    });
-}
-
-/**
- * Return the active item of an array
- */
-function selectActiveSuggestion(suggestionsArray) {
-    var selectedSuggestion = suggestionsArray.filter(function (suggestion) {
-        if (suggestion.isActive) {
-            return suggestion;
-        }
-    });
-
-    return selectedSuggestion[0].name;
-}
-
-/***/ }),
-/* 27 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.simpleSearchAction = simpleSearchAction;
-exports.suggestedSearchAction = suggestedSearchAction;
-
-var _cloneDeep = __webpack_require__(1);
-
-var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
-
-var _dispatcher = __webpack_require__(2);
-
-var _dispatcher2 = _interopRequireDefault(_dispatcher);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * This actions are triggered when a text input changes
- * receives three parameters:
- *   @param text         -> the text value for the search
- *   @param currentQuery -> current application query
- *   @param client       -> apisearch client to trigger a search
- *
- * Finally dispatches an event with the search result and
- * the modified query.
- *   @returns {{
- *     type: string,
- *     payload: {
- *        result,
- *        updatedQuery
- *     }
- *   }}
- */
-
-/**
- * Simple search action
- * Builds a query disabling suggested searches flag
- */
-/**
- * Search actions
- */
-function simpleSearchAction(text, currentQuery, client) {
-    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
-    clonedQuery.setQueryText(text).enableResults().disableSuggestions();
-
-    client.search(clonedQuery, function (result) {
-        _dispatcher2.default.dispatch({
-            type: 'RENDER_FETCHED_DATA',
-            payload: {
-                result: result,
-                updatedQuery: clonedQuery
-            }
-        });
-    });
-}
-
-/**
- * Suggested Search Action
- * Builds a query using suggested search flag active
- */
-function suggestedSearchAction(text, currentQuery, client) {
-    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
-    clonedQuery.setQueryText(text).disableResults().enableSuggestions();
-
-    client.search(clonedQuery, function (result) {
-        _dispatcher2.default.dispatch({
-            type: 'RENDER_FETCHED_DATA',
-            payload: {
-                result: result,
-                updatedQuery: clonedQuery
-            }
-        });
-    });
-}
-
-/***/ }),
-/* 28 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _preact = __webpack_require__(0);
-
-var _sortByActions = __webpack_require__(29);
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
-
-/**
- * SortBy Filter Component
- */
-var SortByComponent = function (_Component) {
-    _inherits(SortByComponent, _Component);
-
-    function SortByComponent() {
-        var _ref;
-
-        var _temp, _this, _ret;
-
-        _classCallCheck(this, SortByComponent);
-
-        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-            args[_key] = arguments[_key];
-        }
-
-        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = SortByComponent.__proto__ || Object.getPrototypeOf(SortByComponent)).call.apply(_ref, [this].concat(args))), _this), _this.handleChange = function (e) {
-            var _this$props = _this.props,
-                currentQuery = _this$props.currentQuery,
-                client = _this$props.client;
-
-            /**
-             * Dispatch action
-             */
-
-            (0, _sortByActions.onChangeSearchAction)(e.target.value, currentQuery, client);
-        }, _temp), _possibleConstructorReturn(_this, _ret);
-    }
-
-    _createClass(SortByComponent, [{
-        key: 'shouldComponentUpdate',
-        value: function shouldComponentUpdate() {
-            return false;
-        }
-    }, {
-        key: 'render',
-        value: function render() {
-            var _props = this.props,
-                _props$classNames = _props.classNames,
-                containerClassName = _props$classNames.container,
-                selectClassName = _props$classNames.select,
-                options = _props.options;
-
-
-            return (0, _preact.h)(
-                'div',
-                { className: 'asui-sortBy ' + containerClassName },
-                (0, _preact.h)(
-                    'select',
-                    {
-                        className: 'asui-sortBy--selector ' + selectClassName,
-                        onChange: this.handleChange
-                    },
-                    options.map(function (option) {
-                        return (0, _preact.h)(
-                            'option',
-                            { value: option.value },
-                            option.name
-                        );
-                    })
-                )
-            );
-        }
-    }]);
-
-    return SortByComponent;
-}(_preact.Component);
-
-SortByComponent.defaultProps = {
-    classNames: {
-        container: '',
-        select: ''
-    }
-};
-
-exports.default = SortByComponent;
-
-/***/ }),
-/* 29 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.onChangeSearchAction = onChangeSearchAction;
-
-var _cloneDeep = __webpack_require__(1);
-
-var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
-
-var _dispatcher = __webpack_require__(2);
-
-var _dispatcher2 = _interopRequireDefault(_dispatcher);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; } /**
-                                                                                                                                                                                                                   * Search actions
-                                                                                                                                                                                                                   */
-
-
-/**
- * On change action
- *
- * This action is triggered when a sortBy filter changes
- * receives three parameters:
- *   @param queryValue   -> the value for the filter (ex: "created_at:asc")
- *   @param currentQuery -> current application query
- *   @param client       -> apisearch client to trigger a search
- *
- * Finally dispatches an event with the search result and
- * the modified query.
- *   @returns {{
- *     type: string,
- *     payload: {
- *        result,
- *        updatedQuery
- *     }
- *   }}
- */
-function onChangeSearchAction(queryValue, currentQuery, client) {
-    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
-    var filterData = splitQueryValue(queryValue);
-
-    clonedQuery.sortBy(_defineProperty({}, 'indexed_metadata.' + filterData.field, {
-        order: filterData.value
-    }));
-
-    client.search(clonedQuery, function (result) {
-        _dispatcher2.default.dispatch({
-            type: 'RENDER_FETCHED_DATA',
-            payload: {
-                result: result,
-                updatedQuery: clonedQuery
-            }
-        });
-    });
-}
-
-function splitQueryValue(string) {
-    var queryValue = string.split(':');
-
-    return {
-        field: queryValue[0],
-        value: queryValue[1]
-    };
-}
-
-/***/ }),
-/* 30 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _preact = __webpack_require__(0);
-
-var _Template = __webpack_require__(3);
-
-var _Template2 = _interopRequireDefault(_Template);
-
-var _ShowMoreComponent = __webpack_require__(34);
-
-var _ShowMoreComponent2 = _interopRequireDefault(_ShowMoreComponent);
-
-var _multipleFilterActions = __webpack_require__(35);
-
-var _helpers = __webpack_require__(36);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
-
-/**
- * Filter Component
- */
-var MultipleFilterComponent = function (_Component) {
-    _inherits(MultipleFilterComponent, _Component);
-
-    function MultipleFilterComponent() {
-        _classCallCheck(this, MultipleFilterComponent);
-
-        var _this = _possibleConstructorReturn(this, (MultipleFilterComponent.__proto__ || Object.getPrototypeOf(MultipleFilterComponent)).call(this));
-
-        _this.handleClick = function (selectedFilter) {
-            var _this$props = _this.props,
-                filterName = _this$props.name,
-                filterField = _this$props.filterField,
-                aggregationField = _this$props.aggregationField,
-                applicationType = _this$props.applicationType,
-                sortBy = _this$props.sortBy,
-                currentQuery = _this$props.currentQuery,
-                client = _this$props.client,
-                aggregations = _this$props.data.aggregations.aggregations;
-
-
-            var activeElements = aggregations[filterName].active_elements;
-            var currentActiveFilterValues = typeof activeElements !== 'undefined' ? activeElements : [];
-
-            /**
-             * Dispatch action
-             */
-            (0, _multipleFilterActions.filterAction)({
-                filterName: filterName,
-                filterField: filterField,
-                applicationType: applicationType,
-                sortBy: sortBy,
-                aggregationField: aggregationField ? aggregationField : filterField,
-
-                filterValues: (0, _helpers.manageCurrentFilterItems)(selectedFilter, currentActiveFilterValues)
-            }, currentQuery, client);
-        };
-
-        _this.handleShowMore = function () {
-            var _this$state = _this.state,
-                activeAggregations = _this$state.activeAggregations,
-                currentAggregations = _this$state.currentAggregations;
-
-            var limit = activeAggregations.length + currentAggregations.length;
-            _this.setState({ limit: limit });
-        };
-
-        _this.handleShowLess = function () {
-            var limit = _this.props.limit;
-
-            _this.setState({ limit: limit });
-        };
-
-        _this.state = {
-            limit: 0,
-            activeAggregations: [],
-            currentAggregations: []
-        };
-        return _this;
-    }
-
-    _createClass(MultipleFilterComponent, [{
-        key: "componentWillMount",
-        value: function componentWillMount() {
-            var _props = this.props,
-                filterName = _props.name,
-                filterField = _props.filterField,
-                aggregationField = _props.aggregationField,
-                applicationType = _props.applicationType,
-                sortBy = _props.sortBy,
-                limit = _props.limit,
-                currentQuery = _props.currentQuery;
-
-
-            this.setState({ limit: limit });
-
-            /**
-             * Dispatch action
-             */
-            (0, _multipleFilterActions.aggregationSetup)({
-                filterName: filterName,
-                filterField: filterField,
-                applicationType: applicationType,
-                sortBy: sortBy,
-                aggregationField: aggregationField ? aggregationField : filterField
-            }, currentQuery);
-        }
-    }, {
-        key: "componentWillReceiveProps",
-        value: function componentWillReceiveProps(props) {
-            var filterName = props.name,
-                aggregations = props.data.aggregations.aggregations;
-
-
-            if (typeof aggregations[filterName] !== 'undefined') {
-                /**
-                 * Getting aggregation from aggregations
-                 */
-                var aggregation = aggregations[filterName];
-                var counters = aggregation.counters ? aggregation.counters : [];
-
-                this.setState({
-                    /**
-                     * Current used aggregations
-                     */
-                    activeAggregations: counters.filter(function (item) {
-                        return item.used;
-                    }),
-                    /**
-                     * Current inactive aggregations
-                     */
-                    currentAggregations: counters.filter(function (item) {
-                        return null === item.used;
-                    })
-                });
-            }
-        }
-    }, {
-        key: "render",
-        value: function render() {
-            var _this2 = this;
-
-            var _props2 = this.props,
-                showMoreActive = _props2.showMoreActive,
-                _props2$classNames = _props2.classNames,
-                containerClassName = _props2$classNames.container,
-                topClassName = _props2$classNames.top,
-                itemsListClassName = _props2$classNames.itemsList,
-                itemClassName = _props2$classNames.item,
-                showMoreContainerClassName = _props2$classNames.showMoreContainer,
-                _props2$template = _props2.template,
-                topTemplate = _props2$template.top,
-                itemTemplate = _props2$template.item,
-                showMoreTemplate = _props2$template.showMore,
-                showLessTemplate = _props2$template.showLess;
-
-            /**
-             * Get aggregation items
-             */
-
-            var allItems = [].concat(_toConsumableArray(this.state.activeAggregations), _toConsumableArray(this.state.currentAggregations));
-            var allItemsLength = allItems.length;
-            var items = allItems.slice(0, this.state.limit);
-
-            return (0, _preact.h)(
-                "div",
-                { className: "asui-multipleFilter " + containerClassName },
-                (0, _preact.h)(_Template2.default, {
-                    template: topTemplate,
-                    className: "asui-multipleFilter--top " + topClassName
-                }),
-                (0, _preact.h)(
-                    "div",
-                    { className: "asui-multipleFilter--itemsList " + itemsListClassName },
-                    items.map(function (item) {
-                        var reducedTemplateData = {
-                            n: parseInt(item.n).toLocaleString('de-DE'),
-                            isActive: item.used,
-                            values: item.values
-                        };
-
-                        return (0, _preact.h)(
-                            "div",
-                            {
-                                className: "asui-multipleFilter--item " + itemClassName,
-                                onClick: function onClick() {
-                                    return _this2.handleClick(item.values.id);
-                                }
-                            },
-                            (0, _preact.h)(_Template2.default, {
-                                template: itemTemplate,
-                                data: reducedTemplateData
-                            })
-                        );
-                    })
-                ),
-                showMoreActive ? (0, _preact.h)(_ShowMoreComponent2.default, {
-                    allItemsLength: allItemsLength,
-                    currentLimit: this.state.limit,
-                    handleShowMore: this.handleShowMore,
-                    handleShowLess: this.handleShowLess,
-                    showMoreContainerClassName: showMoreContainerClassName,
-                    showMoreTemplate: showMoreTemplate,
-                    showLessTemplate: showLessTemplate
-                }) : null
-            );
-        }
-    }]);
-
-    return MultipleFilterComponent;
-}(_preact.Component);
-
-MultipleFilterComponent.defaultProps = {
-    aggregationField: null,
-    applicationType: 8, // FILTER_MUST_ALL
-    limit: 10,
-    sortBy: ['_term', 'desc'],
-    showMoreActive: true,
-    classNames: {
-        container: '',
-        top: '',
-        itemsList: '',
-        item: '',
-        showMoreContainer: ''
-    },
-    template: {
-        top: null,
-        item: null,
-        showMore: '+ Show more',
-        showLess: '- Show less'
-    }
-};
-
-exports.default = MultipleFilterComponent;
-
-/***/ }),
-/* 31 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/*
- *  Copyright 2011 Twitter, Inc.
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
-
-// This file is for use with Node.js. See dist/ for browser files.
-
-var Hogan = __webpack_require__(32);
-Hogan.Template = __webpack_require__(33).Template;
-Hogan.template = Hogan.Template;
-module.exports = Hogan;
-
-
-/***/ }),
-/* 32 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/*
- *  Copyright 2011 Twitter, Inc.
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
-
-(function (Hogan) {
-  // Setup regex  assignments
-  // remove whitespace according to Mustache spec
-  var rIsWhitespace = /\S/,
-      rQuot = /\"/g,
-      rNewline =  /\n/g,
-      rCr = /\r/g,
-      rSlash = /\\/g,
-      rLineSep = /\u2028/,
-      rParagraphSep = /\u2029/;
-
-  Hogan.tags = {
-    '#': 1, '^': 2, '<': 3, '$': 4,
-    '/': 5, '!': 6, '>': 7, '=': 8, '_v': 9,
-    '{': 10, '&': 11, '_t': 12
-  };
-
-  Hogan.scan = function scan(text, delimiters) {
-    var len = text.length,
-        IN_TEXT = 0,
-        IN_TAG_TYPE = 1,
-        IN_TAG = 2,
-        state = IN_TEXT,
-        tagType = null,
-        tag = null,
-        buf = '',
-        tokens = [],
-        seenTag = false,
-        i = 0,
-        lineStart = 0,
-        otag = '{{',
-        ctag = '}}';
-
-    function addBuf() {
-      if (buf.length > 0) {
-        tokens.push({tag: '_t', text: new String(buf)});
-        buf = '';
-      }
-    }
-
-    function lineIsWhitespace() {
-      var isAllWhitespace = true;
-      for (var j = lineStart; j < tokens.length; j++) {
-        isAllWhitespace =
-          (Hogan.tags[tokens[j].tag] < Hogan.tags['_v']) ||
-          (tokens[j].tag == '_t' && tokens[j].text.match(rIsWhitespace) === null);
-        if (!isAllWhitespace) {
-          return false;
-        }
-      }
-
-      return isAllWhitespace;
-    }
-
-    function filterLine(haveSeenTag, noNewLine) {
-      addBuf();
-
-      if (haveSeenTag && lineIsWhitespace()) {
-        for (var j = lineStart, next; j < tokens.length; j++) {
-          if (tokens[j].text) {
-            if ((next = tokens[j+1]) && next.tag == '>') {
-              // set indent to token value
-              next.indent = tokens[j].text.toString()
-            }
-            tokens.splice(j, 1);
-          }
-        }
-      } else if (!noNewLine) {
-        tokens.push({tag:'\n'});
-      }
-
-      seenTag = false;
-      lineStart = tokens.length;
-    }
-
-    function changeDelimiters(text, index) {
-      var close = '=' + ctag,
-          closeIndex = text.indexOf(close, index),
-          delimiters = trim(
-            text.substring(text.indexOf('=', index) + 1, closeIndex)
-          ).split(' ');
-
-      otag = delimiters[0];
-      ctag = delimiters[delimiters.length - 1];
-
-      return closeIndex + close.length - 1;
-    }
-
-    if (delimiters) {
-      delimiters = delimiters.split(' ');
-      otag = delimiters[0];
-      ctag = delimiters[1];
-    }
-
-    for (i = 0; i < len; i++) {
-      if (state == IN_TEXT) {
-        if (tagChange(otag, text, i)) {
-          --i;
-          addBuf();
-          state = IN_TAG_TYPE;
-        } else {
-          if (text.charAt(i) == '\n') {
-            filterLine(seenTag);
-          } else {
-            buf += text.charAt(i);
-          }
-        }
-      } else if (state == IN_TAG_TYPE) {
-        i += otag.length - 1;
-        tag = Hogan.tags[text.charAt(i + 1)];
-        tagType = tag ? text.charAt(i + 1) : '_v';
-        if (tagType == '=') {
-          i = changeDelimiters(text, i);
-          state = IN_TEXT;
-        } else {
-          if (tag) {
-            i++;
-          }
-          state = IN_TAG;
-        }
-        seenTag = i;
-      } else {
-        if (tagChange(ctag, text, i)) {
-          tokens.push({tag: tagType, n: trim(buf), otag: otag, ctag: ctag,
-                       i: (tagType == '/') ? seenTag - otag.length : i + ctag.length});
-          buf = '';
-          i += ctag.length - 1;
-          state = IN_TEXT;
-          if (tagType == '{') {
-            if (ctag == '}}') {
-              i++;
-            } else {
-              cleanTripleStache(tokens[tokens.length - 1]);
-            }
-          }
-        } else {
-          buf += text.charAt(i);
-        }
-      }
-    }
-
-    filterLine(seenTag, true);
-
-    return tokens;
-  }
-
-  function cleanTripleStache(token) {
-    if (token.n.substr(token.n.length - 1) === '}') {
-      token.n = token.n.substring(0, token.n.length - 1);
-    }
-  }
-
-  function trim(s) {
-    if (s.trim) {
-      return s.trim();
-    }
-
-    return s.replace(/^\s*|\s*$/g, '');
-  }
-
-  function tagChange(tag, text, index) {
-    if (text.charAt(index) != tag.charAt(0)) {
-      return false;
-    }
-
-    for (var i = 1, l = tag.length; i < l; i++) {
-      if (text.charAt(index + i) != tag.charAt(i)) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  // the tags allowed inside super templates
-  var allowedInSuper = {'_t': true, '\n': true, '$': true, '/': true};
-
-  function buildTree(tokens, kind, stack, customTags) {
-    var instructions = [],
-        opener = null,
-        tail = null,
-        token = null;
-
-    tail = stack[stack.length - 1];
-
-    while (tokens.length > 0) {
-      token = tokens.shift();
-
-      if (tail && tail.tag == '<' && !(token.tag in allowedInSuper)) {
-        throw new Error('Illegal content in < super tag.');
-      }
-
-      if (Hogan.tags[token.tag] <= Hogan.tags['$'] || isOpener(token, customTags)) {
-        stack.push(token);
-        token.nodes = buildTree(tokens, token.tag, stack, customTags);
-      } else if (token.tag == '/') {
-        if (stack.length === 0) {
-          throw new Error('Closing tag without opener: /' + token.n);
-        }
-        opener = stack.pop();
-        if (token.n != opener.n && !isCloser(token.n, opener.n, customTags)) {
-          throw new Error('Nesting error: ' + opener.n + ' vs. ' + token.n);
-        }
-        opener.end = token.i;
-        return instructions;
-      } else if (token.tag == '\n') {
-        token.last = (tokens.length == 0) || (tokens[0].tag == '\n');
-      }
-
-      instructions.push(token);
-    }
-
-    if (stack.length > 0) {
-      throw new Error('missing closing tag: ' + stack.pop().n);
-    }
-
-    return instructions;
-  }
-
-  function isOpener(token, tags) {
-    for (var i = 0, l = tags.length; i < l; i++) {
-      if (tags[i].o == token.n) {
-        token.tag = '#';
-        return true;
-      }
-    }
-  }
-
-  function isCloser(close, open, tags) {
-    for (var i = 0, l = tags.length; i < l; i++) {
-      if (tags[i].c == close && tags[i].o == open) {
-        return true;
-      }
-    }
-  }
-
-  function stringifySubstitutions(obj) {
-    var items = [];
-    for (var key in obj) {
-      items.push('"' + esc(key) + '": function(c,p,t,i) {' + obj[key] + '}');
-    }
-    return "{ " + items.join(",") + " }";
-  }
-
-  function stringifyPartials(codeObj) {
-    var partials = [];
-    for (var key in codeObj.partials) {
-      partials.push('"' + esc(key) + '":{name:"' + esc(codeObj.partials[key].name) + '", ' + stringifyPartials(codeObj.partials[key]) + "}");
-    }
-    return "partials: {" + partials.join(",") + "}, subs: " + stringifySubstitutions(codeObj.subs);
-  }
-
-  Hogan.stringify = function(codeObj, text, options) {
-    return "{code: function (c,p,i) { " + Hogan.wrapMain(codeObj.code) + " }," + stringifyPartials(codeObj) +  "}";
-  }
-
-  var serialNo = 0;
-  Hogan.generate = function(tree, text, options) {
-    serialNo = 0;
-    var context = { code: '', subs: {}, partials: {} };
-    Hogan.walk(tree, context);
-
-    if (options.asString) {
-      return this.stringify(context, text, options);
-    }
-
-    return this.makeTemplate(context, text, options);
-  }
-
-  Hogan.wrapMain = function(code) {
-    return 'var t=this;t.b(i=i||"");' + code + 'return t.fl();';
-  }
-
-  Hogan.template = Hogan.Template;
-
-  Hogan.makeTemplate = function(codeObj, text, options) {
-    var template = this.makePartials(codeObj);
-    template.code = new Function('c', 'p', 'i', this.wrapMain(codeObj.code));
-    return new this.template(template, text, this, options);
-  }
-
-  Hogan.makePartials = function(codeObj) {
-    var key, template = {subs: {}, partials: codeObj.partials, name: codeObj.name};
-    for (key in template.partials) {
-      template.partials[key] = this.makePartials(template.partials[key]);
-    }
-    for (key in codeObj.subs) {
-      template.subs[key] = new Function('c', 'p', 't', 'i', codeObj.subs[key]);
-    }
-    return template;
-  }
-
-  function esc(s) {
-    return s.replace(rSlash, '\\\\')
-            .replace(rQuot, '\\\"')
-            .replace(rNewline, '\\n')
-            .replace(rCr, '\\r')
-            .replace(rLineSep, '\\u2028')
-            .replace(rParagraphSep, '\\u2029');
-  }
-
-  function chooseMethod(s) {
-    return (~s.indexOf('.')) ? 'd' : 'f';
-  }
-
-  function createPartial(node, context) {
-    var prefix = "<" + (context.prefix || "");
-    var sym = prefix + node.n + serialNo++;
-    context.partials[sym] = {name: node.n, partials: {}};
-    context.code += 't.b(t.rp("' +  esc(sym) + '",c,p,"' + (node.indent || '') + '"));';
-    return sym;
-  }
-
-  Hogan.codegen = {
-    '#': function(node, context) {
-      context.code += 'if(t.s(t.' + chooseMethod(node.n) + '("' + esc(node.n) + '",c,p,1),' +
-                      'c,p,0,' + node.i + ',' + node.end + ',"' + node.otag + " " + node.ctag + '")){' +
-                      't.rs(c,p,' + 'function(c,p,t){';
-      Hogan.walk(node.nodes, context);
-      context.code += '});c.pop();}';
-    },
-
-    '^': function(node, context) {
-      context.code += 'if(!t.s(t.' + chooseMethod(node.n) + '("' + esc(node.n) + '",c,p,1),c,p,1,0,0,"")){';
-      Hogan.walk(node.nodes, context);
-      context.code += '};';
-    },
-
-    '>': createPartial,
-    '<': function(node, context) {
-      var ctx = {partials: {}, code: '', subs: {}, inPartial: true};
-      Hogan.walk(node.nodes, ctx);
-      var template = context.partials[createPartial(node, context)];
-      template.subs = ctx.subs;
-      template.partials = ctx.partials;
-    },
-
-    '$': function(node, context) {
-      var ctx = {subs: {}, code: '', partials: context.partials, prefix: node.n};
-      Hogan.walk(node.nodes, ctx);
-      context.subs[node.n] = ctx.code;
-      if (!context.inPartial) {
-        context.code += 't.sub("' + esc(node.n) + '",c,p,i);';
-      }
-    },
-
-    '\n': function(node, context) {
-      context.code += write('"\\n"' + (node.last ? '' : ' + i'));
-    },
-
-    '_v': function(node, context) {
-      context.code += 't.b(t.v(t.' + chooseMethod(node.n) + '("' + esc(node.n) + '",c,p,0)));';
-    },
-
-    '_t': function(node, context) {
-      context.code += write('"' + esc(node.text) + '"');
-    },
-
-    '{': tripleStache,
-
-    '&': tripleStache
-  }
-
-  function tripleStache(node, context) {
-    context.code += 't.b(t.t(t.' + chooseMethod(node.n) + '("' + esc(node.n) + '",c,p,0)));';
-  }
-
-  function write(s) {
-    return 't.b(' + s + ');';
-  }
-
-  Hogan.walk = function(nodelist, context) {
-    var func;
-    for (var i = 0, l = nodelist.length; i < l; i++) {
-      func = Hogan.codegen[nodelist[i].tag];
-      func && func(nodelist[i], context);
-    }
-    return context;
-  }
-
-  Hogan.parse = function(tokens, text, options) {
-    options = options || {};
-    return buildTree(tokens, '', [], options.sectionTags || []);
-  }
-
-  Hogan.cache = {};
-
-  Hogan.cacheKey = function(text, options) {
-    return [text, !!options.asString, !!options.disableLambda, options.delimiters, !!options.modelGet].join('||');
-  }
-
-  Hogan.compile = function(text, options) {
-    options = options || {};
-    var key = Hogan.cacheKey(text, options);
-    var template = this.cache[key];
-
-    if (template) {
-      var partials = template.partials;
-      for (var name in partials) {
-        delete partials[name].instance;
-      }
-      return template;
-    }
-
-    template = this.generate(this.parse(this.scan(text, options.delimiters), text, options), text, options);
-    return this.cache[key] = template;
-  }
-})( true ? exports : Hogan);
-
-
-/***/ }),
-/* 33 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/*
- *  Copyright 2011 Twitter, Inc.
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
-
-var Hogan = {};
-
-(function (Hogan) {
-  Hogan.Template = function (codeObj, text, compiler, options) {
-    codeObj = codeObj || {};
-    this.r = codeObj.code || this.r;
-    this.c = compiler;
-    this.options = options || {};
-    this.text = text || '';
-    this.partials = codeObj.partials || {};
-    this.subs = codeObj.subs || {};
-    this.buf = '';
-  }
-
-  Hogan.Template.prototype = {
-    // render: replaced by generated code.
-    r: function (context, partials, indent) { return ''; },
-
-    // variable escaping
-    v: hoganEscape,
-
-    // triple stache
-    t: coerceToString,
-
-    render: function render(context, partials, indent) {
-      return this.ri([context], partials || {}, indent);
-    },
-
-    // render internal -- a hook for overrides that catches partials too
-    ri: function (context, partials, indent) {
-      return this.r(context, partials, indent);
-    },
-
-    // ensurePartial
-    ep: function(symbol, partials) {
-      var partial = this.partials[symbol];
-
-      // check to see that if we've instantiated this partial before
-      var template = partials[partial.name];
-      if (partial.instance && partial.base == template) {
-        return partial.instance;
-      }
-
-      if (typeof template == 'string') {
-        if (!this.c) {
-          throw new Error("No compiler available.");
-        }
-        template = this.c.compile(template, this.options);
-      }
-
-      if (!template) {
-        return null;
-      }
-
-      // We use this to check whether the partials dictionary has changed
-      this.partials[symbol].base = template;
-
-      if (partial.subs) {
-        // Make sure we consider parent template now
-        if (!partials.stackText) partials.stackText = {};
-        for (key in partial.subs) {
-          if (!partials.stackText[key]) {
-            partials.stackText[key] = (this.activeSub !== undefined && partials.stackText[this.activeSub]) ? partials.stackText[this.activeSub] : this.text;
-          }
-        }
-        template = createSpecializedPartial(template, partial.subs, partial.partials,
-          this.stackSubs, this.stackPartials, partials.stackText);
-      }
-      this.partials[symbol].instance = template;
-
-      return template;
-    },
-
-    // tries to find a partial in the current scope and render it
-    rp: function(symbol, context, partials, indent) {
-      var partial = this.ep(symbol, partials);
-      if (!partial) {
-        return '';
-      }
-
-      return partial.ri(context, partials, indent);
-    },
-
-    // render a section
-    rs: function(context, partials, section) {
-      var tail = context[context.length - 1];
-
-      if (!isArray(tail)) {
-        section(context, partials, this);
-        return;
-      }
-
-      for (var i = 0; i < tail.length; i++) {
-        context.push(tail[i]);
-        section(context, partials, this);
-        context.pop();
-      }
-    },
-
-    // maybe start a section
-    s: function(val, ctx, partials, inverted, start, end, tags) {
-      var pass;
-
-      if (isArray(val) && val.length === 0) {
-        return false;
-      }
-
-      if (typeof val == 'function') {
-        val = this.ms(val, ctx, partials, inverted, start, end, tags);
-      }
-
-      pass = !!val;
-
-      if (!inverted && pass && ctx) {
-        ctx.push((typeof val == 'object') ? val : ctx[ctx.length - 1]);
-      }
-
-      return pass;
-    },
-
-    // find values with dotted names
-    d: function(key, ctx, partials, returnFound) {
-      var found,
-          names = key.split('.'),
-          val = this.f(names[0], ctx, partials, returnFound),
-          doModelGet = this.options.modelGet,
-          cx = null;
-
-      if (key === '.' && isArray(ctx[ctx.length - 2])) {
-        val = ctx[ctx.length - 1];
-      } else {
-        for (var i = 1; i < names.length; i++) {
-          found = findInScope(names[i], val, doModelGet);
-          if (found !== undefined) {
-            cx = val;
-            val = found;
-          } else {
-            val = '';
-          }
-        }
-      }
-
-      if (returnFound && !val) {
-        return false;
-      }
-
-      if (!returnFound && typeof val == 'function') {
-        ctx.push(cx);
-        val = this.mv(val, ctx, partials);
-        ctx.pop();
-      }
-
-      return val;
-    },
-
-    // find values with normal names
-    f: function(key, ctx, partials, returnFound) {
-      var val = false,
-          v = null,
-          found = false,
-          doModelGet = this.options.modelGet;
-
-      for (var i = ctx.length - 1; i >= 0; i--) {
-        v = ctx[i];
-        val = findInScope(key, v, doModelGet);
-        if (val !== undefined) {
-          found = true;
-          break;
-        }
-      }
-
-      if (!found) {
-        return (returnFound) ? false : "";
-      }
-
-      if (!returnFound && typeof val == 'function') {
-        val = this.mv(val, ctx, partials);
-      }
-
-      return val;
-    },
-
-    // higher order templates
-    ls: function(func, cx, partials, text, tags) {
-      var oldTags = this.options.delimiters;
-
-      this.options.delimiters = tags;
-      this.b(this.ct(coerceToString(func.call(cx, text)), cx, partials));
-      this.options.delimiters = oldTags;
-
-      return false;
-    },
-
-    // compile text
-    ct: function(text, cx, partials) {
-      if (this.options.disableLambda) {
-        throw new Error('Lambda features disabled.');
-      }
-      return this.c.compile(text, this.options).render(cx, partials);
-    },
-
-    // template result buffering
-    b: function(s) { this.buf += s; },
-
-    fl: function() { var r = this.buf; this.buf = ''; return r; },
-
-    // method replace section
-    ms: function(func, ctx, partials, inverted, start, end, tags) {
-      var textSource,
-          cx = ctx[ctx.length - 1],
-          result = func.call(cx);
-
-      if (typeof result == 'function') {
-        if (inverted) {
-          return true;
-        } else {
-          textSource = (this.activeSub && this.subsText && this.subsText[this.activeSub]) ? this.subsText[this.activeSub] : this.text;
-          return this.ls(result, cx, partials, textSource.substring(start, end), tags);
-        }
-      }
-
-      return result;
-    },
-
-    // method replace variable
-    mv: function(func, ctx, partials) {
-      var cx = ctx[ctx.length - 1];
-      var result = func.call(cx);
-
-      if (typeof result == 'function') {
-        return this.ct(coerceToString(result.call(cx)), cx, partials);
-      }
-
-      return result;
-    },
-
-    sub: function(name, context, partials, indent) {
-      var f = this.subs[name];
-      if (f) {
-        this.activeSub = name;
-        f(context, partials, this, indent);
-        this.activeSub = false;
-      }
-    }
-
-  };
-
-  //Find a key in an object
-  function findInScope(key, scope, doModelGet) {
-    var val;
-
-    if (scope && typeof scope == 'object') {
-
-      if (scope[key] !== undefined) {
-        val = scope[key];
-
-      // try lookup with get for backbone or similar model data
-      } else if (doModelGet && scope.get && typeof scope.get == 'function') {
-        val = scope.get(key);
-      }
-    }
-
-    return val;
-  }
-
-  function createSpecializedPartial(instance, subs, partials, stackSubs, stackPartials, stackText) {
-    function PartialTemplate() {};
-    PartialTemplate.prototype = instance;
-    function Substitutions() {};
-    Substitutions.prototype = instance.subs;
-    var key;
-    var partial = new PartialTemplate();
-    partial.subs = new Substitutions();
-    partial.subsText = {};  //hehe. substext.
-    partial.buf = '';
-
-    stackSubs = stackSubs || {};
-    partial.stackSubs = stackSubs;
-    partial.subsText = stackText;
-    for (key in subs) {
-      if (!stackSubs[key]) stackSubs[key] = subs[key];
-    }
-    for (key in stackSubs) {
-      partial.subs[key] = stackSubs[key];
-    }
-
-    stackPartials = stackPartials || {};
-    partial.stackPartials = stackPartials;
-    for (key in partials) {
-      if (!stackPartials[key]) stackPartials[key] = partials[key];
-    }
-    for (key in stackPartials) {
-      partial.partials[key] = stackPartials[key];
-    }
-
-    return partial;
-  }
-
-  var rAmp = /&/g,
-      rLt = /</g,
-      rGt = />/g,
-      rApos = /\'/g,
-      rQuot = /\"/g,
-      hChars = /[&<>\"\']/;
-
-  function coerceToString(val) {
-    return String((val === null || val === undefined) ? '' : val);
-  }
-
-  function hoganEscape(str) {
-    str = coerceToString(str);
-    return hChars.test(str) ?
-      str
-        .replace(rAmp, '&amp;')
-        .replace(rLt, '&lt;')
-        .replace(rGt, '&gt;')
-        .replace(rApos, '&#39;')
-        .replace(rQuot, '&quot;') :
-      str;
-  }
-
-  var isArray = Array.isArray || function(a) {
-    return Object.prototype.toString.call(a) === '[object Array]';
-  };
-
-})( true ? exports : Hogan);
-
-
-/***/ }),
-/* 34 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _preact = __webpack_require__(0);
-
-var _Template = __webpack_require__(3);
-
-var _Template2 = _interopRequireDefault(_Template);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Show more component
- *
- * Provides two items
- *   -> Show more element
- *   -> Show less element
- */
-/**
- * @jsx h
- */
-var ShowMoreComponent = function ShowMoreComponent(_ref) {
-    var allItemsLength = _ref.allItemsLength,
-        currentLimit = _ref.currentLimit,
-        handleShowMore = _ref.handleShowMore,
-        handleShowLess = _ref.handleShowLess,
-        showMoreContainerClassName = _ref.showMoreContainerClassName,
-        showMoreTemplate = _ref.showMoreTemplate,
-        showLessTemplate = _ref.showLessTemplate;
-
-    return allItemsLength > currentLimit ? (0, _preact.h)(
-        "div",
-        { className: "asui-showMore " + showMoreContainerClassName,
-            onClick: handleShowMore
-        },
-        (0, _preact.h)(_Template2.default, {
-            template: showMoreTemplate,
-            className: "asui-showMore--more"
-        })
-    ) : allItemsLength === currentLimit ? (0, _preact.h)(
-        "div",
-        { className: "asui-showMore " + showMoreContainerClassName,
-            onClick: handleShowLess
-        },
-        (0, _preact.h)(_Template2.default, {
-            template: showLessTemplate,
-            className: "asui-showMore--less"
-        })
-    ) : null;
-};
-
-exports.default = ShowMoreComponent;
-
-/***/ }),
-/* 35 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.aggregationSetup = aggregationSetup;
-exports.filterAction = filterAction;
-
-var _cloneDeep = __webpack_require__(1);
-
-var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
-
-var _dispatcher = __webpack_require__(2);
-
-var _dispatcher2 = _interopRequireDefault(_dispatcher);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Define aggregations setup
- *
- * This setup action is triggered when mounting a component
- * receives two parameters:
- *   @param queryOptions -> the itemsPerPage to be displayed on the result container
- *   @param currentQuery -> current application query
- *
- * Finally dispatches an event with the modified query.
- *   @returns {{
- *     type: string,
- *     payload: {
- *        updatedQuery
- *     }
- *   }}
- */
-/**
- * Multiple filter actions
- */
-function aggregationSetup(queryOptions, currentQuery) {
-    var filterName = queryOptions.filterName,
-        aggregationField = queryOptions.aggregationField,
-        applicationType = queryOptions.applicationType,
-        sortBy = queryOptions.sortBy;
-
-    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
-
-    clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy);
-
-    _dispatcher2.default.dispatch({
-        type: 'UPDATE_APISEARCH_SETUP',
-        payload: {
-            updatedQuery: clonedQuery
-        }
-    });
-}
-
-/**
- * Define aggregations setup
- *
- * This setup action is triggered when mounting a component
- * receives two parameters:
- *   @param queryOptions -> the itemsPerPage to be displayed on the result container
- *   @param currentQuery -> current application query
- *   @param client       -> Apisearch client
- *
- * Finally dispatches an event with the modified query.
- *   @returns {{
- *     type: string,
- *     payload: {
- *        updatedQuery
- *     }
- *   }}
- */
-function filterAction(queryOptions, currentQuery, client) {
-    var filterName = queryOptions.filterName,
-        filterField = queryOptions.filterField,
-        aggregationField = queryOptions.aggregationField,
-        filterValues = queryOptions.filterValues,
-        applicationType = queryOptions.applicationType,
-        sortBy = queryOptions.sortBy;
-
-    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
-
-    clonedQuery.filterBy(filterName, filterField, filterValues, applicationType, false, sortBy);
-    clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy);
-
-    client.search(clonedQuery, function (result) {
-        _dispatcher2.default.dispatch({
-            type: 'RENDER_FETCHED_DATA',
-            payload: {
-                updatedQuery: clonedQuery,
-                result: result
-            }
-        });
-    });
-}
-
-/***/ }),
-/* 36 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.manageCurrentFilterItems = manageCurrentFilterItems;
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-/**
- * Manage filter items
- *
- * If an item is on the list, remove it
- * else, add it!
- *
- * @param selectedItem
- * @param currentItems
- * @returns {[null,null]}
- */
-function manageCurrentFilterItems(selectedItem, currentItems) {
-    var isElementActive = currentItems.some(function (item) {
-        return item === selectedItem;
-    });
-
-    if (isElementActive) {
-        return currentItems.filter(function (item) {
-            return item !== selectedItem;
-        });
-    } else {
-        return [].concat(_toConsumableArray(currentItems), [selectedItem]);
-    }
-}
-
-/***/ }),
-/* 37 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _preact = __webpack_require__(0);
-
-var _Template = __webpack_require__(3);
-
-var _Template2 = _interopRequireDefault(_Template);
-
-var _resultActions = __webpack_require__(38);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
-/**
- * Actions
- */
-
-
-/**
- * Result Component
- */
-var ResultComponent = function (_Component) {
-    _inherits(ResultComponent, _Component);
-
-    function ResultComponent() {
-        _classCallCheck(this, ResultComponent);
-
-        return _possibleConstructorReturn(this, (ResultComponent.__proto__ || Object.getPrototypeOf(ResultComponent)).apply(this, arguments));
-    }
-
-    _createClass(ResultComponent, [{
-        key: "componentWillMount",
-        value: function componentWillMount() {
-            /**
-             * Define initial Setup on component mounting
-             * that refers to the store configuration
-             * and affects other widgets
-             */
-
-            var _props = this.props,
-                environmentId = _props.environmentId,
-                itemsPerPage = _props.itemsPerPage,
-                highlightsEnabled = _props.highlightsEnabled,
-                currentQuery = _props.currentQuery;
-
-            /**
-             * Dispatch action
-             */
-
-            (0, _resultActions.changeItemsPerResultPageSetup)({
-                environmentId: environmentId,
-                itemsPerPage: itemsPerPage,
-                highlightsEnabled: highlightsEnabled
-            }, currentQuery);
-        }
-    }, {
-        key: "render",
-        value: function render() {
-            var _props2 = this.props,
-                dirty = _props2.dirty,
-                showInitialResults = _props2.showInitialResults,
-                containerClassName = _props2.classNames.container,
-                _props2$template = _props2.template,
-                bodyTemplate = _props2$template.itemsList,
-                placeholderTemplate = _props2$template.placeholder,
-                data = _props2.data;
-
-            /**
-             * Data accessible to the template
-             */
-
-            var reducedTemplateData = {
-                query: data ? data.query.q : '',
-                items: data ? data.items : []
-            };
-
-            return (0, _preact.h)(
-                "div",
-                { className: "asui-result " + containerClassName },
-                placeholderTemplate && dirty ? (0, _preact.h)(_Template2.default, {
-                    template: placeholderTemplate,
-                    className: "asui-result--placeholder"
-                }) : (0, _preact.h)(_Template2.default, {
-                    template: bodyTemplate,
-                    data: reducedTemplateData,
-                    className: "asui-result--itemsList"
-                })
-            );
-        }
-    }]);
-
-    return ResultComponent;
-}(_preact.Component);
-
-ResultComponent.defaultProps = {
-    itemsPerPage: 10,
-    highlightsEnabled: false,
-    classNames: {
-        container: ''
-    },
-    template: {
-        placeholder: null
-    }
-};
-
-exports.default = ResultComponent;
-
-/***/ }),
-/* 38 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.changeItemsPerResultPageSetup = changeItemsPerResultPageSetup;
-
-var _cloneDeep = __webpack_require__(1);
-
-var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
-
-var _container = __webpack_require__(4);
-
-var _container2 = _interopRequireDefault(_container);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Define items per page on result
- *
- * This action is triggered when mounting a component
- * receives two parameters:
- *   @param queryOptions -> the itemsPerPage to be displayed on the result container
- *   @param currentQuery -> current application query
- *
- * Finally dispatches an event with the modified query.
- *   @returns {{
- *     type: string,
- *     payload: {
- *        updatedQuery
- *     }
- *   }}
- */
-/**
- * Search actions
- */
-function changeItemsPerResultPageSetup(queryOptions, currentQuery) {
-    var environmentId = queryOptions.environmentId,
-        itemsPerPage = queryOptions.itemsPerPage,
-        highlightsEnabled = queryOptions.highlightsEnabled;
-
-
-    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
-
-    /**
-     * Set result size
-     */
-    clonedQuery.setResultSize(itemsPerPage);
-
-    /**
-     * Enabling highlights on query result
-     */
-    if (highlightsEnabled) {
-        clonedQuery.enableHighlights();
-    }
-
-    var dispatcher = _container2.default.get('apisearch_dispatcher--' + environmentId);
-    dispatcher.dispatch({
-        type: 'UPDATE_APISEARCH_SETUP',
-        payload: {
-            updatedQuery: clonedQuery
-        }
-    });
-}
-
-/***/ }),
-/* 39 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _preact = __webpack_require__(0);
-
-var _Template = __webpack_require__(3);
-
-var _Template2 = _interopRequireDefault(_Template);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
-
-/**
- * Result Information Component
- */
-var InformationComponent = function (_Component) {
-    _inherits(InformationComponent, _Component);
-
-    function InformationComponent() {
-        _classCallCheck(this, InformationComponent);
-
-        return _possibleConstructorReturn(this, (InformationComponent.__proto__ || Object.getPrototypeOf(InformationComponent)).apply(this, arguments));
-    }
-
-    _createClass(InformationComponent, [{
-        key: 'render',
-        value: function render() {
-            var _props = this.props,
-                containerClassName = _props.classNames.container,
-                containerTemplate = _props.template.container,
-                data = _props.data;
-
-            /**
-             * Data accessible to the template
-             */
-
-            var reducedTemplateData = {
-                total_hits: parseInt(data.total_hits).toLocaleString('de-DE'),
-                total_items: parseInt(data.total_items).toLocaleString('de-DE')
-            };
-
-            return (0, _preact.h)(_Template2.default, {
-                template: containerTemplate,
-                data: reducedTemplateData,
-                className: 'asui-information ' + containerClassName
-            });
-        }
-    }]);
-
-    return InformationComponent;
-}(_preact.Component);
-
-InformationComponent.defaultProps = {
-    classNames: {
-        container: ''
-    }
-};
-
-exports.default = InformationComponent;
-
-/***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8329,7 +8348,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _events = __webpack_require__(41);
+var _events = __webpack_require__(42);
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -8486,7 +8505,7 @@ var Store = function (_EventEmitter) {
 exports.default = Store;
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, exports) {
 
 // Copyright Joyent, Inc. and other Node contributors.
@@ -8792,6 +8811,25 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
+
+/***/ }),
+/* 43 */,
+/* 44 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+/**
+ * Service constants
+ */
+var APISEARCH_CLIENT = exports.APISEARCH_CLIENT = 'apisearch_client';
+var APISEARCH_STORE = exports.APISEARCH_STORE = 'apisearch_store';
+var APISEARCH_DISPATCHER = exports.APISEARCH_DISPATCHER = 'apisearch_dispatcher';
+var APISEARCH_UI = exports.APISEARCH_UI = 'apisearch_ui';
 
 /***/ })
 /******/ ]);

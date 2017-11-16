@@ -2,7 +2,8 @@
  * Search actions
  */
 import cloneDeep from 'clone-deep';
-import container from '../../container';
+import container from '../../app/container';
+import {APISEARCH_DISPATCHER} from "../../app/constants";
 
 /**
  * Keyup simple search action
@@ -38,7 +39,7 @@ export function simpleSearchAction(
         .setQueryText(queryText)
     ;
 
-    let dispatcher = container.get(`apisearch_dispatcher--${environmentId}`);
+    const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
     client.search(clonedQuery, result => {
         dispatcher.dispatch({
             type: 'RENDER_FETCHED_DATA',

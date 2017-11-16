@@ -276,6 +276,37 @@ npm t
 yarn test
 ```
 
+<hr />
+
+# For developers
+
+## Data workflow
+
+Let's start with a small introduction. When working with ApisearchUI
+you have to keep in mind that you can work with multiple ApisearchUI
+instances at once. 
+
+This instances need a client to request all the data from the Apisearch 
+servers. The thing is, you can work with only one client if all your 
+ApisearchUI instances consume the same data store (index). Or with 
+many clients if you want all your ApisearchUI instances to consume from
+many different indexes.
+
+Single ApisearchUI instance flow:
+```
+View (Widget components) -> action -> request (apisearch client) -> reduce received data -> update store -> re-render view
+```
+
+## Widget development
+ 1. Define widget properties in README as a skeleton.
+ 2. Create component on `src/Widgets`.
+ 3. Create widget factory method in `src/Factory/WidgetFactory.js`
+ and pass all needed widget properties.
+ 4. Create widget action.
+ 5. Test the widget.
+
+<hr />
+
 # Todo's
   
 - [x] Simple Search
@@ -307,9 +338,3 @@ Extra todo list:
 - [ ] Add callbacks before and after a widget action
 to execute customized anonymous functions.
 - [ ] Work with propTypes?
- 
-# Widget creation workflow
- 1. Define widget properties
- 2. Create component
- 3. Create widget factory method
- 4. Create widget action

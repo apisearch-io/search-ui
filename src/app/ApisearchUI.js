@@ -1,7 +1,7 @@
 import { h, render, createElement } from 'preact';
 
 import { initialDataFetchAction } from "./apisearchActions";
-import WidgetFactory from "./Factory/WidgetFactory";
+import WidgetFactory from "../Factory/WidgetFactory";
 
 /**
  * ApisearchUI class
