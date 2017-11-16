@@ -2,8 +2,7 @@
  * Multiple filter actions
  */
 import cloneDeep from 'clone-deep';
-import dispatcher from '../../dispatcher';
-import container from "../../app/container";
+import container from "../../app/Container";
 import {APISEARCH_DISPATCHER} from "../../app/constants";
 
 /**

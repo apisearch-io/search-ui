@@ -144,7 +144,10 @@ class SuggestedSearchComponent extends Component {
         });
 
         simpleSearchAction(
-            e.target.innerText,
+            {
+                environmentId: this.props.environmentId,
+                queryText: e.target.innerText
+            },
             this.props.currentQuery,
             this.props.client
         )

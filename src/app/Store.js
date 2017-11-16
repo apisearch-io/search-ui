@@ -71,54 +71,6 @@ class Store extends EventEmitter {
             this.emit('render');
         }
     }
-
-    /**
-     * Get a store from StoreWrapper
-     * given an Id.
-     */
-    getStore(id) {
-        if (this.store[id]) {
-            return this.store[id];
-        }
-
-        throw new Error(`The store with id (${id}) is not on the StoreWrapper list.`)
-    }
-
-    /**
-     * Register new store on StoreWrapper
-     */
-    registerStore(storeId, client) {
-        let currentStoreIds = Object.keys(this.store);
-        let storeExists = currentStoreIds.some(id => id === storeId);
-
-        if (false === storeExists) {
-            this.store = {
-                ...this.store,
-                [storeId]: {
-                    /**
-                     * Store initial state
-                     */
-                    dirty: true,
-
-                    /**
-                     * Current query instance
-                     */
-                    currentQuery: client.query.create(''),
-
-                    /**
-                     * Data received
-                     */
-                    data: {
-                        query: { q: '' },
-                        aggregations: { total_elements: 0 },
-                        items: [],
-                        total_hits: 0,
-                        total_items: 0
-                    }
-                }
-            };
-        }
-    }
 }
 
 export default Store;

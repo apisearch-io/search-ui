@@ -14,6 +14,12 @@
             background: #b4acff;
             font-style: inherit;
         }
+        .card img {
+            -webkit-border-radius: .2rem;
+            -moz-border-radius: .2rem;
+            border-radius: .2rem;
+            width: 1.5rem;
+        }
     </style>
 </head>
 
@@ -44,9 +50,22 @@
     <div class="container is-fluid">
         <section class="section">
             <div class="columns">
+                <div class="column is-full">
+                    <h1 class="title">Work with two instances (or more) at the same time.</h1>
+                    <div class="content">
+                        <p>With ApisearchUI you can work with one or more instances without disturb
+                        each other results. So if you type something on the first one, the results
+                        on the second one won't be affected.</p>
+                        <blockquote>Note that the two instances work separately but they are using the same
+                        client and index. So all queries made from the first instace are cached
+                        for the second one (if you have the cache set to true, of course).</blockquote>
+                    </div>
+                </div>
+            </div>
+            <div class="columns">
                 <!-- Apisearch Instance 1 -->
                 <div class="column is-half">
-                    <h1 class="title has-text-info">First instance</h1>
+                    <h1 class="title is-4 has-text-info">First instance</h1>
                     <hr>
                     <div class="input-instance-one"></div>
                     <div class="result-instance-one"></div>
@@ -54,7 +73,7 @@
 
                 <!-- Apisearch Instance 2 -->
                 <div class="column is-half">
-                    <h1 class="title has-text-danger">Second instance</h1>
+                    <h1 class="title is-4 has-text-danger">Second instance</h1>
                     <hr>
                     <div class="input-instance-two"></div>
                     <div class="result-instance-two"></div>
@@ -68,7 +87,14 @@
         {{#items}}
         <div class="card" style="border-radius: .2rem; margin-top: .5rem">
             <div class="card-content">
-                <strong>{{metadata.title}}</strong>
+                <div class="media">
+                    <div class="media-left">
+                        <img src="{{metadata.img}}" alt="{{metadata.title}}">
+                    </div>
+                    <div class="media-content">
+                        <strong>{{metadata.title}}</strong>
+                    </div>
+                </div>
             </div>
         </div>
         {{/items}}
@@ -95,7 +121,7 @@
             }),
             firstUI.widgets.result({
                 target: '.result-instance-one',
-                itemsPerPage: 3,
+                itemsPerPage: 5,
                 template: {
                     itemsList: document.getElementById('result-template').text,
                 }

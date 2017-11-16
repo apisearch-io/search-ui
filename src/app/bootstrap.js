@@ -3,7 +3,7 @@ import { Dispatcher } from 'flux';
 import ApisearchUI from "./ApisearchUI";
 import apisearch from 'apisearch';
 import Store from "./Store";
-import container from "./container";
+import container from "./Container";
 import {
     APISEARCH_CLIENT,
     APISEARCH_STORE,

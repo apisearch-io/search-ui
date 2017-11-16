@@ -3,7 +3,7 @@
  */
 
 import {bootstrap} from "./app/bootstrap";
-import container from "./app/container";
+import container from "./app/Container";
 import {APISEARCH_DISPATCHER, APISEARCH_UI} from "./app/constants";
 
 /**
