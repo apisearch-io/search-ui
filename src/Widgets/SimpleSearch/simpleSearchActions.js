@@ -2,14 +2,14 @@
  * Search actions
  */
 import cloneDeep from 'clone-deep';
-import dispatcher from '../../dispatcher';
+import container from '../../container';
 
 /**
  * Keyup simple search action
  *
  * This action is triggered when a text input changes
  * receives three parameters:
- *   @param text         -> the text value for the search
+ *   @param queryOptions -> the queryOptions for the search
  *   @param currentQuery -> current application query
  *   @param client       -> apisearch client to trigger a search
  *
@@ -24,15 +24,21 @@ import dispatcher from '../../dispatcher';
  *   }}
  */
 export function simpleSearchAction(
-    text,
+    queryOptions,
     currentQuery,
     client
 ) {
-    let clonedQuery = cloneDeep(currentQuery);
+    const {
+        environmentId,
+        queryText
+    } = queryOptions;
+
+    const clonedQuery = cloneDeep(currentQuery);
     clonedQuery
-        .setQueryText(text)
+        .setQueryText(queryText)
     ;
 
+    let dispatcher = container.get(`apisearch_dispatcher--${environmentId}`);
     client.search(clonedQuery, result => {
         dispatcher.dispatch({
             type: 'RENDER_FETCHED_DATA',

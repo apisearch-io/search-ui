@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 8);
+/******/ 	return __webpack_require__(__webpack_require__.s = 10);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -1059,28 +1059,13 @@ var preact = {
 "use strict";
 
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _flux = __webpack_require__(10);
-
-exports.default = new _flux.Dispatcher();
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
 /**
  * Module dependenices
  */
 
 var isObject = __webpack_require__(19);
 var clone = __webpack_require__(21);
-var typeOf = __webpack_require__(7);
+var typeOf = __webpack_require__(9);
 var forOwn = __webpack_require__(24);
 
 /**
@@ -1128,6 +1113,21 @@ function cloneArrayDeep(arr, instanceClone) {
 
 module.exports = cloneDeep;
 
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _flux = __webpack_require__(5);
+
+exports.default = new _flux.Dispatcher();
 
 /***/ }),
 /* 3 */
@@ -1207,6 +1207,92 @@ exports.default = Template;
 
 /***/ }),
 /* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * Apisearch Dependency Injection Container
+ */
+var Container = function () {
+    /**
+     * Constructor.
+     */
+    function Container() {
+        _classCallCheck(this, Container);
+
+        this.services = {};
+    }
+
+    /**
+     * Get service
+     */
+
+
+    _createClass(Container, [{
+        key: "get",
+        value: function get(id) {
+            if (this.services[id]) {
+                return this.services[id];
+            }
+
+            throw new Error("Service with id (" + id + ") is not registered.");
+        }
+
+        /**
+         * Register service
+         */
+
+    }, {
+        key: "register",
+        value: function register(id, serviceCallback) {
+            var currentServiceIds = Object.keys(this.services);
+            var serviceExists = currentServiceIds.some(function (serviceId) {
+                return id === serviceId;
+            });
+
+            if (false === serviceExists) {
+                this.services = _extends({}, this.services, _defineProperty({}, id, serviceCallback()));
+            }
+        }
+    }]);
+
+    return Container;
+}();
+
+exports.default = new Container();
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * Copyright (c) 2014-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ */
+
+module.exports.Dispatcher = __webpack_require__(14);
+
+
+/***/ }),
+/* 6 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -1396,7 +1482,7 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 5 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1416,7 +1502,7 @@ module.exports = function isExtendable(val) {
 
 
 /***/ }),
-/* 6 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1439,7 +1525,7 @@ module.exports = function forIn(obj, fn, thisArg) {
 
 
 /***/ }),
-/* 7 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var isBuffer = __webpack_require__(23);
@@ -1561,31 +1647,29 @@ module.exports = function kindOf(val) {
 
 
 /***/ }),
-/* 8 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _apisearch = __webpack_require__(9);
+var _apisearch = __webpack_require__(11);
 
 var _apisearch2 = _interopRequireDefault(_apisearch);
 
-var _dispatcher = __webpack_require__(1);
-
-var _dispatcher2 = _interopRequireDefault(_dispatcher);
-
-var _container = __webpack_require__(13);
+var _container = __webpack_require__(4);
 
 var _container2 = _interopRequireDefault(_container);
 
-var _ApisearchUI = __webpack_require__(14);
+var _ApisearchUI = __webpack_require__(12);
 
 var _ApisearchUI2 = _interopRequireDefault(_ApisearchUI);
 
 var _Store = __webpack_require__(40);
 
 var _Store2 = _interopRequireDefault(_Store);
+
+var _flux = __webpack_require__(5);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1607,46 +1691,89 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * Locals
  */
-function bootstrap(_ref) {
+module.exports = function (_ref) {
   var appId = _ref.appId,
       apiKey = _ref.apiKey,
       options = _ref.options;
 
   /**
-   * Register apisearch dependencies
+   * Build environment Id
    */
-  var apisearchClientServiceId = "apisearch_client_" + appId + "_" + apiKey;
-  _container2.default.register(apisearchClientServiceId, function () {
-    return (0, _apisearch2.default)(appId, apiKey, options);
-  });
-  _container2.default.register('apisearch_store', function () {
-    return new _Store2.default(_container2.default.get(apisearchClientServiceId));
-  });
+  var environmentId = "env_" + Math.ceil(Math.random() * (9999999 - 1) + 1);
 
   /**
-   * Instance UI
+   * Bootstrapping ApisearchUI Services
    */
-  var apisearchUI = new _ApisearchUI2.default(_container2.default.get(apisearchClientServiceId), _container2.default.get('apisearch_store'));
+  bootstrap({ environmentId: environmentId, appId: appId, apiKey: apiKey, options: options });
 
   /**
-   * Register the store
+   * Bind store reducer to the dispatcher
    */
-  _dispatcher2.default.register(apisearchUI.store.handleActions.bind(apisearchUI.store));
+  var apisearchUI = _container2.default.get("apisearch_ui--" + environmentId);
+  var dispatcher = _container2.default.get("apisearch_dispatcher--" + environmentId);
 
+  dispatcher.register(apisearchUI.store.handleActions.bind(apisearchUI.store));
+
+  /**
+   * Return ApisearchUI instance
+   */
   return apisearchUI;
-} /**
-   * @jsx h
-   */
+};
+
+/**
+ * Bootstrap application
+ */
+/**
+ * @jsx h
+ */
 
 /**
  * Vendors
  */
+function bootstrap(_ref2) {
+  var environmentId = _ref2.environmentId,
+      appId = _ref2.appId,
+      apiKey = _ref2.apiKey,
+      options = _ref2.options;
 
+  var clientId = "apisearch_client--" + appId + "_" + apiKey;
+  var storeId = "apisearch_store--" + environmentId;
+  var dispatcherId = "apisearch_dispatcher--" + environmentId;
+  var asuiId = "apisearch_ui--" + environmentId;
 
-module.exports = bootstrap;
+  /**
+   * Register Apisearch client
+   */
+  _container2.default.register(clientId, function () {
+    return (0, _apisearch2.default)(appId, apiKey, options);
+  });
+
+  /**
+   * Register apisearch store
+   */
+  _container2.default.register(storeId, function () {
+    return new _Store2.default(_container2.default.get(clientId));
+  });
+
+  /**
+   * Register an event dispatcher
+   */
+  _container2.default.register(dispatcherId, function () {
+    return new _flux.Dispatcher();
+  });
+
+  /**
+   * Apisearch UI Instance
+   */
+  _container2.default.register(asuiId, function () {
+    return new _ApisearchUI2.default(environmentId, _container2.default.get(clientId), _container2.default.get(storeId));
+  });
+
+  console.log(_container2.default);
+}
 
 /***/ }),
-/* 9 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -4956,23 +5083,211 @@ var SORT_BY_LOCATION_MI_ASC = exports.SORT_BY_LOCATION_MI_ASC = {
 //# sourceMappingURL=apisearch.node.js.map
 
 /***/ }),
-/* 10 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _preact = __webpack_require__(0);
+
+var _apisearchActions = __webpack_require__(13);
+
+var _WidgetFactory = __webpack_require__(16);
+
+var _WidgetFactory2 = _interopRequireDefault(_WidgetFactory);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 /**
- * Copyright (c) 2014-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * ApisearchUI class
  */
+var ApisearchUI = function () {
+    /**
+     * Constructor.
+     */
+    function ApisearchUI(environmentId, client, store) {
+        _classCallCheck(this, ApisearchUI);
 
-module.exports.Dispatcher = __webpack_require__(11);
+        /**
+         * Environment Id
+         */
+        this.environmentId = environmentId;
 
+        /**
+         * UI related properties
+         */
+        this.client = client;
+        this.widgets = _WidgetFactory2.default;
+        this.activeWidgets = [];
+
+        /**
+         * Store related properties
+         */
+        this.store = store;
+    }
+
+    /**
+     * Initialize components
+     */
+
+
+    _createClass(ApisearchUI, [{
+        key: "init",
+        value: function init() {
+            var _this = this;
+
+            /**
+             * Register all events on the store
+             */
+            this.store.on('render', function () {
+                return _this.render();
+            });
+
+            /**
+             * Trigger the initial render: (Mount the components)
+             *   -> To let components setup its configuration on componentWillMount()
+             *   -> And fetch the initial data with the given configuration
+             */
+            this.render();
+            (0, _apisearchActions.initialDataFetchAction)(this.store.currentQuery, this.client);
+        }
+
+        /**
+         * Add new widget
+         */
+
+    }, {
+        key: "addWidget",
+        value: function addWidget(widget) {
+            this.activeWidgets = [].concat(_toConsumableArray(this.activeWidgets), [widget]);
+            return this;
+        }
+
+        /**
+         * Add widgets in bulk mode
+         */
+
+    }, {
+        key: "addWidgets",
+        value: function addWidgets() {
+            var _this2 = this;
+
+            for (var _len = arguments.length, widgets = Array(_len), _key = 0; _key < _len; _key++) {
+                widgets[_key] = arguments[_key];
+            }
+
+            widgets.map(function (widget) {
+                return _this2.addWidget(widget);
+            });
+            return this;
+        }
+
+        /**
+         * Render.
+         *
+         * Loop all active widgets
+         * Hydrate them with new props
+         * And render them.
+         */
+
+    }, {
+        key: "render",
+        value: function render() {
+            var _this3 = this;
+
+            this.activeWidgets.map(function (widget) {
+                var hydratedWidget = hydrateWidget(_this3.environmentId, _this3.store, _this3.client, widget);
+                var targetNode = document.querySelector(widget.attributes.target);
+
+                if (null === targetNode) {
+                    throw new Error("Widget (" + hydratedWidget.nodeName.name + ") must have a valid DOM target");
+                }
+
+                (0, _preact.render)(hydratedWidget, targetNode, targetNode.lastChild);
+            });
+        }
+    }]);
+
+    return ApisearchUI;
+}();
+
+function hydrateWidget(environmentId, currentStore, client, widget) {
+    /**
+     * Pass ApisearchClient, current Query, and data received
+     * as a component attributes. There will be accessible
+     * on component props.
+     */
+    widget.attributes.environmentId = environmentId;
+    widget.attributes.dirty = currentStore.dirty;
+    widget.attributes.data = currentStore.data;
+    widget.attributes.currentQuery = currentStore.currentQuery;
+    widget.attributes.client = client;
+
+    return widget;
+}
+
+exports.default = ApisearchUI;
 
 /***/ }),
-/* 11 */
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.initialDataFetchAction = initialDataFetchAction;
+
+var _dispatcher = __webpack_require__(2);
+
+var _dispatcher2 = _interopRequireDefault(_dispatcher);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Initial data fetching action
+ *
+ * This action is triggered on the first time ApisearchUI is initialized:
+ *   @param initialQuery -> initial application query
+ *   @param client       -> apisearch client to trigger a search
+ *
+ * Finally dispatches an event with the search result and
+ * the modified query.
+ *   @returns {{
+ *     type: string,
+ *     payload: {
+ *        result,
+ *        updatedQuery
+ *     }
+ *   }}
+ */
+function initialDataFetchAction(initialQuery, client) {
+    client.search(initialQuery, function (initialResult) {
+        _dispatcher2.default.dispatch({
+            type: 'RENDER_INITIAL_DATA',
+            payload: {
+                initialResult: initialResult,
+                initialQuery: initialQuery
+            }
+        });
+    });
+}
+
+/***/ }),
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4995,7 +5310,7 @@ exports.__esModule = true;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var invariant = __webpack_require__(12);
+var invariant = __webpack_require__(15);
 
 var _prefix = 'ID_';
 
@@ -5207,10 +5522,10 @@ var Dispatcher = (function () {
 })();
 
 module.exports = Dispatcher;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
 
 /***/ }),
-/* 12 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5267,276 +5582,7 @@ function invariant(condition, format, a, b, c, d, e, f) {
 }
 
 module.exports = invariant;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * Micro Dependency Injection Container
- */
-var Container = function () {
-    /**
-     * Constructor.
-     */
-    function Container() {
-        _classCallCheck(this, Container);
-
-        this.services = {};
-    }
-
-    /**
-     * Get service
-     */
-
-
-    _createClass(Container, [{
-        key: "get",
-        value: function get(id) {
-            if (this.services[id]) {
-                return this.services[id];
-            }
-
-            throw new Error("Service with id (" + id + ") is not registered.");
-        }
-
-        /**
-         * Register service
-         */
-
-    }, {
-        key: "register",
-        value: function register(id, serviceCallback) {
-            var currentServiceIds = Object.keys(this.services);
-            var serviceExists = currentServiceIds.some(function (serviceId) {
-                return id === serviceId;
-            });
-
-            if (false === serviceExists) {
-                this.services = _extends({}, this.services, _defineProperty({}, id, serviceCallback()));
-            }
-        }
-    }]);
-
-    return Container;
-}();
-
-var container = new Container();
-exports.default = container;
-
-/***/ }),
-/* 14 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _preact = __webpack_require__(0);
-
-var _apisearchActions = __webpack_require__(15);
-
-var _WidgetFactory = __webpack_require__(16);
-
-var _WidgetFactory2 = _interopRequireDefault(_WidgetFactory);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * ApisearchUI class
- */
-var ApisearchUI = function () {
-    /**
-     * Constructor.
-     */
-    function ApisearchUI(client, store) {
-        _classCallCheck(this, ApisearchUI);
-
-        /**
-         * UI related properties
-         */
-        this.client = client;
-        this.widgets = _WidgetFactory2.default;
-        this.activeWidgets = [];
-
-        /**
-         * Store related properties
-         */
-        this.store = store;
-    }
-
-    /**
-     * Initialize components
-     */
-
-
-    _createClass(ApisearchUI, [{
-        key: "init",
-        value: function init() {
-            var _this = this;
-
-            /**
-             * Register all events on the store
-             */
-            this.store.on('render', function () {
-                return _this.render();
-            });
-
-            /**
-             * Trigger the initial render: (Mount the components)
-             *   -> To let components setup its configuration on componentWillMount()
-             *   -> And fetch the initial data with the given configuration
-             */
-            this.render();
-            (0, _apisearchActions.initialDataFetchAction)(this.store.currentQuery, this.client);
-        }
-
-        /**
-         * Add new widget
-         */
-
-    }, {
-        key: "addWidget",
-        value: function addWidget(widget) {
-            this.activeWidgets = [].concat(_toConsumableArray(this.activeWidgets), [widget]);
-            return this;
-        }
-
-        /**
-         * Add widgets in bulk mode
-         */
-
-    }, {
-        key: "addWidgets",
-        value: function addWidgets() {
-            var _this2 = this;
-
-            for (var _len = arguments.length, widgets = Array(_len), _key = 0; _key < _len; _key++) {
-                widgets[_key] = arguments[_key];
-            }
-
-            widgets.map(function (widget) {
-                return _this2.addWidget(widget);
-            });
-            return this;
-        }
-
-        /**
-         * Render.
-         *
-         * Loop all active widgets
-         * Hydrate them with new props
-         * And render them.
-         */
-
-    }, {
-        key: "render",
-        value: function render() {
-            var _this3 = this;
-
-            this.activeWidgets.map(function (widget) {
-                var hydratedWidget = hydrateWidget(_this3.store, _this3.client, widget);
-                var targetNode = document.querySelector(widget.attributes.target);
-
-                if (null === targetNode) {
-                    throw new Error("Widget (" + hydratedWidget.nodeName.name + ") must have a valid DOM target");
-                }
-
-                (0, _preact.render)(hydratedWidget, targetNode, targetNode.lastChild);
-            });
-        }
-    }]);
-
-    return ApisearchUI;
-}();
-
-function hydrateWidget(currentStore, client, widget) {
-    /**
-     * Pass ApisearchClient, current Query, and data received
-     * as a component attributes. There will be accessible
-     * on component props.
-     */
-    widget.attributes.dirty = currentStore.dirty;
-    widget.attributes.data = currentStore.data;
-    widget.attributes.currentQuery = currentStore.currentQuery;
-    widget.attributes.client = client;
-
-    return widget;
-}
-
-exports.default = ApisearchUI;
-
-/***/ }),
-/* 15 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.initialDataFetchAction = initialDataFetchAction;
-
-var _dispatcher = __webpack_require__(1);
-
-var _dispatcher2 = _interopRequireDefault(_dispatcher);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Initial data fetching action
- *
- * This action is triggered on the first time ApisearchUI is initialized:
- *   @param initialQuery -> initial application query
- *   @param client       -> apisearch client to trigger a search
- *
- * Finally dispatches an event with the search result and
- * the modified query.
- *   @returns {{
- *     type: string,
- *     payload: {
- *        result,
- *        updatedQuery
- *     }
- *   }}
- */
-function initialDataFetchAction(initialQuery, client) {
-    client.search(initialQuery, function (initialResult) {
-        _dispatcher2.default.dispatch({
-            type: 'RENDER_INITIAL_DATA',
-            payload: {
-                initialResult: initialResult,
-                initialQuery: initialQuery
-            }
-        });
-    });
-}
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
 
 /***/ }),
 /* 16 */
@@ -5793,6 +5839,7 @@ var SimpleSearchComponent = function (_Component) {
 
         return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = SimpleSearchComponent.__proto__ || Object.getPrototypeOf(SimpleSearchComponent)).call.apply(_ref, [this].concat(args))), _this), _this.handleSearch = function (e) {
             var _this$props = _this.props,
+                environmentId = _this$props.environmentId,
                 currentQuery = _this$props.currentQuery,
                 client = _this$props.client;
 
@@ -5800,7 +5847,10 @@ var SimpleSearchComponent = function (_Component) {
              * Dispatch input search action
              */
 
-            (0, _simpleSearchActions.simpleSearchAction)(e.target.value, currentQuery, client);
+            (0, _simpleSearchActions.simpleSearchAction)({
+                environmentId: environmentId,
+                queryText: e.target.value
+            }, currentQuery, client);
         }, _temp), _possibleConstructorReturn(_this, _ret);
     }
 
@@ -5860,13 +5910,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.simpleSearchAction = simpleSearchAction;
 
-var _cloneDeep = __webpack_require__(2);
+var _cloneDeep = __webpack_require__(1);
 
 var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
 
-var _dispatcher = __webpack_require__(1);
+var _container = __webpack_require__(4);
 
-var _dispatcher2 = _interopRequireDefault(_dispatcher);
+var _container2 = _interopRequireDefault(_container);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -5875,7 +5925,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  *
  * This action is triggered when a text input changes
  * receives three parameters:
- *   @param text         -> the text value for the search
+ *   @param queryOptions -> the queryOptions for the search
  *   @param currentQuery -> current application query
  *   @param client       -> apisearch client to trigger a search
  *
@@ -5892,12 +5942,17 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * Search actions
  */
-function simpleSearchAction(text, currentQuery, client) {
-    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
-    clonedQuery.setQueryText(text);
+function simpleSearchAction(queryOptions, currentQuery, client) {
+    var environmentId = queryOptions.environmentId,
+        queryText = queryOptions.queryText;
 
+
+    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+    clonedQuery.setQueryText(queryText);
+
+    var dispatcher = _container2.default.get('apisearch_dispatcher--' + environmentId);
     client.search(clonedQuery, function (result) {
-        _dispatcher2.default.dispatch({
+        dispatcher.dispatch({
             type: 'RENDER_FETCHED_DATA',
             payload: {
                 result: result,
@@ -5984,9 +6039,9 @@ module.exports = function isObject(val) {
 
 
 
-var isObject = __webpack_require__(5);
+var isObject = __webpack_require__(7);
 var mixin = __webpack_require__(22);
-var typeOf = __webpack_require__(7);
+var typeOf = __webpack_require__(9);
 
 /**
  * Shallow copy an object, array or primitive.
@@ -6041,8 +6096,8 @@ module.exports = clone;
 "use strict";
 
 
-var isObject = __webpack_require__(5);
-var forIn = __webpack_require__(6);
+var isObject = __webpack_require__(7);
+var forIn = __webpack_require__(8);
 
 function mixin(target, objects) {
   if (!isObject(target)) {
@@ -6117,7 +6172,7 @@ function isSlowBuffer (obj) {
 
 
 
-var forIn = __webpack_require__(6);
+var forIn = __webpack_require__(8);
 var hasOwn = Object.prototype.hasOwnProperty;
 
 module.exports = function forOwn(obj, fn, thisArg) {
@@ -6479,11 +6534,11 @@ Object.defineProperty(exports, "__esModule", {
 exports.simpleSearchAction = simpleSearchAction;
 exports.suggestedSearchAction = suggestedSearchAction;
 
-var _cloneDeep = __webpack_require__(2);
+var _cloneDeep = __webpack_require__(1);
 
 var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
 
-var _dispatcher = __webpack_require__(1);
+var _dispatcher = __webpack_require__(2);
 
 var _dispatcher2 = _interopRequireDefault(_dispatcher);
 
@@ -6664,11 +6719,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.onChangeSearchAction = onChangeSearchAction;
 
-var _cloneDeep = __webpack_require__(2);
+var _cloneDeep = __webpack_require__(1);
 
 var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
 
-var _dispatcher = __webpack_require__(1);
+var _dispatcher = __webpack_require__(2);
 
 var _dispatcher2 = _interopRequireDefault(_dispatcher);
 
@@ -7860,11 +7915,11 @@ Object.defineProperty(exports, "__esModule", {
 exports.aggregationSetup = aggregationSetup;
 exports.filterAction = filterAction;
 
-var _cloneDeep = __webpack_require__(2);
+var _cloneDeep = __webpack_require__(1);
 
 var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
 
-var _dispatcher = __webpack_require__(1);
+var _dispatcher = __webpack_require__(2);
 
 var _dispatcher2 = _interopRequireDefault(_dispatcher);
 
@@ -8044,6 +8099,7 @@ var ResultComponent = function (_Component) {
              */
 
             var _props = this.props,
+                environmentId = _props.environmentId,
                 itemsPerPage = _props.itemsPerPage,
                 highlightsEnabled = _props.highlightsEnabled,
                 currentQuery = _props.currentQuery;
@@ -8053,6 +8109,7 @@ var ResultComponent = function (_Component) {
              */
 
             (0, _resultActions.changeItemsPerResultPageSetup)({
+                environmentId: environmentId,
                 itemsPerPage: itemsPerPage,
                 highlightsEnabled: highlightsEnabled
             }, currentQuery);
@@ -8121,13 +8178,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.changeItemsPerResultPageSetup = changeItemsPerResultPageSetup;
 
-var _cloneDeep = __webpack_require__(2);
+var _cloneDeep = __webpack_require__(1);
 
 var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
 
-var _dispatcher = __webpack_require__(1);
+var _container = __webpack_require__(4);
 
-var _dispatcher2 = _interopRequireDefault(_dispatcher);
+var _container2 = _interopRequireDefault(_container);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -8151,7 +8208,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Search actions
  */
 function changeItemsPerResultPageSetup(queryOptions, currentQuery) {
-    var itemsPerPage = queryOptions.itemsPerPage,
+    var environmentId = queryOptions.environmentId,
+        itemsPerPage = queryOptions.itemsPerPage,
         highlightsEnabled = queryOptions.highlightsEnabled;
 
 
@@ -8169,7 +8227,8 @@ function changeItemsPerResultPageSetup(queryOptions, currentQuery) {
         clonedQuery.enableHighlights();
     }
 
-    _dispatcher2.default.dispatch({
+    var dispatcher = _container2.default.get('apisearch_dispatcher--' + environmentId);
+    dispatcher.dispatch({
         type: 'UPDATE_APISEARCH_SETUP',
         payload: {
             updatedQuery: clonedQuery
@@ -8263,12 +8322,16 @@ exports.default = InformationComponent;
 
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _events = __webpack_require__(41);
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -8280,91 +8343,144 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  * Flux pattern store class
  */
 var Store = function (_EventEmitter) {
-  _inherits(Store, _EventEmitter);
+    _inherits(Store, _EventEmitter);
 
-  function Store(client) {
-    _classCallCheck(this, Store);
+    function Store(client) {
+        _classCallCheck(this, Store);
 
-    /**
-     * Store initial state
-     */
-    var _this = _possibleConstructorReturn(this, (Store.__proto__ || Object.getPrototypeOf(Store)).call(this));
+        /**
+         * Store initial state
+         */
+        var _this = _possibleConstructorReturn(this, (Store.__proto__ || Object.getPrototypeOf(Store)).call(this));
 
-    _this.dirty = true;
+        _this.dirty = true;
 
-    /**
-     * Current query instance
-     */
-    _this.currentQuery = client.query.create('');
+        /**
+         * Current query instance
+         */
+        _this.currentQuery = client.query.create('');
 
-    /**
-     * Data received
-     */
-    _this.data = {
-      query: { q: '' },
-      aggregations: { total_elements: 0 },
-      items: [],
-      total_hits: 0,
-      total_items: 0
-    };
-    return _this;
-  }
-
-  /**
-   * Handle Dispatched actions
-   *
-   * This is what we call a reducer
-   * on a Redux architecture
-   */
-
-
-  _createClass(Store, [{
-    key: 'handleActions',
-    value: function handleActions(action) {
-      /**
-       * When action only sets up store definitions
-       * Does not dispatch any event
-       */
-      if (action.type === 'UPDATE_APISEARCH_SETUP') {
-        this.currentQuery = action.payload.updatedQuery;
-      }
-
-      /**
-       * Is triggered when a initial data is received
-       * Dispatches an 'render' event
-       */
-      if (action.type === 'RENDER_INITIAL_DATA') {
-        var _action$payload = action.payload,
-            initialResult = _action$payload.initialResult,
-            initialQuery = _action$payload.initialQuery;
-
-
-        this.data = initialResult;
-        this.currentQuery = initialQuery;
-
-        this.emit('render');
-      }
-
-      /**
-       * When action triggers a re-rendering
-       * Dispatches a 'render' event
-       */
-      if (action.type === 'RENDER_FETCHED_DATA') {
-        var _action$payload2 = action.payload,
-            result = _action$payload2.result,
-            updatedQuery = _action$payload2.updatedQuery;
-
-
-        this.dirty = false;
-        this.data = result;
-        this.currentQuery = updatedQuery;
-
-        this.emit('render');
-      }
+        /**
+         * Data received
+         */
+        _this.data = {
+            query: { q: '' },
+            aggregations: { total_elements: 0 },
+            items: [],
+            total_hits: 0,
+            total_items: 0
+        };
+        return _this;
     }
-  }]);
 
-  return Store;
+    /**
+     * Handle Dispatched actions
+     *
+     * This is what we call a reducer
+     * on a Redux architecture
+     */
+
+
+    _createClass(Store, [{
+        key: 'handleActions',
+        value: function handleActions(action) {
+            /**
+             * When action only sets up store definitions
+             * Does not dispatch any event
+             */
+            if (action.type === 'UPDATE_APISEARCH_SETUP') {
+                this.currentQuery = action.payload.updatedQuery;
+            }
+
+            /**
+             * Is triggered when a initial data is received
+             * Dispatches an 'render' event
+             */
+            if (action.type === 'RENDER_INITIAL_DATA') {
+                var _action$payload = action.payload,
+                    initialResult = _action$payload.initialResult,
+                    initialQuery = _action$payload.initialQuery;
+
+
+                this.data = initialResult;
+                this.currentQuery = initialQuery;
+
+                this.emit('render');
+            }
+
+            /**
+             * When action triggers a re-rendering
+             * Dispatches a 'render' event
+             */
+            if (action.type === 'RENDER_FETCHED_DATA') {
+                var _action$payload2 = action.payload,
+                    result = _action$payload2.result,
+                    updatedQuery = _action$payload2.updatedQuery;
+
+
+                this.dirty = false;
+                this.data = result;
+                this.currentQuery = updatedQuery;
+
+                this.emit('render');
+            }
+        }
+
+        /**
+         * Get a store from StoreWrapper
+         * given an Id.
+         */
+
+    }, {
+        key: 'getStore',
+        value: function getStore(id) {
+            if (this.store[id]) {
+                return this.store[id];
+            }
+
+            throw new Error('The store with id (' + id + ') is not on the StoreWrapper list.');
+        }
+
+        /**
+         * Register new store on StoreWrapper
+         */
+
+    }, {
+        key: 'registerStore',
+        value: function registerStore(storeId, client) {
+            var currentStoreIds = Object.keys(this.store);
+            var storeExists = currentStoreIds.some(function (id) {
+                return id === storeId;
+            });
+
+            if (false === storeExists) {
+                this.store = _extends({}, this.store, _defineProperty({}, storeId, {
+                    /**
+                     * Store initial state
+                     */
+                    dirty: true,
+
+                    /**
+                     * Current query instance
+                     */
+                    currentQuery: client.query.create(''),
+
+                    /**
+                     * Data received
+                     */
+                    data: {
+                        query: { q: '' },
+                        aggregations: { total_elements: 0 },
+                        items: [],
+                        total_hits: 0,
+                        total_items: 0
+                    }
+                }));
+            }
+        }
+    }]);
+
+    return Store;
 }(_events.EventEmitter);
 
 exports.default = Store;

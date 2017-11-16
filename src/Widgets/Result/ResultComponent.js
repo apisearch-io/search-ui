@@ -22,6 +22,7 @@ class ResultComponent extends Component {
          */
 
         const {
+            environmentId,
             itemsPerPage,
             highlightsEnabled,
             currentQuery
@@ -32,6 +33,7 @@ class ResultComponent extends Component {
          */
         changeItemsPerResultPageSetup(
             {
+                environmentId,
                 itemsPerPage,
                 highlightsEnabled
             },

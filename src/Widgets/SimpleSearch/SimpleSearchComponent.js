@@ -15,6 +15,7 @@ class SimpleSearchComponent extends Component {
 
     handleSearch = (e) => {
         const {
+            environmentId,
             currentQuery,
             client
         } = this.props;
@@ -23,7 +24,10 @@ class SimpleSearchComponent extends Component {
          * Dispatch input search action
          */
         simpleSearchAction(
-            e.target.value,
+            {
+                environmentId,
+                queryText: e.target.value
+            },
             currentQuery,
             client
         )

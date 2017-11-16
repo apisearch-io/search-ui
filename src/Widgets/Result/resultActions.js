@@ -2,7 +2,7 @@
  * Search actions
  */
 import cloneDeep from 'clone-deep';
-import dispatcher from '../../dispatcher';
+import container from '../../container';
 
 /**
  * Define items per page on result
@@ -25,6 +25,7 @@ export function changeItemsPerResultPageSetup(
     currentQuery
 ) {
     const {
+        environmentId,
         itemsPerPage,
         highlightsEnabled
     } = queryOptions;
@@ -43,6 +44,7 @@ export function changeItemsPerResultPageSetup(
         clonedQuery.enableHighlights();
     }
 
+    let dispatcher = container.get(`apisearch_dispatcher--${environmentId}`);
     dispatcher.dispatch({
         type: 'UPDATE_APISEARCH_SETUP',
         payload: {

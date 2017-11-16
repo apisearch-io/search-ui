@@ -10,7 +10,12 @@ class ApisearchUI {
     /**
      * Constructor.
      */
-    constructor(client, store) {
+    constructor(environmentId, client, store) {
+        /**
+         * Environment Id
+         */
+        this.environmentId = environmentId;
+
         /**
          * UI related properties
          */
@@ -67,7 +72,12 @@ class ApisearchUI {
      */
     render() {
         this.activeWidgets.map(widget => {
-            let hydratedWidget = hydrateWidget(this.store, this.client, widget);
+            let hydratedWidget = hydrateWidget(
+                this.environmentId,
+                this.store,
+                this.client,
+                widget
+            );
             let targetNode = document.querySelector(widget.attributes.target);
 
             if (null === targetNode) {
@@ -86,6 +96,7 @@ class ApisearchUI {
 }
 
 function hydrateWidget(
+    environmentId,
     currentStore,
     client,
     widget
@@ -95,6 +106,7 @@ function hydrateWidget(
      * as a component attributes. There will be accessible
      * on component props.
      */
+    widget.attributes.environmentId = environmentId;
     widget.attributes.dirty = currentStore.dirty;
     widget.attributes.data = currentStore.data;
     widget.attributes.currentQuery = currentStore.currentQuery;

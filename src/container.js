@@ -1,5 +1,5 @@
 /**
- * Micro Dependency Injection Container
+ * Apisearch Dependency Injection Container
  */
 class Container {
     /**
@@ -36,5 +36,4 @@ class Container {
     }
 }
 
-const container = new Container();
-export default container;
+export default new Container;
