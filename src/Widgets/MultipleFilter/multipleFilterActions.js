@@ -2,8 +2,8 @@
  * Multiple filter actions
  */
 import cloneDeep from 'clone-deep';
-import container from "../../app/Container";
-import {APISEARCH_DISPATCHER} from "../../app/constants";
+import container from "../../container";
+import {APISEARCH_DISPATCHER} from "../../constants";
 
 /**
  * Define aggregations setup

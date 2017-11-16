@@ -1642,9 +1642,9 @@ module.exports = function kindOf(val) {
 
 var _bootstrap = __webpack_require__(10);
 
-var _Container = __webpack_require__(1);
+var _container = __webpack_require__(1);
 
-var _Container2 = _interopRequireDefault(_Container);
+var _container2 = _interopRequireDefault(_container);
 
 var _constants = __webpack_require__(2);
 
@@ -1687,8 +1687,8 @@ module.exports = function (_ref) {
    * Register handleActions method (store reducer)
    * into the event dispatcher
    */
-  var apisearchUI = _Container2.default.get(_constants.APISEARCH_UI + "__" + environmentId);
-  var dispatcher = _Container2.default.get(_constants.APISEARCH_DISPATCHER + "__" + environmentId);
+  var apisearchUI = _container2.default.get(_constants.APISEARCH_UI + "__" + environmentId);
+  var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + "__" + environmentId);
   dispatcher.register(apisearchUI.store.handleActions.bind(apisearchUI.store));
 
   /**
@@ -1725,9 +1725,9 @@ var _Store = __webpack_require__(41);
 
 var _Store2 = _interopRequireDefault(_Store);
 
-var _Container = __webpack_require__(1);
+var _container = __webpack_require__(1);
 
-var _Container2 = _interopRequireDefault(_Container);
+var _container2 = _interopRequireDefault(_container);
 
 var _constants = __webpack_require__(2);
 
@@ -1750,29 +1750,29 @@ function bootstrap(_ref) {
     /**
      * Register Apisearch client
      */
-    _Container2.default.register(clientId, function () {
+    _container2.default.register(clientId, function () {
         return (0, _apisearch2.default)(appId, apiKey, options);
     });
 
     /**
      * Register apisearch store
      */
-    _Container2.default.register(storeId, function () {
-        return new _Store2.default(_Container2.default.get(clientId));
+    _container2.default.register(storeId, function () {
+        return new _Store2.default(_container2.default.get(clientId));
     });
 
     /**
      * Register an event dispatcher
      */
-    _Container2.default.register(dispatcherId, function () {
+    _container2.default.register(dispatcherId, function () {
         return new _flux.Dispatcher();
     });
 
     /**
      * Apisearch UI Instance
      */
-    _Container2.default.register(asuiId, function () {
-        return new _ApisearchUI2.default(environmentId, _Container2.default.get(clientId), _Container2.default.get(storeId));
+    _container2.default.register(asuiId, function () {
+        return new _ApisearchUI2.default(environmentId, _container2.default.get(clientId), _container2.default.get(storeId));
     });
 }
 
@@ -2263,9 +2263,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.initialDataFetchAction = initialDataFetchAction;
 
-var _Container = __webpack_require__(1);
+var _container = __webpack_require__(1);
 
-var _Container2 = _interopRequireDefault(_Container);
+var _container2 = _interopRequireDefault(_container);
 
 var _constants = __webpack_require__(2);
 
@@ -2291,7 +2291,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 function initialDataFetchAction(environmentId, initialQuery, client) {
     client.search(initialQuery, function (initialResult) {
-        var dispatcher = _Container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
+        var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
 
         dispatcher.dispatch({
             type: 'RENDER_INITIAL_DATA',
@@ -2633,9 +2633,9 @@ var _cloneDeep = __webpack_require__(3);
 
 var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
 
-var _Container = __webpack_require__(1);
+var _container = __webpack_require__(1);
 
-var _Container2 = _interopRequireDefault(_Container);
+var _container2 = _interopRequireDefault(_container);
 
 var _constants = __webpack_require__(2);
 
@@ -2668,7 +2668,7 @@ function simpleSearchAction(queryOptions, currentQuery, client) {
     var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
     clonedQuery.setQueryText(queryText);
 
-    var dispatcher = _Container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
+    var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
     client.search(clonedQuery, function (result) {
         dispatcher.dispatch({
             type: 'RENDER_FETCHED_DATA',
@@ -3268,9 +3268,9 @@ var _cloneDeep = __webpack_require__(3);
 
 var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
 
-var _Container = __webpack_require__(1);
+var _container = __webpack_require__(1);
 
-var _Container2 = _interopRequireDefault(_Container);
+var _container2 = _interopRequireDefault(_container);
 
 var _constants = __webpack_require__(2);
 
@@ -3307,7 +3307,7 @@ function simpleSearchAction(queryOptions, currentQuery, client) {
     clonedQuery.setQueryText(queryText).enableResults().disableSuggestions();
 
     client.search(clonedQuery, function (result) {
-        var dispatcher = _Container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
+        var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
         dispatcher.dispatch({
             type: 'RENDER_FETCHED_DATA',
             payload: {
@@ -3334,7 +3334,7 @@ function suggestedSearchAction(queryOptions, currentQuery, client) {
     clonedQuery.setQueryText(queryText).disableResults().enableSuggestions();
 
     client.search(clonedQuery, function (result) {
-        var dispatcher = _Container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
+        var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
         dispatcher.dispatch({
             type: 'RENDER_FETCHED_DATA',
             payload: {
@@ -3469,9 +3469,9 @@ var _cloneDeep = __webpack_require__(3);
 
 var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
 
-var _Container = __webpack_require__(1);
+var _container = __webpack_require__(1);
 
-var _Container2 = _interopRequireDefault(_Container);
+var _container2 = _interopRequireDefault(_container);
 
 var _constants = __webpack_require__(2);
 
@@ -3514,7 +3514,7 @@ function onChangeSearchAction(queryOptions, currentQuery, client) {
     }));
 
     client.search(clonedQuery, function (result) {
-        var dispatcher = _Container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
+        var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
         dispatcher.dispatch({
             type: 'RENDER_FETCHED_DATA',
             payload: {
@@ -3812,9 +3812,9 @@ var _cloneDeep = __webpack_require__(3);
 
 var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
 
-var _Container = __webpack_require__(1);
+var _container = __webpack_require__(1);
 
-var _Container2 = _interopRequireDefault(_Container);
+var _container2 = _interopRequireDefault(_container);
 
 var _constants = __webpack_require__(2);
 
@@ -3847,7 +3847,7 @@ function aggregationSetup(queryOptions, currentQuery) {
 
     clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy);
 
-    var dispatcher = _Container2.default.get(_constants.APISEARCH_DISPATCHER + "__" + environmentId);
+    var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + "__" + environmentId);
     dispatcher.dispatch({
         type: 'UPDATE_APISEARCH_SETUP',
         payload: {
@@ -3891,7 +3891,7 @@ function filterAction(queryOptions, currentQuery, client) {
     clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy);
 
     client.search(clonedQuery, function (result) {
-        var dispatcher = _Container2.default.get(_constants.APISEARCH_DISPATCHER + "__" + environmentId);
+        var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + "__" + environmentId);
         dispatcher.dispatch({
             type: 'RENDER_FETCHED_DATA',
             payload: {
@@ -4945,9 +4945,9 @@ var _cloneDeep = __webpack_require__(3);
 
 var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
 
-var _Container = __webpack_require__(1);
+var _container = __webpack_require__(1);
 
-var _Container2 = _interopRequireDefault(_Container);
+var _container2 = _interopRequireDefault(_container);
 
 var _constants = __webpack_require__(2);
 
@@ -4989,7 +4989,7 @@ function changeItemsPerResultPageSetup(queryOptions, currentQuery) {
         clonedQuery.enableHighlights();
     }
 
-    var dispatcher = _Container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
+    var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
     dispatcher.dispatch({
         type: 'UPDATE_APISEARCH_SETUP',
         payload: {

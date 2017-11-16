@@ -1,5 +1,5 @@
-import container from './Container';
-import {APISEARCH_DISPATCHER} from "./constants";
+import container from '../container';
+import {APISEARCH_DISPATCHER} from "../constants";
 
 /**
  * Initial data fetching action

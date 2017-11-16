@@ -1,9 +1,9 @@
 import { Dispatcher } from 'flux';
 
-import ApisearchUI from "./ApisearchUI";
+import ApisearchUI from "./app/ApisearchUI";
 import apisearch from 'apisearch';
-import Store from "./Store";
-import container from "./Container";
+import Store from "./app/Store";
+import container from "./container";
 import {
     APISEARCH_CLIENT,
     APISEARCH_STORE,

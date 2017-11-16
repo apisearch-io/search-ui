@@ -2,9 +2,9 @@
  * @jsx h
  */
 
-import {bootstrap} from "./app/bootstrap";
-import container from "./app/Container";
-import {APISEARCH_DISPATCHER, APISEARCH_UI} from "./app/constants";
+import {bootstrap} from "./bootstrap";
+import container from "./container";
+import {APISEARCH_DISPATCHER, APISEARCH_UI} from "./constants";
 
 /**
  * Apisearch Entry point
