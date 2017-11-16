@@ -1059,68 +1059,6 @@ var preact = {
 "use strict";
 
 
-/**
- * Module dependenices
- */
-
-var isObject = __webpack_require__(20);
-var clone = __webpack_require__(22);
-var typeOf = __webpack_require__(10);
-var forOwn = __webpack_require__(25);
-
-/**
- * Recursively clone native types.
- */
-
-function cloneDeep(val, instanceClone) {
-  switch (typeOf(val)) {
-    case 'object':
-      return cloneObjectDeep(val, instanceClone);
-    case 'array':
-      return cloneArrayDeep(val, instanceClone);
-    default: {
-      return clone(val);
-    }
-  }
-}
-
-function cloneObjectDeep(obj, instanceClone) {
-  if (isObject(obj)) {
-    var res = {};
-    forOwn(obj, function(obj, key) {
-      this[key] = cloneDeep(obj, instanceClone);
-    }, res);
-    return res;
-  } else if (instanceClone) {
-    return instanceClone(obj);
-  } else {
-    return obj;
-  }
-}
-
-function cloneArrayDeep(arr, instanceClone) {
-  var len = arr.length, res = [];
-  var i = -1;
-  while (++i < len) {
-    res[i] = cloneDeep(arr[i], instanceClone);
-  }
-  return res;
-}
-
-/**
- * Expose `cloneDeep`
- */
-
-module.exports = cloneDeep;
-
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
@@ -1185,7 +1123,7 @@ var Container = function () {
 exports.default = new Container();
 
 /***/ }),
-/* 3 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1203,6 +1141,68 @@ var APISEARCH_DISPATCHER = exports.APISEARCH_DISPATCHER = 'apisearch_dispatcher'
 var APISEARCH_UI = exports.APISEARCH_UI = 'apisearch_ui';
 
 /***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * Module dependenices
+ */
+
+var isObject = __webpack_require__(20);
+var clone = __webpack_require__(22);
+var typeOf = __webpack_require__(10);
+var forOwn = __webpack_require__(25);
+
+/**
+ * Recursively clone native types.
+ */
+
+function cloneDeep(val, instanceClone) {
+  switch (typeOf(val)) {
+    case 'object':
+      return cloneObjectDeep(val, instanceClone);
+    case 'array':
+      return cloneArrayDeep(val, instanceClone);
+    default: {
+      return clone(val);
+    }
+  }
+}
+
+function cloneObjectDeep(obj, instanceClone) {
+  if (isObject(obj)) {
+    var res = {};
+    forOwn(obj, function(obj, key) {
+      this[key] = cloneDeep(obj, instanceClone);
+    }, res);
+    return res;
+  } else if (instanceClone) {
+    return instanceClone(obj);
+  } else {
+    return obj;
+  }
+}
+
+function cloneArrayDeep(arr, instanceClone) {
+  var len = arr.length, res = [];
+  var i = -1;
+  while (++i < len) {
+    res[i] = cloneDeep(arr[i], instanceClone);
+  }
+  return res;
+}
+
+/**
+ * Expose `cloneDeep`
+ */
+
+module.exports = cloneDeep;
+
+
+/***/ }),
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1217,7 +1217,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _hogan = __webpack_require__(32);
+var _hogan = __webpack_require__(34);
 
 var _hogan2 = _interopRequireDefault(_hogan);
 
@@ -1673,11 +1673,11 @@ module.exports = function kindOf(val) {
 
 var _bootstrap = __webpack_require__(12);
 
-var _container = __webpack_require__(2);
+var _container = __webpack_require__(1);
 
 var _container2 = _interopRequireDefault(_container);
 
-var _constants = __webpack_require__(3);
+var _constants = __webpack_require__(2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1756,11 +1756,11 @@ var _Store = __webpack_require__(42);
 
 var _Store2 = _interopRequireDefault(_Store);
 
-var _container = __webpack_require__(2);
+var _container = __webpack_require__(1);
 
 var _container2 = _interopRequireDefault(_container);
 
-var _constants = __webpack_require__(3);
+var _constants = __webpack_require__(2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2635,15 +2635,15 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.simpleSearchAction = simpleSearchAction;
 
-var _cloneDeep = __webpack_require__(1);
+var _cloneDeep = __webpack_require__(3);
 
 var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
 
-var _container = __webpack_require__(2);
+var _container = __webpack_require__(1);
 
 var _container2 = _interopRequireDefault(_container);
 
-var _constants = __webpack_require__(3);
+var _constants = __webpack_require__(2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3260,7 +3260,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.simpleSearchAction = simpleSearchAction;
 exports.suggestedSearchAction = suggestedSearchAction;
 
-var _cloneDeep = __webpack_require__(1);
+var _cloneDeep = __webpack_require__(3);
 
 var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
 
@@ -3449,15 +3449,15 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.onChangeSearchAction = onChangeSearchAction;
 
-var _cloneDeep = __webpack_require__(1);
+var _cloneDeep = __webpack_require__(3);
 
 var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
 
-var _container = __webpack_require__(2);
+var _container = __webpack_require__(1);
 
 var _container2 = _interopRequireDefault(_container);
 
-var _constants = __webpack_require__(3);
+var _constants = __webpack_require__(2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3499,7 +3499,6 @@ function onChangeSearchAction(queryOptions, currentQuery, client) {
 
     client.search(clonedQuery, function (result) {
         var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
-
         dispatcher.dispatch({
             type: 'RENDER_FETCHED_DATA',
             payload: {
@@ -3534,17 +3533,17 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
+var _multipleFilterActions = __webpack_require__(32);
+
+var _helpers = __webpack_require__(33);
+
 var _Template = __webpack_require__(4);
 
 var _Template2 = _interopRequireDefault(_Template);
 
-var _ShowMoreComponent = __webpack_require__(35);
+var _ShowMoreComponent = __webpack_require__(37);
 
 var _ShowMoreComponent2 = _interopRequireDefault(_ShowMoreComponent);
-
-var _multipleFilterActions = __webpack_require__(36);
-
-var _helpers = __webpack_require__(37);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3572,6 +3571,7 @@ var MultipleFilterComponent = function (_Component) {
 
         _this.handleClick = function (selectedFilter) {
             var _this$props = _this.props,
+                environmentId = _this$props.environmentId,
                 filterName = _this$props.name,
                 filterField = _this$props.filterField,
                 aggregationField = _this$props.aggregationField,
@@ -3589,6 +3589,7 @@ var MultipleFilterComponent = function (_Component) {
              * Dispatch action
              */
             (0, _multipleFilterActions.filterAction)({
+                environmentId: environmentId,
                 filterName: filterName,
                 filterField: filterField,
                 applicationType: applicationType,
@@ -3626,6 +3627,7 @@ var MultipleFilterComponent = function (_Component) {
         key: "componentWillMount",
         value: function componentWillMount() {
             var _props = this.props,
+                environmentId = _props.environmentId,
                 filterName = _props.name,
                 filterField = _props.filterField,
                 aggregationField = _props.aggregationField,
@@ -3641,6 +3643,7 @@ var MultipleFilterComponent = function (_Component) {
              * Dispatch action
              */
             (0, _multipleFilterActions.aggregationSetup)({
+                environmentId: environmentId,
                 filterName: filterName,
                 filterField: filterField,
                 applicationType: applicationType,
@@ -3780,6 +3783,155 @@ exports.default = MultipleFilterComponent;
 /* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.aggregationSetup = aggregationSetup;
+exports.filterAction = filterAction;
+
+var _cloneDeep = __webpack_require__(3);
+
+var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
+
+var _dispatcher = __webpack_require__(5);
+
+var _dispatcher2 = _interopRequireDefault(_dispatcher);
+
+var _container = __webpack_require__(1);
+
+var _container2 = _interopRequireDefault(_container);
+
+var _constants = __webpack_require__(2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Define aggregations setup
+ *
+ * This setup action is triggered when mounting a component
+ * receives two parameters:
+ *   @param queryOptions -> the itemsPerPage to be displayed on the result container
+ *   @param currentQuery -> current application query
+ *
+ * Finally dispatches an event with the modified query.
+ *   @returns {{
+ *     type: string,
+ *     payload: {
+ *        updatedQuery
+ *     }
+ *   }}
+ */
+/**
+ * Multiple filter actions
+ */
+function aggregationSetup(queryOptions, currentQuery) {
+    var environmentId = queryOptions.environmentId,
+        filterName = queryOptions.filterName,
+        aggregationField = queryOptions.aggregationField,
+        applicationType = queryOptions.applicationType,
+        sortBy = queryOptions.sortBy;
+
+    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+
+    clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy);
+
+    var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
+    dispatcher.dispatch({
+        type: 'UPDATE_APISEARCH_SETUP',
+        payload: {
+            updatedQuery: clonedQuery
+        }
+    });
+}
+
+/**
+ * Define aggregations setup
+ *
+ * This setup action is triggered when mounting a component
+ * receives two parameters:
+ *   @param queryOptions -> the itemsPerPage to be displayed on the result container
+ *   @param currentQuery -> current application query
+ *   @param client       -> Apisearch client
+ *
+ * Finally dispatches an event with the modified query.
+ *   @returns {{
+ *     type: string,
+ *     payload: {
+ *        updatedQuery
+ *     }
+ *   }}
+ */
+function filterAction(queryOptions, currentQuery, client) {
+    var environmentId = queryOptions.environmentId,
+        filterName = queryOptions.filterName,
+        filterField = queryOptions.filterField,
+        aggregationField = queryOptions.aggregationField,
+        filterValues = queryOptions.filterValues,
+        applicationType = queryOptions.applicationType,
+        sortBy = queryOptions.sortBy;
+
+    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+
+    clonedQuery.filterBy(filterName, filterField, filterValues, applicationType, false, sortBy);
+    clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy);
+
+    client.search(clonedQuery, function (result) {
+        var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
+        dispatcher.dispatch({
+            type: 'RENDER_FETCHED_DATA',
+            payload: {
+                updatedQuery: clonedQuery,
+                result: result
+            }
+        });
+    });
+}
+
+/***/ }),
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.manageCurrentFilterItems = manageCurrentFilterItems;
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+/**
+ * Manage filter items
+ *
+ * If an item is on the list, remove it
+ * else, add it!
+ *
+ * @param selectedItem
+ * @param currentItems
+ * @returns {[null,null]}
+ */
+function manageCurrentFilterItems(selectedItem, currentItems) {
+    var isElementActive = currentItems.some(function (item) {
+        return item === selectedItem;
+    });
+
+    if (isElementActive) {
+        return currentItems.filter(function (item) {
+            return item !== selectedItem;
+        });
+    } else {
+        return [].concat(_toConsumableArray(currentItems), [selectedItem]);
+    }
+}
+
+/***/ }),
+/* 34 */
+/***/ (function(module, exports, __webpack_require__) {
+
 /*
  *  Copyright 2011 Twitter, Inc.
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -3797,14 +3949,14 @@ exports.default = MultipleFilterComponent;
 
 // This file is for use with Node.js. See dist/ for browser files.
 
-var Hogan = __webpack_require__(33);
-Hogan.Template = __webpack_require__(34).Template;
+var Hogan = __webpack_require__(35);
+Hogan.Template = __webpack_require__(36).Template;
 Hogan.template = Hogan.Template;
 module.exports = Hogan;
 
 
 /***/ }),
-/* 33 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -4233,7 +4385,7 @@ module.exports = Hogan;
 
 
 /***/ }),
-/* 34 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -4580,7 +4732,7 @@ var Hogan = {};
 
 
 /***/ }),
-/* 35 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4639,145 +4791,6 @@ var ShowMoreComponent = function ShowMoreComponent(_ref) {
 };
 
 exports.default = ShowMoreComponent;
-
-/***/ }),
-/* 36 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.aggregationSetup = aggregationSetup;
-exports.filterAction = filterAction;
-
-var _cloneDeep = __webpack_require__(1);
-
-var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
-
-var _dispatcher = __webpack_require__(5);
-
-var _dispatcher2 = _interopRequireDefault(_dispatcher);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Define aggregations setup
- *
- * This setup action is triggered when mounting a component
- * receives two parameters:
- *   @param queryOptions -> the itemsPerPage to be displayed on the result container
- *   @param currentQuery -> current application query
- *
- * Finally dispatches an event with the modified query.
- *   @returns {{
- *     type: string,
- *     payload: {
- *        updatedQuery
- *     }
- *   }}
- */
-/**
- * Multiple filter actions
- */
-function aggregationSetup(queryOptions, currentQuery) {
-    var filterName = queryOptions.filterName,
-        aggregationField = queryOptions.aggregationField,
-        applicationType = queryOptions.applicationType,
-        sortBy = queryOptions.sortBy;
-
-    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
-
-    clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy);
-
-    _dispatcher2.default.dispatch({
-        type: 'UPDATE_APISEARCH_SETUP',
-        payload: {
-            updatedQuery: clonedQuery
-        }
-    });
-}
-
-/**
- * Define aggregations setup
- *
- * This setup action is triggered when mounting a component
- * receives two parameters:
- *   @param queryOptions -> the itemsPerPage to be displayed on the result container
- *   @param currentQuery -> current application query
- *   @param client       -> Apisearch client
- *
- * Finally dispatches an event with the modified query.
- *   @returns {{
- *     type: string,
- *     payload: {
- *        updatedQuery
- *     }
- *   }}
- */
-function filterAction(queryOptions, currentQuery, client) {
-    var filterName = queryOptions.filterName,
-        filterField = queryOptions.filterField,
-        aggregationField = queryOptions.aggregationField,
-        filterValues = queryOptions.filterValues,
-        applicationType = queryOptions.applicationType,
-        sortBy = queryOptions.sortBy;
-
-    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
-
-    clonedQuery.filterBy(filterName, filterField, filterValues, applicationType, false, sortBy);
-    clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy);
-
-    client.search(clonedQuery, function (result) {
-        _dispatcher2.default.dispatch({
-            type: 'RENDER_FETCHED_DATA',
-            payload: {
-                updatedQuery: clonedQuery,
-                result: result
-            }
-        });
-    });
-}
-
-/***/ }),
-/* 37 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.manageCurrentFilterItems = manageCurrentFilterItems;
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-/**
- * Manage filter items
- *
- * If an item is on the list, remove it
- * else, add it!
- *
- * @param selectedItem
- * @param currentItems
- * @returns {[null,null]}
- */
-function manageCurrentFilterItems(selectedItem, currentItems) {
-    var isElementActive = currentItems.some(function (item) {
-        return item === selectedItem;
-    });
-
-    if (isElementActive) {
-        return currentItems.filter(function (item) {
-            return item !== selectedItem;
-        });
-    } else {
-        return [].concat(_toConsumableArray(currentItems), [selectedItem]);
-    }
-}
 
 /***/ }),
 /* 38 */
@@ -4916,15 +4929,15 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.changeItemsPerResultPageSetup = changeItemsPerResultPageSetup;
 
-var _cloneDeep = __webpack_require__(1);
+var _cloneDeep = __webpack_require__(3);
 
 var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
 
-var _container = __webpack_require__(2);
+var _container = __webpack_require__(1);
 
 var _container2 = _interopRequireDefault(_container);
 
-var _constants = __webpack_require__(3);
+var _constants = __webpack_require__(2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 

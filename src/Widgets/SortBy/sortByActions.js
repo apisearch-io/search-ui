@@ -47,7 +47,6 @@ export function onChangeSearchAction(
         const dispatcher = container
             .get(`${APISEARCH_DISPATCHER}__${environmentId}`)
         ;
-
         dispatcher.dispatch({
             type: 'RENDER_FETCHED_DATA',
             payload: {

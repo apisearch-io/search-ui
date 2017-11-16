@@ -2,17 +2,12 @@
  * @jsx h
  */
 import { h, Component } from 'preact';
+
+import { aggregationSetup, filterAction } from "./multipleFilterActions";
+import { manageCurrentFilterItems } from "./helpers";
+
 import Template from "../Template";
 import ShowMoreComponent from "./ShowMoreComponent";
-import {
-    aggregationSetup,
-    filterAction
-} from "./multipleFilterActions";
-import {
-    aggregationsObjectToArray,
-    manageCurrentFilterItems,
-    simpleObjectToArray
-} from "./helpers";
 
 /**
  * Filter Component
@@ -29,6 +24,7 @@ class MultipleFilterComponent extends Component {
 
     componentWillMount() {
         const {
+            environmentId,
             name: filterName,
             filterField,
             aggregationField,
@@ -45,6 +41,7 @@ class MultipleFilterComponent extends Component {
          */
         aggregationSetup(
             {
+                environmentId,
                 filterName,
                 filterField,
                 applicationType,
@@ -93,6 +90,7 @@ class MultipleFilterComponent extends Component {
 
     handleClick = (selectedFilter) => {
         const {
+            environmentId,
             name: filterName,
             filterField,
             aggregationField,
@@ -118,6 +116,7 @@ class MultipleFilterComponent extends Component {
          */
         filterAction(
             {
+                environmentId,
                 filterName,
                 filterField,
                 applicationType,

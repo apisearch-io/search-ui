@@ -3,6 +3,8 @@
  */
 import cloneDeep from 'clone-deep';
 import dispatcher from '../../dispatcher';
+import container from "../../app/container";
+import {APISEARCH_DISPATCHER} from "../../app/constants";
 
 /**
  * Define aggregations setup
@@ -25,6 +27,7 @@ export function aggregationSetup(
     currentQuery
 ) {
     const {
+        environmentId,
         filterName,
         aggregationField,
         applicationType,
@@ -39,6 +42,9 @@ export function aggregationSetup(
         sortBy
     );
 
+    const dispatcher = container
+        .get(`${APISEARCH_DISPATCHER}__${environmentId}`)
+    ;
     dispatcher.dispatch({
         type: 'UPDATE_APISEARCH_SETUP',
         payload: {
@@ -70,6 +76,7 @@ export function filterAction(
     client
 ) {
     const {
+        environmentId,
         filterName,
         filterField,
         aggregationField,
@@ -95,6 +102,9 @@ export function filterAction(
     );
 
     client.search(clonedQuery, result => {
+        const dispatcher = container
+            .get(`${APISEARCH_DISPATCHER}__${environmentId}`)
+        ;
         dispatcher.dispatch({
             type: 'RENDER_FETCHED_DATA',
             payload: {
