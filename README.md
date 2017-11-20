@@ -159,6 +159,22 @@ const multipleFilterWidget = ui.widgets.multipleFilter({
 
 @todo: describe attributes.
 
+## Clear filters button
+Clear filters widget gives us a button to remove all active
+filters.
+```javascript
+const clearFilters = ui.widgets.clearFilters({
+  target: !string,
+  classNames: {
+      container: ?string
+  },
+  template: {
+      container: ?string['Clear filters']
+  }
+});
+```
+
+
 ## Search result
 The result widget allows you to print a set of results
 based on the search.
@@ -256,7 +272,7 @@ const resultInformationWidget = ui.widgets.information({
       container: ?string
   },
   template: {
-      container: !string,
+      container: !string['Found {{total_hits}} of {{total_items}} items'],
   },
   formatData: ?function(resultInformationData)
 });
@@ -327,13 +343,13 @@ View (Widget components) -> action -> request (apisearch client) -> reduce recei
 
 - [x] SortBy
    - [ ] Random sort
+- [x] Multiple filter
+- [x] Rating filter (it's a multiple filter selector)
+- [x] Clear filters button
 - [ ] Simple filter
-- [ ] Multiple filter (and || or)
 - [ ] Select filter
 - [ ] Menu filter
-- [ ] Rating filter
 - [ ] Range filter
-- [ ] Clear filters
 
 - [ ] Analytics / User analytics
 

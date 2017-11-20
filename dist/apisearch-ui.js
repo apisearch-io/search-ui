@@ -1717,11 +1717,11 @@ var _ApisearchUI = __webpack_require__(14);
 
 var _ApisearchUI2 = _interopRequireDefault(_ApisearchUI);
 
-var _apisearch = __webpack_require__(40);
+var _apisearch = __webpack_require__(42);
 
 var _apisearch2 = _interopRequireDefault(_apisearch);
 
-var _Store = __webpack_require__(41);
+var _Store = __webpack_require__(43);
 
 var _Store2 = _interopRequireDefault(_Store);
 
@@ -2356,6 +2356,10 @@ var _InformationComponent = __webpack_require__(39);
 
 var _InformationComponent2 = _interopRequireDefault(_InformationComponent);
 
+var _ClearFiltersComponent = __webpack_require__(40);
+
+var _ClearFiltersComponent2 = _interopRequireDefault(_ClearFiltersComponent);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -2471,18 +2475,36 @@ var WidgetFactory = function () {
         }
 
         /**
+         * Clear filters button
+         */
+
+    }, {
+        key: "clearFilters",
+        value: function clearFilters(_ref5) {
+            var target = _ref5.target,
+                classNames = _ref5.classNames,
+                template = _ref5.template;
+
+            return (0, _preact.h)(_ClearFiltersComponent2.default, {
+                target: target,
+                classNames: _extends({}, _InformationComponent2.default.defaultProps.classNames, classNames),
+                template: template
+            });
+        }
+
+        /**
          * Search result
          */
 
     }, {
         key: "result",
-        value: function result(_ref5) {
-            var target = _ref5.target,
-                itemsPerPage = _ref5.itemsPerPage,
-                highlightsEnabled = _ref5.highlightsEnabled,
-                classNames = _ref5.classNames,
-                template = _ref5.template,
-                formatData = _ref5.formatData;
+        value: function result(_ref6) {
+            var target = _ref6.target,
+                itemsPerPage = _ref6.itemsPerPage,
+                highlightsEnabled = _ref6.highlightsEnabled,
+                classNames = _ref6.classNames,
+                template = _ref6.template,
+                formatData = _ref6.formatData;
 
             return (0, _preact.h)(_ResultComponent2.default, {
                 target: target,
@@ -2500,11 +2522,11 @@ var WidgetFactory = function () {
 
     }, {
         key: "information",
-        value: function information(_ref6) {
-            var target = _ref6.target,
-                classNames = _ref6.classNames,
-                template = _ref6.template,
-                formatData = _ref6.formatData;
+        value: function information(_ref7) {
+            var target = _ref7.target,
+                classNames = _ref7.classNames,
+                template = _ref7.template,
+                formatData = _ref7.formatData;
 
             return (0, _preact.h)(_InformationComponent2.default, {
                 target: target,
@@ -5147,6 +5169,182 @@ exports.default = InformationComponent;
 
 /***/ }),
 /* 40 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _preact = __webpack_require__(0);
+
+var _Template = __webpack_require__(4);
+
+var _Template2 = _interopRequireDefault(_Template);
+
+var _clearFiltersActions = __webpack_require__(41);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+
+/**
+ * Result Information Component
+ */
+var ClearFiltersComponent = function (_Component) {
+    _inherits(ClearFiltersComponent, _Component);
+
+    function ClearFiltersComponent() {
+        _classCallCheck(this, ClearFiltersComponent);
+
+        var _this = _possibleConstructorReturn(this, (ClearFiltersComponent.__proto__ || Object.getPrototypeOf(ClearFiltersComponent)).call(this));
+
+        _this.handleClick = function () {
+            var _this$props = _this.props,
+                environmentId = _this$props.environmentId,
+                currentQuery = _this$props.currentQuery,
+                client = _this$props.client;
+
+
+            _this.setState({ showClearFilters: false });
+
+            /**
+             * Dispatch a clear filter action
+             */
+            (0, _clearFiltersActions.clearFiltersAction)({}, {
+                environmentId: environmentId,
+                currentQuery: currentQuery,
+                client: client
+            });
+        };
+
+        _this.state = { showClearFilters: false };
+        return _this;
+    }
+
+    _createClass(ClearFiltersComponent, [{
+        key: "componentWillReceiveProps",
+        value: function componentWillReceiveProps(props) {
+            if (typeof props.currentQuery === 'undefined') return;
+
+            if (props.currentQuery.filters.length !== 0) {
+                this.setState({ showClearFilters: true });
+            }
+        }
+    }, {
+        key: "render",
+        value: function render() {
+            var _props = this.props,
+                containerClassName = _props.classNames.container,
+                containerTemplate = _props.template.container;
+
+
+            return this.state.showClearFilters ? (0, _preact.h)(
+                "div",
+                { className: "asui-clearFilters " + containerClassName,
+                    onClick: this.handleClick
+                },
+                (0, _preact.h)(_Template2.default, { template: containerTemplate })
+            ) : null;
+        }
+    }]);
+
+    return ClearFiltersComponent;
+}(_preact.Component);
+
+ClearFiltersComponent.defaultProps = {
+    classNames: {
+        container: ''
+    },
+    template: {
+        container: 'Clear filters'
+    }
+};
+
+exports.default = ClearFiltersComponent;
+
+/***/ }),
+/* 41 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.clearFiltersAction = clearFiltersAction;
+
+var _cloneDeep = __webpack_require__(3);
+
+var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
+
+var _container = __webpack_require__(1);
+
+var _container2 = _interopRequireDefault(_container);
+
+var _constants = __webpack_require__(2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _objectDestructuringEmpty(obj) { if (obj == null) throw new TypeError("Cannot destructure undefined"); } /**
+                                                                                                                   * Clear filters actions
+                                                                                                                   */
+
+
+/**
+ * Clear filters action
+ *
+ * This action is triggered when the component is clicked
+ * receives two parameters:
+ *   @param queryOptions -> query given options
+ *   @param appOptions   -> current application options
+ *
+ * Finally dispatches an event with the modified query.
+ *   @returns {{
+ *     type: string,
+ *     payload: {
+ *        updatedQuery,
+ *        result
+ *     }
+ *   }}
+ */
+function clearFiltersAction(_ref, _ref2) {
+    var environmentId = _ref2.environmentId,
+        currentQuery = _ref2.currentQuery,
+        client = _ref2.client;
+
+    _objectDestructuringEmpty(_ref);
+
+    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+
+    clonedQuery.filters = [];
+
+    client.search(clonedQuery, function (result) {
+        var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + "__" + environmentId);
+        dispatcher.dispatch({
+            type: 'RENDER_FETCHED_DATA',
+            payload: {
+                updatedQuery: clonedQuery,
+                result: result
+            }
+        });
+    });
+}
+
+/***/ }),
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -8456,7 +8654,7 @@ var SORT_BY_LOCATION_MI_ASC = exports.SORT_BY_LOCATION_MI_ASC = {
 //# sourceMappingURL=apisearch.node.js.map
 
 /***/ }),
-/* 41 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8468,7 +8666,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _events = __webpack_require__(42);
+var _events = __webpack_require__(44);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -8570,7 +8768,7 @@ var Store = function (_EventEmitter) {
 exports.default = Store;
 
 /***/ }),
-/* 42 */
+/* 44 */
 /***/ (function(module, exports) {
 
 // Copyright Joyent, Inc. and other Node contributors.

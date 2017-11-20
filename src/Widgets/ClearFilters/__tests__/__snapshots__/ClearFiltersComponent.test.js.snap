@@ -1,0 +1,87 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<ClearFiltersComponent /> it should not render if any filter is active 1`] = `
+preact-render-spy (1 nodes)
+-------
+{null}
+
+`;
+
+exports[`<ClearFiltersComponent /> should handleCLick() remove filters and hide himself 1`] = `
+preact-render-spy (1 nodes)
+-------
+{null}
+
+`;
+
+exports[`<ClearFiltersComponent /> should render if some filter filter is active with custom props 1`] = `
+Object {
+  "children": Array [],
+  "classNames": Object {
+    "container": "some-custom-container-class",
+  },
+  "currentQuery": Object {
+    "filters": Object {
+      "year": Object {
+        "field": "indexed_metadata.year",
+        "values": Array [
+          "1995",
+        ],
+      },
+    },
+  },
+  "target": "#some-tagret",
+  "template": Object {
+    "container": "<button>Clear this awesome filters!</button>",
+  },
+}
+`;
+
+exports[`<ClearFiltersComponent /> should render if some filter filter is active with custom props 2`] = `
+preact-render-spy (1 nodes)
+-------
+<div
+  class="asui-clearFilters some-custom-container-class"
+  onClick={[Function anonymous]}
+>
+  <div>
+    <button>Clear this awesome filters!</button>
+  </div>
+</div>
+
+`;
+
+exports[`<ClearFiltersComponent /> should render if some filter filter is active with default props 1`] = `
+Object {
+  "children": Array [],
+  "classNames": Object {
+    "container": "",
+  },
+  "currentQuery": Object {
+    "filters": Object {
+      "year": Object {
+        "field": "indexed_metadata.year",
+        "values": Array [
+          "1995",
+        ],
+      },
+    },
+  },
+  "target": "#some-tagret",
+  "template": Object {
+    "container": "Clear filters",
+  },
+}
+`;
+
+exports[`<ClearFiltersComponent /> should render if some filter filter is active with default props 2`] = `
+preact-render-spy (1 nodes)
+-------
+<div
+  class="asui-clearFilters "
+  onClick={[Function anonymous]}
+>
+  <div>Clear filters</div>
+</div>
+
+`;

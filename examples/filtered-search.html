@@ -44,7 +44,10 @@
 
         <!-- End -->
         <div class="navbar-end">
-            <!-- SortBy -->
+            <!-- Clear filters -->
+            <div class="navbar-item clear-filters"></div>
+
+            <!-- Sort by -->
             <div class="navbar-item sort-by"></div>
 
             <a class="navbar-item is-hidden-desktop-only"
@@ -224,6 +227,12 @@
                     }
 
                     return itemData;
+                }
+            }),
+            ui.widgets.clearFilters({
+                target: '.clear-filters',
+                template: {
+                    container: '<button class="button"><i class="fa fa-remove"></i>&nbsp;Clear filters</button>'
                 }
             }),
             ui.widgets.information({

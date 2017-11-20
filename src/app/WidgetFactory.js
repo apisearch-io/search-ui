@@ -16,6 +16,7 @@ import SortByComponent from "../Widgets/SortBy/SortByComponent";
 import MultipleFilterComponent from "../Widgets/MultipleFilter/MultipleFilterComponent";
 import ResultComponent from "../Widgets/Result/ResultComponent";
 import InformationComponent from "../Widgets/Information/InformationComponent";
+import ClearFiltersComponent from "../Widgets/ClearFilters/ClearFiltersComponent";
 
 /**
  * Widgets factory class
@@ -123,6 +124,24 @@ class WidgetFactory {
                 ...template
             }}
             formatData={formatData}
+        />
+    }
+
+    /**
+     * Clear filters button
+     */
+    static clearFilters({
+        target,
+        classNames,
+        template
+    }) {
+        return <ClearFiltersComponent
+            target={target}
+            classNames={{
+                ...InformationComponent.defaultProps.classNames,
+                ...classNames
+            }}
+            template={template}
         />
     }
 
