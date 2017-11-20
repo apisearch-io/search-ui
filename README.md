@@ -152,7 +152,8 @@ const multipleFilterWidget = ui.widgets.multipleFilter({
         item: !string,
         showMore: ?string['+ Show more'],
         showLess: ?string['- Show less']
-    }
+    },
+    formatData: ?function
 })
 ```
 
@@ -173,7 +174,8 @@ const resultWidget = ui.widgets.result({
   template: {
       itemsList: !string,
       placeholder: ?string
-  }
+  },
+  formatData: ?function
 });
 ```
 

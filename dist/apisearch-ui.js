@@ -2452,7 +2452,8 @@ var WidgetFactory = function () {
                 sortBy = _ref4.sortBy,
                 showMoreActive = _ref4.showMoreActive,
                 classNames = _ref4.classNames,
-                template = _ref4.template;
+                template = _ref4.template,
+                formatData = _ref4.formatData;
 
             return (0, _preact.h)(_MultipleFilterComponent2.default, {
                 target: target,
@@ -2464,7 +2465,8 @@ var WidgetFactory = function () {
                 sortBy: sortBy,
                 showMoreActive: showMoreActive,
                 classNames: _extends({}, _MultipleFilterComponent2.default.defaultProps.classNames, classNames),
-                template: _extends({}, _MultipleFilterComponent2.default.defaultProps.template, template)
+                template: _extends({}, _MultipleFilterComponent2.default.defaultProps.template, template),
+                formatData: formatData
             });
         }
 
@@ -2479,14 +2481,16 @@ var WidgetFactory = function () {
                 itemsPerPage = _ref5.itemsPerPage,
                 highlightsEnabled = _ref5.highlightsEnabled,
                 classNames = _ref5.classNames,
-                template = _ref5.template;
+                template = _ref5.template,
+                formatData = _ref5.formatData;
 
             return (0, _preact.h)(_ResultComponent2.default, {
                 target: target,
                 itemsPerPage: itemsPerPage,
                 highlightsEnabled: highlightsEnabled,
                 classNames: _extends({}, _ResultComponent2.default.defaultProps.classNames, classNames),
-                template: template
+                template: template,
+                formatData: formatData
             });
         }
 
@@ -3750,7 +3754,8 @@ var MultipleFilterComponent = function (_Component) {
                 topTemplate = _props2$template.top,
                 itemTemplate = _props2$template.item,
                 showMoreTemplate = _props2$template.showMore,
-                showLessTemplate = _props2$template.showLess;
+                showLessTemplate = _props2$template.showLess,
+                formatData = _props2.formatData;
 
             /**
              * Get aggregation items
@@ -3776,6 +3781,7 @@ var MultipleFilterComponent = function (_Component) {
                             isActive: item.used,
                             values: item.values
                         };
+                        var formattedTemplateData = formatData(reducedTemplateData);
 
                         return (0, _preact.h)(
                             "div",
@@ -3787,7 +3793,7 @@ var MultipleFilterComponent = function (_Component) {
                             },
                             (0, _preact.h)(_Template2.default, {
                                 template: itemTemplate,
-                                data: reducedTemplateData
+                                data: formattedTemplateData
                             })
                         );
                     })
@@ -3826,6 +3832,9 @@ MultipleFilterComponent.defaultProps = {
         item: null,
         showMore: '+ Show more',
         showLess: '- Show less'
+    },
+    formatData: function formatData(data) {
+        return data;
     }
 };
 
@@ -4928,6 +4937,7 @@ var ResultComponent = function (_Component) {
                 _props2$template = _props2.template,
                 bodyTemplate = _props2$template.itemsList,
                 placeholderTemplate = _props2$template.placeholder,
+                formatData = _props2.formatData,
                 data = _props2.data;
 
             /**
@@ -4939,6 +4949,8 @@ var ResultComponent = function (_Component) {
                 items: data ? data.items : []
             };
 
+            var formattedTemplateData = formatData(reducedTemplateData);
+
             return (0, _preact.h)(
                 "div",
                 { className: "asui-result " + containerClassName },
@@ -4947,7 +4959,7 @@ var ResultComponent = function (_Component) {
                     className: "asui-result--placeholder"
                 }) : (0, _preact.h)(_Template2.default, {
                     template: bodyTemplate,
-                    data: reducedTemplateData,
+                    data: formattedTemplateData,
                     className: "asui-result--itemsList"
                 })
             );
@@ -4965,6 +4977,9 @@ ResultComponent.defaultProps = {
     },
     template: {
         placeholder: null
+    },
+    formatData: function formatData(data) {
+        return data;
     }
 };
 

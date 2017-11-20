@@ -165,7 +165,8 @@ class MultipleFilterComponent extends Component {
                 item: itemTemplate,
                 showMore: showMoreTemplate,
                 showLess: showLessTemplate
-            }
+            },
+            formatData
         } = this.props;
 
         /**
@@ -192,6 +193,7 @@ class MultipleFilterComponent extends Component {
                         isActive: item.used,
                         values: item.values
                     };
+                    const formattedTemplateData = formatData(reducedTemplateData);
 
                     return (
                         <div
@@ -200,7 +202,7 @@ class MultipleFilterComponent extends Component {
                         >
                             <Template
                                 template={itemTemplate}
-                                data={reducedTemplateData}
+                                data={formattedTemplateData}
                             />
                         </div>
                     )
@@ -241,7 +243,8 @@ MultipleFilterComponent.defaultProps = {
         item: null,
         showMore: '+ Show more',
         showLess: '- Show less'
-    }
+    },
+    formatData: data => data
 };
 
 export default MultipleFilterComponent;

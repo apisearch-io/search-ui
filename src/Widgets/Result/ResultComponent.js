@@ -54,6 +54,7 @@ class ResultComponent extends Component {
                 itemsList: bodyTemplate,
                 placeholder: placeholderTemplate
             },
+            formatData,
             data
         } = this.props;
 
@@ -65,6 +66,8 @@ class ResultComponent extends Component {
             items: data ? data.items : []
         }
 
+        let formattedTemplateData = formatData(reducedTemplateData);
+
         return (
             <div className={`asui-result ${containerClassName}`}>
                 {(placeholderTemplate && dirty)
@@ -74,7 +77,7 @@ class ResultComponent extends Component {
                     />
                     : <Template
                         template={bodyTemplate}
-                        data={reducedTemplateData}
+                        data={formattedTemplateData}
                         className={`asui-result--itemsList`}
                     />
                 }
@@ -91,7 +94,8 @@ ResultComponent.defaultProps = {
     },
     template: {
         placeholder: null
-    }
+    },
+    formatData: data => data
 };
 
 export default ResultComponent;

@@ -112,7 +112,7 @@
 
     <script type="text/template" id="multiple-filter-item-template">
         <input type="checkbox" id="filter_{{values.id}}" {{#isActive}}checked="checked"{{/isActive}}>
-        <label for="filter_{{values.id}}">{{values.name}} ({{n}})</label>
+        <label for="filter_{{values.id}}">{{{values.name}}} ({{n}})</label>
     </script>
 
     <script type="text/template" id="information-container-template">
@@ -210,6 +210,20 @@
                     top: 'panel-heading',
                     item: 'panel-block',
                     showMoreContainer: 'panel-block'
+                },
+                formatData: function(itemData) {
+                    let ratingNumber = parseInt(itemData.values.id);
+                    itemData.values.name = "";
+
+                    for(let index = 0; index < 5; index++) {
+                        if (index < ratingNumber) {
+                            itemData.values.name += '<i class="fa fa-star"></i>';
+                        } else {
+                            itemData.values.name += '<i class="fa fa-star-o"></i>';
+                        }
+                    }
+
+                    return itemData;
                 }
             }),
             ui.widgets.information({

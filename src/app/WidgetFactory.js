@@ -102,7 +102,8 @@ class WidgetFactory {
         sortBy,
         showMoreActive,
         classNames,
-        template
+        template,
+        formatData
     }) {
         return <MultipleFilterComponent
             target={target}
@@ -121,6 +122,7 @@ class WidgetFactory {
                 ...MultipleFilterComponent.defaultProps.template,
                 ...template
             }}
+            formatData={formatData}
         />
     }
 
@@ -132,7 +134,8 @@ class WidgetFactory {
         itemsPerPage,
         highlightsEnabled,
         classNames,
-        template
+        template,
+        formatData
     }) {
         return <ResultComponent
             target={target}
@@ -143,6 +146,7 @@ class WidgetFactory {
                 ...classNames
             }}
             template={template}
+            formatData={formatData}
         />
     }
 
