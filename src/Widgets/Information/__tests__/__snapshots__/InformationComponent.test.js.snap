@@ -5,33 +5,41 @@ preact-render-spy (1 nodes)
 -------
 <div class="asui-information custom-container-class">
   
-                  <span class="total-hits">12</span>
-                  <span class="total-items">32</span>
-              
+                      <span class="total-hits">12</span>
+                      <span class="total-items">32</span>
+                  
 </div>
 
 `;
 
 exports[`<InformationComponent /> should render with default props 1`] = `
+Object {
+  "children": Array [],
+  "classNames": Object {
+    "container": "",
+  },
+  "data": Object {
+    "total_hits": 12,
+    "total_items": 32,
+  },
+  "formatData": [Function],
+  "target": "#some-tagret",
+  "template": Object {
+    "container": "Found {{total_hits}} of {{total_items}} items",
+  },
+}
+`;
+
+exports[`<InformationComponent /> should render with default props 2`] = `
 preact-render-spy (1 nodes)
 -------
-<div class="asui-information ">
-  
-                  <span class="total-hits">12</span>
-                  <span class="total-items">32</span>
-              
-</div>
+<div class="asui-information ">Found 12 of 32 items</div>
 
 `;
 
 exports[`<InformationComponent /> should update content when passing new data 1`] = `
 preact-render-spy (1 nodes)
 -------
-<div class="asui-information ">
-  
-                  <span class="total-hits">34</span>
-                  <span class="total-items">67</span>
-              
-</div>
+<div class="asui-information ">Found 34 of 67 items</div>
 
 `;

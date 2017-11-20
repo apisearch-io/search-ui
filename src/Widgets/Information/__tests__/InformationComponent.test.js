@@ -7,12 +7,6 @@ import Template from '../../Template';
 describe('<InformationComponent />',() => {
     const defaultProps = {
         target: '#some-tagret',
-        template: {
-            container: `
-                <span class="total-hits">{{total_hits}}</span>
-                <span class="total-items">{{total_items}}</span>
-            `
-        }
     };
     const data = {
         total_hits: 12,
@@ -27,22 +21,35 @@ describe('<InformationComponent />',() => {
             />
         );
 
+        /**
+         * Testing the default props tree
+         */
+        expect(tree.component().props).toMatchSnapshot();
+        /**
+         * Testing rendered html
+         */
         expect(tree).toMatchSnapshot();
     });
     it('should render with custom props', () => {
         /**
          * Full custom props available object
          */
-        const customClassNames = {
+        const customProps = {
             classNames: {
                 container: 'custom-container-class',
+            },
+            template: {
+                container: `
+                    <span class="total-hits">{{total_hits}}</span>
+                    <span class="total-items">{{total_items}}</span>
+                `
             }
         };
 
         const tree = deep(
             <InformationComponent
                 {...defaultProps}
-                {...customClassNames}
+                {...customProps}
                 data={data}
             />
         );

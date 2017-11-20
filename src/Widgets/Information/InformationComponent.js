@@ -16,6 +16,7 @@ class InformationComponent extends Component {
             template: {
                 container: containerTemplate
             },
+            formatData,
             data
         } = this.props;
 
@@ -27,10 +28,12 @@ class InformationComponent extends Component {
             total_items: parseInt(data.total_items).toLocaleString('de-DE')
         };
 
+        let formattedTemplateData = formatData(reducedTemplateData);
+
         return (
             <Template
                 template={containerTemplate}
-                data={reducedTemplateData}
+                data={formattedTemplateData}
                 className={`asui-information ${containerClassName}`}
             />
         )
@@ -40,7 +43,11 @@ class InformationComponent extends Component {
 InformationComponent.defaultProps = {
     classNames: {
         container: ''
-    }
+    },
+    template: {
+        container: 'Found {{total_hits}} of {{total_items}} items'
+    },
+    formatData: data => data
 };
 
 export default InformationComponent;

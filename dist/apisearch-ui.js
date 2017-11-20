@@ -2503,12 +2503,14 @@ var WidgetFactory = function () {
         value: function information(_ref6) {
             var target = _ref6.target,
                 classNames = _ref6.classNames,
-                template = _ref6.template;
+                template = _ref6.template,
+                formatData = _ref6.formatData;
 
             return (0, _preact.h)(_InformationComponent2.default, {
                 target: target,
                 classNames: _extends({}, _InformationComponent2.default.defaultProps.classNames, classNames),
-                template: template
+                template: template,
+                formatData: formatData
             });
         }
     }]);
@@ -5104,6 +5106,7 @@ var InformationComponent = function (_Component) {
             var _props = this.props,
                 containerClassName = _props.classNames.container,
                 containerTemplate = _props.template.container,
+                formatData = _props.formatData,
                 data = _props.data;
 
             /**
@@ -5115,9 +5118,11 @@ var InformationComponent = function (_Component) {
                 total_items: parseInt(data.total_items).toLocaleString('de-DE')
             };
 
+            var formattedTemplateData = formatData(reducedTemplateData);
+
             return (0, _preact.h)(_Template2.default, {
                 template: containerTemplate,
-                data: reducedTemplateData,
+                data: formattedTemplateData,
                 className: 'asui-information ' + containerClassName
             });
         }
@@ -5129,6 +5134,12 @@ var InformationComponent = function (_Component) {
 InformationComponent.defaultProps = {
     classNames: {
         container: ''
+    },
+    template: {
+        container: 'Found {{total_hits}} of {{total_items}} items'
+    },
+    formatData: function formatData(data) {
+        return data;
     }
 };
 

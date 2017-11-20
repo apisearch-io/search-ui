@@ -156,7 +156,8 @@ class WidgetFactory {
     static information({
         target,
         classNames,
-        template
+        template,
+        formatData
     }) {
         return <InformationComponent
             target={target}
@@ -165,6 +166,7 @@ class WidgetFactory {
                 ...classNames
             }}
             template={template}
+            formatData={formatData}
         />
     }
 }
