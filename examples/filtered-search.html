@@ -69,7 +69,14 @@
                 <div class="multiple-filter-genre" style="margin-bottom: 1rem"></div>
                 <div class="multiple-filter-rating"></div>
             </div>
-            <div class="result column"></div>
+            <div class="column">
+                <div class="columns">
+                    <div class="result column"></div>
+                </div>
+                <div class="columns">
+                    <div class="pagination column"></div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -243,11 +250,14 @@
             }),
             ui.widgets.result({
                 target: '.result',
-                itemsPerPage: 12,
+                itemsPerPage: 6,
                 highlightsEnabled: true,
                 template: {
                     itemsList: document.getElementById('result-search-tpl').text,
                 }
+            }),
+            ui.widgets.pagination({
+                target: '.pagination'
             })
         );
 

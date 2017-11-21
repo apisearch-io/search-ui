@@ -1717,11 +1717,11 @@ var _ApisearchUI = __webpack_require__(14);
 
 var _ApisearchUI2 = _interopRequireDefault(_ApisearchUI);
 
-var _apisearch = __webpack_require__(42);
+var _apisearch = __webpack_require__(43);
 
 var _apisearch2 = _interopRequireDefault(_apisearch);
 
-var _Store = __webpack_require__(43);
+var _Store = __webpack_require__(44);
 
 var _Store2 = _interopRequireDefault(_Store);
 
@@ -2360,6 +2360,10 @@ var _ClearFiltersComponent = __webpack_require__(40);
 
 var _ClearFiltersComponent2 = _interopRequireDefault(_ClearFiltersComponent);
 
+var _PaginationComponent = __webpack_require__(42);
+
+var _PaginationComponent2 = _interopRequireDefault(_PaginationComponent);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -2533,6 +2537,22 @@ var WidgetFactory = function () {
                 classNames: _extends({}, _InformationComponent2.default.defaultProps.classNames, classNames),
                 template: template,
                 formatData: formatData
+            });
+        }
+
+        /**
+         * Search result information
+         */
+
+    }, {
+        key: "pagination",
+        value: function pagination(_ref8) {
+            var target = _ref8.target,
+                classNames = _ref8.classNames;
+
+            return (0, _preact.h)(_PaginationComponent2.default, {
+                target: target,
+                classNames: _extends({}, _InformationComponent2.default.defaultProps.classNames, classNames)
             });
         }
     }]);
@@ -5344,6 +5364,128 @@ function clearFiltersAction(_ref, _ref2) {
 
 /***/ }),
 /* 42 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _preact = __webpack_require__(0);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+
+/**
+ * Pagination Component
+ */
+var PaginationComponent = function (_Component) {
+    _inherits(PaginationComponent, _Component);
+
+    function PaginationComponent() {
+        _classCallCheck(this, PaginationComponent);
+
+        var _this = _possibleConstructorReturn(this, (PaginationComponent.__proto__ || Object.getPrototypeOf(PaginationComponent)).call(this));
+
+        _this.handleClick = function (page) {
+            _this.setState({ currentPage: page });
+        };
+
+        _this.state = {
+            currentPage: 2,
+            itemsOnPage: 6
+        };
+        return _this;
+    }
+
+    _createClass(PaginationComponent, [{
+        key: 'render',
+        value: function render() {
+            var _this2 = this;
+
+            var _props = this.props,
+                containerClassName = _props.classNames.container,
+                currentQuery = _props.currentQuery,
+                data = _props.data;
+
+
+            var itemsPerPage = parseInt(currentQuery.size);
+            var totalHits = parseInt(data.total_hits);
+
+            // pages array
+            var totalPages = Math.ceil(totalHits / itemsPerPage);
+            var pages = totalPagesToArray(totalPages);
+            // pages array
+
+            var _state = this.state,
+                itemsOnPage = _state.itemsOnPage,
+                currentPage = _state.currentPage;
+
+            // pages spectre
+
+            var halfOfNumberOfItemsOnPage = Math.ceil(this.state.itemsOnPage / 2);
+            var currentPageLessHalf = Math.ceil(this.state.currentPage - halfOfNumberOfItemsOnPage);
+
+            var modulo = totalPages % this.state.currentPage;
+
+            console.log(totalPages, this.state.currentPage);
+            console.log(modulo);
+
+            var pagesSpectre = pages.slice(currentPageLessHalf + modulo, currentPageLessHalf + this.state.itemsOnPage);
+            console.log(pagesSpectre);
+            // pages spectre
+
+            return (0, _preact.h)(
+                'div',
+                { className: 'asui-pagination pagination-list ' + containerClassName },
+                pagesSpectre.map(function (page) {
+                    return (0, _preact.h)(
+                        'span',
+                        {
+                            className: 'pagination-link ' + (_this2.state.currentPage === page ? 'is-current' : ''),
+                            onClick: function onClick() {
+                                return _this2.handleClick(page);
+                            }
+                        },
+                        page
+                    );
+                })
+            );
+        }
+    }]);
+
+    return PaginationComponent;
+}(_preact.Component);
+
+function totalPagesToArray(totalPages) {
+    var pages = [];
+    for (var index = 1; index < totalPages; index++) {
+        pages.push(index);
+    }
+
+    return pages;
+}
+
+PaginationComponent.defaultProps = {
+    classNames: {
+        container: ''
+    }
+};
+
+exports.default = PaginationComponent;
+
+/***/ }),
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -8653,7 +8795,7 @@ var SORT_BY_LOCATION_MI_ASC = exports.SORT_BY_LOCATION_MI_ASC = {
 //# sourceMappingURL=apisearch.node.js.map
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8665,7 +8807,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _events = __webpack_require__(44);
+var _events = __webpack_require__(45);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -8767,7 +8909,7 @@ var Store = function (_EventEmitter) {
 exports.default = Store;
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (function(module, exports) {
 
 // Copyright Joyent, Inc. and other Node contributors.

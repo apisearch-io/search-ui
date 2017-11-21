@@ -17,6 +17,7 @@ import MultipleFilterComponent from "../Widgets/MultipleFilter/MultipleFilterCom
 import ResultComponent from "../Widgets/Result/ResultComponent";
 import InformationComponent from "../Widgets/Information/InformationComponent";
 import ClearFiltersComponent from "../Widgets/ClearFilters/ClearFiltersComponent";
+import PaginationComponent from "../Widgets/Pagination/PaginationComponent";
 
 /**
  * Widgets factory class
@@ -186,6 +187,22 @@ class WidgetFactory {
             }}
             template={template}
             formatData={formatData}
+        />
+    }
+
+    /**
+     * Search result information
+     */
+    static pagination({
+        target,
+        classNames
+    }) {
+        return <PaginationComponent
+            target={target}
+            classNames={{
+                ...InformationComponent.defaultProps.classNames,
+                ...classNames
+            }}
         />
     }
 }
