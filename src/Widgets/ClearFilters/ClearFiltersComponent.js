@@ -15,11 +15,13 @@ class ClearFiltersComponent extends Component {
     }
 
     componentWillReceiveProps(props) {
-        if (typeof props.currentQuery === 'undefined') return;
+        let filters = props.currentQuery.filters;
+        let areFiltersActive = (
+            Object.keys(filters).length !== 0 &&
+            filters.length !== 0
+        );
 
-        if (props.currentQuery.filters.length !== 0) {
-            this.setState({showClearFilters: true})
-        }
+        this.setState({showClearFilters: areFiltersActive});
     }
 
     handleClick = () => {

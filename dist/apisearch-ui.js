@@ -5236,11 +5236,10 @@ var ClearFiltersComponent = function (_Component) {
     _createClass(ClearFiltersComponent, [{
         key: "componentWillReceiveProps",
         value: function componentWillReceiveProps(props) {
-            if (typeof props.currentQuery === 'undefined') return;
+            var filters = props.currentQuery.filters;
+            var areFiltersActive = Object.keys(filters).length !== 0 && filters.length !== 0;
 
-            if (props.currentQuery.filters.length !== 0) {
-                this.setState({ showClearFilters: true });
-            }
+            this.setState({ showClearFilters: areFiltersActive });
         }
     }, {
         key: "render",
