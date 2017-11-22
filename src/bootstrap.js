@@ -29,11 +29,11 @@ export function bootstrap({
      * Register Apisearch client
      */
     container.register(clientId, () => {
-        return apisearch(
+        return apisearch({
             appId,
             apiKey,
             options
-        )
+        })
     });
 
     /**
