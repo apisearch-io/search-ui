@@ -50,7 +50,7 @@
     "yargs": "^8.0.2"
   },
   "dependencies": {
-    "apisearch": "^0.1.*",
+    "apisearch": "^0.1.12",
     "clone-deep": "^1.0.0",
     "flux": "^3.1.3",
     "hogan.js": "^3.0.2",

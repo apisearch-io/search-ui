@@ -30,7 +30,7 @@
         <div class="navbar-brand">
             <a class="navbar-item" href="https://apisearch.io">
                 <img class="has-text-centered"
-                     src="http://apisearch.io/bundles/apisearchweb/images/logo-.png"
+                     src="http://apisearch.io/public/images/logo-.png"
                      height="28px"
                 >
             </a>
@@ -104,7 +104,10 @@
         // UI Instance 1
         const firstUI = apisearchUI({
             appId: 'music',
-            apiKey: '5fadd8c4-c966-11e7-abc4-cec278b6b50a'
+            apiKey: '5fadd8c4-c966-11e7-abc4-cec278b6b50a',
+            options: {
+                endpoint: 'http://puntmig.net'
+            }
         });
 
         firstUI.addWidgets(
