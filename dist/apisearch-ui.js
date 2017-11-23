@@ -1152,9 +1152,9 @@ var APISEARCH_UI = exports.APISEARCH_UI = 'apisearch_ui';
  */
 
 var isObject = __webpack_require__(19);
-var clone = __webpack_require__(22);
+var clone = __webpack_require__(21);
 var typeOf = __webpack_require__(8);
-var forOwn = __webpack_require__(25);
+var forOwn = __webpack_require__(24);
 
 /**
  * Recursively clone native types.
@@ -1217,7 +1217,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _hogan = __webpack_require__(34);
+var _hogan = __webpack_require__(33);
 
 var _hogan2 = _interopRequireDefault(_hogan);
 
@@ -1515,7 +1515,7 @@ module.exports = function forIn(obj, fn, thisArg) {
 /* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isBuffer = __webpack_require__(24);
+var isBuffer = __webpack_require__(23);
 var toString = Object.prototype.toString;
 
 /**
@@ -1717,11 +1717,11 @@ var _ApisearchUI = __webpack_require__(14);
 
 var _ApisearchUI2 = _interopRequireDefault(_ApisearchUI);
 
-var _apisearch = __webpack_require__(43);
+var _apisearch = __webpack_require__(42);
 
 var _apisearch2 = _interopRequireDefault(_apisearch);
 
-var _Store = __webpack_require__(44);
+var _Store = __webpack_require__(43);
 
 var _Store2 = _interopRequireDefault(_Store);
 
@@ -2340,27 +2340,27 @@ var _SimpleSearchComponent = __webpack_require__(17);
 
 var _SimpleSearchComponent2 = _interopRequireDefault(_SimpleSearchComponent);
 
-var _SuggestedSearchComponent = __webpack_require__(26);
+var _SuggestedSearchComponent = __webpack_require__(25);
 
 var _SuggestedSearchComponent2 = _interopRequireDefault(_SuggestedSearchComponent);
 
-var _SortByComponent = __webpack_require__(29);
+var _SortByComponent = __webpack_require__(28);
 
 var _SortByComponent2 = _interopRequireDefault(_SortByComponent);
 
-var _MultipleFilterComponent = __webpack_require__(31);
+var _MultipleFilterComponent = __webpack_require__(30);
 
 var _MultipleFilterComponent2 = _interopRequireDefault(_MultipleFilterComponent);
 
-var _ResultComponent = __webpack_require__(38);
+var _ResultComponent = __webpack_require__(37);
 
 var _ResultComponent2 = _interopRequireDefault(_ResultComponent);
 
-var _InformationComponent = __webpack_require__(40);
+var _InformationComponent = __webpack_require__(39);
 
 var _InformationComponent2 = _interopRequireDefault(_InformationComponent);
 
-var _ClearFiltersComponent = __webpack_require__(41);
+var _ClearFiltersComponent = __webpack_require__(40);
 
 var _ClearFiltersComponent2 = _interopRequireDefault(_ClearFiltersComponent);
 
@@ -2770,32 +2770,19 @@ module.exports = function isPlainObject(o) {
 /*!
  * isobject <https://github.com/jonschlinkert/isobject>
  *
- * Copyright (c) 2014-2015, Jon Schlinkert.
- * Licensed under the MIT License.
+ * Copyright (c) 2014-2017, Jon Schlinkert.
+ * Released under the MIT License.
  */
 
 
 
-var isArray = __webpack_require__(21);
-
 module.exports = function isObject(val) {
-  return val != null && typeof val === 'object' && isArray(val) === false;
+  return val != null && typeof val === 'object' && Array.isArray(val) === false;
 };
 
 
 /***/ }),
 /* 21 */
-/***/ (function(module, exports) {
-
-var toString = {}.toString;
-
-module.exports = Array.isArray || function (arr) {
-  return toString.call(arr) == '[object Array]';
-};
-
-
-/***/ }),
-/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2809,7 +2796,7 @@ module.exports = Array.isArray || function (arr) {
 
 
 var isObject = __webpack_require__(6);
-var mixin = __webpack_require__(23);
+var mixin = __webpack_require__(22);
 var typeOf = __webpack_require__(8);
 
 /**
@@ -2859,7 +2846,7 @@ module.exports = clone;
 
 
 /***/ }),
-/* 23 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2901,13 +2888,13 @@ function copy(value, key) {
 module.exports = mixin;
 
 /***/ }),
-/* 24 */
+/* 23 */
 /***/ (function(module, exports) {
 
 /*!
  * Determine if an object is a Buffer
  *
- * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
+ * @author   Feross Aboukhadijeh <https://feross.org>
  * @license  MIT
  */
 
@@ -2928,7 +2915,7 @@ function isSlowBuffer (obj) {
 
 
 /***/ }),
-/* 25 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2954,7 +2941,7 @@ module.exports = function forOwn(obj, fn, thisArg) {
 
 
 /***/ }),
-/* 26 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2968,9 +2955,9 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _helpers = __webpack_require__(27);
+var _helpers = __webpack_require__(26);
 
-var _suggestedSearchActions = __webpack_require__(28);
+var _suggestedSearchActions = __webpack_require__(27);
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
@@ -3211,7 +3198,7 @@ SuggestedSearchComponent.defaultProps = {
 exports.default = SuggestedSearchComponent;
 
 /***/ }),
-/* 27 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3322,7 +3309,7 @@ function selectActiveSuggestion(suggestionsArray) {
 }
 
 /***/ }),
-/* 28 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3419,7 +3406,7 @@ function suggestedSearchAction(_ref3, _ref4) {
 }
 
 /***/ }),
-/* 29 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3433,7 +3420,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _sortByActions = __webpack_require__(30);
+var _sortByActions = __webpack_require__(29);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -3530,7 +3517,7 @@ SortByComponent.defaultProps = {
 exports.default = SortByComponent;
 
 /***/ }),
-/* 30 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3611,7 +3598,7 @@ function splitQueryValue(string) {
 }
 
 /***/ }),
-/* 31 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3625,15 +3612,15 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _multipleFilterActions = __webpack_require__(32);
+var _multipleFilterActions = __webpack_require__(31);
 
-var _helpers = __webpack_require__(33);
+var _helpers = __webpack_require__(32);
 
 var _Template = __webpack_require__(4);
 
 var _Template2 = _interopRequireDefault(_Template);
 
-var _ShowMoreComponent = __webpack_require__(37);
+var _ShowMoreComponent = __webpack_require__(36);
 
 var _ShowMoreComponent2 = _interopRequireDefault(_ShowMoreComponent);
 
@@ -3882,7 +3869,7 @@ MultipleFilterComponent.defaultProps = {
 exports.default = MultipleFilterComponent;
 
 /***/ }),
-/* 32 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3992,7 +3979,7 @@ function filterAction(_ref3, _ref4) {
 }
 
 /***/ }),
-/* 33 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4030,7 +4017,7 @@ function manageCurrentFilterItems(selectedItem, currentItems) {
 }
 
 /***/ }),
-/* 34 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -4050,14 +4037,14 @@ function manageCurrentFilterItems(selectedItem, currentItems) {
 
 // This file is for use with Node.js. See dist/ for browser files.
 
-var Hogan = __webpack_require__(35);
-Hogan.Template = __webpack_require__(36).Template;
+var Hogan = __webpack_require__(34);
+Hogan.Template = __webpack_require__(35).Template;
 Hogan.template = Hogan.Template;
 module.exports = Hogan;
 
 
 /***/ }),
-/* 35 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -4486,7 +4473,7 @@ module.exports = Hogan;
 
 
 /***/ }),
-/* 36 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -4833,7 +4820,7 @@ var Hogan = {};
 
 
 /***/ }),
-/* 37 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4894,7 +4881,7 @@ var ShowMoreComponent = function ShowMoreComponent(_ref) {
 exports.default = ShowMoreComponent;
 
 /***/ }),
-/* 38 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4912,7 +4899,7 @@ var _Template = __webpack_require__(4);
 
 var _Template2 = _interopRequireDefault(_Template);
 
-var _resultActions = __webpack_require__(39);
+var _resultActions = __webpack_require__(38);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -5027,7 +5014,7 @@ ResultComponent.defaultProps = {
 exports.default = ResultComponent;
 
 /***/ }),
-/* 39 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5098,7 +5085,7 @@ function changeItemsPerResultPageSetup(_ref, _ref2) {
    */
 
 /***/ }),
-/* 40 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5185,7 +5172,7 @@ InformationComponent.defaultProps = {
 exports.default = InformationComponent;
 
 /***/ }),
-/* 41 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5203,7 +5190,7 @@ var _Template = __webpack_require__(4);
 
 var _Template2 = _interopRequireDefault(_Template);
 
-var _clearFiltersActions = __webpack_require__(42);
+var _clearFiltersActions = __webpack_require__(41);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -5291,7 +5278,7 @@ ClearFiltersComponent.defaultProps = {
 exports.default = ClearFiltersComponent;
 
 /***/ }),
-/* 42 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5360,7 +5347,7 @@ function clearFiltersAction(_ref, _ref2) {
 }
 
 /***/ }),
-/* 43 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -6545,6 +6532,8 @@ exports.default = Filter;
 "use strict";
 
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _Apisearch = __webpack_require__(14);
 
 var _Apisearch2 = _interopRequireDefault(_Apisearch);
@@ -6564,28 +6553,41 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 module.exports = function (_ref) {
     var appId = _ref.appId,
         apiKey = _ref.apiKey,
-        options = _ref.options;
+        _ref$options = _ref.options,
+        options = _ref$options === undefined ? {} : _ref$options;
 
-    if (typeof appId === 'undefined') {
-        throw new TypeError('appId parameter must be defined.');
-    }
-    if (typeof apiKey === 'undefined') {
-        throw new TypeError('apiKey parameter must be defined.');
-    }
-    if (typeof options === 'undefined') {
-        options = {};
-    }
+    checkAppId(appId);
+    checkApiKey(apiKey);
+
+    options = _extends({
+        endpoint: 'http://puntmig.net',
+        apiVersion: 'v1',
+        timeout: 10000
+    }, options, {
+        cache: _extends({
+            inMemory: true,
+            http: 0
+        }, options.cache)
+    });
 
     return new _Apisearch2.default({
         appId: appId,
         apiKey: apiKey,
-        options: {
-            endpoint: options.endpoint,
-            apiVersion: options.apiVersion,
-            cache: options.cache
-        }
+        options: options
     });
 };
+
+function checkAppId(appId) {
+    if (typeof appId === 'undefined') {
+        throw new TypeError('appId parameter must be defined.');
+    }
+}
+
+function checkApiKey(apiKey) {
+    if (typeof apiKey === 'undefined') {
+        throw new TypeError('apiKey parameter must be defined.');
+    }
+}
 
 /***/ }),
 /* 14 */
@@ -6620,32 +6622,54 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * Apisearch class
  */
 var Apisearch = function () {
+    /**
+     * Constructor.
+     */
     function Apisearch(_ref) {
         var appId = _ref.appId,
             apiKey = _ref.apiKey,
             _ref$options = _ref.options,
             endpoint = _ref$options.endpoint,
             apiVersion = _ref$options.apiVersion,
-            cache = _ref$options.cache;
+            timeout = _ref$options.timeout,
+            _ref$options$cache = _ref$options.cache,
+            inMemoryCache = _ref$options$cache.inMemory,
+            httpCacheTTL = _ref$options$cache.http;
 
         _classCallCheck(this, Apisearch);
 
+        /**
+         * Api
+         */
         this.appId = appId;
         this.apiKey = apiKey;
-        this.apiVersion = apiVersion || 'v1';
-        this.endpoint = endpoint || 'http://puntmig.net:8250';
+        this.apiVersion = apiVersion;
+        this.endpoint = endpoint;
+        this.httpCacheTTL = httpCacheTTL;
+        this.timeout = timeout;
 
+        /**
+         * Query
+         */
         this.query = _QueryFactory2.default;
         this.createObject = _SecureObjectFactory2.default;
 
-        this.repository = new _HttpClient2.default(typeof cache !== 'undefined' ? cache : true);
+        /**
+         * HttpClient
+         */
+        this.repository = new _HttpClient2.default(inMemoryCache);
     }
 
     _createClass(Apisearch, [{
         key: "search",
         value: function search(query, callback) {
             var encodedQuery = encodeURIComponent(JSON.stringify(query));
-            var composedQuery = this.endpoint + "/" + this.apiVersion + "?app_id=" + this.appId + "&key=" + this.apiKey + "&query=" + encodedQuery;
+            var composedQuery = {
+                url: this.endpoint + "/" + this.apiVersion + "?app_id=" + this.appId + "&key=" + this.apiKey + "&query=" + encodedQuery,
+                options: {
+                    timeout: this.timeout
+                }
+            };
 
             return this.repository.query(composedQuery).then(function (response) {
                 return callback(response, null);
@@ -6712,7 +6736,7 @@ var HttpClient = function () {
             // return promise with the cached value if key exists
             // if not exists, fetch the data
             if (this.cache !== null) {
-                var cachedResponse = this.cache.get(_query);
+                var cachedResponse = this.cache.get(_query.url);
                 if (cachedResponse) {
                     return new Promise(function (resolve) {
                         return resolve(cachedResponse);
@@ -6735,12 +6759,12 @@ var HttpClient = function () {
             var self = this;
 
             return new Promise(function (resolve, reject) {
-                axios.get(query).then(function (response) {
+                axios.get(query.url, query.options).then(function (response) {
                     // check if cache is enabled
                     // set the query as a cache key
                     // and the valid response as a cache value
                     if (self.cache !== null) {
-                        self.cache.set(query, response.data);
+                        self.cache.set(query.url, response.data);
                     }
 
                     return resolve(response.data);
@@ -8161,7 +8185,7 @@ var Query = function () {
         this.filters = params.filters || [];
         this.items_promoted = params.items_promoted || [];
         this.aggregations = params.aggregations || [];
-        this.page = params.aggregations || QUERY_DEFAULT_PAGE;
+        this.page = params.page || QUERY_DEFAULT_PAGE;
         this.size = params.size || QUERY_DEFAULT_SIZE;
         this.from = params.from || QUERY_DEFAULT_FROM;
         this.results_enabled = params.results_enabled || true;
@@ -8181,6 +8205,13 @@ var Query = function () {
         key: "setQueryText",
         value: function setQueryText(text) {
             this.q = text;
+
+            return this;
+        }
+    }, {
+        key: "setPage",
+        value: function setPage(page) {
+            this.page = page;
 
             return this;
         }
@@ -8691,7 +8722,7 @@ var SORT_BY_LOCATION_MI_ASC = exports.SORT_BY_LOCATION_MI_ASC = {
 //# sourceMappingURL=apisearch.node.js.map
 
 /***/ }),
-/* 44 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8703,7 +8734,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _events = __webpack_require__(45);
+var _events = __webpack_require__(44);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -8805,7 +8836,7 @@ var Store = function (_EventEmitter) {
 exports.default = Store;
 
 /***/ }),
-/* 45 */
+/* 44 */
 /***/ (function(module, exports) {
 
 // Copyright Joyent, Inc. and other Node contributors.
