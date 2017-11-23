@@ -2,6 +2,7 @@
  * @jsx h
  */
 import { h, Component } from 'preact';
+import {paginationChangeAction} from "./paginationActions";
 
 /**
  * Pagination Component
@@ -10,14 +11,39 @@ class PaginationComponent extends Component {
     constructor() {
         super();
         this.state = {
-            currentPage: 2,
-            itemsOnPage: 6
+            currentPage: 1,
+            itemsOnPage: 7
         }
     }
 
     handleClick = (page) => {
-        this.setState({currentPage: page})
+        const {
+            environmentId,
+            currentQuery,
+            client
+        } = this.props;
+
+        /**
+         * Dispatch change page action
+         */
+        paginationChangeAction(
+            {
+                selectedPage: page
+            },
+            {
+                environmentId,
+                currentQuery,
+                client
+            }
+        );
     };
+
+    componentWillReceiveProps(props) {
+        const { page } = props.data.query;
+        this.setState({
+            currentPage: page ? page : 1
+        });
+    }
 
     render() {
         const {
@@ -31,31 +57,47 @@ class PaginationComponent extends Component {
         let itemsPerPage = parseInt(currentQuery.size);
         let totalHits = parseInt(data.total_hits);
 
-        // pages array
         let totalPages = Math.ceil(totalHits / itemsPerPage);
         let pages = totalPagesToArray(totalPages);
-        // pages array
 
-        const {itemsOnPage, currentPage} = this.state;
+        // -----------------------------------
+        // |
+        // |
+        // |
+        let {itemsOnPage, currentPage} = this.state;
+        const isTouchingLeft = currentPage < Math.ceil(itemsOnPage / 2);
 
         // pages spectre
-        let halfOfNumberOfItemsOnPage = Math.ceil(this.state.itemsOnPage / 2);
-        let currentPageLessHalf = Math.ceil(this.state.currentPage - halfOfNumberOfItemsOnPage);
+        const start = () => {
+            if (isTouchingLeft) {
+                return currentPage - (currentPage % itemsOnPage);
+            }
+            return currentPage - Math.ceil(itemsOnPage / 2);
+        };
 
-        let modulo = totalPages % this.state.currentPage;
+        const end = () => {
+            if (isTouchingLeft) {
+                return itemsOnPage / currentPage * currentPage;
+            }
+            return (currentPage - 1) + Math.ceil(itemsOnPage / 2);
+        };
 
-        console.log(totalPages, this.state.currentPage);
-        console.log(modulo)
+        console.log(currentPage % itemsOnPage);
 
         let pagesSpectre = pages.slice(
-            currentPageLessHalf + modulo,
-            currentPageLessHalf + this.state.itemsOnPage
+            start(),
+            end()
         );
         console.log(pagesSpectre);
-        // pages spectre
 
         return (
             <div className={`asui-pagination pagination-list ${containerClassName}`}>
+                <span
+                    className={`pagination-link`}
+                    onClick={() => this.handleClick(this.state.currentPage - 1)}
+                >
+                    Prev
+                </span>
                 {pagesSpectre.map(page => {
                     return (
                         <span
@@ -66,10 +108,19 @@ class PaginationComponent extends Component {
                         </span>
                     )
                 })}
+
+                <span
+                    className={`pagination-link`}
+                    onClick={() => this.handleClick(this.state.currentPage + 1)}
+                >
+                    Next
+                </span>
             </div>
         );
     }
 }
+
+
 
 function totalPagesToArray(totalPages) {
     let pages = [];

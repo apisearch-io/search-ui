@@ -1,5 +1,5 @@
 /**
- * Search actions
+ * SortBy actions
  */
 import cloneDeep from 'clone-deep';
 import container from '../../container';

@@ -1717,11 +1717,11 @@ var _ApisearchUI = __webpack_require__(14);
 
 var _ApisearchUI2 = _interopRequireDefault(_ApisearchUI);
 
-var _apisearch = __webpack_require__(44);
+var _apisearch = __webpack_require__(45);
 
 var _apisearch2 = _interopRequireDefault(_apisearch);
 
-var _Store = __webpack_require__(45);
+var _Store = __webpack_require__(46);
 
 var _Store2 = _interopRequireDefault(_Store);
 
@@ -3574,7 +3574,7 @@ var _constants = __webpack_require__(2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; } /**
-                                                                                                                                                                                                                   * Search actions
+                                                                                                                                                                                                                   * SortBy actions
                                                                                                                                                                                                                    */
 
 
@@ -5394,6 +5394,8 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
+var _paginationActions = __webpack_require__(44);
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -5415,17 +5417,41 @@ var PaginationComponent = function (_Component) {
         var _this = _possibleConstructorReturn(this, (PaginationComponent.__proto__ || Object.getPrototypeOf(PaginationComponent)).call(this));
 
         _this.handleClick = function (page) {
-            _this.setState({ currentPage: page });
+            var _this$props = _this.props,
+                environmentId = _this$props.environmentId,
+                currentQuery = _this$props.currentQuery,
+                client = _this$props.client;
+
+            /**
+             * Dispatch change page action
+             */
+
+            (0, _paginationActions.paginationChangeAction)({
+                selectedPage: page
+            }, {
+                environmentId: environmentId,
+                currentQuery: currentQuery,
+                client: client
+            });
         };
 
         _this.state = {
-            currentPage: 2,
-            itemsOnPage: 6
+            currentPage: 1,
+            itemsOnPage: 7
         };
         return _this;
     }
 
     _createClass(PaginationComponent, [{
+        key: 'componentWillReceiveProps',
+        value: function componentWillReceiveProps(props) {
+            var page = props.data.query.page;
+
+            this.setState({
+                currentPage: page ? page : 1
+            });
+        }
+    }, {
         key: 'render',
         value: function render() {
             var _this2 = this;
@@ -5439,32 +5465,52 @@ var PaginationComponent = function (_Component) {
             var itemsPerPage = parseInt(currentQuery.size);
             var totalHits = parseInt(data.total_hits);
 
-            // pages array
             var totalPages = Math.ceil(totalHits / itemsPerPage);
             var pages = totalPagesToArray(totalPages);
-            // pages array
 
+            // -----------------------------------
+            // |
+            // |
+            // |
             var _state = this.state,
                 itemsOnPage = _state.itemsOnPage,
                 currentPage = _state.currentPage;
 
+            var isTouchingLeft = currentPage < Math.ceil(itemsOnPage / 2);
+
             // pages spectre
+            var start = function start() {
+                if (isTouchingLeft) {
+                    return currentPage - currentPage % itemsOnPage;
+                }
+                return currentPage - Math.ceil(itemsOnPage / 2);
+            };
 
-            var halfOfNumberOfItemsOnPage = Math.ceil(this.state.itemsOnPage / 2);
-            var currentPageLessHalf = Math.ceil(this.state.currentPage - halfOfNumberOfItemsOnPage);
+            var end = function end() {
+                if (isTouchingLeft) {
+                    return itemsOnPage / currentPage * currentPage;
+                }
+                return currentPage - 1 + Math.ceil(itemsOnPage / 2);
+            };
 
-            var modulo = totalPages % this.state.currentPage;
+            console.log(currentPage % itemsOnPage);
 
-            console.log(totalPages, this.state.currentPage);
-            console.log(modulo);
-
-            var pagesSpectre = pages.slice(currentPageLessHalf + modulo, currentPageLessHalf + this.state.itemsOnPage);
+            var pagesSpectre = pages.slice(start(), end());
             console.log(pagesSpectre);
-            // pages spectre
 
             return (0, _preact.h)(
                 'div',
                 { className: 'asui-pagination pagination-list ' + containerClassName },
+                (0, _preact.h)(
+                    'span',
+                    {
+                        className: 'pagination-link',
+                        onClick: function onClick() {
+                            return _this2.handleClick(_this2.state.currentPage - 1);
+                        }
+                    },
+                    'Prev'
+                ),
                 pagesSpectre.map(function (page) {
                     return (0, _preact.h)(
                         'span',
@@ -5476,7 +5522,17 @@ var PaginationComponent = function (_Component) {
                         },
                         page
                     );
-                })
+                }),
+                (0, _preact.h)(
+                    'span',
+                    {
+                        className: 'pagination-link',
+                        onClick: function onClick() {
+                            return _this2.handleClick(_this2.state.currentPage + 1);
+                        }
+                    },
+                    'Next'
+                )
             );
         }
     }]);
@@ -5503,6 +5559,71 @@ exports.default = PaginationComponent;
 
 /***/ }),
 /* 44 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.paginationChangeAction = paginationChangeAction;
+
+var _cloneDeep = __webpack_require__(3);
+
+var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
+
+var _container = __webpack_require__(1);
+
+var _container2 = _interopRequireDefault(_container);
+
+var _constants = __webpack_require__(2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Pagination change
+ *
+ * This action is triggered when a sortBy filter changes
+ * receives two parameters:
+ *   @param queryOptions -> query given options
+ *   @param appOptions   -> current application options
+ *
+ * Finally dispatches an event with the search result and
+ * the modified query.
+ *   @returns {{
+ *     type: string,
+ *     payload: {
+ *        result,
+ *        updatedQuery
+ *     }
+ *   }}
+ */
+function paginationChangeAction(_ref, _ref2) {
+    var selectedPage = _ref.selectedPage;
+    var environmentId = _ref2.environmentId,
+        currentQuery = _ref2.currentQuery,
+        client = _ref2.client;
+
+    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+    clonedQuery.page = selectedPage;
+
+    client.search(clonedQuery, function (result) {
+        var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
+        dispatcher.dispatch({
+            type: 'RENDER_FETCHED_DATA',
+            payload: {
+                result: result,
+                updatedQuery: clonedQuery
+            }
+        });
+    });
+} /**
+   * Pagination actions
+   */
+
+/***/ }),
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -8833,7 +8954,7 @@ var SORT_BY_LOCATION_MI_ASC = exports.SORT_BY_LOCATION_MI_ASC = {
 //# sourceMappingURL=apisearch.node.js.map
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8845,7 +8966,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _events = __webpack_require__(46);
+var _events = __webpack_require__(47);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -8947,7 +9068,7 @@ var Store = function (_EventEmitter) {
 exports.default = Store;
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports) {
 
 // Copyright Joyent, Inc. and other Node contributors.
