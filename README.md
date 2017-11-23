@@ -137,9 +137,9 @@ const multipleFilterWidget = ui.widgets.multipleFilter({
     filterField: !string,
     aggregationField: ?string[filterField],
     applicationType: ?integer[8],
-    limit: ?integer[10],
+    fetchLimit: ?integer[5],      
+    viewLimit: ?integer[fetchLimit], // if default, show more won't be visible
     sortBy: ?string['_count:desc'],
-    showMoreActive: ?bool[true],
     classNames: {
         container: ?string,
         top: ?string,

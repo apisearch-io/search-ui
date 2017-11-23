@@ -167,7 +167,8 @@
                 name: 'year',
                 filterField: 'year',
                 applicationType: 8,
-                limit: 3,
+                fetchLimit: 12,
+                viewLimit: 10,
                 sortBy: ['_count', 'desc'],
                 template: {
                     top: '<i class="fa fa-cog"></i>&nbsp;Years',
@@ -188,7 +189,7 @@
                 filterField: 'genre_id',
                 aggregationField: 'genre_data',
                 applicationType: 8,
-                limit: 3,
+                fetchLimit: 3,
                 sortBy: ['_count', 'desc'],
                 template: {
                     top: '<i class="fa fa-user"></i>&nbsp; Genre',
@@ -209,7 +210,7 @@
                 filterField: 'rating',
                 sortBy: ['_term', 'desc'],
                 applicationType: 4,
-                limit: 5,
+                fetchLimit: 5,
                 showMoreActive: false,
                 template: {
                     top: '<i class="fa fa-star"></i>&nbsp; Rating',

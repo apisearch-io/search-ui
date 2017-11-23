@@ -100,9 +100,9 @@ class WidgetFactory {
         filterField,
         aggregationField,
         applicationType,
-        limit,
+        fetchLimit,
+        viewLimit,
         sortBy,
-        showMoreActive,
         classNames,
         template,
         formatData
@@ -113,9 +113,9 @@ class WidgetFactory {
             filterField={filterField}
             aggregationField={aggregationField}
             applicationType={applicationType}
-            limit={limit}
+            fetchLimit={fetchLimit}
+            viewLimit={viewLimit}
             sortBy={sortBy}
-            showMoreActive={showMoreActive}
             classNames={{
                 ...MultipleFilterComponent.defaultProps.classNames,
                 ...classNames

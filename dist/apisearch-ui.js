@@ -2460,9 +2460,9 @@ var WidgetFactory = function () {
                 filterField = _ref4.filterField,
                 aggregationField = _ref4.aggregationField,
                 applicationType = _ref4.applicationType,
-                limit = _ref4.limit,
+                fetchLimit = _ref4.fetchLimit,
+                viewLimit = _ref4.viewLimit,
                 sortBy = _ref4.sortBy,
-                showMoreActive = _ref4.showMoreActive,
                 classNames = _ref4.classNames,
                 template = _ref4.template,
                 formatData = _ref4.formatData;
@@ -2473,9 +2473,9 @@ var WidgetFactory = function () {
                 filterField: filterField,
                 aggregationField: aggregationField,
                 applicationType: applicationType,
-                limit: limit,
+                fetchLimit: fetchLimit,
+                viewLimit: viewLimit,
                 sortBy: sortBy,
-                showMoreActive: showMoreActive,
                 classNames: _extends({}, _MultipleFilterComponent2.default.defaultProps.classNames, classNames),
                 template: _extends({}, _MultipleFilterComponent2.default.defaultProps.template, template),
                 formatData: formatData
@@ -3676,6 +3676,7 @@ var MultipleFilterComponent = function (_Component) {
                 aggregationField = _this$props.aggregationField,
                 applicationType = _this$props.applicationType,
                 sortBy = _this$props.sortBy,
+                fetchLimit = _this$props.fetchLimit,
                 currentQuery = _this$props.currentQuery,
                 client = _this$props.client,
                 aggregations = _this$props.data.aggregations.aggregations;
@@ -3692,6 +3693,7 @@ var MultipleFilterComponent = function (_Component) {
                 filterField: filterField,
                 applicationType: applicationType,
                 sortBy: sortBy,
+                fetchLimit: fetchLimit,
                 aggregationField: aggregationField ? aggregationField : filterField,
 
                 filterValues: (0, _helpers.manageCurrentFilterItems)(selectedFilter, currentActiveFilterValues)
@@ -3707,18 +3709,19 @@ var MultipleFilterComponent = function (_Component) {
                 activeAggregations = _this$state.activeAggregations,
                 currentAggregations = _this$state.currentAggregations;
 
-            var limit = activeAggregations.length + currentAggregations.length;
-            _this.setState({ limit: limit });
+
+            var viewLimit = activeAggregations.length + currentAggregations.length;
+            _this.setState({ viewLimit: viewLimit });
         };
 
         _this.handleShowLess = function () {
-            var limit = _this.props.limit;
+            var viewLimit = _this.props.viewLimit;
 
-            _this.setState({ limit: limit });
+            _this.setState({ viewLimit: viewLimit });
         };
 
         _this.state = {
-            limit: 0,
+            viewLimit: 0,
             activeAggregations: [],
             currentAggregations: []
         };
@@ -3735,20 +3738,27 @@ var MultipleFilterComponent = function (_Component) {
                 aggregationField = _props.aggregationField,
                 applicationType = _props.applicationType,
                 sortBy = _props.sortBy,
-                limit = _props.limit,
+                fetchLimit = _props.fetchLimit,
+                viewLimit = _props.viewLimit,
                 currentQuery = _props.currentQuery;
 
+            /**
+             * Set view items limit
+             */
 
-            this.setState({ limit: limit });
+            var isViewLimitProperlySet = viewLimit && viewLimit < fetchLimit;
+            this.setState({
+                viewLimit: isViewLimitProperlySet ? viewLimit : fetchLimit
+            });
 
             /**
              * Dispatch action
              */
             (0, _multipleFilterActions.aggregationSetup)({
                 filterName: filterName,
-                filterField: filterField,
                 applicationType: applicationType,
                 sortBy: sortBy,
+                fetchLimit: fetchLimit,
                 aggregationField: aggregationField ? aggregationField : filterField
             }, {
                 environmentId: environmentId,
@@ -3791,7 +3801,8 @@ var MultipleFilterComponent = function (_Component) {
             var _this2 = this;
 
             var _props2 = this.props,
-                showMoreActive = _props2.showMoreActive,
+                viewLimit = _props2.viewLimit,
+                fetchLimit = _props2.fetchLimit,
                 _props2$classNames = _props2.classNames,
                 containerClassName = _props2$classNames.container,
                 topClassName = _props2$classNames.top,
@@ -3811,7 +3822,12 @@ var MultipleFilterComponent = function (_Component) {
 
             var allItems = [].concat(_toConsumableArray(this.state.activeAggregations), _toConsumableArray(this.state.currentAggregations));
             var allItemsLength = allItems.length;
-            var items = allItems.slice(0, this.state.limit);
+            var items = allItems.slice(0, this.state.viewLimit);
+
+            /**
+             * Check available view limit
+             */
+            var isViewLimitProperlySet = viewLimit && viewLimit < fetchLimit;
 
             return (0, _preact.h)(
                 "div",
@@ -3846,9 +3862,9 @@ var MultipleFilterComponent = function (_Component) {
                         );
                     })
                 ),
-                showMoreActive ? (0, _preact.h)(_ShowMoreComponent2.default, {
+                isViewLimitProperlySet ? (0, _preact.h)(_ShowMoreComponent2.default, {
                     allItemsLength: allItemsLength,
-                    currentLimit: this.state.limit,
+                    currentLimit: this.state.viewLimit,
                     handleShowMore: this.handleShowMore,
                     handleShowLess: this.handleShowLess,
                     showMoreContainerClassName: showMoreContainerClassName,
@@ -3865,9 +3881,9 @@ var MultipleFilterComponent = function (_Component) {
 MultipleFilterComponent.defaultProps = {
     aggregationField: null,
     applicationType: 8, // FILTER_MUST_ALL
-    limit: 10,
+    fetchLimit: 10,
+    viewLimit: null,
     sortBy: ['_term', 'desc'],
-    showMoreActive: true,
     classNames: {
         container: '',
         top: '',
@@ -3933,13 +3949,14 @@ function aggregationSetup(_ref, _ref2) {
     var filterName = _ref.filterName,
         aggregationField = _ref.aggregationField,
         applicationType = _ref.applicationType,
-        sortBy = _ref.sortBy;
+        sortBy = _ref.sortBy,
+        fetchLimit = _ref.fetchLimit;
     var environmentId = _ref2.environmentId,
         currentQuery = _ref2.currentQuery;
 
     var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
 
-    clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy);
+    clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy, fetchLimit);
 
     var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + "__" + environmentId);
     dispatcher.dispatch({
@@ -3976,7 +3993,8 @@ function filterAction(_ref3, _ref4) {
         aggregationField = _ref3.aggregationField,
         filterValues = _ref3.filterValues,
         applicationType = _ref3.applicationType,
-        sortBy = _ref3.sortBy;
+        sortBy = _ref3.sortBy,
+        fetchLimit = _ref3.fetchLimit;
     var environmentId = _ref4.environmentId,
         currentQuery = _ref4.currentQuery,
         client = _ref4.client;
@@ -3984,7 +4002,7 @@ function filterAction(_ref3, _ref4) {
     var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
 
     clonedQuery.filterBy(filterName, filterField, filterValues, applicationType, false, sortBy);
-    clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy);
+    clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy, fetchLimit);
 
     client.search(clonedQuery, function (result) {
         var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + "__" + environmentId);

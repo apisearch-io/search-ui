@@ -26,7 +26,8 @@ export function aggregationSetup(
         filterName,
         aggregationField,
         applicationType,
-        sortBy
+        sortBy,
+        fetchLimit
     },
     {
         environmentId,
@@ -39,7 +40,8 @@ export function aggregationSetup(
         filterName,
         aggregationField,
         applicationType,
-        sortBy
+        sortBy,
+        fetchLimit
     );
 
     const dispatcher = container
@@ -77,7 +79,8 @@ export function filterAction(
         aggregationField,
         filterValues,
         applicationType,
-        sortBy
+        sortBy,
+        fetchLimit
     },
     {
         environmentId,
@@ -99,7 +102,8 @@ export function filterAction(
         filterName,
         aggregationField,
         applicationType,
-        sortBy
+        sortBy,
+        fetchLimit
     );
 
     client.search(clonedQuery, result => {

@@ -16,7 +16,7 @@ class MultipleFilterComponent extends Component {
     constructor() {
         super();
         this.state = {
-            limit: 0,
+            viewLimit: 0,
             activeAggregations: [],
             currentAggregations: []
         }
@@ -30,11 +30,20 @@ class MultipleFilterComponent extends Component {
             aggregationField,
             applicationType,
             sortBy,
-            limit,
+            fetchLimit,
+            viewLimit,
             currentQuery
         } = this.props;
 
-        this.setState({limit});
+        /**
+         * Set view items limit
+         */
+        const isViewLimitProperlySet = (viewLimit && viewLimit < fetchLimit);
+        this.setState({
+            viewLimit: (isViewLimitProperlySet)
+                ? viewLimit
+                : fetchLimit
+        });
 
         /**
          * Dispatch action
@@ -42,9 +51,9 @@ class MultipleFilterComponent extends Component {
         aggregationSetup(
             {
                 filterName,
-                filterField,
                 applicationType,
                 sortBy,
+                fetchLimit,
                 aggregationField: aggregationField
                     ? aggregationField
                     : filterField
@@ -98,6 +107,7 @@ class MultipleFilterComponent extends Component {
             aggregationField,
             applicationType,
             sortBy,
+            fetchLimit,
             currentQuery,
             client,
             data: {
@@ -122,6 +132,7 @@ class MultipleFilterComponent extends Component {
                 filterField,
                 applicationType,
                 sortBy,
+                fetchLimit,
                 aggregationField: aggregationField
                     ? aggregationField
                     : filterField
@@ -140,19 +151,24 @@ class MultipleFilterComponent extends Component {
     };
 
     handleShowMore = () => {
-        const {activeAggregations, currentAggregations} = this.state;
-        const limit = activeAggregations.length + currentAggregations.length;
-        this.setState({limit})
+        const {
+            activeAggregations,
+            currentAggregations
+        } = this.state;
+
+        const viewLimit = activeAggregations.length + currentAggregations.length;
+        this.setState({viewLimit});
     };
 
     handleShowLess = () => {
-        const {limit} = this.props;
-        this.setState({limit});
+        const {viewLimit} = this.props;
+        this.setState({viewLimit});
     };
 
     render() {
         const {
-            showMoreActive,
+            viewLimit,
+            fetchLimit,
             classNames: {
                 container: containerClassName,
                 top: topClassName,
@@ -177,7 +193,12 @@ class MultipleFilterComponent extends Component {
             ...this.state.currentAggregations
         ];
         const allItemsLength = allItems.length;
-        const items = allItems.slice(0, this.state.limit);
+        const items = allItems.slice(0, this.state.viewLimit);
+
+        /**
+         * Check available view limit
+         */
+        const isViewLimitProperlySet = (viewLimit && viewLimit < fetchLimit);
 
         return (
             <div className={`asui-multipleFilter ${containerClassName}`}>
@@ -209,10 +230,10 @@ class MultipleFilterComponent extends Component {
                 })}
                 </div>
 
-                {(showMoreActive)
+                {(isViewLimitProperlySet)
                     ? <ShowMoreComponent
                         allItemsLength={allItemsLength}
-                        currentLimit={this.state.limit}
+                        currentLimit={this.state.viewLimit}
                         handleShowMore={this.handleShowMore}
                         handleShowLess={this.handleShowLess}
                         showMoreContainerClassName={showMoreContainerClassName}
@@ -228,9 +249,9 @@ class MultipleFilterComponent extends Component {
 MultipleFilterComponent.defaultProps = {
     aggregationField: null,
     applicationType: 8, // FILTER_MUST_ALL
-    limit: 10,
+    fetchLimit: 10,
+    viewLimit: null,
     sortBy: ['_term', 'desc'],
-    showMoreActive: true,
     classNames: {
         container: '',
         top: '',
