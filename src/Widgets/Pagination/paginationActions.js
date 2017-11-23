@@ -1,12 +1,12 @@
 /**
- * SortBy actions
+ * Pagination actions
  */
 import cloneDeep from 'clone-deep';
 import container from '../../container';
 import {APISEARCH_DISPATCHER} from "../../constants";
 
 /**
- * On change action
+ * Pagination change
  *
  * This action is triggered when a sortBy filter changes
  * receives two parameters:
@@ -23,9 +23,9 @@ import {APISEARCH_DISPATCHER} from "../../constants";
  *     }
  *   }}
  */
-export function onChangeSearchAction(
+export function paginationChangeAction(
     {
-        selectedOption
+        selectedPage
     },
     {
         environmentId,
@@ -34,13 +34,7 @@ export function onChangeSearchAction(
     }
 ) {
     const clonedQuery = cloneDeep(currentQuery);
-    const filterData = splitQueryValue(selectedOption);
-
-    clonedQuery.sortBy({
-        [`indexed_metadata.${filterData.field}`]: {
-            order: filterData.value
-        }
-    });
+    clonedQuery.page = selectedPage;
 
     client.search(clonedQuery, result => {
         const dispatcher = container
@@ -54,13 +48,4 @@ export function onChangeSearchAction(
             }
         })
     })
-}
-
-function splitQueryValue(string) {
-    let queryValue = string.split(':');
-
-    return {
-        field: queryValue[0],
-        value: queryValue[1]
-    }
 }
