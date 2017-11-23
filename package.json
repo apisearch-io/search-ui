@@ -1,6 +1,6 @@
 {
   "name": "apisearch-ui",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "Javascript User Interface of Apisearch.",
   "main": "./dist/apisearch-ui.node.js",
   "scripts": {
