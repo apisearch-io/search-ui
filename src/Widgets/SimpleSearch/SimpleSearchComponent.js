@@ -15,10 +15,16 @@ class SimpleSearchComponent extends Component {
 
     handleSearch = (e) => {
         const {
+            startSearchOn,
             environmentId,
             currentQuery,
             client
         } = this.props;
+
+        /**
+         * Search when string is bigger than {startSearchOn}
+         */
+        if (e.target.value.length < startSearchOn) return;
 
         /**
          * Dispatch input search action
@@ -62,6 +68,7 @@ class SimpleSearchComponent extends Component {
 SimpleSearchComponent.defaultProps = {
     placeholder: '',
     autofocus: false,
+    startSearchOn: 0,
     classNames: {
         container: '',
         input: ''

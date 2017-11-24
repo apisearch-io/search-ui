@@ -44,7 +44,9 @@ export function simpleSearchAction(
         .disableSuggestions()
     ;
 
-    client.search(clonedQuery, result => {
+    client.search(clonedQuery, (result, error) => {
+        if (error) return;
+
         const dispatcher = container
             .get(`${APISEARCH_DISPATCHER}__${environmentId}`)
         ;
@@ -80,7 +82,9 @@ export function suggestedSearchAction(
         .enableSuggestions()
     ;
 
-    client.search(clonedQuery, result => {
+    client.search(clonedQuery, (result, error) => {
+        if (error) return;
+
         const dispatcher = container
             .get(`${APISEARCH_DISPATCHER}__${environmentId}`)
         ;

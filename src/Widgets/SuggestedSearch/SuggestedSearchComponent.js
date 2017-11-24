@@ -24,7 +24,6 @@ import {
 class SuggestedSearchComponent extends Component {
     constructor() {
         super();
-
         this.state = {
             q: '',
             currentSuggestions: []
@@ -57,16 +56,25 @@ class SuggestedSearchComponent extends Component {
     }
 
     handleSearch = (e) => {
+        const {
+            startSearchOn,
+            environmentId,
+            currentQuery,
+            client
+        } = this.props;
+
         /**
          * Set the current query text
          */
         this.setState({q: e.target.value});
 
-        const {
-            environmentId,
-            currentQuery,
-            client
-        } = this.props;
+        /**
+         * Search when string is bigger than {startSearchOn}
+         */
+        if (e.target.value.length < startSearchOn) {
+            this.setState({currentSuggestions: []});
+            return;
+        }
 
         /**
          * Dispatch suggested search action
@@ -181,7 +189,7 @@ class SuggestedSearchComponent extends Component {
             null === e.relatedTarget ||
             false === e.relatedTarget.classList.contains('asui-suggestedSearch--box')
         ) {
-            this.setState({currentSuggestions: []})
+            this.setState({currentSuggestions: []});
         }
 
         return false;
@@ -254,6 +262,7 @@ class SuggestedSearchComponent extends Component {
 SuggestedSearchComponent.defaultProps = {
     placeholder: '',
     autofocus: false,
+    startSearchOn: 0,
     classNames: {
         container: '',
         input: '',

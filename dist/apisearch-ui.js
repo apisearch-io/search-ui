@@ -2397,6 +2397,7 @@ var WidgetFactory = function () {
         value: function simpleSearch(_ref) {
             var target = _ref.target,
                 placeholder = _ref.placeholder,
+                startSearchOn = _ref.startSearchOn,
                 autofocus = _ref.autofocus,
                 classNames = _ref.classNames;
 
@@ -2404,6 +2405,7 @@ var WidgetFactory = function () {
                 target: target,
                 placeholder: placeholder,
                 autofocus: autofocus,
+                startSearchOn: startSearchOn,
                 classNames: _extends({}, _SimpleSearchComponent2.default.defaultProps.classNames, classNames)
             });
         }
@@ -2418,6 +2420,7 @@ var WidgetFactory = function () {
             var target = _ref2.target,
                 placeholder = _ref2.placeholder,
                 autofocus = _ref2.autofocus,
+                startSearchOn = _ref2.startSearchOn,
                 classNames = _ref2.classNames,
                 template = _ref2.template;
 
@@ -2425,6 +2428,7 @@ var WidgetFactory = function () {
                 target: target,
                 placeholder: placeholder,
                 autofocus: autofocus,
+                startSearchOn: startSearchOn,
                 classNames: _extends({}, _SuggestedSearchComponent2.default.defaultProps.classNames, classNames),
                 template: template
             });
@@ -2610,14 +2614,20 @@ var SimpleSearchComponent = function (_Component) {
 
         return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = SimpleSearchComponent.__proto__ || Object.getPrototypeOf(SimpleSearchComponent)).call.apply(_ref, [this].concat(args))), _this), _this.handleSearch = function (e) {
             var _this$props = _this.props,
+                startSearchOn = _this$props.startSearchOn,
                 environmentId = _this$props.environmentId,
                 currentQuery = _this$props.currentQuery,
                 client = _this$props.client;
 
             /**
-             * Dispatch input search action
+             * Search when string is bigger than {startSearchOn}
              */
 
+            if (e.target.value.length < startSearchOn) return;
+
+            /**
+             * Dispatch input search action
+             */
             (0, _simpleSearchActions.simpleSearchAction)({ // queryOptions
                 queryText: e.target.value
             }, { // appOptions
@@ -2664,6 +2674,7 @@ var SimpleSearchComponent = function (_Component) {
 SimpleSearchComponent.defaultProps = {
     placeholder: '',
     autofocus: false,
+    startSearchOn: 0,
     classNames: {
         container: '',
         input: ''
@@ -2725,7 +2736,9 @@ function simpleSearchAction(_ref, _ref2) {
     clonedQuery.setQueryText(queryText);
 
     var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
-    client.search(clonedQuery, function (result) {
+    client.search(clonedQuery, function (result, error) {
+        if (error) return;
+
         dispatcher.dispatch({
             type: 'RENDER_FETCHED_DATA',
             payload: {
@@ -3006,20 +3019,29 @@ var SuggestedSearchComponent = function (_Component) {
         var _this = _possibleConstructorReturn(this, (SuggestedSearchComponent.__proto__ || Object.getPrototypeOf(SuggestedSearchComponent)).call(this));
 
         _this.handleSearch = function (e) {
-            /**
-             * Set the current query text
-             */
-            _this.setState({ q: e.target.value });
-
             var _this$props = _this.props,
+                startSearchOn = _this$props.startSearchOn,
                 environmentId = _this$props.environmentId,
                 currentQuery = _this$props.currentQuery,
                 client = _this$props.client;
 
             /**
-             * Dispatch suggested search action
+             * Set the current query text
              */
 
+            _this.setState({ q: e.target.value });
+
+            /**
+             * Search when string is bigger than {startSearchOn}
+             */
+            if (e.target.value.length < startSearchOn) {
+                _this.setState({ currentSuggestions: [] });
+                return;
+            }
+
+            /**
+             * Dispatch suggested search action
+             */
             (0, _suggestedSearchActions.suggestedSearchAction)({
                 queryText: e.target.value
             }, {
@@ -3206,6 +3228,7 @@ var SuggestedSearchComponent = function (_Component) {
 SuggestedSearchComponent.defaultProps = {
     placeholder: '',
     autofocus: false,
+    startSearchOn: 0,
     classNames: {
         container: '',
         input: '',
@@ -3384,7 +3407,9 @@ function simpleSearchAction(_ref, _ref2) {
 
     clonedQuery.setQueryText(queryText).enableResults().disableSuggestions();
 
-    client.search(clonedQuery, function (result) {
+    client.search(clonedQuery, function (result, error) {
+        if (error) return;
+
         var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
         dispatcher.dispatch({
             type: 'RENDER_FETCHED_DATA',
@@ -3413,7 +3438,9 @@ function suggestedSearchAction(_ref3, _ref4) {
 
     clonedQuery.setQueryText(queryText).disableResults().enableSuggestions();
 
-    client.search(clonedQuery, function (result) {
+    client.search(clonedQuery, function (result, error) {
+        if (error) return;
+
         var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
         dispatcher.dispatch({
             type: 'RENDER_FETCHED_DATA',
@@ -3596,7 +3623,9 @@ function onChangeSearchAction(_ref, _ref2) {
         order: filterData.value
     }));
 
-    client.search(clonedQuery, function (result) {
+    client.search(clonedQuery, function (result, error) {
+        if (error) return;
+
         var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
         dispatcher.dispatch({
             type: 'RENDER_FETCHED_DATA',
@@ -4004,7 +4033,9 @@ function filterAction(_ref3, _ref4) {
     clonedQuery.filterBy(filterName, filterField, filterValues, applicationType, false, sortBy);
     clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy, fetchLimit);
 
-    client.search(clonedQuery, function (result) {
+    client.search(clonedQuery, function (result, error) {
+        if (error) return;
+
         var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + "__" + environmentId);
         dispatcher.dispatch({
             type: 'RENDER_FETCHED_DATA',
@@ -5372,7 +5403,9 @@ function clearFiltersAction(_ref, _ref2) {
 
     clonedQuery.filters = [];
 
-    client.search(clonedQuery, function (result) {
+    client.search(clonedQuery, function (result, error) {
+        if (error) return;
+
         var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + "__" + environmentId);
         dispatcher.dispatch({
             type: 'RENDER_FETCHED_DATA',
@@ -5612,7 +5645,9 @@ function paginationChangeAction(_ref, _ref2) {
     var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
     clonedQuery.page = selectedPage;
 
-    client.search(clonedQuery, function (result) {
+    client.search(clonedQuery, function (result, error) {
+        if (error) return;
+
         var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
         dispatcher.dispatch({
             type: 'RENDER_FETCHED_DATA',
@@ -5702,7 +5737,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 13);
+/******/ 	return __webpack_require__(__webpack_require__.s = 14);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -6713,6 +6748,70 @@ module.exports = Cancel;
 "use strict";
 
 
+var Cancel = __webpack_require__(10);
+
+/**
+ * A `CancelToken` is an object that can be used to request cancellation of an operation.
+ *
+ * @class
+ * @param {Function} executor The executor function.
+ */
+function CancelToken(executor) {
+  if (typeof executor !== 'function') {
+    throw new TypeError('executor must be a function.');
+  }
+
+  var resolvePromise;
+  this.promise = new Promise(function promiseExecutor(resolve) {
+    resolvePromise = resolve;
+  });
+
+  var token = this;
+  executor(function cancel(message) {
+    if (token.reason) {
+      // Cancellation has already been requested
+      return;
+    }
+
+    token.reason = new Cancel(message);
+    resolvePromise(token.reason);
+  });
+}
+
+/**
+ * Throws a `Cancel` if cancellation has been requested.
+ */
+CancelToken.prototype.throwIfRequested = function throwIfRequested() {
+  if (this.reason) {
+    throw this.reason;
+  }
+};
+
+/**
+ * Returns an object that contains a new `CancelToken` and a function that, when called,
+ * cancels the `CancelToken`.
+ */
+CancelToken.source = function source() {
+  var cancel;
+  var token = new CancelToken(function executor(c) {
+    cancel = c;
+  });
+  return {
+    token: token,
+    cancel: cancel
+  };
+};
+
+module.exports = CancelToken;
+
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
@@ -6745,7 +6844,7 @@ var ItemUUID = function () {
 exports.default = ItemUUID;
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6806,7 +6905,7 @@ var Filter = function () {
 exports.default = Filter;
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6814,7 +6913,7 @@ exports.default = Filter;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-var _Apisearch = __webpack_require__(14);
+var _Apisearch = __webpack_require__(15);
 
 var _Apisearch2 = _interopRequireDefault(_Apisearch);
 
@@ -6840,9 +6939,10 @@ module.exports = function (_ref) {
     checkApiKey(apiKey);
 
     options = _extends({
-        endpoint: 'http://puntmig.net',
+        endpoint: '//puntmig.net',
         apiVersion: 'v1',
-        timeout: 10000
+        timeout: 10000,
+        overrideQueries: true
     }, options, {
         cache: _extends({
             inMemory: true,
@@ -6870,7 +6970,7 @@ function checkApiKey(apiKey) {
 }
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6882,17 +6982,21 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _HttpClient = __webpack_require__(15);
+var _HttpClient = __webpack_require__(16);
 
 var _HttpClient2 = _interopRequireDefault(_HttpClient);
 
-var _SecureObjectFactory = __webpack_require__(35);
+var _SecureObjectFactory = __webpack_require__(34);
 
 var _SecureObjectFactory2 = _interopRequireDefault(_SecureObjectFactory);
 
-var _QueryFactory = __webpack_require__(39);
+var _QueryFactory = __webpack_require__(38);
 
 var _QueryFactory2 = _interopRequireDefault(_QueryFactory);
+
+var _MemoryCache = __webpack_require__(43);
+
+var _MemoryCache2 = _interopRequireDefault(_MemoryCache);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6912,6 +7016,7 @@ var Apisearch = function () {
             endpoint = _ref$options.endpoint,
             apiVersion = _ref$options.apiVersion,
             timeout = _ref$options.timeout,
+            overrideQueries = _ref$options.overrideQueries,
             _ref$options$cache = _ref$options.cache,
             inMemoryCache = _ref$options$cache.inMemory,
             httpCacheTTL = _ref$options$cache.http;
@@ -6927,6 +7032,7 @@ var Apisearch = function () {
         this.endpoint = endpoint;
         this.httpCacheTTL = httpCacheTTL;
         this.timeout = timeout;
+        this.overrideQueries = overrideQueries;
 
         /**
          * Query
@@ -6937,7 +7043,7 @@ var Apisearch = function () {
         /**
          * HttpClient
          */
-        this.repository = new _HttpClient2.default(inMemoryCache);
+        this.repository = new _HttpClient2.default(inMemoryCache ? new _MemoryCache2.default() : false);
     }
 
     _createClass(Apisearch, [{
@@ -6951,6 +7057,16 @@ var Apisearch = function () {
                 }
             };
 
+            /**
+             * Abort any previous existing request
+             */
+            if (this.overrideQueries) {
+                this.repository.abort();
+            }
+
+            /**
+             * Start new request
+             */
             return this.repository.query(composedQuery).then(function (response) {
                 return callback(response, null);
             }).catch(function (error) {
@@ -6965,7 +7081,7 @@ var Apisearch = function () {
 exports.default = Apisearch;
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6975,17 +7091,14 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _MemoryCache = __webpack_require__(16);
-
-var _MemoryCache2 = _interopRequireDefault(_MemoryCache);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var axios = __webpack_require__(17);
+var CancelToken = __webpack_require__(11);
 
 /**
  * Http class
@@ -6999,7 +7112,8 @@ var HttpClient = function () {
     function HttpClient(cache) {
         _classCallCheck(this, HttpClient);
 
-        this.cache = cache ? new _MemoryCache2.default() : null;
+        this.cache = cache;
+        this.cancelToken = CancelToken.source();
     }
 
     /**
@@ -7010,12 +7124,14 @@ var HttpClient = function () {
 
 
     _createClass(HttpClient, [{
-        key: "query",
+        key: 'query',
         value: function query(_query) {
-            // check if query exists in cache store
-            // return promise with the cached value if key exists
-            // if not exists, fetch the data
-            if (this.cache !== null) {
+            /**
+             * Check if query exists in cache store
+             * return promise with the cached value if key exists
+             * if not exists, fetch the data
+             */
+            if (this.cache) {
                 var cachedResponse = this.cache.get(_query.url);
                 if (cachedResponse) {
                     return new Promise(function (resolve) {
@@ -7034,24 +7150,47 @@ var HttpClient = function () {
          */
 
     }, {
-        key: "fetchData",
+        key: 'fetchData',
         value: function fetchData(query) {
-            var self = this;
+            /**
+             * Attach new cancellation token
+             */
+            query.options = _extends({}, query.options, {
+                cancelToken: this.cancelToken.token
+            });
 
+            /**
+             * Request promise
+             */
+            var self = this;
             return new Promise(function (resolve, reject) {
                 axios.get(query.url, query.options).then(function (response) {
-                    // check if cache is enabled
-                    // set the query as a cache key
-                    // and the valid response as a cache value
-                    if (self.cache !== null) {
+                    /**
+                     * Check if cache is enabled
+                     * set the query as a cache key
+                     * and the valid response as a cache value
+                     */
+                    if (self.cache) {
                         self.cache.set(query.url, response.data);
                     }
 
                     return resolve(response.data);
-                }).catch(function (error) {
-                    return reject(error);
+                }).catch(function (thrown) {
+                    return reject(thrown);
                 });
             });
+        }
+
+        /**
+         * Abort current request
+         * And regenerate the cancellation token
+         */
+
+    }, {
+        key: 'abort',
+        value: function abort() {
+            this.cancelToken.cancel();
+            this.cancelToken = CancelToken.source();
         }
     }]);
 
@@ -7059,64 +7198,6 @@ var HttpClient = function () {
 }();
 
 exports.default = HttpClient;
-
-/***/ }),
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * Cache class
- */
-var MemoryCache = function () {
-    function MemoryCache() {
-        _classCallCheck(this, MemoryCache);
-
-        this.cache = {};
-        this.size = 0;
-
-        return this;
-    }
-
-    _createClass(MemoryCache, [{
-        key: "set",
-        value: function set(key, value) {
-            this.cache = _extends({}, this.cache, _defineProperty({}, key, value));
-            this.size = this.size + 1;
-
-            return this;
-        }
-    }, {
-        key: "get",
-        value: function get(key) {
-            return this.cache[key];
-        }
-    }, {
-        key: "clear",
-        value: function clear() {
-            this.cache = {};
-            this.size = 0;
-        }
-    }]);
-
-    return MemoryCache;
-}();
-
-exports.default = MemoryCache;
 
 /***/ }),
 /* 17 */
@@ -7162,14 +7243,14 @@ axios.create = function create(instanceConfig) {
 
 // Expose Cancel & CancelToken
 axios.Cancel = __webpack_require__(10);
-axios.CancelToken = __webpack_require__(33);
+axios.CancelToken = __webpack_require__(11);
 axios.isCancel = __webpack_require__(9);
 
 // Expose all/spread
 axios.all = function all(promises) {
   return Promise.all(promises);
 };
-axios.spread = __webpack_require__(34);
+axios.spread = __webpack_require__(33);
 
 module.exports = axios;
 
@@ -7895,70 +7976,6 @@ module.exports = function combineURLs(baseURL, relativeURL) {
 "use strict";
 
 
-var Cancel = __webpack_require__(10);
-
-/**
- * A `CancelToken` is an object that can be used to request cancellation of an operation.
- *
- * @class
- * @param {Function} executor The executor function.
- */
-function CancelToken(executor) {
-  if (typeof executor !== 'function') {
-    throw new TypeError('executor must be a function.');
-  }
-
-  var resolvePromise;
-  this.promise = new Promise(function promiseExecutor(resolve) {
-    resolvePromise = resolve;
-  });
-
-  var token = this;
-  executor(function cancel(message) {
-    if (token.reason) {
-      // Cancellation has already been requested
-      return;
-    }
-
-    token.reason = new Cancel(message);
-    resolvePromise(token.reason);
-  });
-}
-
-/**
- * Throws a `Cancel` if cancellation has been requested.
- */
-CancelToken.prototype.throwIfRequested = function throwIfRequested() {
-  if (this.reason) {
-    throw this.reason;
-  }
-};
-
-/**
- * Returns an object that contains a new `CancelToken` and a function that, when called,
- * cancels the `CancelToken`.
- */
-CancelToken.source = function source() {
-  var cancel;
-  var token = new CancelToken(function executor(c) {
-    cancel = c;
-  });
-  return {
-    token: token,
-    cancel: cancel
-  };
-};
-
-module.exports = CancelToken;
-
-
-/***/ }),
-/* 34 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
 /**
  * Syntactic sugar for invoking a function and expanding an array for arguments.
  *
@@ -7987,7 +8004,7 @@ module.exports = function spread(callback) {
 
 
 /***/ }),
-/* 35 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7999,7 +8016,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _ItemUUID = __webpack_require__(11);
+var _ItemUUID = __webpack_require__(12);
 
 var _ItemUUID2 = _interopRequireDefault(_ItemUUID);
 
@@ -8007,15 +8024,15 @@ var _Coordinate = __webpack_require__(1);
 
 var _Coordinate2 = _interopRequireDefault(_Coordinate);
 
-var _CoordinateAndDistance = __webpack_require__(36);
+var _CoordinateAndDistance = __webpack_require__(35);
 
 var _CoordinateAndDistance2 = _interopRequireDefault(_CoordinateAndDistance);
 
-var _Square = __webpack_require__(37);
+var _Square = __webpack_require__(36);
 
 var _Square2 = _interopRequireDefault(_Square);
 
-var _Polygon = __webpack_require__(38);
+var _Polygon = __webpack_require__(37);
 
 var _Polygon2 = _interopRequireDefault(_Polygon);
 
@@ -8068,7 +8085,7 @@ var SecureObjectFactory = function () {
 exports.default = SecureObjectFactory;
 
 /***/ }),
-/* 36 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8138,7 +8155,7 @@ var CoordinateAndDistance = function (_AbstractLocationRang) {
 exports.default = CoordinateAndDistance;
 
 /***/ }),
-/* 37 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8208,7 +8225,7 @@ var Square = function (_AbstractLocationRang) {
 exports.default = Square;
 
 /***/ }),
-/* 38 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8283,7 +8300,7 @@ var Polygon = function (_AbstractLocationRang) {
 exports.default = Polygon;
 
 /***/ }),
-/* 39 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8297,11 +8314,11 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _Query = __webpack_require__(40);
+var _Query = __webpack_require__(39);
 
 var _Query2 = _interopRequireDefault(_Query);
 
-var _Filter = __webpack_require__(12);
+var _Filter = __webpack_require__(13);
 
 var _Filter2 = _interopRequireDefault(_Filter);
 
@@ -8391,7 +8408,7 @@ var QueryFactory = function () {
 exports.default = QueryFactory;
 
 /***/ }),
-/* 40 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8406,7 +8423,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _ItemUUID = __webpack_require__(11);
+var _ItemUUID = __webpack_require__(12);
 
 var _ItemUUID2 = _interopRequireDefault(_ItemUUID);
 
@@ -8418,15 +8435,15 @@ var _TypeChecker = __webpack_require__(3);
 
 var _TypeChecker2 = _interopRequireDefault(_TypeChecker);
 
-var _User = __webpack_require__(41);
+var _User = __webpack_require__(40);
 
 var _User2 = _interopRequireDefault(_User);
 
-var _Aggregation = __webpack_require__(42);
+var _Aggregation = __webpack_require__(41);
 
 var _Aggregation2 = _interopRequireDefault(_Aggregation);
 
-var _Filter = __webpack_require__(12);
+var _Filter = __webpack_require__(13);
 
 var _Filter2 = _interopRequireDefault(_Filter);
 
@@ -8434,7 +8451,7 @@ var _AbstractLocationRange = __webpack_require__(2);
 
 var _AbstractLocationRange2 = _interopRequireDefault(_AbstractLocationRange);
 
-var _SortBy = __webpack_require__(43);
+var _SortBy = __webpack_require__(42);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -8876,7 +8893,7 @@ var Query = function () {
 exports.default = Query;
 
 /***/ }),
-/* 41 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8900,7 +8917,7 @@ var User = function User(id) {
 exports.default = User;
 
 /***/ }),
-/* 42 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8940,7 +8957,7 @@ var Aggregation = function Aggregation(name, field, applicationType, filterType,
 exports.default = Aggregation;
 
 /***/ }),
-/* 43 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8995,6 +9012,64 @@ var SORT_BY_LOCATION_MI_ASC = exports.SORT_BY_LOCATION_MI_ASC = {
         'unit': 'mi'
     }
 };
+
+/***/ }),
+/* 43 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * Cache class
+ */
+var MemoryCache = function () {
+    function MemoryCache() {
+        _classCallCheck(this, MemoryCache);
+
+        this.cache = {};
+        this.size = 0;
+
+        return this;
+    }
+
+    _createClass(MemoryCache, [{
+        key: "set",
+        value: function set(key, value) {
+            this.cache = _extends({}, this.cache, _defineProperty({}, key, value));
+            this.size = this.size + 1;
+
+            return this;
+        }
+    }, {
+        key: "get",
+        value: function get(key) {
+            return this.cache[key];
+        }
+    }, {
+        key: "clear",
+        value: function clear() {
+            this.cache = {};
+            this.size = 0;
+        }
+    }]);
+
+    return MemoryCache;
+}();
+
+exports.default = MemoryCache;
 
 /***/ })
 /******/ ]);

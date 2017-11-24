@@ -25,7 +25,8 @@ describe('<MultipleFilterComponent />', () => {
         filterField: 'year_id',
         aggregationField: 'year_data',
         applicationType: 4,
-        limit: 2,
+        fetchLimit: 6,
+        viewLimit: 3,
         showMoreActive: true,
         classNames: {
             container: 'container-custom-class',

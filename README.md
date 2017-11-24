@@ -78,6 +78,7 @@ const simpleSearchWidget = ui.widgets.simpleSearch({
   target: !string,
   placeholder: ?string,
   autofocus: ?bool[false],
+  startSearchOn: ?integer[0],
   classNames: {
       container: ?string,
       input: ?string

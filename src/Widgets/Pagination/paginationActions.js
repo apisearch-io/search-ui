@@ -36,7 +36,9 @@ export function paginationChangeAction(
     const clonedQuery = cloneDeep(currentQuery);
     clonedQuery.page = selectedPage;
 
-    client.search(clonedQuery, result => {
+    client.search(clonedQuery, (result, error) => {
+        if (error) return;
+
         const dispatcher = container
             .get(`${APISEARCH_DISPATCHER}__${environmentId}`)
         ;

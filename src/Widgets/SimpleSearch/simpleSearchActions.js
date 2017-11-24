@@ -42,7 +42,9 @@ export function simpleSearchAction(
     const dispatcher = container
         .get(`${APISEARCH_DISPATCHER}__${environmentId}`)
     ;
-    client.search(clonedQuery, result => {
+    client.search(clonedQuery, (result, error) => {
+        if (error) return;
+
         dispatcher.dispatch({
             type: 'RENDER_FETCHED_DATA',
             payload: {

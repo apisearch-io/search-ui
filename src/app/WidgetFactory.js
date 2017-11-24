@@ -37,6 +37,7 @@ class WidgetFactory {
     static simpleSearch({
         target,
         placeholder,
+        startSearchOn,
         autofocus,
         classNames
     }) {
@@ -44,6 +45,7 @@ class WidgetFactory {
             target={target}
             placeholder={placeholder}
             autofocus={autofocus}
+            startSearchOn={startSearchOn}
             classNames={{
                 ...SimpleSearchComponent.defaultProps.classNames,
                 ...classNames
@@ -58,6 +60,7 @@ class WidgetFactory {
         target,
         placeholder,
         autofocus,
+        startSearchOn,
         classNames,
         template
     }) {
@@ -65,6 +68,7 @@ class WidgetFactory {
             target={target}
             placeholder={placeholder}
             autofocus={autofocus}
+            startSearchOn={startSearchOn}
             classNames={{
                 ...SuggestedSearchComponent.defaultProps.classNames,
                 ...classNames

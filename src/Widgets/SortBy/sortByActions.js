@@ -42,7 +42,9 @@ export function onChangeSearchAction(
         }
     });
 
-    client.search(clonedQuery, result => {
+    client.search(clonedQuery, (result, error) => {
+        if (error) return;
+
         const dispatcher = container
             .get(`${APISEARCH_DISPATCHER}__${environmentId}`)
         ;

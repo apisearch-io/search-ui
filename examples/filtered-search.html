@@ -167,8 +167,8 @@
                 name: 'year',
                 filterField: 'year',
                 applicationType: 8,
-                fetchLimit: 12,
-                viewLimit: 10,
+                fetchLimit: 10,
+                viewLimit: 3,
                 sortBy: ['_count', 'desc'],
                 template: {
                     top: '<i class="fa fa-cog"></i>&nbsp;Years',
@@ -189,7 +189,8 @@
                 filterField: 'genre_id',
                 aggregationField: 'genre_data',
                 applicationType: 8,
-                fetchLimit: 3,
+                fetchLimit: 10,
+                viewLimit: 3,
                 sortBy: ['_count', 'desc'],
                 template: {
                     top: '<i class="fa fa-user"></i>&nbsp; Genre',
@@ -251,7 +252,7 @@
             }),
             ui.widgets.result({
                 target: '.result',
-                itemsPerPage: 6,
+                itemsPerPage: 9,
                 highlightsEnabled: true,
                 template: {
                     itemsList: document.getElementById('result-search-tpl').text,

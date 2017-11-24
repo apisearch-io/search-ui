@@ -31,6 +31,30 @@ export const initialDataProvider = {
                             id: 2001,
                             name: 'Year 2001'
                         }
+                    },
+                    {
+                        n: 16,
+                        used: null,
+                        values: {
+                            id: 1999,
+                            name: 'Year 2003'
+                        }
+                    },
+                    {
+                        n: 33,
+                        used: null,
+                        values: {
+                            id: 2000,
+                            name: 'Year 2004'
+                        }
+                    },
+                    {
+                        n: 20,
+                        used: null,
+                        values: {
+                            id: 2001,
+                            name: 'Year 2005'
+                        }
                     }
                 ]
             }
@@ -73,6 +97,30 @@ export const updatedDataProvider = {
                         values: {
                             id: 2001,
                             name: 'Year 2001'
+                        }
+                    },
+                    {
+                        n: 16,
+                        used: null,
+                        values: {
+                            id: 1999,
+                            name: 'Year 2003'
+                        }
+                    },
+                    {
+                        n: 33,
+                        used: null,
+                        values: {
+                            id: 2000,
+                            name: 'Year 2004'
+                        }
+                    },
+                    {
+                        n: 20,
+                        used: null,
+                        values: {
+                            id: 2001,
+                            name: 'Year 2005'
                         }
                     }
                 ]
