@@ -2557,13 +2557,15 @@ var WidgetFactory = function () {
         value: function pagination(_ref8) {
             var target = _ref8.target,
                 padding = _ref8.padding,
+                goFirstLast = _ref8.goFirstLast,
                 classNames = _ref8.classNames,
                 template = _ref8.template;
 
             return (0, _preact.h)(_PaginationComponent2.default, {
                 target: target,
                 padding: padding,
-                classNames: _extends({}, _InformationComponent2.default.defaultProps.classNames, classNames),
+                goFirstLast: goFirstLast,
+                classNames: _extends({}, _PaginationComponent2.default.defaultProps.classNames, classNames),
                 template: _extends({}, _PaginationComponent2.default.defaultProps.template, template)
             });
         }
@@ -5511,6 +5513,7 @@ var PaginationComponent = function (_Component) {
 
             var _props = this.props,
                 padding = _props.padding,
+                goFirstLast = _props.goFirstLast,
                 _props$classNames = _props.classNames,
                 containerClassName = _props$classNames.container,
                 itemClassName = _props$classNames.item,
@@ -5558,14 +5561,16 @@ var PaginationComponent = function (_Component) {
                 "ul",
                 { className: "asui-pagination " + containerClassName },
                 (0, _preact.h)(NavigationComponent, {
-                    classNames: "asui-pagination--item " + firstClassName,
+                    isVisible: goFirstLast,
+                    classNames: "asui-pagination--item " + firstClassName + " " + (currentQueryPage === 1 ? disabledClassName : ''),
                     template: firstTemplate,
                     handleClick: function handleClick() {
                         return _this2.handleClick(1);
                     }
                 }),
                 (0, _preact.h)(NavigationComponent, {
-                    classNames: "asui-pagination--item " + previousClassName,
+                    isVisible: true,
+                    classNames: "asui-pagination--item " + previousClassName + " " + (currentQueryPage === 1 ? disabledClassName : ''),
                     template: previousTemplate,
                     handleClick: function handleClick() {
                         return _this2.handleClick(currentQueryPage - 1);
@@ -5582,19 +5587,21 @@ var PaginationComponent = function (_Component) {
                         },
                         (0, _preact.h)(_Template2.default, {
                             template: itemTemplate,
-                            data: { item: page }
+                            data: { page: page }
                         })
                     );
                 }),
                 (0, _preact.h)(NavigationComponent, {
-                    classNames: "asui-pagination--item " + nextClassName,
+                    isVisible: true,
+                    classNames: "asui-pagination--item " + nextClassName + " " + (currentQueryPage === totalPages ? disabledClassName : ''),
                     template: nextTemplate,
                     handleClick: function handleClick() {
                         return _this2.handleClick(currentQueryPage + 1);
                     }
                 }),
                 (0, _preact.h)(NavigationComponent, {
-                    classNames: "asui-pagination--item " + lastClassName,
+                    isVisible: goFirstLast,
+                    classNames: "asui-pagination--item " + lastClassName + " " + (currentQueryPage === totalPages ? disabledClassName : ''),
                     template: lastTemplate,
                     handleClick: function handleClick() {
                         return _this2.handleClick(totalPages);
@@ -5608,23 +5615,24 @@ var PaginationComponent = function (_Component) {
 }(_preact.Component);
 
 function NavigationComponent(_ref2) {
-    var classNames = _ref2.classNames,
+    var isVisible = _ref2.isVisible,
+        classNames = _ref2.classNames,
         template = _ref2.template,
         handleClick = _ref2.handleClick;
 
-    return (0, _preact.h)(
+    return isVisible ? (0, _preact.h)(
         "li",
         {
             className: classNames,
             onClick: handleClick
         },
         (0, _preact.h)(_Template2.default, { template: template })
-    );
+    ) : null;
 }
 
 PaginationComponent.defaultProps = {
     padding: 3,
-    showFirstLast: false,
+    goFirstLast: false,
     classNames: {
         container: '',
         item: '',
@@ -5636,7 +5644,7 @@ PaginationComponent.defaultProps = {
         last: ''
     },
     template: {
-        item: '{{item}}',
+        item: '{{page}}',
         next: 'Next >',
         previous: '< Prev',
         first: '<< First',

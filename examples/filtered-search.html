@@ -20,6 +20,12 @@
         .asui-multipleFilter--item:hover {
             background: whitesmoke;
         }
+        .asui-pagination--item {
+            cursor: pointer
+        }
+        .disabled {
+            display: none
+        }
     </style>
 </head>
 
@@ -261,18 +267,23 @@
             ui.widgets.pagination({
                 target: '.pagination',
                 padding: 2,
+                goFirstLast: true,
                 classNames: {
                     container: 'pagination-list',
                     item: 'pagination-link',
                     active: 'is-current',
+
                     next: 'pagination-link',
                     previous: 'pagination-link',
+
                     first: 'pagination-link',
                     last: 'pagination-link',
                 },
                 template: {
-                    previous: '<i class="fa fa-caret-left"></i> Prev',
-                    next: 'Next <i class="fa fa-caret-right"></i>'
+                    previous: '<i class="fa fa-caret-left"></i>',
+                    next: '<i class="fa fa-caret-right"></i>',
+                    first: '<i class="fa fa-caret-left"></i><i class="fa fa-caret-left"></i>',
+                    last: '<i class="fa fa-caret-right"></i><i class="fa fa-caret-right"></i>'
                 }
             })
         );

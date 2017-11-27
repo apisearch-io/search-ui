@@ -53,6 +53,7 @@ class PaginationComponent extends Component {
     render() {
         const {
             padding,
+            goFirstLast,
             classNames: {
                 container: containerClassName,
                 item: itemClassName,
@@ -105,12 +106,14 @@ class PaginationComponent extends Component {
         return (
             <ul className={`asui-pagination ${containerClassName}`}>
                 <NavigationComponent
-                    classNames={`asui-pagination--item ${firstClassName}`}
+                    isVisible={goFirstLast}
+                    classNames={`asui-pagination--item ${firstClassName} ${(currentQueryPage === 1) ? disabledClassName : ''}`}
                     template={firstTemplate}
                     handleClick={() => this.handleClick(1)}
                 />
                 <NavigationComponent
-                    classNames={`asui-pagination--item ${previousClassName}`}
+                    isVisible={true}
+                    classNames={`asui-pagination--item ${previousClassName} ${(currentQueryPage === 1) ? disabledClassName : ''}`}
                     template={previousTemplate}
                     handleClick={() => this.handleClick(currentQueryPage - 1)}
                 />
@@ -122,18 +125,20 @@ class PaginationComponent extends Component {
                     >
                         <Template
                             template={itemTemplate}
-                            data={{item: page}}
+                            data={{page: page}}
                         />
                     </li>
                 ))}
 
                 <NavigationComponent
-                    classNames={`asui-pagination--item ${nextClassName}`}
+                    isVisible={true}
+                    classNames={`asui-pagination--item ${nextClassName} ${(currentQueryPage === totalPages) ? disabledClassName : ''}`}
                     template={nextTemplate}
                     handleClick={() => this.handleClick(currentQueryPage + 1)}
                 />
                 <NavigationComponent
-                    classNames={`asui-pagination--item ${lastClassName}`}
+                    isVisible={goFirstLast}
+                    classNames={`asui-pagination--item ${lastClassName} ${(currentQueryPage === totalPages) ? disabledClassName : ''}`}
                     template={lastTemplate}
                     handleClick={() => this.handleClick(totalPages)}
                 />
@@ -143,21 +148,24 @@ class PaginationComponent extends Component {
 }
 
 function NavigationComponent({
+    isVisible,
     classNames,
     template,
     handleClick
 }) {
-    return <li
-        className={classNames}
-        onClick={handleClick}
-    >
-        <Template template={template} />
-    </li>;
+    return (isVisible)
+        ? <li
+            className={classNames}
+            onClick={handleClick}
+        >
+            <Template template={template} />
+        </li> : null
+    ;
 }
 
 PaginationComponent.defaultProps = {
     padding: 3,
-    showFirstLast: false,
+    goFirstLast: false,
     classNames: {
         container: '',
         item: '',
@@ -169,7 +177,7 @@ PaginationComponent.defaultProps = {
         last: ''
     },
     template: {
-        item: '{{item}}',
+        item: '{{page}}',
         next: 'Next >',
         previous: '< Prev',
         first: '<< First',

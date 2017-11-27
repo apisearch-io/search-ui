@@ -200,14 +200,16 @@ class WidgetFactory {
     static pagination({
         target,
         padding,
+        goFirstLast,
         classNames,
         template
     }) {
         return <PaginationComponent
             target={target}
             padding={padding}
+            goFirstLast={goFirstLast}
             classNames={{
-                ...InformationComponent.defaultProps.classNames,
+                ...PaginationComponent.defaultProps.classNames,
                 ...classNames
             }}
             template={{
