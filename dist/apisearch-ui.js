@@ -2556,10 +2556,12 @@ var WidgetFactory = function () {
         key: "pagination",
         value: function pagination(_ref8) {
             var target = _ref8.target,
+                padding = _ref8.padding,
                 classNames = _ref8.classNames;
 
             return (0, _preact.h)(_PaginationComponent2.default, {
                 target: target,
+                padding: padding,
                 classNames: _extends({}, _InformationComponent2.default.defaultProps.classNames, classNames)
             });
         }
@@ -5474,8 +5476,7 @@ var PaginationComponent = function (_Component) {
         };
 
         _this.state = {
-            currentPage: 1,
-            shownPages: 4
+            currentPage: 1
         };
         return _this;
     }
@@ -5495,45 +5496,31 @@ var PaginationComponent = function (_Component) {
             var _this2 = this;
 
             var _props = this.props,
+                padding = _props.padding,
                 containerClassName = _props.classNames.container,
                 currentQuery = _props.currentQuery,
                 data = _props.data;
+            var currentPage = this.state.currentPage;
 
+            /**
+             * Get Total pages
+             */
 
-            var itemsPerPage = parseInt(currentQuery.size);
-            var totalHits = parseInt(data.total_hits);
-
-            var totalPages = Math.ceil(totalHits / itemsPerPage);
+            var totalPages = Math.ceil(parseInt(data.total_hits) / parseInt(currentQuery.size));
             var pages = totalPagesToArray(totalPages);
 
-            // -----------------------------------
-
-            var _state = this.state,
-                shownPages = _state.shownPages,
-                currentPage = _state.currentPage;
-
-            var isTouchingLeft = currentPage <= Math.round(shownPages / 2);
-            var isTouchingRight = currentPage + Math.round(shownPages / 2) > totalPages;
-
-            // pages spectre
-            var start = function start() {
-                if (isTouchingLeft) {
-                    return currentPage - currentPage % shownPages;
-                }
-                return currentPage - Math.round(shownPages / 2);
+            /**
+             *  Get pages spectre
+             */
+            var paginationSettings = {
+                totalPages: totalPages,
+                padding: padding,
+                currentPage: currentPage,
+                spectreSize: padding * 2 + 1,
+                isTouchingLeft: currentPage <= padding + 1,
+                isTouchingRight: currentPage + padding >= totalPages
             };
-
-            var end = function end() {
-                if (isTouchingLeft) {
-                    return shownPages / currentPage * currentPage;
-                }
-                if (isTouchingRight) {
-                    return currentPage / shownPages * (currentPage / shownPages);
-                }
-                return currentPage + Math.round(shownPages / 2);
-            };
-
-            var pagesSpectre = pages.slice(start(), end());
+            var pagesSpectre = pages.slice(start(paginationSettings), end(paginationSettings));
 
             return (0, _preact.h)(
                 'div',
@@ -5543,7 +5530,7 @@ var PaginationComponent = function (_Component) {
                     {
                         className: 'pagination-link',
                         onClick: function onClick() {
-                            return _this2.handleClick(_this2.state.currentPage - 1);
+                            return _this2.handleClick(currentPage - 1);
                         }
                     },
                     'Prev'
@@ -5565,7 +5552,7 @@ var PaginationComponent = function (_Component) {
                     {
                         className: 'pagination-link',
                         onClick: function onClick() {
-                            return _this2.handleClick(_this2.state.currentPage + 1);
+                            return _this2.handleClick(currentPage + 1);
                         }
                     },
                     'Next'
@@ -5579,14 +5566,51 @@ var PaginationComponent = function (_Component) {
 
 function totalPagesToArray(totalPages) {
     var pages = [];
-    for (var index = 1; index < totalPages; index++) {
+    for (var index = 1; index <= totalPages; index++) {
         pages.push(index);
     }
 
     return pages;
 }
 
+function start(_ref) {
+    var totalPages = _ref.totalPages,
+        padding = _ref.padding,
+        currentPage = _ref.currentPage,
+        spectreSize = _ref.spectreSize,
+        isTouchingLeft = _ref.isTouchingLeft,
+        isTouchingRight = _ref.isTouchingRight;
+
+    if (isTouchingLeft) {
+        return currentPage - currentPage % spectreSize;
+    }
+    if (isTouchingRight) {
+        return currentPage - (spectreSize - totalPages % currentPage);
+    }
+
+    return currentPage - (padding + 1);
+}
+
+function end(_ref2) {
+    var totalPages = _ref2.totalPages,
+        padding = _ref2.padding,
+        currentPage = _ref2.currentPage,
+        spectreSize = _ref2.spectreSize,
+        isTouchingLeft = _ref2.isTouchingLeft,
+        isTouchingRight = _ref2.isTouchingRight;
+
+    if (isTouchingLeft) {
+        return spectreSize;
+    }
+    if (isTouchingRight) {
+        return totalPages;
+    }
+
+    return currentPage + padding;
+}
+
 PaginationComponent.defaultProps = {
+    padding: 3,
     classNames: {
         container: ''
     }

@@ -199,10 +199,12 @@ class WidgetFactory {
      */
     static pagination({
         target,
+        padding,
         classNames
     }) {
         return <PaginationComponent
             target={target}
+            padding={padding}
             classNames={{
                 ...InformationComponent.defaultProps.classNames,
                 ...classNames

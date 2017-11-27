@@ -11,8 +11,7 @@ class PaginationComponent extends Component {
     constructor() {
         super();
         this.state = {
-            currentPage: 1,
-            shownPages: 4
+            currentPage: 1
         }
     }
 
@@ -47,6 +46,7 @@ class PaginationComponent extends Component {
 
     render() {
         const {
+            padding,
             classNames: {
                 container: containerClassName
             },
@@ -54,47 +54,37 @@ class PaginationComponent extends Component {
             data
         } = this.props;
 
-        let itemsPerPage = parseInt(currentQuery.size);
-        let totalHits = parseInt(data.total_hits);
+        let { currentPage } = this.state;
 
-        let totalPages = Math.ceil(totalHits / itemsPerPage);
+        /**
+         * Get Total pages
+         */
+        let totalPages = Math.ceil(
+            parseInt(data.total_hits) / parseInt(currentQuery.size)
+        );
         let pages = totalPagesToArray(totalPages);
 
-        // -----------------------------------
-
-        let {shownPages, currentPage} = this.state;
-        const isTouchingLeft = currentPage <= Math.round(shownPages / 2);
-        const isTouchingRight = (currentPage + Math.round(shownPages / 2)) > totalPages;
-
-
-        // pages spectre
-        const start = () => {
-            if (isTouchingLeft) {
-                return currentPage - (currentPage % shownPages);
-            }
-            return currentPage - Math.round(shownPages / 2);
+        /**
+         *  Get pages spectre
+         */
+        const paginationSettings = {
+            totalPages,
+            padding,
+            currentPage,
+            spectreSize: (padding * 2) + 1,
+            isTouchingLeft: currentPage <= (padding + 1),
+            isTouchingRight: (currentPage + padding) >= totalPages
         };
-
-        const end = () => {
-            if (isTouchingLeft) {
-                return (shownPages / currentPage) * currentPage;
-            }
-            if(isTouchingRight) {
-                return (currentPage / shownPages) * (currentPage / shownPages)
-            }
-            return (currentPage) + Math.round(shownPages / 2);
-        };
-
         let pagesSpectre = pages.slice(
-            start(),
-            end()
+            start(paginationSettings),
+            end(paginationSettings)
         );
 
         return (
             <div className={`asui-pagination pagination-list ${containerClassName}`}>
                 <span
                     className={`pagination-link`}
-                    onClick={() => this.handleClick(this.state.currentPage - 1)}
+                    onClick={() => this.handleClick(currentPage - 1)}
                 >
                     Prev
                 </span>
@@ -111,7 +101,7 @@ class PaginationComponent extends Component {
 
                 <span
                     className={`pagination-link`}
-                    onClick={() => this.handleClick(this.state.currentPage + 1)}
+                    onClick={() => this.handleClick(currentPage + 1)}
                 >
                     Next
                 </span>
@@ -120,18 +110,53 @@ class PaginationComponent extends Component {
     }
 }
 
-
-
 function totalPagesToArray(totalPages) {
     let pages = [];
-    for(let index = 1; index < totalPages; index++) {
+    for(let index = 1; index <= totalPages; index++) {
         pages.push(index);
     }
 
     return pages;
 }
 
+function start({
+    totalPages,
+    padding,
+    currentPage,
+    spectreSize,
+    isTouchingLeft,
+    isTouchingRight
+}) {
+    if (isTouchingLeft) {
+        return currentPage - (currentPage % spectreSize);
+    }
+    if (isTouchingRight) {
+        return currentPage - (spectreSize - (totalPages % currentPage));
+    }
+
+    return currentPage - (padding + 1);
+}
+
+function end({
+    totalPages,
+    padding,
+    currentPage,
+    spectreSize,
+    isTouchingLeft,
+    isTouchingRight
+}) {
+    if (isTouchingLeft) {
+        return spectreSize;
+    }
+    if (isTouchingRight) {
+        return totalPages;
+    }
+
+    return currentPage + padding;
+}
+
 PaginationComponent.defaultProps = {
+    padding: 3,
     classNames: {
         container: ''
     }
