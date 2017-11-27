@@ -260,6 +260,35 @@ For more information about how this templating system works,
 refer to the [twitter's hogan.js documentation](http://twitter.github.io/hogan.js/). 
 Or check the library examples.
 
+## Pagination
+This widget allows to navigate through the results
+with a pagination links.
+
+```javascript
+const resultInformationWidget = ui.widgets.pagination({
+    target: !string,
+    padding: ?integer[3],
+    goFirstLast: ?bool[false],
+    classNames: {
+        container: ?string,
+        item: ?string,
+        active: ?string['active'],
+        disabled: ?string['disabled'],
+        next: ?string,
+        first: ?string,
+        previous: ?string,
+        last: ?string
+    },
+    template: {
+        item: ?string['{{page}}'],
+        next: ?string['Next >'],
+        previous: ?string['< Prev'],
+        first: ?string['<< First'],
+        last: ?string['Last >>']
+    }
+});
+```
+
 ## Information (Result info)
 The result information widget allows you to provide
 to a user some extra information about the search.
