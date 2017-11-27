@@ -1717,11 +1717,11 @@ var _ApisearchUI = __webpack_require__(14);
 
 var _ApisearchUI2 = _interopRequireDefault(_ApisearchUI);
 
-var _apisearch = __webpack_require__(44);
+var _apisearch = __webpack_require__(45);
 
 var _apisearch2 = _interopRequireDefault(_apisearch);
 
-var _Store = __webpack_require__(45);
+var _Store = __webpack_require__(46);
 
 var _Store2 = _interopRequireDefault(_Store);
 
@@ -2557,12 +2557,14 @@ var WidgetFactory = function () {
         value: function pagination(_ref8) {
             var target = _ref8.target,
                 padding = _ref8.padding,
-                classNames = _ref8.classNames;
+                classNames = _ref8.classNames,
+                template = _ref8.template;
 
             return (0, _preact.h)(_PaginationComponent2.default, {
                 target: target,
                 padding: padding,
-                classNames: _extends({}, _InformationComponent2.default.defaultProps.classNames, classNames)
+                classNames: _extends({}, _InformationComponent2.default.defaultProps.classNames, classNames),
+                template: _extends({}, _PaginationComponent2.default.defaultProps.template, template)
             });
         }
     }]);
@@ -5434,7 +5436,15 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
+var _Template = __webpack_require__(4);
+
+var _Template2 = _interopRequireDefault(_Template);
+
 var _paginationActions = __webpack_require__(43);
+
+var _helpers = __webpack_require__(44);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -5452,20 +5462,38 @@ var PaginationComponent = function (_Component) {
     _inherits(PaginationComponent, _Component);
 
     function PaginationComponent() {
+        var _ref;
+
+        var _temp, _this, _ret;
+
         _classCallCheck(this, PaginationComponent);
 
-        var _this = _possibleConstructorReturn(this, (PaginationComponent.__proto__ || Object.getPrototypeOf(PaginationComponent)).call(this));
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+        }
 
-        _this.handleClick = function (page) {
+        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = PaginationComponent.__proto__ || Object.getPrototypeOf(PaginationComponent)).call.apply(_ref, [this].concat(args))), _this), _this.handleClick = function (page) {
             var _this$props = _this.props,
+                data = _this$props.data,
                 environmentId = _this$props.environmentId,
                 currentQuery = _this$props.currentQuery,
                 client = _this$props.client;
 
+
+            var totalPages = (0, _helpers.getTotalPages)({
+                totalHits: data.total_hits,
+                hitsPerPage: currentQuery.size
+            });
+
+            /**
+             * Do not let go further
+             */
+            if (page <= 0) page = 1;
+            if (page >= totalPages) page = totalPages;
+
             /**
              * Dispatch change page action
              */
-
             (0, _paginationActions.paginationChangeAction)({
                 selectedPage: page
             }, {
@@ -5473,41 +5501,45 @@ var PaginationComponent = function (_Component) {
                 currentQuery: currentQuery,
                 client: client
             });
-        };
-
-        _this.state = {
-            currentPage: 1
-        };
-        return _this;
+        }, _temp), _possibleConstructorReturn(_this, _ret);
     }
 
     _createClass(PaginationComponent, [{
-        key: 'componentWillReceiveProps',
-        value: function componentWillReceiveProps(props) {
-            var page = props.data.query.page;
-
-            this.setState({
-                currentPage: page ? page : 1
-            });
-        }
-    }, {
-        key: 'render',
+        key: "render",
         value: function render() {
             var _this2 = this;
 
             var _props = this.props,
                 padding = _props.padding,
-                containerClassName = _props.classNames.container,
-                currentQuery = _props.currentQuery,
+                _props$classNames = _props.classNames,
+                containerClassName = _props$classNames.container,
+                itemClassName = _props$classNames.item,
+                activeClassName = _props$classNames.active,
+                disabledClassName = _props$classNames.disabled,
+                nextClassName = _props$classNames.next,
+                previousClassName = _props$classNames.previous,
+                lastClassName = _props$classNames.last,
+                firstClassName = _props$classNames.first,
+                _props$template = _props.template,
+                itemTemplate = _props$template.item,
+                nextTemplate = _props$template.next,
+                previousTemplate = _props$template.previous,
+                firstTemplate = _props$template.first,
+                lastTemplate = _props$template.last,
+                _props$currentQuery = _props.currentQuery,
+                currentQueryPage = _props$currentQuery.page,
+                currentQuerySize = _props$currentQuery.size,
                 data = _props.data;
-            var currentPage = this.state.currentPage;
 
             /**
              * Get Total pages
              */
 
-            var totalPages = Math.ceil(parseInt(data.total_hits) / parseInt(currentQuery.size));
-            var pages = totalPagesToArray(totalPages);
+            var totalPages = (0, _helpers.getTotalPages)({
+                totalHits: data.total_hits,
+                hitsPerPage: currentQuerySize
+            });
+            var pages = (0, _helpers.totalPagesToArray)(totalPages);
 
             /**
              *  Get pages spectre
@@ -5515,48 +5547,59 @@ var PaginationComponent = function (_Component) {
             var paginationSettings = {
                 totalPages: totalPages,
                 padding: padding,
-                currentPage: currentPage,
+                currentPage: currentQueryPage,
                 spectreSize: padding * 2 + 1,
-                isTouchingLeft: currentPage <= padding + 1,
-                isTouchingRight: currentPage + padding >= totalPages
+                isTouchingLeft: currentQueryPage <= padding + 1,
+                isTouchingRight: currentQueryPage + padding >= totalPages
             };
-            var pagesSpectre = pages.slice(start(paginationSettings), end(paginationSettings));
+            var spectre = pages.slice((0, _helpers.getStart)(paginationSettings), (0, _helpers.getEnd)(paginationSettings));
 
             return (0, _preact.h)(
-                'div',
-                { className: 'asui-pagination pagination-list ' + containerClassName },
-                (0, _preact.h)(
-                    'span',
-                    {
-                        className: 'pagination-link',
-                        onClick: function onClick() {
-                            return _this2.handleClick(currentPage - 1);
-                        }
-                    },
-                    'Prev'
-                ),
-                pagesSpectre.map(function (page) {
+                "ul",
+                { className: "asui-pagination " + containerClassName },
+                (0, _preact.h)(NavigationComponent, {
+                    classNames: "asui-pagination--item " + firstClassName,
+                    template: firstTemplate,
+                    handleClick: function handleClick() {
+                        return _this2.handleClick(1);
+                    }
+                }),
+                (0, _preact.h)(NavigationComponent, {
+                    classNames: "asui-pagination--item " + previousClassName,
+                    template: previousTemplate,
+                    handleClick: function handleClick() {
+                        return _this2.handleClick(currentQueryPage - 1);
+                    }
+                }),
+                spectre.map(function (page) {
                     return (0, _preact.h)(
-                        'span',
+                        "li",
                         {
-                            className: 'pagination-link ' + (_this2.state.currentPage === page ? 'is-current' : ''),
+                            className: "asui-pagination--item " + itemClassName + " " + (currentQueryPage === page ? activeClassName : ''),
                             onClick: function onClick() {
                                 return _this2.handleClick(page);
                             }
                         },
-                        page
+                        (0, _preact.h)(_Template2.default, {
+                            template: itemTemplate,
+                            data: { item: page }
+                        })
                     );
                 }),
-                (0, _preact.h)(
-                    'span',
-                    {
-                        className: 'pagination-link',
-                        onClick: function onClick() {
-                            return _this2.handleClick(currentPage + 1);
-                        }
-                    },
-                    'Next'
-                )
+                (0, _preact.h)(NavigationComponent, {
+                    classNames: "asui-pagination--item " + nextClassName,
+                    template: nextTemplate,
+                    handleClick: function handleClick() {
+                        return _this2.handleClick(currentQueryPage + 1);
+                    }
+                }),
+                (0, _preact.h)(NavigationComponent, {
+                    classNames: "asui-pagination--item " + lastClassName,
+                    template: lastTemplate,
+                    handleClick: function handleClick() {
+                        return _this2.handleClick(totalPages);
+                    }
+                })
             );
         }
     }]);
@@ -5564,55 +5607,40 @@ var PaginationComponent = function (_Component) {
     return PaginationComponent;
 }(_preact.Component);
 
-function totalPagesToArray(totalPages) {
-    var pages = [];
-    for (var index = 1; index <= totalPages; index++) {
-        pages.push(index);
-    }
+function NavigationComponent(_ref2) {
+    var classNames = _ref2.classNames,
+        template = _ref2.template,
+        handleClick = _ref2.handleClick;
 
-    return pages;
-}
-
-function start(_ref) {
-    var totalPages = _ref.totalPages,
-        padding = _ref.padding,
-        currentPage = _ref.currentPage,
-        spectreSize = _ref.spectreSize,
-        isTouchingLeft = _ref.isTouchingLeft,
-        isTouchingRight = _ref.isTouchingRight;
-
-    if (isTouchingLeft) {
-        return currentPage - currentPage % spectreSize;
-    }
-    if (isTouchingRight) {
-        return currentPage - (spectreSize - totalPages % currentPage);
-    }
-
-    return currentPage - (padding + 1);
-}
-
-function end(_ref2) {
-    var totalPages = _ref2.totalPages,
-        padding = _ref2.padding,
-        currentPage = _ref2.currentPage,
-        spectreSize = _ref2.spectreSize,
-        isTouchingLeft = _ref2.isTouchingLeft,
-        isTouchingRight = _ref2.isTouchingRight;
-
-    if (isTouchingLeft) {
-        return spectreSize;
-    }
-    if (isTouchingRight) {
-        return totalPages;
-    }
-
-    return currentPage + padding;
+    return (0, _preact.h)(
+        "li",
+        {
+            className: classNames,
+            onClick: handleClick
+        },
+        (0, _preact.h)(_Template2.default, { template: template })
+    );
 }
 
 PaginationComponent.defaultProps = {
     padding: 3,
+    showFirstLast: false,
     classNames: {
-        container: ''
+        container: '',
+        item: '',
+        active: 'active',
+        disabled: 'disabled',
+        next: '',
+        first: '',
+        previous: '',
+        last: ''
+    },
+    template: {
+        item: '{{item}}',
+        next: 'Next >',
+        previous: '< Prev',
+        first: '<< First',
+        last: 'Last >>'
     }
 };
 
@@ -5687,6 +5715,91 @@ function paginationChangeAction(_ref, _ref2) {
 
 /***/ }),
 /* 44 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.getTotalPages = getTotalPages;
+exports.totalPagesToArray = totalPagesToArray;
+exports.getStart = getStart;
+exports.getEnd = getEnd;
+/**
+ * Get total pages from the total reached hits
+ * divided by the hits per page configured
+ *
+ * If there are more than 10.000 items
+ * We reduce the max num of items to 9.999
+ * to take care of performance
+ */
+function getTotalPages(_ref) {
+    var totalHits = _ref.totalHits,
+        hitsPerPage = _ref.hitsPerPage;
+
+    totalHits = totalHits >= 10000 ? 9999 : totalHits;
+
+    return Math.ceil(parseInt(totalHits) / parseInt(hitsPerPage));
+}
+
+/**
+ * Pass total pages number into an array of numbers
+ */
+function totalPagesToArray(totalPages) {
+    var pages = [];
+    for (var index = 1; index <= totalPages; index++) {
+        pages.push(index);
+    }
+
+    return pages;
+}
+
+/**
+ * Get the starting point of the pages spectre
+ */
+function getStart(_ref2) {
+    var totalPages = _ref2.totalPages,
+        padding = _ref2.padding,
+        currentPage = _ref2.currentPage,
+        spectreSize = _ref2.spectreSize,
+        isTouchingLeft = _ref2.isTouchingLeft,
+        isTouchingRight = _ref2.isTouchingRight;
+
+    if (isTouchingLeft) {
+        return currentPage - currentPage % spectreSize;
+    }
+    if (isTouchingRight) {
+        return currentPage - (spectreSize - totalPages % currentPage);
+    }
+
+    return currentPage - (padding + 1);
+}
+
+/**
+ * Get the ending point of the pages spectre
+ */
+function getEnd(_ref3) {
+    var totalPages = _ref3.totalPages,
+        padding = _ref3.padding,
+        currentPage = _ref3.currentPage,
+        spectreSize = _ref3.spectreSize,
+        isTouchingLeft = _ref3.isTouchingLeft,
+        isTouchingRight = _ref3.isTouchingRight;
+
+    if (isTouchingLeft) {
+        return spectreSize;
+    }
+    if (isTouchingRight) {
+        return totalPages;
+    }
+
+    return currentPage + padding;
+}
+
+/***/ }),
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -9101,7 +9214,7 @@ exports.default = MemoryCache;
 //# sourceMappingURL=apisearch.node.js.map
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9113,7 +9226,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _events = __webpack_require__(46);
+var _events = __webpack_require__(47);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -9215,7 +9328,7 @@ var Store = function (_EventEmitter) {
 exports.default = Store;
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports) {
 
 // Copyright Joyent, Inc. and other Node contributors.

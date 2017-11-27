@@ -259,7 +259,21 @@
                 }
             }),
             ui.widgets.pagination({
-                target: '.pagination'
+                target: '.pagination',
+                padding: 2,
+                classNames: {
+                    container: 'pagination-list',
+                    item: 'pagination-link',
+                    active: 'is-current',
+                    next: 'pagination-link',
+                    previous: 'pagination-link',
+                    first: 'pagination-link',
+                    last: 'pagination-link',
+                },
+                template: {
+                    previous: '<i class="fa fa-caret-left"></i> Prev',
+                    next: 'Next <i class="fa fa-caret-right"></i>'
+                }
             })
         );
 

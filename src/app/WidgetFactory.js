@@ -200,7 +200,8 @@ class WidgetFactory {
     static pagination({
         target,
         padding,
-        classNames
+        classNames,
+        template
     }) {
         return <PaginationComponent
             target={target}
@@ -208,6 +209,10 @@ class WidgetFactory {
             classNames={{
                 ...InformationComponent.defaultProps.classNames,
                 ...classNames
+            }}
+            template={{
+                ...PaginationComponent.defaultProps.template,
+                ...template
             }}
         />
     }
