@@ -5601,7 +5601,7 @@ var PaginationComponent = function (_Component) {
                         },
                         (0, _preact.h)(_Template2.default, {
                             template: itemTemplate,
-                            data: { page: page }
+                            data: { page: parseInt(page).toLocaleString('de-DE') }
                         })
                     );
                 }),

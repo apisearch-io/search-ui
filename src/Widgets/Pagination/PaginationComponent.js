@@ -138,7 +138,7 @@ class PaginationComponent extends Component {
                     >
                         <Template
                             template={itemTemplate}
-                            data={{page: page}}
+                            data={{page: parseInt(page).toLocaleString('de-DE')}}
                         />
                     </li>
                 ))}
