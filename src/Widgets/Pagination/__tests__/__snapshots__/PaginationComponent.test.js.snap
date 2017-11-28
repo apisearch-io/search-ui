@@ -1,0 +1,336 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<PaginationComponent /> should handleClick() and and go NEXT 1`] = `
+preact-render-spy (1 nodes)
+-------
+<ul class="asui-pagination custom-container-class">
+  <li
+    class="asui-pagination--item asui-pagination--first custom-first-class "
+    onClick={[Function handleClick]}
+  >
+    <div>
+      <| FIRST
+    </div>
+  </li>
+  <li
+    class="asui-pagination--item asui-pagination--previous custom-previous-class "
+    onClick={[Function handleClick]}
+  >
+    <div>
+      <-- Prev
+    </div>
+  </li>
+  <li
+    class="asui-pagination--item asui-pagination--link custom-item-class "
+    onClick={[Function onClick]}
+  >
+    <div>1</div>
+  </li>
+  <li
+    class="asui-pagination--item asui-pagination--link custom-item-class custom-active-class"
+    onClick={[Function onClick]}
+  >
+    <div>2</div>
+  </li>
+  <li
+    class="asui-pagination--item asui-pagination--link custom-item-class "
+    onClick={[Function onClick]}
+  >
+    <div>3</div>
+  </li>
+  <li
+    class="asui-pagination--item asui-pagination--link custom-item-class "
+    onClick={[Function onClick]}
+  >
+    <div>4</div>
+  </li>
+  <li
+    class="asui-pagination--item asui-pagination--link custom-item-class "
+    onClick={[Function onClick]}
+  >
+    <div>5</div>
+  </li>
+  <li
+    class="asui-pagination--item asui-pagination--next custom-next-class "
+    onClick={[Function handleClick]}
+  >
+    <div>Next --></div>
+  </li>
+  <li
+    class="asui-pagination--item asui-pagination--last custom-last-class "
+    onClick={[Function handleClick]}
+  >
+    <div>LAST |></div>
+  </li>
+</ul>
+
+`;
+
+exports[`<PaginationComponent /> should handleClick() and and go PREV 1`] = `
+preact-render-spy (1 nodes)
+-------
+<ul class="asui-pagination custom-container-class">
+  <li
+    class="asui-pagination--item asui-pagination--first custom-first-class custom-disabled-class"
+    onClick={[Function handleClick]}
+  >
+    <div>
+      <| FIRST
+    </div>
+  </li>
+  <li
+    class="asui-pagination--item asui-pagination--previous custom-previous-class custom-disabled-class"
+    onClick={[Function handleClick]}
+  >
+    <div>
+      <-- Prev
+    </div>
+  </li>
+  <li
+    class="asui-pagination--item asui-pagination--link custom-item-class custom-active-class"
+    onClick={[Function onClick]}
+  >
+    <div>1</div>
+  </li>
+  <li
+    class="asui-pagination--item asui-pagination--link custom-item-class "
+    onClick={[Function onClick]}
+  >
+    <div>2</div>
+  </li>
+  <li
+    class="asui-pagination--item asui-pagination--link custom-item-class "
+    onClick={[Function onClick]}
+  >
+    <div>3</div>
+  </li>
+  <li
+    class="asui-pagination--item asui-pagination--link custom-item-class "
+    onClick={[Function onClick]}
+  >
+    <div>4</div>
+  </li>
+  <li
+    class="asui-pagination--item asui-pagination--link custom-item-class "
+    onClick={[Function onClick]}
+  >
+    <div>5</div>
+  </li>
+  <li
+    class="asui-pagination--item asui-pagination--next custom-next-class "
+    onClick={[Function handleClick]}
+  >
+    <div>Next --></div>
+  </li>
+  <li
+    class="asui-pagination--item asui-pagination--last custom-last-class "
+    onClick={[Function handleClick]}
+  >
+    <div>LAST |></div>
+  </li>
+</ul>
+
+`;
+
+exports[`<PaginationComponent /> should not render if data is empty 1`] = `
+preact-render-spy (1 nodes)
+-------
+{null}
+
+`;
+
+exports[`<PaginationComponent /> should render with custom props 1`] = `
+Object {
+  "children": Array [],
+  "classNames": Object {
+    "active": "custom-active-class",
+    "container": "custom-container-class",
+    "disabled": "custom-disabled-class",
+    "first": "custom-first-class",
+    "item": "custom-item-class",
+    "last": "custom-last-class",
+    "next": "custom-next-class",
+    "previous": "custom-previous-class",
+  },
+  "currentQuery": Object {
+    "page": 1,
+    "size": 10,
+  },
+  "data": Object {
+    "total_hits": 1000,
+  },
+  "goFirstLast": true,
+  "padding": 2,
+  "target": "#some-target",
+  "template": Object {
+    "first": "<| FIRST",
+    "item": "{{page}}",
+    "last": "LAST |>",
+    "next": "Next -->",
+    "previous": "<-- Prev",
+  },
+}
+`;
+
+exports[`<PaginationComponent /> should render with custom props 2`] = `
+preact-render-spy (1 nodes)
+-------
+<ul class="asui-pagination custom-container-class">
+  <li
+    class="asui-pagination--item asui-pagination--first custom-first-class custom-disabled-class"
+    onClick={[Function handleClick]}
+  >
+    <div>
+      <| FIRST
+    </div>
+  </li>
+  <li
+    class="asui-pagination--item asui-pagination--previous custom-previous-class custom-disabled-class"
+    onClick={[Function handleClick]}
+  >
+    <div>
+      <-- Prev
+    </div>
+  </li>
+  <li
+    class="asui-pagination--item asui-pagination--link custom-item-class custom-active-class"
+    onClick={[Function onClick]}
+  >
+    <div>1</div>
+  </li>
+  <li
+    class="asui-pagination--item asui-pagination--link custom-item-class "
+    onClick={[Function onClick]}
+  >
+    <div>2</div>
+  </li>
+  <li
+    class="asui-pagination--item asui-pagination--link custom-item-class "
+    onClick={[Function onClick]}
+  >
+    <div>3</div>
+  </li>
+  <li
+    class="asui-pagination--item asui-pagination--link custom-item-class "
+    onClick={[Function onClick]}
+  >
+    <div>4</div>
+  </li>
+  <li
+    class="asui-pagination--item asui-pagination--link custom-item-class "
+    onClick={[Function onClick]}
+  >
+    <div>5</div>
+  </li>
+  <li
+    class="asui-pagination--item asui-pagination--next custom-next-class "
+    onClick={[Function handleClick]}
+  >
+    <div>Next --></div>
+  </li>
+  <li
+    class="asui-pagination--item asui-pagination--last custom-last-class "
+    onClick={[Function handleClick]}
+  >
+    <div>LAST |></div>
+  </li>
+</ul>
+
+`;
+
+exports[`<PaginationComponent /> should render with default props 1`] = `
+Object {
+  "children": Array [],
+  "classNames": Object {
+    "active": "active",
+    "container": "",
+    "disabled": "disabled",
+    "first": "",
+    "item": "",
+    "last": "",
+    "next": "",
+    "previous": "",
+  },
+  "currentQuery": Object {
+    "page": 1,
+    "size": 10,
+  },
+  "data": Object {
+    "total_hits": 1000,
+  },
+  "goFirstLast": false,
+  "padding": 3,
+  "target": "#some-target",
+  "template": Object {
+    "first": "<< First",
+    "item": "{{page}}",
+    "last": "Last >>",
+    "next": "Next >",
+    "previous": "< Prev",
+  },
+}
+`;
+
+exports[`<PaginationComponent /> should render with default props 2`] = `
+preact-render-spy (1 nodes)
+-------
+<ul class="asui-pagination ">
+  <li
+    class="asui-pagination--item asui-pagination--previous  disabled"
+    onClick={[Function handleClick]}
+  >
+    <div>
+      < Prev
+    </div>
+  </li>
+  <li
+    class="asui-pagination--item asui-pagination--link  active"
+    onClick={[Function onClick]}
+  >
+    <div>1</div>
+  </li>
+  <li
+    class="asui-pagination--item asui-pagination--link  "
+    onClick={[Function onClick]}
+  >
+    <div>2</div>
+  </li>
+  <li
+    class="asui-pagination--item asui-pagination--link  "
+    onClick={[Function onClick]}
+  >
+    <div>3</div>
+  </li>
+  <li
+    class="asui-pagination--item asui-pagination--link  "
+    onClick={[Function onClick]}
+  >
+    <div>4</div>
+  </li>
+  <li
+    class="asui-pagination--item asui-pagination--link  "
+    onClick={[Function onClick]}
+  >
+    <div>5</div>
+  </li>
+  <li
+    class="asui-pagination--item asui-pagination--link  "
+    onClick={[Function onClick]}
+  >
+    <div>6</div>
+  </li>
+  <li
+    class="asui-pagination--item asui-pagination--link  "
+    onClick={[Function onClick]}
+  >
+    <div>7</div>
+  </li>
+  <li
+    class="asui-pagination--item asui-pagination--next  "
+    onClick={[Function handleClick]}
+  >
+    <div>Next ></div>
+  </li>
+</ul>
+
+`;

@@ -1717,11 +1717,11 @@ var _ApisearchUI = __webpack_require__(14);
 
 var _ApisearchUI2 = _interopRequireDefault(_ApisearchUI);
 
-var _apisearch = __webpack_require__(45);
+var _apisearch = __webpack_require__(46);
 
 var _apisearch2 = _interopRequireDefault(_apisearch);
 
-var _Store = __webpack_require__(46);
+var _Store = __webpack_require__(47);
 
 var _Store2 = _interopRequireDefault(_Store);
 
@@ -5447,7 +5447,11 @@ var _Template2 = _interopRequireDefault(_Template);
 
 var _paginationActions = __webpack_require__(43);
 
-var _helpers = __webpack_require__(44);
+var _NavigationComponent = __webpack_require__(44);
+
+var _NavigationComponent2 = _interopRequireDefault(_NavigationComponent);
+
+var _helpers = __webpack_require__(45);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -5574,17 +5578,17 @@ var PaginationComponent = function (_Component) {
             return (0, _preact.h)(
                 "ul",
                 { className: "asui-pagination " + containerClassName },
-                (0, _preact.h)(NavigationComponent, {
+                (0, _preact.h)(_NavigationComponent2.default, {
                     isVisible: goFirstLast,
-                    classNames: "asui-pagination--item " + firstClassName + " " + previousDisabledClass,
+                    classNames: "asui-pagination--item asui-pagination--first " + firstClassName + " " + previousDisabledClass,
                     template: firstTemplate,
                     handleClick: function handleClick() {
                         return _this2.handleClick(1);
                     }
                 }),
-                (0, _preact.h)(NavigationComponent, {
+                (0, _preact.h)(_NavigationComponent2.default, {
                     isVisible: true,
-                    classNames: "asui-pagination--item " + previousClassName + " " + previousDisabledClass,
+                    classNames: "asui-pagination--item asui-pagination--previous " + previousClassName + " " + previousDisabledClass,
                     template: previousTemplate,
                     handleClick: function handleClick() {
                         return _this2.handleClick(currentQueryPage - 1);
@@ -5594,7 +5598,7 @@ var PaginationComponent = function (_Component) {
                     return (0, _preact.h)(
                         "li",
                         {
-                            className: "asui-pagination--item " + itemClassName + " " + (currentQueryPage === page ? activeClassName : ''),
+                            className: "asui-pagination--item asui-pagination--link " + itemClassName + " " + (currentQueryPage === page ? activeClassName : ''),
                             onClick: function onClick() {
                                 return _this2.handleClick(page);
                             }
@@ -5605,17 +5609,17 @@ var PaginationComponent = function (_Component) {
                         })
                     );
                 }),
-                (0, _preact.h)(NavigationComponent, {
+                (0, _preact.h)(_NavigationComponent2.default, {
                     isVisible: true,
-                    classNames: "asui-pagination--item " + nextClassName + " " + nextDisabledClass,
+                    classNames: "asui-pagination--item asui-pagination--next " + nextClassName + " " + nextDisabledClass,
                     template: nextTemplate,
                     handleClick: function handleClick() {
                         return _this2.handleClick(currentQueryPage + 1);
                     }
                 }),
-                (0, _preact.h)(NavigationComponent, {
+                (0, _preact.h)(_NavigationComponent2.default, {
                     isVisible: goFirstLast,
-                    classNames: "asui-pagination--item " + lastClassName + " " + nextDisabledClass,
+                    classNames: "asui-pagination--item asui-pagination--last " + lastClassName + " " + nextDisabledClass,
                     template: lastTemplate,
                     handleClick: function handleClick() {
                         return _this2.handleClick(totalPages);
@@ -5627,22 +5631,6 @@ var PaginationComponent = function (_Component) {
 
     return PaginationComponent;
 }(_preact.Component);
-
-function NavigationComponent(_ref2) {
-    var isVisible = _ref2.isVisible,
-        classNames = _ref2.classNames,
-        template = _ref2.template,
-        handleClick = _ref2.handleClick;
-
-    return isVisible ? (0, _preact.h)(
-        "li",
-        {
-            className: classNames,
-            onClick: handleClick
-        },
-        (0, _preact.h)(_Template2.default, { template: template })
-    ) : null;
-}
 
 PaginationComponent.defaultProps = {
     padding: 3,
@@ -5745,6 +5733,46 @@ function paginationChangeAction(_ref, _ref2) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+
+var _preact = __webpack_require__(0);
+
+var _Template = __webpack_require__(4);
+
+var _Template2 = _interopRequireDefault(_Template);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Arrow navigation component
+ */
+function NavigationComponent(_ref) {
+    var isVisible = _ref.isVisible,
+        classNames = _ref.classNames,
+        template = _ref.template,
+        handleClick = _ref.handleClick;
+
+    return isVisible ? (0, _preact.h)(
+        "li",
+        {
+            className: classNames,
+            onClick: handleClick
+        },
+        (0, _preact.h)(_Template2.default, { template: template })
+    ) : null;
+}
+
+exports.default = NavigationComponent;
+
+/***/ }),
+/* 45 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 exports.getTotalPages = getTotalPages;
 exports.totalPagesToArray = totalPagesToArray;
 exports.getStart = getStart;
@@ -5821,7 +5849,7 @@ function getEnd(_ref3) {
 }
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -9236,7 +9264,7 @@ exports.default = MemoryCache;
 //# sourceMappingURL=apisearch.node.js.map
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9248,7 +9276,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _events = __webpack_require__(47);
+var _events = __webpack_require__(48);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -9350,7 +9378,7 @@ var Store = function (_EventEmitter) {
 exports.default = Store;
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports) {
 
 // Copyright Joyent, Inc. and other Node contributors.

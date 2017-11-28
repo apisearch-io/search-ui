@@ -4,6 +4,7 @@
 import { h, Component } from 'preact';
 import Template from "../Template";
 import {paginationChangeAction} from "./paginationActions";
+import NavigationComponent from "./NavigationComponent";
 import {
     getTotalPages,
     totalPagesToArray,
@@ -118,20 +119,20 @@ class PaginationComponent extends Component {
             <ul className={`asui-pagination ${containerClassName}`}>
                 <NavigationComponent
                     isVisible={goFirstLast}
-                    classNames={`asui-pagination--item ${firstClassName} ${previousDisabledClass}`}
+                    classNames={`asui-pagination--item asui-pagination--first ${firstClassName} ${previousDisabledClass}`}
                     template={firstTemplate}
                     handleClick={() => this.handleClick(1)}
                 />
                 <NavigationComponent
                     isVisible={true}
-                    classNames={`asui-pagination--item ${previousClassName} ${previousDisabledClass}`}
+                    classNames={`asui-pagination--item asui-pagination--previous ${previousClassName} ${previousDisabledClass}`}
                     template={previousTemplate}
                     handleClick={() => this.handleClick(currentQueryPage - 1)}
                 />
 
                 {spectre.map(page => (
                     <li
-                        className={`asui-pagination--item ${itemClassName} ${
+                        className={`asui-pagination--item asui-pagination--link ${itemClassName} ${
                             (currentQueryPage === page) ? activeClassName : ''
                         }`}
                         onClick={() => this.handleClick(page)}
@@ -145,35 +146,19 @@ class PaginationComponent extends Component {
 
                 <NavigationComponent
                     isVisible={true}
-                    classNames={`asui-pagination--item ${nextClassName} ${nextDisabledClass}`}
+                    classNames={`asui-pagination--item asui-pagination--next ${nextClassName} ${nextDisabledClass}`}
                     template={nextTemplate}
                     handleClick={() => this.handleClick(currentQueryPage + 1)}
                 />
                 <NavigationComponent
                     isVisible={goFirstLast}
-                    classNames={`asui-pagination--item ${lastClassName} ${nextDisabledClass}`}
+                    classNames={`asui-pagination--item asui-pagination--last ${lastClassName} ${nextDisabledClass}`}
                     template={lastTemplate}
                     handleClick={() => this.handleClick(totalPages)}
                 />
             </ul>
         );
     }
-}
-
-function NavigationComponent({
-    isVisible,
-    classNames,
-    template,
-    handleClick
-}) {
-    return (isVisible)
-        ? <li
-            className={classNames}
-            onClick={handleClick}
-        >
-            <Template template={template} />
-        </li> : null
-    ;
 }
 
 PaginationComponent.defaultProps = {
