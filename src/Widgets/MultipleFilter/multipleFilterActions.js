@@ -105,6 +105,7 @@ export function filterAction(
         sortBy,
         fetchLimit
     );
+    clonedQuery.setPage(1);
 
     client.search(clonedQuery, (result, error) => {
         if (error) return;

@@ -2739,7 +2739,7 @@ function simpleSearchAction(_ref, _ref2) {
 
     var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
 
-    clonedQuery.setQueryText(queryText);
+    clonedQuery.setQueryText(queryText).setPage(1);
 
     var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
     client.search(clonedQuery, function (result, error) {
@@ -3411,7 +3411,7 @@ function simpleSearchAction(_ref, _ref2) {
 
     var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
 
-    clonedQuery.setQueryText(queryText).enableResults().disableSuggestions();
+    clonedQuery.setQueryText(queryText).setPage(1).enableResults().disableSuggestions();
 
     client.search(clonedQuery, function (result, error) {
         if (error) return;
@@ -3442,7 +3442,7 @@ function suggestedSearchAction(_ref3, _ref4) {
 
     var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
 
-    clonedQuery.setQueryText(queryText).disableResults().enableSuggestions();
+    clonedQuery.setQueryText(queryText).setPage(1).disableResults().enableSuggestions();
 
     client.search(clonedQuery, function (result, error) {
         if (error) return;
@@ -3628,6 +3628,7 @@ function onChangeSearchAction(_ref, _ref2) {
     clonedQuery.sortBy(_defineProperty({}, 'indexed_metadata.' + filterData.field, {
         order: filterData.value
     }));
+    clonedQuery.setPage(1);
 
     client.search(clonedQuery, function (result, error) {
         if (error) return;
@@ -4038,6 +4039,7 @@ function filterAction(_ref3, _ref4) {
 
     clonedQuery.filterBy(filterName, filterField, filterValues, applicationType, false, sortBy);
     clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy, fetchLimit);
+    clonedQuery.setPage(1);
 
     client.search(clonedQuery, function (result, error) {
         if (error) return;
@@ -5408,6 +5410,7 @@ function clearFiltersAction(_ref, _ref2) {
     var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
 
     clonedQuery.filters = [];
+    clonedQuery.setPage(1);
 
     client.search(clonedQuery, function (result, error) {
         if (error) return;

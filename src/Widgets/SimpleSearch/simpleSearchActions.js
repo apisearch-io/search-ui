@@ -37,6 +37,7 @@ export function simpleSearchAction(
 
     clonedQuery
         .setQueryText(queryText)
+        .setPage(1)
     ;
 
     const dispatcher = container

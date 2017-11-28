@@ -41,6 +41,7 @@ export function onChangeSearchAction(
             order: filterData.value
         }
     });
+    clonedQuery.setPage(1);
 
     client.search(clonedQuery, (result, error) => {
         if (error) return;

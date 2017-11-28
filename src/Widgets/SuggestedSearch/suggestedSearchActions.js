@@ -40,6 +40,7 @@ export function simpleSearchAction(
 
     clonedQuery
         .setQueryText(queryText)
+        .setPage(1)
         .enableResults()
         .disableSuggestions()
     ;
@@ -78,6 +79,7 @@ export function suggestedSearchAction(
 
     clonedQuery
         .setQueryText(queryText)
+        .setPage(1)
         .disableResults()
         .enableSuggestions()
     ;
