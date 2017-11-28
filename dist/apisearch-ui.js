@@ -7126,16 +7126,13 @@ module.exports = function (_ref) {
     checkApiKey(apiKey);
 
     options = _extends({
-        endpoint: '//puntmig.net',
+        endpoint: 'api.apisear.ch',
         apiVersion: 'v1',
+        protocol: 'http',
         timeout: 10000,
-        overrideQueries: true
-    }, options, {
-        cache: _extends({
-            inMemory: true,
-            http: 0
-        }, options.cache)
-    });
+        overrideQueries: true,
+        cache: true
+    }, options);
 
     return new _Apisearch2.default({
         appId: appId,
@@ -7202,11 +7199,10 @@ var Apisearch = function () {
             _ref$options = _ref.options,
             endpoint = _ref$options.endpoint,
             apiVersion = _ref$options.apiVersion,
+            protocol = _ref$options.protocol,
             timeout = _ref$options.timeout,
             overrideQueries = _ref$options.overrideQueries,
-            _ref$options$cache = _ref$options.cache,
-            inMemoryCache = _ref$options$cache.inMemory,
-            httpCacheTTL = _ref$options$cache.http;
+            inMemoryCache = _ref$options.cache;
 
         _classCallCheck(this, Apisearch);
 
@@ -7217,7 +7213,7 @@ var Apisearch = function () {
         this.apiKey = apiKey;
         this.apiVersion = apiVersion;
         this.endpoint = endpoint;
-        this.httpCacheTTL = httpCacheTTL;
+        this.protocol = protocol;
         this.timeout = timeout;
         this.overrideQueries = overrideQueries;
 
@@ -7233,12 +7229,21 @@ var Apisearch = function () {
         this.repository = new _HttpClient2.default(inMemoryCache ? new _MemoryCache2.default() : false);
     }
 
+    /**
+     * Search entry point
+     *
+     * @param query
+     * @param callback
+     * @returns {Promise}
+     */
+
+
     _createClass(Apisearch, [{
         key: "search",
         value: function search(query, callback) {
             var encodedQuery = encodeURIComponent(JSON.stringify(query));
             var composedQuery = {
-                url: this.endpoint + "/" + this.apiVersion + "?app_id=" + this.appId + "&key=" + this.apiKey + "&query=" + encodedQuery,
+                url: this.protocol + "://" + this.endpoint + "/" + this.apiVersion + "?app_id=" + this.appId + "&key=" + this.apiKey + "&query=" + encodedQuery,
                 options: {
                     timeout: this.timeout
                 }
