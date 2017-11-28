@@ -32,6 +32,19 @@ preact-render-spy (1 nodes)
             
       </div>
     </div>
+    <div
+      class="asui-multipleFilter--item item-custom-class"
+      onClick={[Function onClick]}
+    >
+      <div>
+        
+                <a class="aggregation ">
+                    <input type="checkbox" id="filter_2001" >
+                    <label for="filter_2001">Year 2001 (5)</label>
+                </a>           
+            
+      </div>
+    </div>
   </div>
   <div
     class="asui-showMore showMoreContainer-custom-class"
@@ -90,6 +103,45 @@ preact-render-spy (1 nodes)
             
       </div>
     </div>
+    <div
+      class="asui-multipleFilter--item item-custom-class"
+      onClick={[Function onClick]}
+    >
+      <div>
+        
+                <a class="aggregation ">
+                    <input type="checkbox" id="filter_1999" >
+                    <label for="filter_1999">Year 2003 (16)</label>
+                </a>           
+            
+      </div>
+    </div>
+    <div
+      class="asui-multipleFilter--item item-custom-class"
+      onClick={[Function onClick]}
+    >
+      <div>
+        
+                <a class="aggregation ">
+                    <input type="checkbox" id="filter_2000" >
+                    <label for="filter_2000">Year 2004 (33)</label>
+                </a>           
+            
+      </div>
+    </div>
+    <div
+      class="asui-multipleFilter--item item-custom-class"
+      onClick={[Function onClick]}
+    >
+      <div>
+        
+                <a class="aggregation ">
+                    <input type="checkbox" id="filter_2001" >
+                    <label for="filter_2001">Year 2005 (20)</label>
+                </a>           
+            
+      </div>
+    </div>
   </div>
   <div
     class="asui-showMore showMoreContainer-custom-class"
@@ -135,6 +187,19 @@ preact-render-spy (1 nodes)
             
       </div>
     </div>
+    <div
+      class="asui-multipleFilter--item item-custom-class"
+      onClick={[Function onClick]}
+    >
+      <div>
+        
+                <a class="aggregation ">
+                    <input type="checkbox" id="filter_2001" >
+                    <label for="filter_2001">Year 2001 (5)</label>
+                </a>           
+            
+      </div>
+    </div>
   </div>
   <div
     class="asui-showMore showMoreContainer-custom-class"
@@ -161,9 +226,9 @@ Object {
     "top": "top-custom-class",
   },
   "dirty": true,
+  "fetchLimit": 6,
   "filterField": "year_id",
   "formatData": [Function],
-  "limit": 2,
   "name": "year",
   "showMoreActive": true,
   "sortBy": Array [
@@ -182,6 +247,7 @@ Object {
     "showMore": "<b>+ Show more</b>",
     "top": "Filter top header template:",
   },
+  "viewLimit": 3,
 }
 `;
 
@@ -217,6 +283,19 @@ preact-render-spy (1 nodes)
             
       </div>
     </div>
+    <div
+      class="asui-multipleFilter--item item-custom-class"
+      onClick={[Function onClick]}
+    >
+      <div>
+        
+                <a class="aggregation ">
+                    <input type="checkbox" id="filter_2001" >
+                    <label for="filter_2001">Year 2001 (5)</label>
+                </a>           
+            
+      </div>
+    </div>
   </div>
   <div
     class="asui-showMore showMoreContainer-custom-class"
@@ -243,11 +322,10 @@ Object {
     "top": "",
   },
   "dirty": true,
+  "fetchLimit": 10,
   "filterField": "year_id",
   "formatData": [Function],
-  "limit": 10,
   "name": "year",
-  "showMoreActive": true,
   "sortBy": Array [
     "_term",
     "desc",
@@ -261,6 +339,7 @@ Object {
         </a>           
     ",
   },
+  "viewLimit": null,
 }
 `;
 
@@ -304,6 +383,45 @@ preact-render-spy (1 nodes)
                 <a class="aggregation ">
                     <input type="checkbox" id="filter_2001" >
                     <label for="filter_2001">Year 2001 (5)</label>
+                </a>           
+            
+      </div>
+    </div>
+    <div
+      class="asui-multipleFilter--item "
+      onClick={[Function onClick]}
+    >
+      <div>
+        
+                <a class="aggregation ">
+                    <input type="checkbox" id="filter_1999" >
+                    <label for="filter_1999">Year 2003 (16)</label>
+                </a>           
+            
+      </div>
+    </div>
+    <div
+      class="asui-multipleFilter--item "
+      onClick={[Function onClick]}
+    >
+      <div>
+        
+                <a class="aggregation ">
+                    <input type="checkbox" id="filter_2000" >
+                    <label for="filter_2000">Year 2004 (33)</label>
+                </a>           
+            
+      </div>
+    </div>
+    <div
+      class="asui-multipleFilter--item "
+      onClick={[Function onClick]}
+    >
+      <div>
+        
+                <a class="aggregation ">
+                    <input type="checkbox" id="filter_2001" >
+                    <label for="filter_2001">Year 2005 (20)</label>
                 </a>           
             
       </div>

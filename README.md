@@ -60,10 +60,16 @@ ui.init();
 > Check more examples 
 > [here](https://github.com/puntmig/javascript-search-ui/tree/master/examples)!
 
-# Apisearch UI instance
+
+
+# Initialization
+
 Before configuring your widgets, first you need to create
 a new instance of `apisearchUI`. This will be the core
-of your UI search engine.
+of your UI search engine.s are `appId` and `apiKey`, the options
+are totally optional.
+
+The only mandatory parameter
 
 This is the anatomy of the ApisearchUI configuration:
 ```javascript
@@ -78,6 +84,13 @@ const ui = apisearchUI({
     }
 });
 ```
+
+Once your instance is defined and so your widgets, don't
+forget to initialize it!
+```javascript
+ui.init();
+```
+
 
 # Widgets
 

@@ -252,6 +252,7 @@ Object {
     "suggestion": "custom-suggestion-class",
   },
   "placeholder": "Type to get suggestions...",
+  "startSearchOn": 0,
   "target": "#some-tagret",
 }
 `;
@@ -292,6 +293,7 @@ Object {
     "suggestion": "",
   },
   "placeholder": "",
+  "startSearchOn": 0,
   "target": "#some-tagret",
 }
 `;

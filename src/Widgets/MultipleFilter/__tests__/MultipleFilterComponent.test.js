@@ -123,13 +123,21 @@ describe('<MultipleFilterComponent />', () => {
                 {...props}
             />
         );
+
         /**
          * Mocking componentWillMount functionality
          */
-        tree.setState({limit: props.limit});
+        const { viewLimit, fetchLimit } = props;
+        let isViewLimitProperlySet = viewLimit && (viewLimit < fetchLimit);
+        tree.setState({
+            viewLimit: (isViewLimitProperlySet)
+                ? viewLimit
+                : fetchLimit
+        });
 
         return tree;
     };
+
     const updateMultipleFilterComponent = (tree, props, data) => {
         tree.render(
             <MultipleFilterComponent
