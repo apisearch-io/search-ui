@@ -40,11 +40,7 @@ engine.
 ```javascript
 const ui = apisearchUI({
     appId: 'music',
-    apiKey: '1cc7a3e0-bda5-11e7-abc4-cec278b6b50a',
-    options: {
-        endpoint: 'http://search.puntmig.net',
-        cache: true
-    }
+    apiKey: '1cc7a3e0-bda5-11e7-abc4-cec278b6b50a'
 });
 
 ui.addWidgets(
@@ -63,6 +59,25 @@ ui.init();
 ```
 > Check more examples 
 > [here](https://github.com/puntmig/javascript-search-ui/tree/master/examples)!
+
+# Apisearch UI instance
+Before configuring your widgets, first you need to create
+a new instance of `apisearchUI`. This will be the core
+of your UI search engine.
+
+This is the anatomy of the ApisearchUI configuration:
+```javascript
+const ui = apisearchUI({
+    appId: !string,
+    apiKey: !string,
+    options: {
+        endpoint: ?string,
+        apiVersion: ?string,
+        timeout: ?int[10000],
+        inMemoryCache: ?bool[true],
+    }
+});
+```
 
 # Widgets
 
@@ -368,7 +383,7 @@ View (Widget components) -> action -> request (apisearch client) -> reduce recei
    - [ ] Exclude results
 - [ ] Infinite Result box
 - [x] Result Information
-- [ ] Pagination
+- [x] Pagination
 - [ ] Results per page selector
 
 - [x] SortBy
@@ -384,6 +399,6 @@ View (Widget components) -> action -> request (apisearch client) -> reduce recei
 - [ ] Analytics / User analytics
 
 Extra todo list:
-- [ ] Add callbacks before and after a widget action
-to execute customized anonymous functions.
+- [x] Add data transformers on components that will receive data
+to allow them to edit the data before passing it to the template.
 - [ ] Work with propTypes?

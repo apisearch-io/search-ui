@@ -5560,12 +5560,23 @@ var PaginationComponent = function (_Component) {
             };
             var spectre = pages.slice((0, _helpers.getStart)(paginationSettings), (0, _helpers.getEnd)(paginationSettings));
 
+            /**
+             * Dynamic disabled classes
+             */
+            var previousDisabledClass = currentQueryPage === 1 ? disabledClassName : '';
+            var nextDisabledClass = currentQueryPage === totalPages ? disabledClassName : '';
+
+            /**
+             * Hide container if hits are empty
+             */
+            if (data.total_hits === 0) return null;
+
             return (0, _preact.h)(
                 "ul",
                 { className: "asui-pagination " + containerClassName },
                 (0, _preact.h)(NavigationComponent, {
                     isVisible: goFirstLast,
-                    classNames: "asui-pagination--item " + firstClassName + " " + (currentQueryPage === 1 ? disabledClassName : ''),
+                    classNames: "asui-pagination--item " + firstClassName + " " + previousDisabledClass,
                     template: firstTemplate,
                     handleClick: function handleClick() {
                         return _this2.handleClick(1);
@@ -5573,7 +5584,7 @@ var PaginationComponent = function (_Component) {
                 }),
                 (0, _preact.h)(NavigationComponent, {
                     isVisible: true,
-                    classNames: "asui-pagination--item " + previousClassName + " " + (currentQueryPage === 1 ? disabledClassName : ''),
+                    classNames: "asui-pagination--item " + previousClassName + " " + previousDisabledClass,
                     template: previousTemplate,
                     handleClick: function handleClick() {
                         return _this2.handleClick(currentQueryPage - 1);
@@ -5596,7 +5607,7 @@ var PaginationComponent = function (_Component) {
                 }),
                 (0, _preact.h)(NavigationComponent, {
                     isVisible: true,
-                    classNames: "asui-pagination--item " + nextClassName + " " + (currentQueryPage === totalPages ? disabledClassName : ''),
+                    classNames: "asui-pagination--item " + nextClassName + " " + nextDisabledClass,
                     template: nextTemplate,
                     handleClick: function handleClick() {
                         return _this2.handleClick(currentQueryPage + 1);
@@ -5604,7 +5615,7 @@ var PaginationComponent = function (_Component) {
                 }),
                 (0, _preact.h)(NavigationComponent, {
                     isVisible: goFirstLast,
-                    classNames: "asui-pagination--item " + lastClassName + " " + (currentQueryPage === totalPages ? disabledClassName : ''),
+                    classNames: "asui-pagination--item " + lastClassName + " " + nextDisabledClass,
                     template: lastTemplate,
                     handleClick: function handleClick() {
                         return _this2.handleClick(totalPages);
