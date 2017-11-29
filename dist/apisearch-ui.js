@@ -5784,6 +5784,9 @@ exports.getEnd = getEnd;
  * If there are more than 10.000 items
  * We reduce the max num of items to 9.999
  * to take care of performance
+ *
+ * If total resulted pages are bigger than 999
+ * we set 999 as the max number of pages
  */
 function getTotalPages(_ref) {
     var totalHits = _ref.totalHits,
@@ -5791,7 +5794,9 @@ function getTotalPages(_ref) {
 
     totalHits = totalHits >= 10000 ? 9999 : totalHits;
 
-    return Math.ceil(parseInt(totalHits) / parseInt(hitsPerPage));
+    var totalPages = Math.ceil(parseInt(totalHits) / parseInt(hitsPerPage));
+
+    return totalPages > 999 ? 999 : totalPages;
 }
 
 /**
@@ -5821,7 +5826,8 @@ function getStart(_ref2) {
         return currentPage - currentPage % spectreSize;
     }
     if (isTouchingRight) {
-        return currentPage - (spectreSize - totalPages % currentPage);
+        var start = currentPage - (spectreSize - totalPages % currentPage);
+        return start > 0 ? start : 0;
     }
 
     return currentPage - (padding + 1);
