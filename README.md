@@ -5,16 +5,16 @@ Apisearch UI
 > information about it, please visit [http://apisearch.io](http://apisearch.io). 
 > This a project created with love by [Puntmig Development SLU](http://puntmig.com).
 
-The ApisearchUI is an easy interface library to build searches
-the easy way. It provides a list of pre-built widgets to
-setup your custom search experience. A widget can be a search input, 
-a result list, filters, pagination, and many more explained below.
+ApisearchUI library is set of tools to build a custom search
+experience for your website, e-commerce, docs site, or any
+other web application you can imagine.
 
-All Apisearch widgets are passed using `addWidget(widget)` method,
-or using `addWidgets(...widgets)` to add widgets in a bulk mode.
+It provides a list of common widgets like a search box, a result list, 
+filters, sorting dropdown, pagination, and many more explained below.
 
-Once your setup is done, you just call the `init()` method to 
-start all the magic!
+All your data must be previously indexed using the Apisearch tools.
+For more information say hi to: [hello@puntmig.com](mailto:hello@puntmig.com)
+
 
 # Install
 
@@ -57,8 +57,16 @@ ui.addWidgets(
 
 ui.init();
 ```
-> Check more examples 
-> [here](https://github.com/puntmig/javascript-search-ui/tree/master/examples)!
+
+All widgets are passed using `.addWidget(widget)` method,
+or using `.addWidgets(...widgets)` to add widgets in a bulk mode,
+like in the example below.
+
+Once your setup is done, you just call the `.init()` method to 
+start all the magic!
+
+> Check out this for more examples: 
+> [apisearch-ui/examples](https://github.com/puntmig/javascript-search-ui/tree/master/examples)!
 
 
 
@@ -66,12 +74,11 @@ ui.init();
 
 Before configuring your widgets, first you need to create
 a new instance of `apisearchUI`. This will be the core
-of your UI search engine.s are `appId` and `apiKey`, the options
-are totally optional.
-
-The only mandatory parameter
+of your UI search engines are `appId` and `apiKey`, the `options`
+parameters are totally optional.
 
 This is the anatomy of the ApisearchUI configuration:
+
 ```javascript
 const ui = apisearchUI({
     appId: !string,
@@ -85,8 +92,9 @@ const ui = apisearchUI({
 });
 ```
 
-Once your instance is defined and so your widgets, don't
+Once your instance and widgets are defined, don't
 forget to initialize it!
+
 ```javascript
 ui.init();
 ```
@@ -114,7 +122,18 @@ const simpleSearchWidget = ui.widgets.simpleSearch({
 });
 ```
 
+Parameters:
+ - `target`: is the dom selector, it can be an id or a class.
+ - `placeholder`: the default html input placeholder.
+ - `autofocus`: when set to `true`, the cursor is focused on the input.
+ - `startSearchOn`: is the minimum number of characters to start searching.
+ - `classNames`:
+    - `container`: refers to the parent `div` that contains the widget.
+    - `input`: refers to the html input.
+
+
 ## Suggested Search
+
 The suggested search input goes one step further. You can
 get auto-completed suggestions list related to the text
 you are looking for just below the search input.
@@ -134,6 +153,19 @@ const suggestedSearchWidget = ui.widgets.suggestedSearch({
 });
 ```
 
+Parameters:
+ - `target`: is the dom selector, it can be an id or a class.
+ - `placeholder`: the default html input placeholder.
+ - `autofocus`: when set to `true`, the cursor is focused on the input.
+ - `startSearchOn`: is the minimum number of characters to start searching.
+ - `classNames`:
+    - `container`: refers to the parent `div` class that 
+    contains the widget.
+    - `input`: refers to the html input.
+    - `box`: refers to the suggestions box.
+    - `suggestion`: refers to the suggestion item.
+    - `activeSuggestion`: refers to the active suggestion.
+
 ## Sort By
 The sort by widget allows to order the result set as you like.
 
@@ -141,22 +173,31 @@ This widget points to `indexed_metadata` field.
 
 ```javascript
 const sortByWidget = ui.widgets.sortBy({
-  target: !string,
-  classNames: {
-      container: ?string,
-      select: ?string
-  },
-  options: [
-      {name: !string, value: !string},
-      {name: !string, value: !string},
-      // ...
-  ]
+    target: !string,
+    options: [
+        {name: !string, value: !string},
+        {name: !string, value: !string},
+        // ...
+    ],
+    classNames: {
+        container: ?string,
+        select: ?string
+    }
 });
 ```
 
-@todo: describe attributes.
-
+Parameters:
+ - `target`: is the dom selector, it can be an id or a class.
+ - `options`: is the list of options in a selector. The `name` refers
+ to the html text shown, and `value` is the value of the option itself.
+ - `classNames`:
+    - `container`: refers to the parent `div` class that 
+    contains the widget.
+    - `select`: refers to the select input.
+    
+    
 ## Multiple Filter
+
 The filter widget allows you to refine your search.
 
 ```javascript
@@ -188,7 +229,9 @@ const multipleFilterWidget = ui.widgets.multipleFilter({
 
 @todo: describe attributes.
 
+
 ## Clear filters button
+
 Clear filters widget gives us a button to remove all active
 filters.
 ```javascript
@@ -203,8 +246,17 @@ const clearFilters = ui.widgets.clearFilters({
 });
 ```
 
-
+Parameters:
+ - `target`: is the dom selector, it can be an id or a class.
+ - `classNames`:
+    - `container`: refers to the parent `div` class that 
+    contains the widget.
+ - `template`:
+    - `container`: is the template string for the element.
+ 
+ 
 ## Search result
+
 The result widget allows you to print a set of results
 based on the search.
 
@@ -224,16 +276,23 @@ const resultWidget = ui.widgets.result({
 });
 ```
 
-You can customize your results template on the `template` 
-attribute section:
- * `itemsList`: (required) will be the iterable set of results.
- * `placeholder`: (optional) will be placed on initial widget render.
- Once a search is performed, this placeholder will disappear.
+Parameters:
+ - `target`: is the dom selector, it can be an id or a class.
+ - `classNames`:
+    - `container`: refers to the parent `div` class that 
+    contains the widget.
+ - `template`:
+    - `itemsList`: is the template string of the iterable set of results.
+    - `placeholder`: this template will be placed on initial widget render.
+    Once a search is performed, this placeholder will disappear.
+ - `formatData`: is a callable function that receives all the resulted
+ data, is useful to transform some information received before being passed 
+ to the template.
+
 
 On the `itemsList` template you have access to this two variables:
  * `items`: an array of resulted items.
  * `query`: the query text made for the search.
- 
 The variable `items` will be accessible on the body attribute using
 the `{{#items}}{{/items}}` iterable. For example, given this array 
 of results:
@@ -242,25 +301,20 @@ of results:
 {
     items: [
         {
-            uuid: {
-                source: 'Ba7XMhGh6yy',
-                type: 'marvel'
-            },
+            uuid: { source: 'Ba7XMhGh6yy', type: 'marvel' },
             metadata: {
                 name: 'Tony Stark',
                 img: 'https://api.marvel.com/v2/characters/tony-stark'
             }
         },
         {
-            uuid: {
-                source: 'Ba6mSyvhAJt',
-                type: 'marvel'
-            },
+            uuid: { source: 'Ba6mSyvhAJt', type: 'marvel' },
             metadata: {
                 name: 'Peter Parker',
                 img: 'https://api.marvel.com/v2/characters/peter-parker'
             }
-        }
+        },
+        //...
     ]
 }
 ```
@@ -288,7 +342,9 @@ For more information about how this templating system works,
 refer to the [twitter's hogan.js documentation](http://twitter.github.io/hogan.js/). 
 Or check the library examples.
 
+
 ## Pagination
+
 This widget allows to navigate through the results
 with a pagination links.
 
@@ -317,7 +373,11 @@ const resultInformationWidget = ui.widgets.pagination({
 });
 ```
 
+@todo: describe attributes.
+
+
 ## Information (Result info)
+
 The result information widget allows you to provide
 to a user some extra information about the search.
 Currently only can show the **number of hits** of 
@@ -336,8 +396,38 @@ const resultInformationWidget = ui.widgets.information({
 });
 ```
 
-The variables `{{total_hits}}` and `{{total_items}}`
-can be passed on the template body.
+Parameters:
+ - `target`: is the dom selector, it can be an id or a class.
+ - `classNames`:
+    - `container`: refers to the parent `div` class that 
+    contains the widget.
+ - `template`:
+    - `container`: is the template string of the result information.
+    The variables `{{total_hits}}` and `{{total_items}}` can be used
+    on the template.
+ - `formatData`: is a callable function thatd receives the resulted
+ data related to the information widget: `total_hits` and `total_items`.
+ Is useful to transform some information received before being passed 
+ to the template.
+
+
+
+# Multiple instances
+
+When working with ApisearchUI you have to keep in mind that you 
+can work with multiple ApisearchUI instances at once. 
+
+This instances need a client to request all the data from the Apisearch 
+servers. The thing is, you can work with only one client if all your 
+ApisearchUI instances consume the same data store (index). Or with 
+many clients if you want all your ApisearchUI instances to consume from
+many different indexes.
+
+ApisearchUI workflow:
+
+```
+View (Widget components) -> action -> request (apisearch client) -> reduce received data -> update store -> re-render view
+```
 
 
 # Testing
@@ -355,34 +445,16 @@ yarn test
 
 <hr />
 
-# For developers
 
-## Data workflow
-
-Let's start with a small introduction. When working with ApisearchUI
-you have to keep in mind that you can work with multiple ApisearchUI
-instances at once. 
-
-This instances need a client to request all the data from the Apisearch 
-servers. The thing is, you can work with only one client if all your 
-ApisearchUI instances consume the same data store (index). Or with 
-many clients if you want all your ApisearchUI instances to consume from
-many different indexes.
-
-Single ApisearchUI instance flow:
-```
-View (Widget components) -> action -> request (apisearch client) -> reduce received data -> update store -> re-render view
-```
-
-## Widget development
- 1. Define widget properties in README as a skeleton.
+# Widget development
+ 1. Define widget properties in `README.md` as a skeleton.
  2. Create component on `src/Widgets`.
- 3. Create widget factory method in `src/Factory/WidgetFactory.js`
+ 3. Create widget factory method in `src/app/WidgetFactory.js`
  and pass all needed widget properties.
  4. Create widget action.
- 5. Test the widget.
+ 5. Test the widget on the widget's directory within a 
+ directory named `__tests__`.
 
-<hr />
 
 # Todo's
   
