@@ -76,7 +76,9 @@
                     <div class="result column"></div>
                 </div>
                 <div class="columns">
+                    <div class="column is-one-quarter"></div>
                     <div class="pagination column"></div>
+                    <div class="column is-one-quarter"></div>
                 </div>
             </div>
             <div class="column is-2">
@@ -88,13 +90,15 @@
     <script type="text/template" id="result-search-tpl">
         <div class="columns is-multiline is-variable">
             {{#items}}
-            <div class="column is-narrow is-one-third">
+            <div class="column is-narrow is-one-quarter">
                 <div class="card" style="border-radius: .2rem">
+                    <div class="card-image">
+                        <figure class="image is-4by3">
+                            <img src="{{metadata.img}}" alt="Placeholder image">
+                        </figure>
+                    </div>
                     <div class="card-content">
                         <div class="media">
-                            <div class="media-left">
-                                <img src="{{metadata.img}}" width="60px">
-                            </div>
                             <div class="media-content">
                                 <strong>
                                 {{#highlights.title}}
@@ -254,7 +258,7 @@
             }),
             ui.widgets.result({
                 target: '.result',
-                itemsPerPage: 6,
+                itemsPerPage: 8,
                 highlightsEnabled: true,
                 template: {
                     itemsList: document.getElementById('result-search-tpl').text,
