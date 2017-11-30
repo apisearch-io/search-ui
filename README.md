@@ -26,8 +26,8 @@ yarn add apisearch-ui
 ```
 
 ## html tag \<script\>
-You can either download the library and use a relative path to your assets folder, 
-or use a CDN like jsDelivr. 
+You can either download the library and use a relative path to 
+your assets folder, or use a CDN like jsDelivr. 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/apisearch-ui/dist/apisearch-ui.min.js"></script>
 ``````
@@ -38,11 +38,13 @@ input with a result container using a custom template
 engine.
 
 ```javascript
+// Create instance
 const ui = apisearchUI({
     appId: 'music',
     apiKey: '1cc7a3e0-bda5-11e7-abc4-cec278b6b50a'
 });
 
+// Append widgets
 ui.addWidgets(
     ui.widgets.simpleSearch({
         target: '.search-container',
@@ -55,6 +57,7 @@ ui.addWidgets(
     })
 );
 
+// Initialize it
 ui.init();
 ```
 
@@ -67,7 +70,6 @@ start all the magic!
 
 > Check out this for more examples: 
 > [apisearch-ui/examples](https://github.com/puntmig/javascript-search-ui/tree/master/examples)!
-
 
 
 # Initialization
@@ -122,7 +124,7 @@ const simpleSearchWidget = ui.widgets.simpleSearch({
 });
 ```
 
-Parameters:
+**Parameters:**
  - `target`: is the dom selector, it can be an id or a class.
  - `placeholder`: the default html input placeholder.
  - `autofocus`: when set to `true`, the cursor is focused on the input.
@@ -153,7 +155,7 @@ const suggestedSearchWidget = ui.widgets.suggestedSearch({
 });
 ```
 
-Parameters:
+**Parameters:**
  - `target`: is the dom selector, it can be an id or a class.
  - `placeholder`: the default html input placeholder.
  - `autofocus`: when set to `true`, the cursor is focused on the input.
@@ -166,7 +168,9 @@ Parameters:
     - `suggestion`: refers to the suggestion item.
     - `activeSuggestion`: refers to the active suggestion.
 
+
 ## Sort By
+
 The sort by widget allows to order the result set as you like.
 
 This widget points to `indexed_metadata` field.
@@ -186,7 +190,7 @@ const sortByWidget = ui.widgets.sortBy({
 });
 ```
 
-Parameters:
+**Parameters:**
  - `target`: is the dom selector, it can be an id or a class.
  - `options`: is the list of options in a selector. The `name` refers
  to the html text shown, and `value` is the value of the option itself.
@@ -227,7 +231,41 @@ const multipleFilterWidget = ui.widgets.multipleFilter({
 })
 ```
 
-@todo: describe attributes.
+**Parameters:**
+ - `target`: is the dom selector, it can be an id or a class.
+ - `name`: this will be the unique filter identifier inside 
+ this ApisearchUI instance.
+ - `filterField`: this will be the field name of the filter
+ when was indexed to Apisearch as `indexed_metadata`. 
+ - `aggregationField`: this will be the aggregation field name
+ when was indexed to Apisearch as `indexed_metadata`.
+ - `applicationType`: the type of filter. Check out the
+ (javascript client)[https://github.com/apisearch-io/javascript-client#filters] 
+ docs for more information.
+ - `fetchLimit`: is the limit of items to be fetched on the server.
+ - `viewLimit`: If there are 10 fetched items, and viewLimit is 5. Only
+  the 5 first numbers will be visible and a "show more" / "show less" 
+  button will appear.
+ - `sortBy`: refers to the order/sort of the filter items.
+ - `classNames`:
+    - `container`: refers to the parent `div` class that 
+    contains the widget.
+    - `top`: class name of the container that holds the title of the filter.
+    - `itemsList`: class name of the filter items list.
+    - `item`: class name of the filter item link.
+    - `showMoreContainer`: class of the "show more" button container.
+ - `template`:
+    - `top`: template string for the title of the filter list.
+    - `item`: template string for the filter item link.
+    - `showMore`: template string for the "show more" button.
+    - `showLess`: template string for the "show less" button. 
+ - `formatData`: is a callable function that receives all the resulted
+ data related to the multiple filter widget: 
+    - `n`: number of aggregations. 
+    - `isActive`: if filter is active.
+    - `values`: the information of the filter. 
+ This is useful to transform some information received before being 
+ passed to the template. 
 
 
 ## Clear filters button
@@ -246,7 +284,7 @@ const clearFilters = ui.widgets.clearFilters({
 });
 ```
 
-Parameters:
+**Parameters:**
  - `target`: is the dom selector, it can be an id or a class.
  - `classNames`:
     - `container`: refers to the parent `div` class that 
@@ -276,7 +314,7 @@ const resultWidget = ui.widgets.result({
 });
 ```
 
-Parameters:
+**Parameters:**
  - `target`: is the dom selector, it can be an id or a class.
  - `classNames`:
     - `container`: refers to the parent `div` class that 
@@ -373,8 +411,30 @@ const resultInformationWidget = ui.widgets.pagination({
 });
 ```
 
-@todo: describe attributes.
-
+**Parameters:**
+ - `target`: is the dom selector, it can be an id or a class.
+ - `padding`: is the number of page links that will appear on each side
+ of the current page. For example, if padding is set to 2, and current 
+ page is `[5]`, the result will be: `[<] 3 4 [5] 6 7 [>]`
+ - `classNames`:
+    - `container`: refers to the parent `div` class that 
+    contains the widget.
+    - `item`: class name of the page item.
+    - `active`: class name of the current page.
+    - `disabled`: class name of the disabled buttons. when current 
+    page is the first page, the `first` and `previous` buttons will have
+    this class. 
+    - `next`: class name of the next page button.
+    - `first`: class name of the first page button.
+    - `previous`: class name of the previous page button. 
+    - `last`: class name of the last page button.
+ - `template`:
+    - `item`: template string of the page item. This property will
+    have the page number available using the mustache notation `{{page}}`.
+    - `next`: template string of the next page button.
+    - `first`: template string of the first page button.
+    - `previous`: template string of the previous page button. 
+    - `last`: template string of the last page button. 
 
 ## Information (Result info)
 
@@ -396,7 +456,7 @@ const resultInformationWidget = ui.widgets.information({
 });
 ```
 
-Parameters:
+**Parameters:**
  - `target`: is the dom selector, it can be an id or a class.
  - `classNames`:
     - `container`: refers to the parent `div` class that 
@@ -405,11 +465,10 @@ Parameters:
     - `container`: is the template string of the result information.
     The variables `{{total_hits}}` and `{{total_items}}` can be used
     on the template.
- - `formatData`: is a callable function thatd receives the resulted
+ - `formatData`: is a callable function that receives the resulted
  data related to the information widget: `total_hits` and `total_items`.
  Is useful to transform some information received before being passed 
  to the template.
-
 
 
 # Multiple instances
@@ -442,8 +501,6 @@ npm t
 # or
 yarn test
 ```
-
-<hr />
 
 
 # Widget development
