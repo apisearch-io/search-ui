@@ -2513,6 +2513,8 @@ var WidgetFactory = function () {
         value: function result(_ref6) {
             var target = _ref6.target,
                 itemsPerPage = _ref6.itemsPerPage,
+                promote = _ref6.promote,
+                exclude = _ref6.exclude,
                 highlightsEnabled = _ref6.highlightsEnabled,
                 classNames = _ref6.classNames,
                 template = _ref6.template,
@@ -2521,6 +2523,8 @@ var WidgetFactory = function () {
             return (0, _preact.h)(_ResultComponent2.default, {
                 target: target,
                 itemsPerPage: itemsPerPage,
+                promote: promote,
+                exclude: exclude,
                 highlightsEnabled: highlightsEnabled,
                 classNames: _extends({}, _ResultComponent2.default.defaultProps.classNames, classNames),
                 template: template,
@@ -5017,16 +5021,22 @@ var ResultComponent = function (_Component) {
             var _props = this.props,
                 environmentId = _props.environmentId,
                 itemsPerPage = _props.itemsPerPage,
+                promote = _props.promote,
+                exclude = _props.exclude,
                 highlightsEnabled = _props.highlightsEnabled,
                 currentQuery = _props.currentQuery;
+
+
+            console.log(promote);
 
             /**
              * Dispatch action
              */
-
             (0, _resultActions.changeItemsPerResultPageSetup)({ // queryOptions
                 itemsPerPage: itemsPerPage,
-                highlightsEnabled: highlightsEnabled
+                highlightsEnabled: highlightsEnabled,
+                promotedUUIDs: promote,
+                excludedUUIDs: exclude
             }, { // appOptions
                 environmentId: environmentId,
                 currentQuery: currentQuery
@@ -5077,6 +5087,8 @@ var ResultComponent = function (_Component) {
 ResultComponent.defaultProps = {
     itemsPerPage: 10,
     highlightsEnabled: false,
+    promote: [],
+    exclude: [],
     classNames: {
         container: ''
     },
@@ -5114,6 +5126,11 @@ var _constants = __webpack_require__(2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } } /**
+                                                                                                                                                                                                     * Search actions
+                                                                                                                                                                                                     */
+
+
 /**
  * Define items per page on result
  *
@@ -5132,7 +5149,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 function changeItemsPerResultPageSetup(_ref, _ref2) {
     var itemsPerPage = _ref.itemsPerPage,
-        highlightsEnabled = _ref.highlightsEnabled;
+        highlightsEnabled = _ref.highlightsEnabled,
+        promotedUUIDs = _ref.promotedUUIDs,
+        excludedUUIDs = _ref.excludedUUIDs;
     var environmentId = _ref2.environmentId,
         currentQuery = _ref2.currentQuery;
 
@@ -5150,6 +5169,14 @@ function changeItemsPerResultPageSetup(_ref, _ref2) {
         clonedQuery.enableHighlights();
     }
 
+    if (promotedUUIDs.length !== 0) {
+        clonedQuery.promoteUUIDs.apply(clonedQuery, _toConsumableArray(promotedUUIDs));
+    }
+
+    if (excludedUUIDs.length !== 0) {
+        clonedQuery.excludeUUIDs.apply(clonedQuery, _toConsumableArray(excludedUUIDs));
+    }
+
     var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
     dispatcher.dispatch({
         type: 'UPDATE_APISEARCH_SETUP',
@@ -5157,9 +5184,7 @@ function changeItemsPerResultPageSetup(_ref, _ref2) {
             updatedQuery: clonedQuery
         }
     });
-} /**
-   * Search actions
-   */
+}
 
 /***/ }),
 /* 39 */

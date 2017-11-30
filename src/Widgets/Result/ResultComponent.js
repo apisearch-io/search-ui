@@ -24,9 +24,13 @@ class ResultComponent extends Component {
         const {
             environmentId,
             itemsPerPage,
+            promote,
+            exclude,
             highlightsEnabled,
             currentQuery
         } = this.props;
+
+        console.log(promote)
 
         /**
          * Dispatch action
@@ -34,7 +38,9 @@ class ResultComponent extends Component {
         changeItemsPerResultPageSetup(
             {   // queryOptions
                 itemsPerPage,
-                highlightsEnabled
+                highlightsEnabled,
+                promotedUUIDs: promote,
+                excludedUUIDs: exclude
             },
             {   // appOptions
                 environmentId,
@@ -89,6 +95,8 @@ class ResultComponent extends Component {
 ResultComponent.defaultProps = {
     itemsPerPage: 10,
     highlightsEnabled: false,
+    promote: [],
+    exclude: [],
     classNames: {
         container: ''
     },

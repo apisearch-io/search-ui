@@ -103,12 +103,22 @@
             information
         } = ui.widgets;
 
+        const { uuid } = ui.client.createObject;
+
         // Widgets setup
         ui.addWidgets(
             result({
                 target: '.result',
                 itemsPerPage: 16,
                 highlightsEnabled: true,
+                promote: [
+                    uuid('purpose-mw0002885819', 'album'),
+                    uuid('crazy-love-mw0000828548', 'album'),
+                    uuid('classic-queen-mw0000085540', 'album'),
+                    uuid('21-mw0002080092', 'album'),
+                    uuid('4-mw0002136254', 'album'),
+                    uuid('michael-mw0002079107', 'album')
+                ],
                 classNames: {
                     container: 'column'
                 },
@@ -121,7 +131,6 @@
                 target: '.search',
                 placeholder: 'Search something...',
                 autofocus: true,
-                startSearchOn: 3,
                 classNames: {
                     container: 'column',
                     input: 'input'

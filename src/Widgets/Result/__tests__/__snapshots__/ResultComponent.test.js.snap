@@ -25,9 +25,11 @@ Object {
       "q": "Marvel",
     },
   },
+  "exclude": Array [],
   "formatData": [Function],
   "highlightsEnabled": true,
   "itemsPerPage": 20,
+  "promote": Array [],
   "target": "#some-target",
   "template": Object {
     "itemsList": "
@@ -82,9 +84,11 @@ Object {
       "q": "Marvel",
     },
   },
+  "exclude": Array [],
   "formatData": [Function],
   "highlightsEnabled": false,
   "itemsPerPage": 10,
+  "promote": Array [],
   "target": "#some-target",
   "template": Object {
     "itemsList": "

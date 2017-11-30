@@ -24,7 +24,9 @@ import {APISEARCH_DISPATCHER} from "../../constants";
 export function changeItemsPerResultPageSetup(
     {
         itemsPerPage,
-        highlightsEnabled
+        highlightsEnabled,
+        promotedUUIDs,
+        excludedUUIDs
     },
     {
         environmentId,
@@ -43,6 +45,14 @@ export function changeItemsPerResultPageSetup(
      */
     if (highlightsEnabled) {
         clonedQuery.enableHighlights();
+    }
+
+    if (promotedUUIDs.length !== 0) {
+        clonedQuery.promoteUUIDs(...promotedUUIDs);
+    }
+
+    if (excludedUUIDs.length !== 0) {
+        clonedQuery.excludeUUIDs(...excludedUUIDs);
     }
 
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);

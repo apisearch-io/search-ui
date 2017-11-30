@@ -156,6 +156,8 @@ class WidgetFactory {
     static result({
         target,
         itemsPerPage,
+        promote,
+        exclude,
         highlightsEnabled,
         classNames,
         template,
@@ -164,6 +166,8 @@ class WidgetFactory {
         return <ResultComponent
             target={target}
             itemsPerPage={itemsPerPage}
+            promote={promote}
+            exclude={exclude}
             highlightsEnabled={highlightsEnabled}
             classNames={{
                 ...ResultComponent.defaultProps.classNames,
