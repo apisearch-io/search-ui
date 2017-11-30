@@ -27,10 +27,9 @@ class ResultComponent extends Component {
             promote,
             exclude,
             highlightsEnabled,
-            currentQuery
+            currentQuery,
+            client
         } = this.props;
-
-        console.log(promote)
 
         /**
          * Dispatch action
@@ -44,7 +43,8 @@ class ResultComponent extends Component {
             },
             {   // appOptions
                 environmentId,
-                currentQuery
+                currentQuery,
+                client
             }
         )
     }

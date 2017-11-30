@@ -2738,8 +2738,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function simpleSearchAction(_ref, _ref2) {
     var queryText = _ref.queryText;
     var environmentId = _ref2.environmentId,
-        client = _ref2.client,
-        currentQuery = _ref2.currentQuery;
+        currentQuery = _ref2.currentQuery,
+        client = _ref2.client;
 
     var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
 
@@ -5024,14 +5024,13 @@ var ResultComponent = function (_Component) {
                 promote = _props.promote,
                 exclude = _props.exclude,
                 highlightsEnabled = _props.highlightsEnabled,
-                currentQuery = _props.currentQuery;
-
-
-            console.log(promote);
+                currentQuery = _props.currentQuery,
+                client = _props.client;
 
             /**
              * Dispatch action
              */
+
             (0, _resultActions.changeItemsPerResultPageSetup)({ // queryOptions
                 itemsPerPage: itemsPerPage,
                 highlightsEnabled: highlightsEnabled,
@@ -5039,7 +5038,8 @@ var ResultComponent = function (_Component) {
                 excludedUUIDs: exclude
             }, { // appOptions
                 environmentId: environmentId,
-                currentQuery: currentQuery
+                currentQuery: currentQuery,
+                client: client
             });
         }
     }, {
@@ -5153,7 +5153,8 @@ function changeItemsPerResultPageSetup(_ref, _ref2) {
         promotedUUIDs = _ref.promotedUUIDs,
         excludedUUIDs = _ref.excludedUUIDs;
     var environmentId = _ref2.environmentId,
-        currentQuery = _ref2.currentQuery;
+        currentQuery = _ref2.currentQuery,
+        client = _ref2.client;
 
     var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
 
@@ -5169,12 +5170,22 @@ function changeItemsPerResultPageSetup(_ref, _ref2) {
         clonedQuery.enableHighlights();
     }
 
+    /**
+     * Promoted uuids
+     */
     if (promotedUUIDs.length !== 0) {
-        clonedQuery.promoteUUIDs.apply(clonedQuery, _toConsumableArray(promotedUUIDs));
+        clonedQuery.promoteUUIDs.apply(clonedQuery, _toConsumableArray(promotedUUIDs.map(function (uuid) {
+            return client.createObject.uuid(uuid.id, uuid.type);
+        })));
     }
 
+    /**
+     * excluded uuids
+     */
     if (excludedUUIDs.length !== 0) {
-        clonedQuery.excludeUUIDs.apply(clonedQuery, _toConsumableArray(excludedUUIDs));
+        clonedQuery.excludeUUIDs.apply(clonedQuery, _toConsumableArray(excludedUUIDs.map(function (uuid) {
+            return client.createObject.uuid(uuid.id, uuid.type);
+        })));
     }
 
     var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);

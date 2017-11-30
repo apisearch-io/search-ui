@@ -103,8 +103,6 @@
             information
         } = ui.widgets;
 
-        const { uuid } = ui.client.createObject;
-
         // Widgets setup
         ui.addWidgets(
             result({
@@ -112,12 +110,12 @@
                 itemsPerPage: 16,
                 highlightsEnabled: true,
                 promote: [
-                    uuid('purpose-mw0002885819', 'album'),
-                    uuid('crazy-love-mw0000828548', 'album'),
-                    uuid('classic-queen-mw0000085540', 'album'),
-                    uuid('21-mw0002080092', 'album'),
-                    uuid('4-mw0002136254', 'album'),
-                    uuid('michael-mw0002079107', 'album')
+                    { type: 'album', id: 'purpose-mw0002885819' },
+                    { type: 'album', id: 'crazy-love-mw0000828548' },
+                    { type: 'album', id: 'classic-queen-mw0000085540' },
+                    { type: 'album', id: '21-mw0002080092' },
+                    { type: 'album', id: '4-mw0002136254' },
+                    { type: 'album', id: 'michael-mw0002079107' }
                 ],
                 classNames: {
                     container: 'column'

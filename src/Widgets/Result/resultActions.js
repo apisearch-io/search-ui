@@ -30,7 +30,8 @@ export function changeItemsPerResultPageSetup(
     },
     {
         environmentId,
-        currentQuery
+        currentQuery,
+        client
     }
 ) {
     const clonedQuery = cloneDeep(currentQuery);
@@ -47,12 +48,32 @@ export function changeItemsPerResultPageSetup(
         clonedQuery.enableHighlights();
     }
 
+    /**
+     * Promoted uuids
+     */
     if (promotedUUIDs.length !== 0) {
-        clonedQuery.promoteUUIDs(...promotedUUIDs);
+        clonedQuery.promoteUUIDs(
+            ...promotedUUIDs.map(
+                uuid => client.createObject.uuid(
+                    uuid.id,
+                    uuid.type
+                )
+            )
+        );
     }
 
+    /**
+     * excluded uuids
+     */
     if (excludedUUIDs.length !== 0) {
-        clonedQuery.excludeUUIDs(...excludedUUIDs);
+        clonedQuery.excludeUUIDs(
+            ...excludedUUIDs.map(
+                uuid => client.createObject.uuid(
+                    uuid.id,
+                    uuid.type
+                )
+            )
+        );
     }
 
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);

@@ -29,8 +29,8 @@ export function simpleSearchAction(
     },
     {
         environmentId,
-        client,
-        currentQuery
+        currentQuery,
+        client
     }
 ) {
     const clonedQuery = cloneDeep(currentQuery);

@@ -300,22 +300,37 @@ based on the search.
 
 ```javascript
 const resultWidget = ui.widgets.result({
-  target: !string,
-  itemsPerPage: ?integer[10],
-  highlightsEnabled: ?bool[false],
-  classNames: {
-      container: ?string
-  },
-  template: {
-      itemsList: !string,
-      placeholder: ?string
-  },
-  formatData: ?function(resultData)
+    target: !string,
+    itemsPerPage: ?integer[10],
+    highlightsEnabled: ?bool[false],
+    promote: [
+        {id: !string, type: !string},
+        {id: !string, type: !string},
+        //...   
+    ],
+    exclude: [
+        {id: !string, type: !string},
+        {id: !string, type: !string},
+        //...   
+    ],
+    classNames: {
+        container: ?string
+    },
+    template: {
+        itemsList: !string,
+        placeholder: ?string
+    },
+    formatData: ?function(resultData)
 });
 ```
 
 **Parameters:**
  - `target`: is the dom selector, it can be an id or a class.
+ - `highlightsEnabled`: when `true`, the text of the item indexed as
+ a highlighted, will be accessible from the `highlights` attribute on
+ each resulted element.
+ - `exclude`: an array of items to be promoted on the result set.
+ - `promote`: an array of items to be excluded from the result set.
  - `classNames`:
     - `container`: refers to the parent `div` class that 
     contains the widget.
@@ -521,8 +536,8 @@ yarn test
    
 - [x] Simple Result box
    - [x] Highlighted result
-   - [ ] Promote results
-   - [ ] Exclude results
+   - [x] Promote results
+   - [x] Exclude results
 - [ ] Infinite Result box
 - [x] Result Information
 - [x] Pagination
