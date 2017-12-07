@@ -1,9 +1,11 @@
 const path = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
+const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const baseConfig = require('./webpack.base');
 
 const plugins = [
+    new OptimizeCssAssetsPlugin(),
     new webpack.optimize.UglifyJsPlugin({
         minimize: true,
         sourceMap: false,

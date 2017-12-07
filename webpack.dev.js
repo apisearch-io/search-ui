@@ -18,7 +18,7 @@ const browserConfig = merge(baseConfig, {
 });
 
 const nodeConfig = merge(baseConfig, {
-    devtool: 'eval',
+    devtool: 'source-map',
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'apisearch-ui.node.js',

@@ -1,11 +1,12 @@
 const webpack = require('webpack');
 const path = require('path');
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
     entry: path.resolve(__dirname, 'src') + '/index.js',
     output: {},
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.js$/,
                 loader: 'babel-loader',
@@ -16,6 +17,13 @@ module.exports = {
                 test: /\.js$/,
                 loader: 'eslint-loader',
                 exclude: /node_modules/
+            },
+            {
+                test: /\.sass$/,
+                use: ExtractTextPlugin.extract({
+                    fallback: "style-loader",
+                    use: ["css-loader", "sass-loader"]
+                })
             }
         ]
     },
@@ -24,7 +32,9 @@ module.exports = {
             path.resolve('./node_modules'),
             path.resolve('./src')
         ],
-        extensions: ['.json', '.js']
+        extensions: ['.json', '.js', '.sass']
     },
-    plugins: []
+    plugins: [
+        new ExtractTextPlugin('../dist/apisearch-ui.css')
+    ]
 };

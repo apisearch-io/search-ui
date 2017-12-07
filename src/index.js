@@ -2,6 +2,14 @@
  * @jsx h
  */
 
+/**
+ * Styles
+ */
+import 'styles/index.sass';
+
+/**
+ * Locals
+ */
 import {bootstrap} from "./bootstrap";
 import container from "./container";
 import {APISEARCH_DISPATCHER, APISEARCH_UI} from "./constants";

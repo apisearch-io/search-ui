@@ -12,21 +12,21 @@
     "dist": "npm t; rm -rf ./dist/*; npm run build && npm run build:min"
   },
   "license": "MIT",
-  "author": "alexhoma <alexcm.14@gmail.com>",
+  "author": "Puntmig <hello@puntmig.com>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/apisearch/javascript-search-ui.git"
+    "url": "https://github.com/apisearch-io/javascript-search-ui.git"
   },
   "bugs": {
-    "url": "https://github.com/apisearch/javascript-search-ui/issues"
+    "url": "https://github.com/apisearch-io/javascript-search-ui/issues"
   },
-  "homepage": "https://github.com/apisearch/javascript-search-ui",
+  "homepage": "https://github.com/apisearch-io/javascript-search-ui",
   "keywords": [
     "es6",
     "search-engine",
     "apisearch",
-    "webpack3",
-    "node",
+    "search-out-of-the-box",
+    "facetted-search",
     "user-interface"
   ],
   "devDependencies": {
@@ -42,12 +42,18 @@
     "chai": "^4.1.2",
     "eslint": "^4.11.0",
     "eslint-loader": "^1.9.0",
-    "jest": "^21.2.1",
     "preact-render-spy": "^1.2.1",
     "webpack": "^3.8.1",
     "webpack-dev-server": "^2.9.3",
     "webpack-merge": "^4.1.1",
-    "yargs": "^8.0.2"
+    "yargs": "^8.0.2",
+    "jest-cli": "^21.2.1",
+    "sass-loader": "^6.0.6",
+    "style-loader": "^0.19.0",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "css-loader": "^0.28.7",
+    "optimize-css-assets-webpack-plugin": "^3.2.0",
+    "node-sass": "^4.7.2"
   },
   "dependencies": {
     "apisearch": "^0.1.14",
