@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>AS UI - Suggested search</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.0/css/bulma.min.css">
 
@@ -148,7 +149,7 @@
             viewLimit: 12,
             sortBy: ['_count', 'desc'],
             template: {
-                top: '<i class="fa fa-cog"></i>&nbsp;Years',
+                top: 'Years',
                 item: document.getElementById('multiple-filter-item-template').text
             }
         }),
@@ -162,7 +163,7 @@
             viewLimit: 5,
             sortBy: ['_count', 'desc'],
             template: {
-                top: '<i class="fa fa-user"></i>&nbsp; Genre',
+                top: 'Genre',
                 item: document.getElementById('multiple-filter-item-template').text
             }
         }),
@@ -175,7 +176,7 @@
             fetchLimit: 5,
             showMoreActive: false,
             template: {
-                top: '<i class="fa fa-star"></i>&nbsp; Rating',
+                top: 'Rating',
                 item: document.getElementById('multiple-filter-item-template').text
             },
             formatData: function(itemData) {
@@ -200,10 +201,7 @@
             }
         }),
         ui.widgets.information({
-            target: '.information',
-            template: {
-                container: '<i class="fa fa-bolt"></i> &nbsp; Found {{total_hits}}!'
-            }
+            target: '.information'
         }),
         ui.widgets.result({
             target: '.result',
@@ -216,13 +214,7 @@
         ui.widgets.pagination({
             target: '.pagination',
             padding: 2,
-            goFirstLast: true,
-            template: {
-                previous: '<i class="fa fa-caret-left"></i>',
-                next: '<i class="fa fa-caret-right"></i>',
-                first: '<i class="fa fa-caret-left"></i><i class="fa fa-caret-left"></i>',
-                last: '<i class="fa fa-caret-right"></i><i class="fa fa-caret-right"></i>'
-            }
+            goFirstLast: true
         })
     );
 
