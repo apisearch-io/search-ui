@@ -5,7 +5,7 @@
 /**
  * Styles
  */
-import 'styles/index.sass';
+import 'styles/apisearch-ui.sass';
 
 /**
  * Locals

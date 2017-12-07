@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AS UI - Suggested search</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.0/css/bulma.min.css">
+
+    <!-- ApisearchUI library -->
+    <script src="../dist/apisearch-ui.js"></script>
+    <link rel="stylesheet" href="../dist/apisearch-ui.css">
+</head>
+
+<body>
+<!-- Navbar -->
+<nav class="navbar" role="navigation" aria-label="main navigation">
+    <!-- Logo -->
+    <div class="navbar-brand">
+        <a class="navbar-item" href="https://apisearch.io">
+            <img class="has-text-centered"
+                 src="http://apisearch.io/public/images/logo-.png"
+                 height="28px"
+            >
+        </a>
+    </div>
+
+    <!-- SimpleSearch -->
+    <div class="search navbar-item"></div>
+
+    <!-- Information -->
+    <div class="information navbar-item"></div>
+
+    <!-- End -->
+    <div class="navbar-end">
+        <!-- Clear filters -->
+        <div class="navbar-item clear-filters"></div>
+
+        <!-- Sort by -->
+        <div class="navbar-item sort-by"></div>
+
+        <a class="navbar-item is-hidden-desktop-only"
+           href="https://github.com/alexhoma/javascript-search-ui"
+           target="_blank"
+        >
+                <span class="icon" style="color: #333;">
+                  <i class="fa fa-lg fa-github"></i>
+                </span>
+        </a>
+    </div>
+</nav>
+
+<!-- Result -->
+<div class="container is-fluid">
+    <div class="columns" style="margin-top: 1rem">
+        <div class="column is-2">
+            <div class="multiple-filter-genre" style="margin-bottom: 1rem"></div>
+            <div class="multiple-filter-rating"></div>
+        </div>
+        <div class="column">
+            <div class="columns">
+                <div class="result column"></div>
+            </div>
+            <div class="columns">
+                <div class="column is-one-quarter"></div>
+                <div class="pagination column"></div>
+                <div class="column is-one-quarter"></div>
+            </div>
+        </div>
+        <div class="column is-2">
+            <div class="multiple-filter-year" style="margin-bottom: 1rem"></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/template" id="result-search-tpl">
+    <div class="columns is-multiline is-variable">
+        {{#items}}
+        <div class="column is-narrow is-one-quarter">
+            <div class="card">
+                <div class="card-image">
+                    <figure class="image is-4by3">
+                        <img src="{{metadata.img}}" alt="Placeholder image">
+                    </figure>
+                </div>
+                <div class="card-content">
+                    <div class="media">
+                        <div class="media-content">
+                            <strong>
+                                {{#highlights.title}}
+                                {{{highlights.title}}}
+                                {{/highlights.title}}
+                                {{^highlights.title}}
+                                {{metadata.title}}
+                                {{/highlights.title}}
+                            </strong>
+                            {{#metadata.author}}
+                            <p class="has-text-info is-size-7">@{{name}}</p>
+                            {{/metadata.author}}
+                            <span class="has-text-grey is-size-7">
+                                    <strong>Year: </strong>
+                                    {{indexed_metadata.year}}
+                                </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/items}}
+    </div>
+    {{^items}}
+    <div class="notification">
+        Empty set of results for <b>{{query}}</b> 🙉
+    </div>
+    {{/items}}
+</script>
+
+<script type="text/template" id="multiple-filter-item-template">
+    <input type="checkbox" id="filter_{{values.id}}" {{#isActive}}checked="checked"{{/isActive}}>
+    <label for="filter_{{values.id}}">{{{values.name}}} ({{n}})</label>
+</script>
+
+<script type="text/javascript">
+    // UI Instance
+    const ui = apisearchUI({
+        appId: 'music',
+        apiKey: '5fadd8c4-c966-11e7-abc4-cec278b6b50a'
+    });
+
+    // Widgets setup
+    ui.addWidgets(
+        ui.widgets.simpleSearch({
+            target: '.search',
+            placeholder: 'Search something...',
+            autofocus: true
+        }),
+        ui.widgets.sortBy({
+            target: '.sort-by',
+            options: [
+                {name: 'Oldest', value: 'year:asc'},
+                {name: 'Newest', value: 'year:desc'}
+            ]
+        }),
+        ui.widgets.multipleFilter({
+            target: '.multiple-filter-year',
+            name: 'year',
+            filterField: 'year',
+            applicationType: 8,
+            fetchLimit: 30,
+            viewLimit: 12,
+            sortBy: ['_count', 'desc'],
+            template: {
+                top: '<i class="fa fa-cog"></i>&nbsp;Years',
+                item: document.getElementById('multiple-filter-item-template').text
+            }
+        }),
+        ui.widgets.multipleFilter({
+            target: '.multiple-filter-genre',
+            name: 'genre',
+            filterField: 'genre_id',
+            aggregationField: 'genre_data',
+            applicationType: 8,
+            fetchLimit: 15,
+            viewLimit: 5,
+            sortBy: ['_count', 'desc'],
+            template: {
+                top: '<i class="fa fa-user"></i>&nbsp; Genre',
+                item: document.getElementById('multiple-filter-item-template').text
+            }
+        }),
+        ui.widgets.multipleFilter({
+            target: '.multiple-filter-rating',
+            name: 'rating',
+            filterField: 'rating',
+            sortBy: ['_term', 'desc'],
+            applicationType: 4,
+            fetchLimit: 5,
+            showMoreActive: false,
+            template: {
+                top: '<i class="fa fa-star"></i>&nbsp; Rating',
+                item: document.getElementById('multiple-filter-item-template').text
+            },
+            formatData: function(itemData) {
+                let ratingNumber = parseInt(itemData.values.id);
+                itemData.values.name = "";
+
+                for(let index = 0; index < 5; index++) {
+                    if (index < ratingNumber) {
+                        itemData.values.name += '<i class="fa fa-star"></i>';
+                    } else {
+                        itemData.values.name += '<i class="fa fa-star-o"></i>';
+                    }
+                }
+
+                return itemData;
+            }
+        }),
+        ui.widgets.clearFilters({
+            target: '.clear-filters',
+            template: {
+                container: 'Clear filters'
+            }
+        }),
+        ui.widgets.information({
+            target: '.information',
+            template: {
+                container: '<i class="fa fa-bolt"></i> &nbsp; Found {{total_hits}}!'
+            }
+        }),
+        ui.widgets.result({
+            target: '.result',
+            itemsPerPage: 8,
+            highlightsEnabled: true,
+            template: {
+                itemsList: document.getElementById('result-search-tpl').text,
+            }
+        }),
+        ui.widgets.pagination({
+            target: '.pagination',
+            padding: 2,
+            goFirstLast: true,
+            template: {
+                previous: '<i class="fa fa-caret-left"></i>',
+                next: '<i class="fa fa-caret-right"></i>',
+                first: '<i class="fa fa-caret-left"></i><i class="fa fa-caret-left"></i>',
+                last: '<i class="fa fa-caret-right"></i><i class="fa fa-caret-right"></i>'
+            }
+        })
+    );
+
+    // Init the magic!
+    ui.init();
+</script>
+</body>
+</html>

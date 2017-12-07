@@ -1,1 +1,1 @@
-.as{color:grey}
+.as-simpleSearch{width:100%;position:relative}.as-simpleSearch__input{outline:none;border:2px solid #ebebeb;padding:.6rem 1rem;border-radius:5rem}.as-simpleSearch__clearSearch{position:absolute;right:.5rem;top:50%;transform:translateY(-50%);background-color:#ececec;border-radius:5rem;padding:.1rem .5rem;font-size:.8rem;cursor:pointer}
