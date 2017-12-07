@@ -10,6 +10,7 @@ preact-render-spy (1 nodes)
     autofocus={false}
     placeholder=""
     onInput={[Function anonymous]}
+    value=""
    />
 </div>
 
@@ -25,6 +26,7 @@ preact-render-spy (1 nodes)
     autofocus={false}
     placeholder=""
     onInput={[Function anonymous]}
+    value=""
    />
 </div>
 

@@ -1147,68 +1147,6 @@ var APISEARCH_UI = exports.APISEARCH_UI = 'apisearch_ui';
 "use strict";
 
 
-/**
- * Module dependenices
- */
-
-var isObject = __webpack_require__(19);
-var clone = __webpack_require__(21);
-var typeOf = __webpack_require__(8);
-var forOwn = __webpack_require__(24);
-
-/**
- * Recursively clone native types.
- */
-
-function cloneDeep(val, instanceClone) {
-  switch (typeOf(val)) {
-    case 'object':
-      return cloneObjectDeep(val, instanceClone);
-    case 'array':
-      return cloneArrayDeep(val, instanceClone);
-    default: {
-      return clone(val);
-    }
-  }
-}
-
-function cloneObjectDeep(obj, instanceClone) {
-  if (isObject(obj)) {
-    var res = {};
-    forOwn(obj, function(obj, key) {
-      this[key] = cloneDeep(obj, instanceClone);
-    }, res);
-    return res;
-  } else if (instanceClone) {
-    return instanceClone(obj);
-  } else {
-    return obj;
-  }
-}
-
-function cloneArrayDeep(arr, instanceClone) {
-  var len = arr.length, res = [];
-  var i = -1;
-  while (++i < len) {
-    res[i] = cloneDeep(arr[i], instanceClone);
-  }
-  return res;
-}
-
-/**
- * Expose `cloneDeep`
- */
-
-module.exports = cloneDeep;
-
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
@@ -1217,7 +1155,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _hogan = __webpack_require__(33);
+var _hogan = __webpack_require__(25);
 
 var _hogan2 = _interopRequireDefault(_hogan);
 
@@ -1277,6 +1215,68 @@ var Template = function (_Component) {
 }(_preact.Component);
 
 exports.default = Template;
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * Module dependenices
+ */
+
+var isObject = __webpack_require__(19);
+var clone = __webpack_require__(21);
+var typeOf = __webpack_require__(8);
+var forOwn = __webpack_require__(24);
+
+/**
+ * Recursively clone native types.
+ */
+
+function cloneDeep(val, instanceClone) {
+  switch (typeOf(val)) {
+    case 'object':
+      return cloneObjectDeep(val, instanceClone);
+    case 'array':
+      return cloneArrayDeep(val, instanceClone);
+    default: {
+      return clone(val);
+    }
+  }
+}
+
+function cloneObjectDeep(obj, instanceClone) {
+  if (isObject(obj)) {
+    var res = {};
+    forOwn(obj, function(obj, key) {
+      this[key] = cloneDeep(obj, instanceClone);
+    }, res);
+    return res;
+  } else if (instanceClone) {
+    return instanceClone(obj);
+  } else {
+    return obj;
+  }
+}
+
+function cloneArrayDeep(arr, instanceClone) {
+  var len = arr.length, res = [];
+  var i = -1;
+  while (++i < len) {
+    res[i] = cloneDeep(arr[i], instanceClone);
+  }
+  return res;
+}
+
+/**
+ * Expose `cloneDeep`
+ */
+
+module.exports = cloneDeep;
+
 
 /***/ }),
 /* 5 */
@@ -2340,15 +2340,15 @@ var _SimpleSearchComponent = __webpack_require__(17);
 
 var _SimpleSearchComponent2 = _interopRequireDefault(_SimpleSearchComponent);
 
-var _SuggestedSearchComponent = __webpack_require__(25);
+var _SuggestedSearchComponent = __webpack_require__(28);
 
 var _SuggestedSearchComponent2 = _interopRequireDefault(_SuggestedSearchComponent);
 
-var _SortByComponent = __webpack_require__(28);
+var _SortByComponent = __webpack_require__(31);
 
 var _SortByComponent2 = _interopRequireDefault(_SortByComponent);
 
-var _MultipleFilterComponent = __webpack_require__(30);
+var _MultipleFilterComponent = __webpack_require__(33);
 
 var _MultipleFilterComponent2 = _interopRequireDefault(_MultipleFilterComponent);
 
@@ -2399,14 +2399,16 @@ var WidgetFactory = function () {
                 placeholder = _ref.placeholder,
                 startSearchOn = _ref.startSearchOn,
                 autofocus = _ref.autofocus,
-                classNames = _ref.classNames;
+                classNames = _ref.classNames,
+                template = _ref.template;
 
             return (0, _preact.h)(_SimpleSearchComponent2.default, {
                 target: target,
                 placeholder: placeholder,
                 autofocus: autofocus,
                 startSearchOn: startSearchOn,
-                classNames: _extends({}, _SimpleSearchComponent2.default.defaultProps.classNames, classNames)
+                classNames: _extends({}, _SimpleSearchComponent2.default.defaultProps.classNames, classNames),
+                template: _extends({}, _SimpleSearchComponent2.default.defaultProps.template, template)
             });
         }
     }, {
@@ -2597,6 +2599,12 @@ var _preact = __webpack_require__(0);
 
 var _simpleSearchActions = __webpack_require__(18);
 
+var _Template = __webpack_require__(3);
+
+var _Template2 = _interopRequireDefault(_Template);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -2638,9 +2646,23 @@ var SimpleSearchComponent = function (_Component) {
             /**
              * Dispatch input search action
              */
-            (0, _simpleSearchActions.simpleSearchAction)({ // queryOptions
+            (0, _simpleSearchActions.simpleSearchAction)({
                 queryText: e.target.value
-            }, { // appOptions
+            }, {
+                environmentId: environmentId,
+                currentQuery: currentQuery,
+                client: client
+            });
+        }, _this.clearSearch = function () {
+            var _this$props2 = _this.props,
+                environmentId = _this$props2.environmentId,
+                currentQuery = _this$props2.currentQuery,
+                client = _this$props2.client;
+
+
+            (0, _simpleSearchActions.simpleSearchAction)({
+                queryText: ''
+            }, {
                 environmentId: environmentId,
                 currentQuery: currentQuery,
                 client: client
@@ -2649,31 +2671,38 @@ var SimpleSearchComponent = function (_Component) {
     }
 
     _createClass(SimpleSearchComponent, [{
-        key: 'shouldComponentUpdate',
-        value: function shouldComponentUpdate() {
-            return false;
-        }
-    }, {
-        key: 'render',
+        key: "render",
         value: function render() {
             var _props = this.props,
                 placeholder = _props.placeholder,
                 autofocus = _props.autofocus,
                 _props$classNames = _props.classNames,
                 containerClassName = _props$classNames.container,
-                inputClassName = _props$classNames.input;
+                inputClassName = _props$classNames.input,
+                clearSearchClassName = _props$classNames.clearSearch,
+                clearSearchTemplate = _props.template.clearSearch,
+                currentQueryText = _props.currentQuery.q;
 
 
             return (0, _preact.h)(
-                'div',
-                { className: 'asui-simpleSearch ' + containerClassName },
-                (0, _preact.h)('input', {
-                    type: 'text',
-                    className: 'asui-simpleSearch--input ' + inputClassName,
+                "div",
+                { className: "asui-simpleSearch " + containerClassName },
+                (0, _preact.h)("input", {
+                    type: "text",
+                    className: "asui-simpleSearch--input " + inputClassName,
                     autofocus: autofocus,
                     placeholder: placeholder,
-                    onInput: this.handleSearch
-                })
+                    onInput: this.handleSearch,
+                    value: currentQueryText
+                }),
+                currentQueryText.length !== 0 ? (0, _preact.h)(
+                    "div",
+                    {
+                        className: "asui-simpleSearch--clearSearch " + clearSearchClassName,
+                        onClick: this.clearSearch
+                    },
+                    (0, _preact.h)(_Template2.default, { template: clearSearchTemplate })
+                ) : null
             );
         }
     }]);
@@ -2687,7 +2716,11 @@ SimpleSearchComponent.defaultProps = {
     startSearchOn: 0,
     classNames: {
         container: '',
-        input: ''
+        input: '',
+        clearSearch: ''
+    },
+    template: {
+        clearSearch: 'clear'
     }
 };
 
@@ -2705,7 +2738,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.simpleSearchAction = simpleSearchAction;
 
-var _cloneDeep = __webpack_require__(3);
+var _cloneDeep = __webpack_require__(4);
 
 var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
 
@@ -2987,1120 +3020,6 @@ module.exports = function forOwn(obj, fn, thisArg) {
 /* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _preact = __webpack_require__(0);
-
-var _helpers = __webpack_require__(26);
-
-var _suggestedSearchActions = __webpack_require__(27);
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
-/**
- * Actions
- */
-
-
-/**
- * Suggested Search Component
- */
-var SuggestedSearchComponent = function (_Component) {
-    _inherits(SuggestedSearchComponent, _Component);
-
-    function SuggestedSearchComponent() {
-        _classCallCheck(this, SuggestedSearchComponent);
-
-        var _this = _possibleConstructorReturn(this, (SuggestedSearchComponent.__proto__ || Object.getPrototypeOf(SuggestedSearchComponent)).call(this));
-
-        _this.handleSearch = function (e) {
-            var _this$props = _this.props,
-                startSearchOn = _this$props.startSearchOn,
-                environmentId = _this$props.environmentId,
-                currentQuery = _this$props.currentQuery,
-                client = _this$props.client;
-
-            /**
-             * Set the current query text
-             */
-
-            _this.setState({ q: e.target.value });
-
-            /**
-             * Search when string is bigger than {startSearchOn}
-             */
-            if (e.target.value.length < startSearchOn) {
-                _this.setState({ currentSuggestions: [] });
-                return;
-            }
-
-            /**
-             * Dispatch suggested search action
-             */
-            (0, _suggestedSearchActions.suggestedSearchAction)({
-                queryText: e.target.value
-            }, {
-                environmentId: environmentId,
-                currentQuery: currentQuery,
-                client: client
-            });
-        };
-
-        _this.handleSuggestionsNavigation = function (e) {
-            /**
-             * When user hits arrow down
-             */
-            if (e.code === 'ArrowDown') {
-                _this.setState({
-                    currentSuggestions: (0, _helpers.selectNextSuggestion)(_this.state.currentSuggestions),
-                    q: (0, _helpers.selectActiveSuggestion)(_this.state.currentSuggestions)
-                });
-            }
-
-            /**
-             * When user hits arrow up
-             */
-            if (e.code === 'ArrowUp') {
-                /**
-                 * Prevent cursor to go at the starting point of the line
-                 */
-                e.preventDefault();
-
-                _this.setState({
-                    currentSuggestions: (0, _helpers.selectPreviousSuggestion)(_this.state.currentSuggestions),
-                    q: (0, _helpers.selectActiveSuggestion)(_this.state.currentSuggestions)
-                });
-            }
-
-            /**
-             * When user hits enter
-             */
-            if (e.code === 'Enter') {
-                _this.setState({
-                    q: (0, _helpers.selectActiveSuggestion)(_this.state.currentSuggestions),
-                    currentSuggestions: []
-                });
-
-                var _this$props2 = _this.props,
-                    environmentId = _this$props2.environmentId,
-                    currentQuery = _this$props2.currentQuery,
-                    client = _this$props2.client;
-
-
-                (0, _suggestedSearchActions.simpleSearchAction)({
-                    queryText: _this.state.q
-                }, {
-                    environmentId: environmentId,
-                    currentQuery: currentQuery,
-                    client: client
-                });
-            }
-        };
-
-        _this.handleSuggestionClick = function (e) {
-            _this.setState({
-                q: e.target.innerText,
-                currentSuggestions: []
-            });
-
-            var _this$props3 = _this.props,
-                environmentId = _this$props3.environmentId,
-                currentQuery = _this$props3.currentQuery,
-                client = _this$props3.client;
-
-
-            (0, _suggestedSearchActions.simpleSearchAction)({
-                queryText: e.target.innerText
-            }, {
-                environmentId: environmentId,
-                currentQuery: currentQuery,
-                client: client
-            });
-        };
-
-        _this.handleSearchInputFocusedOut = function (e) {
-            /**
-             * It handles when a user focuses out the search input
-             * If is not clicking on the suggestions box
-             * The suggestions are cleared and panel closes
-             */
-            if (null === e.relatedTarget || false === e.relatedTarget.classList.contains('asui-suggestedSearch--box')) {
-                _this.setState({ currentSuggestions: [] });
-            }
-
-            return false;
-        };
-
-        _this.state = {
-            q: '',
-            currentSuggestions: []
-        };
-        return _this;
-    }
-
-    _createClass(SuggestedSearchComponent, [{
-        key: 'componentWillReceiveProps',
-        value: function componentWillReceiveProps(props) {
-            var _this2 = this;
-
-            /**
-             * Check suggestions available
-             * if some, prepend the current query to the other suggestions array
-             * else, only append the current query to the suggestions array
-             */
-            var suggests = props.data && props.data.suggests ? [this.state.q].concat(_toConsumableArray(props.data.suggests)) : [this.state.q];
-
-            /**
-             * Prepare suggestions array
-             */
-            this.setState({
-                currentSuggestions: suggests.map(function (suggest, key) {
-                    return {
-                        isActive: 0 === key,
-                        name: suggest,
-                        htmlName: (0, _helpers.highlightSuggestion)(_this2.state.q, suggest)
-                    };
-                })
-            });
-        }
-    }, {
-        key: 'render',
-        value: function render() {
-            var _this3 = this;
-
-            var _props = this.props,
-                placeholder = _props.placeholder,
-                autofocus = _props.autofocus,
-                _props$classNames = _props.classNames,
-                containerClassName = _props$classNames.container,
-                inputClassName = _props$classNames.input,
-                boxClassName = _props$classNames.box,
-                suggestionClassName = _props$classNames.suggestion,
-                activeSuggestionClassName = _props$classNames.activeSuggestion;
-            var currentSuggestions = this.state.currentSuggestions;
-
-
-            return (0, _preact.h)(
-                'div',
-                { className: 'asui-suggestedSearch ' + containerClassName },
-                (0, _preact.h)('input', {
-                    type: 'text',
-                    value: this.state.q,
-                    className: 'asui-suggestedSearch--input ' + inputClassName,
-                    placeholder: placeholder,
-                    autofocus: autofocus,
-
-                    onInput: this.handleSearch,
-                    onKeyDown: this.handleSuggestionsNavigation,
-                    onBlur: this.handleSearchInputFocusedOut
-                }),
-                (0, _preact.h)(
-                    'div',
-                    {
-                        tabIndex: '0',
-                        className: 'asui-suggestedSearch--box ' + boxClassName,
-                        style: {
-                            display: currentSuggestions.length !== 0 ? 'block' : 'none'
-                        }
-                    },
-                    currentSuggestions.map(function (suggestion, key) {
-                        return 0 !== key ? (0, _preact.h)('div', {
-                            className: 'asui-suggestedSearch--suggestion ' + (suggestionClassName + ' ') + ('' + (suggestion.isActive ? activeSuggestionClassName : '')),
-                            dangerouslySetInnerHTML: {
-                                __html: suggestion.htmlName
-                            },
-                            onClick: _this3.handleSuggestionClick
-                        }) : null;
-                    })
-                )
-            );
-        }
-    }]);
-
-    return SuggestedSearchComponent;
-}(_preact.Component);
-
-SuggestedSearchComponent.defaultProps = {
-    placeholder: '',
-    autofocus: false,
-    startSearchOn: 0,
-    classNames: {
-        container: '',
-        input: '',
-        box: '',
-        suggestion: '',
-        activeSuggestion: 'asui-active'
-    }
-};
-
-exports.default = SuggestedSearchComponent;
-
-/***/ }),
-/* 26 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.highlightSuggestion = highlightSuggestion;
-exports.selectNextSuggestion = selectNextSuggestion;
-exports.selectPreviousSuggestion = selectPreviousSuggestion;
-exports.selectActiveSuggestion = selectActiveSuggestion;
-/**
- * Set of helpers for the suggestions widget
- */
-
-/**
- * Highlight text
- */
-function highlightSuggestion(currentQueryText, suggestion) {
-    var regex = new RegExp('(' + currentQueryText + ')', 'gi');
-    var highlightedSuggestion = suggestion.replace(regex, "<em>$1</em>");
-    var sanitizedSpaces = highlightedSuggestion.split(' ');
-
-    return sanitizedSpaces.join('&nbsp;');
-}
-
-/**
- * Mark as active the item next
- * to the last active item
- * on a given array of items
- *
- * @example when a user press a key arrow down
- */
-function selectNextSuggestion(suggestionsArray) {
-    var currentActiveSuggestionKey = void 0;
-
-    return suggestionsArray.map(function (suggestion, key) {
-        /**
-         * Detect current active suggestion
-         */
-        if (suggestion.isActive && key + 1 < suggestionsArray.length) {
-            currentActiveSuggestionKey = key;
-            suggestion.isActive = false;
-        }
-
-        /**
-         * Modify the first suggestion next to
-         * the current active suggestion
-         */
-        if (key === currentActiveSuggestionKey + 1 && key + 1 <= suggestionsArray.length) {
-            suggestion.isActive = true;
-        }
-
-        return suggestion;
-    });
-}
-
-/**
- * Mark as active the item previous
- * to the last active item
- * on a given array of items
- *
- * @example when a user press a key arrow up
- */
-function selectPreviousSuggestion(suggestionsArray) {
-    /**
-     * Find the current active suggestion key
-     */
-    var currentActiveSuggestionKey = suggestionsArray.findIndex(function (suggestion) {
-        if (suggestion.isActive) {
-            return suggestion;
-        }
-    });
-
-    return suggestionsArray.map(function (suggestion, key) {
-        /**
-         * Set the current active suggestion as false
-         * if is Active AND is not the last one
-         */
-        if (suggestion.isActive && currentActiveSuggestionKey - 1 >= 0) {
-            suggestion.isActive = false;
-        }
-
-        /**
-         * Set active the suggestion previous to
-         * the current active suggestion
-         */
-        if (currentActiveSuggestionKey - 1 === key && currentActiveSuggestionKey - 1 >= 0) {
-            suggestion.isActive = true;
-        }
-
-        return suggestion;
-    });
-}
-
-/**
- * Return the active item of an array
- */
-function selectActiveSuggestion(suggestionsArray) {
-    var selectedSuggestion = suggestionsArray.filter(function (suggestion) {
-        if (suggestion.isActive) {
-            return suggestion;
-        }
-    });
-
-    return selectedSuggestion[0].name;
-}
-
-/***/ }),
-/* 27 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.simpleSearchAction = simpleSearchAction;
-exports.suggestedSearchAction = suggestedSearchAction;
-
-var _cloneDeep = __webpack_require__(3);
-
-var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
-
-var _container = __webpack_require__(1);
-
-var _container2 = _interopRequireDefault(_container);
-
-var _constants = __webpack_require__(2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * This actions are triggered when a text input changes
- * receives two parameters:
- *   @param queryOptions -> query given options
- *   @param appOptions   -> current application options
- *
- * Finally dispatches an event with the search result and
- * the modified query.
- *   @returns {{
- *     type: string,
- *     payload: {
- *        result,
- *        updatedQuery
- *     }
- *   }}
- */
-
-/**
- * Simple search action
- * Builds a query disabling suggested searches flag
- */
-function simpleSearchAction(_ref, _ref2) {
-    var queryText = _ref.queryText;
-    var environmentId = _ref2.environmentId,
-        currentQuery = _ref2.currentQuery,
-        client = _ref2.client;
-
-    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
-
-    clonedQuery.setQueryText(queryText).setPage(1).enableResults().disableSuggestions();
-
-    client.search(clonedQuery, function (result, error) {
-        if (error) return;
-
-        var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
-        dispatcher.dispatch({
-            type: 'RENDER_FETCHED_DATA',
-            payload: {
-                result: result,
-                updatedQuery: clonedQuery
-            }
-        });
-    });
-}
-
-/**
- * Suggested Search Action
- * Builds a query using suggested search flag active
- */
-/**
- * Search actions
- */
-function suggestedSearchAction(_ref3, _ref4) {
-    var queryText = _ref3.queryText;
-    var environmentId = _ref4.environmentId,
-        currentQuery = _ref4.currentQuery,
-        client = _ref4.client;
-
-    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
-
-    clonedQuery.setQueryText(queryText).setPage(1).disableResults().enableSuggestions();
-
-    client.search(clonedQuery, function (result, error) {
-        if (error) return;
-
-        var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
-        dispatcher.dispatch({
-            type: 'RENDER_FETCHED_DATA',
-            payload: {
-                result: result,
-                updatedQuery: clonedQuery
-            }
-        });
-    });
-}
-
-/***/ }),
-/* 28 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _preact = __webpack_require__(0);
-
-var _sortByActions = __webpack_require__(29);
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
-
-/**
- * SortBy Filter Component
- */
-var SortByComponent = function (_Component) {
-    _inherits(SortByComponent, _Component);
-
-    function SortByComponent() {
-        var _ref;
-
-        var _temp, _this, _ret;
-
-        _classCallCheck(this, SortByComponent);
-
-        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-            args[_key] = arguments[_key];
-        }
-
-        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = SortByComponent.__proto__ || Object.getPrototypeOf(SortByComponent)).call.apply(_ref, [this].concat(args))), _this), _this.handleChange = function (e) {
-            var _this$props = _this.props,
-                environmentId = _this$props.environmentId,
-                currentQuery = _this$props.currentQuery,
-                client = _this$props.client;
-
-            /**
-             * Dispatch action
-             */
-
-            (0, _sortByActions.onChangeSearchAction)({
-                selectedOption: e.target.value
-            }, {
-                environmentId: environmentId,
-                currentQuery: currentQuery,
-                client: client
-            });
-        }, _temp), _possibleConstructorReturn(_this, _ret);
-    }
-
-    _createClass(SortByComponent, [{
-        key: 'shouldComponentUpdate',
-        value: function shouldComponentUpdate() {
-            return false;
-        }
-    }, {
-        key: 'render',
-        value: function render() {
-            var _props = this.props,
-                _props$classNames = _props.classNames,
-                containerClassName = _props$classNames.container,
-                selectClassName = _props$classNames.select,
-                options = _props.options;
-
-
-            return (0, _preact.h)(
-                'div',
-                { className: 'asui-sortBy ' + containerClassName },
-                (0, _preact.h)(
-                    'select',
-                    {
-                        className: 'asui-sortBy--selector ' + selectClassName,
-                        onChange: this.handleChange
-                    },
-                    options.map(function (option) {
-                        return (0, _preact.h)(
-                            'option',
-                            { value: option.value },
-                            option.name
-                        );
-                    })
-                )
-            );
-        }
-    }]);
-
-    return SortByComponent;
-}(_preact.Component);
-
-SortByComponent.defaultProps = {
-    classNames: {
-        container: '',
-        select: ''
-    }
-};
-
-exports.default = SortByComponent;
-
-/***/ }),
-/* 29 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.onChangeSearchAction = onChangeSearchAction;
-
-var _cloneDeep = __webpack_require__(3);
-
-var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
-
-var _container = __webpack_require__(1);
-
-var _container2 = _interopRequireDefault(_container);
-
-var _constants = __webpack_require__(2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; } /**
-                                                                                                                                                                                                                   * SortBy actions
-                                                                                                                                                                                                                   */
-
-
-/**
- * On change action
- *
- * This action is triggered when a sortBy filter changes
- * receives two parameters:
- *   @param queryOptions -> query given options
- *   @param appOptions   -> current application options
- *
- * Finally dispatches an event with the search result and
- * the modified query.
- *   @returns {{
- *     type: string,
- *     payload: {
- *        result,
- *        updatedQuery
- *     }
- *   }}
- */
-function onChangeSearchAction(_ref, _ref2) {
-    var selectedOption = _ref.selectedOption;
-    var environmentId = _ref2.environmentId,
-        currentQuery = _ref2.currentQuery,
-        client = _ref2.client;
-
-    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
-    var filterData = splitQueryValue(selectedOption);
-
-    clonedQuery.sortBy(_defineProperty({}, 'indexed_metadata.' + filterData.field, {
-        order: filterData.value
-    }));
-    clonedQuery.setPage(1);
-
-    client.search(clonedQuery, function (result, error) {
-        if (error) return;
-
-        var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
-        dispatcher.dispatch({
-            type: 'RENDER_FETCHED_DATA',
-            payload: {
-                result: result,
-                updatedQuery: clonedQuery
-            }
-        });
-    });
-}
-
-function splitQueryValue(string) {
-    var queryValue = string.split(':');
-
-    return {
-        field: queryValue[0],
-        value: queryValue[1]
-    };
-}
-
-/***/ }),
-/* 30 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _preact = __webpack_require__(0);
-
-var _multipleFilterActions = __webpack_require__(31);
-
-var _helpers = __webpack_require__(32);
-
-var _Template = __webpack_require__(4);
-
-var _Template2 = _interopRequireDefault(_Template);
-
-var _ShowMoreComponent = __webpack_require__(36);
-
-var _ShowMoreComponent2 = _interopRequireDefault(_ShowMoreComponent);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
-
-/**
- * Filter Component
- */
-var MultipleFilterComponent = function (_Component) {
-    _inherits(MultipleFilterComponent, _Component);
-
-    function MultipleFilterComponent() {
-        _classCallCheck(this, MultipleFilterComponent);
-
-        var _this = _possibleConstructorReturn(this, (MultipleFilterComponent.__proto__ || Object.getPrototypeOf(MultipleFilterComponent)).call(this));
-
-        _this.handleClick = function (selectedFilter) {
-            var _this$props = _this.props,
-                environmentId = _this$props.environmentId,
-                filterName = _this$props.name,
-                filterField = _this$props.filterField,
-                aggregationField = _this$props.aggregationField,
-                applicationType = _this$props.applicationType,
-                sortBy = _this$props.sortBy,
-                fetchLimit = _this$props.fetchLimit,
-                currentQuery = _this$props.currentQuery,
-                client = _this$props.client,
-                aggregations = _this$props.data.aggregations.aggregations;
-
-
-            var activeElements = aggregations[filterName].active_elements;
-            var currentActiveFilterValues = typeof activeElements !== 'undefined' ? activeElements : [];
-
-            /**
-             * Dispatch filter action
-             */
-            (0, _multipleFilterActions.filterAction)({
-                filterName: filterName,
-                filterField: filterField,
-                applicationType: applicationType,
-                sortBy: sortBy,
-                fetchLimit: fetchLimit,
-                aggregationField: aggregationField ? aggregationField : filterField,
-
-                filterValues: (0, _helpers.manageCurrentFilterItems)(selectedFilter, currentActiveFilterValues)
-            }, {
-                environmentId: environmentId,
-                currentQuery: currentQuery,
-                client: client
-            });
-        };
-
-        _this.handleShowMore = function () {
-            var _this$state = _this.state,
-                activeAggregations = _this$state.activeAggregations,
-                currentAggregations = _this$state.currentAggregations;
-
-
-            var viewLimit = activeAggregations.length + currentAggregations.length;
-            _this.setState({ viewLimit: viewLimit });
-        };
-
-        _this.handleShowLess = function () {
-            var viewLimit = _this.props.viewLimit;
-
-            _this.setState({ viewLimit: viewLimit });
-        };
-
-        _this.state = {
-            viewLimit: 0,
-            activeAggregations: [],
-            currentAggregations: []
-        };
-        return _this;
-    }
-
-    _createClass(MultipleFilterComponent, [{
-        key: "componentWillMount",
-        value: function componentWillMount() {
-            var _props = this.props,
-                environmentId = _props.environmentId,
-                filterName = _props.name,
-                filterField = _props.filterField,
-                aggregationField = _props.aggregationField,
-                applicationType = _props.applicationType,
-                sortBy = _props.sortBy,
-                fetchLimit = _props.fetchLimit,
-                viewLimit = _props.viewLimit,
-                currentQuery = _props.currentQuery;
-
-            /**
-             * Set view items limit
-             */
-
-            var isViewLimitProperlySet = viewLimit && viewLimit < fetchLimit;
-            this.setState({
-                viewLimit: isViewLimitProperlySet ? viewLimit : fetchLimit
-            });
-
-            /**
-             * Dispatch action
-             */
-            (0, _multipleFilterActions.aggregationSetup)({
-                filterName: filterName,
-                applicationType: applicationType,
-                sortBy: sortBy,
-                fetchLimit: fetchLimit,
-                aggregationField: aggregationField ? aggregationField : filterField
-            }, {
-                environmentId: environmentId,
-                currentQuery: currentQuery
-            });
-        }
-    }, {
-        key: "componentWillReceiveProps",
-        value: function componentWillReceiveProps(props) {
-            var filterName = props.name,
-                aggregations = props.data.aggregations.aggregations;
-
-
-            if (typeof aggregations[filterName] !== 'undefined') {
-                /**
-                 * Getting aggregation from aggregations
-                 */
-                var aggregation = aggregations[filterName];
-                var counters = aggregation.counters ? aggregation.counters : [];
-
-                this.setState({
-                    /**
-                     * Current used aggregations
-                     */
-                    activeAggregations: counters.filter(function (item) {
-                        return item.used;
-                    }),
-                    /**
-                     * Current inactive aggregations
-                     */
-                    currentAggregations: counters.filter(function (item) {
-                        return null === item.used;
-                    })
-                });
-            }
-        }
-    }, {
-        key: "render",
-        value: function render() {
-            var _this2 = this;
-
-            var _props2 = this.props,
-                viewLimit = _props2.viewLimit,
-                fetchLimit = _props2.fetchLimit,
-                _props2$classNames = _props2.classNames,
-                containerClassName = _props2$classNames.container,
-                topClassName = _props2$classNames.top,
-                itemsListClassName = _props2$classNames.itemsList,
-                itemClassName = _props2$classNames.item,
-                showMoreContainerClassName = _props2$classNames.showMoreContainer,
-                _props2$template = _props2.template,
-                topTemplate = _props2$template.top,
-                itemTemplate = _props2$template.item,
-                showMoreTemplate = _props2$template.showMore,
-                showLessTemplate = _props2$template.showLess,
-                formatData = _props2.formatData;
-
-            /**
-             * Get aggregation items
-             */
-
-            var allItems = [].concat(_toConsumableArray(this.state.activeAggregations), _toConsumableArray(this.state.currentAggregations));
-            var allItemsLength = allItems.length;
-            var items = allItems.slice(0, this.state.viewLimit);
-
-            /**
-             * Check available view limit
-             */
-            var isViewLimitProperlySet = viewLimit && viewLimit < fetchLimit;
-
-            return (0, _preact.h)(
-                "div",
-                { className: "asui-multipleFilter " + containerClassName },
-                (0, _preact.h)(_Template2.default, {
-                    template: topTemplate,
-                    className: "asui-multipleFilter--top " + topClassName
-                }),
-                (0, _preact.h)(
-                    "div",
-                    { className: "asui-multipleFilter--itemsList " + itemsListClassName },
-                    items.map(function (item) {
-                        var reducedTemplateData = {
-                            n: parseInt(item.n).toLocaleString('de-DE'),
-                            isActive: item.used,
-                            values: item.values
-                        };
-                        var formattedTemplateData = formatData(reducedTemplateData);
-
-                        return (0, _preact.h)(
-                            "div",
-                            {
-                                className: "asui-multipleFilter--item " + itemClassName,
-                                onClick: function onClick() {
-                                    return _this2.handleClick(item.values.id);
-                                }
-                            },
-                            (0, _preact.h)(_Template2.default, {
-                                template: itemTemplate,
-                                data: formattedTemplateData
-                            })
-                        );
-                    })
-                ),
-                isViewLimitProperlySet ? (0, _preact.h)(_ShowMoreComponent2.default, {
-                    allItemsLength: allItemsLength,
-                    currentLimit: this.state.viewLimit,
-                    handleShowMore: this.handleShowMore,
-                    handleShowLess: this.handleShowLess,
-                    showMoreContainerClassName: showMoreContainerClassName,
-                    showMoreTemplate: showMoreTemplate,
-                    showLessTemplate: showLessTemplate
-                }) : null
-            );
-        }
-    }]);
-
-    return MultipleFilterComponent;
-}(_preact.Component);
-
-MultipleFilterComponent.defaultProps = {
-    aggregationField: null,
-    applicationType: 8, // FILTER_MUST_ALL
-    fetchLimit: 10,
-    viewLimit: null,
-    sortBy: ['_term', 'desc'],
-    classNames: {
-        container: '',
-        top: '',
-        itemsList: '',
-        item: '',
-        showMoreContainer: ''
-    },
-    template: {
-        top: null,
-        item: null,
-        showMore: '+ Show more',
-        showLess: '- Show less'
-    },
-    formatData: function formatData(data) {
-        return data;
-    }
-};
-
-exports.default = MultipleFilterComponent;
-
-/***/ }),
-/* 31 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.aggregationSetup = aggregationSetup;
-exports.filterAction = filterAction;
-
-var _cloneDeep = __webpack_require__(3);
-
-var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
-
-var _container = __webpack_require__(1);
-
-var _container2 = _interopRequireDefault(_container);
-
-var _constants = __webpack_require__(2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Define aggregations setup
- *
- * This setup action is triggered when mounting a component
- * receives two parameters:
- *   @param queryOptions -> query given options
- *   @param appOptions   -> current application options
- *
- * Finally dispatches an event with the modified query.
- *   @returns {{
- *     type: string,
- *     payload: {
- *        updatedQuery
- *     }
- *   }}
- */
-function aggregationSetup(_ref, _ref2) {
-    var filterName = _ref.filterName,
-        aggregationField = _ref.aggregationField,
-        applicationType = _ref.applicationType,
-        sortBy = _ref.sortBy,
-        fetchLimit = _ref.fetchLimit;
-    var environmentId = _ref2.environmentId,
-        currentQuery = _ref2.currentQuery;
-
-    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
-
-    clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy, fetchLimit);
-
-    var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + "__" + environmentId);
-    dispatcher.dispatch({
-        type: 'UPDATE_APISEARCH_SETUP',
-        payload: {
-            updatedQuery: clonedQuery
-        }
-    });
-}
-
-/**
- * Filter action
- *
- * This setup action is triggered when mounting a component
- * receives two parameters:
- *   @param queryOptions -> query given options
- *   @param appOptions   -> current application options
- *
- * Finally dispatches an event with the modified query.
- *   @returns {{
- *     type: string,
- *     payload: {
- *        updatedQuery,
- *        result
- *     }
- *   }}
- */
-/**
- * Multiple filter actions
- */
-function filterAction(_ref3, _ref4) {
-    var filterName = _ref3.filterName,
-        filterField = _ref3.filterField,
-        aggregationField = _ref3.aggregationField,
-        filterValues = _ref3.filterValues,
-        applicationType = _ref3.applicationType,
-        sortBy = _ref3.sortBy,
-        fetchLimit = _ref3.fetchLimit;
-    var environmentId = _ref4.environmentId,
-        currentQuery = _ref4.currentQuery,
-        client = _ref4.client;
-
-    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
-
-    clonedQuery.filterBy(filterName, filterField, filterValues, applicationType, false, sortBy);
-    clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy, fetchLimit);
-    clonedQuery.setPage(1);
-
-    client.search(clonedQuery, function (result, error) {
-        if (error) return;
-
-        var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + "__" + environmentId);
-        dispatcher.dispatch({
-            type: 'RENDER_FETCHED_DATA',
-            payload: {
-                updatedQuery: clonedQuery,
-                result: result
-            }
-        });
-    });
-}
-
-/***/ }),
-/* 32 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.manageCurrentFilterItems = manageCurrentFilterItems;
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-/**
- * Manage filter items
- *
- * If an item is on the list, remove it
- * else, add it!
- *
- * @param selectedItem
- * @param currentItems
- * @returns {[null,null]}
- */
-function manageCurrentFilterItems(selectedItem, currentItems) {
-    var isElementActive = currentItems.some(function (item) {
-        return item === selectedItem;
-    });
-
-    if (isElementActive) {
-        return currentItems.filter(function (item) {
-            return item !== selectedItem;
-        });
-    } else {
-        return [].concat(_toConsumableArray(currentItems), [selectedItem]);
-    }
-}
-
-/***/ }),
-/* 33 */
-/***/ (function(module, exports, __webpack_require__) {
-
 /*
  *  Copyright 2011 Twitter, Inc.
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -4118,14 +3037,14 @@ function manageCurrentFilterItems(selectedItem, currentItems) {
 
 // This file is for use with Node.js. See dist/ for browser files.
 
-var Hogan = __webpack_require__(34);
-Hogan.Template = __webpack_require__(35).Template;
+var Hogan = __webpack_require__(26);
+Hogan.Template = __webpack_require__(27).Template;
 Hogan.template = Hogan.Template;
 module.exports = Hogan;
 
 
 /***/ }),
-/* 34 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -4554,7 +3473,7 @@ module.exports = Hogan;
 
 
 /***/ }),
-/* 35 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -4901,6 +3820,1120 @@ var Hogan = {};
 
 
 /***/ }),
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _preact = __webpack_require__(0);
+
+var _helpers = __webpack_require__(29);
+
+var _suggestedSearchActions = __webpack_require__(30);
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+/**
+ * Actions
+ */
+
+
+/**
+ * Suggested Search Component
+ */
+var SuggestedSearchComponent = function (_Component) {
+    _inherits(SuggestedSearchComponent, _Component);
+
+    function SuggestedSearchComponent() {
+        _classCallCheck(this, SuggestedSearchComponent);
+
+        var _this = _possibleConstructorReturn(this, (SuggestedSearchComponent.__proto__ || Object.getPrototypeOf(SuggestedSearchComponent)).call(this));
+
+        _this.handleSearch = function (e) {
+            var _this$props = _this.props,
+                startSearchOn = _this$props.startSearchOn,
+                environmentId = _this$props.environmentId,
+                currentQuery = _this$props.currentQuery,
+                client = _this$props.client;
+
+            /**
+             * Set the current query text
+             */
+
+            _this.setState({ q: e.target.value });
+
+            /**
+             * Search when string is bigger than {startSearchOn}
+             */
+            if (e.target.value.length < startSearchOn) {
+                _this.setState({ currentSuggestions: [] });
+                return;
+            }
+
+            /**
+             * Dispatch suggested search action
+             */
+            (0, _suggestedSearchActions.suggestedSearchAction)({
+                queryText: e.target.value
+            }, {
+                environmentId: environmentId,
+                currentQuery: currentQuery,
+                client: client
+            });
+        };
+
+        _this.handleSuggestionsNavigation = function (e) {
+            /**
+             * When user hits arrow down
+             */
+            if (e.code === 'ArrowDown') {
+                _this.setState({
+                    currentSuggestions: (0, _helpers.selectNextSuggestion)(_this.state.currentSuggestions),
+                    q: (0, _helpers.selectActiveSuggestion)(_this.state.currentSuggestions)
+                });
+            }
+
+            /**
+             * When user hits arrow up
+             */
+            if (e.code === 'ArrowUp') {
+                /**
+                 * Prevent cursor to go at the starting point of the line
+                 */
+                e.preventDefault();
+
+                _this.setState({
+                    currentSuggestions: (0, _helpers.selectPreviousSuggestion)(_this.state.currentSuggestions),
+                    q: (0, _helpers.selectActiveSuggestion)(_this.state.currentSuggestions)
+                });
+            }
+
+            /**
+             * When user hits enter
+             */
+            if (e.code === 'Enter') {
+                _this.setState({
+                    q: (0, _helpers.selectActiveSuggestion)(_this.state.currentSuggestions),
+                    currentSuggestions: []
+                });
+
+                var _this$props2 = _this.props,
+                    environmentId = _this$props2.environmentId,
+                    currentQuery = _this$props2.currentQuery,
+                    client = _this$props2.client;
+
+
+                (0, _suggestedSearchActions.simpleSearchAction)({
+                    queryText: _this.state.q
+                }, {
+                    environmentId: environmentId,
+                    currentQuery: currentQuery,
+                    client: client
+                });
+            }
+        };
+
+        _this.handleSuggestionClick = function (e) {
+            _this.setState({
+                q: e.target.innerText,
+                currentSuggestions: []
+            });
+
+            var _this$props3 = _this.props,
+                environmentId = _this$props3.environmentId,
+                currentQuery = _this$props3.currentQuery,
+                client = _this$props3.client;
+
+
+            (0, _suggestedSearchActions.simpleSearchAction)({
+                queryText: e.target.innerText
+            }, {
+                environmentId: environmentId,
+                currentQuery: currentQuery,
+                client: client
+            });
+        };
+
+        _this.handleSearchInputFocusedOut = function (e) {
+            /**
+             * It handles when a user focuses out the search input
+             * If is not clicking on the suggestions box
+             * The suggestions are cleared and panel closes
+             */
+            if (null === e.relatedTarget || false === e.relatedTarget.classList.contains('asui-suggestedSearch--box')) {
+                _this.setState({ currentSuggestions: [] });
+            }
+
+            return false;
+        };
+
+        _this.state = {
+            q: '',
+            currentSuggestions: []
+        };
+        return _this;
+    }
+
+    _createClass(SuggestedSearchComponent, [{
+        key: 'componentWillReceiveProps',
+        value: function componentWillReceiveProps(props) {
+            var _this2 = this;
+
+            /**
+             * Check suggestions available
+             * if some, prepend the current query to the other suggestions array
+             * else, only append the current query to the suggestions array
+             */
+            var suggests = props.data && props.data.suggests ? [this.state.q].concat(_toConsumableArray(props.data.suggests)) : [this.state.q];
+
+            /**
+             * Prepare suggestions array
+             */
+            this.setState({
+                currentSuggestions: suggests.map(function (suggest, key) {
+                    return {
+                        isActive: 0 === key,
+                        name: suggest,
+                        htmlName: (0, _helpers.highlightSuggestion)(_this2.state.q, suggest)
+                    };
+                })
+            });
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var _this3 = this;
+
+            var _props = this.props,
+                placeholder = _props.placeholder,
+                autofocus = _props.autofocus,
+                _props$classNames = _props.classNames,
+                containerClassName = _props$classNames.container,
+                inputClassName = _props$classNames.input,
+                boxClassName = _props$classNames.box,
+                suggestionClassName = _props$classNames.suggestion,
+                activeSuggestionClassName = _props$classNames.activeSuggestion;
+            var currentSuggestions = this.state.currentSuggestions;
+
+
+            return (0, _preact.h)(
+                'div',
+                { className: 'asui-suggestedSearch ' + containerClassName },
+                (0, _preact.h)('input', {
+                    type: 'text',
+                    value: this.state.q,
+                    className: 'asui-suggestedSearch--input ' + inputClassName,
+                    placeholder: placeholder,
+                    autofocus: autofocus,
+
+                    onInput: this.handleSearch,
+                    onKeyDown: this.handleSuggestionsNavigation,
+                    onBlur: this.handleSearchInputFocusedOut
+                }),
+                (0, _preact.h)(
+                    'div',
+                    {
+                        tabIndex: '0',
+                        className: 'asui-suggestedSearch--box ' + boxClassName,
+                        style: {
+                            display: currentSuggestions.length !== 0 ? 'block' : 'none'
+                        }
+                    },
+                    currentSuggestions.map(function (suggestion, key) {
+                        return 0 !== key ? (0, _preact.h)('div', {
+                            className: 'asui-suggestedSearch--suggestion ' + (suggestionClassName + ' ') + ('' + (suggestion.isActive ? activeSuggestionClassName : '')),
+                            dangerouslySetInnerHTML: {
+                                __html: suggestion.htmlName
+                            },
+                            onClick: _this3.handleSuggestionClick
+                        }) : null;
+                    })
+                )
+            );
+        }
+    }]);
+
+    return SuggestedSearchComponent;
+}(_preact.Component);
+
+SuggestedSearchComponent.defaultProps = {
+    placeholder: '',
+    autofocus: false,
+    startSearchOn: 0,
+    classNames: {
+        container: '',
+        input: '',
+        box: '',
+        suggestion: '',
+        activeSuggestion: 'asui-active'
+    }
+};
+
+exports.default = SuggestedSearchComponent;
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.highlightSuggestion = highlightSuggestion;
+exports.selectNextSuggestion = selectNextSuggestion;
+exports.selectPreviousSuggestion = selectPreviousSuggestion;
+exports.selectActiveSuggestion = selectActiveSuggestion;
+/**
+ * Set of helpers for the suggestions widget
+ */
+
+/**
+ * Highlight text
+ */
+function highlightSuggestion(currentQueryText, suggestion) {
+    var regex = new RegExp('(' + currentQueryText + ')', 'gi');
+    var highlightedSuggestion = suggestion.replace(regex, "<em>$1</em>");
+    var sanitizedSpaces = highlightedSuggestion.split(' ');
+
+    return sanitizedSpaces.join('&nbsp;');
+}
+
+/**
+ * Mark as active the item next
+ * to the last active item
+ * on a given array of items
+ *
+ * @example when a user press a key arrow down
+ */
+function selectNextSuggestion(suggestionsArray) {
+    var currentActiveSuggestionKey = void 0;
+
+    return suggestionsArray.map(function (suggestion, key) {
+        /**
+         * Detect current active suggestion
+         */
+        if (suggestion.isActive && key + 1 < suggestionsArray.length) {
+            currentActiveSuggestionKey = key;
+            suggestion.isActive = false;
+        }
+
+        /**
+         * Modify the first suggestion next to
+         * the current active suggestion
+         */
+        if (key === currentActiveSuggestionKey + 1 && key + 1 <= suggestionsArray.length) {
+            suggestion.isActive = true;
+        }
+
+        return suggestion;
+    });
+}
+
+/**
+ * Mark as active the item previous
+ * to the last active item
+ * on a given array of items
+ *
+ * @example when a user press a key arrow up
+ */
+function selectPreviousSuggestion(suggestionsArray) {
+    /**
+     * Find the current active suggestion key
+     */
+    var currentActiveSuggestionKey = suggestionsArray.findIndex(function (suggestion) {
+        if (suggestion.isActive) {
+            return suggestion;
+        }
+    });
+
+    return suggestionsArray.map(function (suggestion, key) {
+        /**
+         * Set the current active suggestion as false
+         * if is Active AND is not the last one
+         */
+        if (suggestion.isActive && currentActiveSuggestionKey - 1 >= 0) {
+            suggestion.isActive = false;
+        }
+
+        /**
+         * Set active the suggestion previous to
+         * the current active suggestion
+         */
+        if (currentActiveSuggestionKey - 1 === key && currentActiveSuggestionKey - 1 >= 0) {
+            suggestion.isActive = true;
+        }
+
+        return suggestion;
+    });
+}
+
+/**
+ * Return the active item of an array
+ */
+function selectActiveSuggestion(suggestionsArray) {
+    var selectedSuggestion = suggestionsArray.filter(function (suggestion) {
+        if (suggestion.isActive) {
+            return suggestion;
+        }
+    });
+
+    return selectedSuggestion[0].name;
+}
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.simpleSearchAction = simpleSearchAction;
+exports.suggestedSearchAction = suggestedSearchAction;
+
+var _cloneDeep = __webpack_require__(4);
+
+var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
+
+var _container = __webpack_require__(1);
+
+var _container2 = _interopRequireDefault(_container);
+
+var _constants = __webpack_require__(2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * This actions are triggered when a text input changes
+ * receives two parameters:
+ *   @param queryOptions -> query given options
+ *   @param appOptions   -> current application options
+ *
+ * Finally dispatches an event with the search result and
+ * the modified query.
+ *   @returns {{
+ *     type: string,
+ *     payload: {
+ *        result,
+ *        updatedQuery
+ *     }
+ *   }}
+ */
+
+/**
+ * Simple search action
+ * Builds a query disabling suggested searches flag
+ */
+function simpleSearchAction(_ref, _ref2) {
+    var queryText = _ref.queryText;
+    var environmentId = _ref2.environmentId,
+        currentQuery = _ref2.currentQuery,
+        client = _ref2.client;
+
+    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+
+    clonedQuery.setQueryText(queryText).setPage(1).enableResults().disableSuggestions();
+
+    client.search(clonedQuery, function (result, error) {
+        if (error) return;
+
+        var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
+        dispatcher.dispatch({
+            type: 'RENDER_FETCHED_DATA',
+            payload: {
+                result: result,
+                updatedQuery: clonedQuery
+            }
+        });
+    });
+}
+
+/**
+ * Suggested Search Action
+ * Builds a query using suggested search flag active
+ */
+/**
+ * Search actions
+ */
+function suggestedSearchAction(_ref3, _ref4) {
+    var queryText = _ref3.queryText;
+    var environmentId = _ref4.environmentId,
+        currentQuery = _ref4.currentQuery,
+        client = _ref4.client;
+
+    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+
+    clonedQuery.setQueryText(queryText).setPage(1).disableResults().enableSuggestions();
+
+    client.search(clonedQuery, function (result, error) {
+        if (error) return;
+
+        var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
+        dispatcher.dispatch({
+            type: 'RENDER_FETCHED_DATA',
+            payload: {
+                result: result,
+                updatedQuery: clonedQuery
+            }
+        });
+    });
+}
+
+/***/ }),
+/* 31 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _preact = __webpack_require__(0);
+
+var _sortByActions = __webpack_require__(32);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+
+/**
+ * SortBy Filter Component
+ */
+var SortByComponent = function (_Component) {
+    _inherits(SortByComponent, _Component);
+
+    function SortByComponent() {
+        var _ref;
+
+        var _temp, _this, _ret;
+
+        _classCallCheck(this, SortByComponent);
+
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+        }
+
+        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = SortByComponent.__proto__ || Object.getPrototypeOf(SortByComponent)).call.apply(_ref, [this].concat(args))), _this), _this.handleChange = function (e) {
+            var _this$props = _this.props,
+                environmentId = _this$props.environmentId,
+                currentQuery = _this$props.currentQuery,
+                client = _this$props.client;
+
+            /**
+             * Dispatch action
+             */
+
+            (0, _sortByActions.onChangeSearchAction)({
+                selectedOption: e.target.value
+            }, {
+                environmentId: environmentId,
+                currentQuery: currentQuery,
+                client: client
+            });
+        }, _temp), _possibleConstructorReturn(_this, _ret);
+    }
+
+    _createClass(SortByComponent, [{
+        key: 'shouldComponentUpdate',
+        value: function shouldComponentUpdate() {
+            return false;
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var _props = this.props,
+                _props$classNames = _props.classNames,
+                containerClassName = _props$classNames.container,
+                selectClassName = _props$classNames.select,
+                options = _props.options;
+
+
+            return (0, _preact.h)(
+                'div',
+                { className: 'asui-sortBy ' + containerClassName },
+                (0, _preact.h)(
+                    'select',
+                    {
+                        className: 'asui-sortBy--selector ' + selectClassName,
+                        onChange: this.handleChange
+                    },
+                    options.map(function (option) {
+                        return (0, _preact.h)(
+                            'option',
+                            { value: option.value },
+                            option.name
+                        );
+                    })
+                )
+            );
+        }
+    }]);
+
+    return SortByComponent;
+}(_preact.Component);
+
+SortByComponent.defaultProps = {
+    classNames: {
+        container: '',
+        select: ''
+    }
+};
+
+exports.default = SortByComponent;
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.onChangeSearchAction = onChangeSearchAction;
+
+var _cloneDeep = __webpack_require__(4);
+
+var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
+
+var _container = __webpack_require__(1);
+
+var _container2 = _interopRequireDefault(_container);
+
+var _constants = __webpack_require__(2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; } /**
+                                                                                                                                                                                                                   * SortBy actions
+                                                                                                                                                                                                                   */
+
+
+/**
+ * On change action
+ *
+ * This action is triggered when a sortBy filter changes
+ * receives two parameters:
+ *   @param queryOptions -> query given options
+ *   @param appOptions   -> current application options
+ *
+ * Finally dispatches an event with the search result and
+ * the modified query.
+ *   @returns {{
+ *     type: string,
+ *     payload: {
+ *        result,
+ *        updatedQuery
+ *     }
+ *   }}
+ */
+function onChangeSearchAction(_ref, _ref2) {
+    var selectedOption = _ref.selectedOption;
+    var environmentId = _ref2.environmentId,
+        currentQuery = _ref2.currentQuery,
+        client = _ref2.client;
+
+    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+    var filterData = splitQueryValue(selectedOption);
+
+    clonedQuery.sortBy(_defineProperty({}, 'indexed_metadata.' + filterData.field, {
+        order: filterData.value
+    }));
+    clonedQuery.setPage(1);
+
+    client.search(clonedQuery, function (result, error) {
+        if (error) return;
+
+        var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
+        dispatcher.dispatch({
+            type: 'RENDER_FETCHED_DATA',
+            payload: {
+                result: result,
+                updatedQuery: clonedQuery
+            }
+        });
+    });
+}
+
+function splitQueryValue(string) {
+    var queryValue = string.split(':');
+
+    return {
+        field: queryValue[0],
+        value: queryValue[1]
+    };
+}
+
+/***/ }),
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _preact = __webpack_require__(0);
+
+var _multipleFilterActions = __webpack_require__(34);
+
+var _helpers = __webpack_require__(35);
+
+var _Template = __webpack_require__(3);
+
+var _Template2 = _interopRequireDefault(_Template);
+
+var _ShowMoreComponent = __webpack_require__(36);
+
+var _ShowMoreComponent2 = _interopRequireDefault(_ShowMoreComponent);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+
+/**
+ * Filter Component
+ */
+var MultipleFilterComponent = function (_Component) {
+    _inherits(MultipleFilterComponent, _Component);
+
+    function MultipleFilterComponent() {
+        _classCallCheck(this, MultipleFilterComponent);
+
+        var _this = _possibleConstructorReturn(this, (MultipleFilterComponent.__proto__ || Object.getPrototypeOf(MultipleFilterComponent)).call(this));
+
+        _this.handleClick = function (selectedFilter) {
+            var _this$props = _this.props,
+                environmentId = _this$props.environmentId,
+                filterName = _this$props.name,
+                filterField = _this$props.filterField,
+                aggregationField = _this$props.aggregationField,
+                applicationType = _this$props.applicationType,
+                sortBy = _this$props.sortBy,
+                fetchLimit = _this$props.fetchLimit,
+                currentQuery = _this$props.currentQuery,
+                client = _this$props.client,
+                aggregations = _this$props.data.aggregations.aggregations;
+
+
+            var activeElements = aggregations[filterName].active_elements;
+            var currentActiveFilterValues = typeof activeElements !== 'undefined' ? activeElements : [];
+
+            /**
+             * Dispatch filter action
+             */
+            (0, _multipleFilterActions.filterAction)({
+                filterName: filterName,
+                filterField: filterField,
+                applicationType: applicationType,
+                sortBy: sortBy,
+                fetchLimit: fetchLimit,
+                aggregationField: aggregationField ? aggregationField : filterField,
+
+                filterValues: (0, _helpers.manageCurrentFilterItems)(selectedFilter, currentActiveFilterValues)
+            }, {
+                environmentId: environmentId,
+                currentQuery: currentQuery,
+                client: client
+            });
+        };
+
+        _this.handleShowMore = function () {
+            var _this$state = _this.state,
+                activeAggregations = _this$state.activeAggregations,
+                currentAggregations = _this$state.currentAggregations;
+
+
+            var viewLimit = activeAggregations.length + currentAggregations.length;
+            _this.setState({ viewLimit: viewLimit });
+        };
+
+        _this.handleShowLess = function () {
+            var viewLimit = _this.props.viewLimit;
+
+            _this.setState({ viewLimit: viewLimit });
+        };
+
+        _this.state = {
+            viewLimit: 0,
+            activeAggregations: [],
+            currentAggregations: []
+        };
+        return _this;
+    }
+
+    _createClass(MultipleFilterComponent, [{
+        key: "componentWillMount",
+        value: function componentWillMount() {
+            var _props = this.props,
+                environmentId = _props.environmentId,
+                filterName = _props.name,
+                filterField = _props.filterField,
+                aggregationField = _props.aggregationField,
+                applicationType = _props.applicationType,
+                sortBy = _props.sortBy,
+                fetchLimit = _props.fetchLimit,
+                viewLimit = _props.viewLimit,
+                currentQuery = _props.currentQuery;
+
+            /**
+             * Set view items limit
+             */
+
+            var isViewLimitProperlySet = viewLimit && viewLimit < fetchLimit;
+            this.setState({
+                viewLimit: isViewLimitProperlySet ? viewLimit : fetchLimit
+            });
+
+            /**
+             * Dispatch action
+             */
+            (0, _multipleFilterActions.aggregationSetup)({
+                filterName: filterName,
+                applicationType: applicationType,
+                sortBy: sortBy,
+                fetchLimit: fetchLimit,
+                aggregationField: aggregationField ? aggregationField : filterField
+            }, {
+                environmentId: environmentId,
+                currentQuery: currentQuery
+            });
+        }
+    }, {
+        key: "componentWillReceiveProps",
+        value: function componentWillReceiveProps(props) {
+            var filterName = props.name,
+                aggregations = props.data.aggregations.aggregations;
+
+
+            if (typeof aggregations[filterName] !== 'undefined') {
+                /**
+                 * Getting aggregation from aggregations
+                 */
+                var aggregation = aggregations[filterName];
+                var counters = aggregation.counters ? aggregation.counters : [];
+
+                this.setState({
+                    /**
+                     * Current used aggregations
+                     */
+                    activeAggregations: counters.filter(function (item) {
+                        return item.used;
+                    }),
+                    /**
+                     * Current inactive aggregations
+                     */
+                    currentAggregations: counters.filter(function (item) {
+                        return null === item.used;
+                    })
+                });
+            }
+        }
+    }, {
+        key: "render",
+        value: function render() {
+            var _this2 = this;
+
+            var _props2 = this.props,
+                viewLimit = _props2.viewLimit,
+                fetchLimit = _props2.fetchLimit,
+                _props2$classNames = _props2.classNames,
+                containerClassName = _props2$classNames.container,
+                topClassName = _props2$classNames.top,
+                itemsListClassName = _props2$classNames.itemsList,
+                itemClassName = _props2$classNames.item,
+                showMoreContainerClassName = _props2$classNames.showMoreContainer,
+                _props2$template = _props2.template,
+                topTemplate = _props2$template.top,
+                itemTemplate = _props2$template.item,
+                showMoreTemplate = _props2$template.showMore,
+                showLessTemplate = _props2$template.showLess,
+                formatData = _props2.formatData;
+
+            /**
+             * Get aggregation items
+             */
+
+            var allItems = [].concat(_toConsumableArray(this.state.activeAggregations), _toConsumableArray(this.state.currentAggregations));
+            var allItemsLength = allItems.length;
+            var items = allItems.slice(0, this.state.viewLimit);
+
+            /**
+             * Check available view limit
+             */
+            var isViewLimitProperlySet = viewLimit && viewLimit < fetchLimit;
+
+            return (0, _preact.h)(
+                "div",
+                { className: "asui-multipleFilter " + containerClassName },
+                (0, _preact.h)(_Template2.default, {
+                    template: topTemplate,
+                    className: "asui-multipleFilter--top " + topClassName
+                }),
+                (0, _preact.h)(
+                    "div",
+                    { className: "asui-multipleFilter--itemsList " + itemsListClassName },
+                    items.map(function (item) {
+                        var reducedTemplateData = {
+                            n: parseInt(item.n).toLocaleString('de-DE'),
+                            isActive: item.used,
+                            values: item.values
+                        };
+                        var formattedTemplateData = formatData(reducedTemplateData);
+
+                        return (0, _preact.h)(
+                            "div",
+                            {
+                                className: "asui-multipleFilter--item " + itemClassName,
+                                onClick: function onClick() {
+                                    return _this2.handleClick(item.values.id);
+                                }
+                            },
+                            (0, _preact.h)(_Template2.default, {
+                                template: itemTemplate,
+                                data: formattedTemplateData
+                            })
+                        );
+                    })
+                ),
+                isViewLimitProperlySet ? (0, _preact.h)(_ShowMoreComponent2.default, {
+                    allItemsLength: allItemsLength,
+                    currentLimit: this.state.viewLimit,
+                    handleShowMore: this.handleShowMore,
+                    handleShowLess: this.handleShowLess,
+                    showMoreContainerClassName: showMoreContainerClassName,
+                    showMoreTemplate: showMoreTemplate,
+                    showLessTemplate: showLessTemplate
+                }) : null
+            );
+        }
+    }]);
+
+    return MultipleFilterComponent;
+}(_preact.Component);
+
+MultipleFilterComponent.defaultProps = {
+    aggregationField: null,
+    applicationType: 8, // FILTER_MUST_ALL
+    fetchLimit: 10,
+    viewLimit: null,
+    sortBy: ['_term', 'desc'],
+    classNames: {
+        container: '',
+        top: '',
+        itemsList: '',
+        item: '',
+        showMoreContainer: ''
+    },
+    template: {
+        top: null,
+        item: null,
+        showMore: '+ Show more',
+        showLess: '- Show less'
+    },
+    formatData: function formatData(data) {
+        return data;
+    }
+};
+
+exports.default = MultipleFilterComponent;
+
+/***/ }),
+/* 34 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.aggregationSetup = aggregationSetup;
+exports.filterAction = filterAction;
+
+var _cloneDeep = __webpack_require__(4);
+
+var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
+
+var _container = __webpack_require__(1);
+
+var _container2 = _interopRequireDefault(_container);
+
+var _constants = __webpack_require__(2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Define aggregations setup
+ *
+ * This setup action is triggered when mounting a component
+ * receives two parameters:
+ *   @param queryOptions -> query given options
+ *   @param appOptions   -> current application options
+ *
+ * Finally dispatches an event with the modified query.
+ *   @returns {{
+ *     type: string,
+ *     payload: {
+ *        updatedQuery
+ *     }
+ *   }}
+ */
+function aggregationSetup(_ref, _ref2) {
+    var filterName = _ref.filterName,
+        aggregationField = _ref.aggregationField,
+        applicationType = _ref.applicationType,
+        sortBy = _ref.sortBy,
+        fetchLimit = _ref.fetchLimit;
+    var environmentId = _ref2.environmentId,
+        currentQuery = _ref2.currentQuery;
+
+    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+
+    clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy, fetchLimit);
+
+    var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + "__" + environmentId);
+    dispatcher.dispatch({
+        type: 'UPDATE_APISEARCH_SETUP',
+        payload: {
+            updatedQuery: clonedQuery
+        }
+    });
+}
+
+/**
+ * Filter action
+ *
+ * This setup action is triggered when mounting a component
+ * receives two parameters:
+ *   @param queryOptions -> query given options
+ *   @param appOptions   -> current application options
+ *
+ * Finally dispatches an event with the modified query.
+ *   @returns {{
+ *     type: string,
+ *     payload: {
+ *        updatedQuery,
+ *        result
+ *     }
+ *   }}
+ */
+/**
+ * Multiple filter actions
+ */
+function filterAction(_ref3, _ref4) {
+    var filterName = _ref3.filterName,
+        filterField = _ref3.filterField,
+        aggregationField = _ref3.aggregationField,
+        filterValues = _ref3.filterValues,
+        applicationType = _ref3.applicationType,
+        sortBy = _ref3.sortBy,
+        fetchLimit = _ref3.fetchLimit;
+    var environmentId = _ref4.environmentId,
+        currentQuery = _ref4.currentQuery,
+        client = _ref4.client;
+
+    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+
+    clonedQuery.filterBy(filterName, filterField, filterValues, applicationType, false, sortBy);
+    clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy, fetchLimit);
+    clonedQuery.setPage(1);
+
+    client.search(clonedQuery, function (result, error) {
+        if (error) return;
+
+        var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + "__" + environmentId);
+        dispatcher.dispatch({
+            type: 'RENDER_FETCHED_DATA',
+            payload: {
+                updatedQuery: clonedQuery,
+                result: result
+            }
+        });
+    });
+}
+
+/***/ }),
+/* 35 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.manageCurrentFilterItems = manageCurrentFilterItems;
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+/**
+ * Manage filter items
+ *
+ * If an item is on the list, remove it
+ * else, add it!
+ *
+ * @param selectedItem
+ * @param currentItems
+ * @returns {[null,null]}
+ */
+function manageCurrentFilterItems(selectedItem, currentItems) {
+    var isElementActive = currentItems.some(function (item) {
+        return item === selectedItem;
+    });
+
+    if (isElementActive) {
+        return currentItems.filter(function (item) {
+            return item !== selectedItem;
+        });
+    } else {
+        return [].concat(_toConsumableArray(currentItems), [selectedItem]);
+    }
+}
+
+/***/ }),
 /* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4913,7 +4946,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _preact = __webpack_require__(0);
 
-var _Template = __webpack_require__(4);
+var _Template = __webpack_require__(3);
 
 var _Template2 = _interopRequireDefault(_Template);
 
@@ -4976,7 +5009,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _Template = __webpack_require__(4);
+var _Template = __webpack_require__(3);
 
 var _Template2 = _interopRequireDefault(_Template);
 
@@ -5114,7 +5147,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.changeItemsPerResultPageSetup = changeItemsPerResultPageSetup;
 
-var _cloneDeep = __webpack_require__(3);
+var _cloneDeep = __webpack_require__(4);
 
 var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
 
@@ -5212,7 +5245,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _Template = __webpack_require__(4);
+var _Template = __webpack_require__(3);
 
 var _Template2 = _interopRequireDefault(_Template);
 
@@ -5299,7 +5332,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _Template = __webpack_require__(4);
+var _Template = __webpack_require__(3);
 
 var _Template2 = _interopRequireDefault(_Template);
 
@@ -5402,7 +5435,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.clearFiltersAction = clearFiltersAction;
 
-var _cloneDeep = __webpack_require__(3);
+var _cloneDeep = __webpack_require__(4);
 
 var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
 
@@ -5477,7 +5510,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _Template = __webpack_require__(4);
+var _Template = __webpack_require__(3);
 
 var _Template2 = _interopRequireDefault(_Template);
 
@@ -5704,7 +5737,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.paginationChangeAction = paginationChangeAction;
 
-var _cloneDeep = __webpack_require__(3);
+var _cloneDeep = __webpack_require__(4);
 
 var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
 
@@ -5772,7 +5805,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _preact = __webpack_require__(0);
 
-var _Template = __webpack_require__(4);
+var _Template = __webpack_require__(3);
 
 var _Template2 = _interopRequireDefault(_Template);
 

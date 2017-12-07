@@ -39,7 +39,8 @@ class WidgetFactory {
         placeholder,
         startSearchOn,
         autofocus,
-        classNames
+        classNames,
+        template
     }) {
         return <SimpleSearchComponent
             target={target}
@@ -49,6 +50,10 @@ class WidgetFactory {
             classNames={{
                 ...SimpleSearchComponent.defaultProps.classNames,
                 ...classNames
+            }}
+            template={{
+                ...SimpleSearchComponent.defaultProps.template,
+                ...template
             }}
         />
     };

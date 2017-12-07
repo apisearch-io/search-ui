@@ -4,14 +4,12 @@
 
 import { h, Component } from 'preact';
 import {simpleSearchAction} from "./simpleSearchActions";
+import Template from "../Template";
 
 /**
  * SimpleSearch Component
  */
 class SimpleSearchComponent extends Component {
-    shouldComponentUpdate() {
-        return false;
-    }
 
     handleSearch = (e) => {
         const {
@@ -30,10 +28,29 @@ class SimpleSearchComponent extends Component {
          * Dispatch input search action
          */
         simpleSearchAction(
-            {   // queryOptions
+            {
                 queryText: e.target.value
             },
-            {   // appOptions
+            {
+                environmentId,
+                currentQuery,
+                client
+            }
+        )
+    };
+
+    clearSearch = () => {
+        const {
+            environmentId,
+            currentQuery,
+            client
+        } = this.props;
+
+        simpleSearchAction(
+            {
+                queryText: ''
+            },
+            {
                 environmentId,
                 currentQuery,
                 client
@@ -47,7 +64,14 @@ class SimpleSearchComponent extends Component {
             autofocus,
             classNames: {
                 container: containerClassName,
-                input: inputClassName
+                input: inputClassName,
+                clearSearch: clearSearchClassName
+            },
+            template: {
+                clearSearch: clearSearchTemplate
+            },
+            currentQuery: {
+                q: currentQueryText
             }
         } = this.props;
 
@@ -59,7 +83,19 @@ class SimpleSearchComponent extends Component {
                     autofocus={autofocus}
                     placeholder={placeholder}
                     onInput={this.handleSearch}
+                    value={currentQueryText}
                 />
+
+                {(currentQueryText.length !== 0)
+                    ? (
+                        <div
+                            className={`asui-simpleSearch--clearSearch ${clearSearchClassName}`}
+                            onClick={this.clearSearch}
+                        >
+                            <Template template={clearSearchTemplate}/>
+                        </div>
+                    ) : null
+                }
             </div>
         );
     }
@@ -71,7 +107,11 @@ SimpleSearchComponent.defaultProps = {
     startSearchOn: 0,
     classNames: {
         container: '',
-        input: ''
+        input: '',
+        clearSearch: ''
+    },
+    template: {
+        clearSearch: 'clear'
     }
 };
 

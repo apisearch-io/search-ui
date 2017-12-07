@@ -5,7 +5,10 @@ import SimpleSearchComponent from './../SimpleSearchComponent';
 
 describe('<SimpleSearchComponent />',() => {
     const defaultProps = {
-        target: '#some-tagret'
+        target: '#some-tagret',
+        currentQuery: {
+            q: ''
+        }
     };
 
     it('should render with default props', () => {
@@ -23,7 +26,7 @@ describe('<SimpleSearchComponent />',() => {
             classNames: {
                 container: 'custom-container-class'
             }
-        }
+        };
 
         const tree = shallow(
             <SimpleSearchComponent
