@@ -28,11 +28,11 @@ Array [
 exports[`<SuggestedSearchComponent /> should componentWillReceiveProps() with suggestions and render it 2`] = `
 preact-render-spy (1 nodes)
 -------
-<div class="asui-suggestedSearch ">
+<div class="as-suggestedSearch ">
   <input
     type="text"
     value="i want to get suggestions"
-    class="asui-suggestedSearch--input "
+    class="as-suggestedSearch__input "
     placeholder=""
     autofocus={false}
     onInput={[Function anonymous]}
@@ -41,21 +41,21 @@ preact-render-spy (1 nodes)
    />
   <div
     tabIndex="0"
-    class="asui-suggestedSearch--box "
+    class="as-suggestedSearch__box "
     style="display: block;"
   >
     <div
-      class="asui-suggestedSearch--suggestion  "
+      class="as-suggestedSearch__suggestion  "
       onClick={[Function anonymous]}
     >suggestion&nbsp;1
     </div>
     <div
-      class="asui-suggestedSearch--suggestion  "
+      class="as-suggestedSearch__suggestion  "
       onClick={[Function anonymous]}
     >suggestion&nbsp;2
     </div>
     <div
-      class="asui-suggestedSearch--suggestion  "
+      class="as-suggestedSearch__suggestion  "
       onClick={[Function anonymous]}
     >suggestion&nbsp;3
     </div>
@@ -67,11 +67,11 @@ preact-render-spy (1 nodes)
 exports[`<SuggestedSearchComponent /> should handleSearchInputFocusedOut() and close the suggestions box 1`] = `
 preact-render-spy (1 nodes)
 -------
-<div class="asui-suggestedSearch ">
+<div class="as-suggestedSearch ">
   <input
     type="text"
     value="i want to get suggestions"
-    class="asui-suggestedSearch--input "
+    class="as-suggestedSearch__input "
     placeholder=""
     autofocus={false}
     onInput={[Function anonymous]}
@@ -80,7 +80,7 @@ preact-render-spy (1 nodes)
    />
   <div
     tabIndex="0"
-    class="asui-suggestedSearch--box "
+    class="as-suggestedSearch__box "
     style="display: none;"
   >
   </div>
@@ -91,11 +91,11 @@ preact-render-spy (1 nodes)
 exports[`<SuggestedSearchComponent /> should handleSuggestionClick(), select the clicked suggestion and close the box 1`] = `
 preact-render-spy (1 nodes)
 -------
-<div class="asui-suggestedSearch ">
+<div class="as-suggestedSearch ">
   <input
     type="text"
     value=""
-    class="asui-suggestedSearch--input "
+    class="as-suggestedSearch__input "
     placeholder=""
     autofocus={false}
     onInput={[Function anonymous]}
@@ -104,7 +104,7 @@ preact-render-spy (1 nodes)
    />
   <div
     tabIndex="0"
-    class="asui-suggestedSearch--box "
+    class="as-suggestedSearch__box "
     style="display: none;"
   >
   </div>
@@ -140,11 +140,11 @@ Array [
 exports[`<SuggestedSearchComponent /> should handleSuggestionsNavigation() and re-render the list being the first suggestion the active one 2`] = `
 preact-render-spy (1 nodes)
 -------
-<div class="asui-suggestedSearch ">
+<div class="as-suggestedSearch ">
   <input
     type="text"
     value="suggestion 1"
-    class="asui-suggestedSearch--input "
+    class="as-suggestedSearch__input "
     placeholder=""
     autofocus={false}
     onInput={[Function anonymous]}
@@ -153,21 +153,21 @@ preact-render-spy (1 nodes)
    />
   <div
     tabIndex="0"
-    class="asui-suggestedSearch--box "
+    class="as-suggestedSearch__box "
     style="display: block;"
   >
     <div
-      class="asui-suggestedSearch--suggestion  asui-active"
+      class="as-suggestedSearch__suggestion  as-suggestedSearch__suggestion--active"
       onClick={[Function anonymous]}
     >suggestion&nbsp;1
     </div>
     <div
-      class="asui-suggestedSearch--suggestion  "
+      class="as-suggestedSearch__suggestion  "
       onClick={[Function anonymous]}
     >suggestion&nbsp;2
     </div>
     <div
-      class="asui-suggestedSearch--suggestion  "
+      class="as-suggestedSearch__suggestion  "
       onClick={[Function anonymous]}
     >suggestion&nbsp;3
     </div>
@@ -204,11 +204,11 @@ Array [
 exports[`<SuggestedSearchComponent /> should handleSuggestionsNavigation() and re-render the list being the last suggestion the active one 2`] = `
 preact-render-spy (1 nodes)
 -------
-<div class="asui-suggestedSearch ">
+<div class="as-suggestedSearch ">
   <input
     type="text"
     value="suggestion 3"
-    class="asui-suggestedSearch--input "
+    class="as-suggestedSearch__input "
     placeholder=""
     autofocus={false}
     onInput={[Function anonymous]}
@@ -217,21 +217,21 @@ preact-render-spy (1 nodes)
    />
   <div
     tabIndex="0"
-    class="asui-suggestedSearch--box "
+    class="as-suggestedSearch__box "
     style="display: block;"
   >
     <div
-      class="asui-suggestedSearch--suggestion  "
+      class="as-suggestedSearch__suggestion  "
       onClick={[Function anonymous]}
     >suggestion&nbsp;1
     </div>
     <div
-      class="asui-suggestedSearch--suggestion  "
+      class="as-suggestedSearch__suggestion  "
       onClick={[Function anonymous]}
     >suggestion&nbsp;2
     </div>
     <div
-      class="asui-suggestedSearch--suggestion  asui-active"
+      class="as-suggestedSearch__suggestion  as-suggestedSearch__suggestion--active"
       onClick={[Function anonymous]}
     >suggestion&nbsp;3
     </div>
@@ -260,11 +260,11 @@ Object {
 exports[`<SuggestedSearchComponent /> should render with custom props 2`] = `
 preact-render-spy (1 nodes)
 -------
-<div class="asui-suggestedSearch custom-container-class">
+<div class="as-suggestedSearch custom-container-class">
   <input
     type="text"
     value=""
-    class="asui-suggestedSearch--input custom-input-class"
+    class="as-suggestedSearch__input custom-input-class"
     placeholder="Type to get suggestions..."
     autofocus={true}
     onInput={[Function anonymous]}
@@ -273,7 +273,7 @@ preact-render-spy (1 nodes)
    />
   <div
     tabIndex="0"
-    class="asui-suggestedSearch--box custom-box-class"
+    class="as-suggestedSearch__box custom-box-class"
     style="display: none;"
   >
   </div>
@@ -286,7 +286,7 @@ Object {
   "autofocus": false,
   "children": Array [],
   "classNames": Object {
-    "activeSuggestion": "asui-active",
+    "activeSuggestion": "as-suggestedSearch__suggestion--active",
     "box": "",
     "container": "",
     "input": "",
@@ -301,11 +301,11 @@ Object {
 exports[`<SuggestedSearchComponent /> should render with default props 2`] = `
 preact-render-spy (1 nodes)
 -------
-<div class="asui-suggestedSearch ">
+<div class="as-suggestedSearch ">
   <input
     type="text"
     value=""
-    class="asui-suggestedSearch--input "
+    class="as-suggestedSearch__input "
     placeholder=""
     autofocus={false}
     onInput={[Function anonymous]}
@@ -314,7 +314,7 @@ preact-render-spy (1 nodes)
    />
   <div
     tabIndex="0"
-    class="asui-suggestedSearch--box "
+    class="as-suggestedSearch__box "
     style="display: none;"
   >
   </div>

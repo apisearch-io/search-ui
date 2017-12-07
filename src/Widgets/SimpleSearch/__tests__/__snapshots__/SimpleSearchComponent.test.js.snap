@@ -3,10 +3,10 @@
 exports[`<SimpleSearchComponent /> should render with custom props 1`] = `
 preact-render-spy (1 nodes)
 -------
-<div class="asui-simpleSearch custom-container-class">
+<div class="as-simpleSearch custom-container-class">
   <input
     type="text"
-    class="asui-simpleSearch--input undefined"
+    class="as-simpleSearch__input undefined"
     autofocus={false}
     placeholder=""
     onInput={[Function anonymous]}
@@ -19,10 +19,10 @@ preact-render-spy (1 nodes)
 exports[`<SimpleSearchComponent /> should render with default props 1`] = `
 preact-render-spy (1 nodes)
 -------
-<div class="asui-simpleSearch ">
+<div class="as-simpleSearch ">
   <input
     type="text"
-    class="asui-simpleSearch--input "
+    class="as-simpleSearch__input "
     autofocus={false}
     placeholder=""
     onInput={[Function anonymous]}

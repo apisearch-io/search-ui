@@ -3,11 +3,11 @@
 exports[`<MultipleFilterComponent /> should handleCLick() given a selected aggregation and set it as active 1`] = `
 preact-render-spy (1 nodes)
 -------
-<div class="asui-multipleFilter container-custom-class">
-  <div class="asui-multipleFilter--top top-custom-class">Filter top header template:</div>
-  <div class="asui-multipleFilter--itemsList itemsList-custom-class">
+<div class="as-multipleFilter container-custom-class">
+  <div class="as-multipleFilter__top top-custom-class">Filter top header template:</div>
+  <div class="as-multipleFilter__itemsList itemsList-custom-class">
     <div
-      class="asui-multipleFilter--item item-custom-class"
+      class="as-multipleFilter__item item-custom-class"
       onClick={[Function onClick]}
     >
       <div>
@@ -20,7 +20,7 @@ preact-render-spy (1 nodes)
       </div>
     </div>
     <div
-      class="asui-multipleFilter--item item-custom-class"
+      class="as-multipleFilter__item item-custom-class"
       onClick={[Function onClick]}
     >
       <div>
@@ -33,7 +33,7 @@ preact-render-spy (1 nodes)
       </div>
     </div>
     <div
-      class="asui-multipleFilter--item item-custom-class"
+      class="as-multipleFilter__item item-custom-class"
       onClick={[Function onClick]}
     >
       <div>
@@ -47,10 +47,10 @@ preact-render-spy (1 nodes)
     </div>
   </div>
   <div
-    class="asui-showMore showMoreContainer-custom-class"
+    class="as-showMore showMoreContainer-custom-class"
     onClick={[Function anonymous]}
   >
-    <div class="asui-showMore--more">
+    <div class="as-showMore--more">
       <b>+ Show more</b>
     </div>
   </div>
@@ -61,11 +61,11 @@ preact-render-spy (1 nodes)
 exports[`<MultipleFilterComponent /> should handleShowMore() and handleShowLess() 1`] = `
 preact-render-spy (1 nodes)
 -------
-<div class="asui-multipleFilter container-custom-class">
-  <div class="asui-multipleFilter--top top-custom-class">Filter top header template:</div>
-  <div class="asui-multipleFilter--itemsList itemsList-custom-class">
+<div class="as-multipleFilter container-custom-class">
+  <div class="as-multipleFilter__top top-custom-class">Filter top header template:</div>
+  <div class="as-multipleFilter__itemsList itemsList-custom-class">
     <div
-      class="asui-multipleFilter--item item-custom-class"
+      class="as-multipleFilter__item item-custom-class"
       onClick={[Function onClick]}
     >
       <div>
@@ -78,7 +78,7 @@ preact-render-spy (1 nodes)
       </div>
     </div>
     <div
-      class="asui-multipleFilter--item item-custom-class"
+      class="as-multipleFilter__item item-custom-class"
       onClick={[Function onClick]}
     >
       <div>
@@ -91,7 +91,7 @@ preact-render-spy (1 nodes)
       </div>
     </div>
     <div
-      class="asui-multipleFilter--item item-custom-class"
+      class="as-multipleFilter__item item-custom-class"
       onClick={[Function onClick]}
     >
       <div>
@@ -104,7 +104,7 @@ preact-render-spy (1 nodes)
       </div>
     </div>
     <div
-      class="asui-multipleFilter--item item-custom-class"
+      class="as-multipleFilter__item item-custom-class"
       onClick={[Function onClick]}
     >
       <div>
@@ -117,7 +117,7 @@ preact-render-spy (1 nodes)
       </div>
     </div>
     <div
-      class="asui-multipleFilter--item item-custom-class"
+      class="as-multipleFilter__item item-custom-class"
       onClick={[Function onClick]}
     >
       <div>
@@ -130,7 +130,7 @@ preact-render-spy (1 nodes)
       </div>
     </div>
     <div
-      class="asui-multipleFilter--item item-custom-class"
+      class="as-multipleFilter__item item-custom-class"
       onClick={[Function onClick]}
     >
       <div>
@@ -144,10 +144,10 @@ preact-render-spy (1 nodes)
     </div>
   </div>
   <div
-    class="asui-showMore showMoreContainer-custom-class"
+    class="as-showMore showMoreContainer-custom-class"
     onClick={[Function anonymous]}
   >
-    <div class="asui-showMore--less">
+    <div class="as-showMore--less">
       <b>- Show less</b>
     </div>
   </div>
@@ -158,11 +158,11 @@ preact-render-spy (1 nodes)
 exports[`<MultipleFilterComponent /> should handleShowMore() and handleShowLess() 2`] = `
 preact-render-spy (1 nodes)
 -------
-<div class="asui-multipleFilter container-custom-class">
-  <div class="asui-multipleFilter--top top-custom-class">Filter top header template:</div>
-  <div class="asui-multipleFilter--itemsList itemsList-custom-class">
+<div class="as-multipleFilter container-custom-class">
+  <div class="as-multipleFilter__top top-custom-class">Filter top header template:</div>
+  <div class="as-multipleFilter__itemsList itemsList-custom-class">
     <div
-      class="asui-multipleFilter--item item-custom-class"
+      class="as-multipleFilter__item item-custom-class"
       onClick={[Function onClick]}
     >
       <div>
@@ -175,7 +175,7 @@ preact-render-spy (1 nodes)
       </div>
     </div>
     <div
-      class="asui-multipleFilter--item item-custom-class"
+      class="as-multipleFilter__item item-custom-class"
       onClick={[Function onClick]}
     >
       <div>
@@ -188,7 +188,7 @@ preact-render-spy (1 nodes)
       </div>
     </div>
     <div
-      class="asui-multipleFilter--item item-custom-class"
+      class="as-multipleFilter__item item-custom-class"
       onClick={[Function onClick]}
     >
       <div>
@@ -202,10 +202,10 @@ preact-render-spy (1 nodes)
     </div>
   </div>
   <div
-    class="asui-showMore showMoreContainer-custom-class"
+    class="as-showMore showMoreContainer-custom-class"
     onClick={[Function anonymous]}
   >
-    <div class="asui-showMore--more">
+    <div class="as-showMore--more">
       <b>+ Show more</b>
     </div>
   </div>
@@ -254,11 +254,11 @@ Object {
 exports[`<MultipleFilterComponent /> should render with custom props, and re-render with aggregations 2`] = `
 preact-render-spy (1 nodes)
 -------
-<div class="asui-multipleFilter container-custom-class">
-  <div class="asui-multipleFilter--top top-custom-class">Filter top header template:</div>
-  <div class="asui-multipleFilter--itemsList itemsList-custom-class">
+<div class="as-multipleFilter container-custom-class">
+  <div class="as-multipleFilter__top top-custom-class">Filter top header template:</div>
+  <div class="as-multipleFilter__itemsList itemsList-custom-class">
     <div
-      class="asui-multipleFilter--item item-custom-class"
+      class="as-multipleFilter__item item-custom-class"
       onClick={[Function onClick]}
     >
       <div>
@@ -271,7 +271,7 @@ preact-render-spy (1 nodes)
       </div>
     </div>
     <div
-      class="asui-multipleFilter--item item-custom-class"
+      class="as-multipleFilter__item item-custom-class"
       onClick={[Function onClick]}
     >
       <div>
@@ -284,7 +284,7 @@ preact-render-spy (1 nodes)
       </div>
     </div>
     <div
-      class="asui-multipleFilter--item item-custom-class"
+      class="as-multipleFilter__item item-custom-class"
       onClick={[Function onClick]}
     >
       <div>
@@ -298,10 +298,10 @@ preact-render-spy (1 nodes)
     </div>
   </div>
   <div
-    class="asui-showMore showMoreContainer-custom-class"
+    class="as-showMore showMoreContainer-custom-class"
     onClick={[Function anonymous]}
   >
-    <div class="asui-showMore--more">
+    <div class="as-showMore--more">
       <b>+ Show more</b>
     </div>
   </div>
@@ -346,10 +346,10 @@ Object {
 exports[`<MultipleFilterComponent /> should render with default props 2`] = `
 preact-render-spy (1 nodes)
 -------
-<div class="asui-multipleFilter ">
-  <div class="asui-multipleFilter--itemsList ">
+<div class="as-multipleFilter ">
+  <div class="as-multipleFilter__itemsList ">
     <div
-      class="asui-multipleFilter--item "
+      class="as-multipleFilter__item "
       onClick={[Function onClick]}
     >
       <div>
@@ -362,7 +362,7 @@ preact-render-spy (1 nodes)
       </div>
     </div>
     <div
-      class="asui-multipleFilter--item "
+      class="as-multipleFilter__item "
       onClick={[Function onClick]}
     >
       <div>
@@ -375,7 +375,7 @@ preact-render-spy (1 nodes)
       </div>
     </div>
     <div
-      class="asui-multipleFilter--item "
+      class="as-multipleFilter__item "
       onClick={[Function onClick]}
     >
       <div>
@@ -388,7 +388,7 @@ preact-render-spy (1 nodes)
       </div>
     </div>
     <div
-      class="asui-multipleFilter--item "
+      class="as-multipleFilter__item "
       onClick={[Function onClick]}
     >
       <div>
@@ -401,7 +401,7 @@ preact-render-spy (1 nodes)
       </div>
     </div>
     <div
-      class="asui-multipleFilter--item "
+      class="as-multipleFilter__item "
       onClick={[Function onClick]}
     >
       <div>
@@ -414,7 +414,7 @@ preact-render-spy (1 nodes)
       </div>
     </div>
     <div
-      class="asui-multipleFilter--item "
+      class="as-multipleFilter__item "
       onClick={[Function onClick]}
     >
       <div>

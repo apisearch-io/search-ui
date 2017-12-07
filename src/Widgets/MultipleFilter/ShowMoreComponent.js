@@ -22,23 +22,23 @@ const ShowMoreComponent = ({
 }) => {
     return (allItemsLength > currentLimit)
         ? (
-            <div className={`asui-showMore ${showMoreContainerClassName}`}
+            <div className={`as-showMore ${showMoreContainerClassName}`}
                  onClick={handleShowMore}
             >
                 <Template
                     template={showMoreTemplate}
-                    className={`asui-showMore--more`}
+                    className={`as-showMore--more`}
                 />
             </div>
         )
         : (allItemsLength === currentLimit)
             ? (
-                <div className={`asui-showMore ${showMoreContainerClassName}`}
+                <div className={`as-showMore ${showMoreContainerClassName}`}
                      onClick={handleShowLess}
                 >
                     <Template
                         template={showLessTemplate}
-                        className={`asui-showMore--less`}
+                        className={`as-showMore--less`}
                     />
                 </div>
             )

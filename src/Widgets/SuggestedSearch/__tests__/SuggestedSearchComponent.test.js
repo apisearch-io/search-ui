@@ -132,10 +132,10 @@ describe('<SuggestedSearchComponent />',() => {
         const tree = getUpdatedSuggestedSearchComponent();
         const mock = jest.fn();
 
-        tree.find('.asui-suggestedSearch--suggestion')[2].attributes.onClick = mock;
-        tree.find('.asui-suggestedSearch--suggestion').at(2).simulate('click');
+        tree.find('.as-suggestedSearch__suggestion')[2].attributes.onClick = mock;
+        tree.find('.as-suggestedSearch__suggestion').at(2).simulate('click');
         tree.setState({
-            q: tree.find('.asui-suggestedSearch--suggestion').at(2).text(),
+            q: tree.find('.as-suggestedSearch__suggestion').at(2).text(),
             currentSuggestions: []
         });
 

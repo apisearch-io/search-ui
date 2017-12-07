@@ -96,8 +96,8 @@ describe('<ClearFiltersComponent />',() => {
         );
 
         const mock = jest.fn();
-        tree.find('.asui-clearFilters')[0].attributes.onClick = mock;
-        tree.find('.asui-clearFilters').at(0).simulate('click');
+        tree.find('.as-clearFilters')[0].attributes.onClick = mock;
+        tree.find('.as-clearFilters').at(0).simulate('click');
 
         /**
          * Mocking onCLick functionality

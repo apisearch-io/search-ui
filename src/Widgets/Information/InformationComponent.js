@@ -34,7 +34,7 @@ class InformationComponent extends Component {
             <Template
                 template={containerTemplate}
                 data={formattedTemplateData}
-                className={`asui-information ${containerClassName}`}
+                className={`as-information ${containerClassName}`}
             />
         )
     }

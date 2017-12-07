@@ -4,10 +4,10 @@ exports[`<ShowMoreComponent /> should render Show Less button when allItemsLengt
 preact-render-spy (1 nodes)
 -------
 <div
-  class="asui-showMore custom-container-class"
+  class="as-showMore custom-container-class"
   onClick={[Function mockConstructor]}
 >
-  <div class="asui-showMore--less">
+  <div class="as-showMore--less">
     <b>+ Show less</b>
   </div>
 </div>
@@ -18,10 +18,10 @@ exports[`<ShowMoreComponent /> should render Show More button when allItemsLengt
 preact-render-spy (1 nodes)
 -------
 <div
-  class="asui-showMore custom-container-class"
+  class="as-showMore custom-container-class"
   onClick={[Function mockConstructor]}
 >
-  <div class="asui-showMore--more">
+  <div class="as-showMore--more">
     <b>+ Show more</b>
   </div>
 </div>

@@ -2686,10 +2686,10 @@ var SimpleSearchComponent = function (_Component) {
 
             return (0, _preact.h)(
                 "div",
-                { className: "asui-simpleSearch " + containerClassName },
+                { className: "as-simpleSearch " + containerClassName },
                 (0, _preact.h)("input", {
                     type: "text",
-                    className: "asui-simpleSearch--input " + inputClassName,
+                    className: "as-simpleSearch__input " + inputClassName,
                     autofocus: autofocus,
                     placeholder: placeholder,
                     onInput: this.handleSearch,
@@ -2698,7 +2698,7 @@ var SimpleSearchComponent = function (_Component) {
                 currentQueryText.length !== 0 ? (0, _preact.h)(
                     "div",
                     {
-                        className: "asui-simpleSearch--clearSearch " + clearSearchClassName,
+                        className: "as-simpleSearch__clearSearch " + clearSearchClassName,
                         onClick: this.clearSearch
                     },
                     (0, _preact.h)(_Template2.default, { template: clearSearchTemplate })
@@ -3975,7 +3975,7 @@ var SuggestedSearchComponent = function (_Component) {
              * If is not clicking on the suggestions box
              * The suggestions are cleared and panel closes
              */
-            if (null === e.relatedTarget || false === e.relatedTarget.classList.contains('asui-suggestedSearch--box')) {
+            if (null === e.relatedTarget || false === e.relatedTarget.classList.contains('as-suggestedSearch--box')) {
                 _this.setState({ currentSuggestions: [] });
             }
 
@@ -4033,11 +4033,11 @@ var SuggestedSearchComponent = function (_Component) {
 
             return (0, _preact.h)(
                 'div',
-                { className: 'asui-suggestedSearch ' + containerClassName },
+                { className: 'as-suggestedSearch ' + containerClassName },
                 (0, _preact.h)('input', {
                     type: 'text',
                     value: this.state.q,
-                    className: 'asui-suggestedSearch--input ' + inputClassName,
+                    className: 'as-suggestedSearch__input ' + inputClassName,
                     placeholder: placeholder,
                     autofocus: autofocus,
 
@@ -4049,14 +4049,14 @@ var SuggestedSearchComponent = function (_Component) {
                     'div',
                     {
                         tabIndex: '0',
-                        className: 'asui-suggestedSearch--box ' + boxClassName,
+                        className: 'as-suggestedSearch__box ' + boxClassName,
                         style: {
                             display: currentSuggestions.length !== 0 ? 'block' : 'none'
                         }
                     },
                     currentSuggestions.map(function (suggestion, key) {
                         return 0 !== key ? (0, _preact.h)('div', {
-                            className: 'asui-suggestedSearch--suggestion ' + (suggestionClassName + ' ') + ('' + (suggestion.isActive ? activeSuggestionClassName : '')),
+                            className: 'as-suggestedSearch__suggestion ' + (suggestionClassName + ' ') + ('' + (suggestion.isActive ? activeSuggestionClassName : '')),
                             dangerouslySetInnerHTML: {
                                 __html: suggestion.htmlName
                             },
@@ -4080,7 +4080,7 @@ SuggestedSearchComponent.defaultProps = {
         input: '',
         box: '',
         suggestion: '',
-        activeSuggestion: 'asui-active'
+        activeSuggestion: 'as-suggestedSearch__suggestion--active'
     }
 };
 
@@ -4378,11 +4378,11 @@ var SortByComponent = function (_Component) {
 
             return (0, _preact.h)(
                 'div',
-                { className: 'asui-sortBy ' + containerClassName },
+                { className: 'as-sortBy ' + containerClassName },
                 (0, _preact.h)(
                     'select',
                     {
-                        className: 'asui-sortBy--selector ' + selectClassName,
+                        className: 'as-sortBy__selector ' + selectClassName,
                         onChange: this.handleChange
                     },
                     options.map(function (option) {
@@ -4707,14 +4707,14 @@ var MultipleFilterComponent = function (_Component) {
 
             return (0, _preact.h)(
                 "div",
-                { className: "asui-multipleFilter " + containerClassName },
+                { className: "as-multipleFilter " + containerClassName },
                 (0, _preact.h)(_Template2.default, {
                     template: topTemplate,
-                    className: "asui-multipleFilter--top " + topClassName
+                    className: "as-multipleFilter__top " + topClassName
                 }),
                 (0, _preact.h)(
                     "div",
-                    { className: "asui-multipleFilter--itemsList " + itemsListClassName },
+                    { className: "as-multipleFilter__itemsList " + itemsListClassName },
                     items.map(function (item) {
                         var reducedTemplateData = {
                             n: parseInt(item.n).toLocaleString('de-DE'),
@@ -4726,7 +4726,7 @@ var MultipleFilterComponent = function (_Component) {
                         return (0, _preact.h)(
                             "div",
                             {
-                                className: "asui-multipleFilter--item " + itemClassName,
+                                className: "as-multipleFilter__item " + itemClassName,
                                 onClick: function onClick() {
                                     return _this2.handleClick(item.values.id);
                                 }
@@ -4973,21 +4973,21 @@ var ShowMoreComponent = function ShowMoreComponent(_ref) {
 
     return allItemsLength > currentLimit ? (0, _preact.h)(
         "div",
-        { className: "asui-showMore " + showMoreContainerClassName,
+        { className: "as-showMore " + showMoreContainerClassName,
             onClick: handleShowMore
         },
         (0, _preact.h)(_Template2.default, {
             template: showMoreTemplate,
-            className: "asui-showMore--more"
+            className: "as-showMore--more"
         })
     ) : allItemsLength === currentLimit ? (0, _preact.h)(
         "div",
-        { className: "asui-showMore " + showMoreContainerClassName,
+        { className: "as-showMore " + showMoreContainerClassName,
             onClick: handleShowLess
         },
         (0, _preact.h)(_Template2.default, {
             template: showLessTemplate,
-            className: "asui-showMore--less"
+            className: "as-showMore--less"
         })
     ) : null;
 };
@@ -5064,12 +5064,12 @@ var ResultComponent = function (_Component) {
              * Dispatch action
              */
 
-            (0, _resultActions.changeItemsPerResultPageSetup)({ // queryOptions
+            (0, _resultActions.changeItemsPerResultPageSetup)({
                 itemsPerPage: itemsPerPage,
                 highlightsEnabled: highlightsEnabled,
                 promotedUUIDs: promote,
                 excludedUUIDs: exclude
-            }, { // appOptions
+            }, {
                 environmentId: environmentId,
                 currentQuery: currentQuery,
                 client: client
@@ -5080,7 +5080,6 @@ var ResultComponent = function (_Component) {
         value: function render() {
             var _props2 = this.props,
                 dirty = _props2.dirty,
-                showInitialResults = _props2.showInitialResults,
                 containerClassName = _props2.classNames.container,
                 _props2$template = _props2.template,
                 bodyTemplate = _props2$template.itemsList,
@@ -5101,14 +5100,14 @@ var ResultComponent = function (_Component) {
 
             return (0, _preact.h)(
                 "div",
-                { className: "asui-result " + containerClassName },
+                { className: "as-result " + containerClassName },
                 placeholderTemplate && dirty ? (0, _preact.h)(_Template2.default, {
                     template: placeholderTemplate,
-                    className: "asui-result--placeholder"
+                    className: "as-result__placeholder"
                 }) : (0, _preact.h)(_Template2.default, {
                     template: bodyTemplate,
                     data: formattedTemplateData,
-                    className: "asui-result--itemsList"
+                    className: "as-result__itemsList"
                 })
             );
         }
@@ -5295,7 +5294,7 @@ var InformationComponent = function (_Component) {
             return (0, _preact.h)(_Template2.default, {
                 template: containerTemplate,
                 data: formattedTemplateData,
-                className: 'asui-information ' + containerClassName
+                className: 'as-information ' + containerClassName
             });
         }
     }]);
@@ -5401,7 +5400,7 @@ var ClearFiltersComponent = function (_Component) {
 
             return this.state.showClearFilters ? (0, _preact.h)(
                 "div",
-                { className: "asui-clearFilters " + containerClassName,
+                { className: "as-clearFilters " + containerClassName,
                     onClick: this.handleClick
                 },
                 (0, _preact.h)(_Template2.default, { template: containerTemplate })
@@ -5646,10 +5645,10 @@ var PaginationComponent = function (_Component) {
 
             return (0, _preact.h)(
                 "ul",
-                { className: "asui-pagination " + containerClassName },
+                { className: "as-pagination " + containerClassName },
                 (0, _preact.h)(_NavigationComponent2.default, {
                     isVisible: goFirstLast,
-                    classNames: "asui-pagination--item asui-pagination--first " + firstClassName + " " + previousDisabledClass,
+                    classNames: "as-pagination__item as-pagination__item--first " + firstClassName + " " + previousDisabledClass,
                     template: firstTemplate,
                     handleClick: function handleClick() {
                         return _this2.handleClick(1);
@@ -5657,7 +5656,7 @@ var PaginationComponent = function (_Component) {
                 }),
                 (0, _preact.h)(_NavigationComponent2.default, {
                     isVisible: true,
-                    classNames: "asui-pagination--item asui-pagination--previous " + previousClassName + " " + previousDisabledClass,
+                    classNames: "as-pagination__item as-pagination__item--previous " + previousClassName + " " + previousDisabledClass,
                     template: previousTemplate,
                     handleClick: function handleClick() {
                         return _this2.handleClick(currentQueryPage - 1);
@@ -5667,7 +5666,7 @@ var PaginationComponent = function (_Component) {
                     return (0, _preact.h)(
                         "li",
                         {
-                            className: "asui-pagination--item asui-pagination--link " + itemClassName + " " + (currentQueryPage === page ? activeClassName : ''),
+                            className: "as-pagination__item as-pagination__item--link " + itemClassName + " " + (currentQueryPage === page ? activeClassName : ''),
                             onClick: function onClick() {
                                 return _this2.handleClick(page);
                             }
@@ -5680,7 +5679,7 @@ var PaginationComponent = function (_Component) {
                 }),
                 (0, _preact.h)(_NavigationComponent2.default, {
                     isVisible: true,
-                    classNames: "asui-pagination--item asui-pagination--next " + nextClassName + " " + nextDisabledClass,
+                    classNames: "as-pagination__item as-pagination__item--next " + nextClassName + " " + nextDisabledClass,
                     template: nextTemplate,
                     handleClick: function handleClick() {
                         return _this2.handleClick(currentQueryPage + 1);
@@ -5688,7 +5687,7 @@ var PaginationComponent = function (_Component) {
                 }),
                 (0, _preact.h)(_NavigationComponent2.default, {
                     isVisible: goFirstLast,
-                    classNames: "asui-pagination--item asui-pagination--last " + lastClassName + " " + nextDisabledClass,
+                    classNames: "as-pagination__item as-pagination__item--last " + lastClassName + " " + nextDisabledClass,
                     template: lastTemplate,
                     handleClick: function handleClick() {
                         return _this2.handleClick(totalPages);
@@ -5707,8 +5706,8 @@ PaginationComponent.defaultProps = {
     classNames: {
         container: '',
         item: '',
-        active: 'active',
-        disabled: 'disabled',
+        active: 'as-pagination__item--active',
+        disabled: 'as-pagination__item--disabled',
         next: '',
         first: '',
         previous: '',

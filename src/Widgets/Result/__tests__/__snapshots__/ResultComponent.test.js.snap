@@ -46,8 +46,8 @@ Object {
 exports[`<ResultComponent /> should render with custom props 2`] = `
 preact-render-spy (1 nodes)
 -------
-<div class="asui-result custom-container-class">
-  <div class="asui-result--itemsList">
+<div class="as-result custom-container-class">
+  <div class="as-result__itemsList">
     
                     <ul>
                         <li>Tony Stark</li> 
@@ -105,8 +105,8 @@ Object {
 exports[`<ResultComponent /> should render with default props 2`] = `
 preact-render-spy (1 nodes)
 -------
-<div class="asui-result ">
-  <div class="asui-result--itemsList">
+<div class="as-result ">
+  <div class="as-result__itemsList">
     
                     <ul>
                         <li>Tony Stark</li> 
@@ -121,8 +121,8 @@ preact-render-spy (1 nodes)
 exports[`<ResultComponent /> should show placeholder if is set in custom properties and ApisearchUI state is dirty 1`] = `
 preact-render-spy (1 nodes)
 -------
-<div class="asui-result ">
-  <div class="asui-result--placeholder">
+<div class="as-result ">
+  <div class="as-result__placeholder">
     This is the results placeholder, search something!
   </div>
 </div>
@@ -132,8 +132,8 @@ preact-render-spy (1 nodes)
 exports[`<ResultComponent /> should update content when passing new data 1`] = `
 preact-render-spy (1 nodes)
 -------
-<div class="asui-result ">
-  <div class="asui-result--itemsList">
+<div class="as-result ">
+  <div class="as-result__itemsList">
     
                     <ul>
                         <li>Robert Bruce Banner</li> 

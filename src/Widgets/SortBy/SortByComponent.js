@@ -44,9 +44,9 @@ class SortByComponent extends Component {
         } = this.props;
 
         return (
-            <div className={`asui-sortBy ${containerClassName}`}>
+            <div className={`as-sortBy ${containerClassName}`}>
                 <select
-                    className={`asui-sortBy--selector ${selectClassName}`}
+                    className={`as-sortBy__selector ${selectClassName}`}
                     onChange={this.handleChange}
                 >
                     {options.map(option => (

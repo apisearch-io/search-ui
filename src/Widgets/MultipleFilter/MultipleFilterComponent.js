@@ -201,13 +201,13 @@ class MultipleFilterComponent extends Component {
         const isViewLimitProperlySet = (viewLimit && viewLimit < fetchLimit);
 
         return (
-            <div className={`asui-multipleFilter ${containerClassName}`}>
+            <div className={`as-multipleFilter ${containerClassName}`}>
                 <Template
                     template={topTemplate}
-                    className={`asui-multipleFilter--top ${topClassName}`}
+                    className={`as-multipleFilter__top ${topClassName}`}
                 />
 
-                <div className={`asui-multipleFilter--itemsList ${itemsListClassName}`}>
+                <div className={`as-multipleFilter__itemsList ${itemsListClassName}`}>
                 {items.map(item => {
                     const reducedTemplateData = {
                         n: parseInt(item.n).toLocaleString('de-DE'),
@@ -218,7 +218,7 @@ class MultipleFilterComponent extends Component {
 
                     return (
                         <div
-                            className={`asui-multipleFilter--item ${itemClassName}`}
+                            className={`as-multipleFilter__item ${itemClassName}`}
                             onClick={() => this.handleClick(item.values.id)}
                         >
                             <Template

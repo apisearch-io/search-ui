@@ -92,8 +92,8 @@ describe('<PaginationComponent />',() => {
         });
 
         const mock = jest.fn();
-        tree.find('.asui-pagination--next')[0].attributes.onClick = mock;
-        tree.find('.asui-pagination--next').at(0).simulate('click', 2);
+        tree.find('.as-pagination__item--next')[0].attributes.onClick = mock;
+        tree.find('.as-pagination__item--next').at(0).simulate('click', 2);
 
         tree = updatePaginationComponent(tree, {
             ...defaultProps,
@@ -121,8 +121,8 @@ describe('<PaginationComponent />',() => {
         });
 
         const mock = jest.fn();
-        tree.find('.asui-pagination--previous')[0].attributes.onClick = mock;
-        tree.find('.asui-pagination--previous').at(0).simulate('click', 3);
+        tree.find('.as-pagination__item--previous')[0].attributes.onClick = mock;
+        tree.find('.as-pagination__item--previous').at(0).simulate('click', 3);
 
         tree = updatePaginationComponent(tree, {
             ...defaultProps,
@@ -149,8 +149,8 @@ describe('<PaginationComponent />',() => {
         });
 
         const mock = jest.fn();
-        tree.find('.asui-pagination--last')[0].attributes.onClick = mock;
-        tree.find('.asui-pagination--last').at(0).simulate('click', 100);
+        tree.find('.as-pagination__item--last')[0].attributes.onClick = mock;
+        tree.find('.as-pagination__item--last').at(0).simulate('click', 100);
 
         tree = updatePaginationComponent(tree, {
             ...defaultProps,
@@ -178,8 +178,8 @@ describe('<PaginationComponent />',() => {
         });
 
         const mock = jest.fn();
-        tree.find('.asui-pagination--first')[0].attributes.onClick = mock;
-        tree.find('.asui-pagination--first').at(0).simulate('click', 1);
+        tree.find('.as-pagination__item--first')[0].attributes.onClick = mock;
+        tree.find('.as-pagination__item--first').at(0).simulate('click', 1);
 
         tree = updatePaginationComponent(tree, {
             ...defaultProps,

@@ -75,8 +75,8 @@ describe('<MultipleFilterComponent />', () => {
         let tree = getDirtyMultipleFilterComponent(customProps);
         tree = updateMultipleFilterComponent(tree, customProps, initialDataProvider);
 
-        tree.find('.asui-multipleFilter--item')[1].attributes.onClick = mock;
-        tree.find('.asui-multipleFilter--item').at(1).simulate('click');
+        tree.find('.as-multipleFilter__item')[1].attributes.onClick = mock;
+        tree.find('.as-multipleFilter__item').at(1).simulate('click');
 
         tree = updateMultipleFilterComponent(tree, customProps, updatedDataProvider);
 
@@ -93,7 +93,7 @@ describe('<MultipleFilterComponent />', () => {
         /**
          * Click on show more function
          */
-        tree.find('.asui-showMore').at(0).simulate('click');
+        tree.find('.as-showMore').at(0).simulate('click');
         tree = updateMultipleFilterComponent(tree, customProps, initialDataProvider);
 
         /**
@@ -105,7 +105,7 @@ describe('<MultipleFilterComponent />', () => {
         /**
          * Click on show less function
          */
-        tree.find('.asui-showMore').at(0).simulate('click');
+        tree.find('.as-showMore').at(0).simulate('click');
         tree = updateMultipleFilterComponent(tree, customProps, initialDataProvider);
 
         /**

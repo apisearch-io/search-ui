@@ -35,13 +35,13 @@ class ResultComponent extends Component {
          * Dispatch action
          */
         changeItemsPerResultPageSetup(
-            {   // queryOptions
+            {
                 itemsPerPage,
                 highlightsEnabled,
                 promotedUUIDs: promote,
                 excludedUUIDs: exclude
             },
-            {   // appOptions
+            {
                 environmentId,
                 currentQuery,
                 client
@@ -52,7 +52,6 @@ class ResultComponent extends Component {
     render() {
         const {
             dirty,
-            showInitialResults,
             classNames: {
                 container: containerClassName
             },
@@ -70,21 +69,21 @@ class ResultComponent extends Component {
         let reducedTemplateData = {
             query: data ? data.query.q : '',
             items: data ? data.items : []
-        }
+        };
 
         let formattedTemplateData = formatData(reducedTemplateData);
 
         return (
-            <div className={`asui-result ${containerClassName}`}>
+            <div className={`as-result ${containerClassName}`}>
                 {(placeholderTemplate && dirty)
                     ? <Template
                         template={placeholderTemplate}
-                        className={`asui-result--placeholder`}
+                        className={`as-result__placeholder`}
                     />
                     : <Template
                         template={bodyTemplate}
                         data={formattedTemplateData}
-                        className={`asui-result--itemsList`}
+                        className={`as-result__itemsList`}
                     />
                 }
             </div>

@@ -187,7 +187,7 @@ class SuggestedSearchComponent extends Component {
          */
         if (
             null === e.relatedTarget ||
-            false === e.relatedTarget.classList.contains('asui-suggestedSearch--box')
+            false === e.relatedTarget.classList.contains('as-suggestedSearch--box')
         ) {
             this.setState({currentSuggestions: []});
         }
@@ -213,11 +213,11 @@ class SuggestedSearchComponent extends Component {
         } = this.state;
 
         return (
-            <div className={`asui-suggestedSearch ${containerClassName}`}>
+            <div className={`as-suggestedSearch ${containerClassName}`}>
                 <input
                     type={`text`}
                     value={this.state.q}
-                    className={`asui-suggestedSearch--input ${inputClassName}`}
+                    className={`as-suggestedSearch__input ${inputClassName}`}
                     placeholder={placeholder}
                     autofocus={autofocus}
 
@@ -228,7 +228,7 @@ class SuggestedSearchComponent extends Component {
 
                 <div
                     tabIndex={`0`}
-                    className={`asui-suggestedSearch--box ${boxClassName}`}
+                    className={`as-suggestedSearch__box ${boxClassName}`}
                     style={{
                         display: currentSuggestions.length !== 0
                             ? 'block'
@@ -239,7 +239,7 @@ class SuggestedSearchComponent extends Component {
                         return (0 !== key)
                             ? <div
                                 className={
-                                    `asui-suggestedSearch--suggestion ` +
+                                    `as-suggestedSearch__suggestion ` +
                                     `${suggestionClassName} ` +
                                     `${suggestion.isActive
                                         ? activeSuggestionClassName
@@ -268,7 +268,7 @@ SuggestedSearchComponent.defaultProps = {
         input: '',
         box: '',
         suggestion: '',
-        activeSuggestion: 'asui-active'
+        activeSuggestion: 'as-suggestedSearch__suggestion--active'
     }
 };
 

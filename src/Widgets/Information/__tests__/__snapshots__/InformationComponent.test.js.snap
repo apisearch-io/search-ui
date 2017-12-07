@@ -3,7 +3,7 @@
 exports[`<InformationComponent /> should render with custom props 1`] = `
 preact-render-spy (1 nodes)
 -------
-<div class="asui-information custom-container-class">
+<div class="as-information custom-container-class">
   
                       <span class="total-hits">12</span>
                       <span class="total-items">32</span>
@@ -33,13 +33,13 @@ Object {
 exports[`<InformationComponent /> should render with default props 2`] = `
 preact-render-spy (1 nodes)
 -------
-<div class="asui-information ">Found 12 of 32 items</div>
+<div class="as-information ">Found 12 of 32 items</div>
 
 `;
 
 exports[`<InformationComponent /> should update content when passing new data 1`] = `
 preact-render-spy (1 nodes)
 -------
-<div class="asui-information ">Found 34 of 67 items</div>
+<div class="as-information ">Found 34 of 67 items</div>
 
 `;

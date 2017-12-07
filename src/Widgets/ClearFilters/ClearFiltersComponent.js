@@ -57,7 +57,7 @@ class ClearFiltersComponent extends Component {
         } = this.props;
 
         return (this.state.showClearFilters)
-            ? ( <div className={`asui-clearFilters ${containerClassName}`}
+            ? ( <div className={`as-clearFilters ${containerClassName}`}
                      onClick={this.handleClick}
                 >
                     <Template template={containerTemplate} />

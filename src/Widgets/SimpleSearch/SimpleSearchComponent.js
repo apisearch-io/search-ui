@@ -76,10 +76,10 @@ class SimpleSearchComponent extends Component {
         } = this.props;
 
         return (
-            <div className={`asui-simpleSearch ${containerClassName}`}>
+            <div className={`as-simpleSearch ${containerClassName}`}>
                 <input
                     type='text'
-                    className={`asui-simpleSearch--input ${inputClassName}`}
+                    className={`as-simpleSearch__input ${inputClassName}`}
                     autofocus={autofocus}
                     placeholder={placeholder}
                     onInput={this.handleSearch}
@@ -89,7 +89,7 @@ class SimpleSearchComponent extends Component {
                 {(currentQueryText.length !== 0)
                     ? (
                         <div
-                            className={`asui-simpleSearch--clearSearch ${clearSearchClassName}`}
+                            className={`as-simpleSearch__clearSearch ${clearSearchClassName}`}
                             onClick={this.clearSearch}
                         >
                             <Template template={clearSearchTemplate}/>

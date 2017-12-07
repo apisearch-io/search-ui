@@ -3,9 +3,9 @@
 exports[`<SortByComponent /> should render with custom props 1`] = `
 preact-render-spy (1 nodes)
 -------
-<div class="asui-sortBy custom-container-class">
+<div class="as-sortBy custom-container-class">
   <select
-    class="asui-sortBy--selector undefined"
+    class="as-sortBy__selector undefined"
     onChange={[Function anonymous]}
   >
     <option value="year:asc">Oldest</option>
@@ -18,9 +18,9 @@ preact-render-spy (1 nodes)
 exports[`<SortByComponent /> should render with default props 1`] = `
 preact-render-spy (1 nodes)
 -------
-<div class="asui-sortBy ">
+<div class="as-sortBy ">
   <select
-    class="asui-sortBy--selector "
+    class="as-sortBy__selector "
     onChange={[Function anonymous]}
   >
     <option value="year:asc">Oldest</option>
