@@ -389,7 +389,7 @@ const resultsTemplate = `
 </ul>
 {{^items}}
     No results found for this search: <b>{{query}}</b> :(
-{{^items}}
+{{/items}}
 `;
 ```
 
