@@ -5732,10 +5732,10 @@ PaginationComponent.defaultProps = {
     },
     template: {
         item: '{{page}}',
-        next: 'Next >',
-        previous: '< Prev',
-        first: '<< First',
-        last: 'Last >>'
+        next: '>',
+        previous: '<',
+        first: '<<',
+        last: '>>'
     }
 };
 

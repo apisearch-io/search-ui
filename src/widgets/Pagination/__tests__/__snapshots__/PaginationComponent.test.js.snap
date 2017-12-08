@@ -396,11 +396,11 @@ Object {
   "padding": 3,
   "target": "#some-target",
   "template": Object {
-    "first": "<< First",
+    "first": "<<",
     "item": "{{page}}",
-    "last": "Last >>",
-    "next": "Next >",
-    "previous": "< Prev",
+    "last": ">>",
+    "next": ">",
+    "previous": "<",
   },
 }
 `;
@@ -414,7 +414,7 @@ preact-render-spy (1 nodes)
     onClick={[Function handleClick]}
   >
     <div>
-      < Prev
+      <
     </div>
   </li>
   <li
@@ -463,7 +463,7 @@ preact-render-spy (1 nodes)
     class="as-pagination__item as-pagination__item--next  "
     onClick={[Function handleClick]}
   >
-    <div>Next ></div>
+    <div>></div>
   </li>
 </ul>
 
