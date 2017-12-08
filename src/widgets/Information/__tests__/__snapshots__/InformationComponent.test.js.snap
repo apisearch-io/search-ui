@@ -25,7 +25,7 @@ Object {
   "formatData": [Function],
   "target": "#some-tagret",
   "template": Object {
-    "container": "Found {{total_hits}} of {{total_items}} items",
+    "container": "Found {{total_hits}}/{{total_items}}",
   },
 }
 `;
@@ -33,13 +33,13 @@ Object {
 exports[`<InformationComponent /> should render with default props 2`] = `
 preact-render-spy (1 nodes)
 -------
-<div class="as-information ">Found 12 of 32 items</div>
+<div class="as-information ">Found 12/32</div>
 
 `;
 
 exports[`<InformationComponent /> should update content when passing new data 1`] = `
 preact-render-spy (1 nodes)
 -------
-<div class="as-information ">Found 34 of 67 items</div>
+<div class="as-information ">Found 34/67</div>
 
 `;

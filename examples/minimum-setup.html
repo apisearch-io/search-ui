@@ -16,6 +16,9 @@
         .grey {
             color: #eaeaea;
         }
+        .search.navbar-item {
+            min-width: 25rem
+        }
         .as-multipleFilter__item label {
             font-weight: 600;
         }
@@ -111,7 +114,8 @@
     // Widgets setup
     ui.addWidgets(
         ui.widgets.simpleSearch({
-            target: '.search'
+            target: '.search',
+            placeholder: 'Type to search...'
         }),
         ui.widgets.sortBy({
             target: '.sort-by',
@@ -119,17 +123,6 @@
                 {name: 'Oldest', value: 'year:asc'},
                 {name: 'Newest', value: 'year:desc'}
             ]
-        }),
-        ui.widgets.multipleFilter({
-            target: '.multiple-filter-year',
-            name: 'year',
-            filterField: 'year',
-            fetchLimit: 30,
-            viewLimit: 15,
-            sortBy: ['_count', 'desc'],
-            template: {
-                top: 'Years'
-            }
         }),
         ui.widgets.multipleFilter({
             target: '.multiple-filter-genre',
@@ -141,6 +134,17 @@
             sortBy: ['_count', 'desc'],
             template: {
                 top: 'Genre'
+            }
+        }),
+        ui.widgets.multipleFilter({
+            target: '.multiple-filter-year',
+            name: 'year',
+            filterField: 'year',
+            fetchLimit: 30,
+            viewLimit: 15,
+            sortBy: ['_count', 'desc'],
+            template: {
+                top: 'Years'
             }
         }),
         ui.widgets.multipleFilter({
@@ -160,11 +164,11 @@
             target: '.information'
         }),
         ui.widgets.result({
-            target: '.result'
+            target: '.result',
+            itemsPerPage: 8
         }),
         ui.widgets.pagination({
-            target: '.pagination',
-            goFirstLast: true
+            target: '.pagination'
         })
     );
 

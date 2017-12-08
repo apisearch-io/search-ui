@@ -219,6 +219,7 @@ const multipleFilterWidget = ui.widgets.multipleFilter({
         top: ?string,
         itemsList: ?string,
         item: ?string,
+        active: ?string,
         showMoreContainer: ?string
     },
     template: {
@@ -240,7 +241,7 @@ const multipleFilterWidget = ui.widgets.multipleFilter({
  - `aggregationField`: this will be the aggregation field name
  when was indexed to Apisearch as `indexed_metadata`.
  - `applicationType`: the type of filter. Check out the
- (javascript client)[https://github.com/apisearch-io/javascript-client#filters] 
+ [javascript client](https://github.com/apisearch-io/javascript-client#filters) 
  docs for more information.
  - `fetchLimit`: is the limit of items to be fetched on the server.
  - `viewLimit`: If there are 10 fetched items, and viewLimit is 5. Only
@@ -253,6 +254,7 @@ const multipleFilterWidget = ui.widgets.multipleFilter({
     - `top`: class name of the container that holds the title of the filter.
     - `itemsList`: class name of the filter items list.
     - `item`: class name of the filter item link.
+    - `active`: class name of the selected item link.
     - `showMoreContainer`: class of the "show more" button container.
  - `template`:
     - `top`: template string for the title of the filter list.

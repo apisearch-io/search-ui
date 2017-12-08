@@ -111,7 +111,7 @@ SimpleSearchComponent.defaultProps = {
         clearSearch: ''
     },
     template: {
-        clearSearch: 'clear'
+        clearSearch: 'x'
     }
 };
 

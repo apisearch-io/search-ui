@@ -11,6 +11,9 @@
     -moz-border-radius: $border-radius
     border-radius: $border-radius
 
+    &:focus
+      border-color: $color-secondary
+
   &__clearSearch
     background-color: $color-default
     padding: .1rem .5rem
@@ -26,3 +29,7 @@
     -webkit-border-radius: $border-radius
     -moz-border-radius: $border-radius
     border-radius: $border-radius
+
+    &:hover
+      background: $color-secondary
+      color: $color-secondary-inverted

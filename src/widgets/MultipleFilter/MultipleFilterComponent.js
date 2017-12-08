@@ -8,6 +8,7 @@ import { manageCurrentFilterItems } from "./helpers";
 
 import Template from "../Template";
 import ShowMoreComponent from "./ShowMoreComponent";
+import {defaultItemTemplate} from "./defaultTemplates";
 
 /**
  * Filter Component
@@ -174,6 +175,7 @@ class MultipleFilterComponent extends Component {
                 top: topClassName,
                 itemsList: itemsListClassName,
                 item: itemClassName,
+                active: activeClassName,
                 showMoreContainer: showMoreContainerClassName
             },
             template: {
@@ -218,7 +220,11 @@ class MultipleFilterComponent extends Component {
 
                     return (
                         <div
-                            className={`as-multipleFilter__item ${itemClassName}`}
+                            className={
+                                `as-multipleFilter__item ` +
+                                `${itemClassName} ` +
+                                `${(item.used) ? activeClassName : ''}`
+                            }
                             onClick={() => this.handleClick(item.values.id)}
                         >
                             <Template
@@ -246,12 +252,6 @@ class MultipleFilterComponent extends Component {
     }
 }
 
-const defaultItemTemplate = `
-    <input type="checkbox" id="filter_{{values.id}}" {{#isActive}}checked="checked"{{/isActive}}>
-    <label for="filter_{{values.id}}">{{{values.name}}}</label>
-    <span>{{n}}</span>
-`;
-
 MultipleFilterComponent.defaultProps = {
     aggregationField: null,
     applicationType: 8, // FILTER_MUST_ALL
@@ -263,6 +263,7 @@ MultipleFilterComponent.defaultProps = {
         top: '',
         itemsList: '',
         item: '',
+        active: 'as-multipleFilter__item--active',
         showMoreContainer: ''
     },
     template: {

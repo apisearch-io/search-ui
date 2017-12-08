@@ -45,7 +45,7 @@ InformationComponent.defaultProps = {
         container: ''
     },
     template: {
-        container: 'Found {{total_hits}} of {{total_items}} items'
+        container: 'Found {{total_hits}}/{{total_items}}'
     },
     formatData: data => data
 };

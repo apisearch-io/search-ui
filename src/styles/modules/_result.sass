@@ -1,8 +1,17 @@
 .as-result
   &__itemsList
     border: 1px solid $color-default
+    -webkit-border-radius: $border-radius
+    -moz-border-radius: $border-radius
+    border-radius: $border-radius
+
+  & ul
+    margin: 0
+    padding: 0
 
   &__item
+    list-style: none
+    margin: 0
     border-bottom: 1px solid $color-default
     padding: .5rem
 

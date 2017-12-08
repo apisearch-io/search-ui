@@ -4,6 +4,7 @@
 
 import { h, Component } from 'preact';
 import Template from "../Template";
+import {defaultItemsListTemplate} from "./defaultTemplates";
 
 /**
  * Actions
@@ -90,18 +91,6 @@ class ResultComponent extends Component {
         )
     }
 }
-
-const defaultItemsListTemplate = `
-    <ul>
-    {{#items}}
-        <li class="as-result__item">
-            <strong>Id:</strong> {{uuid.id}} <br />
-            <strong>Type:</strong> {{uuid.type}}
-        </li>
-    {{/items}}
-    </ul>
-    {{^items}}No result{{/items}}
-`;
 
 ResultComponent.defaultProps = {
     itemsPerPage: 10,

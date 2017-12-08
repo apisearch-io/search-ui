@@ -7,7 +7,7 @@ preact-render-spy (1 nodes)
   <div class="as-multipleFilter__top top-custom-class">Filter top header template:</div>
   <div class="as-multipleFilter__itemsList itemsList-custom-class">
     <div
-      class="as-multipleFilter__item item-custom-class"
+      class="as-multipleFilter__item item-custom-class undefined"
       onClick={[Function onClick]}
     >
       <div>
@@ -20,7 +20,7 @@ preact-render-spy (1 nodes)
       </div>
     </div>
     <div
-      class="as-multipleFilter__item item-custom-class"
+      class="as-multipleFilter__item item-custom-class "
       onClick={[Function onClick]}
     >
       <div>
@@ -33,7 +33,7 @@ preact-render-spy (1 nodes)
       </div>
     </div>
     <div
-      class="as-multipleFilter__item item-custom-class"
+      class="as-multipleFilter__item item-custom-class "
       onClick={[Function onClick]}
     >
       <div>
@@ -65,7 +65,7 @@ preact-render-spy (1 nodes)
   <div class="as-multipleFilter__top top-custom-class">Filter top header template:</div>
   <div class="as-multipleFilter__itemsList itemsList-custom-class">
     <div
-      class="as-multipleFilter__item item-custom-class"
+      class="as-multipleFilter__item item-custom-class "
       onClick={[Function onClick]}
     >
       <div>
@@ -78,7 +78,7 @@ preact-render-spy (1 nodes)
       </div>
     </div>
     <div
-      class="as-multipleFilter__item item-custom-class"
+      class="as-multipleFilter__item item-custom-class "
       onClick={[Function onClick]}
     >
       <div>
@@ -91,7 +91,7 @@ preact-render-spy (1 nodes)
       </div>
     </div>
     <div
-      class="as-multipleFilter__item item-custom-class"
+      class="as-multipleFilter__item item-custom-class "
       onClick={[Function onClick]}
     >
       <div>
@@ -104,7 +104,7 @@ preact-render-spy (1 nodes)
       </div>
     </div>
     <div
-      class="as-multipleFilter__item item-custom-class"
+      class="as-multipleFilter__item item-custom-class "
       onClick={[Function onClick]}
     >
       <div>
@@ -117,7 +117,7 @@ preact-render-spy (1 nodes)
       </div>
     </div>
     <div
-      class="as-multipleFilter__item item-custom-class"
+      class="as-multipleFilter__item item-custom-class "
       onClick={[Function onClick]}
     >
       <div>
@@ -130,7 +130,7 @@ preact-render-spy (1 nodes)
       </div>
     </div>
     <div
-      class="as-multipleFilter__item item-custom-class"
+      class="as-multipleFilter__item item-custom-class "
       onClick={[Function onClick]}
     >
       <div>
@@ -162,7 +162,7 @@ preact-render-spy (1 nodes)
   <div class="as-multipleFilter__top top-custom-class">Filter top header template:</div>
   <div class="as-multipleFilter__itemsList itemsList-custom-class">
     <div
-      class="as-multipleFilter__item item-custom-class"
+      class="as-multipleFilter__item item-custom-class "
       onClick={[Function onClick]}
     >
       <div>
@@ -175,7 +175,7 @@ preact-render-spy (1 nodes)
       </div>
     </div>
     <div
-      class="as-multipleFilter__item item-custom-class"
+      class="as-multipleFilter__item item-custom-class "
       onClick={[Function onClick]}
     >
       <div>
@@ -188,7 +188,7 @@ preact-render-spy (1 nodes)
       </div>
     </div>
     <div
-      class="as-multipleFilter__item item-custom-class"
+      class="as-multipleFilter__item item-custom-class "
       onClick={[Function onClick]}
     >
       <div>
@@ -258,7 +258,7 @@ preact-render-spy (1 nodes)
   <div class="as-multipleFilter__top top-custom-class">Filter top header template:</div>
   <div class="as-multipleFilter__itemsList itemsList-custom-class">
     <div
-      class="as-multipleFilter__item item-custom-class"
+      class="as-multipleFilter__item item-custom-class "
       onClick={[Function onClick]}
     >
       <div>
@@ -271,7 +271,7 @@ preact-render-spy (1 nodes)
       </div>
     </div>
     <div
-      class="as-multipleFilter__item item-custom-class"
+      class="as-multipleFilter__item item-custom-class "
       onClick={[Function onClick]}
     >
       <div>
@@ -284,7 +284,7 @@ preact-render-spy (1 nodes)
       </div>
     </div>
     <div
-      class="as-multipleFilter__item item-custom-class"
+      class="as-multipleFilter__item item-custom-class "
       onClick={[Function onClick]}
     >
       <div>
@@ -315,6 +315,7 @@ Object {
   "applicationType": 8,
   "children": Array [],
   "classNames": Object {
+    "active": "as-multipleFilter__item--active",
     "container": "",
     "item": "",
     "itemsList": "",
@@ -349,7 +350,7 @@ preact-render-spy (1 nodes)
 <div class="as-multipleFilter ">
   <div class="as-multipleFilter__itemsList ">
     <div
-      class="as-multipleFilter__item "
+      class="as-multipleFilter__item  "
       onClick={[Function onClick]}
     >
       <div>
@@ -362,7 +363,7 @@ preact-render-spy (1 nodes)
       </div>
     </div>
     <div
-      class="as-multipleFilter__item "
+      class="as-multipleFilter__item  "
       onClick={[Function onClick]}
     >
       <div>
@@ -375,7 +376,7 @@ preact-render-spy (1 nodes)
       </div>
     </div>
     <div
-      class="as-multipleFilter__item "
+      class="as-multipleFilter__item  "
       onClick={[Function onClick]}
     >
       <div>
@@ -388,7 +389,7 @@ preact-render-spy (1 nodes)
       </div>
     </div>
     <div
-      class="as-multipleFilter__item "
+      class="as-multipleFilter__item  "
       onClick={[Function onClick]}
     >
       <div>
@@ -401,7 +402,7 @@ preact-render-spy (1 nodes)
       </div>
     </div>
     <div
-      class="as-multipleFilter__item "
+      class="as-multipleFilter__item  "
       onClick={[Function onClick]}
     >
       <div>
@@ -414,7 +415,7 @@ preact-render-spy (1 nodes)
       </div>
     </div>
     <div
-      class="as-multipleFilter__item "
+      class="as-multipleFilter__item  "
       onClick={[Function onClick]}
     >
       <div>

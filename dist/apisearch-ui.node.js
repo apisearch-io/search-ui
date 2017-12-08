@@ -1734,11 +1734,11 @@ var _ApisearchUI = __webpack_require__(15);
 
 var _ApisearchUI2 = _interopRequireDefault(_ApisearchUI);
 
-var _apisearch = __webpack_require__(47);
+var _apisearch = __webpack_require__(49);
 
 var _apisearch2 = _interopRequireDefault(_apisearch);
 
-var _Store = __webpack_require__(48);
+var _Store = __webpack_require__(50);
 
 var _Store2 = _interopRequireDefault(_Store);
 
@@ -2369,19 +2369,19 @@ var _MultipleFilterComponent = __webpack_require__(34);
 
 var _MultipleFilterComponent2 = _interopRequireDefault(_MultipleFilterComponent);
 
-var _ResultComponent = __webpack_require__(38);
+var _ResultComponent = __webpack_require__(39);
 
 var _ResultComponent2 = _interopRequireDefault(_ResultComponent);
 
-var _InformationComponent = __webpack_require__(40);
+var _InformationComponent = __webpack_require__(42);
 
 var _InformationComponent2 = _interopRequireDefault(_InformationComponent);
 
-var _ClearFiltersComponent = __webpack_require__(41);
+var _ClearFiltersComponent = __webpack_require__(43);
 
 var _ClearFiltersComponent2 = _interopRequireDefault(_ClearFiltersComponent);
 
-var _PaginationComponent = __webpack_require__(43);
+var _PaginationComponent = __webpack_require__(45);
 
 var _PaginationComponent2 = _interopRequireDefault(_PaginationComponent);
 
@@ -2737,7 +2737,7 @@ SimpleSearchComponent.defaultProps = {
         clearSearch: ''
     },
     template: {
-        clearSearch: 'clear'
+        clearSearch: 'x'
     }
 };
 
@@ -4537,6 +4537,8 @@ var _ShowMoreComponent = __webpack_require__(37);
 
 var _ShowMoreComponent2 = _interopRequireDefault(_ShowMoreComponent);
 
+var _defaultTemplates = __webpack_require__(38);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -4701,6 +4703,7 @@ var MultipleFilterComponent = function (_Component) {
                 topClassName = _props2$classNames.top,
                 itemsListClassName = _props2$classNames.itemsList,
                 itemClassName = _props2$classNames.item,
+                activeClassName = _props2$classNames.active,
                 showMoreContainerClassName = _props2$classNames.showMoreContainer,
                 _props2$template = _props2.template,
                 topTemplate = _props2$template.top,
@@ -4743,7 +4746,7 @@ var MultipleFilterComponent = function (_Component) {
                         return (0, _preact.h)(
                             "div",
                             {
-                                className: "as-multipleFilter__item " + itemClassName,
+                                className: "as-multipleFilter__item " + (itemClassName + " ") + ("" + (item.used ? activeClassName : '')),
                                 onClick: function onClick() {
                                     return _this2.handleClick(item.values.id);
                                 }
@@ -4771,8 +4774,6 @@ var MultipleFilterComponent = function (_Component) {
     return MultipleFilterComponent;
 }(_preact.Component);
 
-var defaultItemTemplate = "\n    <input type=\"checkbox\" id=\"filter_{{values.id}}\" {{#isActive}}checked=\"checked\"{{/isActive}}>\n    <label for=\"filter_{{values.id}}\">{{{values.name}}}</label>\n    <span>{{n}}</span>\n";
-
 MultipleFilterComponent.defaultProps = {
     aggregationField: null,
     applicationType: 8, // FILTER_MUST_ALL
@@ -4784,11 +4785,12 @@ MultipleFilterComponent.defaultProps = {
         top: '',
         itemsList: '',
         item: '',
+        active: 'as-multipleFilter__item--active',
         showMoreContainer: ''
     },
     template: {
         top: null,
-        item: defaultItemTemplate,
+        item: _defaultTemplates.defaultItemTemplate,
         showMore: '+ Show more',
         showLess: '- Show less'
     },
@@ -5023,6 +5025,18 @@ exports.default = ShowMoreComponent;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+var defaultItemTemplate = exports.defaultItemTemplate = "\n    <input \n        type=\"checkbox\" \n        id=\"filter_{{values.id}}\"\n        class=\"as-multipleFilter__itemCheckbox\" \n        {{#isActive}}checked=\"checked\"{{/isActive}}\n    >\n    <label \n        class=\"as-multipleFilter__itemName\"\n        for=\"filter_{{values.id}}\"\n    >\n        {{{values.name}}}\n    </label>\n    <span class=\"as-multipleFilter__itemNumber\">\n        {{n}}\n    </span>\n";
+
+/***/ }),
+/* 39 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -5032,7 +5046,9 @@ var _Template = __webpack_require__(3);
 
 var _Template2 = _interopRequireDefault(_Template);
 
-var _resultActions = __webpack_require__(39);
+var _defaultTemplates = __webpack_require__(40);
+
+var _resultActions = __webpack_require__(41);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -5135,8 +5151,6 @@ var ResultComponent = function (_Component) {
     return ResultComponent;
 }(_preact.Component);
 
-var defaultItemsListTemplate = "\n    <ul>\n    {{#items}}\n        <li class=\"as-result__item\">\n            <strong>Id:</strong> {{uuid.id}} <br />\n            <strong>Type:</strong> {{uuid.type}}\n        </li>\n    {{/items}}\n    </ul>\n    {{^items}}No result{{/items}}\n";
-
 ResultComponent.defaultProps = {
     itemsPerPage: 10,
     highlightsEnabled: false,
@@ -5146,7 +5160,7 @@ ResultComponent.defaultProps = {
         container: ''
     },
     template: {
-        itemsList: defaultItemsListTemplate,
+        itemsList: _defaultTemplates.defaultItemsListTemplate,
         placeholder: null
     },
     formatData: function formatData(data) {
@@ -5157,7 +5171,19 @@ ResultComponent.defaultProps = {
 exports.default = ResultComponent;
 
 /***/ }),
-/* 39 */
+/* 40 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+var defaultItemsListTemplate = exports.defaultItemsListTemplate = "\n    <ul>\n    {{#items}}\n        <li class=\"as-result__item\">\n            <strong>Uuid:</strong> {{uuid.type}} - {{uuid.id}} <br />\n            <strong>Metadata:</strong> {{metadata}} <br />\n            <strong>Indexed metadata:</strong> {{indexed_metadata}}\n        </li>\n    {{/items}}\n    </ul>\n    {{^items}}No result{{/items}}\n";
+
+/***/ }),
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5252,7 +5278,7 @@ function changeItemsPerResultPageSetup(_ref, _ref2) {
 }
 
 /***/ }),
-/* 40 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5329,7 +5355,7 @@ InformationComponent.defaultProps = {
         container: ''
     },
     template: {
-        container: 'Found {{total_hits}} of {{total_items}} items'
+        container: 'Found {{total_hits}}/{{total_items}}'
     },
     formatData: function formatData(data) {
         return data;
@@ -5339,7 +5365,7 @@ InformationComponent.defaultProps = {
 exports.default = InformationComponent;
 
 /***/ }),
-/* 41 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5357,7 +5383,7 @@ var _Template = __webpack_require__(3);
 
 var _Template2 = _interopRequireDefault(_Template);
 
-var _clearFiltersActions = __webpack_require__(42);
+var _clearFiltersActions = __webpack_require__(44);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -5445,7 +5471,7 @@ ClearFiltersComponent.defaultProps = {
 exports.default = ClearFiltersComponent;
 
 /***/ }),
-/* 42 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5517,7 +5543,7 @@ function clearFiltersAction(_ref, _ref2) {
 }
 
 /***/ }),
-/* 43 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5535,13 +5561,13 @@ var _Template = __webpack_require__(3);
 
 var _Template2 = _interopRequireDefault(_Template);
 
-var _paginationActions = __webpack_require__(44);
+var _paginationActions = __webpack_require__(46);
 
-var _NavigationComponent = __webpack_require__(45);
+var _NavigationComponent = __webpack_require__(47);
 
 var _NavigationComponent2 = _interopRequireDefault(_NavigationComponent);
 
-var _helpers = __webpack_require__(46);
+var _helpers = __webpack_require__(48);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -5747,7 +5773,7 @@ PaginationComponent.defaultProps = {
 exports.default = PaginationComponent;
 
 /***/ }),
-/* 44 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5814,7 +5840,7 @@ function paginationChangeAction(_ref, _ref2) {
    */
 
 /***/ }),
-/* 45 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5854,7 +5880,7 @@ function NavigationComponent(_ref) {
 exports.default = NavigationComponent;
 
 /***/ }),
-/* 46 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5945,7 +5971,7 @@ function getEnd(_ref3) {
 }
 
 /***/ }),
-/* 47 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -9365,7 +9391,7 @@ exports.default = MemoryCache;
 //# sourceMappingURL=apisearch.node.js.map
 
 /***/ }),
-/* 48 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9377,7 +9403,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _events = __webpack_require__(49);
+var _events = __webpack_require__(51);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -9479,7 +9505,7 @@ var Store = function (_EventEmitter) {
 exports.default = Store;
 
 /***/ }),
-/* 49 */
+/* 51 */
 /***/ (function(module, exports) {
 
 // Copyright Joyent, Inc. and other Node contributors.
