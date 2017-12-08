@@ -246,6 +246,12 @@ class MultipleFilterComponent extends Component {
     }
 }
 
+const defaultItemTemplate = `
+    <input type="checkbox" id="filter_{{values.id}}" {{#isActive}}checked="checked"{{/isActive}}>
+    <label for="filter_{{values.id}}">{{{values.name}}}</label>
+    <span>{{n}}</span>
+`;
+
 MultipleFilterComponent.defaultProps = {
     aggregationField: null,
     applicationType: 8, // FILTER_MUST_ALL
@@ -261,7 +267,7 @@ MultipleFilterComponent.defaultProps = {
     },
     template: {
         top: null,
-        item: null,
+        item: defaultItemTemplate,
         showMore: '+ Show more',
         showLess: '- Show less'
     },

@@ -1,0 +1,20 @@
+.as-pagination
+  width: 100%
+  position: relative
+
+  &__item
+    display: inline-block
+    width: 1.5rem
+    cursor: pointer
+    text-align: center
+    margin: 0 .1rem
+    -webkit-border-radius: $border-radius
+    -moz-border-radius: $border-radius
+    border-radius: $border-radius
+
+    &:hover
+      background: $color-default
+
+    &--active
+      background: $color-secondary
+      color: $color-secondary-inverted

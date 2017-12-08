@@ -4771,6 +4771,8 @@ var MultipleFilterComponent = function (_Component) {
     return MultipleFilterComponent;
 }(_preact.Component);
 
+var defaultItemTemplate = "\n    <input type=\"checkbox\" id=\"filter_{{values.id}}\" {{#isActive}}checked=\"checked\"{{/isActive}}>\n    <label for=\"filter_{{values.id}}\">{{{values.name}}}</label>\n    <span>{{n}}</span>\n";
+
 MultipleFilterComponent.defaultProps = {
     aggregationField: null,
     applicationType: 8, // FILTER_MUST_ALL
@@ -4786,7 +4788,7 @@ MultipleFilterComponent.defaultProps = {
     },
     template: {
         top: null,
-        item: null,
+        item: defaultItemTemplate,
         showMore: '+ Show more',
         showLess: '- Show less'
     },
@@ -5133,6 +5135,8 @@ var ResultComponent = function (_Component) {
     return ResultComponent;
 }(_preact.Component);
 
+var defaultItemsListTemplate = "\n    <ul>\n    {{#items}}\n        <li class=\"as-result__item\">\n            <strong>Id:</strong> {{uuid.id}} <br />\n            <strong>Type:</strong> {{uuid.type}}\n        </li>\n    {{/items}}\n    </ul>\n    {{^items}}No result{{/items}}\n";
+
 ResultComponent.defaultProps = {
     itemsPerPage: 10,
     highlightsEnabled: false,
@@ -5142,6 +5146,7 @@ ResultComponent.defaultProps = {
         container: ''
     },
     template: {
+        itemsList: defaultItemsListTemplate,
         placeholder: null
     },
     formatData: function formatData(data) {

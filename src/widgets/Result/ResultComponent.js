@@ -91,6 +91,18 @@ class ResultComponent extends Component {
     }
 }
 
+const defaultItemsListTemplate = `
+    <ul>
+    {{#items}}
+        <li class="as-result__item">
+            <strong>Id:</strong> {{uuid.id}} <br />
+            <strong>Type:</strong> {{uuid.type}}
+        </li>
+    {{/items}}
+    </ul>
+    {{^items}}No result{{/items}}
+`;
+
 ResultComponent.defaultProps = {
     itemsPerPage: 10,
     highlightsEnabled: false,
@@ -100,6 +112,7 @@ ResultComponent.defaultProps = {
         container: ''
     },
     template: {
+        itemsList: defaultItemsListTemplate,
         placeholder: null
     },
     formatData: data => data
