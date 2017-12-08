@@ -4037,6 +4037,7 @@ var SuggestedSearchComponent = function (_Component) {
             var _this3 = this;
 
             var _props = this.props,
+                dirty = _props.dirty,
                 placeholder = _props.placeholder,
                 autofocus = _props.autofocus,
                 _props$classNames = _props.classNames,
@@ -4068,7 +4069,7 @@ var SuggestedSearchComponent = function (_Component) {
                         tabIndex: '0',
                         className: 'as-suggestedSearch__box ' + boxClassName,
                         style: {
-                            display: currentSuggestions.length !== 0 ? 'block' : 'none'
+                            display: currentSuggestions.length > 1 && !dirty ? 'block' : 'none'
                         }
                     },
                     currentSuggestions.map(function (suggestion, key) {

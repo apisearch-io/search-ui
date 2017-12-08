@@ -197,6 +197,7 @@ class SuggestedSearchComponent extends Component {
 
     render() {
         const {
+            dirty,
             placeholder,
             autofocus,
             classNames: {
@@ -230,7 +231,7 @@ class SuggestedSearchComponent extends Component {
                     tabIndex={`0`}
                     className={`as-suggestedSearch__box ${boxClassName}`}
                     style={{
-                        display: currentSuggestions.length !== 0
+                        display: currentSuggestions.length > 1 && !dirty
                             ? 'block'
                             : 'none'
                     }}

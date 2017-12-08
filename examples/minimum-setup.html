@@ -16,7 +16,8 @@
         .grey {
             color: #eaeaea;
         }
-        .search.navbar-item {
+        .search.navbar-item,
+        .suggested-search.navbar-item {
             min-width: 25rem
         }
     </style>
@@ -37,6 +38,9 @@
 
     <!-- SimpleSearch -->
     <div class="search navbar-item"></div>
+
+    <!-- Suggested Search -->
+    <div class="suggested-search navbar-item"></div>
 
     <!-- End -->
     <div class="navbar-end">
@@ -110,6 +114,10 @@
         ui.widgets.simpleSearch({
             target: '.search',
             placeholder: 'Type to search...'
+        }),
+        ui.widgets.suggestedSearch({
+            target: '.suggested-search',
+            placeholder: 'Type to search with suggestions...'
         }),
         ui.widgets.sortBy({
             target: '.sort-by',

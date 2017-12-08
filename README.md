@@ -533,7 +533,7 @@ yarn test
 # Todo's
   
 - [x] Simple Search
-   - [ ] Clear search
+   - [x] Clear search
 - [x] Suggested Search
    
 - [x] Simple Result box
@@ -555,7 +555,7 @@ yarn test
 - [ ] Menu filter
 - [ ] Range filter
 
-- [ ] Analytics / User analytics
+- [x] Default styles theme
 
 Extra todo list:
 - [x] Add data transformers on components that will receive data
