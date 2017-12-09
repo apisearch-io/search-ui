@@ -257,7 +257,7 @@ class SuggestedSearchComponent extends Component {
                 {(currentQueryText.length !== 0)
                     ? (
                         <div
-                            className={`as-simpleSearch__clearSearch ${clearSearchClassName}`}
+                            className={`as-suggestedSearch__clearSearch ${clearSearchClassName}`}
                             onClick={this.clearSearch}
                         >
                             <Template template={clearSearchTemplate}/>

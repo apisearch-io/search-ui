@@ -4091,7 +4091,7 @@ var SuggestedSearchComponent = function (_Component) {
                 currentQueryText.length !== 0 ? (0, _preact.h)(
                     'div',
                     {
-                        className: 'as-simpleSearch__clearSearch ' + clearSearchClassName,
+                        className: 'as-suggestedSearch__clearSearch ' + clearSearchClassName,
                         onClick: this.clearSearch
                     },
                     (0, _preact.h)(_Template2.default, { template: clearSearchTemplate })
