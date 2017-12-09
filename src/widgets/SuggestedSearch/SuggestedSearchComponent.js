@@ -17,6 +17,7 @@ import {
     simpleSearchAction,
     suggestedSearchAction
 } from "./suggestedSearchActions";
+import Template from "../Template";
 
 /**
  * Suggested Search Component
@@ -195,6 +196,25 @@ class SuggestedSearchComponent extends Component {
         return false;
     };
 
+    clearSearch = () => {
+        const {
+            environmentId,
+            currentQuery,
+            client
+        } = this.props;
+
+        simpleSearchAction(
+            {
+                queryText: ''
+            },
+            {
+                environmentId,
+                currentQuery,
+                client
+            }
+        )
+    };
+
     render() {
         const {
             dirty,
@@ -203,9 +223,16 @@ class SuggestedSearchComponent extends Component {
             classNames: {
                 container: containerClassName,
                 input: inputClassName,
+                clearSearch: clearSearchClassName,
                 box: boxClassName,
                 suggestion: suggestionClassName,
                 activeSuggestion: activeSuggestionClassName
+            },
+            template: {
+                clearSearch: clearSearchTemplate
+            },
+            currentQuery: {
+                q: currentQueryText
             }
         } = this.props;
 
@@ -217,7 +244,7 @@ class SuggestedSearchComponent extends Component {
             <div className={`as-suggestedSearch ${containerClassName}`}>
                 <input
                     type={`text`}
-                    value={this.state.q}
+                    value={currentQueryText}
                     className={`as-suggestedSearch__input ${inputClassName}`}
                     placeholder={placeholder}
                     autofocus={autofocus}
@@ -226,6 +253,17 @@ class SuggestedSearchComponent extends Component {
                     onKeyDown={this.handleSuggestionsNavigation}
                     onBlur={this.handleSearchInputFocusedOut}
                 />
+
+                {(currentQueryText.length !== 0)
+                    ? (
+                        <div
+                            className={`as-simpleSearch__clearSearch ${clearSearchClassName}`}
+                            onClick={this.clearSearch}
+                        >
+                            <Template template={clearSearchTemplate}/>
+                        </div>
+                    ) : null
+                }
 
                 <div
                     tabIndex={`0`}
@@ -267,9 +305,13 @@ SuggestedSearchComponent.defaultProps = {
     classNames: {
         container: '',
         input: '',
+        clearSearch: '',
         box: '',
         suggestion: '',
         activeSuggestion: 'as-suggestedSearch__suggestion--active'
+    },
+    template: {
+        clearSearch: 'x'
     }
 };
 

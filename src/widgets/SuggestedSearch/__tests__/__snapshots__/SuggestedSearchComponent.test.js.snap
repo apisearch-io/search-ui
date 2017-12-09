@@ -31,7 +31,7 @@ preact-render-spy (1 nodes)
 <div class="as-suggestedSearch ">
   <input
     type="text"
-    value="i want to get suggestions"
+    value=""
     class="as-suggestedSearch__input "
     placeholder=""
     autofocus={false}
@@ -70,7 +70,7 @@ preact-render-spy (1 nodes)
 <div class="as-suggestedSearch ">
   <input
     type="text"
-    value="i want to get suggestions"
+    value=""
     class="as-suggestedSearch__input "
     placeholder=""
     autofocus={false}
@@ -143,7 +143,7 @@ preact-render-spy (1 nodes)
 <div class="as-suggestedSearch ">
   <input
     type="text"
-    value="suggestion 1"
+    value=""
     class="as-suggestedSearch__input "
     placeholder=""
     autofocus={false}
@@ -207,7 +207,7 @@ preact-render-spy (1 nodes)
 <div class="as-suggestedSearch ">
   <input
     type="text"
-    value="suggestion 3"
+    value=""
     class="as-suggestedSearch__input "
     placeholder=""
     autofocus={false}
@@ -251,9 +251,15 @@ Object {
     "input": "custom-input-class",
     "suggestion": "custom-suggestion-class",
   },
+  "currentQuery": Object {
+    "q": "",
+  },
   "placeholder": "Type to get suggestions...",
   "startSearchOn": 0,
   "target": "#some-tagret",
+  "template": Object {
+    "clearSearch": "x",
+  },
 }
 `;
 
@@ -288,13 +294,20 @@ Object {
   "classNames": Object {
     "activeSuggestion": "as-suggestedSearch__suggestion--active",
     "box": "",
+    "clearSearch": "",
     "container": "",
     "input": "",
     "suggestion": "",
   },
+  "currentQuery": Object {
+    "q": "",
+  },
   "placeholder": "",
   "startSearchOn": 0,
   "target": "#some-tagret",
+  "template": Object {
+    "clearSearch": "x",
+  },
 }
 `;
 

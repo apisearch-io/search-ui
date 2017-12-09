@@ -3855,6 +3855,12 @@ var _helpers = __webpack_require__(30);
 
 var _suggestedSearchActions = __webpack_require__(31);
 
+var _Template = __webpack_require__(3);
+
+var _Template2 = _interopRequireDefault(_Template);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -3999,6 +4005,22 @@ var SuggestedSearchComponent = function (_Component) {
             return false;
         };
 
+        _this.clearSearch = function () {
+            var _this$props4 = _this.props,
+                environmentId = _this$props4.environmentId,
+                currentQuery = _this$props4.currentQuery,
+                client = _this$props4.client;
+
+
+            (0, _suggestedSearchActions.simpleSearchAction)({
+                queryText: ''
+            }, {
+                environmentId: environmentId,
+                currentQuery: currentQuery,
+                client: client
+            });
+        };
+
         _this.state = {
             q: '',
             currentSuggestions: []
@@ -4043,9 +4065,12 @@ var SuggestedSearchComponent = function (_Component) {
                 _props$classNames = _props.classNames,
                 containerClassName = _props$classNames.container,
                 inputClassName = _props$classNames.input,
+                clearSearchClassName = _props$classNames.clearSearch,
                 boxClassName = _props$classNames.box,
                 suggestionClassName = _props$classNames.suggestion,
-                activeSuggestionClassName = _props$classNames.activeSuggestion;
+                activeSuggestionClassName = _props$classNames.activeSuggestion,
+                clearSearchTemplate = _props.template.clearSearch,
+                currentQueryText = _props.currentQuery.q;
             var currentSuggestions = this.state.currentSuggestions;
 
 
@@ -4054,7 +4079,7 @@ var SuggestedSearchComponent = function (_Component) {
                 { className: 'as-suggestedSearch ' + containerClassName },
                 (0, _preact.h)('input', {
                     type: 'text',
-                    value: this.state.q,
+                    value: currentQueryText,
                     className: 'as-suggestedSearch__input ' + inputClassName,
                     placeholder: placeholder,
                     autofocus: autofocus,
@@ -4063,6 +4088,14 @@ var SuggestedSearchComponent = function (_Component) {
                     onKeyDown: this.handleSuggestionsNavigation,
                     onBlur: this.handleSearchInputFocusedOut
                 }),
+                currentQueryText.length !== 0 ? (0, _preact.h)(
+                    'div',
+                    {
+                        className: 'as-simpleSearch__clearSearch ' + clearSearchClassName,
+                        onClick: this.clearSearch
+                    },
+                    (0, _preact.h)(_Template2.default, { template: clearSearchTemplate })
+                ) : null,
                 (0, _preact.h)(
                     'div',
                     {
@@ -4096,9 +4129,13 @@ SuggestedSearchComponent.defaultProps = {
     classNames: {
         container: '',
         input: '',
+        clearSearch: '',
         box: '',
         suggestion: '',
         activeSuggestion: 'as-suggestedSearch__suggestion--active'
+    },
+    template: {
+        clearSearch: 'x'
     }
 };
 

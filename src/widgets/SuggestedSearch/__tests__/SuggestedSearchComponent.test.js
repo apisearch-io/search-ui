@@ -5,7 +5,10 @@ import SuggestedSearchComponent from './../SuggestedSearchComponent';
 
 describe('<SuggestedSearchComponent />',() => {
     const defaultProps = {
-        target: '#some-tagret'
+        target: '#some-tagret',
+        currentQuery: {
+            q: ''
+        }
     };
     const receivedData = {
         suggests: [

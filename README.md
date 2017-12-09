@@ -119,7 +119,11 @@ const simpleSearchWidget = ui.widgets.simpleSearch({
   startSearchOn: ?integer[0],
   classNames: {
       container: ?string,
-      input: ?string
+      input: ?string,
+      clearSearch: ?string
+  },
+  template: {
+      clearSearch: ?string
   }
 });
 ```
@@ -142,16 +146,20 @@ you are looking for just below the search input.
 
 ```javascript
 const suggestedSearchWidget = ui.widgets.suggestedSearch({ 
-  target: !string,
-  placeholder: ?string,
-  autofocus: ?bool[false],
-  classNames: {
-      container: ?string,
-      input: ?string,
-      box: ?string,
-      suggestion: ?string,
-      activeSuggestion: ?string
-  }
+    target: !string,
+    placeholder: ?string,
+    autofocus: ?bool[false],
+    classNames: {
+        container: ?string,
+        input: ?string,
+        clearSearch: ?string,
+        box: ?string,
+        suggestion: ?string,
+        activeSuggestion: ?string
+    },
+    template: {
+        clearSearch: ?string
+    }
 });
 ```
 
@@ -535,6 +543,7 @@ yarn test
 - [x] Simple Search
    - [x] Clear search
 - [x] Suggested Search
+   - [x] Clear search
    
 - [x] Simple Result box
    - [x] Highlighted result
