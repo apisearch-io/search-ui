@@ -187,7 +187,7 @@ class SuggestedSearchComponent extends Component {
          */
         if (
             null === e.relatedTarget ||
-            false === e.relatedTarget.classList.contains('as-suggestedSearch--box')
+            false === e.relatedTarget.classList.contains('as-suggestedSearch__box')
         ) {
             this.setState({currentSuggestions: []});
         }

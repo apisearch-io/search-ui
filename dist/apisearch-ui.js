@@ -3992,7 +3992,7 @@ var SuggestedSearchComponent = function (_Component) {
              * If is not clicking on the suggestions box
              * The suggestions are cleared and panel closes
              */
-            if (null === e.relatedTarget || false === e.relatedTarget.classList.contains('as-suggestedSearch--box')) {
+            if (null === e.relatedTarget || false === e.relatedTarget.classList.contains('as-suggestedSearch__box')) {
                 _this.setState({ currentSuggestions: [] });
             }
 
