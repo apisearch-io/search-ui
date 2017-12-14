@@ -17,10 +17,11 @@ import {
 export function bootstrap({
    environmentId,
    appId,
-   apiKey,
+   index,
+   token,
    options
 }) {
-    const clientId = `${APISEARCH_CLIENT}__${appId}_${apiKey}`;
+    const clientId = `${APISEARCH_CLIENT}__${appId}_${token}_${token}`;
     const storeId = `${APISEARCH_STORE}__${environmentId}`;
     const dispatcherId = `${APISEARCH_DISPATCHER}__${environmentId}`;
     const asuiId = `${APISEARCH_UI}__${environmentId}`;
@@ -31,7 +32,8 @@ export function bootstrap({
     container.register(clientId, () => {
         return apisearch({
             appId,
-            apiKey,
+            index,
+            token,
             options
         })
     });

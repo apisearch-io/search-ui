@@ -29,7 +29,8 @@ import {APISEARCH_DISPATCHER, APISEARCH_UI} from "./constants";
  */
 module.exports = function ({
     appId,
-    apiKey,
+    index,
+    token,
     options
 }) {
     /**
@@ -43,7 +44,8 @@ module.exports = function ({
     bootstrap({
         environmentId,
         appId,
-        apiKey,
+        index,
+        token,
         options
     });
 

@@ -16,8 +16,7 @@
         .grey {
             color: #eaeaea;
         }
-        .search.navbar-item,
-        .suggested-search.navbar-item {
+        .search.navbar-item {
             min-width: 25rem
         }
     </style>
@@ -38,9 +37,6 @@
 
     <!-- SimpleSearch -->
     <div class="search navbar-item"></div>
-
-    <!-- Suggested Search -->
-    <div class="suggested-search navbar-item"></div>
 
     <!-- End -->
     <div class="navbar-end">
@@ -106,7 +102,8 @@
     // UI Instance
     const ui = apisearchUI({
         appId: 'music',
-        apiKey: '5fadd8c4-c966-11e7-abc4-cec278b6b50a'
+        index: 'default',
+        token: '5fadd8c4-c966-11e7-abc4-cec278b6b50a'
     });
 
     // Widgets setup
@@ -114,10 +111,6 @@
         ui.widgets.simpleSearch({
             target: '.search',
             placeholder: 'Type to search...'
-        }),
-        ui.widgets.suggestedSearch({
-            target: '.suggested-search',
-            placeholder: 'Type to search with suggestions...'
         }),
         ui.widgets.sortBy({
             target: '.sort-by',
