@@ -62,7 +62,9 @@ describe('<ResultComponent />',() => {
             itemsPerPage: 20,
             highlightsEnabled: true,
             classNames: {
-                container: 'custom-container-class'
+                container: 'custom-container-class',
+                itemsList: 'custom-itemsList-class',
+                placeholder: 'custom-placeholder-class'
             }
         };
 

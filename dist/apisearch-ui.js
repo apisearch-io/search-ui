@@ -2592,7 +2592,7 @@ var WidgetFactory = function () {
                 exclude: exclude,
                 highlightsEnabled: highlightsEnabled,
                 classNames: _extends({}, _ResultComponent2.default.defaultProps.classNames, classNames),
-                template: template,
+                template: _extends({}, _ResultComponent2.default.defaultProps.template, template),
                 formatData: formatData
             });
         }
@@ -5201,9 +5201,12 @@ var ResultComponent = function (_Component) {
         value: function render() {
             var _props2 = this.props,
                 dirty = _props2.dirty,
-                containerClassName = _props2.classNames.container,
+                _props2$classNames = _props2.classNames,
+                containerClassName = _props2$classNames.container,
+                itemsListClassName = _props2$classNames.itemsList,
+                placeholderClassName = _props2$classNames.placeholder,
                 _props2$template = _props2.template,
-                bodyTemplate = _props2$template.itemsList,
+                itemsListTemplate = _props2$template.itemsList,
                 placeholderTemplate = _props2$template.placeholder,
                 formatData = _props2.formatData,
                 data = _props2.data;
@@ -5231,11 +5234,11 @@ var ResultComponent = function (_Component) {
                 { className: "as-result " + containerClassName },
                 placeholderTemplate && dirty ? (0, _preact.h)(_Template2.default, {
                     template: placeholderTemplate,
-                    className: "as-result__placeholder"
+                    className: "as-result__placeholder " + placeholderClassName
                 }) : (0, _preact.h)(_Template2.default, {
-                    template: bodyTemplate,
+                    template: itemsListTemplate,
                     data: formattedTemplateData,
-                    className: "as-result__itemsList"
+                    className: "as-result__itemsList " + itemsListClassName
                 })
             );
         }
@@ -5250,7 +5253,9 @@ ResultComponent.defaultProps = {
     promote: [],
     exclude: [],
     classNames: {
-        container: ''
+        container: '',
+        itemsList: '',
+        placeholder: ''
     },
     template: {
         itemsList: _defaultTemplates.defaultItemsListTemplate,

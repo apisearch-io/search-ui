@@ -345,6 +345,8 @@ const resultWidget = ui.widgets.result({
  - `classNames`:
     - `container`: refers to the parent `div` class that 
     contains the widget.
+    - `itemsList`: refers to the itemsList `div` class name.
+    - `placeholder`: refers to the placeholder `div` class name.
  - `template`:
     - `itemsList`: is the template string of the iterable set of results.
     - `placeholder`: this template will be placed on initial widget render.

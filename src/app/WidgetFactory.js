@@ -178,7 +178,10 @@ class WidgetFactory {
                 ...ResultComponent.defaultProps.classNames,
                 ...classNames
             }}
-            template={template}
+            template={{
+                ...ResultComponent.defaultProps.template,
+                ...template
+            }}
             formatData={formatData}
         />
     }

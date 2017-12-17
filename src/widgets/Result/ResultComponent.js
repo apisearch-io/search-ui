@@ -54,10 +54,12 @@ class ResultComponent extends Component {
         const {
             dirty,
             classNames: {
-                container: containerClassName
+                container: containerClassName,
+                itemsList: itemsListClassName,
+                placeholder: placeholderClassName
             },
             template: {
-                itemsList: bodyTemplate,
+                itemsList: itemsListTemplate,
                 placeholder: placeholderTemplate
             },
             formatData,
@@ -87,12 +89,12 @@ class ResultComponent extends Component {
                 {(placeholderTemplate && dirty)
                     ? <Template
                         template={placeholderTemplate}
-                        className={`as-result__placeholder`}
+                        className={`as-result__placeholder ${placeholderClassName}`}
                     />
                     : <Template
-                        template={bodyTemplate}
+                        template={itemsListTemplate}
                         data={formattedTemplateData}
-                        className={`as-result__itemsList`}
+                        className={`as-result__itemsList ${itemsListClassName}`}
                     />
                 }
             </div>
@@ -106,7 +108,9 @@ ResultComponent.defaultProps = {
     promote: [],
     exclude: [],
     classNames: {
-        container: ''
+        container: '',
+        itemsList: '',
+        placeholder: ''
     },
     template: {
         itemsList: defaultItemsListTemplate,

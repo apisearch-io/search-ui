@@ -5,6 +5,8 @@ Object {
   "children": Array [],
   "classNames": Object {
     "container": "custom-container-class",
+    "itemsList": "custom-itemsList-class",
+    "placeholder": "custom-placeholder-class",
   },
   "data": Object {
     "items": Array [
@@ -47,7 +49,7 @@ exports[`<ResultComponent /> should render with custom props 2`] = `
 preact-render-spy (1 nodes)
 -------
 <div class="as-result custom-container-class">
-  <div class="as-result__itemsList">
+  <div class="as-result__itemsList custom-itemsList-class">
     
                     <ul>
                         <li>Tony Stark</li> 
@@ -64,6 +66,8 @@ Object {
   "children": Array [],
   "classNames": Object {
     "container": "",
+    "itemsList": "",
+    "placeholder": "",
   },
   "data": Object {
     "items": Array [
@@ -106,7 +110,7 @@ exports[`<ResultComponent /> should render with default props 2`] = `
 preact-render-spy (1 nodes)
 -------
 <div class="as-result ">
-  <div class="as-result__itemsList">
+  <div class="as-result__itemsList ">
     
                     <ul>
                         <li>Tony Stark</li> 
@@ -122,7 +126,7 @@ exports[`<ResultComponent /> should show placeholder if is set in custom propert
 preact-render-spy (1 nodes)
 -------
 <div class="as-result ">
-  <div class="as-result__placeholder">
+  <div class="as-result__placeholder ">
     This is the results placeholder, search something!
   </div>
 </div>
@@ -133,7 +137,7 @@ exports[`<ResultComponent /> should update content when passing new data 1`] = `
 preact-render-spy (1 nodes)
 -------
 <div class="as-result ">
-  <div class="as-result__itemsList">
+  <div class="as-result__itemsList ">
     
                     <ul>
                         <li>Robert Bruce Banner</li> 
