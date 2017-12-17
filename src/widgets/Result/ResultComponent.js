@@ -69,10 +69,18 @@ class ResultComponent extends Component {
          */
         let reducedTemplateData = {
             query: data ? data.query.q : '',
-            items: data ? data.items : []
+            items: data.items ? data.items : []
         };
 
-        let formattedTemplateData = formatData(reducedTemplateData);
+        /**
+         * Format each item data
+         */
+        let formattedTemplateData = {
+            ...reducedTemplateData,
+            items: reducedTemplateData
+                .items
+                .map(item => formatData(item))
+        };
 
         return (
             <div className={`as-result ${containerClassName}`}>

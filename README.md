@@ -349,8 +349,8 @@ const resultWidget = ui.widgets.result({
     - `itemsList`: is the template string of the iterable set of results.
     - `placeholder`: this template will be placed on initial widget render.
     Once a search is performed, this placeholder will disappear.
- - `formatData`: is a callable function that receives all the resulted
- data, is useful to transform some information received before being passed 
+ - `formatData`: is a callable function that receives all the resulted items 
+ individually, is useful to transform some item data before is being passed 
  to the template.
 
 

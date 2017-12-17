@@ -106,7 +106,7 @@ describe('<ResultComponent />',() => {
         );
 
         expect(tree).toMatchSnapshot();
-    })
+    });
     it('should update content when passing new data', () => {
         const tree = deep(
             <ResultComponent
