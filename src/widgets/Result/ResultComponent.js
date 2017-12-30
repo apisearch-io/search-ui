@@ -71,7 +71,7 @@ class ResultComponent extends Component {
          */
         let reducedTemplateData = {
             query: data ? data.query.q : '',
-            items: data.items ? data.items : []
+            items: data ? data.items : []
         };
 
         /**
@@ -79,9 +79,11 @@ class ResultComponent extends Component {
          */
         let formattedTemplateData = {
             ...reducedTemplateData,
-            items: reducedTemplateData
-                .items
-                .map(item => formatData(item))
+            items: (reducedTemplateData.items)
+                ? reducedTemplateData
+                   .items
+                   .map(item => formatData(item))
+                : []
         };
 
         return (
