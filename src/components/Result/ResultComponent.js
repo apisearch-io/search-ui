@@ -19,7 +19,7 @@ class ResultComponent extends Component {
         /**
          * Define initial Setup on component mounting
          * that refers to the store configuration
-         * and affects other widgets
+         * and affects other components
          */
 
         const {

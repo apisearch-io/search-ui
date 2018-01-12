@@ -10,14 +10,14 @@ import { h, createElement } from 'preact';
 /**
  * Locals
  */
-import SimpleSearchComponent from "../widgets/SimpleSearch/SimpleSearchComponent";
-import SuggestedSearchComponent from "../widgets/SuggestedSearch/SuggestedSearchComponent";
-import SortByComponent from "../widgets/SortBy/SortByComponent";
-import MultipleFilterComponent from "../widgets/MultipleFilter/MultipleFilterComponent";
-import ResultComponent from "../widgets/Result/ResultComponent";
-import InformationComponent from "../widgets/Information/InformationComponent";
-import ClearFiltersComponent from "../widgets/ClearFilters/ClearFiltersComponent";
-import PaginationComponent from "../widgets/Pagination/PaginationComponent";
+import SimpleSearchComponent from "../components/SimpleSearch/SimpleSearchComponent";
+import SuggestedSearchComponent from "../components/SuggestedSearch/SuggestedSearchComponent";
+import SortByComponent from "../components/SortBy/SortByComponent";
+import MultipleFilterComponent from "../components/MultipleFilter/MultipleFilterComponent";
+import ResultComponent from "../components/Result/ResultComponent";
+import InformationComponent from "../components/Information/InformationComponent";
+import ClearFiltersComponent from "../components/ClearFilters/ClearFiltersComponent";
+import PaginationComponent from "../components/Pagination/PaginationComponent";
 
 /**
  * Widgets factory class

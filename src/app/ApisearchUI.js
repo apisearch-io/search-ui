@@ -64,7 +64,7 @@ class ApisearchUI {
     }
 
     /**
-     * Add widgets in bulk mode
+     * Add components in bulk mode
      */
     addWidgets(...widgets) {
         widgets.map(widget => this.addWidget(widget));
@@ -74,7 +74,7 @@ class ApisearchUI {
     /**
      * Render.
      *
-     * Loop all active widgets
+     * Loop all active components
      * Hydrate them with new props
      * And render them.
      */

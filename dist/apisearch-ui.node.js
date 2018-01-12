@@ -2254,7 +2254,7 @@ var ApisearchUI = function () {
         }
 
         /**
-         * Add widgets in bulk mode
+         * Add components in bulk mode
          */
 
     }, {
@@ -2275,7 +2275,7 @@ var ApisearchUI = function () {
         /**
          * Render.
          *
-         * Loop all active widgets
+         * Loop all active components
          * Hydrate them with new props
          * And render them.
          */
@@ -5169,7 +5169,7 @@ var ResultComponent = function (_Component) {
             /**
              * Define initial Setup on component mounting
              * that refers to the store configuration
-             * and affects other widgets
+             * and affects other components
              */
 
             var _props = this.props,
