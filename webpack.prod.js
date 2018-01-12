@@ -29,16 +29,4 @@ const browserConfig = merge(baseConfig, {
     plugins: plugins
 });
 
-const nodeConfig = merge(baseConfig, {
-    devtool: 'source-map',
-    target: 'node',
-    output: {
-        path: path.resolve(__dirname, 'dist'),
-        filename: 'apisearch-ui.node.min.js',
-        libraryTarget: 'umd',
-        library: 'apisearchUI'
-    },
-    plugins: plugins
-});
-
-module.exports = [browserConfig, nodeConfig];
+module.exports = [browserConfig];

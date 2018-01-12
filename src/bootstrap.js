@@ -17,7 +17,7 @@ import {
 export function bootstrap({
    environmentId,
    appId,
-   index,
+   indexId,
    token,
    options
 }) {
@@ -32,7 +32,7 @@ export function bootstrap({
     container.register(clientId, () => {
         return apisearch({
             appId,
-            index,
+            indexId,
             token,
             options
         })

@@ -1197,7 +1197,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _hogan = __webpack_require__(26);
+var _hogan = __webpack_require__(24);
 
 var _hogan2 = _interopRequireDefault(_hogan);
 
@@ -1269,10 +1269,10 @@ exports.default = Template;
  * Module dependenices
  */
 
-var isObject = __webpack_require__(20);
-var clone = __webpack_require__(22);
+var isObject = __webpack_require__(28);
+var clone = __webpack_require__(30);
 var typeOf = __webpack_require__(8);
-var forOwn = __webpack_require__(25);
+var forOwn = __webpack_require__(33);
 
 /**
  * Recursively clone native types.
@@ -1557,7 +1557,7 @@ module.exports = function forIn(obj, fn, thisArg) {
 /* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isBuffer = __webpack_require__(24);
+var isBuffer = __webpack_require__(32);
 var toString = Object.prototype.toString;
 
 /**
@@ -1684,11 +1684,15 @@ module.exports = function kindOf(val) {
 
 __webpack_require__(10);
 
-var _bootstrap = __webpack_require__(11);
-
 var _container = __webpack_require__(1);
 
 var _container2 = _interopRequireDefault(_container);
+
+var _bootstrap = __webpack_require__(11);
+
+var _environment = __webpack_require__(20);
+
+var _widgets = __webpack_require__(21);
 
 var _constants = __webpack_require__(2);
 
@@ -1716,14 +1720,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 module.exports = function (_ref) {
   var appId = _ref.appId,
-      index = _ref.index,
+      indexId = _ref.indexId,
       token = _ref.token,
       options = _ref.options;
 
   /**
    * Build environment Id
    */
-  var environmentId = "env_" + Math.ceil(Math.random() * (9999999 - 1) + 1);
+  var environmentId = (0, _environment.createEnvironmentId)();
 
   /**
    * Bootstrapping ApisearchUI application
@@ -1731,7 +1735,7 @@ module.exports = function (_ref) {
   (0, _bootstrap.bootstrap)({
     environmentId: environmentId,
     appId: appId,
-    index: index,
+    indexId: indexId,
     token: token,
     options: options
   });
@@ -1743,6 +1747,11 @@ module.exports = function (_ref) {
   var apisearchUI = _container2.default.get(_constants.APISEARCH_UI + "__" + environmentId);
   var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + "__" + environmentId);
   dispatcher.register(apisearchUI.store.handleActions.bind(apisearchUI.store));
+
+  /**
+   * Add widgets
+   */
+  apisearchUI.widgets = _widgets.widgets;
 
   /**
    * Return ApisearchUI instance
@@ -1778,11 +1787,11 @@ var _ApisearchUI = __webpack_require__(15);
 
 var _ApisearchUI2 = _interopRequireDefault(_ApisearchUI);
 
-var _apisearch = __webpack_require__(49);
+var _apisearch = __webpack_require__(17);
 
 var _apisearch2 = _interopRequireDefault(_apisearch);
 
-var _Store = __webpack_require__(50);
+var _Store = __webpack_require__(18);
 
 var _Store2 = _interopRequireDefault(_Store);
 
@@ -1800,7 +1809,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function bootstrap(_ref) {
     var environmentId = _ref.environmentId,
         appId = _ref.appId,
-        index = _ref.index,
+        indexId = _ref.indexId,
         token = _ref.token,
         options = _ref.options;
 
@@ -1815,7 +1824,7 @@ function bootstrap(_ref) {
     _container2.default.register(clientId, function () {
         return (0, _apisearch2.default)({
             appId: appId,
-            index: index,
+            indexId: indexId,
             token: token,
             options: options
         });
@@ -2174,9 +2183,9 @@ var _preact = __webpack_require__(0);
 
 var _apisearchActions = __webpack_require__(16);
 
-var _WidgetFactory = __webpack_require__(17);
+var _container = __webpack_require__(1);
 
-var _WidgetFactory2 = _interopRequireDefault(_WidgetFactory);
+var _container2 = _interopRequireDefault(_container);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2203,7 +2212,7 @@ var ApisearchUI = function () {
          * UI related properties
          */
         this.client = client;
-        this.widgets = _WidgetFactory2.default;
+        this.widgets = {};
         this.activeWidgets = [];
 
         /**
@@ -2374,3704 +2383,6 @@ function initialDataFetchAction(environmentId, initialQuery, client) {
 /* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * @jsx h
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
-
-/**
- * Vendors
- */
-
-
-/**
- * Locals
- */
-
-
-var _preact = __webpack_require__(0);
-
-var _SimpleSearchComponent = __webpack_require__(18);
-
-var _SimpleSearchComponent2 = _interopRequireDefault(_SimpleSearchComponent);
-
-var _SuggestedSearchComponent = __webpack_require__(29);
-
-var _SuggestedSearchComponent2 = _interopRequireDefault(_SuggestedSearchComponent);
-
-var _SortByComponent = __webpack_require__(32);
-
-var _SortByComponent2 = _interopRequireDefault(_SortByComponent);
-
-var _MultipleFilterComponent = __webpack_require__(34);
-
-var _MultipleFilterComponent2 = _interopRequireDefault(_MultipleFilterComponent);
-
-var _ResultComponent = __webpack_require__(39);
-
-var _ResultComponent2 = _interopRequireDefault(_ResultComponent);
-
-var _InformationComponent = __webpack_require__(42);
-
-var _InformationComponent2 = _interopRequireDefault(_InformationComponent);
-
-var _ClearFiltersComponent = __webpack_require__(43);
-
-var _ClearFiltersComponent2 = _interopRequireDefault(_ClearFiltersComponent);
-
-var _PaginationComponent = __webpack_require__(45);
-
-var _PaginationComponent2 = _interopRequireDefault(_PaginationComponent);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * Widgets factory class
- *
- * @info
- *   The className object merge is because react does not
- *   merge the defaultProps deep objects with the custom
- *   props object passed to the component.
- *     @see https://github.com/facebook/react/issues/2568
- *     @see https://stackoverflow.com/questions/40428847/react-component-defaultprops-objects-are-overridden-not-merged
- */
-var WidgetFactory = function () {
-    function WidgetFactory() {
-        _classCallCheck(this, WidgetFactory);
-    }
-
-    _createClass(WidgetFactory, null, [{
-        key: "simpleSearch",
-
-
-        /**
-         * Simple search input
-         */
-        value: function simpleSearch(_ref) {
-            var target = _ref.target,
-                placeholder = _ref.placeholder,
-                startSearchOn = _ref.startSearchOn,
-                autofocus = _ref.autofocus,
-                classNames = _ref.classNames,
-                template = _ref.template;
-
-            return (0, _preact.h)(_SimpleSearchComponent2.default, {
-                target: target,
-                placeholder: placeholder,
-                autofocus: autofocus,
-                startSearchOn: startSearchOn,
-                classNames: _extends({}, _SimpleSearchComponent2.default.defaultProps.classNames, classNames),
-                template: _extends({}, _SimpleSearchComponent2.default.defaultProps.template, template)
-            });
-        }
-    }, {
-        key: "suggestedSearch",
-
-
-        /**
-         * Suggested Search input
-         */
-        value: function suggestedSearch(_ref2) {
-            var target = _ref2.target,
-                placeholder = _ref2.placeholder,
-                autofocus = _ref2.autofocus,
-                startSearchOn = _ref2.startSearchOn,
-                classNames = _ref2.classNames,
-                template = _ref2.template;
-
-            return (0, _preact.h)(_SuggestedSearchComponent2.default, {
-                target: target,
-                placeholder: placeholder,
-                autofocus: autofocus,
-                startSearchOn: startSearchOn,
-                classNames: _extends({}, _SuggestedSearchComponent2.default.defaultProps.classNames, classNames),
-                template: template
-            });
-        }
-
-        /**
-         * Sort By
-         */
-
-    }, {
-        key: "sortBy",
-        value: function sortBy(_ref3) {
-            var target = _ref3.target,
-                classNames = _ref3.classNames,
-                options = _ref3.options;
-
-            return (0, _preact.h)(_SortByComponent2.default, {
-                target: target,
-                classNames: _extends({}, _SortByComponent2.default.defaultProps.classNames, classNames),
-                options: options
-            });
-        }
-
-        /**
-         * Multiple filter
-         */
-
-    }, {
-        key: "multipleFilter",
-        value: function multipleFilter(_ref4) {
-            var target = _ref4.target,
-                name = _ref4.name,
-                filterField = _ref4.filterField,
-                aggregationField = _ref4.aggregationField,
-                applicationType = _ref4.applicationType,
-                fetchLimit = _ref4.fetchLimit,
-                viewLimit = _ref4.viewLimit,
-                sortBy = _ref4.sortBy,
-                classNames = _ref4.classNames,
-                template = _ref4.template,
-                formatData = _ref4.formatData;
-
-            return (0, _preact.h)(_MultipleFilterComponent2.default, {
-                target: target,
-                name: name,
-                filterField: filterField,
-                aggregationField: aggregationField,
-                applicationType: applicationType,
-                fetchLimit: fetchLimit,
-                viewLimit: viewLimit,
-                sortBy: sortBy,
-                classNames: _extends({}, _MultipleFilterComponent2.default.defaultProps.classNames, classNames),
-                template: _extends({}, _MultipleFilterComponent2.default.defaultProps.template, template),
-                formatData: formatData
-            });
-        }
-
-        /**
-         * Clear filters button
-         */
-
-    }, {
-        key: "clearFilters",
-        value: function clearFilters(_ref5) {
-            var target = _ref5.target,
-                classNames = _ref5.classNames,
-                template = _ref5.template;
-
-            return (0, _preact.h)(_ClearFiltersComponent2.default, {
-                target: target,
-                classNames: _extends({}, _InformationComponent2.default.defaultProps.classNames, classNames),
-                template: template
-            });
-        }
-
-        /**
-         * Search result
-         */
-
-    }, {
-        key: "result",
-        value: function result(_ref6) {
-            var target = _ref6.target,
-                itemsPerPage = _ref6.itemsPerPage,
-                promote = _ref6.promote,
-                exclude = _ref6.exclude,
-                highlightsEnabled = _ref6.highlightsEnabled,
-                classNames = _ref6.classNames,
-                template = _ref6.template,
-                formatData = _ref6.formatData;
-
-            return (0, _preact.h)(_ResultComponent2.default, {
-                target: target,
-                itemsPerPage: itemsPerPage,
-                promote: promote,
-                exclude: exclude,
-                highlightsEnabled: highlightsEnabled,
-                classNames: _extends({}, _ResultComponent2.default.defaultProps.classNames, classNames),
-                template: _extends({}, _ResultComponent2.default.defaultProps.template, template),
-                formatData: formatData
-            });
-        }
-
-        /**
-         * Search result information
-         */
-
-    }, {
-        key: "information",
-        value: function information(_ref7) {
-            var target = _ref7.target,
-                classNames = _ref7.classNames,
-                template = _ref7.template,
-                formatData = _ref7.formatData;
-
-            return (0, _preact.h)(_InformationComponent2.default, {
-                target: target,
-                classNames: _extends({}, _InformationComponent2.default.defaultProps.classNames, classNames),
-                template: template,
-                formatData: formatData
-            });
-        }
-
-        /**
-         * Search result information
-         */
-
-    }, {
-        key: "pagination",
-        value: function pagination(_ref8) {
-            var target = _ref8.target,
-                padding = _ref8.padding,
-                goFirstLast = _ref8.goFirstLast,
-                classNames = _ref8.classNames,
-                template = _ref8.template;
-
-            return (0, _preact.h)(_PaginationComponent2.default, {
-                target: target,
-                padding: padding,
-                goFirstLast: goFirstLast,
-                classNames: _extends({}, _PaginationComponent2.default.defaultProps.classNames, classNames),
-                template: _extends({}, _PaginationComponent2.default.defaultProps.template, template)
-            });
-        }
-    }]);
-
-    return WidgetFactory;
-}();
-
-exports.default = WidgetFactory;
-
-/***/ }),
-/* 18 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _preact = __webpack_require__(0);
-
-var _simpleSearchActions = __webpack_require__(19);
-
-var _Template = __webpack_require__(3);
-
-var _Template2 = _interopRequireDefault(_Template);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
-/**
- * SimpleSearch Component
- */
-var SimpleSearchComponent = function (_Component) {
-    _inherits(SimpleSearchComponent, _Component);
-
-    function SimpleSearchComponent() {
-        var _ref;
-
-        var _temp, _this, _ret;
-
-        _classCallCheck(this, SimpleSearchComponent);
-
-        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-            args[_key] = arguments[_key];
-        }
-
-        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = SimpleSearchComponent.__proto__ || Object.getPrototypeOf(SimpleSearchComponent)).call.apply(_ref, [this].concat(args))), _this), _this.handleSearch = function (e) {
-            var _this$props = _this.props,
-                startSearchOn = _this$props.startSearchOn,
-                environmentId = _this$props.environmentId,
-                currentQuery = _this$props.currentQuery,
-                client = _this$props.client;
-
-            /**
-             * Search when string is bigger than {startSearchOn}
-             */
-
-            if (e.target.value.length < startSearchOn) return;
-
-            /**
-             * Dispatch input search action
-             */
-            (0, _simpleSearchActions.simpleSearchAction)({
-                queryText: e.target.value
-            }, {
-                environmentId: environmentId,
-                currentQuery: currentQuery,
-                client: client
-            });
-        }, _this.clearSearch = function () {
-            var _this$props2 = _this.props,
-                environmentId = _this$props2.environmentId,
-                currentQuery = _this$props2.currentQuery,
-                client = _this$props2.client;
-
-
-            (0, _simpleSearchActions.simpleSearchAction)({
-                queryText: ''
-            }, {
-                environmentId: environmentId,
-                currentQuery: currentQuery,
-                client: client
-            });
-        }, _temp), _possibleConstructorReturn(_this, _ret);
-    }
-
-    _createClass(SimpleSearchComponent, [{
-        key: "render",
-        value: function render() {
-            var _props = this.props,
-                placeholder = _props.placeholder,
-                autofocus = _props.autofocus,
-                _props$classNames = _props.classNames,
-                containerClassName = _props$classNames.container,
-                inputClassName = _props$classNames.input,
-                clearSearchClassName = _props$classNames.clearSearch,
-                clearSearchTemplate = _props.template.clearSearch,
-                currentQueryText = _props.currentQuery.q;
-
-
-            return (0, _preact.h)(
-                "div",
-                { className: "as-simpleSearch " + containerClassName },
-                (0, _preact.h)("input", {
-                    type: "text",
-                    className: "as-simpleSearch__input " + inputClassName,
-                    autofocus: autofocus,
-                    placeholder: placeholder,
-                    onInput: this.handleSearch,
-                    value: currentQueryText
-                }),
-                currentQueryText.length !== 0 ? (0, _preact.h)(
-                    "div",
-                    {
-                        className: "as-simpleSearch__clearSearch " + clearSearchClassName,
-                        onClick: this.clearSearch
-                    },
-                    (0, _preact.h)(_Template2.default, { template: clearSearchTemplate })
-                ) : null
-            );
-        }
-    }]);
-
-    return SimpleSearchComponent;
-}(_preact.Component);
-
-SimpleSearchComponent.defaultProps = {
-    placeholder: '',
-    autofocus: false,
-    startSearchOn: 0,
-    classNames: {
-        container: '',
-        input: '',
-        clearSearch: ''
-    },
-    template: {
-        clearSearch: 'x'
-    }
-};
-
-exports.default = SimpleSearchComponent;
-
-/***/ }),
-/* 19 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.simpleSearchAction = simpleSearchAction;
-
-var _cloneDeep = __webpack_require__(4);
-
-var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
-
-var _container = __webpack_require__(1);
-
-var _container2 = _interopRequireDefault(_container);
-
-var _constants = __webpack_require__(2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Keyup simple search action
- *
- * This action is triggered when a text input changes
- * receives two parameters:
- *   @param queryOptions -> query given options
- *   @param appOptions   -> current application options
- *
- * Finally dispatches an event with the search result and
- * the modified query.
- *   @returns {{
- *     type: string,
- *     payload: {
- *        result,
- *        updatedQuery
- *     }
- *   }}
- */
-function simpleSearchAction(_ref, _ref2) {
-    var queryText = _ref.queryText;
-    var environmentId = _ref2.environmentId,
-        currentQuery = _ref2.currentQuery,
-        client = _ref2.client;
-
-    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
-
-    clonedQuery.setQueryText(queryText).setPage(1);
-
-    var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
-    client.search(clonedQuery, function (result, error) {
-        if (error) return;
-
-        dispatcher.dispatch({
-            type: 'RENDER_FETCHED_DATA',
-            payload: {
-                result: result,
-                updatedQuery: clonedQuery
-            }
-        });
-    });
-} /**
-   * Search actions
-   */
-
-/***/ }),
-/* 20 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/*!
- * is-plain-object <https://github.com/jonschlinkert/is-plain-object>
- *
- * Copyright (c) 2014-2017, Jon Schlinkert.
- * Released under the MIT License.
- */
-
-
-
-var isObject = __webpack_require__(21);
-
-function isObjectObject(o) {
-  return isObject(o) === true
-    && Object.prototype.toString.call(o) === '[object Object]';
-}
-
-module.exports = function isPlainObject(o) {
-  var ctor,prot;
-
-  if (isObjectObject(o) === false) return false;
-
-  // If has modified constructor
-  ctor = o.constructor;
-  if (typeof ctor !== 'function') return false;
-
-  // If has modified prototype
-  prot = ctor.prototype;
-  if (isObjectObject(prot) === false) return false;
-
-  // If constructor does not have an Object-specific method
-  if (prot.hasOwnProperty('isPrototypeOf') === false) {
-    return false;
-  }
-
-  // Most likely a plain Object
-  return true;
-};
-
-
-/***/ }),
-/* 21 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/*!
- * isobject <https://github.com/jonschlinkert/isobject>
- *
- * Copyright (c) 2014-2017, Jon Schlinkert.
- * Released under the MIT License.
- */
-
-
-
-module.exports = function isObject(val) {
-  return val != null && typeof val === 'object' && Array.isArray(val) === false;
-};
-
-
-/***/ }),
-/* 22 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/*!
- * shallow-clone <https://github.com/jonschlinkert/shallow-clone>
- *
- * Copyright (c) 2015-2017, Jon Schlinkert.
- * Released under the MIT License.
- */
-
-
-
-var isObject = __webpack_require__(6);
-var mixin = __webpack_require__(23);
-var typeOf = __webpack_require__(8);
-
-/**
- * Shallow copy an object, array or primitive.
- *
- * @param  {any} `val`
- * @return {any}
- */
-
-function clone(val) {
-  var type = typeOf(val);
-  if (clone.hasOwnProperty(type)) {
-    return clone[type](val);
-  }
-  return val;
-}
-
-clone.array = function cloneArray(arr) {
-  return arr.slice();
-};
-
-clone.date = function cloneDate(date) {
-  return new Date(+date);
-};
-
-clone.object = function cloneObject(obj) {
-  if (isObject(obj)) {
-    return mixin({}, obj);
-  } else {
-    return obj;
-  }
-};
-
-clone.regexp = function cloneRegExp(re) {
-  var flags = '';
-  flags += re.multiline ? 'm' : '';
-  flags += re.global ? 'g' : '';
-  flags += re.ignorecase ? 'i' : '';
-  return new RegExp(re.source, flags);
-};
-
-/**
- * Expose `clone`
- */
-
-module.exports = clone;
-
-
-/***/ }),
-/* 23 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var isObject = __webpack_require__(6);
-var forIn = __webpack_require__(7);
-
-function mixin(target, objects) {
-  if (!isObject(target)) {
-    throw new TypeError('mixin-object expects the first argument to be an object.');
-  }
-  var len = arguments.length, i = 0;
-  while (++i < len) {
-    var obj = arguments[i];
-    if (isObject(obj)) {
-      forIn(obj, copy, target);
-    }
-  }
-  return target;
-}
-
-/**
- * copy properties from the source object to the
- * target object.
- *
- * @param  {*} `value`
- * @param  {String} `key`
- */
-
-function copy(value, key) {
-  this[key] = value;
-}
-
-/**
- * Expose `mixin`
- */
-
-module.exports = mixin;
-
-/***/ }),
-/* 24 */
-/***/ (function(module, exports) {
-
-/*!
- * Determine if an object is a Buffer
- *
- * @author   Feross Aboukhadijeh <https://feross.org>
- * @license  MIT
- */
-
-// The _isBuffer check is for Safari 5-7 support, because it's missing
-// Object.prototype.constructor. Remove this eventually
-module.exports = function (obj) {
-  return obj != null && (isBuffer(obj) || isSlowBuffer(obj) || !!obj._isBuffer)
-}
-
-function isBuffer (obj) {
-  return !!obj.constructor && typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
-}
-
-// For Node v0.10 support. Remove this eventually.
-function isSlowBuffer (obj) {
-  return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
-}
-
-
-/***/ }),
-/* 25 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/*!
- * for-own <https://github.com/jonschlinkert/for-own>
- *
- * Copyright (c) 2014-2017, Jon Schlinkert.
- * Released under the MIT License.
- */
-
-
-
-var forIn = __webpack_require__(7);
-var hasOwn = Object.prototype.hasOwnProperty;
-
-module.exports = function forOwn(obj, fn, thisArg) {
-  forIn(obj, function(val, key) {
-    if (hasOwn.call(obj, key)) {
-      return fn.call(thisArg, obj[key], key, obj);
-    }
-  });
-};
-
-
-/***/ }),
-/* 26 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/*
- *  Copyright 2011 Twitter, Inc.
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
-
-// This file is for use with Node.js. See dist/ for browser files.
-
-var Hogan = __webpack_require__(27);
-Hogan.Template = __webpack_require__(28).Template;
-Hogan.template = Hogan.Template;
-module.exports = Hogan;
-
-
-/***/ }),
-/* 27 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/*
- *  Copyright 2011 Twitter, Inc.
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
-
-(function (Hogan) {
-  // Setup regex  assignments
-  // remove whitespace according to Mustache spec
-  var rIsWhitespace = /\S/,
-      rQuot = /\"/g,
-      rNewline =  /\n/g,
-      rCr = /\r/g,
-      rSlash = /\\/g,
-      rLineSep = /\u2028/,
-      rParagraphSep = /\u2029/;
-
-  Hogan.tags = {
-    '#': 1, '^': 2, '<': 3, '$': 4,
-    '/': 5, '!': 6, '>': 7, '=': 8, '_v': 9,
-    '{': 10, '&': 11, '_t': 12
-  };
-
-  Hogan.scan = function scan(text, delimiters) {
-    var len = text.length,
-        IN_TEXT = 0,
-        IN_TAG_TYPE = 1,
-        IN_TAG = 2,
-        state = IN_TEXT,
-        tagType = null,
-        tag = null,
-        buf = '',
-        tokens = [],
-        seenTag = false,
-        i = 0,
-        lineStart = 0,
-        otag = '{{',
-        ctag = '}}';
-
-    function addBuf() {
-      if (buf.length > 0) {
-        tokens.push({tag: '_t', text: new String(buf)});
-        buf = '';
-      }
-    }
-
-    function lineIsWhitespace() {
-      var isAllWhitespace = true;
-      for (var j = lineStart; j < tokens.length; j++) {
-        isAllWhitespace =
-          (Hogan.tags[tokens[j].tag] < Hogan.tags['_v']) ||
-          (tokens[j].tag == '_t' && tokens[j].text.match(rIsWhitespace) === null);
-        if (!isAllWhitespace) {
-          return false;
-        }
-      }
-
-      return isAllWhitespace;
-    }
-
-    function filterLine(haveSeenTag, noNewLine) {
-      addBuf();
-
-      if (haveSeenTag && lineIsWhitespace()) {
-        for (var j = lineStart, next; j < tokens.length; j++) {
-          if (tokens[j].text) {
-            if ((next = tokens[j+1]) && next.tag == '>') {
-              // set indent to token value
-              next.indent = tokens[j].text.toString()
-            }
-            tokens.splice(j, 1);
-          }
-        }
-      } else if (!noNewLine) {
-        tokens.push({tag:'\n'});
-      }
-
-      seenTag = false;
-      lineStart = tokens.length;
-    }
-
-    function changeDelimiters(text, index) {
-      var close = '=' + ctag,
-          closeIndex = text.indexOf(close, index),
-          delimiters = trim(
-            text.substring(text.indexOf('=', index) + 1, closeIndex)
-          ).split(' ');
-
-      otag = delimiters[0];
-      ctag = delimiters[delimiters.length - 1];
-
-      return closeIndex + close.length - 1;
-    }
-
-    if (delimiters) {
-      delimiters = delimiters.split(' ');
-      otag = delimiters[0];
-      ctag = delimiters[1];
-    }
-
-    for (i = 0; i < len; i++) {
-      if (state == IN_TEXT) {
-        if (tagChange(otag, text, i)) {
-          --i;
-          addBuf();
-          state = IN_TAG_TYPE;
-        } else {
-          if (text.charAt(i) == '\n') {
-            filterLine(seenTag);
-          } else {
-            buf += text.charAt(i);
-          }
-        }
-      } else if (state == IN_TAG_TYPE) {
-        i += otag.length - 1;
-        tag = Hogan.tags[text.charAt(i + 1)];
-        tagType = tag ? text.charAt(i + 1) : '_v';
-        if (tagType == '=') {
-          i = changeDelimiters(text, i);
-          state = IN_TEXT;
-        } else {
-          if (tag) {
-            i++;
-          }
-          state = IN_TAG;
-        }
-        seenTag = i;
-      } else {
-        if (tagChange(ctag, text, i)) {
-          tokens.push({tag: tagType, n: trim(buf), otag: otag, ctag: ctag,
-                       i: (tagType == '/') ? seenTag - otag.length : i + ctag.length});
-          buf = '';
-          i += ctag.length - 1;
-          state = IN_TEXT;
-          if (tagType == '{') {
-            if (ctag == '}}') {
-              i++;
-            } else {
-              cleanTripleStache(tokens[tokens.length - 1]);
-            }
-          }
-        } else {
-          buf += text.charAt(i);
-        }
-      }
-    }
-
-    filterLine(seenTag, true);
-
-    return tokens;
-  }
-
-  function cleanTripleStache(token) {
-    if (token.n.substr(token.n.length - 1) === '}') {
-      token.n = token.n.substring(0, token.n.length - 1);
-    }
-  }
-
-  function trim(s) {
-    if (s.trim) {
-      return s.trim();
-    }
-
-    return s.replace(/^\s*|\s*$/g, '');
-  }
-
-  function tagChange(tag, text, index) {
-    if (text.charAt(index) != tag.charAt(0)) {
-      return false;
-    }
-
-    for (var i = 1, l = tag.length; i < l; i++) {
-      if (text.charAt(index + i) != tag.charAt(i)) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  // the tags allowed inside super templates
-  var allowedInSuper = {'_t': true, '\n': true, '$': true, '/': true};
-
-  function buildTree(tokens, kind, stack, customTags) {
-    var instructions = [],
-        opener = null,
-        tail = null,
-        token = null;
-
-    tail = stack[stack.length - 1];
-
-    while (tokens.length > 0) {
-      token = tokens.shift();
-
-      if (tail && tail.tag == '<' && !(token.tag in allowedInSuper)) {
-        throw new Error('Illegal content in < super tag.');
-      }
-
-      if (Hogan.tags[token.tag] <= Hogan.tags['$'] || isOpener(token, customTags)) {
-        stack.push(token);
-        token.nodes = buildTree(tokens, token.tag, stack, customTags);
-      } else if (token.tag == '/') {
-        if (stack.length === 0) {
-          throw new Error('Closing tag without opener: /' + token.n);
-        }
-        opener = stack.pop();
-        if (token.n != opener.n && !isCloser(token.n, opener.n, customTags)) {
-          throw new Error('Nesting error: ' + opener.n + ' vs. ' + token.n);
-        }
-        opener.end = token.i;
-        return instructions;
-      } else if (token.tag == '\n') {
-        token.last = (tokens.length == 0) || (tokens[0].tag == '\n');
-      }
-
-      instructions.push(token);
-    }
-
-    if (stack.length > 0) {
-      throw new Error('missing closing tag: ' + stack.pop().n);
-    }
-
-    return instructions;
-  }
-
-  function isOpener(token, tags) {
-    for (var i = 0, l = tags.length; i < l; i++) {
-      if (tags[i].o == token.n) {
-        token.tag = '#';
-        return true;
-      }
-    }
-  }
-
-  function isCloser(close, open, tags) {
-    for (var i = 0, l = tags.length; i < l; i++) {
-      if (tags[i].c == close && tags[i].o == open) {
-        return true;
-      }
-    }
-  }
-
-  function stringifySubstitutions(obj) {
-    var items = [];
-    for (var key in obj) {
-      items.push('"' + esc(key) + '": function(c,p,t,i) {' + obj[key] + '}');
-    }
-    return "{ " + items.join(",") + " }";
-  }
-
-  function stringifyPartials(codeObj) {
-    var partials = [];
-    for (var key in codeObj.partials) {
-      partials.push('"' + esc(key) + '":{name:"' + esc(codeObj.partials[key].name) + '", ' + stringifyPartials(codeObj.partials[key]) + "}");
-    }
-    return "partials: {" + partials.join(",") + "}, subs: " + stringifySubstitutions(codeObj.subs);
-  }
-
-  Hogan.stringify = function(codeObj, text, options) {
-    return "{code: function (c,p,i) { " + Hogan.wrapMain(codeObj.code) + " }," + stringifyPartials(codeObj) +  "}";
-  }
-
-  var serialNo = 0;
-  Hogan.generate = function(tree, text, options) {
-    serialNo = 0;
-    var context = { code: '', subs: {}, partials: {} };
-    Hogan.walk(tree, context);
-
-    if (options.asString) {
-      return this.stringify(context, text, options);
-    }
-
-    return this.makeTemplate(context, text, options);
-  }
-
-  Hogan.wrapMain = function(code) {
-    return 'var t=this;t.b(i=i||"");' + code + 'return t.fl();';
-  }
-
-  Hogan.template = Hogan.Template;
-
-  Hogan.makeTemplate = function(codeObj, text, options) {
-    var template = this.makePartials(codeObj);
-    template.code = new Function('c', 'p', 'i', this.wrapMain(codeObj.code));
-    return new this.template(template, text, this, options);
-  }
-
-  Hogan.makePartials = function(codeObj) {
-    var key, template = {subs: {}, partials: codeObj.partials, name: codeObj.name};
-    for (key in template.partials) {
-      template.partials[key] = this.makePartials(template.partials[key]);
-    }
-    for (key in codeObj.subs) {
-      template.subs[key] = new Function('c', 'p', 't', 'i', codeObj.subs[key]);
-    }
-    return template;
-  }
-
-  function esc(s) {
-    return s.replace(rSlash, '\\\\')
-            .replace(rQuot, '\\\"')
-            .replace(rNewline, '\\n')
-            .replace(rCr, '\\r')
-            .replace(rLineSep, '\\u2028')
-            .replace(rParagraphSep, '\\u2029');
-  }
-
-  function chooseMethod(s) {
-    return (~s.indexOf('.')) ? 'd' : 'f';
-  }
-
-  function createPartial(node, context) {
-    var prefix = "<" + (context.prefix || "");
-    var sym = prefix + node.n + serialNo++;
-    context.partials[sym] = {name: node.n, partials: {}};
-    context.code += 't.b(t.rp("' +  esc(sym) + '",c,p,"' + (node.indent || '') + '"));';
-    return sym;
-  }
-
-  Hogan.codegen = {
-    '#': function(node, context) {
-      context.code += 'if(t.s(t.' + chooseMethod(node.n) + '("' + esc(node.n) + '",c,p,1),' +
-                      'c,p,0,' + node.i + ',' + node.end + ',"' + node.otag + " " + node.ctag + '")){' +
-                      't.rs(c,p,' + 'function(c,p,t){';
-      Hogan.walk(node.nodes, context);
-      context.code += '});c.pop();}';
-    },
-
-    '^': function(node, context) {
-      context.code += 'if(!t.s(t.' + chooseMethod(node.n) + '("' + esc(node.n) + '",c,p,1),c,p,1,0,0,"")){';
-      Hogan.walk(node.nodes, context);
-      context.code += '};';
-    },
-
-    '>': createPartial,
-    '<': function(node, context) {
-      var ctx = {partials: {}, code: '', subs: {}, inPartial: true};
-      Hogan.walk(node.nodes, ctx);
-      var template = context.partials[createPartial(node, context)];
-      template.subs = ctx.subs;
-      template.partials = ctx.partials;
-    },
-
-    '$': function(node, context) {
-      var ctx = {subs: {}, code: '', partials: context.partials, prefix: node.n};
-      Hogan.walk(node.nodes, ctx);
-      context.subs[node.n] = ctx.code;
-      if (!context.inPartial) {
-        context.code += 't.sub("' + esc(node.n) + '",c,p,i);';
-      }
-    },
-
-    '\n': function(node, context) {
-      context.code += write('"\\n"' + (node.last ? '' : ' + i'));
-    },
-
-    '_v': function(node, context) {
-      context.code += 't.b(t.v(t.' + chooseMethod(node.n) + '("' + esc(node.n) + '",c,p,0)));';
-    },
-
-    '_t': function(node, context) {
-      context.code += write('"' + esc(node.text) + '"');
-    },
-
-    '{': tripleStache,
-
-    '&': tripleStache
-  }
-
-  function tripleStache(node, context) {
-    context.code += 't.b(t.t(t.' + chooseMethod(node.n) + '("' + esc(node.n) + '",c,p,0)));';
-  }
-
-  function write(s) {
-    return 't.b(' + s + ');';
-  }
-
-  Hogan.walk = function(nodelist, context) {
-    var func;
-    for (var i = 0, l = nodelist.length; i < l; i++) {
-      func = Hogan.codegen[nodelist[i].tag];
-      func && func(nodelist[i], context);
-    }
-    return context;
-  }
-
-  Hogan.parse = function(tokens, text, options) {
-    options = options || {};
-    return buildTree(tokens, '', [], options.sectionTags || []);
-  }
-
-  Hogan.cache = {};
-
-  Hogan.cacheKey = function(text, options) {
-    return [text, !!options.asString, !!options.disableLambda, options.delimiters, !!options.modelGet].join('||');
-  }
-
-  Hogan.compile = function(text, options) {
-    options = options || {};
-    var key = Hogan.cacheKey(text, options);
-    var template = this.cache[key];
-
-    if (template) {
-      var partials = template.partials;
-      for (var name in partials) {
-        delete partials[name].instance;
-      }
-      return template;
-    }
-
-    template = this.generate(this.parse(this.scan(text, options.delimiters), text, options), text, options);
-    return this.cache[key] = template;
-  }
-})( true ? exports : Hogan);
-
-
-/***/ }),
-/* 28 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/*
- *  Copyright 2011 Twitter, Inc.
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
-
-var Hogan = {};
-
-(function (Hogan) {
-  Hogan.Template = function (codeObj, text, compiler, options) {
-    codeObj = codeObj || {};
-    this.r = codeObj.code || this.r;
-    this.c = compiler;
-    this.options = options || {};
-    this.text = text || '';
-    this.partials = codeObj.partials || {};
-    this.subs = codeObj.subs || {};
-    this.buf = '';
-  }
-
-  Hogan.Template.prototype = {
-    // render: replaced by generated code.
-    r: function (context, partials, indent) { return ''; },
-
-    // variable escaping
-    v: hoganEscape,
-
-    // triple stache
-    t: coerceToString,
-
-    render: function render(context, partials, indent) {
-      return this.ri([context], partials || {}, indent);
-    },
-
-    // render internal -- a hook for overrides that catches partials too
-    ri: function (context, partials, indent) {
-      return this.r(context, partials, indent);
-    },
-
-    // ensurePartial
-    ep: function(symbol, partials) {
-      var partial = this.partials[symbol];
-
-      // check to see that if we've instantiated this partial before
-      var template = partials[partial.name];
-      if (partial.instance && partial.base == template) {
-        return partial.instance;
-      }
-
-      if (typeof template == 'string') {
-        if (!this.c) {
-          throw new Error("No compiler available.");
-        }
-        template = this.c.compile(template, this.options);
-      }
-
-      if (!template) {
-        return null;
-      }
-
-      // We use this to check whether the partials dictionary has changed
-      this.partials[symbol].base = template;
-
-      if (partial.subs) {
-        // Make sure we consider parent template now
-        if (!partials.stackText) partials.stackText = {};
-        for (key in partial.subs) {
-          if (!partials.stackText[key]) {
-            partials.stackText[key] = (this.activeSub !== undefined && partials.stackText[this.activeSub]) ? partials.stackText[this.activeSub] : this.text;
-          }
-        }
-        template = createSpecializedPartial(template, partial.subs, partial.partials,
-          this.stackSubs, this.stackPartials, partials.stackText);
-      }
-      this.partials[symbol].instance = template;
-
-      return template;
-    },
-
-    // tries to find a partial in the current scope and render it
-    rp: function(symbol, context, partials, indent) {
-      var partial = this.ep(symbol, partials);
-      if (!partial) {
-        return '';
-      }
-
-      return partial.ri(context, partials, indent);
-    },
-
-    // render a section
-    rs: function(context, partials, section) {
-      var tail = context[context.length - 1];
-
-      if (!isArray(tail)) {
-        section(context, partials, this);
-        return;
-      }
-
-      for (var i = 0; i < tail.length; i++) {
-        context.push(tail[i]);
-        section(context, partials, this);
-        context.pop();
-      }
-    },
-
-    // maybe start a section
-    s: function(val, ctx, partials, inverted, start, end, tags) {
-      var pass;
-
-      if (isArray(val) && val.length === 0) {
-        return false;
-      }
-
-      if (typeof val == 'function') {
-        val = this.ms(val, ctx, partials, inverted, start, end, tags);
-      }
-
-      pass = !!val;
-
-      if (!inverted && pass && ctx) {
-        ctx.push((typeof val == 'object') ? val : ctx[ctx.length - 1]);
-      }
-
-      return pass;
-    },
-
-    // find values with dotted names
-    d: function(key, ctx, partials, returnFound) {
-      var found,
-          names = key.split('.'),
-          val = this.f(names[0], ctx, partials, returnFound),
-          doModelGet = this.options.modelGet,
-          cx = null;
-
-      if (key === '.' && isArray(ctx[ctx.length - 2])) {
-        val = ctx[ctx.length - 1];
-      } else {
-        for (var i = 1; i < names.length; i++) {
-          found = findInScope(names[i], val, doModelGet);
-          if (found !== undefined) {
-            cx = val;
-            val = found;
-          } else {
-            val = '';
-          }
-        }
-      }
-
-      if (returnFound && !val) {
-        return false;
-      }
-
-      if (!returnFound && typeof val == 'function') {
-        ctx.push(cx);
-        val = this.mv(val, ctx, partials);
-        ctx.pop();
-      }
-
-      return val;
-    },
-
-    // find values with normal names
-    f: function(key, ctx, partials, returnFound) {
-      var val = false,
-          v = null,
-          found = false,
-          doModelGet = this.options.modelGet;
-
-      for (var i = ctx.length - 1; i >= 0; i--) {
-        v = ctx[i];
-        val = findInScope(key, v, doModelGet);
-        if (val !== undefined) {
-          found = true;
-          break;
-        }
-      }
-
-      if (!found) {
-        return (returnFound) ? false : "";
-      }
-
-      if (!returnFound && typeof val == 'function') {
-        val = this.mv(val, ctx, partials);
-      }
-
-      return val;
-    },
-
-    // higher order templates
-    ls: function(func, cx, partials, text, tags) {
-      var oldTags = this.options.delimiters;
-
-      this.options.delimiters = tags;
-      this.b(this.ct(coerceToString(func.call(cx, text)), cx, partials));
-      this.options.delimiters = oldTags;
-
-      return false;
-    },
-
-    // compile text
-    ct: function(text, cx, partials) {
-      if (this.options.disableLambda) {
-        throw new Error('Lambda features disabled.');
-      }
-      return this.c.compile(text, this.options).render(cx, partials);
-    },
-
-    // template result buffering
-    b: function(s) { this.buf += s; },
-
-    fl: function() { var r = this.buf; this.buf = ''; return r; },
-
-    // method replace section
-    ms: function(func, ctx, partials, inverted, start, end, tags) {
-      var textSource,
-          cx = ctx[ctx.length - 1],
-          result = func.call(cx);
-
-      if (typeof result == 'function') {
-        if (inverted) {
-          return true;
-        } else {
-          textSource = (this.activeSub && this.subsText && this.subsText[this.activeSub]) ? this.subsText[this.activeSub] : this.text;
-          return this.ls(result, cx, partials, textSource.substring(start, end), tags);
-        }
-      }
-
-      return result;
-    },
-
-    // method replace variable
-    mv: function(func, ctx, partials) {
-      var cx = ctx[ctx.length - 1];
-      var result = func.call(cx);
-
-      if (typeof result == 'function') {
-        return this.ct(coerceToString(result.call(cx)), cx, partials);
-      }
-
-      return result;
-    },
-
-    sub: function(name, context, partials, indent) {
-      var f = this.subs[name];
-      if (f) {
-        this.activeSub = name;
-        f(context, partials, this, indent);
-        this.activeSub = false;
-      }
-    }
-
-  };
-
-  //Find a key in an object
-  function findInScope(key, scope, doModelGet) {
-    var val;
-
-    if (scope && typeof scope == 'object') {
-
-      if (scope[key] !== undefined) {
-        val = scope[key];
-
-      // try lookup with get for backbone or similar model data
-      } else if (doModelGet && scope.get && typeof scope.get == 'function') {
-        val = scope.get(key);
-      }
-    }
-
-    return val;
-  }
-
-  function createSpecializedPartial(instance, subs, partials, stackSubs, stackPartials, stackText) {
-    function PartialTemplate() {};
-    PartialTemplate.prototype = instance;
-    function Substitutions() {};
-    Substitutions.prototype = instance.subs;
-    var key;
-    var partial = new PartialTemplate();
-    partial.subs = new Substitutions();
-    partial.subsText = {};  //hehe. substext.
-    partial.buf = '';
-
-    stackSubs = stackSubs || {};
-    partial.stackSubs = stackSubs;
-    partial.subsText = stackText;
-    for (key in subs) {
-      if (!stackSubs[key]) stackSubs[key] = subs[key];
-    }
-    for (key in stackSubs) {
-      partial.subs[key] = stackSubs[key];
-    }
-
-    stackPartials = stackPartials || {};
-    partial.stackPartials = stackPartials;
-    for (key in partials) {
-      if (!stackPartials[key]) stackPartials[key] = partials[key];
-    }
-    for (key in stackPartials) {
-      partial.partials[key] = stackPartials[key];
-    }
-
-    return partial;
-  }
-
-  var rAmp = /&/g,
-      rLt = /</g,
-      rGt = />/g,
-      rApos = /\'/g,
-      rQuot = /\"/g,
-      hChars = /[&<>\"\']/;
-
-  function coerceToString(val) {
-    return String((val === null || val === undefined) ? '' : val);
-  }
-
-  function hoganEscape(str) {
-    str = coerceToString(str);
-    return hChars.test(str) ?
-      str
-        .replace(rAmp, '&amp;')
-        .replace(rLt, '&lt;')
-        .replace(rGt, '&gt;')
-        .replace(rApos, '&#39;')
-        .replace(rQuot, '&quot;') :
-      str;
-  }
-
-  var isArray = Array.isArray || function(a) {
-    return Object.prototype.toString.call(a) === '[object Array]';
-  };
-
-})( true ? exports : Hogan);
-
-
-/***/ }),
-/* 29 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _preact = __webpack_require__(0);
-
-var _helpers = __webpack_require__(30);
-
-var _suggestedSearchActions = __webpack_require__(31);
-
-var _Template = __webpack_require__(3);
-
-var _Template2 = _interopRequireDefault(_Template);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
-/**
- * Actions
- */
-
-
-/**
- * Suggested Search Component
- */
-var SuggestedSearchComponent = function (_Component) {
-    _inherits(SuggestedSearchComponent, _Component);
-
-    function SuggestedSearchComponent() {
-        _classCallCheck(this, SuggestedSearchComponent);
-
-        var _this = _possibleConstructorReturn(this, (SuggestedSearchComponent.__proto__ || Object.getPrototypeOf(SuggestedSearchComponent)).call(this));
-
-        _this.handleSearch = function (e) {
-            var _this$props = _this.props,
-                startSearchOn = _this$props.startSearchOn,
-                environmentId = _this$props.environmentId,
-                currentQuery = _this$props.currentQuery,
-                client = _this$props.client;
-
-            /**
-             * Set the current query text
-             */
-
-            _this.setState({ q: e.target.value });
-
-            /**
-             * Search when string is bigger than {startSearchOn}
-             */
-            if (e.target.value.length < startSearchOn) {
-                _this.setState({ currentSuggestions: [] });
-                return;
-            }
-
-            /**
-             * Dispatch suggested search action
-             */
-            (0, _suggestedSearchActions.suggestedSearchAction)({
-                queryText: e.target.value
-            }, {
-                environmentId: environmentId,
-                currentQuery: currentQuery,
-                client: client
-            });
-        };
-
-        _this.handleSuggestionsNavigation = function (e) {
-            /**
-             * When user hits arrow down
-             */
-            if (e.code === 'ArrowDown') {
-                _this.setState({
-                    currentSuggestions: (0, _helpers.selectNextSuggestion)(_this.state.currentSuggestions),
-                    q: (0, _helpers.selectActiveSuggestion)(_this.state.currentSuggestions)
-                });
-            }
-
-            /**
-             * When user hits arrow up
-             */
-            if (e.code === 'ArrowUp') {
-                /**
-                 * Prevent cursor to go at the starting point of the line
-                 */
-                e.preventDefault();
-
-                _this.setState({
-                    currentSuggestions: (0, _helpers.selectPreviousSuggestion)(_this.state.currentSuggestions),
-                    q: (0, _helpers.selectActiveSuggestion)(_this.state.currentSuggestions)
-                });
-            }
-
-            /**
-             * When user hits enter
-             */
-            if (e.code === 'Enter') {
-                _this.setState({
-                    q: (0, _helpers.selectActiveSuggestion)(_this.state.currentSuggestions),
-                    currentSuggestions: []
-                });
-
-                var _this$props2 = _this.props,
-                    environmentId = _this$props2.environmentId,
-                    currentQuery = _this$props2.currentQuery,
-                    client = _this$props2.client;
-
-
-                (0, _suggestedSearchActions.simpleSearchAction)({
-                    queryText: _this.state.q
-                }, {
-                    environmentId: environmentId,
-                    currentQuery: currentQuery,
-                    client: client
-                });
-            }
-        };
-
-        _this.handleSuggestionClick = function (e) {
-            _this.setState({
-                q: e.target.innerText,
-                currentSuggestions: []
-            });
-
-            var _this$props3 = _this.props,
-                environmentId = _this$props3.environmentId,
-                currentQuery = _this$props3.currentQuery,
-                client = _this$props3.client;
-
-
-            (0, _suggestedSearchActions.simpleSearchAction)({
-                queryText: e.target.innerText
-            }, {
-                environmentId: environmentId,
-                currentQuery: currentQuery,
-                client: client
-            });
-        };
-
-        _this.handleSearchInputFocusedOut = function (e) {
-            /**
-             * It handles when a user focuses out the search input
-             * If is not clicking on the suggestions box
-             * The suggestions are cleared and panel closes
-             */
-            if (null === e.relatedTarget || false === e.relatedTarget.classList.contains('as-suggestedSearch__box')) {
-                _this.setState({ currentSuggestions: [] });
-            }
-
-            return false;
-        };
-
-        _this.clearSearch = function () {
-            var _this$props4 = _this.props,
-                environmentId = _this$props4.environmentId,
-                currentQuery = _this$props4.currentQuery,
-                client = _this$props4.client;
-
-
-            (0, _suggestedSearchActions.simpleSearchAction)({
-                queryText: ''
-            }, {
-                environmentId: environmentId,
-                currentQuery: currentQuery,
-                client: client
-            });
-        };
-
-        _this.state = {
-            q: '',
-            currentSuggestions: []
-        };
-        return _this;
-    }
-
-    _createClass(SuggestedSearchComponent, [{
-        key: 'componentWillReceiveProps',
-        value: function componentWillReceiveProps(props) {
-            var _this2 = this;
-
-            /**
-             * Check suggestions available
-             * if some, prepend the current query to the other suggestions array
-             * else, only append the current query to the suggestions array
-             */
-            var suggests = props.data && props.data.suggests ? [this.state.q].concat(_toConsumableArray(props.data.suggests)) : [this.state.q];
-
-            /**
-             * Prepare suggestions array
-             */
-            this.setState({
-                currentSuggestions: suggests.map(function (suggest, key) {
-                    return {
-                        isActive: 0 === key,
-                        name: suggest,
-                        htmlName: (0, _helpers.highlightSuggestion)(_this2.state.q, suggest)
-                    };
-                })
-            });
-        }
-    }, {
-        key: 'render',
-        value: function render() {
-            var _this3 = this;
-
-            var _props = this.props,
-                dirty = _props.dirty,
-                placeholder = _props.placeholder,
-                autofocus = _props.autofocus,
-                _props$classNames = _props.classNames,
-                containerClassName = _props$classNames.container,
-                inputClassName = _props$classNames.input,
-                clearSearchClassName = _props$classNames.clearSearch,
-                boxClassName = _props$classNames.box,
-                suggestionClassName = _props$classNames.suggestion,
-                activeSuggestionClassName = _props$classNames.activeSuggestion,
-                clearSearchTemplate = _props.template.clearSearch,
-                currentQueryText = _props.currentQuery.q;
-            var currentSuggestions = this.state.currentSuggestions;
-
-
-            return (0, _preact.h)(
-                'div',
-                { className: 'as-suggestedSearch ' + containerClassName },
-                (0, _preact.h)('input', {
-                    type: 'text',
-                    value: currentQueryText,
-                    className: 'as-suggestedSearch__input ' + inputClassName,
-                    placeholder: placeholder,
-                    autofocus: autofocus,
-
-                    onInput: this.handleSearch,
-                    onKeyDown: this.handleSuggestionsNavigation,
-                    onBlur: this.handleSearchInputFocusedOut
-                }),
-                currentQueryText.length !== 0 ? (0, _preact.h)(
-                    'div',
-                    {
-                        className: 'as-suggestedSearch__clearSearch ' + clearSearchClassName,
-                        onClick: this.clearSearch
-                    },
-                    (0, _preact.h)(_Template2.default, { template: clearSearchTemplate })
-                ) : null,
-                (0, _preact.h)(
-                    'div',
-                    {
-                        tabIndex: '0',
-                        className: 'as-suggestedSearch__box ' + boxClassName,
-                        style: {
-                            display: currentSuggestions.length > 1 && !dirty ? 'block' : 'none'
-                        }
-                    },
-                    currentSuggestions.map(function (suggestion, key) {
-                        return 0 !== key ? (0, _preact.h)('div', {
-                            className: 'as-suggestedSearch__suggestion ' + (suggestionClassName + ' ') + ('' + (suggestion.isActive ? activeSuggestionClassName : '')),
-                            dangerouslySetInnerHTML: {
-                                __html: suggestion.htmlName
-                            },
-                            onClick: _this3.handleSuggestionClick
-                        }) : null;
-                    })
-                )
-            );
-        }
-    }]);
-
-    return SuggestedSearchComponent;
-}(_preact.Component);
-
-SuggestedSearchComponent.defaultProps = {
-    placeholder: '',
-    autofocus: false,
-    startSearchOn: 0,
-    classNames: {
-        container: '',
-        input: '',
-        clearSearch: '',
-        box: '',
-        suggestion: '',
-        activeSuggestion: 'as-suggestedSearch__suggestion--active'
-    },
-    template: {
-        clearSearch: 'x'
-    }
-};
-
-exports.default = SuggestedSearchComponent;
-
-/***/ }),
-/* 30 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.highlightSuggestion = highlightSuggestion;
-exports.selectNextSuggestion = selectNextSuggestion;
-exports.selectPreviousSuggestion = selectPreviousSuggestion;
-exports.selectActiveSuggestion = selectActiveSuggestion;
-/**
- * Set of helpers for the suggestions widget
- */
-
-/**
- * Highlight text
- */
-function highlightSuggestion(currentQueryText, suggestion) {
-    var regex = new RegExp('(' + currentQueryText + ')', 'gi');
-    var highlightedSuggestion = suggestion.replace(regex, "<em>$1</em>");
-    var sanitizedSpaces = highlightedSuggestion.split(' ');
-
-    return sanitizedSpaces.join('&nbsp;');
-}
-
-/**
- * Mark as active the item next
- * to the last active item
- * on a given array of items
- *
- * @example when a user press a key arrow down
- */
-function selectNextSuggestion(suggestionsArray) {
-    var currentActiveSuggestionKey = void 0;
-
-    return suggestionsArray.map(function (suggestion, key) {
-        /**
-         * Detect current active suggestion
-         */
-        if (suggestion.isActive && key + 1 < suggestionsArray.length) {
-            currentActiveSuggestionKey = key;
-            suggestion.isActive = false;
-        }
-
-        /**
-         * Modify the first suggestion next to
-         * the current active suggestion
-         */
-        if (key === currentActiveSuggestionKey + 1 && key + 1 <= suggestionsArray.length) {
-            suggestion.isActive = true;
-        }
-
-        return suggestion;
-    });
-}
-
-/**
- * Mark as active the item previous
- * to the last active item
- * on a given array of items
- *
- * @example when a user press a key arrow up
- */
-function selectPreviousSuggestion(suggestionsArray) {
-    /**
-     * Find the current active suggestion key
-     */
-    var currentActiveSuggestionKey = suggestionsArray.findIndex(function (suggestion) {
-        if (suggestion.isActive) {
-            return suggestion;
-        }
-    });
-
-    return suggestionsArray.map(function (suggestion, key) {
-        /**
-         * Set the current active suggestion as false
-         * if is Active AND is not the last one
-         */
-        if (suggestion.isActive && currentActiveSuggestionKey - 1 >= 0) {
-            suggestion.isActive = false;
-        }
-
-        /**
-         * Set active the suggestion previous to
-         * the current active suggestion
-         */
-        if (currentActiveSuggestionKey - 1 === key && currentActiveSuggestionKey - 1 >= 0) {
-            suggestion.isActive = true;
-        }
-
-        return suggestion;
-    });
-}
-
-/**
- * Return the active item of an array
- */
-function selectActiveSuggestion(suggestionsArray) {
-    var selectedSuggestion = suggestionsArray.filter(function (suggestion) {
-        if (suggestion.isActive) {
-            return suggestion;
-        }
-    });
-
-    return selectedSuggestion[0].name;
-}
-
-/***/ }),
-/* 31 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.simpleSearchAction = simpleSearchAction;
-exports.suggestedSearchAction = suggestedSearchAction;
-
-var _cloneDeep = __webpack_require__(4);
-
-var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
-
-var _container = __webpack_require__(1);
-
-var _container2 = _interopRequireDefault(_container);
-
-var _constants = __webpack_require__(2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * This actions are triggered when a text input changes
- * receives two parameters:
- *   @param queryOptions -> query given options
- *   @param appOptions   -> current application options
- *
- * Finally dispatches an event with the search result and
- * the modified query.
- *   @returns {{
- *     type: string,
- *     payload: {
- *        result,
- *        updatedQuery
- *     }
- *   }}
- */
-
-/**
- * Simple search action
- * Builds a query disabling suggested searches flag
- */
-function simpleSearchAction(_ref, _ref2) {
-    var queryText = _ref.queryText;
-    var environmentId = _ref2.environmentId,
-        currentQuery = _ref2.currentQuery,
-        client = _ref2.client;
-
-    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
-
-    clonedQuery.setQueryText(queryText).setPage(1).enableResults().disableSuggestions();
-
-    client.search(clonedQuery, function (result, error) {
-        if (error) return;
-
-        var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
-        dispatcher.dispatch({
-            type: 'RENDER_FETCHED_DATA',
-            payload: {
-                result: result,
-                updatedQuery: clonedQuery
-            }
-        });
-    });
-}
-
-/**
- * Suggested Search Action
- * Builds a query using suggested search flag active
- */
-/**
- * Search actions
- */
-function suggestedSearchAction(_ref3, _ref4) {
-    var queryText = _ref3.queryText;
-    var environmentId = _ref4.environmentId,
-        currentQuery = _ref4.currentQuery,
-        client = _ref4.client;
-
-    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
-
-    clonedQuery.setQueryText(queryText).setPage(1).disableResults().enableSuggestions();
-
-    client.search(clonedQuery, function (result, error) {
-        if (error) return;
-
-        var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
-        dispatcher.dispatch({
-            type: 'RENDER_FETCHED_DATA',
-            payload: {
-                result: result,
-                updatedQuery: clonedQuery
-            }
-        });
-    });
-}
-
-/***/ }),
-/* 32 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _preact = __webpack_require__(0);
-
-var _sortByActions = __webpack_require__(33);
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
-
-/**
- * SortBy Filter Component
- */
-var SortByComponent = function (_Component) {
-    _inherits(SortByComponent, _Component);
-
-    function SortByComponent() {
-        var _ref;
-
-        var _temp, _this, _ret;
-
-        _classCallCheck(this, SortByComponent);
-
-        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-            args[_key] = arguments[_key];
-        }
-
-        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = SortByComponent.__proto__ || Object.getPrototypeOf(SortByComponent)).call.apply(_ref, [this].concat(args))), _this), _this.handleChange = function (e) {
-            var _this$props = _this.props,
-                environmentId = _this$props.environmentId,
-                currentQuery = _this$props.currentQuery,
-                client = _this$props.client;
-
-            /**
-             * Dispatch action
-             */
-
-            (0, _sortByActions.onChangeSearchAction)({
-                selectedOption: e.target.value
-            }, {
-                environmentId: environmentId,
-                currentQuery: currentQuery,
-                client: client
-            });
-        }, _temp), _possibleConstructorReturn(_this, _ret);
-    }
-
-    _createClass(SortByComponent, [{
-        key: 'shouldComponentUpdate',
-        value: function shouldComponentUpdate() {
-            return false;
-        }
-    }, {
-        key: 'render',
-        value: function render() {
-            var _props = this.props,
-                _props$classNames = _props.classNames,
-                containerClassName = _props$classNames.container,
-                selectClassName = _props$classNames.select,
-                options = _props.options;
-
-
-            return (0, _preact.h)(
-                'div',
-                { className: 'as-sortBy ' + containerClassName },
-                (0, _preact.h)(
-                    'select',
-                    {
-                        className: 'as-sortBy__selector ' + selectClassName,
-                        onChange: this.handleChange
-                    },
-                    options.map(function (option) {
-                        return (0, _preact.h)(
-                            'option',
-                            { value: option.value },
-                            option.name
-                        );
-                    })
-                )
-            );
-        }
-    }]);
-
-    return SortByComponent;
-}(_preact.Component);
-
-SortByComponent.defaultProps = {
-    classNames: {
-        container: '',
-        select: ''
-    }
-};
-
-exports.default = SortByComponent;
-
-/***/ }),
-/* 33 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.onChangeSearchAction = onChangeSearchAction;
-
-var _cloneDeep = __webpack_require__(4);
-
-var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
-
-var _container = __webpack_require__(1);
-
-var _container2 = _interopRequireDefault(_container);
-
-var _constants = __webpack_require__(2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; } /**
-                                                                                                                                                                                                                   * SortBy actions
-                                                                                                                                                                                                                   */
-
-
-/**
- * On change action
- *
- * This action is triggered when a sortBy filter changes
- * receives two parameters:
- *   @param queryOptions -> query given options
- *   @param appOptions   -> current application options
- *
- * Finally dispatches an event with the search result and
- * the modified query.
- *   @returns {{
- *     type: string,
- *     payload: {
- *        result,
- *        updatedQuery
- *     }
- *   }}
- */
-function onChangeSearchAction(_ref, _ref2) {
-    var selectedOption = _ref.selectedOption;
-    var environmentId = _ref2.environmentId,
-        currentQuery = _ref2.currentQuery,
-        client = _ref2.client;
-
-    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
-    var filterData = splitQueryValue(selectedOption);
-
-    clonedQuery.sortBy(_defineProperty({}, 'indexed_metadata.' + filterData.field, {
-        order: filterData.value
-    }));
-    clonedQuery.setPage(1);
-
-    client.search(clonedQuery, function (result, error) {
-        if (error) return;
-
-        var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
-        dispatcher.dispatch({
-            type: 'RENDER_FETCHED_DATA',
-            payload: {
-                result: result,
-                updatedQuery: clonedQuery
-            }
-        });
-    });
-}
-
-function splitQueryValue(string) {
-    var queryValue = string.split(':');
-
-    return {
-        field: queryValue[0],
-        value: queryValue[1]
-    };
-}
-
-/***/ }),
-/* 34 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _preact = __webpack_require__(0);
-
-var _multipleFilterActions = __webpack_require__(35);
-
-var _helpers = __webpack_require__(36);
-
-var _Template = __webpack_require__(3);
-
-var _Template2 = _interopRequireDefault(_Template);
-
-var _ShowMoreComponent = __webpack_require__(37);
-
-var _ShowMoreComponent2 = _interopRequireDefault(_ShowMoreComponent);
-
-var _defaultTemplates = __webpack_require__(38);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
-
-/**
- * Filter Component
- */
-var MultipleFilterComponent = function (_Component) {
-    _inherits(MultipleFilterComponent, _Component);
-
-    function MultipleFilterComponent() {
-        _classCallCheck(this, MultipleFilterComponent);
-
-        var _this = _possibleConstructorReturn(this, (MultipleFilterComponent.__proto__ || Object.getPrototypeOf(MultipleFilterComponent)).call(this));
-
-        _this.handleClick = function (selectedFilter) {
-            var _this$props = _this.props,
-                environmentId = _this$props.environmentId,
-                filterName = _this$props.name,
-                filterField = _this$props.filterField,
-                aggregationField = _this$props.aggregationField,
-                applicationType = _this$props.applicationType,
-                sortBy = _this$props.sortBy,
-                fetchLimit = _this$props.fetchLimit,
-                currentQuery = _this$props.currentQuery,
-                client = _this$props.client,
-                aggregations = _this$props.data.aggregations.aggregations;
-
-
-            var activeElements = aggregations[filterName].active_elements;
-            var currentActiveFilterValues = typeof activeElements !== 'undefined' ? activeElements : [];
-
-            /**
-             * Dispatch filter action
-             */
-            (0, _multipleFilterActions.filterAction)({
-                filterName: filterName,
-                filterField: filterField,
-                applicationType: applicationType,
-                sortBy: sortBy,
-                fetchLimit: fetchLimit,
-                aggregationField: aggregationField ? aggregationField : filterField,
-
-                filterValues: (0, _helpers.manageCurrentFilterItems)(selectedFilter, currentActiveFilterValues)
-            }, {
-                environmentId: environmentId,
-                currentQuery: currentQuery,
-                client: client
-            });
-        };
-
-        _this.handleShowMore = function () {
-            var _this$state = _this.state,
-                activeAggregations = _this$state.activeAggregations,
-                currentAggregations = _this$state.currentAggregations;
-
-
-            var viewLimit = activeAggregations.length + currentAggregations.length;
-            _this.setState({ viewLimit: viewLimit });
-        };
-
-        _this.handleShowLess = function () {
-            var viewLimit = _this.props.viewLimit;
-
-            _this.setState({ viewLimit: viewLimit });
-        };
-
-        _this.state = {
-            viewLimit: 0,
-            activeAggregations: [],
-            currentAggregations: []
-        };
-        return _this;
-    }
-
-    _createClass(MultipleFilterComponent, [{
-        key: "componentWillMount",
-        value: function componentWillMount() {
-            var _props = this.props,
-                environmentId = _props.environmentId,
-                filterName = _props.name,
-                filterField = _props.filterField,
-                aggregationField = _props.aggregationField,
-                applicationType = _props.applicationType,
-                sortBy = _props.sortBy,
-                fetchLimit = _props.fetchLimit,
-                viewLimit = _props.viewLimit,
-                currentQuery = _props.currentQuery;
-
-            /**
-             * Set view items limit
-             */
-
-            var isViewLimitProperlySet = viewLimit && viewLimit < fetchLimit;
-            this.setState({
-                viewLimit: isViewLimitProperlySet ? viewLimit : fetchLimit
-            });
-
-            /**
-             * Dispatch action
-             */
-            (0, _multipleFilterActions.aggregationSetup)({
-                filterName: filterName,
-                applicationType: applicationType,
-                sortBy: sortBy,
-                fetchLimit: fetchLimit,
-                aggregationField: aggregationField ? aggregationField : filterField
-            }, {
-                environmentId: environmentId,
-                currentQuery: currentQuery
-            });
-        }
-    }, {
-        key: "componentWillReceiveProps",
-        value: function componentWillReceiveProps(props) {
-            var filterName = props.name,
-                aggregations = props.data.aggregations.aggregations;
-
-
-            if (typeof aggregations[filterName] !== 'undefined') {
-                /**
-                 * Getting aggregation from aggregations
-                 */
-                var aggregation = aggregations[filterName];
-                var counters = aggregation.counters ? aggregation.counters : [];
-
-                this.setState({
-                    /**
-                     * Current used aggregations
-                     */
-                    activeAggregations: counters.filter(function (item) {
-                        return item.used;
-                    }),
-                    /**
-                     * Current inactive aggregations
-                     */
-                    currentAggregations: counters.filter(function (item) {
-                        return null === item.used;
-                    })
-                });
-            }
-        }
-    }, {
-        key: "render",
-        value: function render() {
-            var _this2 = this;
-
-            var _props2 = this.props,
-                viewLimit = _props2.viewLimit,
-                fetchLimit = _props2.fetchLimit,
-                _props2$classNames = _props2.classNames,
-                containerClassName = _props2$classNames.container,
-                topClassName = _props2$classNames.top,
-                itemsListClassName = _props2$classNames.itemsList,
-                itemClassName = _props2$classNames.item,
-                activeClassName = _props2$classNames.active,
-                showMoreContainerClassName = _props2$classNames.showMoreContainer,
-                _props2$template = _props2.template,
-                topTemplate = _props2$template.top,
-                itemTemplate = _props2$template.item,
-                showMoreTemplate = _props2$template.showMore,
-                showLessTemplate = _props2$template.showLess,
-                formatData = _props2.formatData;
-
-            /**
-             * Get aggregation items
-             */
-
-            var allItems = [].concat(_toConsumableArray(this.state.activeAggregations), _toConsumableArray(this.state.currentAggregations));
-            var allItemsLength = allItems.length;
-            var items = allItems.slice(0, this.state.viewLimit);
-
-            /**
-             * Check available view limit
-             */
-            var isViewLimitProperlySet = viewLimit && viewLimit < fetchLimit;
-
-            return (0, _preact.h)(
-                "div",
-                { className: "as-multipleFilter " + containerClassName },
-                (0, _preact.h)(_Template2.default, {
-                    template: topTemplate,
-                    className: "as-multipleFilter__top " + topClassName
-                }),
-                (0, _preact.h)(
-                    "div",
-                    { className: "as-multipleFilter__itemsList " + itemsListClassName },
-                    items.map(function (item) {
-                        var reducedTemplateData = {
-                            n: parseInt(item.n).toLocaleString('de-DE'),
-                            isActive: item.used,
-                            values: item.values
-                        };
-                        var formattedTemplateData = formatData(reducedTemplateData);
-
-                        return (0, _preact.h)(
-                            "div",
-                            {
-                                className: "as-multipleFilter__item " + (itemClassName + " ") + ("" + (item.used ? activeClassName : '')),
-                                onClick: function onClick() {
-                                    return _this2.handleClick(item.values.id);
-                                }
-                            },
-                            (0, _preact.h)(_Template2.default, {
-                                template: itemTemplate,
-                                data: formattedTemplateData
-                            })
-                        );
-                    })
-                ),
-                isViewLimitProperlySet ? (0, _preact.h)(_ShowMoreComponent2.default, {
-                    allItemsLength: allItemsLength,
-                    currentLimit: this.state.viewLimit,
-                    handleShowMore: this.handleShowMore,
-                    handleShowLess: this.handleShowLess,
-                    showMoreContainerClassName: showMoreContainerClassName,
-                    showMoreTemplate: showMoreTemplate,
-                    showLessTemplate: showLessTemplate
-                }) : null
-            );
-        }
-    }]);
-
-    return MultipleFilterComponent;
-}(_preact.Component);
-
-MultipleFilterComponent.defaultProps = {
-    aggregationField: null,
-    applicationType: 8, // FILTER_MUST_ALL
-    fetchLimit: 10,
-    viewLimit: null,
-    sortBy: ['_term', 'desc'],
-    classNames: {
-        container: '',
-        top: '',
-        itemsList: '',
-        item: '',
-        active: 'as-multipleFilter__item--active',
-        showMoreContainer: ''
-    },
-    template: {
-        top: null,
-        item: _defaultTemplates.defaultItemTemplate,
-        showMore: '+ Show more',
-        showLess: '- Show less'
-    },
-    formatData: function formatData(data) {
-        return data;
-    }
-};
-
-exports.default = MultipleFilterComponent;
-
-/***/ }),
-/* 35 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.aggregationSetup = aggregationSetup;
-exports.filterAction = filterAction;
-
-var _cloneDeep = __webpack_require__(4);
-
-var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
-
-var _container = __webpack_require__(1);
-
-var _container2 = _interopRequireDefault(_container);
-
-var _constants = __webpack_require__(2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Define aggregations setup
- *
- * This setup action is triggered when mounting a component
- * receives two parameters:
- *   @param queryOptions -> query given options
- *   @param appOptions   -> current application options
- *
- * Finally dispatches an event with the modified query.
- *   @returns {{
- *     type: string,
- *     payload: {
- *        updatedQuery
- *     }
- *   }}
- */
-function aggregationSetup(_ref, _ref2) {
-    var filterName = _ref.filterName,
-        aggregationField = _ref.aggregationField,
-        applicationType = _ref.applicationType,
-        sortBy = _ref.sortBy,
-        fetchLimit = _ref.fetchLimit;
-    var environmentId = _ref2.environmentId,
-        currentQuery = _ref2.currentQuery;
-
-    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
-
-    clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy, fetchLimit);
-
-    var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + "__" + environmentId);
-    dispatcher.dispatch({
-        type: 'UPDATE_APISEARCH_SETUP',
-        payload: {
-            updatedQuery: clonedQuery
-        }
-    });
-}
-
-/**
- * Filter action
- *
- * This setup action is triggered when mounting a component
- * receives two parameters:
- *   @param queryOptions -> query given options
- *   @param appOptions   -> current application options
- *
- * Finally dispatches an event with the modified query.
- *   @returns {{
- *     type: string,
- *     payload: {
- *        updatedQuery,
- *        result
- *     }
- *   }}
- */
-/**
- * Multiple filter actions
- */
-function filterAction(_ref3, _ref4) {
-    var filterName = _ref3.filterName,
-        filterField = _ref3.filterField,
-        aggregationField = _ref3.aggregationField,
-        filterValues = _ref3.filterValues,
-        applicationType = _ref3.applicationType,
-        sortBy = _ref3.sortBy,
-        fetchLimit = _ref3.fetchLimit;
-    var environmentId = _ref4.environmentId,
-        currentQuery = _ref4.currentQuery,
-        client = _ref4.client;
-
-    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
-
-    clonedQuery.filterBy(filterName, filterField, filterValues, applicationType, false, sortBy);
-    clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy, fetchLimit);
-    clonedQuery.setPage(1);
-
-    client.search(clonedQuery, function (result, error) {
-        if (error) return;
-
-        var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + "__" + environmentId);
-        dispatcher.dispatch({
-            type: 'RENDER_FETCHED_DATA',
-            payload: {
-                updatedQuery: clonedQuery,
-                result: result
-            }
-        });
-    });
-}
-
-/***/ }),
-/* 36 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.manageCurrentFilterItems = manageCurrentFilterItems;
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-/**
- * Manage filter items
- *
- * If an item is on the list, remove it
- * else, add it!
- *
- * @param selectedItem
- * @param currentItems
- * @returns {[null,null]}
- */
-function manageCurrentFilterItems(selectedItem, currentItems) {
-    var isElementActive = currentItems.some(function (item) {
-        return item === selectedItem;
-    });
-
-    if (isElementActive) {
-        return currentItems.filter(function (item) {
-            return item !== selectedItem;
-        });
-    } else {
-        return [].concat(_toConsumableArray(currentItems), [selectedItem]);
-    }
-}
-
-/***/ }),
-/* 37 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _preact = __webpack_require__(0);
-
-var _Template = __webpack_require__(3);
-
-var _Template2 = _interopRequireDefault(_Template);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Show more component
- *
- * Provides two items
- *   -> Show more element
- *   -> Show less element
- */
-/**
- * @jsx h
- */
-var ShowMoreComponent = function ShowMoreComponent(_ref) {
-    var allItemsLength = _ref.allItemsLength,
-        currentLimit = _ref.currentLimit,
-        handleShowMore = _ref.handleShowMore,
-        handleShowLess = _ref.handleShowLess,
-        showMoreContainerClassName = _ref.showMoreContainerClassName,
-        showMoreTemplate = _ref.showMoreTemplate,
-        showLessTemplate = _ref.showLessTemplate;
-
-    return allItemsLength > currentLimit ? (0, _preact.h)(
-        "div",
-        { className: "as-showMore " + showMoreContainerClassName,
-            onClick: handleShowMore
-        },
-        (0, _preact.h)(_Template2.default, {
-            template: showMoreTemplate,
-            className: "as-showMore--more"
-        })
-    ) : allItemsLength === currentLimit ? (0, _preact.h)(
-        "div",
-        { className: "as-showMore " + showMoreContainerClassName,
-            onClick: handleShowLess
-        },
-        (0, _preact.h)(_Template2.default, {
-            template: showLessTemplate,
-            className: "as-showMore--less"
-        })
-    ) : null;
-};
-
-exports.default = ShowMoreComponent;
-
-/***/ }),
-/* 38 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-var defaultItemTemplate = exports.defaultItemTemplate = "\n    <input \n        type=\"checkbox\" \n        id=\"filter_{{values.id}}\"\n        class=\"as-multipleFilter__itemCheckbox\" \n        {{#isActive}}checked=\"checked\"{{/isActive}}\n    >\n    <label \n        class=\"as-multipleFilter__itemName\"\n        for=\"filter_{{values.id}}\"\n    >\n        {{{values.name}}}\n    </label>\n    <span class=\"as-multipleFilter__itemNumber\">\n        {{n}}\n    </span>\n";
-
-/***/ }),
-/* 39 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _preact = __webpack_require__(0);
-
-var _Template = __webpack_require__(3);
-
-var _Template2 = _interopRequireDefault(_Template);
-
-var _defaultTemplates = __webpack_require__(40);
-
-var _resultActions = __webpack_require__(41);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
-/**
- * Actions
- */
-
-
-/**
- * Result Component
- */
-var ResultComponent = function (_Component) {
-    _inherits(ResultComponent, _Component);
-
-    function ResultComponent() {
-        _classCallCheck(this, ResultComponent);
-
-        return _possibleConstructorReturn(this, (ResultComponent.__proto__ || Object.getPrototypeOf(ResultComponent)).apply(this, arguments));
-    }
-
-    _createClass(ResultComponent, [{
-        key: "componentWillMount",
-        value: function componentWillMount() {
-            /**
-             * Define initial Setup on component mounting
-             * that refers to the store configuration
-             * and affects other components
-             */
-
-            var _props = this.props,
-                environmentId = _props.environmentId,
-                itemsPerPage = _props.itemsPerPage,
-                promote = _props.promote,
-                exclude = _props.exclude,
-                highlightsEnabled = _props.highlightsEnabled,
-                currentQuery = _props.currentQuery,
-                client = _props.client;
-
-            /**
-             * Dispatch action
-             */
-
-            (0, _resultActions.changeItemsPerResultPageSetup)({
-                itemsPerPage: itemsPerPage,
-                highlightsEnabled: highlightsEnabled,
-                promotedUUIDs: promote,
-                excludedUUIDs: exclude
-            }, {
-                environmentId: environmentId,
-                currentQuery: currentQuery,
-                client: client
-            });
-        }
-    }, {
-        key: "render",
-        value: function render() {
-            var _props2 = this.props,
-                dirty = _props2.dirty,
-                _props2$classNames = _props2.classNames,
-                containerClassName = _props2$classNames.container,
-                itemsListClassName = _props2$classNames.itemsList,
-                placeholderClassName = _props2$classNames.placeholder,
-                _props2$template = _props2.template,
-                itemsListTemplate = _props2$template.itemsList,
-                placeholderTemplate = _props2$template.placeholder,
-                formatData = _props2.formatData,
-                data = _props2.data;
-
-            /**
-             * Data accessible to the template
-             */
-
-            var reducedTemplateData = {
-                query: data ? data.query.q : '',
-                items: data ? data.items : []
-            };
-
-            /**
-             * Format each item data
-             */
-            var formattedTemplateData = _extends({}, reducedTemplateData, {
-                items: reducedTemplateData.items ? reducedTemplateData.items.map(function (item) {
-                    return formatData(item);
-                }) : []
-            });
-
-            return (0, _preact.h)(
-                "div",
-                { className: "as-result " + containerClassName },
-                placeholderTemplate && dirty ? (0, _preact.h)(_Template2.default, {
-                    template: placeholderTemplate,
-                    className: "as-result__placeholder " + placeholderClassName
-                }) : (0, _preact.h)(_Template2.default, {
-                    template: itemsListTemplate,
-                    data: formattedTemplateData,
-                    className: "as-result__itemsList " + itemsListClassName
-                })
-            );
-        }
-    }]);
-
-    return ResultComponent;
-}(_preact.Component);
-
-ResultComponent.defaultProps = {
-    itemsPerPage: 10,
-    highlightsEnabled: false,
-    promote: [],
-    exclude: [],
-    classNames: {
-        container: '',
-        itemsList: '',
-        placeholder: ''
-    },
-    template: {
-        itemsList: _defaultTemplates.defaultItemsListTemplate,
-        placeholder: null
-    },
-    formatData: function formatData(data) {
-        return data;
-    }
-};
-
-exports.default = ResultComponent;
-
-/***/ }),
-/* 40 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-var defaultItemsListTemplate = exports.defaultItemsListTemplate = "\n    <ul>\n    {{#items}}\n        <li class=\"as-result__item\">\n            <strong>Uuid:</strong> {{uuid.type}} - {{uuid.id}} <br />\n            <strong>Metadata:</strong> {{metadata}} <br />\n            <strong>Indexed metadata:</strong> {{indexed_metadata}}\n        </li>\n    {{/items}}\n    </ul>\n    {{^items}}No result{{/items}}\n";
-
-/***/ }),
-/* 41 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.changeItemsPerResultPageSetup = changeItemsPerResultPageSetup;
-
-var _cloneDeep = __webpack_require__(4);
-
-var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
-
-var _container = __webpack_require__(1);
-
-var _container2 = _interopRequireDefault(_container);
-
-var _constants = __webpack_require__(2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } } /**
-                                                                                                                                                                                                     * Search actions
-                                                                                                                                                                                                     */
-
-
-/**
- * Define items per page on result
- *
- * This action is triggered when mounting a component
- * receives two parameters:
- *   @param queryOptions -> given new query options
- *   @param appOptions   -> current application options
- *
- * Finally dispatches an event with the modified query.
- *   @returns {{
- *     type: string,
- *     payload: {
- *        updatedQuery
- *     }
- *   }}
- */
-function changeItemsPerResultPageSetup(_ref, _ref2) {
-    var itemsPerPage = _ref.itemsPerPage,
-        highlightsEnabled = _ref.highlightsEnabled,
-        promotedUUIDs = _ref.promotedUUIDs,
-        excludedUUIDs = _ref.excludedUUIDs;
-    var environmentId = _ref2.environmentId,
-        currentQuery = _ref2.currentQuery,
-        client = _ref2.client;
-
-    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
-
-    /**
-     * Set result size
-     */
-    clonedQuery.setResultSize(itemsPerPage);
-
-    /**
-     * Enabling highlights on query result
-     */
-    if (highlightsEnabled) {
-        clonedQuery.enableHighlights();
-    }
-
-    /**
-     * Promoted uuids
-     */
-    if (promotedUUIDs.length !== 0) {
-        clonedQuery.promoteUUIDs.apply(clonedQuery, _toConsumableArray(promotedUUIDs.map(function (uuid) {
-            return client.createObject.uuid(uuid.id, uuid.type);
-        })));
-    }
-
-    /**
-     * excluded uuids
-     */
-    if (excludedUUIDs.length !== 0) {
-        clonedQuery.excludeUUIDs.apply(clonedQuery, _toConsumableArray(excludedUUIDs.map(function (uuid) {
-            return client.createObject.uuid(uuid.id, uuid.type);
-        })));
-    }
-
-    var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
-    dispatcher.dispatch({
-        type: 'UPDATE_APISEARCH_SETUP',
-        payload: {
-            updatedQuery: clonedQuery
-        }
-    });
-}
-
-/***/ }),
-/* 42 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _preact = __webpack_require__(0);
-
-var _Template = __webpack_require__(3);
-
-var _Template2 = _interopRequireDefault(_Template);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
-
-/**
- * Result Information Component
- */
-var InformationComponent = function (_Component) {
-    _inherits(InformationComponent, _Component);
-
-    function InformationComponent() {
-        _classCallCheck(this, InformationComponent);
-
-        return _possibleConstructorReturn(this, (InformationComponent.__proto__ || Object.getPrototypeOf(InformationComponent)).apply(this, arguments));
-    }
-
-    _createClass(InformationComponent, [{
-        key: 'render',
-        value: function render() {
-            var _props = this.props,
-                containerClassName = _props.classNames.container,
-                containerTemplate = _props.template.container,
-                formatData = _props.formatData,
-                data = _props.data;
-
-            /**
-             * Data accessible to the template
-             */
-
-            var reducedTemplateData = {
-                total_hits: parseInt(data.total_hits).toLocaleString('de-DE'),
-                total_items: parseInt(data.total_items).toLocaleString('de-DE')
-            };
-
-            var formattedTemplateData = formatData(reducedTemplateData);
-
-            return (0, _preact.h)(_Template2.default, {
-                template: containerTemplate,
-                data: formattedTemplateData,
-                className: 'as-information ' + containerClassName
-            });
-        }
-    }]);
-
-    return InformationComponent;
-}(_preact.Component);
-
-InformationComponent.defaultProps = {
-    classNames: {
-        container: ''
-    },
-    template: {
-        container: 'Found {{total_hits}}/{{total_items}}'
-    },
-    formatData: function formatData(data) {
-        return data;
-    }
-};
-
-exports.default = InformationComponent;
-
-/***/ }),
-/* 43 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _preact = __webpack_require__(0);
-
-var _Template = __webpack_require__(3);
-
-var _Template2 = _interopRequireDefault(_Template);
-
-var _clearFiltersActions = __webpack_require__(44);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
-
-/**
- * Result Information Component
- */
-var ClearFiltersComponent = function (_Component) {
-    _inherits(ClearFiltersComponent, _Component);
-
-    function ClearFiltersComponent() {
-        _classCallCheck(this, ClearFiltersComponent);
-
-        var _this = _possibleConstructorReturn(this, (ClearFiltersComponent.__proto__ || Object.getPrototypeOf(ClearFiltersComponent)).call(this));
-
-        _this.handleClick = function () {
-            var _this$props = _this.props,
-                environmentId = _this$props.environmentId,
-                currentQuery = _this$props.currentQuery,
-                client = _this$props.client;
-
-
-            _this.setState({ showClearFilters: false });
-
-            /**
-             * Dispatch a clear filter action
-             */
-            (0, _clearFiltersActions.clearFiltersAction)({}, {
-                environmentId: environmentId,
-                currentQuery: currentQuery,
-                client: client
-            });
-        };
-
-        _this.state = { showClearFilters: false };
-        return _this;
-    }
-
-    _createClass(ClearFiltersComponent, [{
-        key: "componentWillReceiveProps",
-        value: function componentWillReceiveProps(props) {
-            var filters = props.currentQuery.filters;
-            var areFiltersActive = Object.keys(filters).length !== 0 && filters.length !== 0;
-
-            this.setState({ showClearFilters: areFiltersActive });
-        }
-    }, {
-        key: "render",
-        value: function render() {
-            var _props = this.props,
-                containerClassName = _props.classNames.container,
-                containerTemplate = _props.template.container;
-
-
-            return this.state.showClearFilters ? (0, _preact.h)(
-                "div",
-                { className: "as-clearFilters " + containerClassName,
-                    onClick: this.handleClick
-                },
-                (0, _preact.h)(_Template2.default, { template: containerTemplate })
-            ) : null;
-        }
-    }]);
-
-    return ClearFiltersComponent;
-}(_preact.Component);
-
-ClearFiltersComponent.defaultProps = {
-    classNames: {
-        container: ''
-    },
-    template: {
-        container: 'Clear filters'
-    }
-};
-
-exports.default = ClearFiltersComponent;
-
-/***/ }),
-/* 44 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.clearFiltersAction = clearFiltersAction;
-
-var _cloneDeep = __webpack_require__(4);
-
-var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
-
-var _container = __webpack_require__(1);
-
-var _container2 = _interopRequireDefault(_container);
-
-var _constants = __webpack_require__(2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _objectDestructuringEmpty(obj) { if (obj == null) throw new TypeError("Cannot destructure undefined"); } /**
-                                                                                                                   * Clear filters actions
-                                                                                                                   */
-
-
-/**
- * Clear filters action
- *
- * This action is triggered when the component is clicked
- * receives two parameters:
- *   @param queryOptions -> query given options
- *   @param appOptions   -> current application options
- *
- * Finally dispatches an event with the modified query.
- *   @returns {{
- *     type: string,
- *     payload: {
- *        updatedQuery,
- *        result
- *     }
- *   }}
- */
-function clearFiltersAction(_ref, _ref2) {
-    var environmentId = _ref2.environmentId,
-        currentQuery = _ref2.currentQuery,
-        client = _ref2.client;
-
-    _objectDestructuringEmpty(_ref);
-
-    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
-
-    clonedQuery.filters = [];
-    clonedQuery.setPage(1);
-
-    client.search(clonedQuery, function (result, error) {
-        if (error) return;
-
-        var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + "__" + environmentId);
-        dispatcher.dispatch({
-            type: 'RENDER_FETCHED_DATA',
-            payload: {
-                updatedQuery: clonedQuery,
-                result: result
-            }
-        });
-    });
-}
-
-/***/ }),
-/* 45 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _preact = __webpack_require__(0);
-
-var _Template = __webpack_require__(3);
-
-var _Template2 = _interopRequireDefault(_Template);
-
-var _paginationActions = __webpack_require__(46);
-
-var _NavigationComponent = __webpack_require__(47);
-
-var _NavigationComponent2 = _interopRequireDefault(_NavigationComponent);
-
-var _helpers = __webpack_require__(48);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
-
-/**
- * Pagination Component
- */
-var PaginationComponent = function (_Component) {
-    _inherits(PaginationComponent, _Component);
-
-    function PaginationComponent() {
-        var _ref;
-
-        var _temp, _this, _ret;
-
-        _classCallCheck(this, PaginationComponent);
-
-        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-            args[_key] = arguments[_key];
-        }
-
-        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = PaginationComponent.__proto__ || Object.getPrototypeOf(PaginationComponent)).call.apply(_ref, [this].concat(args))), _this), _this.handleClick = function (page) {
-            var _this$props = _this.props,
-                data = _this$props.data,
-                environmentId = _this$props.environmentId,
-                currentQuery = _this$props.currentQuery,
-                client = _this$props.client;
-
-
-            var totalPages = (0, _helpers.getTotalPages)({
-                totalHits: data.total_hits,
-                hitsPerPage: currentQuery.size
-            });
-
-            /**
-             * Do not let go further
-             */
-            if (page <= 0) page = 1;
-            if (page >= totalPages) page = totalPages;
-
-            /**
-             * Dispatch change page action
-             */
-            (0, _paginationActions.paginationChangeAction)({
-                selectedPage: page
-            }, {
-                environmentId: environmentId,
-                currentQuery: currentQuery,
-                client: client
-            });
-        }, _temp), _possibleConstructorReturn(_this, _ret);
-    }
-
-    _createClass(PaginationComponent, [{
-        key: "render",
-        value: function render() {
-            var _this2 = this;
-
-            var _props = this.props,
-                padding = _props.padding,
-                goFirstLast = _props.goFirstLast,
-                _props$classNames = _props.classNames,
-                containerClassName = _props$classNames.container,
-                itemClassName = _props$classNames.item,
-                activeClassName = _props$classNames.active,
-                disabledClassName = _props$classNames.disabled,
-                nextClassName = _props$classNames.next,
-                previousClassName = _props$classNames.previous,
-                lastClassName = _props$classNames.last,
-                firstClassName = _props$classNames.first,
-                _props$template = _props.template,
-                itemTemplate = _props$template.item,
-                nextTemplate = _props$template.next,
-                previousTemplate = _props$template.previous,
-                firstTemplate = _props$template.first,
-                lastTemplate = _props$template.last,
-                _props$currentQuery = _props.currentQuery,
-                currentQueryPage = _props$currentQuery.page,
-                currentQuerySize = _props$currentQuery.size,
-                data = _props.data;
-
-            /**
-             * Get Total pages
-             */
-
-            var totalPages = (0, _helpers.getTotalPages)({
-                totalHits: data.total_hits,
-                hitsPerPage: currentQuerySize
-            });
-            var pages = (0, _helpers.totalPagesToArray)(totalPages);
-
-            /**
-             *  Get pages spectre
-             */
-            var paginationSettings = {
-                totalPages: totalPages,
-                padding: padding,
-                currentPage: currentQueryPage,
-                spectreSize: padding * 2 + 1,
-                isTouchingLeft: currentQueryPage <= padding + 1,
-                isTouchingRight: currentQueryPage + padding >= totalPages
-            };
-            var spectre = pages.slice((0, _helpers.getStart)(paginationSettings), (0, _helpers.getEnd)(paginationSettings));
-
-            /**
-             * Dynamic disabled classes
-             */
-            var previousDisabledClass = currentQueryPage === 1 ? disabledClassName : '';
-            var nextDisabledClass = currentQueryPage === totalPages ? disabledClassName : '';
-
-            /**
-             * Hide container if hits are empty
-             */
-            if (data.total_hits === 0) return null;
-
-            return (0, _preact.h)(
-                "ul",
-                { className: "as-pagination " + containerClassName },
-                (0, _preact.h)(_NavigationComponent2.default, {
-                    isVisible: goFirstLast,
-                    classNames: "as-pagination__item as-pagination__item--first " + firstClassName + " " + previousDisabledClass,
-                    template: firstTemplate,
-                    handleClick: function handleClick() {
-                        return _this2.handleClick(1);
-                    }
-                }),
-                (0, _preact.h)(_NavigationComponent2.default, {
-                    isVisible: true,
-                    classNames: "as-pagination__item as-pagination__item--previous " + previousClassName + " " + previousDisabledClass,
-                    template: previousTemplate,
-                    handleClick: function handleClick() {
-                        return _this2.handleClick(currentQueryPage - 1);
-                    }
-                }),
-                spectre.map(function (page) {
-                    return (0, _preact.h)(
-                        "li",
-                        {
-                            className: "as-pagination__item as-pagination__item--link " + itemClassName + " " + (currentQueryPage === page ? activeClassName : ''),
-                            onClick: function onClick() {
-                                return _this2.handleClick(page);
-                            }
-                        },
-                        (0, _preact.h)(_Template2.default, {
-                            template: itemTemplate,
-                            data: { page: parseInt(page).toLocaleString('de-DE') }
-                        })
-                    );
-                }),
-                (0, _preact.h)(_NavigationComponent2.default, {
-                    isVisible: true,
-                    classNames: "as-pagination__item as-pagination__item--next " + nextClassName + " " + nextDisabledClass,
-                    template: nextTemplate,
-                    handleClick: function handleClick() {
-                        return _this2.handleClick(currentQueryPage + 1);
-                    }
-                }),
-                (0, _preact.h)(_NavigationComponent2.default, {
-                    isVisible: goFirstLast,
-                    classNames: "as-pagination__item as-pagination__item--last " + lastClassName + " " + nextDisabledClass,
-                    template: lastTemplate,
-                    handleClick: function handleClick() {
-                        return _this2.handleClick(totalPages);
-                    }
-                })
-            );
-        }
-    }]);
-
-    return PaginationComponent;
-}(_preact.Component);
-
-PaginationComponent.defaultProps = {
-    padding: 3,
-    goFirstLast: false,
-    classNames: {
-        container: '',
-        item: '',
-        active: 'as-pagination__item--active',
-        disabled: 'as-pagination__item--disabled',
-        next: '',
-        first: '',
-        previous: '',
-        last: ''
-    },
-    template: {
-        item: '{{page}}',
-        next: '>',
-        previous: '<',
-        first: '<<',
-        last: '>>'
-    }
-};
-
-exports.default = PaginationComponent;
-
-/***/ }),
-/* 46 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.paginationChangeAction = paginationChangeAction;
-
-var _cloneDeep = __webpack_require__(4);
-
-var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
-
-var _container = __webpack_require__(1);
-
-var _container2 = _interopRequireDefault(_container);
-
-var _constants = __webpack_require__(2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Pagination change
- *
- * This action is triggered when a sortBy filter changes
- * receives two parameters:
- *   @param queryOptions -> query given options
- *   @param appOptions   -> current application options
- *
- * Finally dispatches an event with the search result and
- * the modified query.
- *   @returns {{
- *     type: string,
- *     payload: {
- *        result,
- *        updatedQuery
- *     }
- *   }}
- */
-function paginationChangeAction(_ref, _ref2) {
-    var selectedPage = _ref.selectedPage;
-    var environmentId = _ref2.environmentId,
-        currentQuery = _ref2.currentQuery,
-        client = _ref2.client;
-
-    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
-    clonedQuery.page = selectedPage;
-
-    client.search(clonedQuery, function (result, error) {
-        if (error) return;
-
-        var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
-        dispatcher.dispatch({
-            type: 'RENDER_FETCHED_DATA',
-            payload: {
-                result: result,
-                updatedQuery: clonedQuery
-            }
-        });
-    });
-} /**
-   * Pagination actions
-   */
-
-/***/ }),
-/* 47 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _preact = __webpack_require__(0);
-
-var _Template = __webpack_require__(3);
-
-var _Template2 = _interopRequireDefault(_Template);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Arrow navigation component
- */
-function NavigationComponent(_ref) {
-    var isVisible = _ref.isVisible,
-        classNames = _ref.classNames,
-        template = _ref.template,
-        handleClick = _ref.handleClick;
-
-    return isVisible ? (0, _preact.h)(
-        "li",
-        {
-            className: classNames,
-            onClick: handleClick
-        },
-        (0, _preact.h)(_Template2.default, { template: template })
-    ) : null;
-}
-
-exports.default = NavigationComponent;
-
-/***/ }),
-/* 48 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.getTotalPages = getTotalPages;
-exports.totalPagesToArray = totalPagesToArray;
-exports.getStart = getStart;
-exports.getEnd = getEnd;
-/**
- * Get total pages from the total reached hits
- * divided by the hits per page configured
- *
- * If there are more than 10.000 items
- * We reduce the max num of items to 9.999
- * to take care of performance
- *
- * If total resulted pages are bigger than 999
- * we set 999 as the max number of pages
- */
-function getTotalPages(_ref) {
-    var totalHits = _ref.totalHits,
-        hitsPerPage = _ref.hitsPerPage;
-
-    totalHits = totalHits >= 10000 ? 9999 : totalHits;
-
-    var totalPages = Math.ceil(parseInt(totalHits) / parseInt(hitsPerPage));
-
-    return totalPages > 999 ? 999 : totalPages;
-}
-
-/**
- * Pass total pages number into an array of numbers
- */
-function totalPagesToArray(totalPages) {
-    var pages = [];
-    for (var index = 1; index <= totalPages; index++) {
-        pages.push(index);
-    }
-
-    return pages;
-}
-
-/**
- * Get the starting point of the pages spectre
- */
-function getStart(_ref2) {
-    var totalPages = _ref2.totalPages,
-        padding = _ref2.padding,
-        currentPage = _ref2.currentPage,
-        spectreSize = _ref2.spectreSize,
-        isTouchingLeft = _ref2.isTouchingLeft,
-        isTouchingRight = _ref2.isTouchingRight;
-
-    if (isTouchingLeft) {
-        return currentPage - currentPage % spectreSize;
-    }
-    if (isTouchingRight) {
-        var start = currentPage - (spectreSize - totalPages % currentPage);
-        return start > 0 ? start : 0;
-    }
-
-    return currentPage - (padding + 1);
-}
-
-/**
- * Get the ending point of the pages spectre
- */
-function getEnd(_ref3) {
-    var totalPages = _ref3.totalPages,
-        padding = _ref3.padding,
-        currentPage = _ref3.currentPage,
-        spectreSize = _ref3.spectreSize,
-        isTouchingLeft = _ref3.isTouchingLeft,
-        isTouchingRight = _ref3.isTouchingRight;
-
-    if (isTouchingLeft) {
-        return spectreSize;
-    }
-    if (isTouchingRight) {
-        return totalPages;
-    }
-
-    return currentPage + padding;
-}
-
-/***/ }),
-/* 49 */
-/***/ (function(module, exports, __webpack_require__) {
-
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(true)
 		module.exports = factory();
@@ -6081,7 +2392,7 @@ function getEnd(_ref3) {
 		exports["apisearch"] = factory();
 	else
 		root["apisearch"] = factory();
-})(this, function() {
+})(typeof self !== 'undefined' ? self : this, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -6361,7 +2672,7 @@ function forEach(obj, fn) {
   }
 
   // Force an array if not already something iterable
-  if (typeof obj !== 'object' && !isArray(obj)) {
+  if (typeof obj !== 'object') {
     /*eslint no-param-reassign:0*/
     obj = [obj];
   }
@@ -6970,7 +3281,7 @@ module.exports = function xhrAdapter(config) {
       var responseData = !config.responseType || config.responseType === 'text' ? request.responseText : request.response;
       var response = {
         data: responseData,
-        // IE sends 1223 instead of 204 (https://github.com/mzabriskie/axios/issues/201)
+        // IE sends 1223 instead of 204 (https://github.com/axios/axios/issues/201)
         status: request.status === 1223 ? 204 : request.status,
         statusText: request.status === 1223 ? 'No Content' : request.statusText,
         headers: responseHeaders,
@@ -7241,7 +3552,7 @@ var ItemUUID = function () {
     _createClass(ItemUUID, [{
         key: "composedUUID",
         value: function composedUUID() {
-            return this.type + "~" + this.id;
+            return this.id + "~" + this.type;
         }
     }]);
 
@@ -7338,19 +3649,18 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 module.exports = function (_ref) {
     var appId = _ref.appId,
-        index = _ref.index,
+        indexId = _ref.indexId,
         token = _ref.token,
         _ref$options = _ref.options,
         options = _ref$options === undefined ? {} : _ref$options;
 
-    checkAppId(appId);
-    checkIndex(index);
-    checkApiKey(token);
+    ensureIsDefined(appId, 'appId');
+    ensureIsDefined(indexId, 'indexId');
+    ensureIsDefined(token, 'token');
 
     options = _extends({
-        endpoint: 'api.apisear.ch',
+        endpoint: 'https://apisearch.global.ssl.fastly.net',
         apiVersion: 'v1',
-        protocol: 'http',
         timeout: 10000,
         overrideQueries: true,
         cache: true
@@ -7358,27 +3668,15 @@ module.exports = function (_ref) {
 
     return new _Apisearch2.default({
         appId: appId,
-        index: index,
+        indexId: indexId,
         token: token,
         options: options
     });
 };
 
-function checkAppId(appId) {
-    if (typeof appId === 'undefined') {
-        throw new TypeError('appId parameter must be defined.');
-    }
-}
-
-function checkIndex(index) {
-    if (typeof index === 'undefined') {
-        throw new TypeError('index parameter must be defined.');
-    }
-}
-
-function checkApiKey(token) {
-    if (typeof token === 'undefined') {
-        throw new TypeError('token parameter must be defined.');
+function ensureIsDefined(param, name) {
+    if (typeof param === 'undefined') {
+        throw new TypeError(name + ' parameter must be defined.');
     }
 }
 
@@ -7424,12 +3722,11 @@ var Apisearch = function () {
      */
     function Apisearch(_ref) {
         var appId = _ref.appId,
-            index = _ref.index,
+            indexId = _ref.indexId,
             token = _ref.token,
             _ref$options = _ref.options,
             endpoint = _ref$options.endpoint,
             apiVersion = _ref$options.apiVersion,
-            protocol = _ref$options.protocol,
             timeout = _ref$options.timeout,
             overrideQueries = _ref$options.overrideQueries,
             inMemoryCache = _ref$options.cache;
@@ -7440,11 +3737,10 @@ var Apisearch = function () {
          * Api
          */
         this.appId = appId;
-        this.index = index;
+        this.indexId = indexId;
         this.token = token;
         this.apiVersion = apiVersion;
         this.endpoint = endpoint;
-        this.protocol = protocol;
         this.timeout = timeout;
         this.overrideQueries = overrideQueries;
 
@@ -7474,7 +3770,7 @@ var Apisearch = function () {
         value: function search(query, callback) {
             var encodedQuery = encodeURIComponent(JSON.stringify(query));
             var composedQuery = {
-                url: this.protocol + "://" + this.endpoint + "/" + this.apiVersion + "?app_id=" + this.appId + "&index=" + this.index + "&token=" + this.token + "&query=" + encodedQuery,
+                url: this.endpoint + "/" + this.apiVersion + "?app_id=" + this.appId + "&index=" + this.indexId + "&token=" + this.token + "&query=" + encodedQuery,
                 options: {
                     timeout: this.timeout
                 }
@@ -7719,8 +4015,6 @@ var defaults = __webpack_require__(4);
 var utils = __webpack_require__(0);
 var InterceptorManager = __webpack_require__(28);
 var dispatchRequest = __webpack_require__(29);
-var isAbsoluteURL = __webpack_require__(31);
-var combineURLs = __webpack_require__(32);
 
 /**
  * Create a new instance of Axios
@@ -7751,11 +4045,6 @@ Axios.prototype.request = function request(config) {
 
   config = utils.merge(defaults, this.defaults, { method: 'get' }, config);
   config.method = config.method.toLowerCase();
-
-  // Support baseURL config
-  if (config.baseURL && !isAbsoluteURL(config.url)) {
-    config.url = combineURLs(config.baseURL, config.url);
-  }
 
   // Hook up interceptors middleware
   var chain = [dispatchRequest, undefined];
@@ -7965,6 +4254,15 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 
 var utils = __webpack_require__(0);
 
+// Headers whose duplicates are ignored by node
+// c.f. https://nodejs.org/api/http.html#http_message_headers
+var ignoreDuplicateOf = [
+  'age', 'authorization', 'content-length', 'content-type', 'etag',
+  'expires', 'from', 'host', 'if-modified-since', 'if-unmodified-since',
+  'last-modified', 'location', 'max-forwards', 'proxy-authorization',
+  'referer', 'retry-after', 'user-agent'
+];
+
 /**
  * Parse headers into an object
  *
@@ -7992,7 +4290,14 @@ module.exports = function parseHeaders(headers) {
     val = utils.trim(line.substr(i + 1));
 
     if (key) {
-      parsed[key] = parsed[key] ? parsed[key] + ', ' + val : val;
+      if (parsed[key] && ignoreDuplicateOf.indexOf(key) >= 0) {
+        return;
+      }
+      if (key === 'set-cookie') {
+        parsed[key] = (parsed[key] ? parsed[key] : []).concat([val]);
+      } else {
+        parsed[key] = parsed[key] ? parsed[key] + ', ' + val : val;
+      }
     }
   });
 
@@ -8248,6 +4553,8 @@ var utils = __webpack_require__(0);
 var transformData = __webpack_require__(30);
 var isCancel = __webpack_require__(9);
 var defaults = __webpack_require__(4);
+var isAbsoluteURL = __webpack_require__(31);
+var combineURLs = __webpack_require__(32);
 
 /**
  * Throws a `Cancel` if cancellation has been requested.
@@ -8266,6 +4573,11 @@ function throwIfCancellationRequested(config) {
  */
 module.exports = function dispatchRequest(config) {
   throwIfCancellationRequested(config);
+
+  // Support baseURL config
+  if (config.baseURL && !isAbsoluteURL(config.url)) {
+    config.url = combineURLs(config.baseURL, config.url);
+  }
 
   // Ensure headers exist
   config.headers = config.headers || {};
@@ -9500,7 +5812,7 @@ exports.default = MemoryCache;
 //# sourceMappingURL=apisearch.node.js.map
 
 /***/ }),
-/* 50 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9512,7 +5824,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _events = __webpack_require__(51);
+var _events = __webpack_require__(19);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -9614,7 +5926,7 @@ var Store = function (_EventEmitter) {
 exports.default = Store;
 
 /***/ }),
-/* 51 */
+/* 19 */
 /***/ (function(module, exports) {
 
 // Copyright Joyent, Inc. and other Node contributors.
@@ -9920,6 +6232,3885 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+/**
+ * Create an envID
+ */
+var createEnvironmentId = exports.createEnvironmentId = function createEnvironmentId() {
+  return "env_" + Math.ceil(Math.random() * (9999999 - 1) + 1);
+};
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.widgets = undefined;
+
+var _clearFilters = __webpack_require__(22);
+
+var _information = __webpack_require__(34);
+
+var _result = __webpack_require__(36);
+
+var _multipleFilter = __webpack_require__(40);
+
+var _simpleSearch = __webpack_require__(46);
+
+var _sortBy = __webpack_require__(49);
+
+var _suggestedSearch = __webpack_require__(52);
+
+var _pagination = __webpack_require__(56);
+
+var widgets = exports.widgets = {
+    simpleSearch: _simpleSearch.simpleSearch,
+    suggestedSearch: _suggestedSearch.suggestedSearch,
+    clearFilters: _clearFilters.clearFilters,
+    multipleFilter: _multipleFilter.multipleFilter,
+    sortBy: _sortBy.sortBy,
+    information: _information.information,
+    result: _result.result,
+    pagination: _pagination.pagination
+};
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.clearFilters = undefined;
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; /**
+                                                                                                                                                                                                                                                                   * @jsx h
+                                                                                                                                                                                                                                                                   */
+
+var _preact = __webpack_require__(0);
+
+var _ClearFiltersComponent = __webpack_require__(23);
+
+var _ClearFiltersComponent2 = _interopRequireDefault(_ClearFiltersComponent);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Clear filters
+ *
+ * @param target
+ * @param classNames
+ * @param template
+ * @returns {XML}
+ */
+var clearFilters = exports.clearFilters = function clearFilters(_ref) {
+    var target = _ref.target,
+        classNames = _ref.classNames,
+        template = _ref.template;
+
+    return (0, _preact.h)(_ClearFiltersComponent2.default, {
+        target: target,
+        classNames: _extends({}, _ClearFiltersComponent2.default.defaultProps.classNames, classNames),
+        template: template
+    });
+};
+
+/***/ }),
+/* 23 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _preact = __webpack_require__(0);
+
+var _Template = __webpack_require__(3);
+
+var _Template2 = _interopRequireDefault(_Template);
+
+var _clearFiltersActions = __webpack_require__(27);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+
+/**
+ * Result Information Component
+ */
+var ClearFiltersComponent = function (_Component) {
+    _inherits(ClearFiltersComponent, _Component);
+
+    function ClearFiltersComponent() {
+        _classCallCheck(this, ClearFiltersComponent);
+
+        var _this = _possibleConstructorReturn(this, (ClearFiltersComponent.__proto__ || Object.getPrototypeOf(ClearFiltersComponent)).call(this));
+
+        _this.handleClick = function () {
+            var _this$props = _this.props,
+                environmentId = _this$props.environmentId,
+                currentQuery = _this$props.currentQuery,
+                client = _this$props.client;
+
+
+            _this.setState({ showClearFilters: false });
+
+            /**
+             * Dispatch a clear filter action
+             */
+            (0, _clearFiltersActions.clearFiltersAction)({}, {
+                environmentId: environmentId,
+                currentQuery: currentQuery,
+                client: client
+            });
+        };
+
+        _this.state = { showClearFilters: false };
+        return _this;
+    }
+
+    _createClass(ClearFiltersComponent, [{
+        key: "componentWillReceiveProps",
+        value: function componentWillReceiveProps(props) {
+            var filters = props.currentQuery.filters;
+            var areFiltersActive = Object.keys(filters).length !== 0 && filters.length !== 0;
+
+            this.setState({ showClearFilters: areFiltersActive });
+        }
+    }, {
+        key: "render",
+        value: function render() {
+            var _props = this.props,
+                containerClassName = _props.classNames.container,
+                containerTemplate = _props.template.container;
+
+
+            return this.state.showClearFilters ? (0, _preact.h)(
+                "div",
+                { className: "as-clearFilters " + containerClassName,
+                    onClick: this.handleClick
+                },
+                (0, _preact.h)(_Template2.default, { template: containerTemplate })
+            ) : null;
+        }
+    }]);
+
+    return ClearFiltersComponent;
+}(_preact.Component);
+
+ClearFiltersComponent.defaultProps = {
+    classNames: {
+        container: ''
+    },
+    template: {
+        container: 'Clear filters'
+    }
+};
+
+exports.default = ClearFiltersComponent;
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+ *  Copyright 2011 Twitter, Inc.
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+// This file is for use with Node.js. See dist/ for browser files.
+
+var Hogan = __webpack_require__(25);
+Hogan.Template = __webpack_require__(26).Template;
+Hogan.template = Hogan.Template;
+module.exports = Hogan;
+
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+ *  Copyright 2011 Twitter, Inc.
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+(function (Hogan) {
+  // Setup regex  assignments
+  // remove whitespace according to Mustache spec
+  var rIsWhitespace = /\S/,
+      rQuot = /\"/g,
+      rNewline =  /\n/g,
+      rCr = /\r/g,
+      rSlash = /\\/g,
+      rLineSep = /\u2028/,
+      rParagraphSep = /\u2029/;
+
+  Hogan.tags = {
+    '#': 1, '^': 2, '<': 3, '$': 4,
+    '/': 5, '!': 6, '>': 7, '=': 8, '_v': 9,
+    '{': 10, '&': 11, '_t': 12
+  };
+
+  Hogan.scan = function scan(text, delimiters) {
+    var len = text.length,
+        IN_TEXT = 0,
+        IN_TAG_TYPE = 1,
+        IN_TAG = 2,
+        state = IN_TEXT,
+        tagType = null,
+        tag = null,
+        buf = '',
+        tokens = [],
+        seenTag = false,
+        i = 0,
+        lineStart = 0,
+        otag = '{{',
+        ctag = '}}';
+
+    function addBuf() {
+      if (buf.length > 0) {
+        tokens.push({tag: '_t', text: new String(buf)});
+        buf = '';
+      }
+    }
+
+    function lineIsWhitespace() {
+      var isAllWhitespace = true;
+      for (var j = lineStart; j < tokens.length; j++) {
+        isAllWhitespace =
+          (Hogan.tags[tokens[j].tag] < Hogan.tags['_v']) ||
+          (tokens[j].tag == '_t' && tokens[j].text.match(rIsWhitespace) === null);
+        if (!isAllWhitespace) {
+          return false;
+        }
+      }
+
+      return isAllWhitespace;
+    }
+
+    function filterLine(haveSeenTag, noNewLine) {
+      addBuf();
+
+      if (haveSeenTag && lineIsWhitespace()) {
+        for (var j = lineStart, next; j < tokens.length; j++) {
+          if (tokens[j].text) {
+            if ((next = tokens[j+1]) && next.tag == '>') {
+              // set indent to token value
+              next.indent = tokens[j].text.toString()
+            }
+            tokens.splice(j, 1);
+          }
+        }
+      } else if (!noNewLine) {
+        tokens.push({tag:'\n'});
+      }
+
+      seenTag = false;
+      lineStart = tokens.length;
+    }
+
+    function changeDelimiters(text, index) {
+      var close = '=' + ctag,
+          closeIndex = text.indexOf(close, index),
+          delimiters = trim(
+            text.substring(text.indexOf('=', index) + 1, closeIndex)
+          ).split(' ');
+
+      otag = delimiters[0];
+      ctag = delimiters[delimiters.length - 1];
+
+      return closeIndex + close.length - 1;
+    }
+
+    if (delimiters) {
+      delimiters = delimiters.split(' ');
+      otag = delimiters[0];
+      ctag = delimiters[1];
+    }
+
+    for (i = 0; i < len; i++) {
+      if (state == IN_TEXT) {
+        if (tagChange(otag, text, i)) {
+          --i;
+          addBuf();
+          state = IN_TAG_TYPE;
+        } else {
+          if (text.charAt(i) == '\n') {
+            filterLine(seenTag);
+          } else {
+            buf += text.charAt(i);
+          }
+        }
+      } else if (state == IN_TAG_TYPE) {
+        i += otag.length - 1;
+        tag = Hogan.tags[text.charAt(i + 1)];
+        tagType = tag ? text.charAt(i + 1) : '_v';
+        if (tagType == '=') {
+          i = changeDelimiters(text, i);
+          state = IN_TEXT;
+        } else {
+          if (tag) {
+            i++;
+          }
+          state = IN_TAG;
+        }
+        seenTag = i;
+      } else {
+        if (tagChange(ctag, text, i)) {
+          tokens.push({tag: tagType, n: trim(buf), otag: otag, ctag: ctag,
+                       i: (tagType == '/') ? seenTag - otag.length : i + ctag.length});
+          buf = '';
+          i += ctag.length - 1;
+          state = IN_TEXT;
+          if (tagType == '{') {
+            if (ctag == '}}') {
+              i++;
+            } else {
+              cleanTripleStache(tokens[tokens.length - 1]);
+            }
+          }
+        } else {
+          buf += text.charAt(i);
+        }
+      }
+    }
+
+    filterLine(seenTag, true);
+
+    return tokens;
+  }
+
+  function cleanTripleStache(token) {
+    if (token.n.substr(token.n.length - 1) === '}') {
+      token.n = token.n.substring(0, token.n.length - 1);
+    }
+  }
+
+  function trim(s) {
+    if (s.trim) {
+      return s.trim();
+    }
+
+    return s.replace(/^\s*|\s*$/g, '');
+  }
+
+  function tagChange(tag, text, index) {
+    if (text.charAt(index) != tag.charAt(0)) {
+      return false;
+    }
+
+    for (var i = 1, l = tag.length; i < l; i++) {
+      if (text.charAt(index + i) != tag.charAt(i)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  // the tags allowed inside super templates
+  var allowedInSuper = {'_t': true, '\n': true, '$': true, '/': true};
+
+  function buildTree(tokens, kind, stack, customTags) {
+    var instructions = [],
+        opener = null,
+        tail = null,
+        token = null;
+
+    tail = stack[stack.length - 1];
+
+    while (tokens.length > 0) {
+      token = tokens.shift();
+
+      if (tail && tail.tag == '<' && !(token.tag in allowedInSuper)) {
+        throw new Error('Illegal content in < super tag.');
+      }
+
+      if (Hogan.tags[token.tag] <= Hogan.tags['$'] || isOpener(token, customTags)) {
+        stack.push(token);
+        token.nodes = buildTree(tokens, token.tag, stack, customTags);
+      } else if (token.tag == '/') {
+        if (stack.length === 0) {
+          throw new Error('Closing tag without opener: /' + token.n);
+        }
+        opener = stack.pop();
+        if (token.n != opener.n && !isCloser(token.n, opener.n, customTags)) {
+          throw new Error('Nesting error: ' + opener.n + ' vs. ' + token.n);
+        }
+        opener.end = token.i;
+        return instructions;
+      } else if (token.tag == '\n') {
+        token.last = (tokens.length == 0) || (tokens[0].tag == '\n');
+      }
+
+      instructions.push(token);
+    }
+
+    if (stack.length > 0) {
+      throw new Error('missing closing tag: ' + stack.pop().n);
+    }
+
+    return instructions;
+  }
+
+  function isOpener(token, tags) {
+    for (var i = 0, l = tags.length; i < l; i++) {
+      if (tags[i].o == token.n) {
+        token.tag = '#';
+        return true;
+      }
+    }
+  }
+
+  function isCloser(close, open, tags) {
+    for (var i = 0, l = tags.length; i < l; i++) {
+      if (tags[i].c == close && tags[i].o == open) {
+        return true;
+      }
+    }
+  }
+
+  function stringifySubstitutions(obj) {
+    var items = [];
+    for (var key in obj) {
+      items.push('"' + esc(key) + '": function(c,p,t,i) {' + obj[key] + '}');
+    }
+    return "{ " + items.join(",") + " }";
+  }
+
+  function stringifyPartials(codeObj) {
+    var partials = [];
+    for (var key in codeObj.partials) {
+      partials.push('"' + esc(key) + '":{name:"' + esc(codeObj.partials[key].name) + '", ' + stringifyPartials(codeObj.partials[key]) + "}");
+    }
+    return "partials: {" + partials.join(",") + "}, subs: " + stringifySubstitutions(codeObj.subs);
+  }
+
+  Hogan.stringify = function(codeObj, text, options) {
+    return "{code: function (c,p,i) { " + Hogan.wrapMain(codeObj.code) + " }," + stringifyPartials(codeObj) +  "}";
+  }
+
+  var serialNo = 0;
+  Hogan.generate = function(tree, text, options) {
+    serialNo = 0;
+    var context = { code: '', subs: {}, partials: {} };
+    Hogan.walk(tree, context);
+
+    if (options.asString) {
+      return this.stringify(context, text, options);
+    }
+
+    return this.makeTemplate(context, text, options);
+  }
+
+  Hogan.wrapMain = function(code) {
+    return 'var t=this;t.b(i=i||"");' + code + 'return t.fl();';
+  }
+
+  Hogan.template = Hogan.Template;
+
+  Hogan.makeTemplate = function(codeObj, text, options) {
+    var template = this.makePartials(codeObj);
+    template.code = new Function('c', 'p', 'i', this.wrapMain(codeObj.code));
+    return new this.template(template, text, this, options);
+  }
+
+  Hogan.makePartials = function(codeObj) {
+    var key, template = {subs: {}, partials: codeObj.partials, name: codeObj.name};
+    for (key in template.partials) {
+      template.partials[key] = this.makePartials(template.partials[key]);
+    }
+    for (key in codeObj.subs) {
+      template.subs[key] = new Function('c', 'p', 't', 'i', codeObj.subs[key]);
+    }
+    return template;
+  }
+
+  function esc(s) {
+    return s.replace(rSlash, '\\\\')
+            .replace(rQuot, '\\\"')
+            .replace(rNewline, '\\n')
+            .replace(rCr, '\\r')
+            .replace(rLineSep, '\\u2028')
+            .replace(rParagraphSep, '\\u2029');
+  }
+
+  function chooseMethod(s) {
+    return (~s.indexOf('.')) ? 'd' : 'f';
+  }
+
+  function createPartial(node, context) {
+    var prefix = "<" + (context.prefix || "");
+    var sym = prefix + node.n + serialNo++;
+    context.partials[sym] = {name: node.n, partials: {}};
+    context.code += 't.b(t.rp("' +  esc(sym) + '",c,p,"' + (node.indent || '') + '"));';
+    return sym;
+  }
+
+  Hogan.codegen = {
+    '#': function(node, context) {
+      context.code += 'if(t.s(t.' + chooseMethod(node.n) + '("' + esc(node.n) + '",c,p,1),' +
+                      'c,p,0,' + node.i + ',' + node.end + ',"' + node.otag + " " + node.ctag + '")){' +
+                      't.rs(c,p,' + 'function(c,p,t){';
+      Hogan.walk(node.nodes, context);
+      context.code += '});c.pop();}';
+    },
+
+    '^': function(node, context) {
+      context.code += 'if(!t.s(t.' + chooseMethod(node.n) + '("' + esc(node.n) + '",c,p,1),c,p,1,0,0,"")){';
+      Hogan.walk(node.nodes, context);
+      context.code += '};';
+    },
+
+    '>': createPartial,
+    '<': function(node, context) {
+      var ctx = {partials: {}, code: '', subs: {}, inPartial: true};
+      Hogan.walk(node.nodes, ctx);
+      var template = context.partials[createPartial(node, context)];
+      template.subs = ctx.subs;
+      template.partials = ctx.partials;
+    },
+
+    '$': function(node, context) {
+      var ctx = {subs: {}, code: '', partials: context.partials, prefix: node.n};
+      Hogan.walk(node.nodes, ctx);
+      context.subs[node.n] = ctx.code;
+      if (!context.inPartial) {
+        context.code += 't.sub("' + esc(node.n) + '",c,p,i);';
+      }
+    },
+
+    '\n': function(node, context) {
+      context.code += write('"\\n"' + (node.last ? '' : ' + i'));
+    },
+
+    '_v': function(node, context) {
+      context.code += 't.b(t.v(t.' + chooseMethod(node.n) + '("' + esc(node.n) + '",c,p,0)));';
+    },
+
+    '_t': function(node, context) {
+      context.code += write('"' + esc(node.text) + '"');
+    },
+
+    '{': tripleStache,
+
+    '&': tripleStache
+  }
+
+  function tripleStache(node, context) {
+    context.code += 't.b(t.t(t.' + chooseMethod(node.n) + '("' + esc(node.n) + '",c,p,0)));';
+  }
+
+  function write(s) {
+    return 't.b(' + s + ');';
+  }
+
+  Hogan.walk = function(nodelist, context) {
+    var func;
+    for (var i = 0, l = nodelist.length; i < l; i++) {
+      func = Hogan.codegen[nodelist[i].tag];
+      func && func(nodelist[i], context);
+    }
+    return context;
+  }
+
+  Hogan.parse = function(tokens, text, options) {
+    options = options || {};
+    return buildTree(tokens, '', [], options.sectionTags || []);
+  }
+
+  Hogan.cache = {};
+
+  Hogan.cacheKey = function(text, options) {
+    return [text, !!options.asString, !!options.disableLambda, options.delimiters, !!options.modelGet].join('||');
+  }
+
+  Hogan.compile = function(text, options) {
+    options = options || {};
+    var key = Hogan.cacheKey(text, options);
+    var template = this.cache[key];
+
+    if (template) {
+      var partials = template.partials;
+      for (var name in partials) {
+        delete partials[name].instance;
+      }
+      return template;
+    }
+
+    template = this.generate(this.parse(this.scan(text, options.delimiters), text, options), text, options);
+    return this.cache[key] = template;
+  }
+})( true ? exports : Hogan);
+
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+ *  Copyright 2011 Twitter, Inc.
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+var Hogan = {};
+
+(function (Hogan) {
+  Hogan.Template = function (codeObj, text, compiler, options) {
+    codeObj = codeObj || {};
+    this.r = codeObj.code || this.r;
+    this.c = compiler;
+    this.options = options || {};
+    this.text = text || '';
+    this.partials = codeObj.partials || {};
+    this.subs = codeObj.subs || {};
+    this.buf = '';
+  }
+
+  Hogan.Template.prototype = {
+    // render: replaced by generated code.
+    r: function (context, partials, indent) { return ''; },
+
+    // variable escaping
+    v: hoganEscape,
+
+    // triple stache
+    t: coerceToString,
+
+    render: function render(context, partials, indent) {
+      return this.ri([context], partials || {}, indent);
+    },
+
+    // render internal -- a hook for overrides that catches partials too
+    ri: function (context, partials, indent) {
+      return this.r(context, partials, indent);
+    },
+
+    // ensurePartial
+    ep: function(symbol, partials) {
+      var partial = this.partials[symbol];
+
+      // check to see that if we've instantiated this partial before
+      var template = partials[partial.name];
+      if (partial.instance && partial.base == template) {
+        return partial.instance;
+      }
+
+      if (typeof template == 'string') {
+        if (!this.c) {
+          throw new Error("No compiler available.");
+        }
+        template = this.c.compile(template, this.options);
+      }
+
+      if (!template) {
+        return null;
+      }
+
+      // We use this to check whether the partials dictionary has changed
+      this.partials[symbol].base = template;
+
+      if (partial.subs) {
+        // Make sure we consider parent template now
+        if (!partials.stackText) partials.stackText = {};
+        for (key in partial.subs) {
+          if (!partials.stackText[key]) {
+            partials.stackText[key] = (this.activeSub !== undefined && partials.stackText[this.activeSub]) ? partials.stackText[this.activeSub] : this.text;
+          }
+        }
+        template = createSpecializedPartial(template, partial.subs, partial.partials,
+          this.stackSubs, this.stackPartials, partials.stackText);
+      }
+      this.partials[symbol].instance = template;
+
+      return template;
+    },
+
+    // tries to find a partial in the current scope and render it
+    rp: function(symbol, context, partials, indent) {
+      var partial = this.ep(symbol, partials);
+      if (!partial) {
+        return '';
+      }
+
+      return partial.ri(context, partials, indent);
+    },
+
+    // render a section
+    rs: function(context, partials, section) {
+      var tail = context[context.length - 1];
+
+      if (!isArray(tail)) {
+        section(context, partials, this);
+        return;
+      }
+
+      for (var i = 0; i < tail.length; i++) {
+        context.push(tail[i]);
+        section(context, partials, this);
+        context.pop();
+      }
+    },
+
+    // maybe start a section
+    s: function(val, ctx, partials, inverted, start, end, tags) {
+      var pass;
+
+      if (isArray(val) && val.length === 0) {
+        return false;
+      }
+
+      if (typeof val == 'function') {
+        val = this.ms(val, ctx, partials, inverted, start, end, tags);
+      }
+
+      pass = !!val;
+
+      if (!inverted && pass && ctx) {
+        ctx.push((typeof val == 'object') ? val : ctx[ctx.length - 1]);
+      }
+
+      return pass;
+    },
+
+    // find values with dotted names
+    d: function(key, ctx, partials, returnFound) {
+      var found,
+          names = key.split('.'),
+          val = this.f(names[0], ctx, partials, returnFound),
+          doModelGet = this.options.modelGet,
+          cx = null;
+
+      if (key === '.' && isArray(ctx[ctx.length - 2])) {
+        val = ctx[ctx.length - 1];
+      } else {
+        for (var i = 1; i < names.length; i++) {
+          found = findInScope(names[i], val, doModelGet);
+          if (found !== undefined) {
+            cx = val;
+            val = found;
+          } else {
+            val = '';
+          }
+        }
+      }
+
+      if (returnFound && !val) {
+        return false;
+      }
+
+      if (!returnFound && typeof val == 'function') {
+        ctx.push(cx);
+        val = this.mv(val, ctx, partials);
+        ctx.pop();
+      }
+
+      return val;
+    },
+
+    // find values with normal names
+    f: function(key, ctx, partials, returnFound) {
+      var val = false,
+          v = null,
+          found = false,
+          doModelGet = this.options.modelGet;
+
+      for (var i = ctx.length - 1; i >= 0; i--) {
+        v = ctx[i];
+        val = findInScope(key, v, doModelGet);
+        if (val !== undefined) {
+          found = true;
+          break;
+        }
+      }
+
+      if (!found) {
+        return (returnFound) ? false : "";
+      }
+
+      if (!returnFound && typeof val == 'function') {
+        val = this.mv(val, ctx, partials);
+      }
+
+      return val;
+    },
+
+    // higher order templates
+    ls: function(func, cx, partials, text, tags) {
+      var oldTags = this.options.delimiters;
+
+      this.options.delimiters = tags;
+      this.b(this.ct(coerceToString(func.call(cx, text)), cx, partials));
+      this.options.delimiters = oldTags;
+
+      return false;
+    },
+
+    // compile text
+    ct: function(text, cx, partials) {
+      if (this.options.disableLambda) {
+        throw new Error('Lambda features disabled.');
+      }
+      return this.c.compile(text, this.options).render(cx, partials);
+    },
+
+    // template result buffering
+    b: function(s) { this.buf += s; },
+
+    fl: function() { var r = this.buf; this.buf = ''; return r; },
+
+    // method replace section
+    ms: function(func, ctx, partials, inverted, start, end, tags) {
+      var textSource,
+          cx = ctx[ctx.length - 1],
+          result = func.call(cx);
+
+      if (typeof result == 'function') {
+        if (inverted) {
+          return true;
+        } else {
+          textSource = (this.activeSub && this.subsText && this.subsText[this.activeSub]) ? this.subsText[this.activeSub] : this.text;
+          return this.ls(result, cx, partials, textSource.substring(start, end), tags);
+        }
+      }
+
+      return result;
+    },
+
+    // method replace variable
+    mv: function(func, ctx, partials) {
+      var cx = ctx[ctx.length - 1];
+      var result = func.call(cx);
+
+      if (typeof result == 'function') {
+        return this.ct(coerceToString(result.call(cx)), cx, partials);
+      }
+
+      return result;
+    },
+
+    sub: function(name, context, partials, indent) {
+      var f = this.subs[name];
+      if (f) {
+        this.activeSub = name;
+        f(context, partials, this, indent);
+        this.activeSub = false;
+      }
+    }
+
+  };
+
+  //Find a key in an object
+  function findInScope(key, scope, doModelGet) {
+    var val;
+
+    if (scope && typeof scope == 'object') {
+
+      if (scope[key] !== undefined) {
+        val = scope[key];
+
+      // try lookup with get for backbone or similar model data
+      } else if (doModelGet && scope.get && typeof scope.get == 'function') {
+        val = scope.get(key);
+      }
+    }
+
+    return val;
+  }
+
+  function createSpecializedPartial(instance, subs, partials, stackSubs, stackPartials, stackText) {
+    function PartialTemplate() {};
+    PartialTemplate.prototype = instance;
+    function Substitutions() {};
+    Substitutions.prototype = instance.subs;
+    var key;
+    var partial = new PartialTemplate();
+    partial.subs = new Substitutions();
+    partial.subsText = {};  //hehe. substext.
+    partial.buf = '';
+
+    stackSubs = stackSubs || {};
+    partial.stackSubs = stackSubs;
+    partial.subsText = stackText;
+    for (key in subs) {
+      if (!stackSubs[key]) stackSubs[key] = subs[key];
+    }
+    for (key in stackSubs) {
+      partial.subs[key] = stackSubs[key];
+    }
+
+    stackPartials = stackPartials || {};
+    partial.stackPartials = stackPartials;
+    for (key in partials) {
+      if (!stackPartials[key]) stackPartials[key] = partials[key];
+    }
+    for (key in stackPartials) {
+      partial.partials[key] = stackPartials[key];
+    }
+
+    return partial;
+  }
+
+  var rAmp = /&/g,
+      rLt = /</g,
+      rGt = />/g,
+      rApos = /\'/g,
+      rQuot = /\"/g,
+      hChars = /[&<>\"\']/;
+
+  function coerceToString(val) {
+    return String((val === null || val === undefined) ? '' : val);
+  }
+
+  function hoganEscape(str) {
+    str = coerceToString(str);
+    return hChars.test(str) ?
+      str
+        .replace(rAmp, '&amp;')
+        .replace(rLt, '&lt;')
+        .replace(rGt, '&gt;')
+        .replace(rApos, '&#39;')
+        .replace(rQuot, '&quot;') :
+      str;
+  }
+
+  var isArray = Array.isArray || function(a) {
+    return Object.prototype.toString.call(a) === '[object Array]';
+  };
+
+})( true ? exports : Hogan);
+
+
+/***/ }),
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.clearFiltersAction = clearFiltersAction;
+
+var _cloneDeep = __webpack_require__(4);
+
+var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
+
+var _container = __webpack_require__(1);
+
+var _container2 = _interopRequireDefault(_container);
+
+var _constants = __webpack_require__(2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _objectDestructuringEmpty(obj) { if (obj == null) throw new TypeError("Cannot destructure undefined"); } /**
+                                                                                                                   * Clear filters actions
+                                                                                                                   */
+
+
+/**
+ * Clear filters action
+ *
+ * This action is triggered when the component is clicked
+ * receives two parameters:
+ *   @param queryOptions -> query given options
+ *   @param appOptions   -> current application options
+ *
+ * Finally dispatches an event with the modified query.
+ *   @returns {{
+ *     type: string,
+ *     payload: {
+ *        updatedQuery,
+ *        result
+ *     }
+ *   }}
+ */
+function clearFiltersAction(_ref, _ref2) {
+    var environmentId = _ref2.environmentId,
+        currentQuery = _ref2.currentQuery,
+        client = _ref2.client;
+
+    _objectDestructuringEmpty(_ref);
+
+    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+
+    clonedQuery.filters = [];
+    clonedQuery.setPage(1);
+
+    client.search(clonedQuery, function (result, error) {
+        if (error) return;
+
+        var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + "__" + environmentId);
+        dispatcher.dispatch({
+            type: 'RENDER_FETCHED_DATA',
+            payload: {
+                updatedQuery: clonedQuery,
+                result: result
+            }
+        });
+    });
+}
+
+/***/ }),
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * is-plain-object <https://github.com/jonschlinkert/is-plain-object>
+ *
+ * Copyright (c) 2014-2017, Jon Schlinkert.
+ * Released under the MIT License.
+ */
+
+
+
+var isObject = __webpack_require__(29);
+
+function isObjectObject(o) {
+  return isObject(o) === true
+    && Object.prototype.toString.call(o) === '[object Object]';
+}
+
+module.exports = function isPlainObject(o) {
+  var ctor,prot;
+
+  if (isObjectObject(o) === false) return false;
+
+  // If has modified constructor
+  ctor = o.constructor;
+  if (typeof ctor !== 'function') return false;
+
+  // If has modified prototype
+  prot = ctor.prototype;
+  if (isObjectObject(prot) === false) return false;
+
+  // If constructor does not have an Object-specific method
+  if (prot.hasOwnProperty('isPrototypeOf') === false) {
+    return false;
+  }
+
+  // Most likely a plain Object
+  return true;
+};
+
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * isobject <https://github.com/jonschlinkert/isobject>
+ *
+ * Copyright (c) 2014-2017, Jon Schlinkert.
+ * Released under the MIT License.
+ */
+
+
+
+module.exports = function isObject(val) {
+  return val != null && typeof val === 'object' && Array.isArray(val) === false;
+};
+
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * shallow-clone <https://github.com/jonschlinkert/shallow-clone>
+ *
+ * Copyright (c) 2015-2017, Jon Schlinkert.
+ * Released under the MIT License.
+ */
+
+
+
+var isObject = __webpack_require__(6);
+var mixin = __webpack_require__(31);
+var typeOf = __webpack_require__(8);
+
+/**
+ * Shallow copy an object, array or primitive.
+ *
+ * @param  {any} `val`
+ * @return {any}
+ */
+
+function clone(val) {
+  var type = typeOf(val);
+  if (clone.hasOwnProperty(type)) {
+    return clone[type](val);
+  }
+  return val;
+}
+
+clone.array = function cloneArray(arr) {
+  return arr.slice();
+};
+
+clone.date = function cloneDate(date) {
+  return new Date(+date);
+};
+
+clone.object = function cloneObject(obj) {
+  if (isObject(obj)) {
+    return mixin({}, obj);
+  } else {
+    return obj;
+  }
+};
+
+clone.regexp = function cloneRegExp(re) {
+  var flags = '';
+  flags += re.multiline ? 'm' : '';
+  flags += re.global ? 'g' : '';
+  flags += re.ignorecase ? 'i' : '';
+  return new RegExp(re.source, flags);
+};
+
+/**
+ * Expose `clone`
+ */
+
+module.exports = clone;
+
+
+/***/ }),
+/* 31 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var isObject = __webpack_require__(6);
+var forIn = __webpack_require__(7);
+
+function mixin(target, objects) {
+  if (!isObject(target)) {
+    throw new TypeError('mixin-object expects the first argument to be an object.');
+  }
+  var len = arguments.length, i = 0;
+  while (++i < len) {
+    var obj = arguments[i];
+    if (isObject(obj)) {
+      forIn(obj, copy, target);
+    }
+  }
+  return target;
+}
+
+/**
+ * copy properties from the source object to the
+ * target object.
+ *
+ * @param  {*} `value`
+ * @param  {String} `key`
+ */
+
+function copy(value, key) {
+  this[key] = value;
+}
+
+/**
+ * Expose `mixin`
+ */
+
+module.exports = mixin;
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports) {
+
+/*!
+ * Determine if an object is a Buffer
+ *
+ * @author   Feross Aboukhadijeh <https://feross.org>
+ * @license  MIT
+ */
+
+// The _isBuffer check is for Safari 5-7 support, because it's missing
+// Object.prototype.constructor. Remove this eventually
+module.exports = function (obj) {
+  return obj != null && (isBuffer(obj) || isSlowBuffer(obj) || !!obj._isBuffer)
+}
+
+function isBuffer (obj) {
+  return !!obj.constructor && typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
+}
+
+// For Node v0.10 support. Remove this eventually.
+function isSlowBuffer (obj) {
+  return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
+}
+
+
+/***/ }),
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * for-own <https://github.com/jonschlinkert/for-own>
+ *
+ * Copyright (c) 2014-2017, Jon Schlinkert.
+ * Released under the MIT License.
+ */
+
+
+
+var forIn = __webpack_require__(7);
+var hasOwn = Object.prototype.hasOwnProperty;
+
+module.exports = function forOwn(obj, fn, thisArg) {
+  forIn(obj, function(val, key) {
+    if (hasOwn.call(obj, key)) {
+      return fn.call(thisArg, obj[key], key, obj);
+    }
+  });
+};
+
+
+/***/ }),
+/* 34 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.information = undefined;
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; /**
+                                                                                                                                                                                                                                                                   * @jsx h
+                                                                                                                                                                                                                                                                   */
+
+var _preact = __webpack_require__(0);
+
+var _InformationComponent = __webpack_require__(35);
+
+var _InformationComponent2 = _interopRequireDefault(_InformationComponent);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var information = exports.information = function information(_ref) {
+    var target = _ref.target,
+        classNames = _ref.classNames,
+        template = _ref.template,
+        formatData = _ref.formatData;
+
+    return (0, _preact.h)(_InformationComponent2.default, {
+        target: target,
+        classNames: _extends({}, _InformationComponent2.default.defaultProps.classNames, classNames),
+        template: template,
+        formatData: formatData
+    });
+};
+
+/***/ }),
+/* 35 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _preact = __webpack_require__(0);
+
+var _Template = __webpack_require__(3);
+
+var _Template2 = _interopRequireDefault(_Template);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+
+/**
+ * Result Information Component
+ */
+var InformationComponent = function (_Component) {
+    _inherits(InformationComponent, _Component);
+
+    function InformationComponent() {
+        _classCallCheck(this, InformationComponent);
+
+        return _possibleConstructorReturn(this, (InformationComponent.__proto__ || Object.getPrototypeOf(InformationComponent)).apply(this, arguments));
+    }
+
+    _createClass(InformationComponent, [{
+        key: 'render',
+        value: function render() {
+            var _props = this.props,
+                containerClassName = _props.classNames.container,
+                containerTemplate = _props.template.container,
+                formatData = _props.formatData,
+                data = _props.data;
+
+            /**
+             * Data accessible to the template
+             */
+
+            var reducedTemplateData = {
+                total_hits: parseInt(data.total_hits).toLocaleString('de-DE'),
+                total_items: parseInt(data.total_items).toLocaleString('de-DE')
+            };
+
+            var formattedTemplateData = formatData(reducedTemplateData);
+
+            return (0, _preact.h)(_Template2.default, {
+                template: containerTemplate,
+                data: formattedTemplateData,
+                className: 'as-information ' + containerClassName
+            });
+        }
+    }]);
+
+    return InformationComponent;
+}(_preact.Component);
+
+InformationComponent.defaultProps = {
+    classNames: {
+        container: ''
+    },
+    template: {
+        container: 'Found {{total_hits}}/{{total_items}}'
+    },
+    formatData: function formatData(data) {
+        return data;
+    }
+};
+
+exports.default = InformationComponent;
+
+/***/ }),
+/* 36 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.result = undefined;
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; /**
+                                                                                                                                                                                                                                                                   * @jsx h
+                                                                                                                                                                                                                                                                   */
+
+var _preact = __webpack_require__(0);
+
+var _ResultComponent = __webpack_require__(37);
+
+var _ResultComponent2 = _interopRequireDefault(_ResultComponent);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Result
+ *
+ * @param target
+ * @param itemsPerPage
+ * @param promote
+ * @param exclude
+ * @param highlightsEnabled
+ * @param classNames
+ * @param template
+ * @param formatData
+ * @returns {XML}
+ */
+var result = exports.result = function result(_ref) {
+    var target = _ref.target,
+        itemsPerPage = _ref.itemsPerPage,
+        promote = _ref.promote,
+        exclude = _ref.exclude,
+        highlightsEnabled = _ref.highlightsEnabled,
+        classNames = _ref.classNames,
+        template = _ref.template,
+        formatData = _ref.formatData;
+
+    return (0, _preact.h)(_ResultComponent2.default, {
+        target: target,
+        itemsPerPage: itemsPerPage,
+        promote: promote,
+        exclude: exclude,
+        highlightsEnabled: highlightsEnabled,
+        classNames: _extends({}, _ResultComponent2.default.defaultProps.classNames, classNames),
+        template: _extends({}, _ResultComponent2.default.defaultProps.template, template),
+        formatData: formatData
+    });
+};
+
+/***/ }),
+/* 37 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _preact = __webpack_require__(0);
+
+var _Template = __webpack_require__(3);
+
+var _Template2 = _interopRequireDefault(_Template);
+
+var _defaultTemplates = __webpack_require__(38);
+
+var _resultActions = __webpack_require__(39);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+/**
+ * Actions
+ */
+
+
+/**
+ * Result Component
+ */
+var ResultComponent = function (_Component) {
+    _inherits(ResultComponent, _Component);
+
+    function ResultComponent() {
+        _classCallCheck(this, ResultComponent);
+
+        return _possibleConstructorReturn(this, (ResultComponent.__proto__ || Object.getPrototypeOf(ResultComponent)).apply(this, arguments));
+    }
+
+    _createClass(ResultComponent, [{
+        key: "componentWillMount",
+        value: function componentWillMount() {
+            /**
+             * Define initial Setup on component mounting
+             * that refers to the store configuration
+             * and affects other components
+             */
+
+            var _props = this.props,
+                environmentId = _props.environmentId,
+                itemsPerPage = _props.itemsPerPage,
+                promote = _props.promote,
+                exclude = _props.exclude,
+                highlightsEnabled = _props.highlightsEnabled,
+                currentQuery = _props.currentQuery,
+                client = _props.client;
+
+            /**
+             * Dispatch action
+             */
+
+            (0, _resultActions.changeItemsPerResultPageSetup)({
+                itemsPerPage: itemsPerPage,
+                highlightsEnabled: highlightsEnabled,
+                promotedUUIDs: promote,
+                excludedUUIDs: exclude
+            }, {
+                environmentId: environmentId,
+                currentQuery: currentQuery,
+                client: client
+            });
+        }
+    }, {
+        key: "render",
+        value: function render() {
+            var _props2 = this.props,
+                dirty = _props2.dirty,
+                _props2$classNames = _props2.classNames,
+                containerClassName = _props2$classNames.container,
+                itemsListClassName = _props2$classNames.itemsList,
+                placeholderClassName = _props2$classNames.placeholder,
+                _props2$template = _props2.template,
+                itemsListTemplate = _props2$template.itemsList,
+                placeholderTemplate = _props2$template.placeholder,
+                formatData = _props2.formatData,
+                data = _props2.data;
+
+            /**
+             * Data accessible to the template
+             */
+
+            var reducedTemplateData = {
+                query: data ? data.query.q : '',
+                items: data ? data.items : []
+            };
+
+            /**
+             * Format each item data
+             */
+            var formattedTemplateData = _extends({}, reducedTemplateData, {
+                items: reducedTemplateData.items ? reducedTemplateData.items.map(function (item) {
+                    return formatData(item);
+                }) : []
+            });
+
+            return (0, _preact.h)(
+                "div",
+                { className: "as-result " + containerClassName },
+                placeholderTemplate && dirty ? (0, _preact.h)(_Template2.default, {
+                    template: placeholderTemplate,
+                    className: "as-result__placeholder " + placeholderClassName
+                }) : (0, _preact.h)(_Template2.default, {
+                    template: itemsListTemplate,
+                    data: formattedTemplateData,
+                    className: "as-result__itemsList " + itemsListClassName
+                })
+            );
+        }
+    }]);
+
+    return ResultComponent;
+}(_preact.Component);
+
+ResultComponent.defaultProps = {
+    itemsPerPage: 10,
+    highlightsEnabled: false,
+    promote: [],
+    exclude: [],
+    classNames: {
+        container: '',
+        itemsList: '',
+        placeholder: ''
+    },
+    template: {
+        itemsList: _defaultTemplates.defaultItemsListTemplate,
+        placeholder: null
+    },
+    formatData: function formatData(data) {
+        return data;
+    }
+};
+
+exports.default = ResultComponent;
+
+/***/ }),
+/* 38 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+var defaultItemsListTemplate = exports.defaultItemsListTemplate = "\n    <ul>\n    {{#items}}\n        <li class=\"as-result__item\">\n            <strong>Uuid:</strong> {{uuid.type}} - {{uuid.id}} <br />\n            <strong>Metadata:</strong> {{metadata}} <br />\n            <strong>Indexed metadata:</strong> {{indexed_metadata}}\n        </li>\n    {{/items}}\n    </ul>\n    {{^items}}No result{{/items}}\n";
+
+/***/ }),
+/* 39 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.changeItemsPerResultPageSetup = changeItemsPerResultPageSetup;
+
+var _cloneDeep = __webpack_require__(4);
+
+var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
+
+var _container = __webpack_require__(1);
+
+var _container2 = _interopRequireDefault(_container);
+
+var _constants = __webpack_require__(2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } } /**
+                                                                                                                                                                                                     * Search actions
+                                                                                                                                                                                                     */
+
+
+/**
+ * Define items per page on result
+ *
+ * This action is triggered when mounting a component
+ * receives two parameters:
+ *   @param queryOptions -> given new query options
+ *   @param appOptions   -> current application options
+ *
+ * Finally dispatches an event with the modified query.
+ *   @returns {{
+ *     type: string,
+ *     payload: {
+ *        updatedQuery
+ *     }
+ *   }}
+ */
+function changeItemsPerResultPageSetup(_ref, _ref2) {
+    var itemsPerPage = _ref.itemsPerPage,
+        highlightsEnabled = _ref.highlightsEnabled,
+        promotedUUIDs = _ref.promotedUUIDs,
+        excludedUUIDs = _ref.excludedUUIDs;
+    var environmentId = _ref2.environmentId,
+        currentQuery = _ref2.currentQuery,
+        client = _ref2.client;
+
+    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+
+    /**
+     * Set result size
+     */
+    clonedQuery.setResultSize(itemsPerPage);
+
+    /**
+     * Enabling highlights on query result
+     */
+    if (highlightsEnabled) {
+        clonedQuery.enableHighlights();
+    }
+
+    /**
+     * Promoted uuids
+     */
+    if (promotedUUIDs.length !== 0) {
+        clonedQuery.promoteUUIDs.apply(clonedQuery, _toConsumableArray(promotedUUIDs.map(function (uuid) {
+            return client.createObject.uuid(uuid.id, uuid.type);
+        })));
+    }
+
+    /**
+     * excluded uuids
+     */
+    if (excludedUUIDs.length !== 0) {
+        clonedQuery.excludeUUIDs.apply(clonedQuery, _toConsumableArray(excludedUUIDs.map(function (uuid) {
+            return client.createObject.uuid(uuid.id, uuid.type);
+        })));
+    }
+
+    var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
+    dispatcher.dispatch({
+        type: 'UPDATE_APISEARCH_SETUP',
+        payload: {
+            updatedQuery: clonedQuery
+        }
+    });
+}
+
+/***/ }),
+/* 40 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.multipleFilter = undefined;
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; /**
+                                                                                                                                                                                                                                                                   * @jsx h
+                                                                                                                                                                                                                                                                   */
+
+var _preact = __webpack_require__(0);
+
+var _MultipleFilterComponent = __webpack_require__(41);
+
+var _MultipleFilterComponent2 = _interopRequireDefault(_MultipleFilterComponent);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Multiple filter
+ *
+ * @param target
+ * @param name
+ * @param filterField
+ * @param aggregationField
+ * @param applicationType
+ * @param fetchLimit
+ * @param viewLimit
+ * @param sortBy
+ * @param classNames
+ * @param template
+ * @param formatData
+ * @returns {XML}
+ */
+var multipleFilter = exports.multipleFilter = function multipleFilter(_ref) {
+    var target = _ref.target,
+        name = _ref.name,
+        filterField = _ref.filterField,
+        aggregationField = _ref.aggregationField,
+        applicationType = _ref.applicationType,
+        fetchLimit = _ref.fetchLimit,
+        viewLimit = _ref.viewLimit,
+        sortBy = _ref.sortBy,
+        classNames = _ref.classNames,
+        template = _ref.template,
+        formatData = _ref.formatData;
+
+    return (0, _preact.h)(_MultipleFilterComponent2.default, {
+        target: target,
+        name: name,
+        filterField: filterField,
+        aggregationField: aggregationField,
+        applicationType: applicationType,
+        fetchLimit: fetchLimit,
+        viewLimit: viewLimit,
+        sortBy: sortBy,
+        classNames: _extends({}, _MultipleFilterComponent2.default.defaultProps.classNames, classNames),
+        template: _extends({}, _MultipleFilterComponent2.default.defaultProps.template, template),
+        formatData: formatData
+    });
+};
+
+/***/ }),
+/* 41 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _preact = __webpack_require__(0);
+
+var _multipleFilterActions = __webpack_require__(42);
+
+var _helpers = __webpack_require__(43);
+
+var _Template = __webpack_require__(3);
+
+var _Template2 = _interopRequireDefault(_Template);
+
+var _ShowMoreComponent = __webpack_require__(44);
+
+var _ShowMoreComponent2 = _interopRequireDefault(_ShowMoreComponent);
+
+var _defaultTemplates = __webpack_require__(45);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+
+/**
+ * Filter Component
+ */
+var MultipleFilterComponent = function (_Component) {
+    _inherits(MultipleFilterComponent, _Component);
+
+    function MultipleFilterComponent() {
+        _classCallCheck(this, MultipleFilterComponent);
+
+        var _this = _possibleConstructorReturn(this, (MultipleFilterComponent.__proto__ || Object.getPrototypeOf(MultipleFilterComponent)).call(this));
+
+        _this.handleClick = function (selectedFilter) {
+            var _this$props = _this.props,
+                environmentId = _this$props.environmentId,
+                filterName = _this$props.name,
+                filterField = _this$props.filterField,
+                aggregationField = _this$props.aggregationField,
+                applicationType = _this$props.applicationType,
+                sortBy = _this$props.sortBy,
+                fetchLimit = _this$props.fetchLimit,
+                currentQuery = _this$props.currentQuery,
+                client = _this$props.client,
+                aggregations = _this$props.data.aggregations.aggregations;
+
+
+            var activeElements = aggregations[filterName].active_elements;
+            var currentActiveFilterValues = typeof activeElements !== 'undefined' ? activeElements : [];
+
+            /**
+             * Dispatch filter action
+             */
+            (0, _multipleFilterActions.filterAction)({
+                filterName: filterName,
+                filterField: filterField,
+                applicationType: applicationType,
+                sortBy: sortBy,
+                fetchLimit: fetchLimit,
+                aggregationField: aggregationField ? aggregationField : filterField,
+
+                filterValues: (0, _helpers.manageCurrentFilterItems)(selectedFilter, currentActiveFilterValues)
+            }, {
+                environmentId: environmentId,
+                currentQuery: currentQuery,
+                client: client
+            });
+        };
+
+        _this.handleShowMore = function () {
+            var _this$state = _this.state,
+                activeAggregations = _this$state.activeAggregations,
+                currentAggregations = _this$state.currentAggregations;
+
+
+            var viewLimit = activeAggregations.length + currentAggregations.length;
+            _this.setState({ viewLimit: viewLimit });
+        };
+
+        _this.handleShowLess = function () {
+            var viewLimit = _this.props.viewLimit;
+
+            _this.setState({ viewLimit: viewLimit });
+        };
+
+        _this.state = {
+            viewLimit: 0,
+            activeAggregations: [],
+            currentAggregations: []
+        };
+        return _this;
+    }
+
+    _createClass(MultipleFilterComponent, [{
+        key: "componentWillMount",
+        value: function componentWillMount() {
+            var _props = this.props,
+                environmentId = _props.environmentId,
+                filterName = _props.name,
+                filterField = _props.filterField,
+                aggregationField = _props.aggregationField,
+                applicationType = _props.applicationType,
+                sortBy = _props.sortBy,
+                fetchLimit = _props.fetchLimit,
+                viewLimit = _props.viewLimit,
+                currentQuery = _props.currentQuery;
+
+            /**
+             * Set view items limit
+             */
+
+            var isViewLimitProperlySet = viewLimit && viewLimit < fetchLimit;
+            this.setState({
+                viewLimit: isViewLimitProperlySet ? viewLimit : fetchLimit
+            });
+
+            /**
+             * Dispatch action
+             */
+            (0, _multipleFilterActions.aggregationSetup)({
+                filterName: filterName,
+                applicationType: applicationType,
+                sortBy: sortBy,
+                fetchLimit: fetchLimit,
+                aggregationField: aggregationField ? aggregationField : filterField
+            }, {
+                environmentId: environmentId,
+                currentQuery: currentQuery
+            });
+        }
+    }, {
+        key: "componentWillReceiveProps",
+        value: function componentWillReceiveProps(props) {
+            var filterName = props.name,
+                aggregations = props.data.aggregations.aggregations;
+
+
+            if (typeof aggregations[filterName] !== 'undefined') {
+                /**
+                 * Getting aggregation from aggregations
+                 */
+                var aggregation = aggregations[filterName];
+                var counters = aggregation.counters ? aggregation.counters : [];
+
+                this.setState({
+                    /**
+                     * Current used aggregations
+                     */
+                    activeAggregations: counters.filter(function (item) {
+                        return item.used;
+                    }),
+                    /**
+                     * Current inactive aggregations
+                     */
+                    currentAggregations: counters.filter(function (item) {
+                        return null === item.used;
+                    })
+                });
+            }
+        }
+    }, {
+        key: "render",
+        value: function render() {
+            var _this2 = this;
+
+            var _props2 = this.props,
+                viewLimit = _props2.viewLimit,
+                fetchLimit = _props2.fetchLimit,
+                _props2$classNames = _props2.classNames,
+                containerClassName = _props2$classNames.container,
+                topClassName = _props2$classNames.top,
+                itemsListClassName = _props2$classNames.itemsList,
+                itemClassName = _props2$classNames.item,
+                activeClassName = _props2$classNames.active,
+                showMoreContainerClassName = _props2$classNames.showMoreContainer,
+                _props2$template = _props2.template,
+                topTemplate = _props2$template.top,
+                itemTemplate = _props2$template.item,
+                showMoreTemplate = _props2$template.showMore,
+                showLessTemplate = _props2$template.showLess,
+                formatData = _props2.formatData;
+
+            /**
+             * Get aggregation items
+             */
+
+            var allItems = [].concat(_toConsumableArray(this.state.activeAggregations), _toConsumableArray(this.state.currentAggregations));
+            var allItemsLength = allItems.length;
+            var items = allItems.slice(0, this.state.viewLimit);
+
+            /**
+             * Check available view limit
+             */
+            var isViewLimitProperlySet = viewLimit && viewLimit < fetchLimit;
+
+            return (0, _preact.h)(
+                "div",
+                { className: "as-multipleFilter " + containerClassName },
+                (0, _preact.h)(_Template2.default, {
+                    template: topTemplate,
+                    className: "as-multipleFilter__top " + topClassName
+                }),
+                (0, _preact.h)(
+                    "div",
+                    { className: "as-multipleFilter__itemsList " + itemsListClassName },
+                    items.map(function (item) {
+                        var reducedTemplateData = {
+                            n: parseInt(item.n).toLocaleString('de-DE'),
+                            isActive: item.used,
+                            values: item.values
+                        };
+                        var formattedTemplateData = formatData(reducedTemplateData);
+
+                        return (0, _preact.h)(
+                            "div",
+                            {
+                                className: "as-multipleFilter__item " + (itemClassName + " ") + ("" + (item.used ? activeClassName : '')),
+                                onClick: function onClick() {
+                                    return _this2.handleClick(item.values.id);
+                                }
+                            },
+                            (0, _preact.h)(_Template2.default, {
+                                template: itemTemplate,
+                                data: formattedTemplateData
+                            })
+                        );
+                    })
+                ),
+                isViewLimitProperlySet ? (0, _preact.h)(_ShowMoreComponent2.default, {
+                    allItemsLength: allItemsLength,
+                    currentLimit: this.state.viewLimit,
+                    handleShowMore: this.handleShowMore,
+                    handleShowLess: this.handleShowLess,
+                    showMoreContainerClassName: showMoreContainerClassName,
+                    showMoreTemplate: showMoreTemplate,
+                    showLessTemplate: showLessTemplate
+                }) : null
+            );
+        }
+    }]);
+
+    return MultipleFilterComponent;
+}(_preact.Component);
+
+MultipleFilterComponent.defaultProps = {
+    aggregationField: null,
+    applicationType: 8, // FILTER_MUST_ALL
+    fetchLimit: 10,
+    viewLimit: null,
+    sortBy: ['_term', 'desc'],
+    classNames: {
+        container: '',
+        top: '',
+        itemsList: '',
+        item: '',
+        active: 'as-multipleFilter__item--active',
+        showMoreContainer: ''
+    },
+    template: {
+        top: null,
+        item: _defaultTemplates.defaultItemTemplate,
+        showMore: '+ Show more',
+        showLess: '- Show less'
+    },
+    formatData: function formatData(data) {
+        return data;
+    }
+};
+
+exports.default = MultipleFilterComponent;
+
+/***/ }),
+/* 42 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.aggregationSetup = aggregationSetup;
+exports.filterAction = filterAction;
+
+var _cloneDeep = __webpack_require__(4);
+
+var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
+
+var _container = __webpack_require__(1);
+
+var _container2 = _interopRequireDefault(_container);
+
+var _constants = __webpack_require__(2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Define aggregations setup
+ *
+ * This setup action is triggered when mounting a component
+ * receives two parameters:
+ *   @param queryOptions -> query given options
+ *   @param appOptions   -> current application options
+ *
+ * Finally dispatches an event with the modified query.
+ *   @returns {{
+ *     type: string,
+ *     payload: {
+ *        updatedQuery
+ *     }
+ *   }}
+ */
+function aggregationSetup(_ref, _ref2) {
+    var filterName = _ref.filterName,
+        aggregationField = _ref.aggregationField,
+        applicationType = _ref.applicationType,
+        sortBy = _ref.sortBy,
+        fetchLimit = _ref.fetchLimit;
+    var environmentId = _ref2.environmentId,
+        currentQuery = _ref2.currentQuery;
+
+    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+
+    clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy, fetchLimit);
+
+    var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + "__" + environmentId);
+    dispatcher.dispatch({
+        type: 'UPDATE_APISEARCH_SETUP',
+        payload: {
+            updatedQuery: clonedQuery
+        }
+    });
+}
+
+/**
+ * Filter action
+ *
+ * This setup action is triggered when mounting a component
+ * receives two parameters:
+ *   @param queryOptions -> query given options
+ *   @param appOptions   -> current application options
+ *
+ * Finally dispatches an event with the modified query.
+ *   @returns {{
+ *     type: string,
+ *     payload: {
+ *        updatedQuery,
+ *        result
+ *     }
+ *   }}
+ */
+/**
+ * Multiple filter actions
+ */
+function filterAction(_ref3, _ref4) {
+    var filterName = _ref3.filterName,
+        filterField = _ref3.filterField,
+        aggregationField = _ref3.aggregationField,
+        filterValues = _ref3.filterValues,
+        applicationType = _ref3.applicationType,
+        sortBy = _ref3.sortBy,
+        fetchLimit = _ref3.fetchLimit;
+    var environmentId = _ref4.environmentId,
+        currentQuery = _ref4.currentQuery,
+        client = _ref4.client;
+
+    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+
+    clonedQuery.filterBy(filterName, filterField, filterValues, applicationType, false, sortBy);
+    clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy, fetchLimit);
+    clonedQuery.setPage(1);
+
+    client.search(clonedQuery, function (result, error) {
+        if (error) return;
+
+        var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + "__" + environmentId);
+        dispatcher.dispatch({
+            type: 'RENDER_FETCHED_DATA',
+            payload: {
+                updatedQuery: clonedQuery,
+                result: result
+            }
+        });
+    });
+}
+
+/***/ }),
+/* 43 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.manageCurrentFilterItems = manageCurrentFilterItems;
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+/**
+ * Manage filter items
+ *
+ * If an item is on the list, remove it
+ * else, add it!
+ *
+ * @param selectedItem
+ * @param currentItems
+ * @returns {[null,null]}
+ */
+function manageCurrentFilterItems(selectedItem, currentItems) {
+    var isElementActive = currentItems.some(function (item) {
+        return item === selectedItem;
+    });
+
+    if (isElementActive) {
+        return currentItems.filter(function (item) {
+            return item !== selectedItem;
+        });
+    } else {
+        return [].concat(_toConsumableArray(currentItems), [selectedItem]);
+    }
+}
+
+/***/ }),
+/* 44 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _preact = __webpack_require__(0);
+
+var _Template = __webpack_require__(3);
+
+var _Template2 = _interopRequireDefault(_Template);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Show more component
+ *
+ * Provides two items
+ *   -> Show more element
+ *   -> Show less element
+ */
+/**
+ * @jsx h
+ */
+var ShowMoreComponent = function ShowMoreComponent(_ref) {
+    var allItemsLength = _ref.allItemsLength,
+        currentLimit = _ref.currentLimit,
+        handleShowMore = _ref.handleShowMore,
+        handleShowLess = _ref.handleShowLess,
+        showMoreContainerClassName = _ref.showMoreContainerClassName,
+        showMoreTemplate = _ref.showMoreTemplate,
+        showLessTemplate = _ref.showLessTemplate;
+
+    return allItemsLength > currentLimit ? (0, _preact.h)(
+        "div",
+        { className: "as-showMore " + showMoreContainerClassName,
+            onClick: handleShowMore
+        },
+        (0, _preact.h)(_Template2.default, {
+            template: showMoreTemplate,
+            className: "as-showMore--more"
+        })
+    ) : allItemsLength === currentLimit ? (0, _preact.h)(
+        "div",
+        { className: "as-showMore " + showMoreContainerClassName,
+            onClick: handleShowLess
+        },
+        (0, _preact.h)(_Template2.default, {
+            template: showLessTemplate,
+            className: "as-showMore--less"
+        })
+    ) : null;
+};
+
+exports.default = ShowMoreComponent;
+
+/***/ }),
+/* 45 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+var defaultItemTemplate = exports.defaultItemTemplate = "\n    <input \n        type=\"checkbox\" \n        id=\"filter_{{values.id}}\"\n        class=\"as-multipleFilter__itemCheckbox\" \n        {{#isActive}}checked=\"checked\"{{/isActive}}\n    >\n    <label \n        class=\"as-multipleFilter__itemName\"\n        for=\"filter_{{values.id}}\"\n    >\n        {{{values.name}}}\n    </label>\n    <span class=\"as-multipleFilter__itemNumber\">\n        {{n}}\n    </span>\n";
+
+/***/ }),
+/* 46 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.simpleSearch = undefined;
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; /**
+                                                                                                                                                                                                                                                                   * @jsx h
+                                                                                                                                                                                                                                                                   */
+
+var _preact = __webpack_require__(0);
+
+var _SimpleSearchComponent = __webpack_require__(47);
+
+var _SimpleSearchComponent2 = _interopRequireDefault(_SimpleSearchComponent);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Simple search
+ *
+ * @param target
+ * @param placeholder
+ * @param startSearchOn
+ * @param autofocus
+ * @param classNames
+ * @param template
+ * @returns {XML}
+ */
+var simpleSearch = exports.simpleSearch = function simpleSearch(_ref) {
+    var target = _ref.target,
+        placeholder = _ref.placeholder,
+        startSearchOn = _ref.startSearchOn,
+        autofocus = _ref.autofocus,
+        classNames = _ref.classNames,
+        template = _ref.template;
+
+    return (0, _preact.h)(_SimpleSearchComponent2.default, {
+        target: target,
+        placeholder: placeholder,
+        autofocus: autofocus,
+        startSearchOn: startSearchOn,
+        classNames: _extends({}, _SimpleSearchComponent2.default.defaultProps.classNames, classNames),
+        template: _extends({}, _SimpleSearchComponent2.default.defaultProps.template, template)
+    });
+};
+
+/***/ }),
+/* 47 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _preact = __webpack_require__(0);
+
+var _simpleSearchActions = __webpack_require__(48);
+
+var _Template = __webpack_require__(3);
+
+var _Template2 = _interopRequireDefault(_Template);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+/**
+ * SimpleSearch Component
+ */
+var SimpleSearchComponent = function (_Component) {
+    _inherits(SimpleSearchComponent, _Component);
+
+    function SimpleSearchComponent() {
+        var _ref;
+
+        var _temp, _this, _ret;
+
+        _classCallCheck(this, SimpleSearchComponent);
+
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+        }
+
+        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = SimpleSearchComponent.__proto__ || Object.getPrototypeOf(SimpleSearchComponent)).call.apply(_ref, [this].concat(args))), _this), _this.handleSearch = function (e) {
+            var _this$props = _this.props,
+                startSearchOn = _this$props.startSearchOn,
+                environmentId = _this$props.environmentId,
+                currentQuery = _this$props.currentQuery,
+                client = _this$props.client;
+
+            /**
+             * Search when string is bigger than {startSearchOn}
+             */
+
+            if (e.target.value.length < startSearchOn) return;
+
+            /**
+             * Dispatch input search action
+             */
+            (0, _simpleSearchActions.simpleSearchAction)({
+                queryText: e.target.value
+            }, {
+                environmentId: environmentId,
+                currentQuery: currentQuery,
+                client: client
+            });
+        }, _this.clearSearch = function () {
+            var _this$props2 = _this.props,
+                environmentId = _this$props2.environmentId,
+                currentQuery = _this$props2.currentQuery,
+                client = _this$props2.client;
+
+
+            (0, _simpleSearchActions.simpleSearchAction)({
+                queryText: ''
+            }, {
+                environmentId: environmentId,
+                currentQuery: currentQuery,
+                client: client
+            });
+        }, _temp), _possibleConstructorReturn(_this, _ret);
+    }
+
+    _createClass(SimpleSearchComponent, [{
+        key: "render",
+        value: function render() {
+            var _props = this.props,
+                placeholder = _props.placeholder,
+                autofocus = _props.autofocus,
+                _props$classNames = _props.classNames,
+                containerClassName = _props$classNames.container,
+                inputClassName = _props$classNames.input,
+                clearSearchClassName = _props$classNames.clearSearch,
+                clearSearchTemplate = _props.template.clearSearch,
+                currentQueryText = _props.currentQuery.q;
+
+
+            return (0, _preact.h)(
+                "div",
+                { className: "as-simpleSearch " + containerClassName },
+                (0, _preact.h)("input", {
+                    type: "text",
+                    className: "as-simpleSearch__input " + inputClassName,
+                    autofocus: autofocus,
+                    placeholder: placeholder,
+                    onInput: this.handleSearch,
+                    value: currentQueryText
+                }),
+                currentQueryText.length !== 0 ? (0, _preact.h)(
+                    "div",
+                    {
+                        className: "as-simpleSearch__clearSearch " + clearSearchClassName,
+                        onClick: this.clearSearch
+                    },
+                    (0, _preact.h)(_Template2.default, { template: clearSearchTemplate })
+                ) : null
+            );
+        }
+    }]);
+
+    return SimpleSearchComponent;
+}(_preact.Component);
+
+SimpleSearchComponent.defaultProps = {
+    placeholder: '',
+    autofocus: false,
+    startSearchOn: 0,
+    classNames: {
+        container: '',
+        input: '',
+        clearSearch: ''
+    },
+    template: {
+        clearSearch: 'x'
+    }
+};
+
+exports.default = SimpleSearchComponent;
+
+/***/ }),
+/* 48 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.simpleSearchAction = simpleSearchAction;
+
+var _cloneDeep = __webpack_require__(4);
+
+var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
+
+var _container = __webpack_require__(1);
+
+var _container2 = _interopRequireDefault(_container);
+
+var _constants = __webpack_require__(2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Keyup simple search action
+ *
+ * This action is triggered when a text input changes
+ * receives two parameters:
+ *   @param queryOptions -> query given options
+ *   @param appOptions   -> current application options
+ *
+ * Finally dispatches an event with the search result and
+ * the modified query.
+ *   @returns {{
+ *     type: string,
+ *     payload: {
+ *        result,
+ *        updatedQuery
+ *     }
+ *   }}
+ */
+function simpleSearchAction(_ref, _ref2) {
+    var queryText = _ref.queryText;
+    var environmentId = _ref2.environmentId,
+        currentQuery = _ref2.currentQuery,
+        client = _ref2.client;
+
+    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+
+    clonedQuery.setQueryText(queryText).setPage(1);
+
+    var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
+    client.search(clonedQuery, function (result, error) {
+        if (error) return;
+
+        dispatcher.dispatch({
+            type: 'RENDER_FETCHED_DATA',
+            payload: {
+                result: result,
+                updatedQuery: clonedQuery
+            }
+        });
+    });
+} /**
+   * Search actions
+   */
+
+/***/ }),
+/* 49 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.sortBy = undefined;
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; /**
+                                                                                                                                                                                                                                                                   * @jsx h
+                                                                                                                                                                                                                                                                   */
+
+var _preact = __webpack_require__(0);
+
+var _SortByComponent = __webpack_require__(50);
+
+var _SortByComponent2 = _interopRequireDefault(_SortByComponent);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Sort By
+ *
+ * @param target
+ * @param classNames
+ * @param options
+ * @returns {XML}
+ */
+var sortBy = exports.sortBy = function sortBy(_ref) {
+    var target = _ref.target,
+        classNames = _ref.classNames,
+        options = _ref.options;
+
+    return (0, _preact.h)(_SortByComponent2.default, {
+        target: target,
+        classNames: _extends({}, _SortByComponent2.default.defaultProps.classNames, classNames),
+        options: options
+    });
+};
+
+/***/ }),
+/* 50 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _preact = __webpack_require__(0);
+
+var _sortByActions = __webpack_require__(51);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+
+/**
+ * SortBy Filter Component
+ */
+var SortByComponent = function (_Component) {
+    _inherits(SortByComponent, _Component);
+
+    function SortByComponent() {
+        var _ref;
+
+        var _temp, _this, _ret;
+
+        _classCallCheck(this, SortByComponent);
+
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+        }
+
+        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = SortByComponent.__proto__ || Object.getPrototypeOf(SortByComponent)).call.apply(_ref, [this].concat(args))), _this), _this.handleChange = function (e) {
+            var _this$props = _this.props,
+                environmentId = _this$props.environmentId,
+                currentQuery = _this$props.currentQuery,
+                client = _this$props.client;
+
+            /**
+             * Dispatch action
+             */
+
+            (0, _sortByActions.onChangeSearchAction)({
+                selectedOption: e.target.value
+            }, {
+                environmentId: environmentId,
+                currentQuery: currentQuery,
+                client: client
+            });
+        }, _temp), _possibleConstructorReturn(_this, _ret);
+    }
+
+    _createClass(SortByComponent, [{
+        key: 'shouldComponentUpdate',
+        value: function shouldComponentUpdate() {
+            return false;
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var _props = this.props,
+                _props$classNames = _props.classNames,
+                containerClassName = _props$classNames.container,
+                selectClassName = _props$classNames.select,
+                options = _props.options;
+
+
+            return (0, _preact.h)(
+                'div',
+                { className: 'as-sortBy ' + containerClassName },
+                (0, _preact.h)(
+                    'select',
+                    {
+                        className: 'as-sortBy__selector ' + selectClassName,
+                        onChange: this.handleChange
+                    },
+                    options.map(function (option) {
+                        return (0, _preact.h)(
+                            'option',
+                            { value: option.value },
+                            option.name
+                        );
+                    })
+                )
+            );
+        }
+    }]);
+
+    return SortByComponent;
+}(_preact.Component);
+
+SortByComponent.defaultProps = {
+    classNames: {
+        container: '',
+        select: ''
+    }
+};
+
+exports.default = SortByComponent;
+
+/***/ }),
+/* 51 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.onChangeSearchAction = onChangeSearchAction;
+
+var _cloneDeep = __webpack_require__(4);
+
+var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
+
+var _container = __webpack_require__(1);
+
+var _container2 = _interopRequireDefault(_container);
+
+var _constants = __webpack_require__(2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; } /**
+                                                                                                                                                                                                                   * SortBy actions
+                                                                                                                                                                                                                   */
+
+
+/**
+ * On change action
+ *
+ * This action is triggered when a sortBy filter changes
+ * receives two parameters:
+ *   @param queryOptions -> query given options
+ *   @param appOptions   -> current application options
+ *
+ * Finally dispatches an event with the search result and
+ * the modified query.
+ *   @returns {{
+ *     type: string,
+ *     payload: {
+ *        result,
+ *        updatedQuery
+ *     }
+ *   }}
+ */
+function onChangeSearchAction(_ref, _ref2) {
+    var selectedOption = _ref.selectedOption;
+    var environmentId = _ref2.environmentId,
+        currentQuery = _ref2.currentQuery,
+        client = _ref2.client;
+
+    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+    var filterData = splitQueryValue(selectedOption);
+
+    clonedQuery.sortBy(_defineProperty({}, 'indexed_metadata.' + filterData.field, {
+        order: filterData.value
+    }));
+    clonedQuery.setPage(1);
+
+    client.search(clonedQuery, function (result, error) {
+        if (error) return;
+
+        var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
+        dispatcher.dispatch({
+            type: 'RENDER_FETCHED_DATA',
+            payload: {
+                result: result,
+                updatedQuery: clonedQuery
+            }
+        });
+    });
+}
+
+function splitQueryValue(string) {
+    var queryValue = string.split(':');
+
+    return {
+        field: queryValue[0],
+        value: queryValue[1]
+    };
+}
+
+/***/ }),
+/* 52 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.suggestedSearch = undefined;
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; /**
+                                                                                                                                                                                                                                                                   * @jsx h
+                                                                                                                                                                                                                                                                   */
+
+var _preact = __webpack_require__(0);
+
+var _SuggestedSearchComponent = __webpack_require__(53);
+
+var _SuggestedSearchComponent2 = _interopRequireDefault(_SuggestedSearchComponent);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Suggested Search
+ *
+ * @param target
+ * @param placeholder
+ * @param autofocus
+ * @param startSearchOn
+ * @param classNames
+ * @param template
+ * @returns {XML}
+ */
+var suggestedSearch = exports.suggestedSearch = function suggestedSearch(_ref) {
+    var target = _ref.target,
+        placeholder = _ref.placeholder,
+        autofocus = _ref.autofocus,
+        startSearchOn = _ref.startSearchOn,
+        classNames = _ref.classNames,
+        template = _ref.template;
+
+    return (0, _preact.h)(_SuggestedSearchComponent2.default, {
+        target: target,
+        placeholder: placeholder,
+        autofocus: autofocus,
+        startSearchOn: startSearchOn,
+        classNames: _extends({}, _SuggestedSearchComponent2.default.defaultProps.classNames, classNames),
+        template: template
+    });
+};
+
+/***/ }),
+/* 53 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _preact = __webpack_require__(0);
+
+var _helpers = __webpack_require__(54);
+
+var _suggestedSearchActions = __webpack_require__(55);
+
+var _Template = __webpack_require__(3);
+
+var _Template2 = _interopRequireDefault(_Template);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+/**
+ * Actions
+ */
+
+
+/**
+ * Suggested Search Component
+ */
+var SuggestedSearchComponent = function (_Component) {
+    _inherits(SuggestedSearchComponent, _Component);
+
+    function SuggestedSearchComponent() {
+        _classCallCheck(this, SuggestedSearchComponent);
+
+        var _this = _possibleConstructorReturn(this, (SuggestedSearchComponent.__proto__ || Object.getPrototypeOf(SuggestedSearchComponent)).call(this));
+
+        _this.handleSearch = function (e) {
+            var _this$props = _this.props,
+                startSearchOn = _this$props.startSearchOn,
+                environmentId = _this$props.environmentId,
+                currentQuery = _this$props.currentQuery,
+                client = _this$props.client;
+
+            /**
+             * Set the current query text
+             */
+
+            _this.setState({ q: e.target.value });
+
+            /**
+             * Search when string is bigger than {startSearchOn}
+             */
+            if (e.target.value.length < startSearchOn) {
+                _this.setState({ currentSuggestions: [] });
+                return;
+            }
+
+            /**
+             * Dispatch suggested search action
+             */
+            (0, _suggestedSearchActions.suggestedSearchAction)({
+                queryText: e.target.value
+            }, {
+                environmentId: environmentId,
+                currentQuery: currentQuery,
+                client: client
+            });
+        };
+
+        _this.handleSuggestionsNavigation = function (e) {
+            /**
+             * When user hits arrow down
+             */
+            if (e.code === 'ArrowDown') {
+                _this.setState({
+                    currentSuggestions: (0, _helpers.selectNextSuggestion)(_this.state.currentSuggestions),
+                    q: (0, _helpers.selectActiveSuggestion)(_this.state.currentSuggestions)
+                });
+            }
+
+            /**
+             * When user hits arrow up
+             */
+            if (e.code === 'ArrowUp') {
+                /**
+                 * Prevent cursor to go at the starting point of the line
+                 */
+                e.preventDefault();
+
+                _this.setState({
+                    currentSuggestions: (0, _helpers.selectPreviousSuggestion)(_this.state.currentSuggestions),
+                    q: (0, _helpers.selectActiveSuggestion)(_this.state.currentSuggestions)
+                });
+            }
+
+            /**
+             * When user hits enter
+             */
+            if (e.code === 'Enter') {
+                _this.setState({
+                    q: (0, _helpers.selectActiveSuggestion)(_this.state.currentSuggestions),
+                    currentSuggestions: []
+                });
+
+                var _this$props2 = _this.props,
+                    environmentId = _this$props2.environmentId,
+                    currentQuery = _this$props2.currentQuery,
+                    client = _this$props2.client;
+
+
+                (0, _suggestedSearchActions.simpleSearchAction)({
+                    queryText: _this.state.q
+                }, {
+                    environmentId: environmentId,
+                    currentQuery: currentQuery,
+                    client: client
+                });
+            }
+        };
+
+        _this.handleSuggestionClick = function (e) {
+            _this.setState({
+                q: e.target.innerText,
+                currentSuggestions: []
+            });
+
+            var _this$props3 = _this.props,
+                environmentId = _this$props3.environmentId,
+                currentQuery = _this$props3.currentQuery,
+                client = _this$props3.client;
+
+
+            (0, _suggestedSearchActions.simpleSearchAction)({
+                queryText: e.target.innerText
+            }, {
+                environmentId: environmentId,
+                currentQuery: currentQuery,
+                client: client
+            });
+        };
+
+        _this.handleSearchInputFocusedOut = function (e) {
+            /**
+             * It handles when a user focuses out the search input
+             * If is not clicking on the suggestions box
+             * The suggestions are cleared and panel closes
+             */
+            if (null === e.relatedTarget || false === e.relatedTarget.classList.contains('as-suggestedSearch__box')) {
+                _this.setState({ currentSuggestions: [] });
+            }
+
+            return false;
+        };
+
+        _this.clearSearch = function () {
+            var _this$props4 = _this.props,
+                environmentId = _this$props4.environmentId,
+                currentQuery = _this$props4.currentQuery,
+                client = _this$props4.client;
+
+
+            (0, _suggestedSearchActions.simpleSearchAction)({
+                queryText: ''
+            }, {
+                environmentId: environmentId,
+                currentQuery: currentQuery,
+                client: client
+            });
+        };
+
+        _this.state = {
+            q: '',
+            currentSuggestions: []
+        };
+        return _this;
+    }
+
+    _createClass(SuggestedSearchComponent, [{
+        key: 'componentWillReceiveProps',
+        value: function componentWillReceiveProps(props) {
+            var _this2 = this;
+
+            /**
+             * Check suggestions available
+             * if some, prepend the current query to the other suggestions array
+             * else, only append the current query to the suggestions array
+             */
+            var suggests = props.data && props.data.suggests ? [this.state.q].concat(_toConsumableArray(props.data.suggests)) : [this.state.q];
+
+            /**
+             * Prepare suggestions array
+             */
+            this.setState({
+                currentSuggestions: suggests.map(function (suggest, key) {
+                    return {
+                        isActive: 0 === key,
+                        name: suggest,
+                        htmlName: (0, _helpers.highlightSuggestion)(_this2.state.q, suggest)
+                    };
+                })
+            });
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var _this3 = this;
+
+            var _props = this.props,
+                dirty = _props.dirty,
+                placeholder = _props.placeholder,
+                autofocus = _props.autofocus,
+                _props$classNames = _props.classNames,
+                containerClassName = _props$classNames.container,
+                inputClassName = _props$classNames.input,
+                clearSearchClassName = _props$classNames.clearSearch,
+                boxClassName = _props$classNames.box,
+                suggestionClassName = _props$classNames.suggestion,
+                activeSuggestionClassName = _props$classNames.activeSuggestion,
+                clearSearchTemplate = _props.template.clearSearch,
+                currentQueryText = _props.currentQuery.q;
+            var currentSuggestions = this.state.currentSuggestions;
+
+
+            return (0, _preact.h)(
+                'div',
+                { className: 'as-suggestedSearch ' + containerClassName },
+                (0, _preact.h)('input', {
+                    type: 'text',
+                    value: currentQueryText,
+                    className: 'as-suggestedSearch__input ' + inputClassName,
+                    placeholder: placeholder,
+                    autofocus: autofocus,
+
+                    onInput: this.handleSearch,
+                    onKeyDown: this.handleSuggestionsNavigation,
+                    onBlur: this.handleSearchInputFocusedOut
+                }),
+                currentQueryText.length !== 0 ? (0, _preact.h)(
+                    'div',
+                    {
+                        className: 'as-suggestedSearch__clearSearch ' + clearSearchClassName,
+                        onClick: this.clearSearch
+                    },
+                    (0, _preact.h)(_Template2.default, { template: clearSearchTemplate })
+                ) : null,
+                (0, _preact.h)(
+                    'div',
+                    {
+                        tabIndex: '0',
+                        className: 'as-suggestedSearch__box ' + boxClassName,
+                        style: {
+                            display: currentSuggestions.length > 1 && !dirty ? 'block' : 'none'
+                        }
+                    },
+                    currentSuggestions.map(function (suggestion, key) {
+                        return 0 !== key ? (0, _preact.h)('div', {
+                            className: 'as-suggestedSearch__suggestion ' + (suggestionClassName + ' ') + ('' + (suggestion.isActive ? activeSuggestionClassName : '')),
+                            dangerouslySetInnerHTML: {
+                                __html: suggestion.htmlName
+                            },
+                            onClick: _this3.handleSuggestionClick
+                        }) : null;
+                    })
+                )
+            );
+        }
+    }]);
+
+    return SuggestedSearchComponent;
+}(_preact.Component);
+
+SuggestedSearchComponent.defaultProps = {
+    placeholder: '',
+    autofocus: false,
+    startSearchOn: 0,
+    classNames: {
+        container: '',
+        input: '',
+        clearSearch: '',
+        box: '',
+        suggestion: '',
+        activeSuggestion: 'as-suggestedSearch__suggestion--active'
+    },
+    template: {
+        clearSearch: 'x'
+    }
+};
+
+exports.default = SuggestedSearchComponent;
+
+/***/ }),
+/* 54 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.highlightSuggestion = highlightSuggestion;
+exports.selectNextSuggestion = selectNextSuggestion;
+exports.selectPreviousSuggestion = selectPreviousSuggestion;
+exports.selectActiveSuggestion = selectActiveSuggestion;
+/**
+ * Set of helpers for the suggestions widget
+ */
+
+/**
+ * Highlight text
+ */
+function highlightSuggestion(currentQueryText, suggestion) {
+    var regex = new RegExp('(' + currentQueryText + ')', 'gi');
+    var highlightedSuggestion = suggestion.replace(regex, "<em>$1</em>");
+    var sanitizedSpaces = highlightedSuggestion.split(' ');
+
+    return sanitizedSpaces.join('&nbsp;');
+}
+
+/**
+ * Mark as active the item next
+ * to the last active item
+ * on a given array of items
+ *
+ * @example when a user press a key arrow down
+ */
+function selectNextSuggestion(suggestionsArray) {
+    var currentActiveSuggestionKey = void 0;
+
+    return suggestionsArray.map(function (suggestion, key) {
+        /**
+         * Detect current active suggestion
+         */
+        if (suggestion.isActive && key + 1 < suggestionsArray.length) {
+            currentActiveSuggestionKey = key;
+            suggestion.isActive = false;
+        }
+
+        /**
+         * Modify the first suggestion next to
+         * the current active suggestion
+         */
+        if (key === currentActiveSuggestionKey + 1 && key + 1 <= suggestionsArray.length) {
+            suggestion.isActive = true;
+        }
+
+        return suggestion;
+    });
+}
+
+/**
+ * Mark as active the item previous
+ * to the last active item
+ * on a given array of items
+ *
+ * @example when a user press a key arrow up
+ */
+function selectPreviousSuggestion(suggestionsArray) {
+    /**
+     * Find the current active suggestion key
+     */
+    var currentActiveSuggestionKey = suggestionsArray.findIndex(function (suggestion) {
+        if (suggestion.isActive) {
+            return suggestion;
+        }
+    });
+
+    return suggestionsArray.map(function (suggestion, key) {
+        /**
+         * Set the current active suggestion as false
+         * if is Active AND is not the last one
+         */
+        if (suggestion.isActive && currentActiveSuggestionKey - 1 >= 0) {
+            suggestion.isActive = false;
+        }
+
+        /**
+         * Set active the suggestion previous to
+         * the current active suggestion
+         */
+        if (currentActiveSuggestionKey - 1 === key && currentActiveSuggestionKey - 1 >= 0) {
+            suggestion.isActive = true;
+        }
+
+        return suggestion;
+    });
+}
+
+/**
+ * Return the active item of an array
+ */
+function selectActiveSuggestion(suggestionsArray) {
+    var selectedSuggestion = suggestionsArray.filter(function (suggestion) {
+        if (suggestion.isActive) {
+            return suggestion;
+        }
+    });
+
+    return selectedSuggestion[0].name;
+}
+
+/***/ }),
+/* 55 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.simpleSearchAction = simpleSearchAction;
+exports.suggestedSearchAction = suggestedSearchAction;
+
+var _cloneDeep = __webpack_require__(4);
+
+var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
+
+var _container = __webpack_require__(1);
+
+var _container2 = _interopRequireDefault(_container);
+
+var _constants = __webpack_require__(2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * This actions are triggered when a text input changes
+ * receives two parameters:
+ *   @param queryOptions -> query given options
+ *   @param appOptions   -> current application options
+ *
+ * Finally dispatches an event with the search result and
+ * the modified query.
+ *   @returns {{
+ *     type: string,
+ *     payload: {
+ *        result,
+ *        updatedQuery
+ *     }
+ *   }}
+ */
+
+/**
+ * Simple search action
+ * Builds a query disabling suggested searches flag
+ */
+function simpleSearchAction(_ref, _ref2) {
+    var queryText = _ref.queryText;
+    var environmentId = _ref2.environmentId,
+        currentQuery = _ref2.currentQuery,
+        client = _ref2.client;
+
+    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+
+    clonedQuery.setQueryText(queryText).setPage(1).enableResults().disableSuggestions();
+
+    client.search(clonedQuery, function (result, error) {
+        if (error) return;
+
+        var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
+        dispatcher.dispatch({
+            type: 'RENDER_FETCHED_DATA',
+            payload: {
+                result: result,
+                updatedQuery: clonedQuery
+            }
+        });
+    });
+}
+
+/**
+ * Suggested Search Action
+ * Builds a query using suggested search flag active
+ */
+/**
+ * Search actions
+ */
+function suggestedSearchAction(_ref3, _ref4) {
+    var queryText = _ref3.queryText;
+    var environmentId = _ref4.environmentId,
+        currentQuery = _ref4.currentQuery,
+        client = _ref4.client;
+
+    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+
+    clonedQuery.setQueryText(queryText).setPage(1).disableResults().enableSuggestions();
+
+    client.search(clonedQuery, function (result, error) {
+        if (error) return;
+
+        var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
+        dispatcher.dispatch({
+            type: 'RENDER_FETCHED_DATA',
+            payload: {
+                result: result,
+                updatedQuery: clonedQuery
+            }
+        });
+    });
+}
+
+/***/ }),
+/* 56 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.pagination = undefined;
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; /**
+                                                                                                                                                                                                                                                                   * @jsx h
+                                                                                                                                                                                                                                                                   */
+
+var _preact = __webpack_require__(0);
+
+var _PaginationComponent = __webpack_require__(57);
+
+var _PaginationComponent2 = _interopRequireDefault(_PaginationComponent);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var pagination = exports.pagination = function pagination(_ref) {
+    var target = _ref.target,
+        padding = _ref.padding,
+        goFirstLast = _ref.goFirstLast,
+        classNames = _ref.classNames,
+        template = _ref.template;
+
+    return (0, _preact.h)(_PaginationComponent2.default, {
+        Component: true,
+        target: target,
+        padding: padding,
+        goFirstLast: goFirstLast,
+        classNames: _extends({}, _PaginationComponent2.default.defaultProps.classNames, classNames),
+        template: _extends({}, _PaginationComponent2.default.defaultProps.template, template)
+    });
+};
+
+/***/ }),
+/* 57 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _preact = __webpack_require__(0);
+
+var _Template = __webpack_require__(3);
+
+var _Template2 = _interopRequireDefault(_Template);
+
+var _paginationActions = __webpack_require__(58);
+
+var _NavigationComponent = __webpack_require__(59);
+
+var _NavigationComponent2 = _interopRequireDefault(_NavigationComponent);
+
+var _helpers = __webpack_require__(60);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+
+/**
+ * Pagination Component
+ */
+var PaginationComponent = function (_Component) {
+    _inherits(PaginationComponent, _Component);
+
+    function PaginationComponent() {
+        var _ref;
+
+        var _temp, _this, _ret;
+
+        _classCallCheck(this, PaginationComponent);
+
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+        }
+
+        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = PaginationComponent.__proto__ || Object.getPrototypeOf(PaginationComponent)).call.apply(_ref, [this].concat(args))), _this), _this.handleClick = function (page) {
+            var _this$props = _this.props,
+                data = _this$props.data,
+                environmentId = _this$props.environmentId,
+                currentQuery = _this$props.currentQuery,
+                client = _this$props.client;
+
+
+            var totalPages = (0, _helpers.getTotalPages)({
+                totalHits: data.total_hits,
+                hitsPerPage: currentQuery.size
+            });
+
+            /**
+             * Do not let go further
+             */
+            if (page <= 0) page = 1;
+            if (page >= totalPages) page = totalPages;
+
+            /**
+             * Dispatch change page action
+             */
+            (0, _paginationActions.paginationChangeAction)({
+                selectedPage: page
+            }, {
+                environmentId: environmentId,
+                currentQuery: currentQuery,
+                client: client
+            });
+        }, _temp), _possibleConstructorReturn(_this, _ret);
+    }
+
+    _createClass(PaginationComponent, [{
+        key: "render",
+        value: function render() {
+            var _this2 = this;
+
+            var _props = this.props,
+                padding = _props.padding,
+                goFirstLast = _props.goFirstLast,
+                _props$classNames = _props.classNames,
+                containerClassName = _props$classNames.container,
+                itemClassName = _props$classNames.item,
+                activeClassName = _props$classNames.active,
+                disabledClassName = _props$classNames.disabled,
+                nextClassName = _props$classNames.next,
+                previousClassName = _props$classNames.previous,
+                lastClassName = _props$classNames.last,
+                firstClassName = _props$classNames.first,
+                _props$template = _props.template,
+                itemTemplate = _props$template.item,
+                nextTemplate = _props$template.next,
+                previousTemplate = _props$template.previous,
+                firstTemplate = _props$template.first,
+                lastTemplate = _props$template.last,
+                _props$currentQuery = _props.currentQuery,
+                currentQueryPage = _props$currentQuery.page,
+                currentQuerySize = _props$currentQuery.size,
+                data = _props.data;
+
+            /**
+             * Get Total pages
+             */
+
+            var totalPages = (0, _helpers.getTotalPages)({
+                totalHits: data.total_hits,
+                hitsPerPage: currentQuerySize
+            });
+            var pages = (0, _helpers.totalPagesToArray)(totalPages);
+
+            /**
+             *  Get pages spectre
+             */
+            var paginationSettings = {
+                totalPages: totalPages,
+                padding: padding,
+                currentPage: currentQueryPage,
+                spectreSize: padding * 2 + 1,
+                isTouchingLeft: currentQueryPage <= padding + 1,
+                isTouchingRight: currentQueryPage + padding >= totalPages
+            };
+            var spectre = pages.slice((0, _helpers.getStart)(paginationSettings), (0, _helpers.getEnd)(paginationSettings));
+
+            /**
+             * Dynamic disabled classes
+             */
+            var previousDisabledClass = currentQueryPage === 1 ? disabledClassName : '';
+            var nextDisabledClass = currentQueryPage === totalPages ? disabledClassName : '';
+
+            /**
+             * Hide container if hits are empty
+             */
+            if (data.total_hits === 0) return null;
+
+            return (0, _preact.h)(
+                "ul",
+                { className: "as-pagination " + containerClassName },
+                (0, _preact.h)(_NavigationComponent2.default, {
+                    isVisible: goFirstLast,
+                    classNames: "as-pagination__item as-pagination__item--first " + firstClassName + " " + previousDisabledClass,
+                    template: firstTemplate,
+                    handleClick: function handleClick() {
+                        return _this2.handleClick(1);
+                    }
+                }),
+                (0, _preact.h)(_NavigationComponent2.default, {
+                    isVisible: true,
+                    classNames: "as-pagination__item as-pagination__item--previous " + previousClassName + " " + previousDisabledClass,
+                    template: previousTemplate,
+                    handleClick: function handleClick() {
+                        return _this2.handleClick(currentQueryPage - 1);
+                    }
+                }),
+                spectre.map(function (page) {
+                    return (0, _preact.h)(
+                        "li",
+                        {
+                            className: "as-pagination__item as-pagination__item--link " + itemClassName + " " + (currentQueryPage === page ? activeClassName : ''),
+                            onClick: function onClick() {
+                                return _this2.handleClick(page);
+                            }
+                        },
+                        (0, _preact.h)(_Template2.default, {
+                            template: itemTemplate,
+                            data: { page: parseInt(page).toLocaleString('de-DE') }
+                        })
+                    );
+                }),
+                (0, _preact.h)(_NavigationComponent2.default, {
+                    isVisible: true,
+                    classNames: "as-pagination__item as-pagination__item--next " + nextClassName + " " + nextDisabledClass,
+                    template: nextTemplate,
+                    handleClick: function handleClick() {
+                        return _this2.handleClick(currentQueryPage + 1);
+                    }
+                }),
+                (0, _preact.h)(_NavigationComponent2.default, {
+                    isVisible: goFirstLast,
+                    classNames: "as-pagination__item as-pagination__item--last " + lastClassName + " " + nextDisabledClass,
+                    template: lastTemplate,
+                    handleClick: function handleClick() {
+                        return _this2.handleClick(totalPages);
+                    }
+                })
+            );
+        }
+    }]);
+
+    return PaginationComponent;
+}(_preact.Component);
+
+PaginationComponent.defaultProps = {
+    padding: 3,
+    goFirstLast: false,
+    classNames: {
+        container: '',
+        item: '',
+        active: 'as-pagination__item--active',
+        disabled: 'as-pagination__item--disabled',
+        next: '',
+        first: '',
+        previous: '',
+        last: ''
+    },
+    template: {
+        item: '{{page}}',
+        next: '>',
+        previous: '<',
+        first: '<<',
+        last: '>>'
+    }
+};
+
+exports.default = PaginationComponent;
+
+/***/ }),
+/* 58 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.paginationChangeAction = paginationChangeAction;
+
+var _cloneDeep = __webpack_require__(4);
+
+var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
+
+var _container = __webpack_require__(1);
+
+var _container2 = _interopRequireDefault(_container);
+
+var _constants = __webpack_require__(2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Pagination change
+ *
+ * This action is triggered when a sortBy filter changes
+ * receives two parameters:
+ *   @param queryOptions -> query given options
+ *   @param appOptions   -> current application options
+ *
+ * Finally dispatches an event with the search result and
+ * the modified query.
+ *   @returns {{
+ *     type: string,
+ *     payload: {
+ *        result,
+ *        updatedQuery
+ *     }
+ *   }}
+ */
+function paginationChangeAction(_ref, _ref2) {
+    var selectedPage = _ref.selectedPage;
+    var environmentId = _ref2.environmentId,
+        currentQuery = _ref2.currentQuery,
+        client = _ref2.client;
+
+    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
+    clonedQuery.page = selectedPage;
+
+    client.search(clonedQuery, function (result, error) {
+        if (error) return;
+
+        var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
+        dispatcher.dispatch({
+            type: 'RENDER_FETCHED_DATA',
+            payload: {
+                result: result,
+                updatedQuery: clonedQuery
+            }
+        });
+    });
+} /**
+   * Pagination actions
+   */
+
+/***/ }),
+/* 59 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _preact = __webpack_require__(0);
+
+var _Template = __webpack_require__(3);
+
+var _Template2 = _interopRequireDefault(_Template);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Arrow navigation component
+ */
+function NavigationComponent(_ref) {
+    var isVisible = _ref.isVisible,
+        classNames = _ref.classNames,
+        template = _ref.template,
+        handleClick = _ref.handleClick;
+
+    return isVisible ? (0, _preact.h)(
+        "li",
+        {
+            className: classNames,
+            onClick: handleClick
+        },
+        (0, _preact.h)(_Template2.default, { template: template })
+    ) : null;
+}
+
+exports.default = NavigationComponent;
+
+/***/ }),
+/* 60 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.getTotalPages = getTotalPages;
+exports.totalPagesToArray = totalPagesToArray;
+exports.getStart = getStart;
+exports.getEnd = getEnd;
+/**
+ * Get total pages from the total reached hits
+ * divided by the hits per page configured
+ *
+ * If there are more than 10.000 items
+ * We reduce the max num of items to 9.999
+ * to take care of performance
+ *
+ * If total resulted pages are bigger than 999
+ * we set 999 as the max number of pages
+ */
+function getTotalPages(_ref) {
+    var totalHits = _ref.totalHits,
+        hitsPerPage = _ref.hitsPerPage;
+
+    totalHits = totalHits >= 10000 ? 9999 : totalHits;
+
+    var totalPages = Math.ceil(parseInt(totalHits) / parseInt(hitsPerPage));
+
+    return totalPages > 999 ? 999 : totalPages;
+}
+
+/**
+ * Pass total pages number into an array of numbers
+ */
+function totalPagesToArray(totalPages) {
+    var pages = [];
+    for (var index = 1; index <= totalPages; index++) {
+        pages.push(index);
+    }
+
+    return pages;
+}
+
+/**
+ * Get the starting point of the pages spectre
+ */
+function getStart(_ref2) {
+    var totalPages = _ref2.totalPages,
+        padding = _ref2.padding,
+        currentPage = _ref2.currentPage,
+        spectreSize = _ref2.spectreSize,
+        isTouchingLeft = _ref2.isTouchingLeft,
+        isTouchingRight = _ref2.isTouchingRight;
+
+    if (isTouchingLeft) {
+        return currentPage - currentPage % spectreSize;
+    }
+    if (isTouchingRight) {
+        var start = currentPage - (spectreSize - totalPages % currentPage);
+        return start > 0 ? start : 0;
+    }
+
+    return currentPage - (padding + 1);
+}
+
+/**
+ * Get the ending point of the pages spectre
+ */
+function getEnd(_ref3) {
+    var totalPages = _ref3.totalPages,
+        padding = _ref3.padding,
+        currentPage = _ref3.currentPage,
+        spectreSize = _ref3.spectreSize,
+        isTouchingLeft = _ref3.isTouchingLeft,
+        isTouchingRight = _ref3.isTouchingRight;
+
+    if (isTouchingLeft) {
+        return spectreSize;
+    }
+    if (isTouchingRight) {
+        return totalPages;
+    }
+
+    return currentPage + padding;
+}
 
 /***/ })
 /******/ ]);

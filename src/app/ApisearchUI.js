@@ -1,7 +1,8 @@
 import { h, render, createElement } from 'preact';
 
 import { initialDataFetchAction } from "./apisearchActions";
-import WidgetFactory from "./WidgetFactory";
+import container from "../container";
+
 
 /**
  * ApisearchUI class
@@ -20,7 +21,7 @@ class ApisearchUI {
          * UI related properties
          */
         this.client = client;
-        this.widgets = WidgetFactory;
+        this.widgets = {};
         this.activeWidgets = [];
 
         /**

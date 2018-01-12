@@ -16,7 +16,7 @@ import SuggestedSearchComponent from "../components/SuggestedSearch/SuggestedSea
  * @param template
  * @returns {XML}
  */
-export const suggestedSearch =({
+export const suggestedSearch = ({
     target,
     placeholder,
     autofocus,

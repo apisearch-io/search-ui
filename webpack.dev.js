@@ -17,14 +17,4 @@ const browserConfig = merge(baseConfig, {
     }
 });
 
-const nodeConfig = merge(baseConfig, {
-    devtool: 'source-map',
-    output: {
-        path: path.resolve(__dirname, 'dist'),
-        filename: 'apisearch-ui.node.js',
-        libraryTarget: 'umd',
-        library: 'apisearchUI'
-    }
-});
-
-module.exports = [browserConfig, nodeConfig];
+module.exports = [browserConfig];

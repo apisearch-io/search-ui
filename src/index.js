@@ -10,8 +10,10 @@ import 'styles/apisearch-ui.sass';
 /**
  * Locals
  */
-import {bootstrap} from "./bootstrap";
 import container from "./container";
+import {bootstrap} from "./bootstrap";
+import {createEnvironmentId} from "./environment";
+import {widgets} from "./widgets/widgets";
 import {APISEARCH_DISPATCHER, APISEARCH_UI} from "./constants";
 
 /**
@@ -29,14 +31,14 @@ import {APISEARCH_DISPATCHER, APISEARCH_UI} from "./constants";
  */
 module.exports = function ({
     appId,
-    index,
+    indexId,
     token,
     options
 }) {
     /**
      * Build environment Id
      */
-    const environmentId = `env_${Math.ceil(Math.random() * (9999999 - 1) + 1)}`;
+    const environmentId = createEnvironmentId();
 
     /**
      * Bootstrapping ApisearchUI application
@@ -44,7 +46,7 @@ module.exports = function ({
     bootstrap({
         environmentId,
         appId,
-        index,
+        indexId,
         token,
         options
     });
@@ -60,6 +62,11 @@ module.exports = function ({
             apisearchUI.store
         )
     );
+
+    /**
+     * Add widgets
+     */
+    apisearchUI.widgets = widgets;
 
     /**
      * Return ApisearchUI instance
