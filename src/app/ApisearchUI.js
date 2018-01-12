@@ -1,8 +1,6 @@
 import { h, render, createElement } from 'preact';
 
 import { initialDataFetchAction } from "./apisearchActions";
-import container from "../container";
-
 
 /**
  * ApisearchUI class

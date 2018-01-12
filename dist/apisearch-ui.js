@@ -2183,12 +2183,6 @@ var _preact = __webpack_require__(0);
 
 var _apisearchActions = __webpack_require__(16);
 
-var _container = __webpack_require__(1);
-
-var _container2 = _interopRequireDefault(_container);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -2227,7 +2221,7 @@ var ApisearchUI = function () {
 
 
     _createClass(ApisearchUI, [{
-        key: "init",
+        key: 'init',
         value: function init() {
             var _this = this;
 
@@ -2256,7 +2250,7 @@ var ApisearchUI = function () {
          */
 
     }, {
-        key: "addWidget",
+        key: 'addWidget',
         value: function addWidget(widget) {
             this.activeWidgets = [].concat(_toConsumableArray(this.activeWidgets), [widget]);
             return this;
@@ -2267,7 +2261,7 @@ var ApisearchUI = function () {
          */
 
     }, {
-        key: "addWidgets",
+        key: 'addWidgets',
         value: function addWidgets() {
             var _this2 = this;
 
@@ -2290,7 +2284,7 @@ var ApisearchUI = function () {
          */
 
     }, {
-        key: "render",
+        key: 'render',
         value: function render() {
             var _this3 = this;
 
@@ -2299,7 +2293,7 @@ var ApisearchUI = function () {
                 var targetNode = document.querySelector(widget.attributes.target);
 
                 if (null === targetNode) {
-                    throw new Error("Widget (" + hydratedWidget.nodeName.name + ") must have a valid DOM target");
+                    throw new Error('Widget (' + hydratedWidget.nodeName.name + ') must have a valid DOM target');
                 }
 
                 (0, _preact.render)(hydratedWidget, targetNode, targetNode.lastChild);
@@ -3753,11 +3747,11 @@ var Apisearch = function () {
         /**
          * HttpClient
          */
-        this.repository = new _HttpClient2.default(inMemoryCache ? new _MemoryCache2.default() : false);
+        this.client = new _HttpClient2.default(inMemoryCache ? new _MemoryCache2.default() : false);
     }
 
     /**
-     * Search entry point
+     * Search items
      *
      * @param query
      * @param callback
@@ -3769,8 +3763,48 @@ var Apisearch = function () {
         key: "search",
         value: function search(query, callback) {
             var encodedQuery = encodeURIComponent(JSON.stringify(query));
+            var url = this.endpoint + "/" + this.apiVersion + "?app_id=" + this.appId + "&index=" + this.indexId + "&token=" + this.token + "&query=" + encodedQuery;
+
+            return this.fetch(url).then(function (response) {
+                return callback(response, null);
+            }).catch(function (error) {
+                return callback(null, error);
+            });
+        }
+
+        /**
+         * Search events
+         *
+         * @param query
+         * @param callback
+         * @returns {Promise}
+         */
+
+    }, {
+        key: "events",
+        value: function events(query, callback) {
+            var encodedQuery = encodeURIComponent(JSON.stringify(query));
+            var url = this.endpoint + "/" + this.apiVersion + "/events?app_id=" + this.appId + "&index=" + this.indexId + "&token=" + this.token + "&query=" + encodedQuery;
+
+            return this.fetch(url).then(function (response) {
+                return callback(response, null);
+            }).catch(function (error) {
+                return callback(null, error);
+            });
+        }
+
+        /**
+         * Fetch data
+         *
+         * @param url
+         * @returns {Promise}
+         */
+
+    }, {
+        key: "fetch",
+        value: function fetch(url) {
             var composedQuery = {
-                url: this.endpoint + "/" + this.apiVersion + "?app_id=" + this.appId + "&index=" + this.indexId + "&token=" + this.token + "&query=" + encodedQuery,
+                url: url,
                 options: {
                     timeout: this.timeout
                 }
@@ -3780,17 +3814,13 @@ var Apisearch = function () {
              * Abort any previous existing request
              */
             if (this.overrideQueries) {
-                this.repository.abort();
+                this.client.abort();
             }
 
             /**
              * Start new request
              */
-            return this.repository.query(composedQuery).then(function (response) {
-                return callback(response, null);
-            }).catch(function (error) {
-                return callback(null, error);
-            });
+            return this.client.query(composedQuery);
         }
     }]);
 
