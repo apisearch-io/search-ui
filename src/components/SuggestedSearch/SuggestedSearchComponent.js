@@ -220,6 +220,7 @@ class SuggestedSearchComponent extends Component {
             dirty,
             placeholder,
             autofocus,
+            clearSearch,
             classNames: {
                 container: containerClassName,
                 input: inputClassName,
@@ -254,7 +255,7 @@ class SuggestedSearchComponent extends Component {
                     onBlur={this.handleSearchInputFocusedOut}
                 />
 
-                {(currentQueryText.length !== 0)
+                {(clearSearch && currentQueryText.length !== 0)
                     ? (
                         <div
                             className={`as-suggestedSearch__clearSearch ${clearSearchClassName}`}
@@ -302,6 +303,7 @@ SuggestedSearchComponent.defaultProps = {
     placeholder: '',
     autofocus: false,
     startSearchOn: 0,
+    clearSearch: true,
     classNames: {
         container: '',
         input: '',

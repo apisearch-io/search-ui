@@ -5,6 +5,9 @@
 import { h, render } from 'preact';
 import PaginationComponent from "../components/Pagination/PaginationComponent";
 
+/**
+ * Pagination
+ */
 class Pagination {
     constructor({
         target,
@@ -51,4 +54,9 @@ class Pagination {
     }
 }
 
+/**
+ * Pagination widget
+ *
+ * @param settings
+ */
 export const pagination = settings => new Pagination(settings);

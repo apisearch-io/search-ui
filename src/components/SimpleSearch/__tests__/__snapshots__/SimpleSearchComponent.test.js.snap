@@ -1,5 +1,57 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`<SimpleSearchComponent /> should appear a clearSearch button when the input value is not empty, and should handle clearSearch() on click 1`] = `
+preact-render-spy (1 nodes)
+-------
+<div class="as-simpleSearch ">
+  <input
+    type="text"
+    class="as-simpleSearch__input "
+    autofocus={false}
+    placeholder=""
+    onInput={[Function anonymous]}
+    value="Some query text..."
+   />
+  <div
+    class="as-simpleSearch__clearSearch "
+    onClick={[Function anonymous]}
+  >
+    <div>x</div>
+  </div>
+</div>
+
+`;
+
+exports[`<SimpleSearchComponent /> should render new html properties when "htmlNodeInheritProps" are passed 1`] = `
+preact-render-spy (1 nodes)
+-------
+<input
+  type="text"
+  class="some-class-name"
+  data-apisearch="apisearch-search-bar"
+  id="some-id"
+  autofocus={false}
+  placeholder=""
+  onInput={[Function anonymous]}
+  value=""
+ />
+
+`;
+
+exports[`<SimpleSearchComponent /> should render only the input when "withContainer" property is set to false 1`] = `
+preact-render-spy (1 nodes)
+-------
+<input
+  type="text"
+  class="as-simpleSearch__input "
+  autofocus={false}
+  placeholder=""
+  onInput={[Function anonymous]}
+  value=""
+ />
+
+`;
+
 exports[`<SimpleSearchComponent /> should render with custom props 1`] = `
 preact-render-spy (1 nodes)
 -------
@@ -8,7 +60,7 @@ preact-render-spy (1 nodes)
     type="text"
     class="as-simpleSearch__input undefined"
     autofocus={false}
-    placeholder=""
+    placeholder="Type something..."
     onInput={[Function anonymous]}
     value=""
    />

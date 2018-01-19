@@ -1,0 +1,44 @@
+<html>
+<head>
+    <title>Refactoring</title>
+    <script src="../dist/apisearch-ui.js"></script>
+</head>
+
+<body>
+<form>
+    <input type="search"
+           class="search-container"
+           id="random-id"
+           data-apisearch="random-attribute"
+    />
+</form>
+<!--<div class="search-container"></div>-->
+<div class="result-container"></div>
+
+<script>
+    // Create instance
+    const ui = apisearchUI({
+        appId: '54725861',
+        indexId: '66777162',
+        token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
+    });
+
+    // Append widgets
+    ui.addWidgets(
+        ui.widgets.simpleSearch({
+            target: '.search-container',
+            placeholder: 'hello...'
+        }),
+        ui.widgets.result({
+            target: '.result-container',
+            template: {
+                itemsList: '<ul>{{#items}} <li>{{metadata.title}}</li> {{/items}}</ul>',
+            }
+        })
+    );
+
+    // Initialize it
+    ui.init();
+</script>
+</body>
+</html>

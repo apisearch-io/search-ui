@@ -5,6 +5,9 @@
 import { h, render } from 'preact';
 import ResultComponent from "../components/Result/ResultComponent";
 
+/**
+ * Result
+ */
 class Result {
     constructor({
         target,
@@ -56,4 +59,9 @@ class Result {
     }
 }
 
+/**
+ * Result widget
+ *
+ * @param settings
+ */
 export const result = settings => new Result(settings);

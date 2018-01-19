@@ -5,6 +5,9 @@
 import { h, render } from 'preact';
 import SortByComponent from "../components/SortBy/SortByComponent";
 
+/**
+ * SortBy
+ */
 class SortBy {
     constructor({
         target,
@@ -43,4 +46,9 @@ class SortBy {
     }
 }
 
+/**
+ * SortBy widget
+ *
+ * @param settings
+ */
 export const sortBy = settings => new SortBy(settings);

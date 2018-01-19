@@ -5,6 +5,9 @@
 import { h, render } from 'preact';
 import ClearFiltersComponent from "../components/ClearFilters/ClearFiltersComponent";
 
+/**
+ * Clear Filters
+ */
 class ClearFilters {
     constructor({
         target,
@@ -43,4 +46,9 @@ class ClearFilters {
     }
 }
 
+/**
+ * Clear filters widget
+ *
+ * @param settings
+ */
 export const clearFilters = settings => new ClearFilters(settings);

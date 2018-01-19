@@ -5,12 +5,16 @@
 import { h, render } from 'preact';
 import SuggestedSearchComponent from "../components/SuggestedSearch/SuggestedSearchComponent";
 
+/**
+ * Suggested Search
+ */
 class SuggestedSearch {
     constructor({
         target,
         placeholder,
         autofocus,
         startSearchOn,
+        clearSearch,
         classNames,
         template
     }) {
@@ -20,6 +24,7 @@ class SuggestedSearch {
             placeholder={placeholder}
             autofocus={autofocus}
             startSearchOn={startSearchOn}
+            clearSearch={clearSearch}
             classNames={{
                 ...SuggestedSearchComponent.defaultProps.classNames,
                 ...classNames
@@ -49,4 +54,9 @@ class SuggestedSearch {
     }
 }
 
+/**
+ * Suggested search widget
+ *
+ * @param settings
+ */
 export const suggestedSearch = settings => new SuggestedSearch(settings);

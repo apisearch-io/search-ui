@@ -5,6 +5,9 @@
 import { h, render } from 'preact';
 import MultipleFilterComponent from "../components/MultipleFilter/MultipleFilterComponent";
 
+/**
+ * Multiple Filter
+ */
 class MultipleFilter {
     constructor({
         target,
@@ -62,4 +65,9 @@ class MultipleFilter {
     }
 }
 
+/**
+ * Multiple filter widget
+ *
+ * @param settings
+ */
 export const multipleFilter = settings => new MultipleFilter(settings);

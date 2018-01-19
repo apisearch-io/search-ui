@@ -62,6 +62,8 @@ class SimpleSearchComponent extends Component {
         const {
             placeholder,
             autofocus,
+            clearSearch,
+            withContainer,
             classNames: {
                 container: containerClassName,
                 input: inputClassName,
@@ -72,32 +74,40 @@ class SimpleSearchComponent extends Component {
             },
             currentQuery: {
                 q: currentQueryText
-            }
+            },
+            htmlNodeInheritProps
         } = this.props;
 
-        return (
-            <div className={`as-simpleSearch ${containerClassName}`}>
-                <input
-                    type='text'
-                    className={`as-simpleSearch__input ${inputClassName}`}
-                    autofocus={autofocus}
-                    placeholder={placeholder}
-                    onInput={this.handleSearch}
-                    value={currentQueryText}
-                />
+        let searchInput = (<input
+            type='text'
+            className={`as-simpleSearch__input ${inputClassName}`}
+            {...htmlNodeInheritProps}
+            autofocus={autofocus}
+            placeholder={placeholder}
+            onInput={this.handleSearch}
+            value={currentQueryText}
+        />);
 
-                {(currentQueryText.length !== 0)
-                    ? (
-                        <div
-                            className={`as-simpleSearch__clearSearch ${clearSearchClassName}`}
-                            onClick={this.clearSearch}
-                        >
-                            <Template template={clearSearchTemplate}/>
-                        </div>
-                    ) : null
-                }
-            </div>
-        );
+        if (withContainer) {
+            return (
+                <div className={`as-simpleSearch ${containerClassName}`}>
+                    {searchInput}
+
+                    {(clearSearch && currentQueryText.length !== 0)
+                        ? (
+                            <div
+                                className={`as-simpleSearch__clearSearch ${clearSearchClassName}`}
+                                onClick={this.clearSearch}
+                            >
+                                <Template template={clearSearchTemplate}/>
+                            </div>
+                        ) : null
+                    }
+                </div>
+            );
+        }
+
+        return searchInput;
     }
 }
 
@@ -105,6 +115,8 @@ SimpleSearchComponent.defaultProps = {
     placeholder: '',
     autofocus: false,
     startSearchOn: 0,
+    clearSearch: true,
+    withContainer: true,
     classNames: {
         container: '',
         input: '',

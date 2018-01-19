@@ -6290,6 +6290,9 @@ var _suggestedSearch = __webpack_require__(52);
 
 var _pagination = __webpack_require__(56);
 
+/**
+ * Widget factories
+ */
 var widgets = exports.widgets = {
     simpleSearch: _simpleSearch.simpleSearch,
     suggestedSearch: _suggestedSearch.suggestedSearch,
@@ -6329,6 +6332,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+/**
+ * Clear Filters
+ */
 var ClearFilters = function () {
     function ClearFilters(_ref) {
         var target = _ref.target,
@@ -6366,6 +6372,13 @@ var ClearFilters = function () {
 
     return ClearFilters;
 }();
+
+/**
+ * Clear filters widget
+ *
+ * @param settings
+ */
+
 
 var clearFilters = exports.clearFilters = function clearFilters(settings) {
     return new ClearFilters(settings);
@@ -7602,6 +7615,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+/**
+ * Information
+ */
 var Information = function () {
     function Information(_ref) {
         var target = _ref.target,
@@ -7641,6 +7657,13 @@ var Information = function () {
 
     return Information;
 }();
+
+/**
+ * Information widget
+ *
+ * @param settings
+ */
+
 
 var information = exports.information = function information(settings) {
     return new Information(settings);
@@ -7761,6 +7784,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+/**
+ * Result
+ */
 var Result = function () {
     function Result(_ref) {
         var target = _ref.target,
@@ -7808,6 +7834,13 @@ var Result = function () {
 
     return Result;
 }();
+
+/**
+ * Result widget
+ *
+ * @param settings
+ */
+
 
 var result = exports.result = function result(settings) {
     return new Result(settings);
@@ -8105,6 +8138,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+/**
+ * Multiple Filter
+ */
 var MultipleFilter = function () {
     function MultipleFilter(_ref) {
         var target = _ref.target,
@@ -8158,6 +8194,13 @@ var MultipleFilter = function () {
 
     return MultipleFilter;
 }();
+
+/**
+ * Multiple filter widget
+ *
+ * @param settings
+ */
+
 
 var multipleFilter = exports.multipleFilter = function multipleFilter(settings) {
     return new MultipleFilter(settings);
@@ -8706,13 +8749,20 @@ var _SimpleSearchComponent2 = _interopRequireDefault(_SimpleSearchComponent);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+/**
+ * Simple Search
+ */
 var SimpleSearch = function () {
     function SimpleSearch(_ref) {
         var target = _ref.target,
             placeholder = _ref.placeholder,
             startSearchOn = _ref.startSearchOn,
+            clearSearch = _ref.clearSearch,
+            withContainer = _ref.withContainer,
             autofocus = _ref.autofocus,
             classNames = _ref.classNames,
             template = _ref.template;
@@ -8720,11 +8770,14 @@ var SimpleSearch = function () {
         _classCallCheck(this, SimpleSearch);
 
         this.target = target;
+        this.isFirstRender = true;
         this.component = (0, _preact.h)(_SimpleSearchComponent2.default, {
             target: target,
             placeholder: placeholder,
             autofocus: autofocus,
             startSearchOn: startSearchOn,
+            clearSearch: clearSearch,
+            withContainer: withContainer,
             classNames: _extends({}, _SimpleSearchComponent2.default.defaultProps.classNames, classNames),
             template: _extends({}, _SimpleSearchComponent2.default.defaultProps.template, template)
         });
@@ -8737,21 +8790,82 @@ var SimpleSearch = function () {
                 store = _ref2.store,
                 client = _ref2.client;
 
-            this.component.attributes.environmentId = environmentId;
-            this.component.attributes.dirty = store.dirty;
-            this.component.attributes.data = store.data;
-            this.component.attributes.currentQuery = store.currentQuery;
-            this.component.attributes.client = client;
+            this.component.attributes = _extends({}, this.component.attributes, {
+                environmentId: environmentId,
+                client: client,
+                dirty: store.dirty,
+                data: store.data,
+                currentQuery: store.currentQuery
+            });
 
             var targetNode = document.querySelector(this.target);
 
-            (0, _preact.render)(this.component, targetNode, targetNode.lastChild);
+            /**
+             * Checking if the targeted element is an input
+             * or is another container element.
+             */
+            var isInput = isInputElement(targetNode);
+
+            if (!isInput) {
+                (0, _preact.render)(this.component, targetNode, targetNode.lastChild);
+            }
+
+            if (isInput && this.isFirstRender) {
+                this.component.attributes = _extends({}, this.component.attributes, {
+                    withContainer: false,
+                    htmlNodeInheritProps: getNodeAttributes(targetNode)
+                });
+                var parentNode = targetNode.parentNode;
+
+                (0, _preact.render)(this.component, parentNode, parentNode.childNodes[0]);
+
+                targetNode.remove();
+            }
+
+            this.isFirstRender = false;
         }
     }]);
 
     return SimpleSearch;
 }();
 
+/**
+ * Returns an object of an
+ * html node attributes.
+ *
+ * @param htmlNode
+ * @returns {{}}
+ */
+
+
+var getNodeAttributes = function getNodeAttributes(htmlNode) {
+    var nodeAttributes = {};
+    for (var i = 0; i < htmlNode.attributes.length; i++) {
+        var attr = htmlNode.attributes[i];
+        if (attr.specified) {
+            nodeAttributes = _extends({}, nodeAttributes, _defineProperty({}, attr.name, attr.value));
+        }
+    }
+
+    return nodeAttributes;
+};
+
+/**
+ * Checks if an html node
+ * is an input.
+ *
+ * @param targetNode
+ * @returns {boolean}
+ */
+var isInputElement = function isInputElement(targetNode) {
+    return targetNode instanceof HTMLInputElement;
+};
+
+/**
+ * Simple search widget
+ *
+ * @param settings
+ */
 var simpleSearch = exports.simpleSearch = function simpleSearch(settings) {
     return new SimpleSearch(settings);
 };
@@ -8766,6 +8880,8 @@ var simpleSearch = exports.simpleSearch = function simpleSearch(settings) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -8850,34 +8966,44 @@ var SimpleSearchComponent = function (_Component) {
             var _props = this.props,
                 placeholder = _props.placeholder,
                 autofocus = _props.autofocus,
+                clearSearch = _props.clearSearch,
+                withContainer = _props.withContainer,
                 _props$classNames = _props.classNames,
                 containerClassName = _props$classNames.container,
                 inputClassName = _props$classNames.input,
                 clearSearchClassName = _props$classNames.clearSearch,
                 clearSearchTemplate = _props.template.clearSearch,
-                currentQueryText = _props.currentQuery.q;
+                currentQueryText = _props.currentQuery.q,
+                htmlNodeInheritProps = _props.htmlNodeInheritProps;
 
 
-            return (0, _preact.h)(
-                "div",
-                { className: "as-simpleSearch " + containerClassName },
-                (0, _preact.h)("input", {
-                    type: "text",
-                    className: "as-simpleSearch__input " + inputClassName,
-                    autofocus: autofocus,
-                    placeholder: placeholder,
-                    onInput: this.handleSearch,
-                    value: currentQueryText
-                }),
-                currentQueryText.length !== 0 ? (0, _preact.h)(
+            var searchInput = (0, _preact.h)("input", _extends({
+                type: "text",
+                className: "as-simpleSearch__input " + inputClassName
+            }, htmlNodeInheritProps, {
+                autofocus: autofocus,
+                placeholder: placeholder,
+                onInput: this.handleSearch,
+                value: currentQueryText
+            }));
+
+            if (withContainer) {
+                return (0, _preact.h)(
                     "div",
-                    {
-                        className: "as-simpleSearch__clearSearch " + clearSearchClassName,
-                        onClick: this.clearSearch
-                    },
-                    (0, _preact.h)(_Template2.default, { template: clearSearchTemplate })
-                ) : null
-            );
+                    { className: "as-simpleSearch " + containerClassName },
+                    searchInput,
+                    clearSearch && currentQueryText.length !== 0 ? (0, _preact.h)(
+                        "div",
+                        {
+                            className: "as-simpleSearch__clearSearch " + clearSearchClassName,
+                            onClick: this.clearSearch
+                        },
+                        (0, _preact.h)(_Template2.default, { template: clearSearchTemplate })
+                    ) : null
+                );
+            }
+
+            return searchInput;
         }
     }]);
 
@@ -8888,6 +9014,8 @@ SimpleSearchComponent.defaultProps = {
     placeholder: '',
     autofocus: false,
     startSearchOn: 0,
+    clearSearch: true,
+    withContainer: true,
     classNames: {
         container: '',
         input: '',
@@ -8996,6 +9124,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+/**
+ * SortBy
+ */
 var SortBy = function () {
     function SortBy(_ref) {
         var target = _ref.target,
@@ -9033,6 +9164,13 @@ var SortBy = function () {
 
     return SortBy;
 }();
+
+/**
+ * SortBy widget
+ *
+ * @param settings
+ */
+
 
 var sortBy = exports.sortBy = function sortBy(settings) {
     return new SortBy(settings);
@@ -9261,12 +9399,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+/**
+ * Suggested Search
+ */
 var SuggestedSearch = function () {
     function SuggestedSearch(_ref) {
         var target = _ref.target,
             placeholder = _ref.placeholder,
             autofocus = _ref.autofocus,
             startSearchOn = _ref.startSearchOn,
+            clearSearch = _ref.clearSearch,
             classNames = _ref.classNames,
             template = _ref.template;
 
@@ -9278,6 +9420,7 @@ var SuggestedSearch = function () {
             placeholder: placeholder,
             autofocus: autofocus,
             startSearchOn: startSearchOn,
+            clearSearch: clearSearch,
             classNames: _extends({}, _SuggestedSearchComponent2.default.defaultProps.classNames, classNames),
             template: template
         });
@@ -9304,6 +9447,13 @@ var SuggestedSearch = function () {
 
     return SuggestedSearch;
 }();
+
+/**
+ * Suggested search widget
+ *
+ * @param settings
+ */
+
 
 var suggestedSearch = exports.suggestedSearch = function suggestedSearch(settings) {
     return new SuggestedSearch(settings);
@@ -9535,6 +9685,7 @@ var SuggestedSearchComponent = function (_Component) {
                 dirty = _props.dirty,
                 placeholder = _props.placeholder,
                 autofocus = _props.autofocus,
+                clearSearch = _props.clearSearch,
                 _props$classNames = _props.classNames,
                 containerClassName = _props$classNames.container,
                 inputClassName = _props$classNames.input,
@@ -9561,7 +9712,7 @@ var SuggestedSearchComponent = function (_Component) {
                     onKeyDown: this.handleSuggestionsNavigation,
                     onBlur: this.handleSearchInputFocusedOut
                 }),
-                currentQueryText.length !== 0 ? (0, _preact.h)(
+                clearSearch && currentQueryText.length !== 0 ? (0, _preact.h)(
                     'div',
                     {
                         className: 'as-suggestedSearch__clearSearch ' + clearSearchClassName,
@@ -9599,6 +9750,7 @@ SuggestedSearchComponent.defaultProps = {
     placeholder: '',
     autofocus: false,
     startSearchOn: 0,
+    clearSearch: true,
     classNames: {
         container: '',
         input: '',
@@ -9854,6 +10006,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+/**
+ * Pagination
+ */
 var Pagination = function () {
     function Pagination(_ref) {
         var target = _ref.target,
@@ -9896,6 +10051,13 @@ var Pagination = function () {
 
     return Pagination;
 }();
+
+/**
+ * Pagination widget
+ *
+ * @param settings
+ */
+
 
 var pagination = exports.pagination = function pagination(settings) {
     return new Pagination(settings);

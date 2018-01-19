@@ -251,6 +251,7 @@ Object {
     "input": "custom-input-class",
     "suggestion": "custom-suggestion-class",
   },
+  "clearSearch": true,
   "currentQuery": Object {
     "q": "",
   },
@@ -299,6 +300,7 @@ Object {
     "input": "",
     "suggestion": "",
   },
+  "clearSearch": true,
   "currentQuery": Object {
     "q": "",
   },

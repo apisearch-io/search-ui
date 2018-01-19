@@ -7,6 +7,9 @@ import {sortBy} from "./sortBy";
 import {suggestedSearch} from "./suggestedSearch";
 import {pagination} from "./pagination";
 
+/**
+ * Widget factories
+ */
 export const widgets = {
     simpleSearch,
     suggestedSearch,

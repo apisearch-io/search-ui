@@ -10,7 +10,7 @@ describe('<SortByComponent />',() => {
             {name: 'Oldest', value: 'year:asc'},
             {name: 'Newest', value: 'year:desc'}
         ]
-    }
+    };
 
     it('should render with default props', () => {
         const tree = shallow(
@@ -28,7 +28,7 @@ describe('<SortByComponent />',() => {
             classNames: {
                 container: 'custom-container-class'
             }
-        }
+        };
 
         const tree = shallow(
             <SortByComponent
@@ -46,7 +46,7 @@ describe('<SortByComponent />',() => {
         );
 
         const trigger = jest.fn();
-        tree.find('select')[0].attributes.onChange = trigger
+        tree.find('select')[0].attributes.onChange = trigger;
         tree.find('select').simulate('change');
 
         expect(trigger).toBeCalled();

@@ -5,6 +5,9 @@
 import { h, render } from 'preact';
 import InformationComponent from "../components/Information/InformationComponent";
 
+/**
+ * Information
+ */
 class Information {
     constructor({
         target,
@@ -45,4 +48,9 @@ class Information {
     }
 }
 
+/**
+ * Information widget
+ *
+ * @param settings
+ */
 export const information = settings => new Information(settings);

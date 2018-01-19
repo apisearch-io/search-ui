@@ -157,6 +157,25 @@ describe('<SuggestedSearchComponent />',() => {
 
         expect(tree).toMatchSnapshot();
     });
+    it('should handle clearSearch() on click', () => {
+        /**
+         * A text is typed on the input
+         */
+        const tree = shallow(
+            <SuggestedSearchComponent
+                {...defaultProps}
+                currentQuery={{q: 'Text typed on the input'}}
+            />
+        );
+
+        /**
+         * The clearSearch button is clicked
+         */
+        const trigger = jest.fn();
+        tree.find('.as-suggestedSearch__clearSearch')[0].attributes.onClick = trigger;
+        tree.find('.as-suggestedSearch__clearSearch').simulate('click');
+        expect(trigger).toBeCalled();
+    });
 
     /**
      * Return a Shallowed Suggested search component
