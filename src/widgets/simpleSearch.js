@@ -2,40 +2,54 @@
  * @jsx h
  */
 
-import { h, createElement } from 'preact';
+import { h, render } from 'preact';
 import SimpleSearchComponent from "../components/SimpleSearch/SimpleSearchComponent";
 
-/**
- * Simple search
- *
- * @param target
- * @param placeholder
- * @param startSearchOn
- * @param autofocus
- * @param classNames
- * @param template
- * @returns {XML}
- */
-export const simpleSearch = ({
-    target,
-    placeholder,
-    startSearchOn,
-    autofocus,
-    classNames,
-    template
-}) => {
-    return <SimpleSearchComponent
-        target={target}
-        placeholder={placeholder}
-        autofocus={autofocus}
-        startSearchOn={startSearchOn}
-        classNames={{
-            ...SimpleSearchComponent.defaultProps.classNames,
-            ...classNames
-        }}
-        template={{
-            ...SimpleSearchComponent.defaultProps.template,
-            ...template
-        }}
-    />
-};
+class SimpleSearch {
+    constructor({
+        target,
+        placeholder,
+        startSearchOn,
+        autofocus,
+        classNames,
+        template
+    }) {
+        this.target = target;
+        this.component = <SimpleSearchComponent
+            target={target}
+            placeholder={placeholder}
+            autofocus={autofocus}
+            startSearchOn={startSearchOn}
+            classNames={{
+                ...SimpleSearchComponent.defaultProps.classNames,
+                ...classNames
+            }}
+            template={{
+                ...SimpleSearchComponent.defaultProps.template,
+                ...template
+            }}
+        />
+    }
+
+    render({
+        environmentId,
+        store,
+        client
+    }) {
+        this.component.attributes.environmentId = environmentId;
+        this.component.attributes.dirty = store.dirty;
+        this.component.attributes.data = store.data;
+        this.component.attributes.currentQuery = store.currentQuery;
+        this.component.attributes.client = client;
+
+        let targetNode = document.querySelector(this.target);
+
+        render(
+            this.component,
+            targetNode,
+            targetNode.lastChild
+        )
+    }
+}
+
+export const simpleSearch = settings => new SimpleSearch(settings);

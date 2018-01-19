@@ -1692,7 +1692,7 @@ var _bootstrap = __webpack_require__(11);
 
 var _environment = __webpack_require__(20);
 
-var _widgets = __webpack_require__(21);
+var _index = __webpack_require__(21);
 
 var _constants = __webpack_require__(2);
 
@@ -1751,7 +1751,7 @@ module.exports = function (_ref) {
   /**
    * Add widgets
    */
-  apisearchUI.widgets = _widgets.widgets;
+  apisearchUI.widgets = _index.widgets;
 
   /**
    * Return ApisearchUI instance
@@ -2174,7 +2174,7 @@ module.exports = invariant;
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -2191,133 +2191,115 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * ApisearchUI class
  */
 var ApisearchUI = function () {
+  /**
+   * Constructor.
+   */
+  function ApisearchUI(environmentId, client, store) {
+    _classCallCheck(this, ApisearchUI);
+
     /**
-     * Constructor.
+     * Environment Id
      */
-    function ApisearchUI(environmentId, client, store) {
-        _classCallCheck(this, ApisearchUI);
+    this.environmentId = environmentId;
 
-        /**
-         * Environment Id
-         */
-        this.environmentId = environmentId;
+    /**
+     * UI related properties
+     */
+    this.client = client;
+    this.widgets = {};
+    this.activeWidgets = [];
 
-        /**
-         * UI related properties
-         */
-        this.client = client;
-        this.widgets = {};
-        this.activeWidgets = [];
+    /**
+     * Store related properties
+     */
+    this.store = store;
+  }
 
-        /**
-         * Store related properties
-         */
-        this.store = store;
+  /**
+   * Initialize components
+   */
+
+
+  _createClass(ApisearchUI, [{
+    key: 'init',
+    value: function init() {
+      var _this = this;
+
+      /**
+       * 1.- Register all events on the store
+       */
+      this.store.on('render', function () {
+        return _this.render();
+      });
+
+      /**
+       * 2.- Trigger the initial render: (Mount the components)
+       *     To let components setup its configuration on componentWillMount()
+       */
+      this.render();
+
+      /**
+       * 3.- Dispatch the initial data request
+       *     With all widget previous initial configurations
+       */
+      (0, _apisearchActions.initialDataFetchAction)(this.environmentId, this.store.currentQuery, this.client);
     }
 
     /**
-     * Initialize components
+     * Add new widget
      */
 
+  }, {
+    key: 'addWidget',
+    value: function addWidget(widget) {
+      this.activeWidgets = [].concat(_toConsumableArray(this.activeWidgets), [widget]);
+      return this;
+    }
 
-    _createClass(ApisearchUI, [{
-        key: 'init',
-        value: function init() {
-            var _this = this;
-
-            /**
-             * 1.- Register all events on the store
-             */
-            this.store.on('render', function () {
-                return _this.render();
-            });
-
-            /**
-             * 2.- Trigger the initial render: (Mount the components)
-             *     To let components setup its configuration on componentWillMount()
-             */
-            this.render();
-
-            /**
-             * 3.- Dispatch the initial data request
-             *     With all widget previous initial configurations
-             */
-            (0, _apisearchActions.initialDataFetchAction)(this.environmentId, this.store.currentQuery, this.client);
-        }
-
-        /**
-         * Add new widget
-         */
-
-    }, {
-        key: 'addWidget',
-        value: function addWidget(widget) {
-            this.activeWidgets = [].concat(_toConsumableArray(this.activeWidgets), [widget]);
-            return this;
-        }
-
-        /**
-         * Add components in bulk mode
-         */
-
-    }, {
-        key: 'addWidgets',
-        value: function addWidgets() {
-            var _this2 = this;
-
-            for (var _len = arguments.length, widgets = Array(_len), _key = 0; _key < _len; _key++) {
-                widgets[_key] = arguments[_key];
-            }
-
-            widgets.map(function (widget) {
-                return _this2.addWidget(widget);
-            });
-            return this;
-        }
-
-        /**
-         * Render.
-         *
-         * Loop all active components
-         * Hydrate them with new props
-         * And render them.
-         */
-
-    }, {
-        key: 'render',
-        value: function render() {
-            var _this3 = this;
-
-            this.activeWidgets.map(function (widget) {
-                var hydratedWidget = hydrateWidget(_this3.environmentId, _this3.store, _this3.client, widget);
-                var targetNode = document.querySelector(widget.attributes.target);
-
-                if (null === targetNode) {
-                    throw new Error('Widget (' + hydratedWidget.nodeName.name + ') must have a valid DOM target');
-                }
-
-                (0, _preact.render)(hydratedWidget, targetNode, targetNode.lastChild);
-            });
-        }
-    }]);
-
-    return ApisearchUI;
-}();
-
-function hydrateWidget(environmentId, currentStore, client, widget) {
     /**
-     * Pass ApisearchClient, current Query, and data received
-     * as a component attributes. There will be accessible
-     * on component props.
+     * Add components in bulk mode
      */
-    widget.attributes.environmentId = environmentId;
-    widget.attributes.dirty = currentStore.dirty;
-    widget.attributes.data = currentStore.data;
-    widget.attributes.currentQuery = currentStore.currentQuery;
-    widget.attributes.client = client;
 
-    return widget;
-}
+  }, {
+    key: 'addWidgets',
+    value: function addWidgets() {
+      var _this2 = this;
+
+      for (var _len = arguments.length, widgets = Array(_len), _key = 0; _key < _len; _key++) {
+        widgets[_key] = arguments[_key];
+      }
+
+      widgets.map(function (widget) {
+        return _this2.addWidget(widget);
+      });
+      return this;
+    }
+
+    /**
+     * Render.
+     *
+     * Loop all active components
+     * Hydrate them with new props
+     * And render them.
+     */
+
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this3 = this;
+
+      this.activeWidgets.map(function (widget) {
+        widget.render({
+          environmentId: _this3.environmentId,
+          store: _this3.store,
+          client: _this3.client
+        });
+      });
+    }
+  }]);
+
+  return ApisearchUI;
+}();
 
 exports.default = ApisearchUI;
 
@@ -6331,9 +6313,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.clearFilters = undefined;
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; /**
-                                                                                                                                                                                                                                                                   * @jsx h
-                                                                                                                                                                                                                                                                   */
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * @jsx h
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 
 var _preact = __webpack_require__(0);
 
@@ -6343,24 +6327,48 @@ var _ClearFiltersComponent2 = _interopRequireDefault(_ClearFiltersComponent);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * Clear filters
- *
- * @param target
- * @param classNames
- * @param template
- * @returns {XML}
- */
-var clearFilters = exports.clearFilters = function clearFilters(_ref) {
-    var target = _ref.target,
-        classNames = _ref.classNames,
-        template = _ref.template;
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-    return (0, _preact.h)(_ClearFiltersComponent2.default, {
-        target: target,
-        classNames: _extends({}, _ClearFiltersComponent2.default.defaultProps.classNames, classNames),
-        template: template
-    });
+var ClearFilters = function () {
+    function ClearFilters(_ref) {
+        var target = _ref.target,
+            classNames = _ref.classNames,
+            template = _ref.template;
+
+        _classCallCheck(this, ClearFilters);
+
+        this.target = target;
+        this.component = (0, _preact.h)(_ClearFiltersComponent2.default, {
+            target: target,
+            classNames: _extends({}, _ClearFiltersComponent2.default.defaultProps.classNames, classNames),
+            template: template
+        });
+    }
+
+    _createClass(ClearFilters, [{
+        key: "render",
+        value: function render(_ref2) {
+            var environmentId = _ref2.environmentId,
+                store = _ref2.store,
+                client = _ref2.client;
+
+            this.component.attributes.environmentId = environmentId;
+            this.component.attributes.dirty = store.dirty;
+            this.component.attributes.data = store.data;
+            this.component.attributes.currentQuery = store.currentQuery;
+            this.component.attributes.client = client;
+
+            var targetNode = document.querySelector(this.target);
+
+            (0, _preact.render)(this.component, targetNode, targetNode.lastChild);
+        }
+    }]);
+
+    return ClearFilters;
+}();
+
+var clearFilters = exports.clearFilters = function clearFilters(settings) {
+    return new ClearFilters(settings);
 };
 
 /***/ }),
@@ -7578,9 +7586,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.information = undefined;
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; /**
-                                                                                                                                                                                                                                                                   * @jsx h
-                                                                                                                                                                                                                                                                   */
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * @jsx h
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 
 var _preact = __webpack_require__(0);
 
@@ -7590,18 +7600,50 @@ var _InformationComponent2 = _interopRequireDefault(_InformationComponent);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var information = exports.information = function information(_ref) {
-    var target = _ref.target,
-        classNames = _ref.classNames,
-        template = _ref.template,
-        formatData = _ref.formatData;
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-    return (0, _preact.h)(_InformationComponent2.default, {
-        target: target,
-        classNames: _extends({}, _InformationComponent2.default.defaultProps.classNames, classNames),
-        template: template,
-        formatData: formatData
-    });
+var Information = function () {
+    function Information(_ref) {
+        var target = _ref.target,
+            classNames = _ref.classNames,
+            template = _ref.template,
+            formatData = _ref.formatData;
+
+        _classCallCheck(this, Information);
+
+        this.target = target;
+        this.component = (0, _preact.h)(_InformationComponent2.default, {
+            target: target,
+            classNames: _extends({}, _InformationComponent2.default.defaultProps.classNames, classNames),
+            template: template,
+            formatData: formatData
+        });
+    }
+
+    _createClass(Information, [{
+        key: "render",
+        value: function render(_ref2) {
+            var environmentId = _ref2.environmentId,
+                store = _ref2.store,
+                client = _ref2.client;
+
+            this.component.attributes.environmentId = environmentId;
+            this.component.attributes.dirty = store.dirty;
+            this.component.attributes.data = store.data;
+            this.component.attributes.currentQuery = store.currentQuery;
+            this.component.attributes.client = client;
+
+            var targetNode = document.querySelector(this.target);
+
+            (0, _preact.render)(this.component, targetNode, targetNode.lastChild);
+        }
+    }]);
+
+    return Information;
+}();
+
+var information = exports.information = function information(settings) {
+    return new Information(settings);
 };
 
 /***/ }),
@@ -7703,9 +7745,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.result = undefined;
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; /**
-                                                                                                                                                                                                                                                                   * @jsx h
-                                                                                                                                                                                                                                                                   */
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * @jsx h
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 
 var _preact = __webpack_require__(0);
 
@@ -7715,39 +7759,58 @@ var _ResultComponent2 = _interopRequireDefault(_ResultComponent);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * Result
- *
- * @param target
- * @param itemsPerPage
- * @param promote
- * @param exclude
- * @param highlightsEnabled
- * @param classNames
- * @param template
- * @param formatData
- * @returns {XML}
- */
-var result = exports.result = function result(_ref) {
-    var target = _ref.target,
-        itemsPerPage = _ref.itemsPerPage,
-        promote = _ref.promote,
-        exclude = _ref.exclude,
-        highlightsEnabled = _ref.highlightsEnabled,
-        classNames = _ref.classNames,
-        template = _ref.template,
-        formatData = _ref.formatData;
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-    return (0, _preact.h)(_ResultComponent2.default, {
-        target: target,
-        itemsPerPage: itemsPerPage,
-        promote: promote,
-        exclude: exclude,
-        highlightsEnabled: highlightsEnabled,
-        classNames: _extends({}, _ResultComponent2.default.defaultProps.classNames, classNames),
-        template: _extends({}, _ResultComponent2.default.defaultProps.template, template),
-        formatData: formatData
-    });
+var Result = function () {
+    function Result(_ref) {
+        var target = _ref.target,
+            itemsPerPage = _ref.itemsPerPage,
+            promote = _ref.promote,
+            exclude = _ref.exclude,
+            highlightsEnabled = _ref.highlightsEnabled,
+            classNames = _ref.classNames,
+            template = _ref.template,
+            formatData = _ref.formatData;
+
+        _classCallCheck(this, Result);
+
+        this.target = target;
+        this.component = (0, _preact.h)(_ResultComponent2.default, {
+            target: target,
+            itemsPerPage: itemsPerPage,
+            promote: promote,
+            exclude: exclude,
+            highlightsEnabled: highlightsEnabled,
+            classNames: _extends({}, _ResultComponent2.default.defaultProps.classNames, classNames),
+            template: _extends({}, _ResultComponent2.default.defaultProps.template, template),
+            formatData: formatData
+        });
+    }
+
+    _createClass(Result, [{
+        key: "render",
+        value: function render(_ref2) {
+            var environmentId = _ref2.environmentId,
+                store = _ref2.store,
+                client = _ref2.client;
+
+            this.component.attributes.environmentId = environmentId;
+            this.component.attributes.dirty = store.dirty;
+            this.component.attributes.data = store.data;
+            this.component.attributes.currentQuery = store.currentQuery;
+            this.component.attributes.client = client;
+
+            var targetNode = document.querySelector(this.target);
+
+            (0, _preact.render)(this.component, targetNode, targetNode.lastChild);
+        }
+    }]);
+
+    return Result;
+}();
+
+var result = exports.result = function result(settings) {
+    return new Result(settings);
 };
 
 /***/ }),
@@ -8026,9 +8089,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.multipleFilter = undefined;
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; /**
-                                                                                                                                                                                                                                                                   * @jsx h
-                                                                                                                                                                                                                                                                   */
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * @jsx h
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 
 var _preact = __webpack_require__(0);
 
@@ -8038,48 +8103,64 @@ var _MultipleFilterComponent2 = _interopRequireDefault(_MultipleFilterComponent)
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * Multiple filter
- *
- * @param target
- * @param name
- * @param filterField
- * @param aggregationField
- * @param applicationType
- * @param fetchLimit
- * @param viewLimit
- * @param sortBy
- * @param classNames
- * @param template
- * @param formatData
- * @returns {XML}
- */
-var multipleFilter = exports.multipleFilter = function multipleFilter(_ref) {
-    var target = _ref.target,
-        name = _ref.name,
-        filterField = _ref.filterField,
-        aggregationField = _ref.aggregationField,
-        applicationType = _ref.applicationType,
-        fetchLimit = _ref.fetchLimit,
-        viewLimit = _ref.viewLimit,
-        sortBy = _ref.sortBy,
-        classNames = _ref.classNames,
-        template = _ref.template,
-        formatData = _ref.formatData;
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-    return (0, _preact.h)(_MultipleFilterComponent2.default, {
-        target: target,
-        name: name,
-        filterField: filterField,
-        aggregationField: aggregationField,
-        applicationType: applicationType,
-        fetchLimit: fetchLimit,
-        viewLimit: viewLimit,
-        sortBy: sortBy,
-        classNames: _extends({}, _MultipleFilterComponent2.default.defaultProps.classNames, classNames),
-        template: _extends({}, _MultipleFilterComponent2.default.defaultProps.template, template),
-        formatData: formatData
-    });
+var MultipleFilter = function () {
+    function MultipleFilter(_ref) {
+        var target = _ref.target,
+            name = _ref.name,
+            filterField = _ref.filterField,
+            aggregationField = _ref.aggregationField,
+            applicationType = _ref.applicationType,
+            fetchLimit = _ref.fetchLimit,
+            viewLimit = _ref.viewLimit,
+            sortBy = _ref.sortBy,
+            classNames = _ref.classNames,
+            template = _ref.template,
+            formatData = _ref.formatData;
+
+        _classCallCheck(this, MultipleFilter);
+
+        this.target = target;
+        this.component = (0, _preact.h)(_MultipleFilterComponent2.default, {
+            target: target,
+            name: name,
+            filterField: filterField,
+            aggregationField: aggregationField,
+            applicationType: applicationType,
+            fetchLimit: fetchLimit,
+            viewLimit: viewLimit,
+            sortBy: sortBy,
+            classNames: _extends({}, _MultipleFilterComponent2.default.defaultProps.classNames, classNames),
+            template: _extends({}, _MultipleFilterComponent2.default.defaultProps.template, template),
+            formatData: formatData
+        });
+    }
+
+    _createClass(MultipleFilter, [{
+        key: "render",
+        value: function render(_ref2) {
+            var environmentId = _ref2.environmentId,
+                store = _ref2.store,
+                client = _ref2.client;
+
+            this.component.attributes.environmentId = environmentId;
+            this.component.attributes.dirty = store.dirty;
+            this.component.attributes.data = store.data;
+            this.component.attributes.currentQuery = store.currentQuery;
+            this.component.attributes.client = client;
+
+            var targetNode = document.querySelector(this.target);
+
+            (0, _preact.render)(this.component, targetNode, targetNode.lastChild);
+        }
+    }]);
+
+    return MultipleFilter;
+}();
+
+var multipleFilter = exports.multipleFilter = function multipleFilter(settings) {
+    return new MultipleFilter(settings);
 };
 
 /***/ }),
@@ -8611,9 +8692,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.simpleSearch = undefined;
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; /**
-                                                                                                                                                                                                                                                                   * @jsx h
-                                                                                                                                                                                                                                                                   */
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * @jsx h
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 
 var _preact = __webpack_require__(0);
 
@@ -8623,33 +8706,54 @@ var _SimpleSearchComponent2 = _interopRequireDefault(_SimpleSearchComponent);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * Simple search
- *
- * @param target
- * @param placeholder
- * @param startSearchOn
- * @param autofocus
- * @param classNames
- * @param template
- * @returns {XML}
- */
-var simpleSearch = exports.simpleSearch = function simpleSearch(_ref) {
-    var target = _ref.target,
-        placeholder = _ref.placeholder,
-        startSearchOn = _ref.startSearchOn,
-        autofocus = _ref.autofocus,
-        classNames = _ref.classNames,
-        template = _ref.template;
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-    return (0, _preact.h)(_SimpleSearchComponent2.default, {
-        target: target,
-        placeholder: placeholder,
-        autofocus: autofocus,
-        startSearchOn: startSearchOn,
-        classNames: _extends({}, _SimpleSearchComponent2.default.defaultProps.classNames, classNames),
-        template: _extends({}, _SimpleSearchComponent2.default.defaultProps.template, template)
-    });
+var SimpleSearch = function () {
+    function SimpleSearch(_ref) {
+        var target = _ref.target,
+            placeholder = _ref.placeholder,
+            startSearchOn = _ref.startSearchOn,
+            autofocus = _ref.autofocus,
+            classNames = _ref.classNames,
+            template = _ref.template;
+
+        _classCallCheck(this, SimpleSearch);
+
+        this.target = target;
+        this.component = (0, _preact.h)(_SimpleSearchComponent2.default, {
+            target: target,
+            placeholder: placeholder,
+            autofocus: autofocus,
+            startSearchOn: startSearchOn,
+            classNames: _extends({}, _SimpleSearchComponent2.default.defaultProps.classNames, classNames),
+            template: _extends({}, _SimpleSearchComponent2.default.defaultProps.template, template)
+        });
+    }
+
+    _createClass(SimpleSearch, [{
+        key: "render",
+        value: function render(_ref2) {
+            var environmentId = _ref2.environmentId,
+                store = _ref2.store,
+                client = _ref2.client;
+
+            this.component.attributes.environmentId = environmentId;
+            this.component.attributes.dirty = store.dirty;
+            this.component.attributes.data = store.data;
+            this.component.attributes.currentQuery = store.currentQuery;
+            this.component.attributes.client = client;
+
+            var targetNode = document.querySelector(this.target);
+
+            (0, _preact.render)(this.component, targetNode, targetNode.lastChild);
+        }
+    }]);
+
+    return SimpleSearch;
+}();
+
+var simpleSearch = exports.simpleSearch = function simpleSearch(settings) {
+    return new SimpleSearch(settings);
 };
 
 /***/ }),
@@ -8876,9 +8980,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.sortBy = undefined;
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; /**
-                                                                                                                                                                                                                                                                   * @jsx h
-                                                                                                                                                                                                                                                                   */
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * @jsx h
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 
 var _preact = __webpack_require__(0);
 
@@ -8888,24 +8994,48 @@ var _SortByComponent2 = _interopRequireDefault(_SortByComponent);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * Sort By
- *
- * @param target
- * @param classNames
- * @param options
- * @returns {XML}
- */
-var sortBy = exports.sortBy = function sortBy(_ref) {
-    var target = _ref.target,
-        classNames = _ref.classNames,
-        options = _ref.options;
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-    return (0, _preact.h)(_SortByComponent2.default, {
-        target: target,
-        classNames: _extends({}, _SortByComponent2.default.defaultProps.classNames, classNames),
-        options: options
-    });
+var SortBy = function () {
+    function SortBy(_ref) {
+        var target = _ref.target,
+            classNames = _ref.classNames,
+            options = _ref.options;
+
+        _classCallCheck(this, SortBy);
+
+        this.target = target;
+        this.component = (0, _preact.h)(_SortByComponent2.default, {
+            target: target,
+            classNames: _extends({}, _SortByComponent2.default.defaultProps.classNames, classNames),
+            options: options
+        });
+    }
+
+    _createClass(SortBy, [{
+        key: "render",
+        value: function render(_ref2) {
+            var environmentId = _ref2.environmentId,
+                store = _ref2.store,
+                client = _ref2.client;
+
+            this.component.attributes.environmentId = environmentId;
+            this.component.attributes.dirty = store.dirty;
+            this.component.attributes.data = store.data;
+            this.component.attributes.currentQuery = store.currentQuery;
+            this.component.attributes.client = client;
+
+            var targetNode = document.querySelector(this.target);
+
+            (0, _preact.render)(this.component, targetNode, targetNode.lastChild);
+        }
+    }]);
+
+    return SortBy;
+}();
+
+var sortBy = exports.sortBy = function sortBy(settings) {
+    return new SortBy(settings);
 };
 
 /***/ }),
@@ -9115,9 +9245,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.suggestedSearch = undefined;
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; /**
-                                                                                                                                                                                                                                                                   * @jsx h
-                                                                                                                                                                                                                                                                   */
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * @jsx h
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 
 var _preact = __webpack_require__(0);
 
@@ -9127,33 +9259,54 @@ var _SuggestedSearchComponent2 = _interopRequireDefault(_SuggestedSearchComponen
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * Suggested Search
- *
- * @param target
- * @param placeholder
- * @param autofocus
- * @param startSearchOn
- * @param classNames
- * @param template
- * @returns {XML}
- */
-var suggestedSearch = exports.suggestedSearch = function suggestedSearch(_ref) {
-    var target = _ref.target,
-        placeholder = _ref.placeholder,
-        autofocus = _ref.autofocus,
-        startSearchOn = _ref.startSearchOn,
-        classNames = _ref.classNames,
-        template = _ref.template;
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-    return (0, _preact.h)(_SuggestedSearchComponent2.default, {
-        target: target,
-        placeholder: placeholder,
-        autofocus: autofocus,
-        startSearchOn: startSearchOn,
-        classNames: _extends({}, _SuggestedSearchComponent2.default.defaultProps.classNames, classNames),
-        template: template
-    });
+var SuggestedSearch = function () {
+    function SuggestedSearch(_ref) {
+        var target = _ref.target,
+            placeholder = _ref.placeholder,
+            autofocus = _ref.autofocus,
+            startSearchOn = _ref.startSearchOn,
+            classNames = _ref.classNames,
+            template = _ref.template;
+
+        _classCallCheck(this, SuggestedSearch);
+
+        this.target = target;
+        this.component = (0, _preact.h)(_SuggestedSearchComponent2.default, {
+            target: target,
+            placeholder: placeholder,
+            autofocus: autofocus,
+            startSearchOn: startSearchOn,
+            classNames: _extends({}, _SuggestedSearchComponent2.default.defaultProps.classNames, classNames),
+            template: template
+        });
+    }
+
+    _createClass(SuggestedSearch, [{
+        key: "render",
+        value: function render(_ref2) {
+            var environmentId = _ref2.environmentId,
+                store = _ref2.store,
+                client = _ref2.client;
+
+            this.component.attributes.environmentId = environmentId;
+            this.component.attributes.dirty = store.dirty;
+            this.component.attributes.data = store.data;
+            this.component.attributes.currentQuery = store.currentQuery;
+            this.component.attributes.client = client;
+
+            var targetNode = document.querySelector(this.target);
+
+            (0, _preact.render)(this.component, targetNode, targetNode.lastChild);
+        }
+    }]);
+
+    return SuggestedSearch;
+}();
+
+var suggestedSearch = exports.suggestedSearch = function suggestedSearch(settings) {
+    return new SuggestedSearch(settings);
 };
 
 /***/ }),
@@ -9685,9 +9838,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.pagination = undefined;
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; /**
-                                                                                                                                                                                                                                                                   * @jsx h
-                                                                                                                                                                                                                                                                   */
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * @jsx h
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 
 var _preact = __webpack_require__(0);
 
@@ -9697,21 +9852,53 @@ var _PaginationComponent2 = _interopRequireDefault(_PaginationComponent);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var pagination = exports.pagination = function pagination(_ref) {
-    var target = _ref.target,
-        padding = _ref.padding,
-        goFirstLast = _ref.goFirstLast,
-        classNames = _ref.classNames,
-        template = _ref.template;
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-    return (0, _preact.h)(_PaginationComponent2.default, {
-        Component: true,
-        target: target,
-        padding: padding,
-        goFirstLast: goFirstLast,
-        classNames: _extends({}, _PaginationComponent2.default.defaultProps.classNames, classNames),
-        template: _extends({}, _PaginationComponent2.default.defaultProps.template, template)
-    });
+var Pagination = function () {
+    function Pagination(_ref) {
+        var target = _ref.target,
+            padding = _ref.padding,
+            goFirstLast = _ref.goFirstLast,
+            classNames = _ref.classNames,
+            template = _ref.template;
+
+        _classCallCheck(this, Pagination);
+
+        this.target = target;
+        this.component = (0, _preact.h)(_PaginationComponent2.default, {
+            Component: true,
+            target: target,
+            padding: padding,
+            goFirstLast: goFirstLast,
+            classNames: _extends({}, _PaginationComponent2.default.defaultProps.classNames, classNames),
+            template: _extends({}, _PaginationComponent2.default.defaultProps.template, template)
+        });
+    }
+
+    _createClass(Pagination, [{
+        key: "render",
+        value: function render(_ref2) {
+            var environmentId = _ref2.environmentId,
+                store = _ref2.store,
+                client = _ref2.client;
+
+            this.component.attributes.environmentId = environmentId;
+            this.component.attributes.dirty = store.dirty;
+            this.component.attributes.data = store.data;
+            this.component.attributes.currentQuery = store.currentQuery;
+            this.component.attributes.client = client;
+
+            var targetNode = document.querySelector(this.target);
+
+            (0, _preact.render)(this.component, targetNode, targetNode.lastChild);
+        }
+    }]);
+
+    return Pagination;
+}();
+
+var pagination = exports.pagination = function pagination(settings) {
+    return new Pagination(settings);
 };
 
 /***/ }),

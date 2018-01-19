@@ -13,7 +13,7 @@ import 'styles/apisearch-ui.sass';
 import container from "./container";
 import {bootstrap} from "./bootstrap";
 import {createEnvironmentId} from "./environment";
-import {widgets} from "./widgets/widgets";
+import {widgets} from "./widgets/index";
 import {APISEARCH_DISPATCHER, APISEARCH_UI} from "./constants";
 
 /**

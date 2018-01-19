@@ -79,47 +79,13 @@ class ApisearchUI {
      */
     render() {
         this.activeWidgets.map(widget => {
-            let hydratedWidget = hydrateWidget(
-                this.environmentId,
-                this.store,
-                this.client,
-                widget
-            );
-            let targetNode = document.querySelector(widget.attributes.target);
-
-            if (null === targetNode) {
-                throw new Error(
-                    `Widget (${hydratedWidget.nodeName.name}) must have a valid DOM target`
-                )
-            }
-
-            render(
-                hydratedWidget,
-                targetNode,
-                targetNode.lastChild
-            )
+            widget.render({
+                environmentId: this.environmentId,
+                store: this.store,
+                client: this.client
+            });
         });
     }
-}
-
-function hydrateWidget(
-    environmentId,
-    currentStore,
-    client,
-    widget
-) {
-    /**
-     * Pass ApisearchClient, current Query, and data received
-     * as a component attributes. There will be accessible
-     * on component props.
-     */
-    widget.attributes.environmentId = environmentId;
-    widget.attributes.dirty = currentStore.dirty;
-    widget.attributes.data = currentStore.data;
-    widget.attributes.currentQuery = currentStore.currentQuery;
-    widget.attributes.client = client;
-
-    return widget;
 }
 
 export default ApisearchUI;
