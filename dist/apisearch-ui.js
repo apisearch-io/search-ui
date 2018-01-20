@@ -8984,7 +8984,8 @@ var SimpleSearchComponent = function (_Component) {
                 autofocus: autofocus,
                 placeholder: placeholder,
                 onInput: this.handleSearch,
-                value: currentQueryText
+                value: currentQueryText,
+                autocomplete: "off"
             }));
 
             if (withContainer) {

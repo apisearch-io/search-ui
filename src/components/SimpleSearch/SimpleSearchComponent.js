@@ -86,6 +86,7 @@ class SimpleSearchComponent extends Component {
             placeholder={placeholder}
             onInput={this.handleSearch}
             value={currentQueryText}
+            autocomplete="off"
         />);
 
         if (withContainer) {

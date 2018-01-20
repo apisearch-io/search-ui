@@ -11,6 +11,7 @@ preact-render-spy (1 nodes)
     placeholder=""
     onInput={[Function anonymous]}
     value="Some query text..."
+    autocomplete="off"
    />
   <div
     class="as-simpleSearch__clearSearch "
@@ -34,6 +35,7 @@ preact-render-spy (1 nodes)
   placeholder=""
   onInput={[Function anonymous]}
   value=""
+  autocomplete="off"
  />
 
 `;
@@ -48,6 +50,7 @@ preact-render-spy (1 nodes)
   placeholder=""
   onInput={[Function anonymous]}
   value=""
+  autocomplete="off"
  />
 
 `;
@@ -63,6 +66,7 @@ preact-render-spy (1 nodes)
     placeholder="Type something..."
     onInput={[Function anonymous]}
     value=""
+    autocomplete="off"
    />
 </div>
 
@@ -79,6 +83,7 @@ preact-render-spy (1 nodes)
     placeholder=""
     onInput={[Function anonymous]}
     value=""
+    autocomplete="off"
    />
 </div>
 
