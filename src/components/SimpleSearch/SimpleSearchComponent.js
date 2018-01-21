@@ -81,12 +81,11 @@ class SimpleSearchComponent extends Component {
         let searchInput = (<input
             type='text'
             className={`as-simpleSearch__input ${inputClassName}`}
-            {...htmlNodeInheritProps}
-            autofocus={autofocus}
             placeholder={placeholder}
+            autofocus={autofocus}
+            {...htmlNodeInheritProps}
             onInput={this.handleSearch}
             value={currentQueryText}
-            autocomplete="off"
         />);
 
         if (withContainer) {

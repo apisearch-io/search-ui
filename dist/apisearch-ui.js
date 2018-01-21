@@ -8784,7 +8784,7 @@ var SimpleSearch = function () {
     }
 
     _createClass(SimpleSearch, [{
-        key: "render",
+        key: 'render',
         value: function render(_ref2) {
             var environmentId = _ref2.environmentId,
                 store = _ref2.store,
@@ -8795,7 +8795,11 @@ var SimpleSearch = function () {
                 client: client,
                 dirty: store.dirty,
                 data: store.data,
-                currentQuery: store.currentQuery
+                currentQuery: store.currentQuery,
+                htmlNodeInheritProps: {
+                    autocomplete: 'off',
+                    spellcheck: 0
+                }
             });
 
             var targetNode = document.querySelector(this.target);
@@ -8813,7 +8817,7 @@ var SimpleSearch = function () {
             if (isInput && this.isFirstRender) {
                 this.component.attributes = _extends({}, this.component.attributes, {
                     withContainer: false,
-                    htmlNodeInheritProps: getNodeAttributes(targetNode)
+                    htmlNodeInheritProps: _extends({}, this.component.attributes.htmlNodeInheritedProps, getNodeAttributes(targetNode))
                 });
                 var parentNode = targetNode.parentNode;
 
@@ -8979,13 +8983,12 @@ var SimpleSearchComponent = function (_Component) {
 
             var searchInput = (0, _preact.h)("input", _extends({
                 type: "text",
-                className: "as-simpleSearch__input " + inputClassName
-            }, htmlNodeInheritProps, {
-                autofocus: autofocus,
+                className: "as-simpleSearch__input " + inputClassName,
                 placeholder: placeholder,
+                autofocus: autofocus
+            }, htmlNodeInheritProps, {
                 onInput: this.handleSearch,
-                value: currentQueryText,
-                autocomplete: "off"
+                value: currentQueryText
             }));
 
             if (withContainer) {

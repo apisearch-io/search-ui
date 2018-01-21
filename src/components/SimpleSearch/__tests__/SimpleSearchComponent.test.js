@@ -62,7 +62,9 @@ describe('<SimpleSearchComponent />', () => {
                 htmlNodeInheritProps={{
                     'className': 'some-class-name',
                     'data-apisearch': 'apisearch-search-bar',
-                    'id': 'some-id'
+                    'id': 'some-id',
+                    'autocomplete': 'off',
+                    'spellcheck': 0
                 }}
                 withContainer={false}
                 clearSearch={false}

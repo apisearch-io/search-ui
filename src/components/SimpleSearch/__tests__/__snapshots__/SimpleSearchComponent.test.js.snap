@@ -7,11 +7,10 @@ preact-render-spy (1 nodes)
   <input
     type="text"
     class="as-simpleSearch__input "
-    autofocus={false}
     placeholder=""
+    autofocus={false}
     onInput={[Function anonymous]}
     value="Some query text..."
-    autocomplete="off"
    />
   <div
     class="as-simpleSearch__clearSearch "
@@ -29,13 +28,14 @@ preact-render-spy (1 nodes)
 <input
   type="text"
   class="some-class-name"
+  placeholder=""
+  autofocus={false}
   data-apisearch="apisearch-search-bar"
   id="some-id"
-  autofocus={false}
-  placeholder=""
+  autocomplete="off"
+  spellcheck={0}
   onInput={[Function anonymous]}
   value=""
-  autocomplete="off"
  />
 
 `;
@@ -46,11 +46,10 @@ preact-render-spy (1 nodes)
 <input
   type="text"
   class="as-simpleSearch__input "
-  autofocus={false}
   placeholder=""
+  autofocus={false}
   onInput={[Function anonymous]}
   value=""
-  autocomplete="off"
  />
 
 `;
@@ -62,11 +61,10 @@ preact-render-spy (1 nodes)
   <input
     type="text"
     class="as-simpleSearch__input undefined"
-    autofocus={false}
     placeholder="Type something..."
+    autofocus={false}
     onInput={[Function anonymous]}
     value=""
-    autocomplete="off"
    />
 </div>
 
@@ -79,11 +77,10 @@ preact-render-spy (1 nodes)
   <input
     type="text"
     class="as-simpleSearch__input "
-    autofocus={false}
     placeholder=""
+    autofocus={false}
     onInput={[Function anonymous]}
     value=""
-    autocomplete="off"
    />
 </div>
 

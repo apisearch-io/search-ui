@@ -50,7 +50,11 @@ class SimpleSearch {
             client,
             dirty: store.dirty,
             data: store.data,
-            currentQuery: store.currentQuery
+            currentQuery: store.currentQuery,
+            htmlNodeInheritProps: {
+                autocomplete: 'off',
+                spellcheck: 0
+            }
         };
 
         let targetNode = document.querySelector(this.target);
@@ -73,7 +77,10 @@ class SimpleSearch {
             this.component.attributes = {
                 ...this.component.attributes,
                 withContainer: false,
-                htmlNodeInheritProps: getNodeAttributes(targetNode)
+                htmlNodeInheritProps: {
+                    ...this.component.attributes.htmlNodeInheritedProps,
+                    ...getNodeAttributes(targetNode)
+                }
             };
             let parentNode = targetNode.parentNode;
 
