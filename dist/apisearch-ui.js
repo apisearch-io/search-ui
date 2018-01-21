@@ -6358,11 +6358,13 @@ var ClearFilters = function () {
                 store = _ref2.store,
                 client = _ref2.client;
 
-            this.component.attributes.environmentId = environmentId;
-            this.component.attributes.dirty = store.dirty;
-            this.component.attributes.data = store.data;
-            this.component.attributes.currentQuery = store.currentQuery;
-            this.component.attributes.client = client;
+            this.component.attributes = _extends({}, this.component.attributes, {
+                environmentId: environmentId,
+                client: client,
+                dirty: store.dirty,
+                data: store.data,
+                currentQuery: store.currentQuery
+            });
 
             var targetNode = document.querySelector(this.target);
 
@@ -7643,11 +7645,13 @@ var Information = function () {
                 store = _ref2.store,
                 client = _ref2.client;
 
-            this.component.attributes.environmentId = environmentId;
-            this.component.attributes.dirty = store.dirty;
-            this.component.attributes.data = store.data;
-            this.component.attributes.currentQuery = store.currentQuery;
-            this.component.attributes.client = client;
+            this.component.attributes = _extends({}, this.component.attributes, {
+                environmentId: environmentId,
+                client: client,
+                dirty: store.dirty,
+                data: store.data,
+                currentQuery: store.currentQuery
+            });
 
             var targetNode = document.querySelector(this.target);
 
@@ -7820,11 +7824,13 @@ var Result = function () {
                 store = _ref2.store,
                 client = _ref2.client;
 
-            this.component.attributes.environmentId = environmentId;
-            this.component.attributes.dirty = store.dirty;
-            this.component.attributes.data = store.data;
-            this.component.attributes.currentQuery = store.currentQuery;
-            this.component.attributes.client = client;
+            this.component.attributes = _extends({}, this.component.attributes, {
+                environmentId: environmentId,
+                client: client,
+                dirty: store.dirty,
+                data: store.data,
+                currentQuery: store.currentQuery
+            });
 
             var targetNode = document.querySelector(this.target);
 
@@ -8180,11 +8186,13 @@ var MultipleFilter = function () {
                 store = _ref2.store,
                 client = _ref2.client;
 
-            this.component.attributes.environmentId = environmentId;
-            this.component.attributes.dirty = store.dirty;
-            this.component.attributes.data = store.data;
-            this.component.attributes.currentQuery = store.currentQuery;
-            this.component.attributes.client = client;
+            this.component.attributes = _extends({}, this.component.attributes, {
+                environmentId: environmentId,
+                client: client,
+                dirty: store.dirty,
+                data: store.data,
+                currentQuery: store.currentQuery
+            });
 
             var targetNode = document.querySelector(this.target);
 
@@ -9154,11 +9162,13 @@ var SortBy = function () {
                 store = _ref2.store,
                 client = _ref2.client;
 
-            this.component.attributes.environmentId = environmentId;
-            this.component.attributes.dirty = store.dirty;
-            this.component.attributes.data = store.data;
-            this.component.attributes.currentQuery = store.currentQuery;
-            this.component.attributes.client = client;
+            this.component.attributes = _extends({}, this.component.attributes, {
+                environmentId: environmentId,
+                client: client,
+                dirty: store.dirty,
+                data: store.data,
+                currentQuery: store.currentQuery
+            });
 
             var targetNode = document.querySelector(this.target);
 
@@ -9437,11 +9447,13 @@ var SuggestedSearch = function () {
                 store = _ref2.store,
                 client = _ref2.client;
 
-            this.component.attributes.environmentId = environmentId;
-            this.component.attributes.dirty = store.dirty;
-            this.component.attributes.data = store.data;
-            this.component.attributes.currentQuery = store.currentQuery;
-            this.component.attributes.client = client;
+            this.component.attributes = _extends({}, this.component.attributes, {
+                environmentId: environmentId,
+                client: client,
+                dirty: store.dirty,
+                data: store.data,
+                currentQuery: store.currentQuery
+            });
 
             var targetNode = document.querySelector(this.target);
 
@@ -10041,11 +10053,13 @@ var Pagination = function () {
                 store = _ref2.store,
                 client = _ref2.client;
 
-            this.component.attributes.environmentId = environmentId;
-            this.component.attributes.dirty = store.dirty;
-            this.component.attributes.data = store.data;
-            this.component.attributes.currentQuery = store.currentQuery;
-            this.component.attributes.client = client;
+            this.component.attributes = _extends({}, this.component.attributes, {
+                environmentId: environmentId,
+                client: client,
+                dirty: store.dirty,
+                data: store.data,
+                currentQuery: store.currentQuery
+            });
 
             var targetNode = document.querySelector(this.target);
 

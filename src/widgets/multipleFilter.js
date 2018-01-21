@@ -49,11 +49,14 @@ class MultipleFilter {
         store,
         client
     }) {
-        this.component.attributes.environmentId = environmentId;
-        this.component.attributes.dirty = store.dirty;
-        this.component.attributes.data = store.data;
-        this.component.attributes.currentQuery = store.currentQuery;
-        this.component.attributes.client = client;
+        this.component.attributes = {
+            ...this.component.attributes,
+            environmentId,
+            client,
+            dirty: store.dirty,
+            data: store.data,
+            currentQuery: store.currentQuery,
+        };
 
         let targetNode = document.querySelector(this.target);
 
