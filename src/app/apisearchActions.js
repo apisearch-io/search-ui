@@ -24,7 +24,7 @@ export function initialDataFetchAction(
     initialQuery,
     client
 ) {
-    client.search(initialQuery, initialResult => {
+    client.search(initialQuery.toJSON(), initialResult => {
         const dispatcher = container
             .get(`${APISEARCH_DISPATCHER}__${environmentId}`)
         ;

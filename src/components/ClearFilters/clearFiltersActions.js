@@ -35,7 +35,7 @@ export function clearFiltersAction(
     clonedQuery.filters = [];
     clonedQuery.setPage(1);
 
-    client.search(clonedQuery, (result, error) => {
+    client.search(clonedQuery.toJSON(), (result, error) => {
         if (error) return;
 
         const dispatcher = container

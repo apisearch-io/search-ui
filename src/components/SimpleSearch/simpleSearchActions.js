@@ -43,7 +43,7 @@ export function simpleSearchAction(
     const dispatcher = container
         .get(`${APISEARCH_DISPATCHER}__${environmentId}`)
     ;
-    client.search(clonedQuery, (result, error) => {
+    client.search(clonedQuery.toJSON(), (result, error) => {
         if (error) return;
 
         dispatcher.dispatch({

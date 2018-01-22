@@ -2342,7 +2342,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  *   }}
  */
 function initialDataFetchAction(environmentId, initialQuery, client) {
-    client.search(initialQuery, function (initialResult) {
+    client.search(initialQuery.toJSON(), function (initialResult) {
         var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
 
         dispatcher.dispatch({
@@ -5232,15 +5232,14 @@ var Query = function () {
         this.page = params.page || QUERY_DEFAULT_PAGE;
         this.size = params.size || QUERY_DEFAULT_SIZE;
         this.from = params.from || QUERY_DEFAULT_FROM;
-        this.results_enabled = params.results_enabled || true;
-        this.aggregations_enabled = params.aggregations_enabled || true;
-        this.suggestions_enabled = params.suggestions_enabled || false;
-        this.highlight_enabled = params.highlight_enabled || false;
+        this.results_enabled = params.results_enabled || null;
+        this.aggregations_enabled = params.aggregations_enabled || null;
+        this.suggestions_enabled = params.suggestions_enabled || null;
+        this.highlight_enabled = params.highlight_enabled || null;
         this.filter_fields = params.filter_fields || [];
         this.user = params.user || null;
         this.coordinate = typeof params.coordinate !== 'undefined' ? new _Coordinate2.default(params.coordinate.lat, params.coordinate.lon) : null;
-        this.sort = {};
-        this.sortBy(_SortBy.SORT_BY_SCORE);
+        this.sort = null;
 
         return this;
     }
@@ -5632,6 +5631,32 @@ var Query = function () {
 
             return null;
         }
+    }, {
+        key: "toJSON",
+        value: function toJSON() {
+            var _this4 = this;
+
+            var object = {
+                q: this.q
+            };
+
+            Object.keys(this).forEach(function (key) {
+                var value = _this4[key];
+
+                /**
+                 * When null, server handles its default values
+                 */
+                if (value instanceof Array && value.length === 0) return;
+                if (value === null) return;
+                if (key === 'page' && value === QUERY_DEFAULT_PAGE) return;
+                if (key === 'from' && value === QUERY_DEFAULT_FROM) return;
+                if (key === 'size' && value === QUERY_DEFAULT_SIZE) return;
+
+                object = _extends({}, object, _defineProperty({}, key, value));
+            });
+
+            return object;
+        }
     }]);
 
     return Query;
@@ -5821,7 +5846,7 @@ exports.default = MemoryCache;
 /***/ })
 /******/ ]);
 });
-//# sourceMappingURL=apisearch.node.js.map
+//# sourceMappingURL=apisearch.js.map
 
 /***/ }),
 /* 18 */
@@ -7353,7 +7378,7 @@ function clearFiltersAction(_ref, _ref2) {
     clonedQuery.filters = [];
     clonedQuery.setPage(1);
 
-    client.search(clonedQuery, function (result, error) {
+    client.search(clonedQuery.toJSON(), function (result, error) {
         if (error) return;
 
         var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + "__" + environmentId);
@@ -8606,7 +8631,7 @@ function filterAction(_ref3, _ref4) {
     clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy, fetchLimit);
     clonedQuery.setPage(1);
 
-    client.search(clonedQuery, function (result, error) {
+    client.search(clonedQuery.toJSON(), function (result, error) {
         if (error) return;
 
         var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + "__" + environmentId);
@@ -9093,7 +9118,7 @@ function simpleSearchAction(_ref, _ref2) {
     clonedQuery.setQueryText(queryText).setPage(1);
 
     var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
-    client.search(clonedQuery, function (result, error) {
+    client.search(clonedQuery.toJSON(), function (result, error) {
         if (error) return;
 
         dispatcher.dispatch({
@@ -9362,7 +9387,7 @@ function onChangeSearchAction(_ref, _ref2) {
     }));
     clonedQuery.setPage(1);
 
-    client.search(clonedQuery, function (result, error) {
+    client.search(clonedQuery.toJSON(), function (result, error) {
         if (error) return;
 
         var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
@@ -9949,7 +9974,7 @@ function simpleSearchAction(_ref, _ref2) {
 
     clonedQuery.setQueryText(queryText).setPage(1).enableResults().disableSuggestions();
 
-    client.search(clonedQuery, function (result, error) {
+    client.search(clonedQuery.toJSON(), function (result, error) {
         if (error) return;
 
         var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
@@ -10362,7 +10387,7 @@ function paginationChangeAction(_ref, _ref2) {
     var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
     clonedQuery.page = selectedPage;
 
-    client.search(clonedQuery, function (result, error) {
+    client.search(clonedQuery.toJSON(), function (result, error) {
         if (error) return;
 
         var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
