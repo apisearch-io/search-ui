@@ -3,12 +3,12 @@
  */
 
 import { h, render } from 'preact';
-import SimpleSearchComponent from "../components/SimpleSearch/SimpleSearchComponent";
+import SearchInputComponent from "../components/SearchInput/SearchInputComponent";
 
 /**
- * Simple Search
+ * SearchInput
  */
-class SimpleSearch {
+class SearchInput {
     constructor({
         target,
         placeholder,
@@ -21,7 +21,7 @@ class SimpleSearch {
     }) {
         this.target = target;
         this.isFirstRender = true;
-        this.component = <SimpleSearchComponent
+        this.component = <SearchInputComponent
             target={target}
             placeholder={placeholder}
             autofocus={autofocus}
@@ -29,11 +29,11 @@ class SimpleSearch {
             clearSearch={clearSearch}
             withContainer={withContainer}
             classNames={{
-                ...SimpleSearchComponent.defaultProps.classNames,
+                ...SearchInputComponent.defaultProps.classNames,
                 ...classNames
             }}
             template={{
-                ...SimpleSearchComponent.defaultProps.template,
+                ...SearchInputComponent.defaultProps.template,
                 ...template
             }}
         />
@@ -131,8 +131,8 @@ const isInputElement = (targetNode) => {
 };
 
 /**
- * Simple search widget
+ * Search Input widget
  *
  * @param settings
  */
-export const simpleSearch = settings => new SimpleSearch(settings);
+export const searchInput = settings => new SearchInput(settings);

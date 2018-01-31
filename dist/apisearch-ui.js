@@ -6307,20 +6307,17 @@ var _result = __webpack_require__(36);
 
 var _multipleFilter = __webpack_require__(40);
 
-var _simpleSearch = __webpack_require__(46);
+var _searchInput = __webpack_require__(46);
 
 var _sortBy = __webpack_require__(49);
 
-var _suggestedSearch = __webpack_require__(52);
-
-var _pagination = __webpack_require__(56);
+var _pagination = __webpack_require__(52);
 
 /**
  * Widget factories
  */
 var widgets = exports.widgets = {
-    simpleSearch: _simpleSearch.simpleSearch,
-    suggestedSearch: _suggestedSearch.suggestedSearch,
+    searchInput: _searchInput.searchInput,
     clearFilters: _clearFilters.clearFilters,
     multipleFilter: _multipleFilter.multipleFilter,
     sortBy: _sortBy.sortBy,
@@ -8766,7 +8763,7 @@ var defaultItemTemplate = exports.defaultItemTemplate = "\n    <input \n        
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.simpleSearch = undefined;
+exports.searchInput = undefined;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -8776,9 +8773,9 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _SimpleSearchComponent = __webpack_require__(47);
+var _SearchInputComponent = __webpack_require__(47);
 
-var _SimpleSearchComponent2 = _interopRequireDefault(_SimpleSearchComponent);
+var _SearchInputComponent2 = _interopRequireDefault(_SearchInputComponent);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -8787,10 +8784,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
- * Simple Search
+ * SearchInput
  */
-var SimpleSearch = function () {
-    function SimpleSearch(_ref) {
+var SearchInput = function () {
+    function SearchInput(_ref) {
         var target = _ref.target,
             placeholder = _ref.placeholder,
             startSearchOn = _ref.startSearchOn,
@@ -8800,23 +8797,23 @@ var SimpleSearch = function () {
             classNames = _ref.classNames,
             template = _ref.template;
 
-        _classCallCheck(this, SimpleSearch);
+        _classCallCheck(this, SearchInput);
 
         this.target = target;
         this.isFirstRender = true;
-        this.component = (0, _preact.h)(_SimpleSearchComponent2.default, {
+        this.component = (0, _preact.h)(_SearchInputComponent2.default, {
             target: target,
             placeholder: placeholder,
             autofocus: autofocus,
             startSearchOn: startSearchOn,
             clearSearch: clearSearch,
             withContainer: withContainer,
-            classNames: _extends({}, _SimpleSearchComponent2.default.defaultProps.classNames, classNames),
-            template: _extends({}, _SimpleSearchComponent2.default.defaultProps.template, template)
+            classNames: _extends({}, _SearchInputComponent2.default.defaultProps.classNames, classNames),
+            template: _extends({}, _SearchInputComponent2.default.defaultProps.template, template)
         });
     }
 
-    _createClass(SimpleSearch, [{
+    _createClass(SearchInput, [{
         key: 'render',
         value: function render(_ref2) {
             var environmentId = _ref2.environmentId,
@@ -8863,7 +8860,7 @@ var SimpleSearch = function () {
         }
     }]);
 
-    return SimpleSearch;
+    return SearchInput;
 }();
 
 /**
@@ -8899,12 +8896,12 @@ var isInputElement = function isInputElement(targetNode) {
 };
 
 /**
- * Simple search widget
+ * Search Input widget
  *
  * @param settings
  */
-var simpleSearch = exports.simpleSearch = function simpleSearch(settings) {
-    return new SimpleSearch(settings);
+var searchInput = exports.searchInput = function searchInput(settings) {
+    return new SearchInput(settings);
 };
 
 /***/ }),
@@ -8924,7 +8921,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _simpleSearchActions = __webpack_require__(48);
+var _searchInputActions = __webpack_require__(48);
 
 var _Template = __webpack_require__(3);
 
@@ -8941,23 +8938,23 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 */
 
 /**
- * SimpleSearch Component
+ * SearchInput Component
  */
-var SimpleSearchComponent = function (_Component) {
-    _inherits(SimpleSearchComponent, _Component);
+var SearchInputComponent = function (_Component) {
+    _inherits(SearchInputComponent, _Component);
 
-    function SimpleSearchComponent() {
+    function SearchInputComponent() {
         var _ref;
 
         var _temp, _this, _ret;
 
-        _classCallCheck(this, SimpleSearchComponent);
+        _classCallCheck(this, SearchInputComponent);
 
         for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
             args[_key] = arguments[_key];
         }
 
-        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = SimpleSearchComponent.__proto__ || Object.getPrototypeOf(SimpleSearchComponent)).call.apply(_ref, [this].concat(args))), _this), _this.handleSearch = function (e) {
+        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = SearchInputComponent.__proto__ || Object.getPrototypeOf(SearchInputComponent)).call.apply(_ref, [this].concat(args))), _this), _this.handleSearch = function (e) {
             var _this$props = _this.props,
                 startSearchOn = _this$props.startSearchOn,
                 environmentId = _this$props.environmentId,
@@ -8973,7 +8970,7 @@ var SimpleSearchComponent = function (_Component) {
             /**
              * Dispatch input search action
              */
-            (0, _simpleSearchActions.simpleSearchAction)({
+            (0, _searchInputActions.simpleSearchAction)({
                 queryText: e.target.value
             }, {
                 environmentId: environmentId,
@@ -8987,7 +8984,7 @@ var SimpleSearchComponent = function (_Component) {
                 client = _this$props2.client;
 
 
-            (0, _simpleSearchActions.simpleSearchAction)({
+            (0, _searchInputActions.simpleSearchAction)({
                 queryText: ''
             }, {
                 environmentId: environmentId,
@@ -8997,7 +8994,7 @@ var SimpleSearchComponent = function (_Component) {
         }, _temp), _possibleConstructorReturn(_this, _ret);
     }
 
-    _createClass(SimpleSearchComponent, [{
+    _createClass(SearchInputComponent, [{
         key: "render",
         value: function render() {
             var _props = this.props,
@@ -9016,9 +9013,9 @@ var SimpleSearchComponent = function (_Component) {
 
             var searchInput = (0, _preact.h)("input", _extends({
                 type: "text",
-                className: "as-simpleSearch__input " + inputClassName,
+                className: "as-searchInput__input " + inputClassName,
                 placeholder: placeholder,
-                autofocus: autofocus
+                autoFocus: autofocus
             }, htmlNodeInheritProps, {
                 onInput: this.handleSearch,
                 value: currentQueryText
@@ -9027,12 +9024,12 @@ var SimpleSearchComponent = function (_Component) {
             if (withContainer) {
                 return (0, _preact.h)(
                     "div",
-                    { className: "as-simpleSearch " + containerClassName },
+                    { className: "as-searchInput " + containerClassName },
                     searchInput,
                     clearSearch && currentQueryText.length !== 0 ? (0, _preact.h)(
                         "div",
                         {
-                            className: "as-simpleSearch__clearSearch " + clearSearchClassName,
+                            className: "as-searchInput__clearSearch " + clearSearchClassName,
                             onClick: this.clearSearch
                         },
                         (0, _preact.h)(_Template2.default, { template: clearSearchTemplate })
@@ -9044,10 +9041,10 @@ var SimpleSearchComponent = function (_Component) {
         }
     }]);
 
-    return SimpleSearchComponent;
+    return SearchInputComponent;
 }(_preact.Component);
 
-SimpleSearchComponent.defaultProps = {
+SearchInputComponent.defaultProps = {
     placeholder: '',
     autofocus: false,
     startSearchOn: 0,
@@ -9063,7 +9060,7 @@ SimpleSearchComponent.defaultProps = {
     }
 };
 
-exports.default = SimpleSearchComponent;
+exports.default = SearchInputComponent;
 
 /***/ }),
 /* 48 */
@@ -9420,615 +9417,6 @@ function splitQueryValue(string) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.suggestedSearch = undefined;
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * @jsx h
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
-
-var _preact = __webpack_require__(0);
-
-var _SuggestedSearchComponent = __webpack_require__(53);
-
-var _SuggestedSearchComponent2 = _interopRequireDefault(_SuggestedSearchComponent);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * Suggested Search
- */
-var SuggestedSearch = function () {
-    function SuggestedSearch(_ref) {
-        var target = _ref.target,
-            placeholder = _ref.placeholder,
-            autofocus = _ref.autofocus,
-            startSearchOn = _ref.startSearchOn,
-            clearSearch = _ref.clearSearch,
-            classNames = _ref.classNames,
-            template = _ref.template;
-
-        _classCallCheck(this, SuggestedSearch);
-
-        this.target = target;
-        this.component = (0, _preact.h)(_SuggestedSearchComponent2.default, {
-            target: target,
-            placeholder: placeholder,
-            autofocus: autofocus,
-            startSearchOn: startSearchOn,
-            clearSearch: clearSearch,
-            classNames: _extends({}, _SuggestedSearchComponent2.default.defaultProps.classNames, classNames),
-            template: template
-        });
-    }
-
-    _createClass(SuggestedSearch, [{
-        key: "render",
-        value: function render(_ref2) {
-            var environmentId = _ref2.environmentId,
-                store = _ref2.store,
-                client = _ref2.client;
-
-            this.component.attributes = _extends({}, this.component.attributes, {
-                environmentId: environmentId,
-                client: client,
-                dirty: store.dirty,
-                data: store.data,
-                currentQuery: store.currentQuery
-            });
-
-            var targetNode = document.querySelector(this.target);
-
-            (0, _preact.render)(this.component, targetNode, targetNode.lastChild);
-        }
-    }]);
-
-    return SuggestedSearch;
-}();
-
-/**
- * Suggested search widget
- *
- * @param settings
- */
-
-
-var suggestedSearch = exports.suggestedSearch = function suggestedSearch(settings) {
-    return new SuggestedSearch(settings);
-};
-
-/***/ }),
-/* 53 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _preact = __webpack_require__(0);
-
-var _helpers = __webpack_require__(54);
-
-var _suggestedSearchActions = __webpack_require__(55);
-
-var _Template = __webpack_require__(3);
-
-var _Template2 = _interopRequireDefault(_Template);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @jsx h
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
-/**
- * Actions
- */
-
-
-/**
- * Suggested Search Component
- */
-var SuggestedSearchComponent = function (_Component) {
-    _inherits(SuggestedSearchComponent, _Component);
-
-    function SuggestedSearchComponent() {
-        _classCallCheck(this, SuggestedSearchComponent);
-
-        var _this = _possibleConstructorReturn(this, (SuggestedSearchComponent.__proto__ || Object.getPrototypeOf(SuggestedSearchComponent)).call(this));
-
-        _this.handleSearch = function (e) {
-            var _this$props = _this.props,
-                startSearchOn = _this$props.startSearchOn,
-                environmentId = _this$props.environmentId,
-                currentQuery = _this$props.currentQuery,
-                client = _this$props.client;
-
-            /**
-             * Set the current query text
-             */
-
-            _this.setState({ q: e.target.value });
-
-            /**
-             * Search when string is bigger than {startSearchOn}
-             */
-            if (e.target.value.length < startSearchOn) {
-                _this.setState({ currentSuggestions: [] });
-                return;
-            }
-
-            /**
-             * Dispatch suggested search action
-             */
-            (0, _suggestedSearchActions.suggestedSearchAction)({
-                queryText: e.target.value
-            }, {
-                environmentId: environmentId,
-                currentQuery: currentQuery,
-                client: client
-            });
-        };
-
-        _this.handleSuggestionsNavigation = function (e) {
-            /**
-             * When user hits arrow down
-             */
-            if (e.code === 'ArrowDown') {
-                _this.setState({
-                    currentSuggestions: (0, _helpers.selectNextSuggestion)(_this.state.currentSuggestions),
-                    q: (0, _helpers.selectActiveSuggestion)(_this.state.currentSuggestions)
-                });
-            }
-
-            /**
-             * When user hits arrow up
-             */
-            if (e.code === 'ArrowUp') {
-                /**
-                 * Prevent cursor to go at the starting point of the line
-                 */
-                e.preventDefault();
-
-                _this.setState({
-                    currentSuggestions: (0, _helpers.selectPreviousSuggestion)(_this.state.currentSuggestions),
-                    q: (0, _helpers.selectActiveSuggestion)(_this.state.currentSuggestions)
-                });
-            }
-
-            /**
-             * When user hits enter
-             */
-            if (e.code === 'Enter') {
-                _this.setState({
-                    q: (0, _helpers.selectActiveSuggestion)(_this.state.currentSuggestions),
-                    currentSuggestions: []
-                });
-
-                var _this$props2 = _this.props,
-                    environmentId = _this$props2.environmentId,
-                    currentQuery = _this$props2.currentQuery,
-                    client = _this$props2.client;
-
-
-                (0, _suggestedSearchActions.simpleSearchAction)({
-                    queryText: _this.state.q
-                }, {
-                    environmentId: environmentId,
-                    currentQuery: currentQuery,
-                    client: client
-                });
-            }
-        };
-
-        _this.handleSuggestionClick = function (e) {
-            _this.setState({
-                q: e.target.innerText,
-                currentSuggestions: []
-            });
-
-            var _this$props3 = _this.props,
-                environmentId = _this$props3.environmentId,
-                currentQuery = _this$props3.currentQuery,
-                client = _this$props3.client;
-
-
-            (0, _suggestedSearchActions.simpleSearchAction)({
-                queryText: e.target.innerText
-            }, {
-                environmentId: environmentId,
-                currentQuery: currentQuery,
-                client: client
-            });
-        };
-
-        _this.handleSearchInputFocusedOut = function (e) {
-            /**
-             * It handles when a user focuses out the search input
-             * If is not clicking on the suggestions box
-             * The suggestions are cleared and panel closes
-             */
-            if (null === e.relatedTarget || false === e.relatedTarget.classList.contains('as-suggestedSearch__box')) {
-                _this.setState({ currentSuggestions: [] });
-            }
-
-            return false;
-        };
-
-        _this.clearSearch = function () {
-            var _this$props4 = _this.props,
-                environmentId = _this$props4.environmentId,
-                currentQuery = _this$props4.currentQuery,
-                client = _this$props4.client;
-
-
-            (0, _suggestedSearchActions.simpleSearchAction)({
-                queryText: ''
-            }, {
-                environmentId: environmentId,
-                currentQuery: currentQuery,
-                client: client
-            });
-        };
-
-        _this.state = {
-            q: '',
-            currentSuggestions: []
-        };
-        return _this;
-    }
-
-    _createClass(SuggestedSearchComponent, [{
-        key: 'componentWillReceiveProps',
-        value: function componentWillReceiveProps(props) {
-            var _this2 = this;
-
-            /**
-             * Check suggestions available
-             * if some, prepend the current query to the other suggestions array
-             * else, only append the current query to the suggestions array
-             */
-            var suggests = props.data && props.data.suggests ? [this.state.q].concat(_toConsumableArray(props.data.suggests)) : [this.state.q];
-
-            /**
-             * Prepare suggestions array
-             */
-            this.setState({
-                currentSuggestions: suggests.map(function (suggest, key) {
-                    return {
-                        isActive: 0 === key,
-                        name: suggest,
-                        htmlName: (0, _helpers.highlightSuggestion)(_this2.state.q, suggest)
-                    };
-                })
-            });
-        }
-    }, {
-        key: 'render',
-        value: function render() {
-            var _this3 = this;
-
-            var _props = this.props,
-                dirty = _props.dirty,
-                placeholder = _props.placeholder,
-                autofocus = _props.autofocus,
-                clearSearch = _props.clearSearch,
-                _props$classNames = _props.classNames,
-                containerClassName = _props$classNames.container,
-                inputClassName = _props$classNames.input,
-                clearSearchClassName = _props$classNames.clearSearch,
-                boxClassName = _props$classNames.box,
-                suggestionClassName = _props$classNames.suggestion,
-                activeSuggestionClassName = _props$classNames.activeSuggestion,
-                clearSearchTemplate = _props.template.clearSearch,
-                currentQueryText = _props.currentQuery.q;
-            var currentSuggestions = this.state.currentSuggestions;
-
-
-            return (0, _preact.h)(
-                'div',
-                { className: 'as-suggestedSearch ' + containerClassName },
-                (0, _preact.h)('input', {
-                    type: 'text',
-                    value: currentQueryText,
-                    className: 'as-suggestedSearch__input ' + inputClassName,
-                    placeholder: placeholder,
-                    autofocus: autofocus,
-
-                    onInput: this.handleSearch,
-                    onKeyDown: this.handleSuggestionsNavigation,
-                    onBlur: this.handleSearchInputFocusedOut
-                }),
-                clearSearch && currentQueryText.length !== 0 ? (0, _preact.h)(
-                    'div',
-                    {
-                        className: 'as-suggestedSearch__clearSearch ' + clearSearchClassName,
-                        onClick: this.clearSearch
-                    },
-                    (0, _preact.h)(_Template2.default, { template: clearSearchTemplate })
-                ) : null,
-                (0, _preact.h)(
-                    'div',
-                    {
-                        tabIndex: '0',
-                        className: 'as-suggestedSearch__box ' + boxClassName,
-                        style: {
-                            display: currentSuggestions.length > 1 && !dirty ? 'block' : 'none'
-                        }
-                    },
-                    currentSuggestions.map(function (suggestion, key) {
-                        return 0 !== key ? (0, _preact.h)('div', {
-                            className: 'as-suggestedSearch__suggestion ' + (suggestionClassName + ' ') + ('' + (suggestion.isActive ? activeSuggestionClassName : '')),
-                            dangerouslySetInnerHTML: {
-                                __html: suggestion.htmlName
-                            },
-                            onClick: _this3.handleSuggestionClick
-                        }) : null;
-                    })
-                )
-            );
-        }
-    }]);
-
-    return SuggestedSearchComponent;
-}(_preact.Component);
-
-SuggestedSearchComponent.defaultProps = {
-    placeholder: '',
-    autofocus: false,
-    startSearchOn: 0,
-    clearSearch: true,
-    classNames: {
-        container: '',
-        input: '',
-        clearSearch: '',
-        box: '',
-        suggestion: '',
-        activeSuggestion: 'as-suggestedSearch__suggestion--active'
-    },
-    template: {
-        clearSearch: 'x'
-    }
-};
-
-exports.default = SuggestedSearchComponent;
-
-/***/ }),
-/* 54 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.highlightSuggestion = highlightSuggestion;
-exports.selectNextSuggestion = selectNextSuggestion;
-exports.selectPreviousSuggestion = selectPreviousSuggestion;
-exports.selectActiveSuggestion = selectActiveSuggestion;
-/**
- * Set of helpers for the suggestions widget
- */
-
-/**
- * Highlight text
- */
-function highlightSuggestion(currentQueryText, suggestion) {
-    var regex = new RegExp('(' + currentQueryText + ')', 'gi');
-    var highlightedSuggestion = suggestion.replace(regex, "<em>$1</em>");
-    var sanitizedSpaces = highlightedSuggestion.split(' ');
-
-    return sanitizedSpaces.join('&nbsp;');
-}
-
-/**
- * Mark as active the item next
- * to the last active item
- * on a given array of items
- *
- * @example when a user press a key arrow down
- */
-function selectNextSuggestion(suggestionsArray) {
-    var currentActiveSuggestionKey = void 0;
-
-    return suggestionsArray.map(function (suggestion, key) {
-        /**
-         * Detect current active suggestion
-         */
-        if (suggestion.isActive && key + 1 < suggestionsArray.length) {
-            currentActiveSuggestionKey = key;
-            suggestion.isActive = false;
-        }
-
-        /**
-         * Modify the first suggestion next to
-         * the current active suggestion
-         */
-        if (key === currentActiveSuggestionKey + 1 && key + 1 <= suggestionsArray.length) {
-            suggestion.isActive = true;
-        }
-
-        return suggestion;
-    });
-}
-
-/**
- * Mark as active the item previous
- * to the last active item
- * on a given array of items
- *
- * @example when a user press a key arrow up
- */
-function selectPreviousSuggestion(suggestionsArray) {
-    /**
-     * Find the current active suggestion key
-     */
-    var currentActiveSuggestionKey = suggestionsArray.findIndex(function (suggestion) {
-        if (suggestion.isActive) {
-            return suggestion;
-        }
-    });
-
-    return suggestionsArray.map(function (suggestion, key) {
-        /**
-         * Set the current active suggestion as false
-         * if is Active AND is not the last one
-         */
-        if (suggestion.isActive && currentActiveSuggestionKey - 1 >= 0) {
-            suggestion.isActive = false;
-        }
-
-        /**
-         * Set active the suggestion previous to
-         * the current active suggestion
-         */
-        if (currentActiveSuggestionKey - 1 === key && currentActiveSuggestionKey - 1 >= 0) {
-            suggestion.isActive = true;
-        }
-
-        return suggestion;
-    });
-}
-
-/**
- * Return the active item of an array
- */
-function selectActiveSuggestion(suggestionsArray) {
-    var selectedSuggestion = suggestionsArray.filter(function (suggestion) {
-        if (suggestion.isActive) {
-            return suggestion;
-        }
-    });
-
-    return selectedSuggestion[0].name;
-}
-
-/***/ }),
-/* 55 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.simpleSearchAction = simpleSearchAction;
-exports.suggestedSearchAction = suggestedSearchAction;
-
-var _cloneDeep = __webpack_require__(4);
-
-var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
-
-var _container = __webpack_require__(1);
-
-var _container2 = _interopRequireDefault(_container);
-
-var _constants = __webpack_require__(2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * This actions are triggered when a text input changes
- * receives two parameters:
- *   @param queryOptions -> query given options
- *   @param appOptions   -> current application options
- *
- * Finally dispatches an event with the search result and
- * the modified query.
- *   @returns {{
- *     type: string,
- *     payload: {
- *        result,
- *        updatedQuery
- *     }
- *   }}
- */
-
-/**
- * Simple search action
- * Builds a query disabling suggested searches flag
- */
-function simpleSearchAction(_ref, _ref2) {
-    var queryText = _ref.queryText;
-    var environmentId = _ref2.environmentId,
-        currentQuery = _ref2.currentQuery,
-        client = _ref2.client;
-
-    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
-
-    clonedQuery.setQueryText(queryText).setPage(1).enableResults().disableSuggestions();
-
-    client.search(clonedQuery.toJSON(), function (result, error) {
-        if (error) return;
-
-        var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
-        dispatcher.dispatch({
-            type: 'RENDER_FETCHED_DATA',
-            payload: {
-                result: result,
-                updatedQuery: clonedQuery
-            }
-        });
-    });
-}
-
-/**
- * Suggested Search Action
- * Builds a query using suggested search flag active
- */
-/**
- * Search actions
- */
-function suggestedSearchAction(_ref3, _ref4) {
-    var queryText = _ref3.queryText;
-    var environmentId = _ref4.environmentId,
-        currentQuery = _ref4.currentQuery,
-        client = _ref4.client;
-
-    var clonedQuery = (0, _cloneDeep2.default)(currentQuery);
-
-    clonedQuery.setQueryText(queryText).setPage(1).disableResults().enableSuggestions();
-
-    client.search(clonedQuery, function (result, error) {
-        if (error) return;
-
-        var dispatcher = _container2.default.get(_constants.APISEARCH_DISPATCHER + '__' + environmentId);
-        dispatcher.dispatch({
-            type: 'RENDER_FETCHED_DATA',
-            payload: {
-                result: result,
-                updatedQuery: clonedQuery
-            }
-        });
-    });
-}
-
-/***/ }),
-/* 56 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
 exports.pagination = undefined;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -10039,7 +9427,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _preact = __webpack_require__(0);
 
-var _PaginationComponent = __webpack_require__(57);
+var _PaginationComponent = __webpack_require__(53);
 
 var _PaginationComponent2 = _interopRequireDefault(_PaginationComponent);
 
@@ -10107,7 +9495,7 @@ var pagination = exports.pagination = function pagination(settings) {
 };
 
 /***/ }),
-/* 57 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10125,13 +9513,13 @@ var _Template = __webpack_require__(3);
 
 var _Template2 = _interopRequireDefault(_Template);
 
-var _paginationActions = __webpack_require__(58);
+var _paginationActions = __webpack_require__(54);
 
-var _NavigationComponent = __webpack_require__(59);
+var _NavigationComponent = __webpack_require__(55);
 
 var _NavigationComponent2 = _interopRequireDefault(_NavigationComponent);
 
-var _helpers = __webpack_require__(60);
+var _helpers = __webpack_require__(56);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -10337,7 +9725,7 @@ PaginationComponent.defaultProps = {
 exports.default = PaginationComponent;
 
 /***/ }),
-/* 58 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10404,7 +9792,7 @@ function paginationChangeAction(_ref, _ref2) {
    */
 
 /***/ }),
-/* 59 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10444,7 +9832,7 @@ function NavigationComponent(_ref) {
 exports.default = NavigationComponent;
 
 /***/ }),
-/* 60 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

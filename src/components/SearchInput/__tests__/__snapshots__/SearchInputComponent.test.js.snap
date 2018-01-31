@@ -1,19 +1,19 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<SimpleSearchComponent /> should appear a clearSearch button when the input value is not empty, and should handle clearSearch() on click 1`] = `
+exports[`<SearchInputComponent /> should appear a clearSearch button when the input value is not empty, and should handle clearSearch() on click 1`] = `
 preact-render-spy (1 nodes)
 -------
-<div class="as-simpleSearch ">
+<div class="as-searchInput ">
   <input
     type="text"
-    class="as-simpleSearch__input "
+    class="as-searchInput__input "
     placeholder=""
-    autofocus={false}
+    autoFocus={false}
     onInput={[Function anonymous]}
     value="Some query text..."
    />
   <div
-    class="as-simpleSearch__clearSearch "
+    class="as-searchInput__clearSearch "
     onClick={[Function anonymous]}
   >
     <div>x</div>
@@ -22,14 +22,14 @@ preact-render-spy (1 nodes)
 
 `;
 
-exports[`<SimpleSearchComponent /> should render new html properties when "htmlNodeInheritProps" are passed 1`] = `
+exports[`<SearchInputComponent /> should render new html properties when "htmlNodeInheritProps" are passed 1`] = `
 preact-render-spy (1 nodes)
 -------
 <input
   type="text"
   class="some-class-name"
   placeholder=""
-  autofocus={false}
+  autoFocus={false}
   data-apisearch="apisearch-search-bar"
   id="some-id"
   autocomplete="off"
@@ -40,29 +40,29 @@ preact-render-spy (1 nodes)
 
 `;
 
-exports[`<SimpleSearchComponent /> should render only the input when "withContainer" property is set to false 1`] = `
+exports[`<SearchInputComponent /> should render only the input when "withContainer" property is set to false 1`] = `
 preact-render-spy (1 nodes)
 -------
 <input
   type="text"
-  class="as-simpleSearch__input "
+  class="as-searchInput__input "
   placeholder=""
-  autofocus={false}
+  autoFocus={false}
   onInput={[Function anonymous]}
   value=""
  />
 
 `;
 
-exports[`<SimpleSearchComponent /> should render with custom props 1`] = `
+exports[`<SearchInputComponent /> should render with custom props 1`] = `
 preact-render-spy (1 nodes)
 -------
-<div class="as-simpleSearch custom-container-class">
+<div class="as-searchInput custom-container-class">
   <input
     type="text"
-    class="as-simpleSearch__input undefined"
+    class="as-searchInput__input undefined"
     placeholder="Type something..."
-    autofocus={false}
+    autoFocus={false}
     onInput={[Function anonymous]}
     value=""
    />
@@ -70,15 +70,15 @@ preact-render-spy (1 nodes)
 
 `;
 
-exports[`<SimpleSearchComponent /> should render with default props 1`] = `
+exports[`<SearchInputComponent /> should render with default props 1`] = `
 preact-render-spy (1 nodes)
 -------
-<div class="as-simpleSearch ">
+<div class="as-searchInput ">
   <input
     type="text"
-    class="as-simpleSearch__input "
+    class="as-searchInput__input "
     placeholder=""
-    autofocus={false}
+    autoFocus={false}
     onInput={[Function anonymous]}
     value=""
    />

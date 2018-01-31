@@ -1,18 +1,22 @@
-.as-simpleSearch
+.as-searchInput
   width: 100%
   position: relative
 
   &__input
     width: 100%
     outline: none
-    border: 2px solid $color-default
+    border: 1px solid $color-default
+    box-shadow: 0 2px $color-default
     padding: .6rem 1rem
-    -webkit-border-radius: $border-radius
-    -moz-border-radius: $border-radius
-    border-radius: $border-radius
+    -webkit-border-radius: $border-radius-round
+    -moz-border-radius: $border-radius-round
+    border-radius: $border-radius-round
 
     &:focus
       border-color: $color-secondary
+      -webkit-box-shadow: 0 2px $color-secondary
+      -moz-box-shadow: 0 2px $color-secondary
+      box-shadow: 0 2px $color-secondary
 
   &__clearSearch
     background-color: $color-default
@@ -26,9 +30,9 @@
     -ms-transform: translateY(-50%)
     -o-transform: translateY(-50%)
     transform: translateY(-50%)
-    -webkit-border-radius: $border-radius
-    -moz-border-radius: $border-radius
-    border-radius: $border-radius
+    -webkit-border-radius: $border-radius-round
+    -moz-border-radius: $border-radius-round
+    border-radius: $border-radius-round
 
     &:hover
       background: $color-secondary

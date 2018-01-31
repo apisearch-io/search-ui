@@ -30,7 +30,7 @@
             </a>
         </div>
 
-        <!-- SimpleSearch -->
+        <!-- SearchInput -->
         <div class="search navbar-item"></div>
 
         <!-- Information -->
@@ -99,7 +99,7 @@
 
         const {
             result,
-            simpleSearch,
+            searchInput,
             sortBy,
             information
         } = ui.widgets;
@@ -126,7 +126,7 @@
                     // placeholder: '<div class="notification">Search something on the input right now!!</div>'
                 }
             }),
-            simpleSearch({
+            searchInput({
                 target: '.search',
                 placeholder: 'Search something...',
                 autofocus: true,

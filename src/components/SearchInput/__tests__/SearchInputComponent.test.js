@@ -1,9 +1,9 @@
 /** @jsx h */
 import {h} from 'preact';
 import {shallow, deep} from 'preact-render-spy';
-import SimpleSearchComponent from './../SimpleSearchComponent';
+import SearchInputComponent from '../SearchInputComponent';
 
-describe('<SimpleSearchComponent />', () => {
+describe('<SearchInputComponent />', () => {
     const defaultProps = {
         target: '#some-tagret',
         currentQuery: {
@@ -13,7 +13,7 @@ describe('<SimpleSearchComponent />', () => {
 
     it('should render with default props', () => {
         const tree = shallow(
-            <SimpleSearchComponent {...defaultProps} />
+            <SearchInputComponent {...defaultProps} />
         );
 
         expect(tree).toMatchSnapshot();
@@ -30,7 +30,7 @@ describe('<SimpleSearchComponent />', () => {
         };
 
         const tree = shallow(
-            <SimpleSearchComponent
+            <SearchInputComponent
                 {...defaultProps}
                 {...customProps}
             />
@@ -40,7 +40,7 @@ describe('<SimpleSearchComponent />', () => {
     });
     it('should render only the input when "withContainer" property is set to false', () => {
         const tree = shallow(
-            <SimpleSearchComponent
+            <SearchInputComponent
                 {...defaultProps}
                 withContainer={false}
                 clearSearch={false}
@@ -54,10 +54,10 @@ describe('<SimpleSearchComponent />', () => {
          * This is due when the targeted node is an input
          * instead of a container. When the system takes the selected "input"
          * gets its current properties and replaces this input with the
-         * SimpleSearchComponent input.
+         * SearchInputComponent input.
          */
         const tree = shallow(
-            <SimpleSearchComponent
+            <SearchInputComponent
                 {...defaultProps}
                 htmlNodeInheritProps={{
                     'className': 'some-class-name',
@@ -75,7 +75,7 @@ describe('<SimpleSearchComponent />', () => {
     });
     it('should handleSearch() on input event', () => {
         const tree = shallow(
-            <SimpleSearchComponent {...defaultProps} />
+            <SearchInputComponent {...defaultProps} />
         );
 
         tree.find('input')[0].attributes.onInput = jest.fn();
@@ -90,7 +90,7 @@ describe('<SimpleSearchComponent />', () => {
          * A text is typed on the input
          */
         const tree = deep(
-            <SimpleSearchComponent
+            <SearchInputComponent
                 {...defaultProps}
                 currentQuery={{q: 'Some query text...'}}
             />
@@ -101,8 +101,8 @@ describe('<SimpleSearchComponent />', () => {
          * The clearSearch button is clicked
          */
         const trigger = jest.fn();
-        tree.find('.as-simpleSearch__clearSearch')[0].attributes.onClick = trigger;
-        tree.find('.as-simpleSearch__clearSearch').simulate('click');
+        tree.find('.as-searchInput__clearSearch')[0].attributes.onClick = trigger;
+        tree.find('.as-searchInput__clearSearch').simulate('click');
         expect(trigger).toBeCalled();
     });
 });

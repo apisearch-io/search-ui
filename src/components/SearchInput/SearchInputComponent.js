@@ -3,13 +3,13 @@
  */
 
 import { h, Component } from 'preact';
-import {simpleSearchAction} from "./simpleSearchActions";
+import {simpleSearchAction} from "./searchInputActions";
 import Template from "../Template";
 
 /**
- * SimpleSearch Component
+ * SearchInput Component
  */
-class SimpleSearchComponent extends Component {
+class SearchInputComponent extends Component {
 
     handleSearch = (e) => {
         const {
@@ -80,9 +80,9 @@ class SimpleSearchComponent extends Component {
 
         let searchInput = (<input
             type='text'
-            className={`as-simpleSearch__input ${inputClassName}`}
+            className={`as-searchInput__input ${inputClassName}`}
             placeholder={placeholder}
-            autofocus={autofocus}
+            autoFocus={autofocus}
             {...htmlNodeInheritProps}
             onInput={this.handleSearch}
             value={currentQueryText}
@@ -90,13 +90,13 @@ class SimpleSearchComponent extends Component {
 
         if (withContainer) {
             return (
-                <div className={`as-simpleSearch ${containerClassName}`}>
+                <div className={`as-searchInput ${containerClassName}`}>
                     {searchInput}
 
                     {(clearSearch && currentQueryText.length !== 0)
                         ? (
                             <div
-                                className={`as-simpleSearch__clearSearch ${clearSearchClassName}`}
+                                className={`as-searchInput__clearSearch ${clearSearchClassName}`}
                                 onClick={this.clearSearch}
                             >
                                 <Template template={clearSearchTemplate}/>
@@ -111,7 +111,7 @@ class SimpleSearchComponent extends Component {
     }
 }
 
-SimpleSearchComponent.defaultProps = {
+SearchInputComponent.defaultProps = {
     placeholder: '',
     autofocus: false,
     startSearchOn: 0,
@@ -127,4 +127,4 @@ SimpleSearchComponent.defaultProps = {
     }
 };
 
-export default SimpleSearchComponent;
+export default SearchInputComponent;
