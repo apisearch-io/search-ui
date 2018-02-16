@@ -31,7 +31,7 @@ class ApisearchUI {
     /**
      * Initialize components
      */
-    init() {
+    init({firstQuery = true} = {}) {
         /**
          * 1.- Register all events on the store
          */
@@ -47,11 +47,16 @@ class ApisearchUI {
          * 3.- Dispatch the initial data request
          *     With all widget previous initial configurations
          */
-        initialDataFetchAction(
-            this.environmentId,
-            this.store.currentQuery,
-            this.client
-        );
+        if (
+            typeof firstQuery === 'undefined' ||
+            true === firstQuery
+        ) {
+            initialDataFetchAction(
+                this.environmentId,
+                this.store.currentQuery,
+                this.client
+            );
+        }
     }
 
     /**

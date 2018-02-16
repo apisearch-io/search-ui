@@ -2225,6 +2225,10 @@ var ApisearchUI = function () {
     value: function init() {
       var _this = this;
 
+      var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+          _ref$firstQuery = _ref.firstQuery,
+          firstQuery = _ref$firstQuery === undefined ? true : _ref$firstQuery;
+
       /**
        * 1.- Register all events on the store
        */
@@ -2242,7 +2246,9 @@ var ApisearchUI = function () {
        * 3.- Dispatch the initial data request
        *     With all widget previous initial configurations
        */
-      (0, _apisearchActions.initialDataFetchAction)(this.environmentId, this.store.currentQuery, this.client);
+      if (typeof firstQuery === 'undefined' || true === firstQuery) {
+        (0, _apisearchActions.initialDataFetchAction)(this.environmentId, this.store.currentQuery, this.client);
+      }
     }
 
     /**
