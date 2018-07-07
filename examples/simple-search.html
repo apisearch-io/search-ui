@@ -40,7 +40,7 @@
         <div class="navbar-end">
             <div class="navbar-item sort-by"></div>
 
-            <a class="navbar-item is-hidden-desktop-only" href="https://github.com/alexhoma/javascript-search-ui" target="_blank">
+            <a class="navbar-item is-hidden-desktop-only" href="#" target="_blank">
                 <span class="icon" style="color: #333;">
                   <i class="fa fa-lg fa-github"></i>
                 </span>
@@ -91,11 +91,14 @@
 
     <script type="text/javascript">
         // UI Instance
-        const ui = apisearchUI({
-            appId: '54725861',
-            indexId: '66777162',
-            token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
-        });
+        const ui = apisearchUI.create(
+            '54725861',
+            '66777162',
+            'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
+            {
+                endpoint: 'https://apisearch.global.ssl.fastly.net'
+            }
+        );
 
         const {
             result,
@@ -110,14 +113,6 @@
                 target: '.result',
                 itemsPerPage: 16,
                 highlightsEnabled: true,
-                promote: [
-                    { type: 'album', id: 'purpose-mw0002885819' },
-                    { type: 'album', id: 'crazy-love-mw0000828548' },
-                    { type: 'album', id: 'classic-queen-mw0000085540' },
-                    { type: 'album', id: '21-mw0002080092' },
-                    { type: 'album', id: '4-mw0002136254' },
-                    { type: 'album', id: 'michael-mw0002079107' }
-                ],
                 classNames: {
                     container: 'column'
                 },

@@ -102,14 +102,14 @@
 
     <script type="text/javascript">
         // UI Instance 1
-        const firstUI = apisearchUI({
-            appId: '54725861',
-            indexId: '66777162',
-            token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
-            options: {
-                overrideQueries: false
+        const firstUI = apisearchUI.create(
+            '54725861',
+            '66777162',
+            'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
+            {
+                endpoint: 'https://apisearch.global.ssl.fastly.net'
             }
-        });
+        );
 
         firstUI.addWidgets(
             firstUI.widgets.searchInput({
@@ -133,14 +133,15 @@
 
     <script type="text/javascript">
         // UI Instance 2
-        const secondUI = apisearchUI({
-            appId: '54725861',
-            indexId: '66777162',
-            token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
-            options: {
+        const secondUI = apisearchUI.create(
+            '54725861',
+            '66777162',
+            'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
+            {
+                endpoint: 'https://apisearch.global.ssl.fastly.net',
                 overrideQueries: false
             }
-        });
+        );
 
         secondUI.addWidgets(
             secondUI.widgets.searchInput({
