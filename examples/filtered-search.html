@@ -113,7 +113,7 @@
                                 {{/metadata.author}}
                                 <span class="has-text-grey is-size-7">
                                     <strong>Year: </strong>
-                                    {{indexed_metadata.year}}
+                                    {{indexedMetadata.year}}
                                 </span>
                             </div>
                         </div>
@@ -142,11 +142,14 @@
 
     <script type="text/javascript">
         // UI Instance
-        const ui = apisearchUI({
-            appId: '54725861',
-            indexId: '66777162',
-            token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
-        });
+        const ui = apisearchUI.create(
+            '54725861',
+            '66777162',
+            'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
+            {
+                endpoint: 'https://apisearch.global.ssl.fastly.net'
+            }
+        );
 
         // Widgets setup
         ui.addWidgets(
@@ -171,7 +174,7 @@
             }),
             ui.widgets.multipleFilter({
                 target: '.multiple-filter-year',
-                name: 'year',
+                filterName: 'year',
                 filterField: 'year',
                 applicationType: 8,
                 fetchLimit: 30,
@@ -192,7 +195,7 @@
             }),
             ui.widgets.multipleFilter({
                 target: '.multiple-filter-genre',
-                name: 'genre',
+                filterName: 'genre',
                 filterField: 'genre_id',
                 aggregationField: 'genre_data',
                 applicationType: 8,
@@ -214,7 +217,7 @@
             }),
             ui.widgets.multipleFilter({
                 target: '.multiple-filter-rating',
-                name: 'rating',
+                filterName: 'rating',
                 filterField: 'rating',
                 sortBy: ['_term', 'desc'],
                 applicationType: 4,

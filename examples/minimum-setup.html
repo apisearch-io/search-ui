@@ -100,11 +100,14 @@
     }
 
     // UI Instance
-    const ui = apisearchUI({
-        appId: '54725861',
-        indexId: '66777162',
-        token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
-    });
+    const ui = apisearchUI.create(
+        '54725861',
+        '66777162',
+        'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
+        {
+            endpoint: 'https://apisearch.global.ssl.fastly.net'
+        }
+    );
 
     // Widgets setup
     ui.addWidgets(
@@ -121,7 +124,7 @@
         }),
         ui.widgets.multipleFilter({
             target: '.multiple-filter-genre',
-            name: 'genre',
+            filterName: 'genre',
             filterField: 'genre_id',
             aggregationField: 'genre_data',
             fetchLimit: 15,
@@ -133,7 +136,7 @@
         }),
         ui.widgets.multipleFilter({
             target: '.multiple-filter-year',
-            name: 'year',
+            filterName: 'year',
             filterField: 'year',
             fetchLimit: 30,
             viewLimit: 15,
@@ -144,7 +147,7 @@
         }),
         ui.widgets.multipleFilter({
             target: '.multiple-filter-rating',
-            name: 'rating',
+            filterName: 'rating',
             filterField: 'rating',
             applicationType: 4,
             template: {
