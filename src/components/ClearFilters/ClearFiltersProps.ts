@@ -6,16 +6,16 @@ import {Result} from "apisearch";
  * ClearFiltersProps
  */
 export interface ClearFiltersProps {
-    target:any,
+    target: any;
     classNames: {
-        container: string
-    },
+        container: string,
+    };
     template: {
-        container: string
-    },
-    environmentId?: string,
-    repository?: Repository,
-    dirty?: boolean,
-    currentResult?: Result,
-    currentQuery?: Query
+        container: string,
+    };
+    environmentId?: string;
+    repository?: Repository;
+    dirty?: boolean;
+    currentResult?: Result;
+    currentQuery?: Query;
 }

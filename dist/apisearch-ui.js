@@ -122,8 +122,8 @@ var Query_2 = __webpack_require__(/*! ./Query/Query */ "./node_modules/apisearch
 var Query_3 = __webpack_require__(/*! ./Query/Query */ "./node_modules/apisearch/lib/Query/Query.js");
 var SortBy_1 = __webpack_require__(/*! ./Query/SortBy */ "./node_modules/apisearch/lib/Query/SortBy.js");
 var HttpRepository_1 = __webpack_require__(/*! ./Repository/HttpRepository */ "./node_modules/apisearch/lib/Repository/HttpRepository.js");
-var ResultAggregations_1 = __webpack_require__(/*! ./Result/ResultAggregations */ "./node_modules/apisearch/lib/Result/ResultAggregations.js");
 var Result_1 = __webpack_require__(/*! ./Result/Result */ "./node_modules/apisearch/lib/Result/Result.js");
+var ResultAggregations_1 = __webpack_require__(/*! ./Result/ResultAggregations */ "./node_modules/apisearch/lib/Result/ResultAggregations.js");
 var Transformer_1 = __webpack_require__(/*! ./Transformer/Transformer */ "./node_modules/apisearch/lib/Transformer/Transformer.js");
 /**
  * Apisearch class
@@ -136,15 +136,40 @@ var Apisearch = /** @class */ (function () {
      *
      * @param config
      *
-     * @returns {Repository}
+     * @return {HttpRepository}
      */
     Apisearch.createRepository = function (config) {
-        config.options = __assign({ api_version: "v1", cache: new NoCache_1.NoCache(), timeout: 10000, override_queries: true }, config.options);
+        Apisearch.ensureRepositoryConfigIsValid(config);
+        config.options = __assign({ api_version: "v1", cache: new NoCache_1.NoCache(), timeout: 5000, override_queries: true }, config.options);
         /**
          * Client
          */
-        var httpClient = new AxiosClient_1.AxiosClient(config.options.endpoint, config.options.api_version, config.options.timeout, new RetryMap_1.RetryMap(), config.options.override_queries, config.options.cache);
+        var httpClient = typeof config.options.http_client !== "undefined"
+            ? config.options.http_client
+            : new AxiosClient_1.AxiosClient(config.options.endpoint, config.options.api_version, config.options.timeout, new RetryMap_1.RetryMap(), config.options.override_queries, config.options.cache);
         return new HttpRepository_1.HttpRepository(httpClient, config.app_id, config.index_id, config.token, new Transformer_1.Transformer());
+    };
+    /**
+     * Ensure the Repository configuration is valid
+     *
+     * @param config
+     */
+    Apisearch.ensureRepositoryConfigIsValid = function (config) {
+        Apisearch.ensureIsDefined(config.app_id, "app_id");
+        Apisearch.ensureIsDefined(config.index_id, "index_id");
+        Apisearch.ensureIsDefined(config.token, "token");
+        Apisearch.ensureIsDefined(config.options.endpoint, "options.endpoint");
+    };
+    /**
+     * Ensure the value is not undefined
+     *
+     * @param param
+     * @param name
+     */
+    Apisearch.ensureIsDefined = function (param, name) {
+        if (typeof param === "undefined") {
+            throw new TypeError(name + " parameter must be defined.");
+        }
     };
     /**
      * Created located
@@ -157,9 +182,9 @@ var Apisearch = /** @class */ (function () {
      * @returns {Query}
      */
     Apisearch.createQueryLocated = function (coordinate, queryText, page, size) {
-        if (page === void 0) { page = Query_2.QUERY_DEFAULT_PAGE; }
-        if (size === void 0) { size = Query_3.QUERY_DEFAULT_SIZE; }
-        return Query_1.Query.createLocated(coordinate, queryText, page, size);
+        if (page === void 0) { page = Query_1.QUERY_DEFAULT_PAGE; }
+        if (size === void 0) { size = Query_2.QUERY_DEFAULT_SIZE; }
+        return Query_3.Query.createLocated(coordinate, queryText, page, size);
     };
     /**
      * Create
@@ -171,9 +196,9 @@ var Apisearch = /** @class */ (function () {
      * @returns {Query}
      */
     Apisearch.createQuery = function (queryText, page, size) {
-        if (page === void 0) { page = Query_2.QUERY_DEFAULT_PAGE; }
-        if (size === void 0) { size = Query_3.QUERY_DEFAULT_SIZE; }
-        return Query_1.Query.create(queryText, page, size);
+        if (page === void 0) { page = Query_1.QUERY_DEFAULT_PAGE; }
+        if (size === void 0) { size = Query_2.QUERY_DEFAULT_SIZE; }
+        return Query_3.Query.create(queryText, page, size);
     };
     /**
      * Create match all
@@ -181,7 +206,7 @@ var Apisearch = /** @class */ (function () {
      * @return {Query}
      */
     Apisearch.createQueryMatchAll = function () {
-        return Query_1.Query.createMatchAll();
+        return Query_3.Query.createMatchAll();
     };
     /**
      * Create by UUID
@@ -191,7 +216,7 @@ var Apisearch = /** @class */ (function () {
      * @return {Query}
      */
     Apisearch.createQueryByUUID = function (uuid) {
-        return Query_1.Query.createByUUID(uuid);
+        return Query_3.Query.createByUUID(uuid);
     };
     /**
      * Create by UUIDs
@@ -205,7 +230,7 @@ var Apisearch = /** @class */ (function () {
         for (var _i = 0; _i < arguments.length; _i++) {
             uuids[_i] = arguments[_i];
         }
-        return Query_1.Query.createByUUIDs.apply(Query_1.Query, uuids);
+        return Query_3.Query.createByUUIDs.apply(Query_3.Query, uuids);
     };
     /**
      * Create empty result
@@ -270,9 +295,9 @@ var InMemoryCache = /** @class */ (function () {
      * @returns {void}
      */
     InMemoryCache.prototype.set = function (key, value) {
+        var _a;
         this.cache = __assign({}, this.cache, (_a = {}, _a[key] = value, _a));
         this.size = this.size + 1;
-        var _a;
     };
     /**
      * Get element from cache
@@ -1430,8 +1455,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
         while (_) try {
-            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [0, t.value];
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
                 case 0: case 1: t = op; break;
                 case 4: _.label++; return { value: op[1], done: false };
@@ -1493,8 +1518,8 @@ var AxiosClient = /** @class */ (function (_super) {
         if (parameters === void 0) { parameters = {}; }
         if (data === void 0) { data = {}; }
         return __awaiter(this, void 0, void 0, function () {
-            var _this = this;
             var that;
+            var _this = this;
             return __generator(this, function (_a) {
                 that = this;
                 url = url.replace(/^\/*|\/*$/g, "");
@@ -3133,6 +3158,7 @@ var Query = /** @class */ (function () {
      * @return {Query}
      */
     Query.prototype.filterUniverseByTypes = function (values) {
+        var _a;
         var fieldPath = Filter_1.Filter.getFilterPathByField("type");
         if (values.length > 0) {
             this.universeFilters = __assign({}, this.universeFilters, (_a = {}, _a["type"] = Filter_1.Filter.create(fieldPath, values, Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_FIELD), _a));
@@ -3141,7 +3167,6 @@ var Query = /** @class */ (function () {
             delete this.universeFilters.type;
         }
         return this;
-        var _a;
     };
     /**
      * Filter by types
@@ -3155,6 +3180,7 @@ var Query = /** @class */ (function () {
     Query.prototype.filterByTypes = function (values, aggregate, aggregationSort) {
         if (aggregate === void 0) { aggregate = true; }
         if (aggregationSort === void 0) { aggregationSort = Aggregation_2.AGGREGATION_SORT_BY_COUNT_DESC; }
+        var _a, _b;
         var fieldPath = Filter_1.Filter.getFilterPathByField("type");
         if (values.length > 0) {
             this.filters = __assign({}, this.filters, (_a = {}, _a["type"] = Filter_1.Filter.create(fieldPath, values, Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_FIELD), _a));
@@ -3166,7 +3192,6 @@ var Query = /** @class */ (function () {
             this.aggregations = __assign({}, this.aggregations, (_b = {}, _b["type"] = Aggregation_1.Aggregation.create("type", fieldPath, Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_FIELD, [], aggregationSort), _b));
         }
         return this;
-        var _a, _b;
     };
     /**
      * Filter universe by ids
@@ -3176,6 +3201,7 @@ var Query = /** @class */ (function () {
      * @return {Query}
      */
     Query.prototype.filterUniverseByIds = function (values) {
+        var _a;
         var fieldPath = Filter_1.Filter.getFilterPathByField("id");
         if (values.length > 0) {
             this.universeFilters = __assign({}, this.universeFilters, (_a = {}, _a["id"] = Filter_1.Filter.create(fieldPath, values, Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_FIELD), _a));
@@ -3184,7 +3210,6 @@ var Query = /** @class */ (function () {
             delete this.universeFilters.id;
         }
         return this;
-        var _a;
     };
     /**
      * Filter by ids
@@ -3194,6 +3219,7 @@ var Query = /** @class */ (function () {
      * @return {Query}
      */
     Query.prototype.filterByIds = function (values) {
+        var _a;
         var fieldPath = Filter_1.Filter.getFilterPathByField("id");
         if (values.length > 0) {
             this.filters = __assign({}, this.filters, (_a = {}, _a["id"] = Filter_1.Filter.create(fieldPath, values, Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_FIELD), _a));
@@ -3202,7 +3228,6 @@ var Query = /** @class */ (function () {
             delete this.filters.id;
         }
         return this;
-        var _a;
     };
     /**
      * Filter universe by
@@ -3215,6 +3240,7 @@ var Query = /** @class */ (function () {
      */
     Query.prototype.filterUniverseBy = function (field, values, applicationType) {
         if (applicationType === void 0) { applicationType = Filter_2.FILTER_AT_LEAST_ONE; }
+        var _a;
         var fieldPath = Filter_1.Filter.getFilterPathByField(field);
         if (values.length > 0) {
             this.universeFilters = __assign({}, this.universeFilters, (_a = {}, _a[field] = Filter_1.Filter.create(fieldPath, values, applicationType, Filter_2.FILTER_TYPE_FIELD), _a));
@@ -3223,7 +3249,6 @@ var Query = /** @class */ (function () {
             delete this.universeFilters[field];
         }
         return this;
-        var _a;
     };
     /**
      * Filter by
@@ -3241,6 +3266,7 @@ var Query = /** @class */ (function () {
         if (applicationType === void 0) { applicationType = Filter_2.FILTER_AT_LEAST_ONE; }
         if (aggregate === void 0) { aggregate = true; }
         if (aggregationSort === void 0) { aggregationSort = Aggregation_2.AGGREGATION_SORT_BY_COUNT_DESC; }
+        var _a;
         var fieldPath = Filter_1.Filter.getFilterPathByField(field);
         if (values.length > 0) {
             this.filters = __assign({}, this.filters, (_a = {}, _a[filterName] = Filter_1.Filter.create(fieldPath, values, applicationType, Filter_2.FILTER_TYPE_FIELD), _a));
@@ -3252,7 +3278,6 @@ var Query = /** @class */ (function () {
             this.aggregateBy(filterName, field, applicationType, aggregationSort);
         }
         return this;
-        var _a;
     };
     /**
      * Filter universe by range
@@ -3267,6 +3292,7 @@ var Query = /** @class */ (function () {
     Query.prototype.filterUniverseByRange = function (field, values, applicationType, rangeType) {
         if (applicationType === void 0) { applicationType = Filter_2.FILTER_AT_LEAST_ONE; }
         if (rangeType === void 0) { rangeType = Filter_2.FILTER_TYPE_RANGE; }
+        var _a;
         var fieldPath = Filter_1.Filter.getFilterPathByField(field);
         if (values.length > 0) {
             this.universeFilters = __assign({}, this.universeFilters, (_a = {}, _a[field] = Filter_1.Filter.create(fieldPath, values, applicationType, rangeType), _a));
@@ -3275,7 +3301,6 @@ var Query = /** @class */ (function () {
             delete this.universeFilters[field];
         }
         return this;
-        var _a;
     };
     /**
      * Filter universe by date range
@@ -3309,6 +3334,7 @@ var Query = /** @class */ (function () {
         if (rangeType === void 0) { rangeType = Filter_2.FILTER_TYPE_RANGE; }
         if (aggregate === void 0) { aggregate = true; }
         if (aggregationSort === void 0) { aggregationSort = Aggregation_2.AGGREGATION_SORT_BY_COUNT_DESC; }
+        var _a;
         var fieldPath = Filter_1.Filter.getFilterPathByField(field);
         if (values.length !== 0) {
             this.filters = __assign({}, this.filters, (_a = {}, _a[filterName] = Filter_1.Filter.create(fieldPath, values, applicationType, rangeType), _a));
@@ -3320,7 +3346,6 @@ var Query = /** @class */ (function () {
             this.aggregateByRange(filterName, fieldPath, options, applicationType, rangeType, aggregationSort);
         }
         return this;
-        var _a;
     };
     /**
      * Filter by date range
@@ -3349,9 +3374,9 @@ var Query = /** @class */ (function () {
      * @return {Query}
      */
     Query.prototype.filterUniverseByLocation = function (locationRange) {
+        var _a;
         this.universeFilters = __assign({}, this.universeFilters, (_a = {}, _a["coordinate"] = Filter_1.Filter.create("coordinate", locationRange.toArray(), Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_GEO), _a));
         return this;
-        var _a;
     };
     /**
      * Set filter fields
@@ -3403,9 +3428,9 @@ var Query = /** @class */ (function () {
     Query.prototype.aggregateBy = function (filterName, field, applicationType, aggregationSort, limit) {
         if (aggregationSort === void 0) { aggregationSort = Aggregation_2.AGGREGATION_SORT_BY_COUNT_DESC; }
         if (limit === void 0) { limit = Aggregation_2.AGGREGATION_NO_LIMIT; }
+        var _a;
         this.aggregations = __assign({}, this.aggregations, (_a = {}, _a[filterName] = Aggregation_1.Aggregation.create(filterName, Filter_1.Filter.getFilterPathByField(field), applicationType, Filter_2.FILTER_TYPE_FIELD, [], aggregationSort, limit), _a));
         return this;
-        var _a;
     };
     /**
      * Aggregate by range
@@ -3424,12 +3449,12 @@ var Query = /** @class */ (function () {
         if (rangeType === void 0) { rangeType = Filter_2.FILTER_TYPE_RANGE; }
         if (aggregationSort === void 0) { aggregationSort = Aggregation_2.AGGREGATION_SORT_BY_COUNT_DESC; }
         if (limit === void 0) { limit = Aggregation_2.AGGREGATION_NO_LIMIT; }
+        var _a;
         if (options.length === 0) {
             return this;
         }
         this.aggregations = __assign({}, this.aggregations, (_a = {}, _a[filterName] = Aggregation_1.Aggregation.create(filterName, Filter_1.Filter.getFilterPathByField(field), applicationType, rangeType, options, aggregationSort, limit), _a));
         return this;
-        var _a;
     };
     /**
      * Aggregate by date range
@@ -3730,9 +3755,9 @@ var Query = /** @class */ (function () {
         for (var _i = 0; _i < arguments.length; _i++) {
             uuids[_i] = arguments[_i];
         }
+        var _a;
         this.filters = __assign({}, this.filters, (_a = {}, _a["excluded_ids"] = Filter_1.Filter.create("_id", uuids.map(function (uuid) { return uuid.composedUUID(); }), Filter_2.FILTER_EXCLUDE, Filter_2.FILTER_TYPE_FIELD), _a));
         return this;
-        var _a;
     };
     /**
      * Get score strategy
@@ -4537,8 +4562,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
         while (_) try {
-            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [0, t.value];
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
                 case 0: case 1: t = op; break;
                 case 4: _.label++; return { value: op[1], done: false };
@@ -4946,8 +4971,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
         while (_) try {
-            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [0, t.value];
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
                 case 0: case 1: t = op; break;
                 case 4: _.label++; return { value: op[1], done: false };
@@ -12843,8 +12868,8 @@ module.exports = g;
 "use strict";
 
 exports.__esModule = true;
-var Container_1 = __webpack_require__(/*! ./Container */ "./src/Container.ts");
 var Constants_1 = __webpack_require__(/*! ./Constants */ "./src/Constants.ts");
+var Container_1 = __webpack_require__(/*! ./Container */ "./src/Container.ts");
 /**
  * Initial data fetching action
  *
@@ -12858,7 +12883,7 @@ function initialDataFetchAction(environmentId, query, repository) {
         .query(query)
         .then(function (result) {
         dispatcher.dispatch({
-            type: 'RENDER_INITIAL_DATA',
+            type: "RENDER_INITIAL_DATA",
             payload: {
                 query: query,
                 result: result
@@ -12881,12 +12906,13 @@ exports.initialDataFetchAction = initialDataFetchAction;
 "use strict";
 
 exports.__esModule = true;
+var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
 var ApisearchActions_1 = __webpack_require__(/*! ./ApisearchActions */ "./src/ApisearchActions.ts");
-var Container_1 = __webpack_require__(/*! ./Container */ "./src/Container.ts");
 var Bootstrap_1 = __webpack_require__(/*! ./Bootstrap */ "./src/Bootstrap.ts");
+var Constants_1 = __webpack_require__(/*! ./Constants */ "./src/Constants.ts");
+var Container_1 = __webpack_require__(/*! ./Container */ "./src/Container.ts");
 var Environment_1 = __webpack_require__(/*! ./Environment */ "./src/Environment.ts");
 var Widgets_1 = __webpack_require__(/*! ./widgets/Widgets */ "./src/widgets/Widgets.ts");
-var Constants_1 = __webpack_require__(/*! ./Constants */ "./src/Constants.ts");
 /**
  * ApisearchUI class
  */
@@ -12921,7 +12947,7 @@ var ApisearchUI = /** @class */ (function () {
         /**
          * 1.- Register all events on the store
          */
-        this.store.on('render', function () { return _this.render(); });
+        this.store.on("render", function () { return _this.render(); });
         /**
          * 2.- Trigger the initial render: (Mount the components)
          *     To let components setup its configuration on componentWillMount()
@@ -12931,7 +12957,7 @@ var ApisearchUI = /** @class */ (function () {
          * 3.- Dispatch the initial data request
          *     With all widget previous initial configurations
          */
-        if (typeof firstQuery === 'undefined' ||
+        if (typeof firstQuery === "undefined" ||
             true === firstQuery) {
             ApisearchActions_1.initialDataFetchAction(this.environmentId, this.store.getCurrentQuery(), this.repository);
         }
@@ -12979,15 +13005,12 @@ var ApisearchUI = /** @class */ (function () {
     /**
      * Create instance
      *
-     * @param appId
-     * @param indexId
-     * @param token
-     * @param options
+     * @param config
      *
-     * @return {ApisearchUI}
+     * @return {any}
      */
-    ApisearchUI.create = function (appId, indexId, token, options) {
-        if (options === void 0) { options = {}; }
+    ApisearchUI.create = function (config) {
+        apisearch_1["default"].ensureRepositoryConfigIsValid(config);
         /**
          * Build environment Id
          */
@@ -12995,7 +13018,7 @@ var ApisearchUI = /** @class */ (function () {
         /**
          * Bootstrapping ApisearchUI application
          */
-        Bootstrap_1.bootstrap(environmentId, appId, indexId, token, options);
+        Bootstrap_1.bootstrap(environmentId, config);
         /**
          * Register handleActions method (store reducer)
          * into the event dispatcher
@@ -13012,7 +13035,6 @@ var ApisearchUI = /** @class */ (function () {
          */
         return apisearchUI;
     };
-    ;
     return ApisearchUI;
 }());
 exports["default"] = ApisearchUI;
@@ -13031,22 +13053,20 @@ exports["default"] = ApisearchUI;
 
 exports.__esModule = true;
 var flux_1 = __webpack_require__(/*! flux */ "./node_modules/flux/index.js");
-var ApisearchUI_1 = __webpack_require__(/*! ./ApisearchUI */ "./src/ApisearchUI.ts");
-var Store_1 = __webpack_require__(/*! ./Store */ "./src/Store.ts");
-var Container_1 = __webpack_require__(/*! ./Container */ "./src/Container.ts");
 var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
+var ApisearchUI_1 = __webpack_require__(/*! ./ApisearchUI */ "./src/ApisearchUI.ts");
+var Container_1 = __webpack_require__(/*! ./Container */ "./src/Container.ts");
+var Store_1 = __webpack_require__(/*! ./Store */ "./src/Store.ts");
 var Constants_1 = __webpack_require__(/*! ./Constants */ "./src/Constants.ts");
 /**
  * Bootstrap application
  *
  * @param environmentId
- * @param appId
- * @param indexId
- * @param token
- * @param options
+ * @param config
  */
-function bootstrap(environmentId, appId, indexId, token, options) {
-    var repositoryId = Constants_1.APISEARCH_REPOSITORY + "__" + appId + "_" + token + "_" + token;
+function bootstrap(environmentId, config) {
+    var configAsString = JSON.stringify(config);
+    var repositoryId = Constants_1.APISEARCH_REPOSITORY + "__" + configAsString;
     var storeId = Constants_1.APISEARCH_STORE + "__" + environmentId;
     var dispatcherId = Constants_1.APISEARCH_DISPATCHER + "__" + environmentId;
     var asuiId = Constants_1.APISEARCH_UI + "__" + environmentId;
@@ -13054,12 +13074,7 @@ function bootstrap(environmentId, appId, indexId, token, options) {
      * Register Apisearch repository
      */
     Container_1["default"].register(repositoryId, function () {
-        return apisearch_1["default"].createRepository({
-            app_id: appId,
-            index_id: indexId,
-            token: token,
-            options: options
-        });
+        return apisearch_1["default"].createRepository(config);
     });
     /**
      * Register apisearch store
@@ -13098,10 +13113,10 @@ exports.__esModule = true;
 /**
  * Service constants
  */
-exports.APISEARCH_REPOSITORY = 'apisearch_repository';
-exports.APISEARCH_STORE = 'apisearch_store';
-exports.APISEARCH_DISPATCHER = 'apisearch_dispatcher';
-exports.APISEARCH_UI = 'apisearch_ui';
+exports.APISEARCH_REPOSITORY = "apisearch_repository";
+exports.APISEARCH_STORE = "apisearch_store";
+exports.APISEARCH_DISPATCHER = "apisearch_dispatcher";
+exports.APISEARCH_UI = "apisearch_ui";
 
 
 /***/ }),
@@ -13188,8 +13203,8 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 exports.__esModule = true;
-var events_1 = __webpack_require__(/*! events */ "./node_modules/events/events.js");
 var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
+var events_1 = __webpack_require__(/*! events */ "./node_modules/events/events.js");
 /**
  * Flux pattern store class
  */
@@ -13249,29 +13264,29 @@ var Store = /** @class */ (function (_super) {
          * When action only sets up store definitions
          * Does not dispatch any event
          */
-        if (action.type === 'UPDATE_APISEARCH_SETUP') {
+        if (action.type === "UPDATE_APISEARCH_SETUP") {
             this.currentQuery = action.payload.query;
         }
         /**
          * Is triggered when a initial data is received
          * Dispatches an 'render' event
          */
-        if (action.type === 'RENDER_INITIAL_DATA') {
+        if (action.type === "RENDER_INITIAL_DATA") {
             var _a = action.payload, result = _a.result, query = _a.query;
             this.currentResult = result;
             this.currentQuery = query;
-            this.emit('render');
+            this.emit("render");
         }
         /**
          * When action triggers a re-rendering
          * Dispatches a 'render' event
          */
-        if (action.type === 'RENDER_FETCHED_DATA') {
+        if (action.type === "RENDER_FETCHED_DATA") {
             var _b = action.payload, result = _b.result, query = _b.query;
             this.dirty = false;
             this.currentResult = result;
             this.currentQuery = query;
-            this.emit('render');
+            this.emit("render");
         }
     };
     return Store;
@@ -13291,12 +13306,9 @@ exports["default"] = Store;
 "use strict";
 
 exports.__esModule = true;
-/**
- * Clear filters actions
- */
 var cloneDeep = __webpack_require__(/*! clone-deep */ "./node_modules/clone-deep/index.js");
-var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
 var Constants_1 = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
+var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
 /**
  * Clear filters action
  *
@@ -13313,7 +13325,7 @@ function clearFiltersAction(environmentId, currentQuery, repository) {
         .query(clonedQuery)
         .then(function (result) {
         dispatcher.dispatch({
-            type: 'RENDER_FETCHED_DATA',
+            type: "RENDER_FETCHED_DATA",
             payload: {
                 query: clonedQuery,
                 result: result
@@ -13507,7 +13519,7 @@ function manageCurrentFilterItems(selectedItem, currentItems) {
     }
     else {
         return currentItems.concat([
-            selectedItem
+            selectedItem,
         ]);
     }
 }
@@ -13526,12 +13538,9 @@ exports.manageCurrentFilterItems = manageCurrentFilterItems;
 "use strict";
 
 exports.__esModule = true;
-/**
- * Multiple filter actions
- */
 var cloneDeep = __webpack_require__(/*! clone-deep */ "./node_modules/clone-deep/index.js");
-var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
 var Constants_1 = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
+var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
 /**
  * Define aggregations setup
  *
@@ -13548,7 +13557,7 @@ function aggregationSetup(environmentId, currentQuery, filterName, aggregationFi
     clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy, fetchLimit);
     var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
     dispatcher.dispatch({
-        type: 'UPDATE_APISEARCH_SETUP',
+        type: "UPDATE_APISEARCH_SETUP",
         payload: {
             query: clonedQuery
         }
@@ -13579,7 +13588,7 @@ function filterAction(environmentId, currentQuery, repository, filterName, filte
         .query(clonedQuery)
         .then(function (result) {
         dispatcher.dispatch({
-            type: 'RENDER_FETCHED_DATA',
+            type: "RENDER_FETCHED_DATA",
             payload: {
                 query: clonedQuery,
                 result: result
@@ -14009,12 +14018,9 @@ exports["default"] = NavigationComponent;
 "use strict";
 
 exports.__esModule = true;
-/**
- * Pagination actions
- */
 var cloneDeep = __webpack_require__(/*! clone-deep */ "./node_modules/clone-deep/index.js");
-var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
 var Constants_1 = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
+var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
 /**
  * Pagination change
  *
@@ -14031,7 +14037,7 @@ function paginationChangeAction(environmentId, currentQuery, repository, selecte
         .query(clonedQuery)
         .then(function (result) {
         dispatcher.dispatch({
-            type: 'RENDER_FETCHED_DATA',
+            type: "RENDER_FETCHED_DATA",
             payload: {
                 query: clonedQuery,
                 result: result
@@ -14196,12 +14202,9 @@ exports["default"] = PaginationComponent;
 "use strict";
 
 exports.__esModule = true;
-/**
- * Search actions
- */
 var cloneDeep = __webpack_require__(/*! clone-deep */ "./node_modules/clone-deep/index.js");
-var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
 var Constants_1 = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
+var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
 /**
  *
  * Change items per result page setup
@@ -14239,7 +14242,7 @@ function changeItemsPerResultPageSetup(environmentId, currentQuery, itemsPerPage
     }
     var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
     dispatcher.dispatch({
-        type: 'UPDATE_APISEARCH_SETUP',
+        type: "UPDATE_APISEARCH_SETUP",
         payload: {
             query: clonedQuery
         }
@@ -14383,12 +14386,9 @@ exports.defaultItemsListTemplate = "\n    <ul>\n    {{#items}}\n        <li clas
 "use strict";
 
 exports.__esModule = true;
-/**
- * Search actions
- */
 var cloneDeep = __webpack_require__(/*! clone-deep */ "./node_modules/clone-deep/index.js");
-var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
 var Constants_1 = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
+var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
 /**
  * Search action
  *
@@ -14406,7 +14406,7 @@ function simpleSearchAction(environmentId, currentQuery, repository, queryText) 
         .query(clonedQuery)
         .then(function (result) {
         dispatcher.dispatch({
-            type: 'RENDER_FETCHED_DATA',
+            type: "RENDER_FETCHED_DATA",
             payload: {
                 query: clonedQuery,
                 result: result
@@ -14553,10 +14553,10 @@ exports.__esModule = true;
 /**
  * SortBy actions
  */
-var cloneDeep = __webpack_require__(/*! clone-deep */ "./node_modules/clone-deep/index.js");
-var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
 var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
+var cloneDeep = __webpack_require__(/*! clone-deep */ "./node_modules/clone-deep/index.js");
 var Constants_1 = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
+var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
 /**
  * ON change search action
  *
@@ -14578,7 +14578,7 @@ function onChangeSearchAction(environmentId, currentQuery, repository, selectedO
         .query(clonedQuery)
         .then(function (result) {
         dispatcher.dispatch({
-            type: 'RENDER_FETCHED_DATA',
+            type: "RENDER_FETCHED_DATA",
             payload: {
                 query: clonedQuery,
                 result: result
@@ -14595,7 +14595,7 @@ exports.onChangeSearchAction = onChangeSearchAction;
  * @return {{field: string, sort: string}}
  */
 function splitQueryValue(string) {
-    var queryValue = string.split(':');
+    var queryValue = string.split(":");
     return {
         field: queryValue[0],
         sort: queryValue[1]
@@ -15347,11 +15347,11 @@ exports["default"] = Widget;
 exports.__esModule = true;
 var ClearFilters_1 = __webpack_require__(/*! ./ClearFilters */ "./src/widgets/ClearFilters.tsx");
 var Information_1 = __webpack_require__(/*! ./Information */ "./src/widgets/Information.tsx");
-var Result_1 = __webpack_require__(/*! ./Result */ "./src/widgets/Result.tsx");
 var MultipleFilter_1 = __webpack_require__(/*! ./MultipleFilter */ "./src/widgets/MultipleFilter.tsx");
+var Pagination_1 = __webpack_require__(/*! ./Pagination */ "./src/widgets/Pagination.tsx");
+var Result_1 = __webpack_require__(/*! ./Result */ "./src/widgets/Result.tsx");
 var SearchInput_1 = __webpack_require__(/*! ./SearchInput */ "./src/widgets/SearchInput.tsx");
 var SortBy_1 = __webpack_require__(/*! ./SortBy */ "./src/widgets/SortBy.tsx");
-var Pagination_1 = __webpack_require__(/*! ./Pagination */ "./src/widgets/Pagination.tsx");
 /**
  * Widget factories
  */

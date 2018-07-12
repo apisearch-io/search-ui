@@ -2,5 +2,5 @@
  * ClearFiltersState
  */
 export interface ClearFiltersState {
-    showClearFilters: boolean
+    showClearFilters: boolean;
 }

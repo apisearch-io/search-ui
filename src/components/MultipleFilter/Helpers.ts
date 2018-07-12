@@ -10,21 +10,21 @@
  * @returns {[null,null]}
  */
 export function manageCurrentFilterItems(
-    selectedItem:string,
-    currentItems:string[]
+    selectedItem: string,
+    currentItems: string[],
 ) {
-    let isElementActive = currentItems
-        .some(item => item === selectedItem)
+    const isElementActive = currentItems
+        .some((item) => item === selectedItem)
     ;
 
     if (isElementActive) {
         return currentItems
-            .filter(item => item !== selectedItem)
+            .filter((item) => item !== selectedItem)
         ;
     } else {
         return [
             ...currentItems,
-            selectedItem
+            selectedItem,
         ];
     }
 }

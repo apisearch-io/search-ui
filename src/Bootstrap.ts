@@ -1,34 +1,29 @@
-import {Dispatcher} from 'flux';
+import {Dispatcher} from "flux";
 
+import apisearch, {KeyValueCache} from "apisearch";
 import ApisearchUI from "./ApisearchUI";
-import Store from "./Store";
 import container from "./Container";
-import apisearch from "apisearch";
+import Store from "./Store";
 
 import {
+    APISEARCH_DISPATCHER,
     APISEARCH_REPOSITORY,
     APISEARCH_STORE,
     APISEARCH_UI,
-    APISEARCH_DISPATCHER
 } from "./Constants";
 
 /**
  * Bootstrap application
  *
  * @param environmentId
- * @param appId
- * @param indexId
- * @param token
- * @param options
+ * @param config
  */
 export function bootstrap(
-   environmentId:string,
-   appId:string,
-   indexId:string,
-   token:string,
-   options:any
+    environmentId: string,
+    config: any,
 ) {
-    const repositoryId = `${APISEARCH_REPOSITORY}__${appId}_${token}_${token}`;
+    const configAsString = JSON.stringify(config);
+    const repositoryId = `${APISEARCH_REPOSITORY}__${configAsString}`;
     const storeId = `${APISEARCH_STORE}__${environmentId}`;
     const dispatcherId = `${APISEARCH_DISPATCHER}__${environmentId}`;
     const asuiId = `${APISEARCH_UI}__${environmentId}`;
@@ -37,19 +32,14 @@ export function bootstrap(
      * Register Apisearch repository
      */
     container.register(repositoryId, () => {
-        return apisearch.createRepository({
-            app_id: appId,
-            index_id: indexId,
-            token: token,
-            options: options
-        })
+        return apisearch.createRepository(config);
     });
 
     /**
      * Register apisearch store
      */
     container.register(storeId, () => {
-        return new Store()
+        return new Store();
     });
 
     /**
@@ -66,7 +56,7 @@ export function bootstrap(
         return new ApisearchUI(
             environmentId,
             container.get(repositoryId),
-            container.get(storeId)
+            container.get(storeId),
         );
     });
 }

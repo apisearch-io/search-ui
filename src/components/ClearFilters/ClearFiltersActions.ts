@@ -1,11 +1,11 @@
 /**
  * Clear filters actions
  */
-import * as cloneDeep from 'clone-deep';
-import container from "../../Container";
-import {APISEARCH_DISPATCHER} from "../../Constants";
 import {Repository} from "apisearch";
 import {Query} from "apisearch";
+import * as cloneDeep from "clone-deep";
+import {APISEARCH_DISPATCHER} from "../../Constants";
+import container from "../../Container";
 
 /**
  * Clear filters action
@@ -15,9 +15,9 @@ import {Query} from "apisearch";
  * @param repository
  */
 export function clearFiltersAction(
-    environmentId:string,
-    currentQuery:Query,
-    repository:Repository
+    environmentId: string,
+    currentQuery: Query,
+    repository: Repository,
 ) {
     const clonedQuery = cloneDeep(currentQuery);
 
@@ -27,13 +27,13 @@ export function clearFiltersAction(
 
     repository
         .query(clonedQuery)
-        .then(result => {
+        .then((result) => {
             dispatcher.dispatch({
-                type: 'RENDER_FETCHED_DATA',
+                type: "RENDER_FETCHED_DATA",
                 payload: {
                     query: clonedQuery,
-                    result: result
-                }
-            })
+                    result,
+                },
+            });
         });
 }

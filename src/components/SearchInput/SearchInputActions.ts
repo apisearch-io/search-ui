@@ -1,11 +1,11 @@
 /**
  * Search actions
  */
-import * as cloneDeep from 'clone-deep';
-import container from '../../Container';
-import {APISEARCH_DISPATCHER} from "../../Constants";
 import {Repository} from "apisearch";
 import {Query} from "apisearch";
+import * as cloneDeep from "clone-deep";
+import {APISEARCH_DISPATCHER} from "../../Constants";
+import container from "../../Container";
 
 /**
  * Search action
@@ -16,10 +16,10 @@ import {Query} from "apisearch";
  * @param queryText
  */
 export function simpleSearchAction(
-    environmentId:string,
-    currentQuery:Query,
-    repository:Repository,
-    queryText:string
+    environmentId: string,
+    currentQuery: Query,
+    repository: Repository,
+    queryText: string,
 ) {
     const clonedQuery = cloneDeep(currentQuery);
 
@@ -29,13 +29,13 @@ export function simpleSearchAction(
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
     repository
         .query(clonedQuery)
-        .then(result => {
+        .then((result) => {
             dispatcher.dispatch({
-                type: 'RENDER_FETCHED_DATA',
+                type: "RENDER_FETCHED_DATA",
                 payload: {
                     query: clonedQuery,
-                    result: result
-                }
-            })
-    })
+                    result,
+                },
+            });
+    });
 }

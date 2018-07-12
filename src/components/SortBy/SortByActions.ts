@@ -1,12 +1,12 @@
 /**
  * SortBy actions
  */
-import * as cloneDeep from 'clone-deep';
-import container from '../../Container';
-import Apisearch from 'apisearch';
-import {APISEARCH_DISPATCHER} from "../../Constants";
+import Apisearch from "apisearch";
 import {Repository} from "apisearch";
 import {Query} from "apisearch";
+import * as cloneDeep from "clone-deep";
+import {APISEARCH_DISPATCHER} from "../../Constants";
+import container from "../../Container";
 
 /**
  * ON change search action
@@ -17,10 +17,10 @@ import {Query} from "apisearch";
  * @param selectedOption
  */
 export function onChangeSearchAction(
-    environmentId:string,
-    currentQuery:Query,
-    repository:Repository,
-    selectedOption:string
+    environmentId: string,
+    currentQuery: Query,
+    repository: Repository,
+    selectedOption: string,
 ) {
     const clonedQuery = cloneDeep(currentQuery);
     const filterData = splitQueryValue(selectedOption);
@@ -30,8 +30,8 @@ export function onChangeSearchAction(
             .createEmptySortBy()
             .byFieldValue(
                 filterData.field,
-                filterData.sort
-            )
+                filterData.sort,
+            ),
         );
 
     clonedQuery.page = 1;
@@ -39,14 +39,14 @@ export function onChangeSearchAction(
 
     repository
         .query(clonedQuery)
-        .then(result => {
+        .then((result) => {
             dispatcher.dispatch({
-                type: 'RENDER_FETCHED_DATA',
+                type: "RENDER_FETCHED_DATA",
                 payload: {
                     query: clonedQuery,
-                    result: result
-                }
-            })
+                    result,
+                },
+            });
         });
 }
 
@@ -58,10 +58,10 @@ export function onChangeSearchAction(
  * @return {{field: string, sort: string}}
  */
 function splitQueryValue(string) {
-    let queryValue = string.split(':');
+    const queryValue = string.split(":");
 
     return {
         field: queryValue[0],
-        sort: queryValue[1]
-    }
+        sort: queryValue[1],
+    };
 }

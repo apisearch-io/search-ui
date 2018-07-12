@@ -1,11 +1,11 @@
 /**
  * Multiple filter actions
  */
-import * as cloneDeep from 'clone-deep';
-import container from "../../Container";
-import {APISEARCH_DISPATCHER} from "../../Constants";
 import {Repository} from "apisearch";
 import {Query} from "apisearch";
+import * as cloneDeep from "clone-deep";
+import {APISEARCH_DISPATCHER} from "../../Constants";
+import container from "../../Container";
 
 /**
  * Define aggregations setup
@@ -19,13 +19,13 @@ import {Query} from "apisearch";
  * @param fetchLimit
  */
 export function aggregationSetup(
-    environmentId:string,
-    currentQuery:Query,
-    filterName:string,
-    aggregationField:string,
-    applicationType:number,
-    sortBy:string[],
-    fetchLimit:number
+    environmentId: string,
+    currentQuery: Query,
+    filterName: string,
+    aggregationField: string,
+    applicationType: number,
+    sortBy: string[],
+    fetchLimit: number,
 ) {
     const clonedQuery = cloneDeep(currentQuery);
 
@@ -34,17 +34,17 @@ export function aggregationSetup(
         aggregationField,
         applicationType,
         sortBy,
-        fetchLimit
+        fetchLimit,
     );
 
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
 
     dispatcher.dispatch({
-        type: 'UPDATE_APISEARCH_SETUP',
+        type: "UPDATE_APISEARCH_SETUP",
         payload: {
-            query: clonedQuery
-        }
-    })
+            query: clonedQuery,
+        },
+    });
 }
 
 /**
@@ -62,16 +62,16 @@ export function aggregationSetup(
  * @param fetchLimit
  */
 export function filterAction(
-    environmentId:string,
-    currentQuery:Query,
-    repository:Repository,
-    filterName:string,
-    filterField:string,
-    aggregationField:string,
-    filterValues:string[],
-    applicationType:number,
-    sortBy:string[],
-    fetchLimit:number
+    environmentId: string,
+    currentQuery: Query,
+    repository: Repository,
+    filterName: string,
+    filterField: string,
+    aggregationField: string,
+    filterValues: string[],
+    applicationType: number,
+    sortBy: string[],
+    fetchLimit: number,
 ) {
     const clonedQuery = cloneDeep(currentQuery);
 
@@ -81,7 +81,7 @@ export function filterAction(
         filterValues,
         applicationType,
         false,
-        sortBy
+        sortBy,
     );
 
     clonedQuery.aggregateBy(
@@ -89,23 +89,23 @@ export function filterAction(
         aggregationField,
         applicationType,
         sortBy,
-        fetchLimit
+        fetchLimit,
     );
     clonedQuery.page = 1;
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
 
     repository
         .query(clonedQuery)
-        .then(result => {
+        .then((result) => {
             dispatcher.dispatch({
-                type: 'RENDER_FETCHED_DATA',
+                type: "RENDER_FETCHED_DATA",
                 payload: {
                     query: clonedQuery,
-                    result: result
-                }
-            })
+                    result,
+                },
+            });
         })
-        .catch(error => {
+        .catch((error) => {
             return null;
         });
 }

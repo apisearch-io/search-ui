@@ -7,24 +7,24 @@ import {ItemUUID} from "apisearch";
  * Created by mmoreram on 9/07/18.
  */
 export interface ResultProps {
-    target:any,
-    itemsPerPage: number,
-    highlightsEnabled: boolean,
-    promote: ItemUUID[],
-    exclude: ItemUUID[],
+    target: any;
+    itemsPerPage: number;
+    highlightsEnabled: boolean;
+    promote: ItemUUID[];
+    exclude: ItemUUID[];
     classNames: {
         container: string,
         itemsList: string,
-        placeholder: string
-    },
+        placeholder: string,
+    };
     template: {
         itemsList: string,
-        placeholder: null
-    },
-    formatData: Function,
-    environmentId?: string,
-    repository?: Repository,
-    dirty?: boolean,
-    currentResult?: Result,
-    currentQuery?: Query
+        placeholder: null,
+    };
+    formatData: Function;
+    environmentId?: string;
+    repository?: Repository;
+    dirty?: boolean;
+    currentResult?: Result;
+    currentQuery?: Query;
 }
