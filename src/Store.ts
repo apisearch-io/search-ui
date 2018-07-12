@@ -1,7 +1,7 @@
+import apisearch from "apisearch";
+import {Query} from "apisearch";
+import {Result} from "apisearch";
 import { EventEmitter } from "events";
-import apisearch from 'apisearch';
-import {Query} from 'apisearch';
-import {Result} from 'apisearch';
 
 /**
  * Flux pattern store class
@@ -9,8 +9,8 @@ import {Result} from 'apisearch';
 class Store extends EventEmitter {
 
     private dirty;
-    private currentQuery:Query;
-    private currentResult:Result;
+    private currentQuery: Query;
+    private currentResult: Result;
 
     /**
      * Constructor
@@ -39,7 +39,7 @@ class Store extends EventEmitter {
      *
      * @return {any}
      */
-    isDirty():boolean {
+    public isDirty(): boolean {
         return this.dirty;
     }
 
@@ -48,7 +48,7 @@ class Store extends EventEmitter {
      *
      * @return {Query}
      */
-    getCurrentQuery():Query {
+    public getCurrentQuery(): Query {
         return this.currentQuery;
     }
 
@@ -57,7 +57,7 @@ class Store extends EventEmitter {
      *
      * @return {Result}
      */
-    getCurrentResult():Result {
+    public getCurrentResult(): Result {
         return this.currentResult;
     }
 
@@ -67,12 +67,12 @@ class Store extends EventEmitter {
      * This is what we call a reducer
      * on a Redux architecture
      */
-    handleActions(action) {
+    public handleActions(action) {
         /**
          * When action only sets up store definitions
          * Does not dispatch any event
          */
-        if (action.type === 'UPDATE_APISEARCH_SETUP') {
+        if (action.type === "UPDATE_APISEARCH_SETUP") {
             this.currentQuery = action.payload.query;
         }
 
@@ -80,27 +80,27 @@ class Store extends EventEmitter {
          * Is triggered when a initial data is received
          * Dispatches an 'render' event
          */
-        if (action.type === 'RENDER_INITIAL_DATA') {
+        if (action.type === "RENDER_INITIAL_DATA") {
             const { result, query } = action.payload;
 
             this.currentResult = result;
             this.currentQuery = query;
 
-            this.emit('render');
+            this.emit("render");
         }
 
         /**
          * When action triggers a re-rendering
          * Dispatches a 'render' event
          */
-        if (action.type === 'RENDER_FETCHED_DATA') {
+        if (action.type === "RENDER_FETCHED_DATA") {
             const { result, query } = action.payload;
 
             this.dirty = false;
             this.currentResult = result;
             this.currentQuery = query;
 
-            this.emit('render');
+            this.emit("render");
         }
     }
 }

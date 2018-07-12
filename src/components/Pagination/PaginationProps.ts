@@ -6,9 +6,9 @@ import {Result} from "apisearch";
  * Created by mmoreram on 9/07/18.
  */
 export interface PaginationProps {
-    target:any,
-    padding: number,
-    goFirstLast: boolean,
+    target: any;
+    padding: number;
+    goFirstLast: boolean;
     classNames: {
         container: string,
         item: string,
@@ -17,18 +17,18 @@ export interface PaginationProps {
         next: string,
         first: string,
         previous: string,
-        last: string
-    },
+        last: string,
+    };
     template: {
         item: string,
         next: string,
         previous: string,
         first: string,
-        last: string
-    }
-    environmentId?: string,
-    repository?: Repository,
-    dirty?: boolean,
-    currentResult?: Result,
-    currentQuery?: Query
+        last: string,
+    };
+    environmentId?: string;
+    repository?: Repository;
+    dirty?: boolean;
+    currentResult?: Result;
+    currentQuery?: Query;
 }

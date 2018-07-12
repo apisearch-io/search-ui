@@ -3,19 +3,19 @@
  */
 class Container {
 
-    private services:any = {};
+    private services: any = {};
 
     /**
      * Get service
      *
      * @param id
      */
-    get(id:string) {
+    public get(id: string) {
         if (this.services[id]) {
             return this.services[id];
         }
 
-        throw new Error(`Service with id (${id}) is not registered.`)
+        throw new Error(`Service with id (${id}) is not registered.`);
     }
 
     /**
@@ -24,9 +24,9 @@ class Container {
      * @param id
      * @param serviceCallback
      */
-    register(
-        id:string,
-        serviceCallback:Function
+    public register(
+        id: string,
+        serviceCallback: Function,
     ) {
         this.services[id] = serviceCallback();
     }

@@ -7,7 +7,7 @@ import Store from "../Store";
 export default abstract class Widget {
 
     protected target;
-    protected component:any;
+    protected component: any;
 
     /**
      * Widget
@@ -16,9 +16,9 @@ export default abstract class Widget {
      * @param store
      * @param repository
      */
-    abstract render(
-        environmentId:string,
-        store:Store,
-        repository:Repository
+    public abstract render(
+        environmentId: string,
+        store: Store,
+        repository: Repository,
     );
 }

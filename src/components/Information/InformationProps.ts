@@ -6,17 +6,17 @@ import {Result} from "apisearch";
  * InformationProps
  */
 export interface InformationProps {
-    target:any,
+    target: any;
     classNames: {
-        container: string
-    },
+        container: string,
+    };
     template: {
-        container: string
-    },
-    formatData: Function,
-    environmentId?: string,
-    repository?: Repository,
-    dirty?: boolean,
-    currentResult?: Result,
-    currentQuery?: Query
+        container: string,
+    };
+    formatData: Function;
+    environmentId?: string;
+    repository?: Repository;
+    dirty?: boolean;
+    currentResult?: Result;
+    currentQuery?: Query;
 }

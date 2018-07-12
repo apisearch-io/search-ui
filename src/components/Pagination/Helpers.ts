@@ -15,16 +15,16 @@
  * @return {number}
  */
 export function getTotalPages(
-    totalHits:number,
-    hitsPerPage:number
-) : number {
+    totalHits: number,
+    hitsPerPage: number,
+): number {
     totalHits = (totalHits >= 10000)
         ? 9999
         : totalHits
     ;
 
     const totalPages = Math.ceil(
-        totalHits / hitsPerPage
+        totalHits / hitsPerPage,
     );
 
     return (totalPages > 999)
@@ -40,9 +40,9 @@ export function getTotalPages(
  *
  * @return {number[]}
  */
-export function totalPagesToArray(totalPages) : number[] {
-    let pages = [];
-    for(let index = 1; index <= totalPages; index++) {
+export function totalPagesToArray(totalPages): number[] {
+    const pages = [];
+    for (let index = 1; index <= totalPages; index++) {
         pages.push(index);
     }
 
@@ -62,18 +62,18 @@ export function totalPagesToArray(totalPages) : number[] {
  * @return {number}
  */
 export function getStart(
-    totalPages:number,
-    padding:number,
-    currentPage:number,
-    spectreSize:number,
-    isTouchingLeft:boolean,
-    isTouchingRight:boolean
-) : number {
+    totalPages: number,
+    padding: number,
+    currentPage: number,
+    spectreSize: number,
+    isTouchingLeft: boolean,
+    isTouchingRight: boolean,
+): number {
     if (isTouchingLeft) {
         return currentPage - (currentPage % spectreSize);
     }
     if (isTouchingRight) {
-        let start =  currentPage - (spectreSize - (totalPages % currentPage));
+        const start =  currentPage - (spectreSize - (totalPages % currentPage));
         return (start > 0) ? start : 0;
     }
 
@@ -93,13 +93,13 @@ export function getStart(
  * @return {number}
  */
 export function getEnd(
-    totalPages:number,
-    padding:number,
-    currentPage:number,
-    spectreSize:number,
-    isTouchingLeft:boolean,
-    isTouchingRight:boolean
-) : number {
+    totalPages: number,
+    padding: number,
+    currentPage: number,
+    spectreSize: number,
+    isTouchingLeft: boolean,
+    isTouchingRight: boolean,
+): number {
     if (isTouchingLeft) {
         return spectreSize;
     }

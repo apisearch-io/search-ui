@@ -1,11 +1,11 @@
 /**
  * Search actions
  */
-import * as cloneDeep from 'clone-deep';
-import container from '../../Container';
-import {APISEARCH_DISPATCHER} from "../../Constants";
 import {ItemUUID} from "apisearch";
 import {Query} from "apisearch";
+import * as cloneDeep from "clone-deep";
+import {APISEARCH_DISPATCHER} from "../../Constants";
+import container from "../../Container";
 
 /**
  *
@@ -19,10 +19,10 @@ import {Query} from "apisearch";
  * @param excludedUUIDs
  */
 export function changeItemsPerResultPageSetup(
-    environmentId:string,
-    currentQuery:Query,
-    itemsPerPage:number,
-    highlightsEnabled:boolean,
+    environmentId: string,
+    currentQuery: Query,
+    itemsPerPage: number,
+    highlightsEnabled: boolean,
     promotedUUIDs: ItemUUID[],
     excludedUUIDs: ItemUUID[],
 ) {
@@ -56,9 +56,9 @@ export function changeItemsPerResultPageSetup(
 
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
     dispatcher.dispatch({
-        type: 'UPDATE_APISEARCH_SETUP',
+        type: "UPDATE_APISEARCH_SETUP",
         payload: {
-            query: clonedQuery
-        }
-    })
+            query: clonedQuery,
+        },
+    });
 }
