@@ -3920,7 +3920,7 @@ var Query = /** @class */ (function () {
             for (var i in this.itemsPromoted) {
                 array
                     .items_promoted
-                    .push(this.itemsPromoted[i].toArray);
+                    .push(this.itemsPromoted[i].toArray());
             }
         }
         return array;
@@ -13318,7 +13318,9 @@ var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts
  */
 function clearFiltersAction(environmentId, currentQuery, repository) {
     var clonedQuery = cloneDeep(currentQuery);
-    clonedQuery.filters = [];
+    clonedQuery.filters = {
+        '_query': currentQuery.getFilter('_query')
+    };
     clonedQuery.page = 1;
     var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
     repository
@@ -13394,9 +13396,8 @@ var ClearFiltersComponent = /** @class */ (function (_super) {
      * @param props
      */
     ClearFiltersComponent.prototype.componentWillReceiveProps = function (props) {
-        var filters = props.currentQuery.filters;
-        var areFiltersActive = (Object.keys(filters).length !== 0 &&
-            filters.length !== 0);
+        var filters = props.currentQuery.getFilters();
+        var areFiltersActive = (Object.keys(filters).length > 1);
         this.setState({ showClearFilters: areFiltersActive });
     };
     /**
@@ -14231,14 +14232,14 @@ function changeItemsPerResultPageSetup(environmentId, currentQuery, itemsPerPage
     /**
      * Promoted uuids
      */
-    if (promotedUUIDs.length !== 0) {
-        clonedQuery.promoteUUIDs(promotedUUIDs);
+    for (var i in promotedUUIDs) {
+        clonedQuery.promoteUUID(promotedUUIDs[i]);
     }
     /**
      * excluded uuids
      */
-    if (excludedUUIDs.length !== 0) {
-        clonedQuery.excludeUUIDs(excludedUUIDs);
+    for (var i in excludedUUIDs) {
+        clonedQuery.excludeUUID(excludedUUIDs[i]);
     }
     var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
     dispatcher.dispatch({
@@ -14285,6 +14286,7 @@ var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/pre
 var Template_1 = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
 var defaultTemplates_1 = __webpack_require__(/*! ./defaultTemplates */ "./src/components/Result/defaultTemplates.tsx");
 var ResultActions_1 = __webpack_require__(/*! ./ResultActions */ "./src/components/Result/ResultActions.ts");
+var ItemUUID_1 = __webpack_require__(/*! apisearch/lib/Model/ItemUUID */ "./node_modules/apisearch/lib/Model/ItemUUID.js");
 /**
  * Result Component
  */
@@ -14301,7 +14303,15 @@ var ResultComponent = /** @class */ (function (_super) {
         /**
          * Dispatch action
          */
-        ResultActions_1.changeItemsPerResultPageSetup(props.environmentId, props.currentQuery, props.itemsPerPage, props.highlightsEnabled, props.promote, props.exclude);
+        ResultActions_1.changeItemsPerResultPageSetup(props.environmentId, props.currentQuery, props.itemsPerPage, props.highlightsEnabled, props.promote.map(function (itemUUID) {
+            return itemUUID instanceof ItemUUID_1.ItemUUID
+                ? itemUUID
+                : ItemUUID_1.ItemUUID.createFromArray(itemUUID);
+        }), props.exclude.map(function (itemUUID) {
+            return itemUUID instanceof ItemUUID_1.ItemUUID
+                ? itemUUID
+                : ItemUUID_1.ItemUUID.createFromArray(itemUUID);
+        }));
     };
     /**
      * Render

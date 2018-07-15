@@ -23,10 +23,9 @@ class ClearFiltersComponent extends Component<ClearFiltersProps, ClearFiltersSta
      * @param props
      */
     componentWillReceiveProps(props) {
-        let filters = props.currentQuery.filters;
+        let filters = props.currentQuery.getFilters();
         let areFiltersActive = (
-            Object.keys(filters).length !== 0 &&
-            filters.length !== 0
+            Object.keys(filters).length > 1
         );
 
         this.setState({showClearFilters: areFiltersActive});

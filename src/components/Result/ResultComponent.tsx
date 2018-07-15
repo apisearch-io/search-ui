@@ -3,6 +3,7 @@ import Template from "../Template";
 import {defaultItemsListTemplate} from "./defaultTemplates";
 import {changeItemsPerResultPageSetup} from "./ResultActions";
 import {ResultProps} from "./ResultProps";
+import {ItemUUID} from "apisearch/lib/Model/ItemUUID";
 
 /**
  * Result Component
@@ -24,8 +25,16 @@ class ResultComponent extends Component<ResultProps> {
             props.currentQuery,
             props.itemsPerPage,
             props.highlightsEnabled,
-            props.promote,
-            props.exclude
+            props.promote.map((itemUUID) => {
+                return itemUUID instanceof ItemUUID
+                    ? itemUUID
+                    : ItemUUID.createFromArray(itemUUID)
+            }),
+            props.exclude.map((itemUUID) => {
+                return itemUUID instanceof ItemUUID
+                    ? itemUUID
+                    : ItemUUID.createFromArray(itemUUID)
+            })
         );
     }
 

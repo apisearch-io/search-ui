@@ -43,15 +43,15 @@ export function changeItemsPerResultPageSetup(
     /**
      * Promoted uuids
      */
-    if (promotedUUIDs.length !== 0) {
-        clonedQuery.promoteUUIDs(promotedUUIDs);
+    for (const i in promotedUUIDs) {
+        clonedQuery.promoteUUID(promotedUUIDs[i]);
     }
 
     /**
      * excluded uuids
      */
-    if (excludedUUIDs.length !== 0) {
-        clonedQuery.excludeUUIDs(excludedUUIDs);
+    for (const i in excludedUUIDs) {
+        clonedQuery.excludeUUID(excludedUUIDs[i]);
     }
 
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
