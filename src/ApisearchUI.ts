@@ -20,6 +20,7 @@ export default class ApisearchUI {
     private repository: Repository;
     private activeWidgets: Widget[];
     private store: Store;
+    public widgets: any;
 
     /**
      * Constructor
@@ -39,6 +40,7 @@ export default class ApisearchUI {
         this.environmentId = environmentId;
         this.repository = repository;
         this.activeWidgets = [];
+        this.widgets = widgets;
 
         /**
          * Store related properties
@@ -118,6 +120,21 @@ export default class ApisearchUI {
                 this.repository,
             );
         });
+    }
+
+    /**
+     * Attach a function into an event
+     *
+     * @param eventName
+     * @param action
+     */
+    public attach(
+        eventName: string,
+        action: any,
+    ) {
+        this
+            .store
+            .on(eventName, action);
     }
 
     /**

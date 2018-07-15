@@ -67,4 +67,4 @@ class Information extends Widget {
  *
  * @param settings
  */
-export const information = settings => new Information(settings);
+export default settings => new Information(settings);

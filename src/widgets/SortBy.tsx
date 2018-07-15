@@ -62,4 +62,4 @@ class SortBy extends Widget {
  *
  * @param settings
  */
-export const sortBy = settings => new SortBy(settings);
+export default settings => new SortBy(settings);

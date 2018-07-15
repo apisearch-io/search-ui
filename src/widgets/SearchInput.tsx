@@ -157,4 +157,4 @@ const isInputElement = (targetNode) => {
  *
  * @param settings
  */
-export const searchInput = settings => new SearchInput(settings);
+export default settings => new SearchInput(settings);

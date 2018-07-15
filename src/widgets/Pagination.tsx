@@ -69,4 +69,4 @@ class Pagination extends Widget {
  *
  * @param settings
  */
-export const pagination = settings => new Pagination(settings);
+export default settings => new Pagination(settings);

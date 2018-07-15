@@ -1,16 +1,17 @@
 {
   "name": "apisearch-ui",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Javascript User Interface of Apisearch.",
-  "main": "./dist/apisearch-ui.js",
+  "main": "lib/index.js",
   "scripts": {
     "dev": "webpack --config ./webpack.dev.js --progress --colors --watch",
     "test": "jest --config jest.config.js",
+    "build:lib": "tsc --outDir lib -m commonjs",
     "build:dev": "webpack --config ./webpack.dev.js --mode development",
     "build:min": "webpack --config ./webpack.min.js --mode production",
     "build:styles": "sass src/styles/apisearch-ui.sass dist/apisearch-ui.css",
-    "fix": "tslint -c tslint.json --fix 'src/**/**/*.ts' 'src/**/*.ts' 'src/*.ts'",
-    "dist": "rm -rf ./dist/*; npm run build:dev && npm run build:min && npm run build:styles"
+    "fix": "tslint -c tslint.json --fix 'src/**/*.ts' 'src/*.ts'",
+    "dist": "rm -rf ./dist/*; npm run build:lib && npm run build:dev && npm run build:min && npm run build:styles"
   },
   "license": "MIT",
   "author": "Puntmig Development <hello@puntmig.com>",

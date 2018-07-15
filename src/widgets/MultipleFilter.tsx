@@ -96,4 +96,4 @@ class MultipleFilter extends Widget {
  *
  * @param settings
  */
-export const multipleFilter = settings => new MultipleFilter(settings);
+export default settings => new MultipleFilter(settings);
