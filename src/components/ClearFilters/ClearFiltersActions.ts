@@ -21,7 +21,10 @@ export function clearFiltersAction(
 ) {
     const clonedQuery = cloneDeep(currentQuery);
 
-    clonedQuery.filters = [];
+    clonedQuery.filters = {
+        _query: currentQuery.getFilter("_query"),
+    };
+
     clonedQuery.page = 1;
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
 
