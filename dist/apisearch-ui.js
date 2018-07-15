@@ -12931,6 +12931,7 @@ var ApisearchUI = /** @class */ (function () {
         this.environmentId = environmentId;
         this.repository = repository;
         this.activeWidgets = [];
+        this.widgets = Widgets_1["default"];
         /**
          * Store related properties
          */
@@ -13001,6 +13002,17 @@ var ApisearchUI = /** @class */ (function () {
         this.activeWidgets.map(function (widget) {
             widget.render(_this.environmentId, _this.store, _this.repository);
         });
+    };
+    /**
+     * Attach a function into an event
+     *
+     * @param eventName
+     * @param action
+     */
+    ApisearchUI.prototype.attach = function (eventName, action) {
+        this
+            .store
+            .on(eventName, action);
     };
     /**
      * Create instance
@@ -13319,7 +13331,7 @@ var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts
 function clearFiltersAction(environmentId, currentQuery, repository) {
     var clonedQuery = cloneDeep(currentQuery);
     clonedQuery.filters = {
-        '_query': currentQuery.getFilter('_query')
+        _query: currentQuery.getFilter("_query")
     };
     clonedQuery.page = 1;
     var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
@@ -14842,7 +14854,7 @@ var ClearFilters = /** @class */ (function (_super) {
  *
  * @param settings
  */
-exports.clearFilters = function (settings) { return new ClearFilters(settings); };
+exports["default"] = (function (settings) { return new ClearFilters(settings); });
 
 
 /***/ }),
@@ -14909,7 +14921,7 @@ var Information = /** @class */ (function (_super) {
  *
  * @param settings
  */
-exports.information = function (settings) { return new Information(settings); };
+exports["default"] = (function (settings) { return new Information(settings); });
 
 
 /***/ }),
@@ -14991,7 +15003,7 @@ var MultipleFilter = /** @class */ (function (_super) {
  *
  * @param settings
  */
-exports.multipleFilter = function (settings) { return new MultipleFilter(settings); };
+exports["default"] = (function (settings) { return new MultipleFilter(settings); });
 
 
 /***/ }),
@@ -15058,7 +15070,7 @@ var Pagination = /** @class */ (function (_super) {
  *
  * @param settings
  */
-exports.pagination = function (settings) { return new Pagination(settings); };
+exports["default"] = (function (settings) { return new Pagination(settings); });
 
 
 /***/ }),
@@ -15125,7 +15137,7 @@ var Result = /** @class */ (function (_super) {
  *
  * @param settings
  */
-exports.result = function (settings) { return new Result(settings); };
+exports["default"] = (function (settings) { return new Result(settings); });
 
 
 /***/ }),
@@ -15250,7 +15262,7 @@ var isInputElement = function (targetNode) {
  *
  * @param settings
  */
-exports.searchInput = function (settings) { return new SearchInput(settings); };
+exports["default"] = (function (settings) { return new SearchInput(settings); });
 
 
 /***/ }),
@@ -15317,7 +15329,7 @@ var SortBy = /** @class */ (function (_super) {
  *
  * @param settings
  */
-exports.sortBy = function (settings) { return new SortBy(settings); };
+exports["default"] = (function (settings) { return new SortBy(settings); });
 
 
 /***/ }),
@@ -15365,16 +15377,15 @@ var SortBy_1 = __webpack_require__(/*! ./SortBy */ "./src/widgets/SortBy.tsx");
 /**
  * Widget factories
  */
-var widgets = {
-    searchInput: SearchInput_1.searchInput,
-    clearFilters: ClearFilters_1.clearFilters,
-    multipleFilter: MultipleFilter_1.multipleFilter,
-    sortBy: SortBy_1.sortBy,
-    information: Information_1.information,
-    result: Result_1.result,
-    pagination: Pagination_1.pagination
+exports["default"] = {
+    'searchInput': SearchInput_1["default"],
+    'clearFilters': ClearFilters_1["default"],
+    'multipleFilter': MultipleFilter_1["default"],
+    'sortBy': SortBy_1["default"],
+    'information': Information_1["default"],
+    'result': Result_1["default"],
+    'pagination': Pagination_1["default"]
 };
-exports["default"] = widgets;
 
 
 /***/ })

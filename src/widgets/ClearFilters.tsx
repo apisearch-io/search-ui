@@ -62,4 +62,4 @@ class ClearFilters extends Widget {
  *
  * @param settings
  */
-export const clearFilters = settings => new ClearFilters(settings);
+export default settings => new ClearFilters(settings);

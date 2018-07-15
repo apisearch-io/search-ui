@@ -75,4 +75,4 @@ class Result extends Widget {
  *
  * @param settings
  */
-export const result = settings => new Result(settings);
+export default settings => new Result(settings);
