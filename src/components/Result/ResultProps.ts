@@ -12,6 +12,7 @@ export interface ResultProps {
     highlightsEnabled: boolean;
     promote: ItemUUID[];
     exclude: ItemUUID[];
+    filter: Function,
     classNames: {
         container: string,
         itemsList: string,

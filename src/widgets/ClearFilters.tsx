@@ -9,6 +9,13 @@ import Store from "../Store";
  */
 class ClearFilters extends Widget {
 
+    /**
+     * Constructor
+     *
+     * @param target
+     * @param classNames
+     * @param template
+     */
     constructor({
         target,
         classNames,

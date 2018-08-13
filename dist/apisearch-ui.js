@@ -14220,7 +14220,7 @@ var Constants_1 = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts
 var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
 /**
  *
- * Change items per result page setup
+ * Configure query
  *
  * @param environmentId
  * @param currentQuery
@@ -14228,9 +14228,11 @@ var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts
  * @param highlightsEnabled
  * @param promotedUUIDs
  * @param excludedUUIDs
+ * @param filter
  */
-function changeItemsPerResultPageSetup(environmentId, currentQuery, itemsPerPage, highlightsEnabled, promotedUUIDs, excludedUUIDs) {
+function configureQuery(environmentId, currentQuery, itemsPerPage, highlightsEnabled, promotedUUIDs, excludedUUIDs, filter) {
     var clonedQuery = cloneDeep(currentQuery);
+    filter(clonedQuery);
     /**
      * Set result size
      */
@@ -14261,7 +14263,7 @@ function changeItemsPerResultPageSetup(environmentId, currentQuery, itemsPerPage
         }
     });
 }
-exports.changeItemsPerResultPageSetup = changeItemsPerResultPageSetup;
+exports.configureQuery = configureQuery;
 
 
 /***/ }),
@@ -14315,7 +14317,7 @@ var ResultComponent = /** @class */ (function (_super) {
         /**
          * Dispatch action
          */
-        ResultActions_1.changeItemsPerResultPageSetup(props.environmentId, props.currentQuery, props.itemsPerPage, props.highlightsEnabled, props.promote.map(function (itemUUID) {
+        ResultActions_1.configureQuery(props.environmentId, props.currentQuery, props.itemsPerPage, props.highlightsEnabled, props.promote.map(function (itemUUID) {
             return itemUUID instanceof ItemUUID_1.ItemUUID
                 ? itemUUID
                 : ItemUUID_1.ItemUUID.createFromArray(itemUUID);
@@ -14323,7 +14325,7 @@ var ResultComponent = /** @class */ (function (_super) {
             return itemUUID instanceof ItemUUID_1.ItemUUID
                 ? itemUUID
                 : ItemUUID_1.ItemUUID.createFromArray(itemUUID);
-        }));
+        }), props.filter);
     };
     /**
      * Render
@@ -14367,6 +14369,7 @@ ResultComponent.defaultProps = {
     highlightsEnabled: false,
     promote: [],
     exclude: [],
+    filter: function (query) { },
     classNames: {
         container: '',
         itemsList: '',
@@ -14828,6 +14831,13 @@ var Widget_1 = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
  */
 var ClearFilters = /** @class */ (function (_super) {
     __extends(ClearFilters, _super);
+    /**
+     * Constructor
+     *
+     * @param target
+     * @param classNames
+     * @param template
+     */
     function ClearFilters(_a) {
         var target = _a.target, classNames = _a.classNames, template = _a.template;
         var _this = _super.call(this) || this;
@@ -14895,6 +14905,14 @@ var Widget_1 = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
  */
 var Information = /** @class */ (function (_super) {
     __extends(Information, _super);
+    /**
+     * Constructor
+     *
+     * @param target
+     * @param classNames
+     * @param template
+     * @param formatData
+     */
     function Information(_a) {
         var target = _a.target, classNames = _a.classNames, template = _a.template, formatData = _a.formatData;
         var _this = _super.call(this) || this;
@@ -15044,6 +15062,15 @@ var Widget_1 = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
  */
 var Pagination = /** @class */ (function (_super) {
     __extends(Pagination, _super);
+    /**
+     * Constructor
+     *
+     * @param target
+     * @param padding
+     * @param goFirstLast
+     * @param classNames
+     * @param template
+     */
     function Pagination(_a) {
         var target = _a.target, padding = _a.padding, goFirstLast = _a.goFirstLast, classNames = _a.classNames, template = _a.template;
         var _this = _super.call(this) || this;
@@ -15111,11 +15138,24 @@ var Widget_1 = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
  */
 var Result = /** @class */ (function (_super) {
     __extends(Result, _super);
+    /**
+     * Constructor
+     *
+     * @param target
+     * @param itemsPerPage
+     * @param promote
+     * @param exclude
+     * @param filter
+     * @param highlightsEnabled
+     * @param classNames
+     * @param template
+     * @param formatData
+     */
     function Result(_a) {
-        var target = _a.target, itemsPerPage = _a.itemsPerPage, promote = _a.promote, exclude = _a.exclude, highlightsEnabled = _a.highlightsEnabled, classNames = _a.classNames, template = _a.template, formatData = _a.formatData;
+        var target = _a.target, itemsPerPage = _a.itemsPerPage, promote = _a.promote, exclude = _a.exclude, filter = _a.filter, highlightsEnabled = _a.highlightsEnabled, classNames = _a.classNames, template = _a.template, formatData = _a.formatData;
         var _this = _super.call(this) || this;
         _this.target = target;
-        _this.component = preact_1.h(ResultComponent_1["default"], { target: target, itemsPerPage: itemsPerPage, promote: promote, exclude: exclude, highlightsEnabled: highlightsEnabled, classNames: __assign({}, ResultComponent_1["default"].defaultProps.classNames, classNames), template: __assign({}, ResultComponent_1["default"].defaultProps.template, template), formatData: formatData });
+        _this.component = preact_1.h(ResultComponent_1["default"], { target: target, itemsPerPage: itemsPerPage, promote: promote, exclude: exclude, filter: filter, highlightsEnabled: highlightsEnabled, classNames: __assign({}, ResultComponent_1["default"].defaultProps.classNames, classNames), template: __assign({}, ResultComponent_1["default"].defaultProps.template, template), formatData: formatData });
         return _this;
     }
     /**
@@ -15378,13 +15418,13 @@ var SortBy_1 = __webpack_require__(/*! ./SortBy */ "./src/widgets/SortBy.tsx");
  * Widget factories
  */
 exports["default"] = {
-    'searchInput': SearchInput_1["default"],
-    'clearFilters': ClearFilters_1["default"],
-    'multipleFilter': MultipleFilter_1["default"],
-    'sortBy': SortBy_1["default"],
-    'information': Information_1["default"],
-    'result': Result_1["default"],
-    'pagination': Pagination_1["default"]
+    searchInput: SearchInput_1["default"],
+    clearFilters: ClearFilters_1["default"],
+    multipleFilter: MultipleFilter_1["default"],
+    sortBy: SortBy_1["default"],
+    information: Information_1["default"],
+    result: Result_1["default"],
+    pagination: Pagination_1["default"]
 };
 
 

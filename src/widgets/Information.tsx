@@ -9,6 +9,14 @@ import Store from "../Store";
  */
 class Information extends Widget {
 
+    /**
+     * Constructor
+     *
+     * @param target
+     * @param classNames
+     * @param template
+     * @param formatData
+     */
     constructor({
         target,
         classNames,

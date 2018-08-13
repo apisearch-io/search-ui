@@ -1,7 +1,7 @@
 import { h, Component } from 'preact';
 import Template from "../Template";
 import {defaultItemsListTemplate} from "./defaultTemplates";
-import {changeItemsPerResultPageSetup} from "./ResultActions";
+import {configureQuery} from "./ResultActions";
 import {ResultProps} from "./ResultProps";
 import {ItemUUID} from "apisearch/lib/Model/ItemUUID";
 
@@ -20,7 +20,7 @@ class ResultComponent extends Component<ResultProps> {
         /**
          * Dispatch action
          */
-        changeItemsPerResultPageSetup(
+        configureQuery(
             props.environmentId,
             props.currentQuery,
             props.itemsPerPage,
@@ -34,7 +34,8 @@ class ResultComponent extends Component<ResultProps> {
                 return itemUUID instanceof ItemUUID
                     ? itemUUID
                     : ItemUUID.createFromArray(itemUUID)
-            })
+            }),
+            props.filter
         );
     }
 
@@ -101,6 +102,7 @@ ResultComponent.defaultProps = {
     highlightsEnabled: false,
     promote: [],
     exclude: [],
+    filter: function (query) {},
     classNames: {
         container: '',
         itemsList: '',

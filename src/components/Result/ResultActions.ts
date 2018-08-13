@@ -9,7 +9,7 @@ import container from "../../Container";
 
 /**
  *
- * Change items per result page setup
+ * Configure query
  *
  * @param environmentId
  * @param currentQuery
@@ -17,16 +17,19 @@ import container from "../../Container";
  * @param highlightsEnabled
  * @param promotedUUIDs
  * @param excludedUUIDs
+ * @param filter
  */
-export function changeItemsPerResultPageSetup(
+export function configureQuery(
     environmentId: string,
     currentQuery: Query,
     itemsPerPage: number,
     highlightsEnabled: boolean,
     promotedUUIDs: ItemUUID[],
     excludedUUIDs: ItemUUID[],
+    filter: Function
 ) {
     const clonedQuery = cloneDeep(currentQuery);
+    filter(clonedQuery);
 
     /**
      * Set result size

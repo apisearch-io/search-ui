@@ -9,6 +9,15 @@ import Store from "../Store";
  */
 class Pagination extends Widget {
 
+    /**
+     * Constructor
+     *
+     * @param target
+     * @param padding
+     * @param goFirstLast
+     * @param classNames
+     * @param template
+     */
     constructor({
         target,
         padding,
