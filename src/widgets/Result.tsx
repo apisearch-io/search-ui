@@ -9,11 +9,25 @@ import Store from "../Store";
  */
 class Result extends Widget {
 
+    /**
+     * Constructor
+     *
+     * @param target
+     * @param itemsPerPage
+     * @param promote
+     * @param exclude
+     * @param filter
+     * @param highlightsEnabled
+     * @param classNames
+     * @param template
+     * @param formatData
+     */
     constructor({
         target,
         itemsPerPage,
         promote,
         exclude,
+        filter,
         highlightsEnabled,
         classNames,
         template,
@@ -26,6 +40,7 @@ class Result extends Widget {
             itemsPerPage={itemsPerPage}
             promote={promote}
             exclude={exclude}
+            filter={filter}
             highlightsEnabled={highlightsEnabled}
             classNames={{
                 ...ResultComponent.defaultProps.classNames,

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>AS UI - Simple search</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.0/css/bulma.min.css">
@@ -64,7 +65,7 @@
                             <div class="media-content">
                                 <strong>
                                     {{#highlights.title}}
-                                        {{{highlights.title}}}
+                                        {{highlights.title}}
                                     {{/highlights.title}}
                                     {{^highlights.title}}
                                         {{metadata.title}}
@@ -75,7 +76,7 @@
                                 {{/metadata.author}}
                                 <span class="has-text-grey is-size-7">
                                     <strong>Year: </strong>
-                                    {{indexed_metadata.year}}
+                                    {{indexedMetadata.year}}
                                 </span>
                             </div>
                         </div>
@@ -96,7 +97,7 @@
             index_id: '66777162',
             token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
             options: {
-                endpoint: 'https://apisearch.global.ssl.fastly.net'
+                endpoint: 'https://apisearch.global.ssl.fastly.net',
             }
         });
 
@@ -113,6 +114,9 @@
                 target: '.result',
                 itemsPerPage: 16,
                 highlightsEnabled: true,
+                filter: function(query) {
+                    query.filterUniverseBy('year', ['2011']);
+                },
                 classNames: {
                     container: 'column'
                 },
