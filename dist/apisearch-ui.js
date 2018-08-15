@@ -105,15 +105,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 "use strict";
 
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
-};
 exports.__esModule = true;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var NoCache_1 = __webpack_require__(/*! ./Cache/NoCache */ "./node_modules/apisearch/lib/Cache/NoCache.js");
 var AxiosClient_1 = __webpack_require__(/*! ./Http/AxiosClient */ "./node_modules/apisearch/lib/Http/AxiosClient.js");
 var RetryMap_1 = __webpack_require__(/*! ./Http/RetryMap */ "./node_modules/apisearch/lib/Http/RetryMap.js");
@@ -140,7 +133,7 @@ var Apisearch = /** @class */ (function () {
      */
     Apisearch.createRepository = function (config) {
         Apisearch.ensureRepositoryConfigIsValid(config);
-        config.options = __assign({ api_version: "v1", cache: new NoCache_1.NoCache(), timeout: 5000, override_queries: true }, config.options);
+        config.options = tslib_1.__assign({ api_version: "v1", cache: new NoCache_1.NoCache(), timeout: 5000, override_queries: true }, config.options);
         /**
          * Client
          */
@@ -264,15 +257,8 @@ exports["default"] = Apisearch;
 
 "use strict";
 
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
-};
 exports.__esModule = true;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /**
  * Cache class
  */
@@ -296,7 +282,7 @@ var InMemoryCache = /** @class */ (function () {
      */
     InMemoryCache.prototype.set = function (key, value) {
         var _a;
-        this.cache = __assign({}, this.cache, (_a = {}, _a[key] = value, _a));
+        this.cache = tslib_1.__assign({}, this.cache, (_a = {}, _a[key] = value, _a));
         this.size = this.size + 1;
     };
     /**
@@ -596,23 +582,14 @@ exports.Synonym = Synonym;
 
 "use strict";
 
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 exports.__esModule = true;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var ErrorWithMessage_1 = __webpack_require__(/*! ./ErrorWithMessage */ "./node_modules/apisearch/lib/Error/ErrorWithMessage.js");
 /**
  * Connection error
  */
 var ConnectionError = /** @class */ (function (_super) {
-    __extends(ConnectionError, _super);
+    tslib_1.__extends(ConnectionError, _super);
     function ConnectionError() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -669,23 +646,14 @@ exports.ErrorWithMessage = ErrorWithMessage;
 
 "use strict";
 
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 exports.__esModule = true;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var ErrorWithMessage_1 = __webpack_require__(/*! ./ErrorWithMessage */ "./node_modules/apisearch/lib/Error/ErrorWithMessage.js");
 /**
  * EventError
  */
 var EventError = /** @class */ (function (_super) {
-    __extends(EventError, _super);
+    tslib_1.__extends(EventError, _super);
     function EventError() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -713,23 +681,14 @@ exports.EventError = EventError;
 
 "use strict";
 
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 exports.__esModule = true;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var ErrorWithMessage_1 = __webpack_require__(/*! ./ErrorWithMessage */ "./node_modules/apisearch/lib/Error/ErrorWithMessage.js");
 /**
  * Forbidden Error
  */
 var ForbiddenError = /** @class */ (function (_super) {
-    __extends(ForbiddenError, _super);
+    tslib_1.__extends(ForbiddenError, _super);
     function ForbiddenError() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -781,23 +740,14 @@ exports.ForbiddenError = ForbiddenError;
 
 "use strict";
 
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 exports.__esModule = true;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var ErrorWithMessage_1 = __webpack_require__(/*! ./ErrorWithMessage */ "./node_modules/apisearch/lib/Error/ErrorWithMessage.js");
 /**
  * Class InvalidFormatError
  */
 var InvalidFormatError = /** @class */ (function (_super) {
-    __extends(InvalidFormatError, _super);
+    tslib_1.__extends(InvalidFormatError, _super);
     function InvalidFormatError() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -929,23 +879,14 @@ exports.InvalidFormatError = InvalidFormatError;
 
 "use strict";
 
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 exports.__esModule = true;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var ErrorWithMessage_1 = __webpack_require__(/*! ./ErrorWithMessage */ "./node_modules/apisearch/lib/Error/ErrorWithMessage.js");
 /**
  * Invalid token error
  */
 var InvalidTokenError = /** @class */ (function (_super) {
-    __extends(InvalidTokenError, _super);
+    tslib_1.__extends(InvalidTokenError, _super);
     function InvalidTokenError() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -994,23 +935,14 @@ exports.InvalidTokenError = InvalidTokenError;
 
 "use strict";
 
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 exports.__esModule = true;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var ErrorWithMessage_1 = __webpack_require__(/*! ./ErrorWithMessage */ "./node_modules/apisearch/lib/Error/ErrorWithMessage.js");
 /**
  * Resource exists error
  */
 var ResourceExistsError = /** @class */ (function (_super) {
-    __extends(ResourceExistsError, _super);
+    tslib_1.__extends(ResourceExistsError, _super);
     function ResourceExistsError() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -1062,23 +994,14 @@ exports.ResourceExistsError = ResourceExistsError;
 
 "use strict";
 
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 exports.__esModule = true;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var ErrorWithMessage_1 = __webpack_require__(/*! ./ErrorWithMessage */ "./node_modules/apisearch/lib/Error/ErrorWithMessage.js");
 /**
  * Resource not available error
  */
 var ResourceNotAvailableError = /** @class */ (function (_super) {
-    __extends(ResourceNotAvailableError, _super);
+    tslib_1.__extends(ResourceNotAvailableError, _super);
     function ResourceNotAvailableError() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -1146,23 +1069,14 @@ exports.ResourceNotAvailableError = ResourceNotAvailableError;
 
 "use strict";
 
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 exports.__esModule = true;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var ErrorWithMessage_1 = __webpack_require__(/*! ./ErrorWithMessage */ "./node_modules/apisearch/lib/Error/ErrorWithMessage.js");
 /**
  * Unsupported content type error
  */
 var UnsupportedContentTypeError = /** @class */ (function (_super) {
-    __extends(UnsupportedContentTypeError, _super);
+    tslib_1.__extends(UnsupportedContentTypeError, _super);
     function UnsupportedContentTypeError() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -1198,17 +1112,8 @@ exports.UnsupportedContentTypeError = UnsupportedContentTypeError;
 
 "use strict";
 
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 exports.__esModule = true;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var Coordinate_1 = __webpack_require__(/*! ../Model/Coordinate */ "./node_modules/apisearch/lib/Model/Coordinate.js");
 /**
  * Abstract Location Range class
@@ -1258,7 +1163,7 @@ exports.LocationRange = LocationRange;
  * CoordinateAndDistance
  */
 var CoordinateAndDistance = /** @class */ (function (_super) {
-    __extends(CoordinateAndDistance, _super);
+    tslib_1.__extends(CoordinateAndDistance, _super);
     /**
      * Constructor
      *
@@ -1307,7 +1212,7 @@ exports.CoordinateAndDistance = CoordinateAndDistance;
  * Polygon
  */
 var Polygon = /** @class */ (function (_super) {
-    __extends(Polygon, _super);
+    tslib_1.__extends(Polygon, _super);
     /**
      * Constructor
      *
@@ -1364,7 +1269,7 @@ exports.Polygon = Polygon;
  * Square
  */
 var Square = /** @class */ (function (_super) {
-    __extends(Square, _super);
+    tslib_1.__extends(Square, _super);
     /**
      * Constructor
      *
@@ -1422,60 +1327,8 @@ exports.Square = Square;
 
 "use strict";
 
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
 exports.__esModule = true;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var axios_1 = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 var Client_1 = __webpack_require__(/*! ./Client */ "./node_modules/apisearch/lib/Http/Client.js");
 var Response_1 = __webpack_require__(/*! ./Response */ "./node_modules/apisearch/lib/Http/Response.js");
@@ -1483,7 +1336,7 @@ var Response_1 = __webpack_require__(/*! ./Response */ "./node_modules/apisearch
  * AxiosClient
  */
 var AxiosClient = /** @class */ (function (_super) {
-    __extends(AxiosClient, _super);
+    tslib_1.__extends(AxiosClient, _super);
     /**
      * Constructor
      *
@@ -1517,10 +1370,10 @@ var AxiosClient = /** @class */ (function (_super) {
     AxiosClient.prototype.get = function (url, method, credentials, parameters, data) {
         if (parameters === void 0) { parameters = {}; }
         if (data === void 0) { data = {}; }
-        return __awaiter(this, void 0, void 0, function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
             var that;
             var _this = this;
-            return __generator(this, function (_a) {
+            return tslib_1.__generator(this, function (_a) {
                 that = this;
                 url = url.replace(/^\/*|\/*$/g, "");
                 url = "/" + (this.version + "/" + url).replace(/^\/*|\/*$/g, "");
@@ -1539,7 +1392,7 @@ var AxiosClient = /** @class */ (function (_super) {
                         //noinspection TypeScriptValidateTypes
                         axios_1["default"]
                             .request({
-                            url: url + "?" + Client_1.Client.objectToUrlParameters(__assign({}, credentials, parameters)),
+                            url: url + "?" + Client_1.Client.objectToUrlParameters(tslib_1.__assign({}, credentials, parameters)),
                             data: data,
                             headers: headers,
                             method: method,
@@ -2050,15 +1903,8 @@ exports.Coordinate = Coordinate;
 
 "use strict";
 
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
-};
 exports.__esModule = true;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var InvalidFormatError_1 = __webpack_require__(/*! ../Error/InvalidFormatError */ "./node_modules/apisearch/lib/Error/InvalidFormatError.js");
 var Coordinate_1 = __webpack_require__(/*! ./Coordinate */ "./node_modules/apisearch/lib/Model/Coordinate.js");
 var ItemUUID_1 = __webpack_require__(/*! ./ItemUUID */ "./node_modules/apisearch/lib/Model/ItemUUID.js");
@@ -2277,7 +2123,7 @@ var Item = /** @class */ (function () {
      * @returns {{}}
      */
     Item.prototype.getAllMetadata = function () {
-        return __assign({}, this.metadata, this.indexedMetadata);
+        return tslib_1.__assign({}, this.metadata, this.indexedMetadata);
     };
     /**
      * Get
@@ -3029,15 +2875,8 @@ exports.Filter = Filter;
 
 "use strict";
 
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
-};
 exports.__esModule = true;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var Coordinate_1 = __webpack_require__(/*! ../Model/Coordinate */ "./node_modules/apisearch/lib/Model/Coordinate.js");
 var ItemUUID_1 = __webpack_require__(/*! ../Model/ItemUUID */ "./node_modules/apisearch/lib/Model/ItemUUID.js");
 var User_1 = __webpack_require__(/*! ../Model/User */ "./node_modules/apisearch/lib/Model/User.js");
@@ -3161,7 +3000,7 @@ var Query = /** @class */ (function () {
         var _a;
         var fieldPath = Filter_1.Filter.getFilterPathByField("type");
         if (values.length > 0) {
-            this.universeFilters = __assign({}, this.universeFilters, (_a = {}, _a["type"] = Filter_1.Filter.create(fieldPath, values, Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_FIELD), _a));
+            this.universeFilters = tslib_1.__assign({}, this.universeFilters, (_a = {}, _a["type"] = Filter_1.Filter.create(fieldPath, values, Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_FIELD), _a));
         }
         else {
             delete this.universeFilters.type;
@@ -3183,13 +3022,13 @@ var Query = /** @class */ (function () {
         var _a, _b;
         var fieldPath = Filter_1.Filter.getFilterPathByField("type");
         if (values.length > 0) {
-            this.filters = __assign({}, this.filters, (_a = {}, _a["type"] = Filter_1.Filter.create(fieldPath, values, Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_FIELD), _a));
+            this.filters = tslib_1.__assign({}, this.filters, (_a = {}, _a["type"] = Filter_1.Filter.create(fieldPath, values, Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_FIELD), _a));
         }
         else {
             delete this.filters.type;
         }
         if (aggregate) {
-            this.aggregations = __assign({}, this.aggregations, (_b = {}, _b["type"] = Aggregation_1.Aggregation.create("type", fieldPath, Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_FIELD, [], aggregationSort), _b));
+            this.aggregations = tslib_1.__assign({}, this.aggregations, (_b = {}, _b["type"] = Aggregation_1.Aggregation.create("type", fieldPath, Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_FIELD, [], aggregationSort), _b));
         }
         return this;
     };
@@ -3204,7 +3043,7 @@ var Query = /** @class */ (function () {
         var _a;
         var fieldPath = Filter_1.Filter.getFilterPathByField("id");
         if (values.length > 0) {
-            this.universeFilters = __assign({}, this.universeFilters, (_a = {}, _a["id"] = Filter_1.Filter.create(fieldPath, values, Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_FIELD), _a));
+            this.universeFilters = tslib_1.__assign({}, this.universeFilters, (_a = {}, _a["id"] = Filter_1.Filter.create(fieldPath, values, Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_FIELD), _a));
         }
         else {
             delete this.universeFilters.id;
@@ -3222,7 +3061,7 @@ var Query = /** @class */ (function () {
         var _a;
         var fieldPath = Filter_1.Filter.getFilterPathByField("id");
         if (values.length > 0) {
-            this.filters = __assign({}, this.filters, (_a = {}, _a["id"] = Filter_1.Filter.create(fieldPath, values, Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_FIELD), _a));
+            this.filters = tslib_1.__assign({}, this.filters, (_a = {}, _a["id"] = Filter_1.Filter.create(fieldPath, values, Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_FIELD), _a));
         }
         else {
             delete this.filters.id;
@@ -3243,7 +3082,7 @@ var Query = /** @class */ (function () {
         var _a;
         var fieldPath = Filter_1.Filter.getFilterPathByField(field);
         if (values.length > 0) {
-            this.universeFilters = __assign({}, this.universeFilters, (_a = {}, _a[field] = Filter_1.Filter.create(fieldPath, values, applicationType, Filter_2.FILTER_TYPE_FIELD), _a));
+            this.universeFilters = tslib_1.__assign({}, this.universeFilters, (_a = {}, _a[field] = Filter_1.Filter.create(fieldPath, values, applicationType, Filter_2.FILTER_TYPE_FIELD), _a));
         }
         else {
             delete this.universeFilters[field];
@@ -3269,7 +3108,7 @@ var Query = /** @class */ (function () {
         var _a;
         var fieldPath = Filter_1.Filter.getFilterPathByField(field);
         if (values.length > 0) {
-            this.filters = __assign({}, this.filters, (_a = {}, _a[filterName] = Filter_1.Filter.create(fieldPath, values, applicationType, Filter_2.FILTER_TYPE_FIELD), _a));
+            this.filters = tslib_1.__assign({}, this.filters, (_a = {}, _a[filterName] = Filter_1.Filter.create(fieldPath, values, applicationType, Filter_2.FILTER_TYPE_FIELD), _a));
         }
         else {
             delete this.filters[filterName];
@@ -3295,7 +3134,7 @@ var Query = /** @class */ (function () {
         var _a;
         var fieldPath = Filter_1.Filter.getFilterPathByField(field);
         if (values.length > 0) {
-            this.universeFilters = __assign({}, this.universeFilters, (_a = {}, _a[field] = Filter_1.Filter.create(fieldPath, values, applicationType, rangeType), _a));
+            this.universeFilters = tslib_1.__assign({}, this.universeFilters, (_a = {}, _a[field] = Filter_1.Filter.create(fieldPath, values, applicationType, rangeType), _a));
         }
         else {
             delete this.universeFilters[field];
@@ -3337,7 +3176,7 @@ var Query = /** @class */ (function () {
         var _a;
         var fieldPath = Filter_1.Filter.getFilterPathByField(field);
         if (values.length !== 0) {
-            this.filters = __assign({}, this.filters, (_a = {}, _a[filterName] = Filter_1.Filter.create(fieldPath, values, applicationType, rangeType), _a));
+            this.filters = tslib_1.__assign({}, this.filters, (_a = {}, _a[filterName] = Filter_1.Filter.create(fieldPath, values, applicationType, rangeType), _a));
         }
         else {
             delete this.filters[filterName];
@@ -3375,7 +3214,7 @@ var Query = /** @class */ (function () {
      */
     Query.prototype.filterUniverseByLocation = function (locationRange) {
         var _a;
-        this.universeFilters = __assign({}, this.universeFilters, (_a = {}, _a["coordinate"] = Filter_1.Filter.create("coordinate", locationRange.toArray(), Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_GEO), _a));
+        this.universeFilters = tslib_1.__assign({}, this.universeFilters, (_a = {}, _a["coordinate"] = Filter_1.Filter.create("coordinate", locationRange.toArray(), Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_GEO), _a));
         return this;
     };
     /**
@@ -3429,7 +3268,7 @@ var Query = /** @class */ (function () {
         if (aggregationSort === void 0) { aggregationSort = Aggregation_2.AGGREGATION_SORT_BY_COUNT_DESC; }
         if (limit === void 0) { limit = Aggregation_2.AGGREGATION_NO_LIMIT; }
         var _a;
-        this.aggregations = __assign({}, this.aggregations, (_a = {}, _a[filterName] = Aggregation_1.Aggregation.create(filterName, Filter_1.Filter.getFilterPathByField(field), applicationType, Filter_2.FILTER_TYPE_FIELD, [], aggregationSort, limit), _a));
+        this.aggregations = tslib_1.__assign({}, this.aggregations, (_a = {}, _a[filterName] = Aggregation_1.Aggregation.create(filterName, Filter_1.Filter.getFilterPathByField(field), applicationType, Filter_2.FILTER_TYPE_FIELD, [], aggregationSort, limit), _a));
         return this;
     };
     /**
@@ -3453,7 +3292,7 @@ var Query = /** @class */ (function () {
         if (options.length === 0) {
             return this;
         }
-        this.aggregations = __assign({}, this.aggregations, (_a = {}, _a[filterName] = Aggregation_1.Aggregation.create(filterName, Filter_1.Filter.getFilterPathByField(field), applicationType, rangeType, options, aggregationSort, limit), _a));
+        this.aggregations = tslib_1.__assign({}, this.aggregations, (_a = {}, _a[filterName] = Aggregation_1.Aggregation.create(filterName, Filter_1.Filter.getFilterPathByField(field), applicationType, rangeType, options, aggregationSort, limit), _a));
         return this;
     };
     /**
@@ -3756,7 +3595,7 @@ var Query = /** @class */ (function () {
             uuids[_i] = arguments[_i];
         }
         var _a;
-        this.filters = __assign({}, this.filters, (_a = {}, _a["excluded_ids"] = Filter_1.Filter.create("_id", uuids.map(function (uuid) { return uuid.composedUUID(); }), Filter_2.FILTER_EXCLUDE, Filter_2.FILTER_TYPE_FIELD), _a));
+        this.filters = tslib_1.__assign({}, this.filters, (_a = {}, _a["excluded_ids"] = Filter_1.Filter.create("_id", uuids.map(function (uuid) { return uuid.composedUUID(); }), Filter_2.FILTER_EXCLUDE, Filter_2.FILTER_TYPE_FIELD), _a));
         return this;
     };
     /**
@@ -3774,6 +3613,34 @@ var Query = /** @class */ (function () {
      */
     Query.prototype.setScoreStrategy = function (scoreStrategy) {
         this.scoreStrategy = scoreStrategy;
+        return this;
+    };
+    /**
+     * Get fuzziness
+     *
+     * @return any
+     */
+    Query.prototype.getFuzziness = function () {
+        return this.fuzziness;
+    };
+    /**
+     * Set fuzziness
+     *
+     * @param fuzziness
+     *
+     * @return {Query}
+     */
+    Query.prototype.setFuzziness = function (fuzziness) {
+        this.fuzziness = fuzziness;
+        return this;
+    };
+    /**
+     * Set auto fuzziness
+     *
+     * @return {Query}
+     */
+    Query.prototype.setAutoFuzziness = function () {
+        this.fuzziness = 'AUTO';
         return this;
     };
     /**
@@ -3903,6 +3770,9 @@ var Query = /** @class */ (function () {
                 array.score_strategy = scoreStrategyAsArray;
             }
         }
+        if (this.fuzziness !== null) {
+            array.fuzziness = this.fuzziness;
+        }
         /**
          * User
          */
@@ -3987,6 +3857,7 @@ var Query = /** @class */ (function () {
         query.highlightsEnabled = typeof array.highlights_enabled === "boolean"
             ? array.highlights_enabled
             : false;
+        query.fuzziness = array.fuzziness;
         /**
          * Items promoted
          */
@@ -4537,52 +4408,8 @@ exports.SortBy = SortBy;
 
 "use strict";
 
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
 exports.__esModule = true;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var ConnectionError_1 = __webpack_require__(/*! ../Error/ConnectionError */ "./node_modules/apisearch/lib/Error/ConnectionError.js");
 var InvalidFormatError_1 = __webpack_require__(/*! ../Error/InvalidFormatError */ "./node_modules/apisearch/lib/Error/InvalidFormatError.js");
 var InvalidTokenError_1 = __webpack_require__(/*! ../Error/InvalidTokenError */ "./node_modules/apisearch/lib/Error/InvalidTokenError.js");
@@ -4596,7 +4423,7 @@ var Repository_1 = __webpack_require__(/*! ./Repository */ "./node_modules/apise
  * Aggregation class
  */
 var HttpRepository = /** @class */ (function (_super) {
-    __extends(HttpRepository, _super);
+    tslib_1.__extends(HttpRepository, _super);
     /**
      * Constructor
      *
@@ -4647,39 +4474,6 @@ var HttpRepository = /** @class */ (function (_super) {
         }
     };
     /**
-     * flush items
-     *
-     * @param itemsToUpdate
-     * @param itemsToDelete
-     *
-     * @Returns {Promise<void>}
-     */
-    HttpRepository.prototype.flushItems = function (itemsToUpdate, itemsToDelete) {
-        return __awaiter(this, void 0, void 0, function () {
-            var _a, _b, _c;
-            return __generator(this, function (_d) {
-                switch (_d.label) {
-                    case 0:
-                        _b = (_a = Promise).all;
-                        return [4 /*yield*/, this.flushUpdateItems(itemsToUpdate)];
-                    case 1:
-                        _c = [
-                            _d.sent()
-                        ];
-                        return [4 /*yield*/, this.flushDeleteItems(itemsToDelete)];
-                    case 2: return [4 /*yield*/, _b.apply(_a, [_c.concat([
-                                _d.sent()
-                            ])]).then(function (_) {
-                            return;
-                        })];
-                    case 3:
-                        _d.sent();
-                        return [2 /*return*/, new Promise(function (resolve) { return resolve(); })];
-                }
-            });
-        });
-    };
-    /**
      * Flush update items
      *
      * @param itemsToUpdate
@@ -4687,23 +4481,21 @@ var HttpRepository = /** @class */ (function (_super) {
      * @return {Promise<void>}
      */
     HttpRepository.prototype.flushUpdateItems = function (itemsToUpdate) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, (itemsToUpdate.length > 0)];
-                    case 1: return [2 /*return*/, (_a.sent())
-                            ? this
-                                .httpClient
-                                .get("/items", "post", this.getCredentials(), {}, {
-                                items: itemsToUpdate.map(function (item) {
-                                    return item.toArray();
-                                })
-                            })
-                                .then(function (response) {
-                                HttpRepository.throwTransportableExceptionIfNeeded(response);
-                            })
-                            : new Promise(function (resolve) { return resolve(); })];
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            return tslib_1.__generator(this, function (_a) {
+                if (itemsToUpdate.length === 0) {
+                    return [2 /*return*/];
                 }
+                return [2 /*return*/, this
+                        .httpClient
+                        .get("/items", "post", this.getCredentials(), {}, {
+                        items: itemsToUpdate.map(function (item) {
+                            return item.toArray();
+                        })
+                    })
+                        .then(function (response) {
+                        HttpRepository.throwTransportableExceptionIfNeeded(response);
+                    })];
             });
         });
     };
@@ -4715,23 +4507,21 @@ var HttpRepository = /** @class */ (function (_super) {
      * @return {Promise<void>}
      */
     HttpRepository.prototype.flushDeleteItems = function (itemsToDelete) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, (itemsToDelete.length > 0)];
-                    case 1: return [2 /*return*/, (_a.sent())
-                            ? this
-                                .httpClient
-                                .get("/items", "delete", this.getCredentials(), {}, {
-                                items: itemsToDelete.map(function (itemUUID) {
-                                    return itemUUID.toArray();
-                                })
-                            })
-                                .then(function (response) {
-                                HttpRepository.throwTransportableExceptionIfNeeded(response);
-                            })
-                            : new Promise(function (resolve) { return resolve(); })];
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            return tslib_1.__generator(this, function (_a) {
+                if (itemsToDelete.length === 0) {
+                    return [2 /*return*/];
                 }
+                return [2 /*return*/, this
+                        .httpClient
+                        .get("/items", "delete", this.getCredentials(), {}, {
+                        items: itemsToDelete.map(function (itemUUID) {
+                            return itemUUID.toArray();
+                        })
+                    })
+                        .then(function (response) {
+                        HttpRepository.throwTransportableExceptionIfNeeded(response);
+                    })];
             });
         });
     };
@@ -4743,9 +4533,9 @@ var HttpRepository = /** @class */ (function (_super) {
      * @return {Promise<Result>}
      */
     HttpRepository.prototype.query = function (query) {
-        return __awaiter(this, void 0, void 0, function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
             var that;
-            return __generator(this, function (_a) {
+            return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         that = this;
@@ -4775,8 +4565,8 @@ var HttpRepository = /** @class */ (function (_super) {
      * @return {Promise<void>}
      */
     HttpRepository.prototype.updateItems = function (query, changes) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this
                             .httpClient
@@ -4801,8 +4591,8 @@ var HttpRepository = /** @class */ (function (_super) {
      * @return {Promise<void>}
      */
     HttpRepository.prototype.createIndex = function (immutableConfig) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this
                             .httpClient
@@ -4824,8 +4614,8 @@ var HttpRepository = /** @class */ (function (_super) {
      * @return {Promise<void>}
      */
     HttpRepository.prototype.deleteIndex = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this
                             .httpClient
@@ -4845,8 +4635,8 @@ var HttpRepository = /** @class */ (function (_super) {
      * @return {Promise<void>}
      */
     HttpRepository.prototype.resetIndex = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this
                             .httpClient
@@ -4866,8 +4656,8 @@ var HttpRepository = /** @class */ (function (_super) {
      * @return {Promise<boolean>}
      */
     HttpRepository.prototype.checkIndex = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this
                             .httpClient
@@ -4889,8 +4679,8 @@ var HttpRepository = /** @class */ (function (_super) {
      * @return {Promise<void>}
      */
     HttpRepository.prototype.configureIndex = function (config) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this
                             .httpClient
@@ -4956,42 +4746,8 @@ exports.HttpRepository = HttpRepository;
 
 "use strict";
 
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
 exports.__esModule = true;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /**
  * Aggregation class
  */
@@ -5062,54 +4818,50 @@ var Repository = /** @class */ (function () {
      * @return {Promise<void>}
      */
     Repository.prototype.flush = function (bulkNumber, skipIfLess) {
-        return __awaiter(this, void 0, void 0, function () {
-            var offset, items, error_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        if (!bulkNumber) {
-                            bulkNumber = 500;
-                        }
-                        if (!skipIfLess) {
-                            skipIfLess = false;
-                        }
-                        if (skipIfLess &&
-                            this.itemsToUpdate.length < bulkNumber) {
-                            return [2 /*return*/, new Promise(function (resolve) { return resolve(); })];
-                        }
-                        offset = 0;
-                        items = [];
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 6, , 7]);
-                        _a.label = 2;
-                    case 2:
-                        if (false) {}
-                        items = this
-                            .itemsToUpdate
-                            .slice(offset, offset + bulkNumber);
-                        if (items.length === 0) {
-                            return [3 /*break*/, 4];
-                        }
-                        return [4 /*yield*/, this.flushItems(items, [])];
-                    case 3:
-                        _a.sent();
-                        offset += bulkNumber;
-                        return [3 /*break*/, 2];
-                    case 4: return [4 /*yield*/, this.flushItems([], this.itemsToDelete)];
-                    case 5:
-                        _a.sent();
-                        return [3 /*break*/, 7];
-                    case 6:
-                        error_1 = _a.sent();
-                        this.resetCachedElements();
-                        throw error_1;
-                    case 7:
-                        this.resetCachedElements();
-                        return [2 /*return*/, new Promise(function (resolve) { return resolve(); })];
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return tslib_1.__generator(this, function (_a) {
+                if (!bulkNumber) {
+                    bulkNumber = 500;
                 }
+                if (!skipIfLess) {
+                    skipIfLess = false;
+                }
+                if (skipIfLess &&
+                    this.itemsToUpdate.length < bulkNumber) {
+                    return [2 /*return*/];
+                }
+                return [2 /*return*/, Promise.all(Repository
+                        .chunkArray(this.itemsToUpdate, bulkNumber)
+                        .map(function (arrayOfItems) {
+                        return _this.flushUpdateItems(arrayOfItems);
+                    })
+                        .concat(Repository
+                        .chunkArray(this.itemsToDelete, bulkNumber)
+                        .map(function (arrayOfItemsUUID) {
+                        return _this.flushDeleteItems(arrayOfItemsUUID);
+                    }))).then(function (_) {
+                        _this.resetCachedElements();
+                    })["catch"](function (_) {
+                        _this.resetCachedElements();
+                    })];
             });
         });
+    };
+    /**
+     * Make chunks of n elements
+     *
+     * @param array
+     * @param chunk
+     *
+     * @return any[]
+     */
+    Repository.chunkArray = function (array, chunk) {
+        var arrayChunked = [];
+        for (var i = 0, j = array.length; i < j; i += chunk) {
+            arrayChunked.push(array.slice(i, i + chunk));
+        }
+        return arrayChunked;
     };
     return Repository;
 }());
@@ -5518,15 +5270,8 @@ exports.Result = Result;
 
 "use strict";
 
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
-};
 exports.__esModule = true;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var Filter_1 = __webpack_require__(/*! ../Query/Filter */ "./node_modules/apisearch/lib/Query/Filter.js");
 var Counter_1 = __webpack_require__(/*! ./Counter */ "./node_modules/apisearch/lib/Result/Counter.js");
 /**
@@ -5626,7 +5371,7 @@ var ResultAggregation = /** @class */ (function () {
      * @return {{}}
      */
     ResultAggregation.prototype.getAllElements = function () {
-        return __assign({}, this.activeElements, this.counters);
+        return tslib_1.__assign({}, this.activeElements, this.counters);
     };
     /**
      * Get total elements
@@ -6030,51 +5775,49 @@ exports.Transformer = Transformer;
 
 "use strict";
 
-function __export(m) {
-    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-}
 exports.__esModule = true;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var Apisearch_1 = __webpack_require__(/*! ./Apisearch */ "./node_modules/apisearch/lib/Apisearch.js");
 exports["default"] = Apisearch_1["default"];
-__export(__webpack_require__(/*! ./Cache/InMemoryCache */ "./node_modules/apisearch/lib/Cache/InMemoryCache.js"));
-__export(__webpack_require__(/*! ./Config/Config */ "./node_modules/apisearch/lib/Config/Config.js"));
-__export(__webpack_require__(/*! ./Config/ImmutableConfig */ "./node_modules/apisearch/lib/Config/ImmutableConfig.js"));
-__export(__webpack_require__(/*! ./Config/Synonym */ "./node_modules/apisearch/lib/Config/Synonym.js"));
-__export(__webpack_require__(/*! ./Error/ConnectionError */ "./node_modules/apisearch/lib/Error/ConnectionError.js"));
-__export(__webpack_require__(/*! ./Error/ErrorWithMessage */ "./node_modules/apisearch/lib/Error/ErrorWithMessage.js"));
-__export(__webpack_require__(/*! ./Error/EventError */ "./node_modules/apisearch/lib/Error/EventError.js"));
-__export(__webpack_require__(/*! ./Error/ForbiddenError */ "./node_modules/apisearch/lib/Error/ForbiddenError.js"));
-__export(__webpack_require__(/*! ./Error/InvalidFormatError */ "./node_modules/apisearch/lib/Error/InvalidFormatError.js"));
-__export(__webpack_require__(/*! ./Error/InvalidTokenError */ "./node_modules/apisearch/lib/Error/InvalidTokenError.js"));
-__export(__webpack_require__(/*! ./Error/ResourceExistsError */ "./node_modules/apisearch/lib/Error/ResourceExistsError.js"));
-__export(__webpack_require__(/*! ./Error/ResourceNotAvailableError */ "./node_modules/apisearch/lib/Error/ResourceNotAvailableError.js"));
-__export(__webpack_require__(/*! ./Error/UnsupportedContentTypeError */ "./node_modules/apisearch/lib/Error/UnsupportedContentTypeError.js"));
-__export(__webpack_require__(/*! ./Geo/LocationRange */ "./node_modules/apisearch/lib/Geo/LocationRange.js"));
-__export(__webpack_require__(/*! ./Http/AxiosClient */ "./node_modules/apisearch/lib/Http/AxiosClient.js"));
-__export(__webpack_require__(/*! ./Http/Client */ "./node_modules/apisearch/lib/Http/Client.js"));
-__export(__webpack_require__(/*! ./Http/HttpClient */ "./node_modules/apisearch/lib/Http/HttpClient.js"));
-__export(__webpack_require__(/*! ./Http/Response */ "./node_modules/apisearch/lib/Http/Response.js"));
-__export(__webpack_require__(/*! ./Http/Retry */ "./node_modules/apisearch/lib/Http/Retry.js"));
-__export(__webpack_require__(/*! ./Http/RetryMap */ "./node_modules/apisearch/lib/Http/RetryMap.js"));
-__export(__webpack_require__(/*! ./Model/Changes */ "./node_modules/apisearch/lib/Model/Changes.js"));
-__export(__webpack_require__(/*! ./Model/Coordinate */ "./node_modules/apisearch/lib/Model/Coordinate.js"));
-__export(__webpack_require__(/*! ./Model/Item */ "./node_modules/apisearch/lib/Model/Item.js"));
-__export(__webpack_require__(/*! ./Model/ItemUUID */ "./node_modules/apisearch/lib/Model/ItemUUID.js"));
-__export(__webpack_require__(/*! ./Model/Metadata */ "./node_modules/apisearch/lib/Model/Metadata.js"));
-__export(__webpack_require__(/*! ./Model/User */ "./node_modules/apisearch/lib/Model/User.js"));
-__export(__webpack_require__(/*! ./Query/Aggregation */ "./node_modules/apisearch/lib/Query/Aggregation.js"));
-__export(__webpack_require__(/*! ./Query/Filter */ "./node_modules/apisearch/lib/Query/Filter.js"));
-__export(__webpack_require__(/*! ./Query/Query */ "./node_modules/apisearch/lib/Query/Query.js"));
-__export(__webpack_require__(/*! ./Query/Range */ "./node_modules/apisearch/lib/Query/Range.js"));
-__export(__webpack_require__(/*! ./Query/ScoreStrategy */ "./node_modules/apisearch/lib/Query/ScoreStrategy.js"));
-__export(__webpack_require__(/*! ./Query/SortBy */ "./node_modules/apisearch/lib/Query/SortBy.js"));
-__export(__webpack_require__(/*! ./Repository/HttpRepository */ "./node_modules/apisearch/lib/Repository/HttpRepository.js"));
-__export(__webpack_require__(/*! ./Repository/Repository */ "./node_modules/apisearch/lib/Repository/Repository.js"));
-__export(__webpack_require__(/*! ./Result/ResultAggregation */ "./node_modules/apisearch/lib/Result/ResultAggregation.js"));
-__export(__webpack_require__(/*! ./Result/ResultAggregations */ "./node_modules/apisearch/lib/Result/ResultAggregations.js"));
-__export(__webpack_require__(/*! ./Result/Counter */ "./node_modules/apisearch/lib/Result/Counter.js"));
-__export(__webpack_require__(/*! ./Result/Result */ "./node_modules/apisearch/lib/Result/Result.js"));
-__export(__webpack_require__(/*! ./Transformer/Transformer */ "./node_modules/apisearch/lib/Transformer/Transformer.js"));
+tslib_1.__exportStar(__webpack_require__(/*! ./Cache/InMemoryCache */ "./node_modules/apisearch/lib/Cache/InMemoryCache.js"), exports);
+tslib_1.__exportStar(__webpack_require__(/*! ./Config/Config */ "./node_modules/apisearch/lib/Config/Config.js"), exports);
+tslib_1.__exportStar(__webpack_require__(/*! ./Config/ImmutableConfig */ "./node_modules/apisearch/lib/Config/ImmutableConfig.js"), exports);
+tslib_1.__exportStar(__webpack_require__(/*! ./Config/Synonym */ "./node_modules/apisearch/lib/Config/Synonym.js"), exports);
+tslib_1.__exportStar(__webpack_require__(/*! ./Error/ConnectionError */ "./node_modules/apisearch/lib/Error/ConnectionError.js"), exports);
+tslib_1.__exportStar(__webpack_require__(/*! ./Error/ErrorWithMessage */ "./node_modules/apisearch/lib/Error/ErrorWithMessage.js"), exports);
+tslib_1.__exportStar(__webpack_require__(/*! ./Error/EventError */ "./node_modules/apisearch/lib/Error/EventError.js"), exports);
+tslib_1.__exportStar(__webpack_require__(/*! ./Error/ForbiddenError */ "./node_modules/apisearch/lib/Error/ForbiddenError.js"), exports);
+tslib_1.__exportStar(__webpack_require__(/*! ./Error/InvalidFormatError */ "./node_modules/apisearch/lib/Error/InvalidFormatError.js"), exports);
+tslib_1.__exportStar(__webpack_require__(/*! ./Error/InvalidTokenError */ "./node_modules/apisearch/lib/Error/InvalidTokenError.js"), exports);
+tslib_1.__exportStar(__webpack_require__(/*! ./Error/ResourceExistsError */ "./node_modules/apisearch/lib/Error/ResourceExistsError.js"), exports);
+tslib_1.__exportStar(__webpack_require__(/*! ./Error/ResourceNotAvailableError */ "./node_modules/apisearch/lib/Error/ResourceNotAvailableError.js"), exports);
+tslib_1.__exportStar(__webpack_require__(/*! ./Error/UnsupportedContentTypeError */ "./node_modules/apisearch/lib/Error/UnsupportedContentTypeError.js"), exports);
+tslib_1.__exportStar(__webpack_require__(/*! ./Geo/LocationRange */ "./node_modules/apisearch/lib/Geo/LocationRange.js"), exports);
+tslib_1.__exportStar(__webpack_require__(/*! ./Http/AxiosClient */ "./node_modules/apisearch/lib/Http/AxiosClient.js"), exports);
+tslib_1.__exportStar(__webpack_require__(/*! ./Http/Client */ "./node_modules/apisearch/lib/Http/Client.js"), exports);
+tslib_1.__exportStar(__webpack_require__(/*! ./Http/HttpClient */ "./node_modules/apisearch/lib/Http/HttpClient.js"), exports);
+tslib_1.__exportStar(__webpack_require__(/*! ./Http/Response */ "./node_modules/apisearch/lib/Http/Response.js"), exports);
+tslib_1.__exportStar(__webpack_require__(/*! ./Http/Retry */ "./node_modules/apisearch/lib/Http/Retry.js"), exports);
+tslib_1.__exportStar(__webpack_require__(/*! ./Http/RetryMap */ "./node_modules/apisearch/lib/Http/RetryMap.js"), exports);
+tslib_1.__exportStar(__webpack_require__(/*! ./Model/Changes */ "./node_modules/apisearch/lib/Model/Changes.js"), exports);
+tslib_1.__exportStar(__webpack_require__(/*! ./Model/Coordinate */ "./node_modules/apisearch/lib/Model/Coordinate.js"), exports);
+tslib_1.__exportStar(__webpack_require__(/*! ./Model/Item */ "./node_modules/apisearch/lib/Model/Item.js"), exports);
+tslib_1.__exportStar(__webpack_require__(/*! ./Model/ItemUUID */ "./node_modules/apisearch/lib/Model/ItemUUID.js"), exports);
+tslib_1.__exportStar(__webpack_require__(/*! ./Model/Metadata */ "./node_modules/apisearch/lib/Model/Metadata.js"), exports);
+tslib_1.__exportStar(__webpack_require__(/*! ./Model/User */ "./node_modules/apisearch/lib/Model/User.js"), exports);
+tslib_1.__exportStar(__webpack_require__(/*! ./Query/Aggregation */ "./node_modules/apisearch/lib/Query/Aggregation.js"), exports);
+tslib_1.__exportStar(__webpack_require__(/*! ./Query/Filter */ "./node_modules/apisearch/lib/Query/Filter.js"), exports);
+tslib_1.__exportStar(__webpack_require__(/*! ./Query/Query */ "./node_modules/apisearch/lib/Query/Query.js"), exports);
+tslib_1.__exportStar(__webpack_require__(/*! ./Query/Range */ "./node_modules/apisearch/lib/Query/Range.js"), exports);
+tslib_1.__exportStar(__webpack_require__(/*! ./Query/ScoreStrategy */ "./node_modules/apisearch/lib/Query/ScoreStrategy.js"), exports);
+tslib_1.__exportStar(__webpack_require__(/*! ./Query/SortBy */ "./node_modules/apisearch/lib/Query/SortBy.js"), exports);
+tslib_1.__exportStar(__webpack_require__(/*! ./Repository/HttpRepository */ "./node_modules/apisearch/lib/Repository/HttpRepository.js"), exports);
+tslib_1.__exportStar(__webpack_require__(/*! ./Repository/Repository */ "./node_modules/apisearch/lib/Repository/Repository.js"), exports);
+tslib_1.__exportStar(__webpack_require__(/*! ./Result/ResultAggregation */ "./node_modules/apisearch/lib/Result/ResultAggregation.js"), exports);
+tslib_1.__exportStar(__webpack_require__(/*! ./Result/ResultAggregations */ "./node_modules/apisearch/lib/Result/ResultAggregations.js"), exports);
+tslib_1.__exportStar(__webpack_require__(/*! ./Result/Counter */ "./node_modules/apisearch/lib/Result/Counter.js"), exports);
+tslib_1.__exportStar(__webpack_require__(/*! ./Result/Result */ "./node_modules/apisearch/lib/Result/Result.js"), exports);
+tslib_1.__exportStar(__webpack_require__(/*! ./Transformer/Transformer */ "./node_modules/apisearch/lib/Transformer/Transformer.js"), exports);
 
 
 /***/ }),
@@ -12823,6 +12566,224 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 process.umask = function() { return 0; };
+
+
+/***/ }),
+
+/***/ "./node_modules/tslib/tslib.es6.js":
+/*!*****************************************!*\
+  !*** ./node_modules/tslib/tslib.es6.js ***!
+  \*****************************************/
+/*! exports provided: __extends, __assign, __rest, __decorate, __param, __metadata, __awaiter, __generator, __exportStar, __values, __read, __spread, __await, __asyncGenerator, __asyncDelegator, __asyncValues, __makeTemplateObject, __importStar, __importDefault */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__extends", function() { return __extends; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__assign", function() { return __assign; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__rest", function() { return __rest; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__decorate", function() { return __decorate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__param", function() { return __param; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__metadata", function() { return __metadata; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__awaiter", function() { return __awaiter; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__generator", function() { return __generator; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__exportStar", function() { return __exportStar; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__values", function() { return __values; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__read", function() { return __read; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__spread", function() { return __spread; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__await", function() { return __await; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__asyncGenerator", function() { return __asyncGenerator; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__asyncDelegator", function() { return __asyncDelegator; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__asyncValues", function() { return __asyncValues; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__makeTemplateObject", function() { return __makeTemplateObject; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__importStar", function() { return __importStar; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__importDefault", function() { return __importDefault; });
+/*! *****************************************************************************
+Copyright (c) Microsoft Corporation. All rights reserved.
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+this file except in compliance with the License. You may obtain a copy of the
+License at http://www.apache.org/licenses/LICENSE-2.0
+
+THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
+WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+MERCHANTABLITY OR NON-INFRINGEMENT.
+
+See the Apache Version 2.0 License for specific language governing permissions
+and limitations under the License.
+***************************************************************************** */
+/* global Reflect, Promise */
+
+var extendStatics = function(d, b) {
+    extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return extendStatics(d, b);
+};
+
+function __extends(d, b) {
+    extendStatics(d, b);
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+}
+
+var __assign = function() {
+    __assign = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+    }
+    return __assign.apply(this, arguments);
+}
+
+function __rest(s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
+            t[p[i]] = s[p[i]];
+    return t;
+}
+
+function __decorate(decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+}
+
+function __param(paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+}
+
+function __metadata(metadataKey, metadataValue) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(metadataKey, metadataValue);
+}
+
+function __awaiter(thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+}
+
+function __generator(thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+}
+
+function __exportStar(m, exports) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
+
+function __values(o) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator], i = 0;
+    if (m) return m.call(o);
+    return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+}
+
+function __read(o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+}
+
+function __spread() {
+    for (var ar = [], i = 0; i < arguments.length; i++)
+        ar = ar.concat(__read(arguments[i]));
+    return ar;
+}
+
+function __await(v) {
+    return this instanceof __await ? (this.v = v, this) : new __await(v);
+}
+
+function __asyncGenerator(thisArg, _arguments, generator) {
+    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+    var g = generator.apply(thisArg, _arguments || []), i, q = [];
+    return i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i;
+    function verb(n) { if (g[n]) i[n] = function (v) { return new Promise(function (a, b) { q.push([n, v, a, b]) > 1 || resume(n, v); }); }; }
+    function resume(n, v) { try { step(g[n](v)); } catch (e) { settle(q[0][3], e); } }
+    function step(r) { r.value instanceof __await ? Promise.resolve(r.value.v).then(fulfill, reject) : settle(q[0][2], r); }
+    function fulfill(value) { resume("next", value); }
+    function reject(value) { resume("throw", value); }
+    function settle(f, v) { if (f(v), q.shift(), q.length) resume(q[0][0], q[0][1]); }
+}
+
+function __asyncDelegator(o) {
+    var i, p;
+    return i = {}, verb("next"), verb("throw", function (e) { throw e; }), verb("return"), i[Symbol.iterator] = function () { return this; }, i;
+    function verb(n, f) { i[n] = o[n] ? function (v) { return (p = !p) ? { value: __await(o[n](v)), done: n === "return" } : f ? f(v) : v; } : f; }
+}
+
+function __asyncValues(o) {
+    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+    var m = o[Symbol.asyncIterator], i;
+    return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);
+    function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
+    function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
+}
+
+function __makeTemplateObject(cooked, raw) {
+    if (Object.defineProperty) { Object.defineProperty(cooked, "raw", { value: raw }); } else { cooked.raw = raw; }
+    return cooked;
+};
+
+function __importStar(mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result.default = mod;
+    return result;
+}
+
+function __importDefault(mod) {
+    return (mod && mod.__esModule) ? mod : { default: mod };
+}
 
 
 /***/ }),
