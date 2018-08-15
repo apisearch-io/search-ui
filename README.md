@@ -2,6 +2,7 @@
 
 This library is part of the Apisearch project.
 
+[![npm version](https://badge.fury.io/js/apisearch-ui.svg)](https://badge.fury.io/js/apisearch-ui)
 [![Join the chat](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/apisearch_io/general)
 
 Apisearch is an open source search engine fully based on open source third party
