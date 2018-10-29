@@ -17,6 +17,7 @@ import container from "../../Container";
  * @param highlightsEnabled
  * @param promotedUUIDs
  * @param excludedUUIDs
+ * @param fields
  * @param filter
  */
 export function configureQuery(
@@ -26,6 +27,7 @@ export function configureQuery(
     highlightsEnabled: boolean,
     promotedUUIDs: ItemUUID[],
     excludedUUIDs: ItemUUID[],
+    fields: string[],
     filter: Function
 ) {
     const clonedQuery = cloneDeep(currentQuery);
@@ -35,6 +37,11 @@ export function configureQuery(
      * Set result size
      */
     clonedQuery.size = itemsPerPage;
+
+    /**
+     * Set specific fields
+     */
+    clonedQuery.setFields(fields);
 
     /**
      * Enabling highlights on query result

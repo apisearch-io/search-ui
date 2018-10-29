@@ -8,6 +8,7 @@ import {ItemUUID} from "apisearch";
  */
 export interface ResultProps {
     target: any;
+    fields: string[];
     itemsPerPage: number;
     highlightsEnabled: boolean;
     promote: ItemUUID[];
