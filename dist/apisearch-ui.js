@@ -385,49 +385,18 @@ exports.NoCache = NoCache;
 "use strict";
 
 exports.__esModule = true;
-/**
- * Result class
- */
-var Config = /** @class */ (function () {
-    function Config() {
-    }
-    /**
-     * To array
-     *
-     * @returns {any}
-     */
-    Config.prototype.toArray = function () {
-        return {};
-    };
-    return Config;
-}());
-exports.Config = Config;
-
-
-/***/ }),
-
-/***/ "./node_modules/apisearch/lib/Config/ImmutableConfig.js":
-/*!**************************************************************!*\
-  !*** ./node_modules/apisearch/lib/Config/ImmutableConfig.js ***!
-  \**************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
 var Synonym_1 = __webpack_require__(/*! ./Synonym */ "./node_modules/apisearch/lib/Config/Synonym.js");
 /**
  * Result class
  */
-var ImmutableConfig = /** @class */ (function () {
+var Config = /** @class */ (function () {
     /**
      * Constructor
      *
      * @param language
      * @param storeSearchableMetadata
      */
-    function ImmutableConfig(language, storeSearchableMetadata) {
+    function Config(language, storeSearchableMetadata) {
         if (language === void 0) { language = null; }
         if (storeSearchableMetadata === void 0) { storeSearchableMetadata = true; }
         this.synonyms = [];
@@ -439,7 +408,7 @@ var ImmutableConfig = /** @class */ (function () {
      *
      * @return {string}
      */
-    ImmutableConfig.prototype.getLanguage = function () {
+    Config.prototype.getLanguage = function () {
         return this.language;
     };
     /**
@@ -447,7 +416,7 @@ var ImmutableConfig = /** @class */ (function () {
      *
      * @return {boolean}
      */
-    ImmutableConfig.prototype.shouldSearchableMetadataBeStored = function () {
+    Config.prototype.shouldSearchableMetadataBeStored = function () {
         return this.storeSearchableMetadata;
     };
     /**
@@ -455,7 +424,7 @@ var ImmutableConfig = /** @class */ (function () {
      *
      * @param synonym
      */
-    ImmutableConfig.prototype.addSynonym = function (synonym) {
+    Config.prototype.addSynonym = function (synonym) {
         this.synonyms.push(synonym);
     };
     /**
@@ -463,13 +432,13 @@ var ImmutableConfig = /** @class */ (function () {
      *
      * @return {Synonym[]}
      */
-    ImmutableConfig.prototype.getSynonyms = function () {
+    Config.prototype.getSynonyms = function () {
         return this.synonyms;
     };
     /**
      * to array
      */
-    ImmutableConfig.prototype.toArray = function () {
+    Config.prototype.toArray = function () {
         return {
             language: this.language,
             store_searchable_metadata: this.storeSearchableMetadata,
@@ -479,8 +448,8 @@ var ImmutableConfig = /** @class */ (function () {
     /**
      * Create from array
      */
-    ImmutableConfig.createFromArray = function (array) {
-        var immutableConfig = new ImmutableConfig(array.language ? array.language : null, typeof array.store_searchable_metadata == "boolean"
+    Config.createFromArray = function (array) {
+        var immutableConfig = new Config(array.language ? array.language : null, typeof array.store_searchable_metadata == "boolean"
             ? array.store_searchable_metadata
             : true);
         if (array.synonyms instanceof Array &&
@@ -489,9 +458,9 @@ var ImmutableConfig = /** @class */ (function () {
         }
         return immutableConfig;
     };
-    return ImmutableConfig;
+    return Config;
 }());
-exports.ImmutableConfig = ImmutableConfig;
+exports.Config = Config;
 
 
 /***/ }),
@@ -822,6 +791,30 @@ var InvalidFormatError = /** @class */ (function (_super) {
      */
     InvalidFormatError.tokenFormatNotValid = function () {
         return new InvalidFormatError("Token Format not valid. Expecting a Token serialized but found malformed data");
+    };
+    /**
+     * Index format not valid.
+     *
+     * @return {InvalidFormatError}
+     */
+    InvalidFormatError.indexFormatNotValid = function () {
+        return new InvalidFormatError('Index Format not valid. Expecting an Index serialized but found malformed data');
+    };
+    /**
+     * IndexUUI format not valid.
+     *
+     * @return {InvalidFormatError}
+     */
+    InvalidFormatError.indexUUIDFormatNotValid = function () {
+        return new InvalidFormatError('IndexUUID Format not valid. Expecting an IndexUUID serialized but found malformed data');
+    };
+    /**
+     * App format not valid.
+     *
+     * @return {InvalidFormatError}
+     */
+    InvalidFormatError.appUUIDFormatNotValid = function () {
+        return new InvalidFormatError('AppUUID Format not valid. Expecting an AppUUID serialized but found malformed data');
     };
     /**
      * Campaign representation not valid
@@ -1353,7 +1346,7 @@ var AxiosClient = /** @class */ (function (_super) {
         _this.timeout = timeout;
         _this.cache = cache;
         _this.overrideQueries = overrideQueries;
-        _this.cancelToken = axios_1["default"].CancelToken.source();
+        _this.cancelToken = {};
         return _this;
     }
     /**
@@ -1380,7 +1373,7 @@ var AxiosClient = /** @class */ (function (_super) {
                 method = method.toLowerCase();
                 if ("get" === method &&
                     this.overrideQueries) {
-                    this.abort();
+                    this.abort(url);
                 }
                 return [2 /*return*/, new Promise(function (resolve, reject) {
                         var headers = "get" == method
@@ -1389,22 +1382,27 @@ var AxiosClient = /** @class */ (function (_super) {
                                 "Content-Encoding": "gzip",
                                 "Content-Type": "application/json"
                             };
-                        //noinspection TypeScriptValidateTypes
-                        axios_1["default"]
-                            .request({
+                        var axiosRequestConfig = {
                             url: url + "?" + Client_1.Client.objectToUrlParameters(tslib_1.__assign({}, credentials, parameters)),
                             data: data,
                             headers: headers,
                             method: method,
                             baseURL: that.host.replace(/\/*$/g, ""),
                             timeout: that.timeout,
-                            cancelToken: _this.cancelToken.token,
                             transformRequest: [function (data) { return JSON.stringify(data); }]
-                        })
+                        };
+                        if (typeof _this.cancelToken[url] != 'undefined') {
+                            axiosRequestConfig.cancelToken = _this.cancelToken[url].token;
+                        }
+                        axios_1["default"]
+                            .request(axiosRequestConfig)
                             .then(function (axiosResponse) {
                             var response = new Response_1.Response(axiosResponse.status, axiosResponse.data);
                             return resolve(response);
-                        })["catch"](function (thrown) { return reject(thrown); });
+                        })["catch"](function (error) {
+                            var response = new Response_1.Response(error.response.status, error.response.data);
+                            return reject(response);
+                        });
                     })];
             });
         });
@@ -1412,10 +1410,22 @@ var AxiosClient = /** @class */ (function (_super) {
     /**
      * Abort current request
      * And regenerate the cancellation token
+     *
+     * @param url
      */
-    AxiosClient.prototype.abort = function () {
-        this.cancelToken.cancel();
-        this.cancelToken = axios_1["default"].CancelToken.source();
+    AxiosClient.prototype.abort = function (url) {
+        if (typeof this.cancelToken[url] != 'undefined') {
+            this.cancelToken[url].cancel();
+        }
+        this.generateCancelToken(url);
+    };
+    /**
+     * Generate a new cancellation token for a query
+     *
+     * @param url
+     */
+    AxiosClient.prototype.generateCancelToken = function (url) {
+        this.cancelToken[url] = axios_1["default"].CancelToken.source();
     };
     return AxiosClient;
 }(Client_1.Client));
@@ -1683,6 +1693,86 @@ exports.RetryMap = RetryMap;
 
 /***/ }),
 
+/***/ "./node_modules/apisearch/lib/Model/AppUUID.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/apisearch/lib/Model/AppUUID.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var InvalidFormatError_1 = __webpack_require__(/*! ../Error/InvalidFormatError */ "./node_modules/apisearch/lib/Error/InvalidFormatError.js");
+/**
+ * AppUUID class
+ */
+var AppUUID = /** @class */ (function () {
+    /**
+     * Constructor
+     *
+     * @param id
+     */
+    function AppUUID(id) {
+        if (id.indexOf('_') >= 0) {
+            throw InvalidFormatError_1.InvalidFormatError.appUUIDFormatNotValid();
+        }
+        this.id = id;
+    }
+    /**
+     * Create by id
+     *
+     * @param id
+     *
+     * @returns {ItemUUID}
+     */
+    AppUUID.createById = function (id) {
+        return new AppUUID(id);
+    };
+    /**
+     * Return id
+     *
+     * @returns {string}
+     */
+    AppUUID.prototype.getId = function () {
+        return this.id;
+    };
+    /**
+     * To array
+     *
+     * @returns {{id: *, type: *}}
+     */
+    AppUUID.prototype.toArray = function () {
+        return {
+            id: this.id
+        };
+    };
+    /**
+     * Create from array
+     *
+     * @param array {{id:string, type:string}}
+     *
+     * @return {ItemUUID}
+     */
+    AppUUID.createFromArray = function (array) {
+        array = JSON.parse(JSON.stringify(array));
+        return new AppUUID(array.id);
+    };
+    /**
+     * Compose unique id
+     *
+     * @returns {string}
+     */
+    AppUUID.prototype.composedUUID = function () {
+        return this.id;
+    };
+    return AppUUID;
+}());
+exports.AppUUID = AppUUID;
+
+
+/***/ }),
+
 /***/ "./node_modules/apisearch/lib/Model/Changes.js":
 /*!*****************************************************!*\
   !*** ./node_modules/apisearch/lib/Model/Changes.js ***!
@@ -1890,6 +1980,197 @@ var Coordinate = /** @class */ (function () {
     return Coordinate;
 }());
 exports.Coordinate = Coordinate;
+
+
+/***/ }),
+
+/***/ "./node_modules/apisearch/lib/Model/Index.js":
+/*!***************************************************!*\
+  !*** ./node_modules/apisearch/lib/Model/Index.js ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var InvalidFormatError_1 = __webpack_require__(/*! ../Error/InvalidFormatError */ "./node_modules/apisearch/lib/Error/InvalidFormatError.js");
+var IndexUUID_1 = __webpack_require__(/*! ./IndexUUID */ "./node_modules/apisearch/lib/Model/IndexUUID.js");
+var AppUUID_1 = __webpack_require__(/*! ./AppUUID */ "./node_modules/apisearch/lib/Model/AppUUID.js");
+/**
+ * Index class
+ */
+var Index = /** @class */ (function () {
+    /**
+     * Constructor
+     *
+     * @param uuid
+     * @param appUUID
+     * @param isOK
+     * @param docCount
+     * @param size
+     */
+    function Index(uuid, appUUID, isOK, docCount, size) {
+        if (isOK === void 0) { isOK = false; }
+        if (docCount === void 0) { docCount = 0; }
+        if (size === void 0) { size = '0kb'; }
+        this.uuid = uuid;
+        this.appUUID = appUUID;
+        this.isOK = isOK;
+        this.docCount = docCount;
+        this.size = size;
+    }
+    /**
+     * Get uuid
+     *
+     * @return {IndexUUID}
+     */
+    Index.prototype.getUUID = function () {
+        return this.uuid;
+    };
+    /**
+     * Get app id
+     *
+     * @return {AppUUID}
+     */
+    Index.prototype.getAppUUID = function () {
+        return this.appUUID;
+    };
+    /**
+     * Index is OK
+     *
+     * @return {boolean}
+     */
+    Index.prototype.isOk = function () {
+        return this.isOK;
+    };
+    /**
+     * Get doc count
+     *
+     * @return {number}
+     */
+    Index.prototype.getDocCount = function () {
+        return this.docCount;
+    };
+    /**
+     * get size
+     *
+     * @return {string}
+     */
+    Index.prototype.getSize = function () {
+        return this.size;
+    };
+    /**
+     * To array
+     *
+     * @returns {{id: string, attributes: {}}}
+     */
+    Index.prototype.toArray = function () {
+        return {
+            uuid: this.uuid.toArray(),
+            app_id: this.appUUID.toArray(),
+            is_ok: this.isOK,
+            doc_count: this.docCount,
+            size: this.size
+        };
+    };
+    /**
+     * Create from array
+     *
+     * @param array
+     *
+     * @return User
+     */
+    Index.createFromArray = function (array) {
+        if (typeof array.uuid == "undefined" ||
+            typeof array.app_id == "undefined") {
+            throw InvalidFormatError_1.InvalidFormatError.indexFormatNotValid();
+        }
+        return new Index(IndexUUID_1.IndexUUID.createFromArray(array.uuid), AppUUID_1.AppUUID.createFromArray(array.app_id), (typeof array.is_ok == "undefined" ? false : array.is_ok), (typeof array.doc_count == "undefined" ? 0 : array.doc_count), (typeof array.size == "undefined" ? '0kb' : array.size));
+    };
+    return Index;
+}());
+exports.Index = Index;
+
+
+/***/ }),
+
+/***/ "./node_modules/apisearch/lib/Model/IndexUUID.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/apisearch/lib/Model/IndexUUID.js ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var InvalidFormatError_1 = __webpack_require__(/*! ../Error/InvalidFormatError */ "./node_modules/apisearch/lib/Error/InvalidFormatError.js");
+/**
+ * IndexUUID class
+ */
+var IndexUUID = /** @class */ (function () {
+    /**
+     * Constructor
+     *
+     * @param id
+     */
+    function IndexUUID(id) {
+        if (id.indexOf('_') >= 0) {
+            throw InvalidFormatError_1.InvalidFormatError.indexUUIDFormatNotValid();
+        }
+        this.id = id;
+    }
+    /**
+     * Create by id
+     *
+     * @param id
+     *
+     * @returns {ItemUUID}
+     */
+    IndexUUID.createById = function (id) {
+        return new IndexUUID(id);
+    };
+    /**
+     * Return id
+     *
+     * @returns {string}
+     */
+    IndexUUID.prototype.getId = function () {
+        return this.id;
+    };
+    /**
+     * To array
+     *
+     * @returns {{id: *, type: *}}
+     */
+    IndexUUID.prototype.toArray = function () {
+        return {
+            id: this.id
+        };
+    };
+    /**
+     * Create from array
+     *
+     * @param array {{id:string, type:string}}
+     *
+     * @return {ItemUUID}
+     */
+    IndexUUID.createFromArray = function (array) {
+        array = JSON.parse(JSON.stringify(array));
+        return new IndexUUID(array.id);
+    };
+    /**
+     * Compose unique id
+     *
+     * @returns {string}
+     */
+    IndexUUID.prototype.composedUUID = function () {
+        return this.id;
+    };
+    return IndexUUID;
+}());
+exports.IndexUUID = IndexUUID;
 
 
 /***/ }),
@@ -2175,6 +2456,25 @@ var Item = /** @class */ (function () {
         return this.promoted;
     };
     /**
+     * Set score
+     *
+     * @param score
+     *
+     * @return {Item}
+     */
+    Item.prototype.setScore = function (score) {
+        this.score = score;
+        return this;
+    };
+    /**
+     * Get score
+     *
+     * @return {number}
+     */
+    Item.prototype.getScore = function () {
+        return this.score;
+    };
+    /**
      * To array
      */
     Item.prototype.toArray = function () {
@@ -2208,6 +2508,9 @@ var Item = /** @class */ (function () {
         if (typeof this.distance != "undefined") {
             itemAsArray.distance = this.distance;
         }
+        if (typeof this.score != "undefined") {
+            itemAsArray.score = this.score;
+        }
         return itemAsArray;
     };
     /**
@@ -2236,8 +2539,13 @@ var Item = /** @class */ (function () {
             array.distance != null) {
             item.highlights = array.highlights;
         }
-        if (array.is_promoted) {
-            item.promoted = true;
+        if (typeof array.is_promoted != "undefined" &&
+            array.is_promoted != null) {
+            item.promoted = array.is_promoted;
+        }
+        if (typeof array.score != "undefined" &&
+            array.score != null) {
+            item.score = array.score;
         }
         return item;
     };
@@ -2895,6 +3203,7 @@ exports.QUERY_DEFAULT_FROM = 0;
 exports.QUERY_DEFAULT_PAGE = 1;
 exports.QUERY_DEFAULT_SIZE = 10;
 exports.QUERY_INFINITE_SIZE = 1000;
+exports.NO_MIN_SCORE = 0.0;
 /**
  * Query class
  */
@@ -2905,11 +3214,13 @@ var Query = /** @class */ (function () {
      * @param queryText
      */
     function Query(queryText) {
+        this.fields = [];
         this.universeFilters = {};
         this.filters = {};
         this.itemsPromoted = [];
         this.aggregations = {};
         this.filterFields = [];
+        this.minScore = exports.NO_MIN_SCORE;
         this.sortByInstance = SortBy_1.SortBy.create();
         this.filters._query = Filter_1.Filter.create("", [queryText], 0, Filter_3.FILTER_TYPE_QUERY);
     }
@@ -2988,6 +3299,25 @@ var Query = /** @class */ (function () {
             .disableSuggestions();
         query.filters._id = Filter_1.Filter.create("_id", ids, Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_FIELD);
         return query;
+    };
+    /**
+     * set fields
+     *
+     * @param fields
+     *
+     * @return {Query}
+     */
+    Query.prototype.setFields = function (fields) {
+        this.fields = fields;
+        return this;
+    };
+    /**
+     * get fields
+     *
+     * @return {string[]}
+     */
+    Query.prototype.getFields = function () {
+        return this.fields;
     };
     /**
      * Filter universe by types
@@ -3644,6 +3974,25 @@ var Query = /** @class */ (function () {
         return this;
     };
     /**
+     * Get min score
+     *
+     * @return any
+     */
+    Query.prototype.getMinScore = function () {
+        return this.minScore;
+    };
+    /**
+     * Set min score
+     *
+     * @param minScore
+     *
+     * @return {Query}
+     */
+    Query.prototype.setMinScore = function (minScore) {
+        this.minScore = minScore;
+        return this;
+    };
+    /**
      * By user
      *
      * @param user
@@ -3683,6 +4032,13 @@ var Query = /** @class */ (function () {
         }
         if (this.coordinate instanceof Coordinate_1.Coordinate) {
             array.coordinate = this.coordinate.toArray();
+        }
+        /**
+         * Fields
+         */
+        if (this.fields instanceof Array &&
+            this.fields.length > 0) {
+            array.fields = this.fields;
         }
         /**
          * Universe Filters
@@ -3774,6 +4130,13 @@ var Query = /** @class */ (function () {
             array.fuzziness = this.fuzziness;
         }
         /**
+         * Min score
+         */
+        var minScore = this.minScore;
+        if (minScore !== exports.NO_MIN_SCORE) {
+            array.min_score = minScore;
+        }
+        /**
          * User
          */
         if (this.user instanceof User_1.User) {
@@ -3806,6 +4169,12 @@ var Query = /** @class */ (function () {
         var query = array.coordinate instanceof Object
             ? Query.createLocated(Coordinate_1.Coordinate.createFromArray(array.coordinate), array.q ? array.q : "", array.page ? array.page : exports.QUERY_DEFAULT_PAGE, array.size ? array.size : exports.QUERY_DEFAULT_SIZE)
             : Query.create(array.q ? array.q : "", array.page ? array.page : exports.QUERY_DEFAULT_PAGE, array.size ? array.size : exports.QUERY_DEFAULT_SIZE);
+        /**
+         * Fields
+         */
+        query.fields = array.fields instanceof Array
+            ? array.fields
+            : [];
         /**
          * Aggregations
          */
@@ -3858,6 +4227,7 @@ var Query = /** @class */ (function () {
             ? array.highlights_enabled
             : false;
         query.fuzziness = array.fuzziness;
+        query.minScore = array.min_score ? array.min_score : exports.NO_MIN_SCORE;
         /**
          * Items promoted
          */
@@ -4419,6 +4789,7 @@ var Item_1 = __webpack_require__(/*! ../Model/Item */ "./node_modules/apisearch/
 var ItemUUID_1 = __webpack_require__(/*! ../Model/ItemUUID */ "./node_modules/apisearch/lib/Model/ItemUUID.js");
 var Result_1 = __webpack_require__(/*! ../Result/Result */ "./node_modules/apisearch/lib/Result/Result.js");
 var Repository_1 = __webpack_require__(/*! ./Repository */ "./node_modules/apisearch/lib/Repository/Repository.js");
+var Index_1 = __webpack_require__(/*! ../Model/Index */ "./node_modules/apisearch/lib/Model/Index.js");
 /**
  * Aggregation class
  */
@@ -4488,7 +4859,7 @@ var HttpRepository = /** @class */ (function (_super) {
                 }
                 return [2 /*return*/, this
                         .httpClient
-                        .get("/items", "post", this.getCredentials(), {}, {
+                        .get("/items", "post", this.getCredentialsWithIndex(this.indexId), {}, {
                         items: itemsToUpdate.map(function (item) {
                             return item.toArray();
                         })
@@ -4514,7 +4885,7 @@ var HttpRepository = /** @class */ (function (_super) {
                 }
                 return [2 /*return*/, this
                         .httpClient
-                        .get("/items", "delete", this.getCredentials(), {}, {
+                        .get("/items", "delete", this.getCredentialsWithIndex(this.indexId), {}, {
                         items: itemsToDelete.map(function (itemUUID) {
                             return itemUUID.toArray();
                         })
@@ -4541,7 +4912,7 @@ var HttpRepository = /** @class */ (function (_super) {
                         that = this;
                         return [4 /*yield*/, this
                                 .httpClient
-                                .get("/", "get", this.getCredentials(), {
+                                .get("/", "get", this.getCredentialsWithIndex(this.indexId), {
                                 query: JSON.stringify(query.toArray())
                             }, {})
                                 .then(function (response) {
@@ -4570,7 +4941,7 @@ var HttpRepository = /** @class */ (function (_super) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this
                             .httpClient
-                            .get("/items", "put", this.getCredentials(), {}, {
+                            .get("/items", "put", this.getCredentialsWithIndex(this.indexId), {}, {
                             query: query.toArray(),
                             changes: changes.toArray()
                         })
@@ -4586,18 +4957,20 @@ var HttpRepository = /** @class */ (function (_super) {
     /**
      * Create index
      *
-     * @param immutableConfig
+     * @param indexUUID
+     * @param config
      *
      * @return {Promise<void>}
      */
-    HttpRepository.prototype.createIndex = function (immutableConfig) {
+    HttpRepository.prototype.createIndex = function (indexUUID, config) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this
                             .httpClient
-                            .get("/index", "post", this.getCredentials(), {}, {
-                            config: immutableConfig.toArray()
+                            .get("/index", "put", this.getCredentials(), {}, {
+                            index: indexUUID.toArray(),
+                            config: config.toArray()
                         })
                             .then(function (response) {
                             HttpRepository.throwTransportableExceptionIfNeeded(response);
@@ -4611,15 +4984,17 @@ var HttpRepository = /** @class */ (function (_super) {
     /**
      * Delete index
      *
+     * @param indexUUID
+     *
      * @return {Promise<void>}
      */
-    HttpRepository.prototype.deleteIndex = function () {
+    HttpRepository.prototype.deleteIndex = function (indexUUID) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this
                             .httpClient
-                            .get("/index", "delete", this.getCredentials(), {}, {})
+                            .get("/index", "delete", this.getCredentialsWithIndex(this.indexId), {}, {})
                             .then(function (response) {
                             HttpRepository.throwTransportableExceptionIfNeeded(response);
                             return;
@@ -4632,15 +5007,17 @@ var HttpRepository = /** @class */ (function (_super) {
     /**
      * Reset index
      *
+     * @param indexUUID
+     *
      * @return {Promise<void>}
      */
-    HttpRepository.prototype.resetIndex = function () {
+    HttpRepository.prototype.resetIndex = function (indexUUID) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this
                             .httpClient
-                            .get("/index/reset", "post", this.getCredentials(), {}, {})
+                            .get("/index/reset", "post", this.getCredentialsWithIndex(this.indexId), {}, {})
                             .then(function (response) {
                             HttpRepository.throwTransportableExceptionIfNeeded(response);
                             return;
@@ -4653,15 +5030,17 @@ var HttpRepository = /** @class */ (function (_super) {
     /**
      * Check index
      *
+     * @param indexUUID
+     *
      * @return {Promise<boolean>}
      */
-    HttpRepository.prototype.checkIndex = function () {
+    HttpRepository.prototype.checkIndex = function (indexUUID) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this
                             .httpClient
-                            .get("/index", "head", this.getCredentials(), {}, {})
+                            .get("/index", "head", this.getCredentialsWithIndex(this.indexId), {}, {})
                             .then(function (response) {
                             HttpRepository.throwTransportableExceptionIfNeeded(response);
                             return response.getCode() === 200;
@@ -4672,19 +5051,46 @@ var HttpRepository = /** @class */ (function (_super) {
         });
     };
     /**
-     * Configure index
+     * Check index
      *
-     * @param config
-     *
-     * @return {Promise<void>}
+     * @return {Promise<Index[]>}
      */
-    HttpRepository.prototype.configureIndex = function (config) {
+    HttpRepository.prototype.getIndices = function () {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this
                             .httpClient
-                            .get("/index/config", "post", this.getCredentials(), {}, {
+                            .get("/indices", "get", this.getCredentials(), {}, {})
+                            .then(function (response) {
+                            HttpRepository.throwTransportableExceptionIfNeeded(response);
+                            var result = [];
+                            for (var _i = 0, _a = response.getBody(); _i < _a.length; _i++) {
+                                var indexAsArray = _a[_i];
+                                result.push(Index_1.Index.createFromArray(indexAsArray));
+                            }
+                            return result;
+                        })];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    /**
+     * Configure index
+     *
+     * @param indexUUID
+     * @param config
+     *
+     * @return {Promise<void>}
+     */
+    HttpRepository.prototype.configureIndex = function (indexUUID, config) {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            return tslib_1.__generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this
+                            .httpClient
+                            .get("/index", "post", this.getCredentialsWithIndex(this.indexId), {}, {
                             config: config.toArray()
                         })
                             .then(function (response) {
@@ -4704,7 +5110,20 @@ var HttpRepository = /** @class */ (function (_super) {
     HttpRepository.prototype.getCredentials = function () {
         return {
             app_id: this.appId,
-            index: this.indexId,
+            token: this.token
+        };
+    };
+    /**
+     * Get query values
+     *
+     * @param indexComposedUUID
+     *
+     * @returns any
+     */
+    HttpRepository.prototype.getCredentialsWithIndex = function (indexComposedUUID) {
+        return {
+            app_id: this.appId,
+            index: indexComposedUUID,
             token: this.token
         };
     };
@@ -5781,7 +6200,6 @@ var Apisearch_1 = __webpack_require__(/*! ./Apisearch */ "./node_modules/apisear
 exports["default"] = Apisearch_1["default"];
 tslib_1.__exportStar(__webpack_require__(/*! ./Cache/InMemoryCache */ "./node_modules/apisearch/lib/Cache/InMemoryCache.js"), exports);
 tslib_1.__exportStar(__webpack_require__(/*! ./Config/Config */ "./node_modules/apisearch/lib/Config/Config.js"), exports);
-tslib_1.__exportStar(__webpack_require__(/*! ./Config/ImmutableConfig */ "./node_modules/apisearch/lib/Config/ImmutableConfig.js"), exports);
 tslib_1.__exportStar(__webpack_require__(/*! ./Config/Synonym */ "./node_modules/apisearch/lib/Config/Synonym.js"), exports);
 tslib_1.__exportStar(__webpack_require__(/*! ./Error/ConnectionError */ "./node_modules/apisearch/lib/Error/ConnectionError.js"), exports);
 tslib_1.__exportStar(__webpack_require__(/*! ./Error/ErrorWithMessage */ "./node_modules/apisearch/lib/Error/ErrorWithMessage.js"), exports);
@@ -14189,15 +14607,20 @@ var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts
  * @param highlightsEnabled
  * @param promotedUUIDs
  * @param excludedUUIDs
+ * @param fields
  * @param filter
  */
-function configureQuery(environmentId, currentQuery, itemsPerPage, highlightsEnabled, promotedUUIDs, excludedUUIDs, filter) {
+function configureQuery(environmentId, currentQuery, itemsPerPage, highlightsEnabled, promotedUUIDs, excludedUUIDs, fields, filter) {
     var clonedQuery = cloneDeep(currentQuery);
     filter(clonedQuery);
     /**
      * Set result size
      */
     clonedQuery.size = itemsPerPage;
+    /**
+     * Set specific fields
+     */
+    clonedQuery.setFields(fields);
     /**
      * Enabling highlights on query result
      */
@@ -14286,7 +14709,7 @@ var ResultComponent = /** @class */ (function (_super) {
             return itemUUID instanceof ItemUUID_1.ItemUUID
                 ? itemUUID
                 : ItemUUID_1.ItemUUID.createFromArray(itemUUID);
-        }), props.filter);
+        }), props.fields, props.filter);
     };
     /**
      * Render
@@ -14326,6 +14749,7 @@ var ResultComponent = /** @class */ (function (_super) {
     return ResultComponent;
 }(preact_1.Component));
 ResultComponent.defaultProps = {
+    fields: [],
     itemsPerPage: 10,
     highlightsEnabled: false,
     promote: [],
@@ -15103,6 +15527,7 @@ var Result = /** @class */ (function (_super) {
      * Constructor
      *
      * @param target
+     * @param fields
      * @param itemsPerPage
      * @param promote
      * @param exclude
@@ -15113,10 +15538,10 @@ var Result = /** @class */ (function (_super) {
      * @param formatData
      */
     function Result(_a) {
-        var target = _a.target, itemsPerPage = _a.itemsPerPage, promote = _a.promote, exclude = _a.exclude, filter = _a.filter, highlightsEnabled = _a.highlightsEnabled, classNames = _a.classNames, template = _a.template, formatData = _a.formatData;
+        var target = _a.target, fields = _a.fields, itemsPerPage = _a.itemsPerPage, promote = _a.promote, exclude = _a.exclude, filter = _a.filter, highlightsEnabled = _a.highlightsEnabled, classNames = _a.classNames, template = _a.template, formatData = _a.formatData;
         var _this = _super.call(this) || this;
         _this.target = target;
-        _this.component = preact_1.h(ResultComponent_1["default"], { target: target, itemsPerPage: itemsPerPage, promote: promote, exclude: exclude, filter: filter, highlightsEnabled: highlightsEnabled, classNames: __assign({}, ResultComponent_1["default"].defaultProps.classNames, classNames), template: __assign({}, ResultComponent_1["default"].defaultProps.template, template), formatData: formatData });
+        _this.component = preact_1.h(ResultComponent_1["default"], { target: target, fields: fields, itemsPerPage: itemsPerPage, promote: promote, exclude: exclude, filter: filter, highlightsEnabled: highlightsEnabled, classNames: __assign({}, ResultComponent_1["default"].defaultProps.classNames, classNames), template: __assign({}, ResultComponent_1["default"].defaultProps.template, template), formatData: formatData });
         return _this;
     }
     /**

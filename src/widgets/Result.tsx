@@ -13,6 +13,7 @@ class Result extends Widget {
      * Constructor
      *
      * @param target
+     * @param fields
      * @param itemsPerPage
      * @param promote
      * @param exclude
@@ -24,6 +25,7 @@ class Result extends Widget {
      */
     constructor({
         target,
+        fields,
         itemsPerPage,
         promote,
         exclude,
@@ -37,6 +39,7 @@ class Result extends Widget {
         this.target = target;
         this.component = <ResultComponent
             target={target}
+            fields={fields}
             itemsPerPage={itemsPerPage}
             promote={promote}
             exclude={exclude}

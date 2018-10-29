@@ -35,6 +35,7 @@ class ResultComponent extends Component<ResultProps> {
                     ? itemUUID
                     : ItemUUID.createFromArray(itemUUID)
             }),
+            props.fields,
             props.filter
         );
     }
@@ -98,6 +99,7 @@ class ResultComponent extends Component<ResultProps> {
 }
 
 ResultComponent.defaultProps = {
+    fields: [],
     itemsPerPage: 10,
     highlightsEnabled: false,
     promote: [],
