@@ -75,7 +75,7 @@ class SearchInput extends Widget{
             currentQuery: store.getCurrentQuery(),
             htmlNodeInheritProps: {
                 autocomplete: 'off',
-                spellcheck: 0
+                spellcheck: false
             }
         };
 
