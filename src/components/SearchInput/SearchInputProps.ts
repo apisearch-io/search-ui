@@ -27,6 +27,6 @@ export interface SearchInputProps {
     currentQuery?: Query;
     htmlNodeInheritProps?: {
         autocomplete?: string,
-        spellcheck?: number,
+        spellcheck?: boolean,
     };
 }
