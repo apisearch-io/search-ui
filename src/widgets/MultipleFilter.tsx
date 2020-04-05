@@ -20,6 +20,7 @@ class MultipleFilter extends Widget {
      * @param fetchLimit
      * @param viewLimit
      * @param sortBy
+     * @param ranges
      * @param classNames
      * @param template
      * @param formatData
@@ -33,6 +34,7 @@ class MultipleFilter extends Widget {
         fetchLimit,
         viewLimit,
         sortBy,
+        ranges,
         classNames,
         template,
         formatData
@@ -48,6 +50,7 @@ class MultipleFilter extends Widget {
             fetchLimit={fetchLimit}
             viewLimit={viewLimit}
             sortBy={sortBy}
+            ranges={ranges}
             classNames={{
                 ...MultipleFilterComponent.defaultProps.classNames,
                 ...classNames

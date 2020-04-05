@@ -41,6 +41,7 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
         const aggregationField = props.aggregationField;
         const applicationType = props.applicationType;
         const sortBy = props.sortBy;
+        const ranges = props.ranges;
         const fetchLimit = props.fetchLimit;
         const viewLimit = props.viewLimit;
         const currentQuery = props.currentQuery;
@@ -69,7 +70,8 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
             ),
             applicationType,
             sortBy,
-            fetchLimit
+            fetchLimit,
+            ranges
         );
     }
 
@@ -127,6 +129,7 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
         const aggregationField = props.aggregationField;
         const applicationType = props.applicationType;
         const sortBy = props.sortBy;
+        const ranges = props.ranges;
         const fetchLimit = props.fetchLimit;
         const repository = props.repository;
         const currentQuery = props.currentQuery;
@@ -160,7 +163,8 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
             ),
             applicationType,
             sortBy,
-            fetchLimit
+            fetchLimit,
+            ranges
         );
     };
 
@@ -279,6 +283,7 @@ MultipleFilterComponent.defaultProps = {
     fetchLimit: 10,
     viewLimit: null,
     sortBy: ['_term', 'desc'],
+    ranges: [],
     classNames: {
         container: '',
         top: '',

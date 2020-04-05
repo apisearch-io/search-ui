@@ -1,6 +1,6 @@
 import {Dispatcher} from "flux";
 
-import apisearch, {KeyValueCache} from "apisearch";
+import apisearch from "apisearch";
 import ApisearchUI from "./ApisearchUI";
 import container from "./Container";
 import Store from "./Store";

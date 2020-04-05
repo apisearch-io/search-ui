@@ -79,6 +79,7 @@
             </div>
         </div>
         <div class="column is-2">
+            <div class="multiple-filter-decade" style="margin-bottom: 1rem"></div>
             <div class="multiple-filter-year" style="margin-bottom: 1rem"></div>
         </div>
     </div>
@@ -133,6 +134,18 @@
             sortBy: ['_count', 'desc'],
             template: {
                 top: 'Genre'
+            }
+        }),
+        ui.widgets.multipleFilter({
+            target: '.multiple-filter-decade',
+            filterName: 'decade',
+            filterField: 'year',
+            fetchLimit: 30,
+            viewLimit: 15,
+            sortBy: ['_count', 'desc'],
+            ranges: ['..1950', '1950..1970', '1970..2000', '2000..2010', '2010..'],
+            template: {
+                top: 'Decade'
             }
         }),
         ui.widgets.multipleFilter({

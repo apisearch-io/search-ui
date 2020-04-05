@@ -2,3 +2,4 @@
 *.log
 /.nyc_output/
 /coverage/
+src/styles/.sass-cache

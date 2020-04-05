@@ -14,6 +14,7 @@ export interface MultipleFilterProps {
     fetchLimit: number;
     viewLimit: number;
     sortBy: [string, string];
+    ranges: string[];
     classNames: {
         container: string,
         top: string,

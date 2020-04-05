@@ -1,6 +1,6 @@
 import { h, render } from "preact";
 
-import {KeyValueCache, Repository} from "apisearch";
+import {Repository} from "apisearch";
 import apisearch from "apisearch";
 import { initialDataFetchAction } from "./ApisearchActions";
 import {bootstrap} from "./Bootstrap";
