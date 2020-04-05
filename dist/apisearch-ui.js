@@ -107,7 +107,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 exports.__esModule = true;
 var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var NoCache_1 = __webpack_require__(/*! ./Cache/NoCache */ "./node_modules/apisearch/lib/Cache/NoCache.js");
 var AxiosClient_1 = __webpack_require__(/*! ./Http/AxiosClient */ "./node_modules/apisearch/lib/Http/AxiosClient.js");
 var RetryMap_1 = __webpack_require__(/*! ./Http/RetryMap */ "./node_modules/apisearch/lib/Http/RetryMap.js");
 var Query_1 = __webpack_require__(/*! ./Query/Query */ "./node_modules/apisearch/lib/Query/Query.js");
@@ -133,13 +132,13 @@ var Apisearch = /** @class */ (function () {
      */
     Apisearch.createRepository = function (config) {
         Apisearch.ensureRepositoryConfigIsValid(config);
-        config.options = tslib_1.__assign({ api_version: "v1", cache: new NoCache_1.NoCache(), timeout: 5000, override_queries: true }, config.options);
+        config.options = tslib_1.__assign({ api_version: "v1", override_queries: true, retry_map_config: [], timeout: 5000 }, config.options);
         /**
          * Client
          */
         var httpClient = typeof config.options.http_client !== "undefined"
             ? config.options.http_client
-            : new AxiosClient_1.AxiosClient(config.options.endpoint, config.options.api_version, config.options.timeout, new RetryMap_1.RetryMap(), config.options.override_queries, config.options.cache);
+            : new AxiosClient_1.AxiosClient(config.options.endpoint, config.options.api_version, config.options.timeout, RetryMap_1.RetryMap.createFromArray(config.options.retry_map_config), config.options.override_queries);
         return new HttpRepository_1.HttpRepository(httpClient, config.app_id, config.index_id, config.token, new Transformer_1.Transformer());
     };
     /**
@@ -231,7 +230,7 @@ var Apisearch = /** @class */ (function () {
      * @return {Result}
      */
     Apisearch.createEmptyResult = function () {
-        return Result_1.Result.create('', 0, 0, new ResultAggregations_1.ResultAggregations(0), [], []);
+        return Result_1.Result.create("", 0, 0, new ResultAggregations_1.ResultAggregations(0), [], []);
     };
     /**
      * Create empty sortby
@@ -244,133 +243,6 @@ var Apisearch = /** @class */ (function () {
     return Apisearch;
 }());
 exports["default"] = Apisearch;
-
-
-/***/ }),
-
-/***/ "./node_modules/apisearch/lib/Cache/InMemoryCache.js":
-/*!***********************************************************!*\
-  !*** ./node_modules/apisearch/lib/Cache/InMemoryCache.js ***!
-  \***********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/**
- * Cache class
- */
-var InMemoryCache = /** @class */ (function () {
-    /**
-     * Constructor
-     */
-    function InMemoryCache() {
-        this.cache = {};
-        this.size = 0;
-        this.cache = {};
-        this.size = 0;
-    }
-    /**
-     * Set cache element
-     *
-     * @param key
-     * @param value
-     *
-     * @returns {void}
-     */
-    InMemoryCache.prototype.set = function (key, value) {
-        var _a;
-        this.cache = tslib_1.__assign({}, this.cache, (_a = {}, _a[key] = value, _a));
-        this.size = this.size + 1;
-    };
-    /**
-     * Get element from cache
-     *
-     * @param key
-     *
-     * @returns {any}
-     */
-    InMemoryCache.prototype.get = function (key) {
-        return this.cache[key];
-    };
-    /**
-     * Deletes element from cache
-     *
-     * @param key
-     */
-    InMemoryCache.prototype.del = function (key) {
-        delete this.cache[key];
-    };
-    /**
-     * Clear cache
-     */
-    InMemoryCache.prototype.clear = function () {
-        this.cache = {};
-        this.size = 0;
-    };
-    return InMemoryCache;
-}());
-exports.InMemoryCache = InMemoryCache;
-
-
-/***/ }),
-
-/***/ "./node_modules/apisearch/lib/Cache/NoCache.js":
-/*!*****************************************************!*\
-  !*** ./node_modules/apisearch/lib/Cache/NoCache.js ***!
-  \*****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-/**
- * Cache class
- */
-var NoCache = /** @class */ (function () {
-    function NoCache() {
-    }
-    /**
-     * Set cache element
-     *
-     * @param key
-     * @param value
-     *
-     * @returns {void}
-     */
-    NoCache.prototype.set = function (key, value) {
-        // Empty
-    };
-    /**
-     * Get element from cache
-     *
-     * @param key
-     *
-     * @returns {any}
-     */
-    NoCache.prototype.get = function (key) {
-        return undefined;
-    };
-    /**
-     * Deletes element from cache
-     *
-     * @param key
-     */
-    NoCache.prototype.del = function (key) {
-        // Empty
-    };
-    /**
-     * Clear cache
-     */
-    NoCache.prototype.clear = function () {
-        // Empty
-    };
-    return NoCache;
-}());
-exports.NoCache = NoCache;
 
 
 /***/ }),
@@ -1085,6 +957,41 @@ exports.ResourceNotAvailableError = ResourceNotAvailableError;
 
 /***/ }),
 
+/***/ "./node_modules/apisearch/lib/Error/UnknownError.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/apisearch/lib/Error/UnknownError.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var ErrorWithMessage_1 = __webpack_require__(/*! ./ErrorWithMessage */ "./node_modules/apisearch/lib/Error/ErrorWithMessage.js");
+/**
+ * Connection error
+ */
+var UnknownError = /** @class */ (function (_super) {
+    tslib_1.__extends(UnknownError, _super);
+    function UnknownError() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    /**
+     * Unknown error
+     *
+     * @return this
+     */
+    UnknownError.createUnknownError = function () {
+        return new this("Unknown error.");
+    };
+    return UnknownError;
+}(ErrorWithMessage_1.ErrorWithMessage));
+exports.UnknownError = UnknownError;
+
+
+/***/ }),
+
 /***/ "./node_modules/apisearch/lib/Error/UnsupportedContentTypeError.js":
 /*!*************************************************************************!*\
   !*** ./node_modules/apisearch/lib/Error/UnsupportedContentTypeError.js ***!
@@ -1355,6 +1262,7 @@ exports.Square = Square;
 exports.__esModule = true;
 var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var axios_1 = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+var __1 = __webpack_require__(/*! .. */ "./node_modules/apisearch/lib/index.js");
 var Client_1 = __webpack_require__(/*! ./Client */ "./node_modules/apisearch/lib/Http/Client.js");
 var Response_1 = __webpack_require__(/*! ./Response */ "./node_modules/apisearch/lib/Http/Response.js");
 /**
@@ -1370,13 +1278,11 @@ var AxiosClient = /** @class */ (function (_super) {
      * @param timeout
      * @param retryMap
      * @param overrideQueries
-     * @param cache
      */
-    function AxiosClient(host, version, timeout, retryMap, overrideQueries, cache) {
+    function AxiosClient(host, version, timeout, retryMap, overrideQueries) {
         var _this = _super.call(this, version, retryMap) || this;
         _this.host = host;
         _this.timeout = timeout;
-        _this.cache = cache;
         _this.overrideQueries = overrideQueries;
         _this.cancelToken = {};
         return _this;
@@ -1396,51 +1302,66 @@ var AxiosClient = /** @class */ (function (_super) {
         if (parameters === void 0) { parameters = {}; }
         if (data === void 0) { data = {}; }
         return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var that;
+            var headers, axiosRequestConfig, sendRequest, retry, axiosResponse, error_1, response;
             var _this = this;
             return tslib_1.__generator(this, function (_a) {
-                that = this;
-                url = url.replace(/^\/*|\/*$/g, "");
-                url = "/" + (this.version + "/" + url).replace(/^\/*|\/*$/g, "");
-                method = method.toLowerCase();
-                if ("get" === method &&
-                    this.overrideQueries) {
-                    this.abort(url);
-                }
-                return [2 /*return*/, new Promise(function (resolve, reject) {
-                        var headers = "get" == method
+                switch (_a.label) {
+                    case 0:
+                        url = url.replace(/^\/*|\/*$/g, "");
+                        url = "/" + (this.version + "/" + url).replace(/^\/*|\/*$/g, "");
+                        method = method.toLowerCase();
+                        if ("get" === method &&
+                            this.overrideQueries) {
+                            this.abort(url);
+                        }
+                        headers = "get" === method
                             ? {}
                             : {
                                 "Content-Encoding": "gzip",
                                 "Content-Type": "application/json"
                             };
-                        var axiosRequestConfig = {
-                            url: url + "?" + Client_1.Client.objectToUrlParameters(tslib_1.__assign({}, parameters, {
-                                'token': credentials.token
-                            })),
+                        axiosRequestConfig = {
+                            baseURL: this.host.replace(/\/*$/g, ""),
                             data: data,
                             headers: headers,
                             method: method,
-                            baseURL: that.host.replace(/\/*$/g, ""),
-                            timeout: that.timeout,
-                            transformRequest: [function (data) { return JSON.stringify(data); }]
+                            timeout: this.timeout,
+                            transformRequest: [function (rawData) { return JSON.stringify(rawData); }],
+                            url: url + "?" + Client_1.Client.objectToUrlParameters(tslib_1.__assign(tslib_1.__assign({}, parameters), {
+                                token: credentials.token
+                            }))
                         };
-                        if (typeof _this.cancelToken[url] != 'undefined') {
-                            axiosRequestConfig.cancelToken = _this.cancelToken[url].token;
+                        if (typeof this.cancelToken[url] !== "undefined") {
+                            axiosRequestConfig.cancelToken = this.cancelToken[url].token;
                         }
-                        axios_1["default"]
-                            .request(axiosRequestConfig)
-                            .then(function (axiosResponse) {
-                            var response = new Response_1.Response(axiosResponse.status, axiosResponse.data);
-                            return resolve(response);
-                        })["catch"](function (error) {
-                            if (error.response === undefined) {
-                                return;
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        sendRequest = function () { return tslib_1.__awaiter(_this, void 0, void 0, function () { return tslib_1.__generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, axios_1["default"].request(axiosRequestConfig)];
+                                case 1: return [2 /*return*/, _a.sent()];
                             }
-                            var response = new Response_1.Response(error.response.status, error.response.data);
-                            return reject(response);
-                        });
-                    })];
+                        }); }); };
+                        retry = this.retryMap.getRetry(axiosRequestConfig.url, axiosRequestConfig.method);
+                        return [4 /*yield*/, this.tryRequest(sendRequest, retry)];
+                    case 2:
+                        axiosResponse = _a.sent();
+                        return [2 /*return*/, new Response_1.Response(axiosResponse.status, axiosResponse.data)];
+                    case 3:
+                        error_1 = _a.sent();
+                        response = void 0;
+                        if (error_1.response) {
+                            response = new Response_1.Response(error_1.response.status, error_1.response.data);
+                        }
+                        else {
+                            response = new Response_1.Response(__1.ConnectionError.getTransportableHTTPError(), {
+                                message: "Connection failed or timed out"
+                            });
+                        }
+                        throw response;
+                    case 4: return [2 /*return*/];
+                }
             });
         });
     };
@@ -1451,7 +1372,7 @@ var AxiosClient = /** @class */ (function (_super) {
      * @param url
      */
     AxiosClient.prototype.abort = function (url) {
-        if (typeof this.cancelToken[url] != 'undefined') {
+        if (typeof this.cancelToken[url] !== "undefined") {
             this.cancelToken[url].cancel();
         }
         this.generateCancelToken(url);
@@ -1463,6 +1384,52 @@ var AxiosClient = /** @class */ (function (_super) {
      */
     AxiosClient.prototype.generateCancelToken = function (url) {
         this.cancelToken[url] = axios_1["default"].CancelToken.source();
+    };
+    /**
+     * Performs the request and maybe retries in case of failure
+     *
+     * @param sendRequest The function that, when called, will perform the HTTP request
+     * @param retry       If it's an instance of Retry and the request fails it will retry the request
+     *
+     * @return {Promise<AxiosResponse>}
+     */
+    AxiosClient.prototype.tryRequest = function (sendRequest, retry) {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var retries, millisecondsBetweenRetries, error_2;
+            return tslib_1.__generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        retries = 0;
+                        millisecondsBetweenRetries = 0;
+                        if (retry instanceof __1.Retry) {
+                            retries = retry.getRetries();
+                            millisecondsBetweenRetries = retry.getMicrosecondsBetweenRetries() / 1000;
+                        }
+                        _a.label = 1;
+                    case 1:
+                        if (false) {}
+                        _a.label = 2;
+                    case 2:
+                        _a.trys.push([2, 4, , 7]);
+                        return [4 /*yield*/, sendRequest()];
+                    case 3: return [2 /*return*/, _a.sent()];
+                    case 4:
+                        error_2 = _a.sent();
+                        if (retries <= 0) {
+                            throw error_2;
+                        }
+                        retries -= 1;
+                        if (!(millisecondsBetweenRetries > 0)) return [3 /*break*/, 6];
+                        return [4 /*yield*/, new Promise(function (resolve) { return setTimeout(resolve, millisecondsBetweenRetries); })];
+                    case 5:
+                        _a.sent();
+                        _a.label = 6;
+                    case 6: return [3 /*break*/, 7];
+                    case 7: return [3 /*break*/, 1];
+                    case 8: return [2 /*return*/];
+                }
+            });
+        });
     };
     return AxiosClient;
 }(Client_1.Client));
@@ -1685,20 +1652,23 @@ var RetryMap = /** @class */ (function () {
         this.retries = {};
     }
     /**
+     * Create from array
+     */
+    RetryMap.createFromArray = function (array) {
+        var retryMap = new RetryMap();
+        for (var _i = 0, array_1 = array; _i < array_1.length; _i++) {
+            var retryConfig = array_1[_i];
+            retryMap.addRetry(Retry_1.Retry.createFromArray(retryConfig));
+        }
+        return retryMap;
+    };
+    /**
      * Add retry
      *
      * @param retry
      */
     RetryMap.prototype.addRetry = function (retry) {
         this.retries[retry.getUrl() + "~~" + retry.getMethod()] = retry;
-    };
-    /**
-     * Create from array
-     */
-    RetryMap.createFromArray = function (array) {
-        var retryMap = new RetryMap();
-        retryMap.retries = array.map(function (retry) { return Retry_1.Retry.createFromArray(retry); });
-        return retryMap;
     };
     /**
      * Get retry
@@ -2441,7 +2411,7 @@ var Item = /** @class */ (function () {
      * @returns {{}}
      */
     Item.prototype.getAllMetadata = function () {
-        return tslib_1.__assign({}, this.metadata, this.indexedMetadata);
+        return tslib_1.__assign(tslib_1.__assign({}, this.metadata), this.indexedMetadata);
     };
     /**
      * Get
@@ -3234,6 +3204,7 @@ var InvalidFormatError_1 = __webpack_require__(/*! ../Error/InvalidFormatError *
 var Filter_3 = __webpack_require__(/*! ./Filter */ "./node_modules/apisearch/lib/Query/Filter.js");
 var ScoreStrategies_1 = __webpack_require__(/*! ./ScoreStrategies */ "./node_modules/apisearch/lib/Query/ScoreStrategies.js");
 var SortBy_1 = __webpack_require__(/*! ./SortBy */ "./node_modules/apisearch/lib/Query/SortBy.js");
+var IndexUUID_1 = __webpack_require__(/*! ../Model/IndexUUID */ "./node_modules/apisearch/lib/Model/IndexUUID.js");
 /**
  * Query constants
  */
@@ -3259,7 +3230,7 @@ var Query = /** @class */ (function () {
         this.aggregationsEnabled = true;
         this.suggestionsEnabled = false;
         this.highlightsEnabled = false;
-        this.filterFields = [];
+        this.searchableFields = [];
         this.minScore = exports.NO_MIN_SCORE;
         this.metadata = {};
         this.subqueries = {};
@@ -3384,7 +3355,7 @@ var Query = /** @class */ (function () {
         var _a;
         var fieldPath = Item_1.Item.getPathByField("type");
         if (values.length > 0) {
-            this.universeFilters = tslib_1.__assign({}, this.universeFilters, (_a = {}, _a["type"] = Filter_1.Filter.create(fieldPath, values, Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_FIELD), _a));
+            this.universeFilters = tslib_1.__assign(tslib_1.__assign({}, this.universeFilters), (_a = {}, _a["type"] = Filter_1.Filter.create(fieldPath, values, Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_FIELD), _a));
         }
         else {
             delete this.universeFilters.type;
@@ -3401,18 +3372,18 @@ var Query = /** @class */ (function () {
      * @return {Query}
      */
     Query.prototype.filterByTypes = function (values, aggregate, aggregationSort) {
+        var _a, _b;
         if (aggregate === void 0) { aggregate = true; }
         if (aggregationSort === void 0) { aggregationSort = Aggregation_2.AGGREGATION_SORT_BY_COUNT_DESC; }
-        var _a, _b;
         var fieldPath = Item_1.Item.getPathByField("type");
         if (values.length > 0) {
-            this.filters = tslib_1.__assign({}, this.filters, (_a = {}, _a["type"] = Filter_1.Filter.create(fieldPath, values, Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_FIELD), _a));
+            this.filters = tslib_1.__assign(tslib_1.__assign({}, this.filters), (_a = {}, _a["type"] = Filter_1.Filter.create(fieldPath, values, Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_FIELD), _a));
         }
         else {
             delete this.filters.type;
         }
         if (aggregate) {
-            this.aggregations = tslib_1.__assign({}, this.aggregations, (_b = {}, _b["type"] = Aggregation_1.Aggregation.create("type", fieldPath, Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_FIELD, [], aggregationSort), _b));
+            this.aggregations = tslib_1.__assign(tslib_1.__assign({}, this.aggregations), (_b = {}, _b["type"] = Aggregation_1.Aggregation.create("type", fieldPath, Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_FIELD, [], aggregationSort), _b));
         }
         return this;
     };
@@ -3427,7 +3398,7 @@ var Query = /** @class */ (function () {
         var _a;
         var fieldPath = Item_1.Item.getPathByField("id");
         if (values.length > 0) {
-            this.universeFilters = tslib_1.__assign({}, this.universeFilters, (_a = {}, _a["id"] = Filter_1.Filter.create(fieldPath, values, Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_FIELD), _a));
+            this.universeFilters = tslib_1.__assign(tslib_1.__assign({}, this.universeFilters), (_a = {}, _a["id"] = Filter_1.Filter.create(fieldPath, values, Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_FIELD), _a));
         }
         else {
             delete this.universeFilters.id;
@@ -3445,7 +3416,7 @@ var Query = /** @class */ (function () {
         var _a;
         var fieldPath = Item_1.Item.getPathByField("id");
         if (values.length > 0) {
-            this.filters = tslib_1.__assign({}, this.filters, (_a = {}, _a["id"] = Filter_1.Filter.create(fieldPath, values, Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_FIELD), _a));
+            this.filters = tslib_1.__assign(tslib_1.__assign({}, this.filters), (_a = {}, _a["id"] = Filter_1.Filter.create(fieldPath, values, Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_FIELD), _a));
         }
         else {
             delete this.filters.id;
@@ -3462,11 +3433,11 @@ var Query = /** @class */ (function () {
      * @return {Query}
      */
     Query.prototype.filterUniverseBy = function (field, values, applicationType) {
-        if (applicationType === void 0) { applicationType = Filter_2.FILTER_AT_LEAST_ONE; }
         var _a;
+        if (applicationType === void 0) { applicationType = Filter_2.FILTER_AT_LEAST_ONE; }
         var fieldPath = Item_1.Item.getPathByField(field);
         if (values.length > 0) {
-            this.universeFilters = tslib_1.__assign({}, this.universeFilters, (_a = {}, _a[field] = Filter_1.Filter.create(fieldPath, values, applicationType, Filter_2.FILTER_TYPE_FIELD), _a));
+            this.universeFilters = tslib_1.__assign(tslib_1.__assign({}, this.universeFilters), (_a = {}, _a[field] = Filter_1.Filter.create(fieldPath, values, applicationType, Filter_2.FILTER_TYPE_FIELD), _a));
         }
         else {
             delete this.universeFilters[field];
@@ -3486,13 +3457,13 @@ var Query = /** @class */ (function () {
      * @return {Query}
      */
     Query.prototype.filterBy = function (filterName, field, values, applicationType, aggregate, aggregationSort) {
+        var _a;
         if (applicationType === void 0) { applicationType = Filter_2.FILTER_AT_LEAST_ONE; }
         if (aggregate === void 0) { aggregate = true; }
         if (aggregationSort === void 0) { aggregationSort = Aggregation_2.AGGREGATION_SORT_BY_COUNT_DESC; }
-        var _a;
         var fieldPath = Item_1.Item.getPathByField(field);
         if (values.length > 0) {
-            this.filters = tslib_1.__assign({}, this.filters, (_a = {}, _a[filterName] = Filter_1.Filter.create(fieldPath, values, applicationType, Filter_2.FILTER_TYPE_FIELD), _a));
+            this.filters = tslib_1.__assign(tslib_1.__assign({}, this.filters), (_a = {}, _a[filterName] = Filter_1.Filter.create(fieldPath, values, applicationType, Filter_2.FILTER_TYPE_FIELD), _a));
         }
         else {
             delete this.filters[filterName];
@@ -3513,12 +3484,12 @@ var Query = /** @class */ (function () {
      * @return {Query}
      */
     Query.prototype.filterUniverseByRange = function (field, values, applicationType, rangeType) {
+        var _a;
         if (applicationType === void 0) { applicationType = Filter_2.FILTER_AT_LEAST_ONE; }
         if (rangeType === void 0) { rangeType = Filter_2.FILTER_TYPE_RANGE; }
-        var _a;
         var fieldPath = Item_1.Item.getPathByField(field);
         if (values.length > 0) {
-            this.universeFilters = tslib_1.__assign({}, this.universeFilters, (_a = {}, _a[field] = Filter_1.Filter.create(fieldPath, values, applicationType, rangeType), _a));
+            this.universeFilters = tslib_1.__assign(tslib_1.__assign({}, this.universeFilters), (_a = {}, _a[field] = Filter_1.Filter.create(fieldPath, values, applicationType, rangeType), _a));
         }
         else {
             delete this.universeFilters[field];
@@ -3553,14 +3524,14 @@ var Query = /** @class */ (function () {
      * @return {Query}
      */
     Query.prototype.filterByRange = function (filterName, field, options, values, applicationType, rangeType, aggregate, aggregationSort) {
+        var _a;
         if (applicationType === void 0) { applicationType = Filter_2.FILTER_AT_LEAST_ONE; }
         if (rangeType === void 0) { rangeType = Filter_2.FILTER_TYPE_RANGE; }
         if (aggregate === void 0) { aggregate = true; }
         if (aggregationSort === void 0) { aggregationSort = Aggregation_2.AGGREGATION_SORT_BY_COUNT_DESC; }
-        var _a;
         var fieldPath = Item_1.Item.getPathByField(field);
         if (values.length !== 0) {
-            this.filters = tslib_1.__assign({}, this.filters, (_a = {}, _a[filterName] = Filter_1.Filter.create(fieldPath, values, applicationType, rangeType), _a));
+            this.filters = tslib_1.__assign(tslib_1.__assign({}, this.filters), (_a = {}, _a[filterName] = Filter_1.Filter.create(fieldPath, values, applicationType, rangeType), _a));
         }
         else {
             delete this.filters[filterName];
@@ -3598,18 +3569,18 @@ var Query = /** @class */ (function () {
      */
     Query.prototype.filterUniverseByLocation = function (locationRange) {
         var _a;
-        this.universeFilters = tslib_1.__assign({}, this.universeFilters, (_a = {}, _a["coordinate"] = Filter_1.Filter.create("coordinate", locationRange.toArray(), Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_GEO), _a));
+        this.universeFilters = tslib_1.__assign(tslib_1.__assign({}, this.universeFilters), (_a = {}, _a["coordinate"] = Filter_1.Filter.create("coordinate", locationRange.toArray(), Filter_2.FILTER_AT_LEAST_ONE, Filter_2.FILTER_TYPE_GEO), _a));
         return this;
     };
     /**
      * Set filter fields
      *
-     * @param filterFields
+     * @param searchableFields
      *
      * @return {Query}
      */
-    Query.prototype.setFilterFields = function (filterFields) {
-        this.filterFields = filterFields;
+    Query.prototype.setSearchableFields = function (searchableFields) {
+        this.searchableFields = searchableFields;
         return this;
     };
     /**
@@ -3617,8 +3588,8 @@ var Query = /** @class */ (function () {
      *
      * @return {string[]}
      */
-    Query.prototype.getFilterFields = function () {
-        return this.filterFields;
+    Query.prototype.getSearchableFields = function () {
+        return this.searchableFields;
     };
     /**
      * Sort by
@@ -3649,10 +3620,10 @@ var Query = /** @class */ (function () {
      * @return {Query}
      */
     Query.prototype.aggregateBy = function (filterName, field, applicationType, aggregationSort, limit) {
+        var _a;
         if (aggregationSort === void 0) { aggregationSort = Aggregation_2.AGGREGATION_SORT_BY_COUNT_DESC; }
         if (limit === void 0) { limit = Aggregation_2.AGGREGATION_NO_LIMIT; }
-        var _a;
-        this.aggregations = tslib_1.__assign({}, this.aggregations, (_a = {}, _a[filterName] = Aggregation_1.Aggregation.create(filterName, Item_1.Item.getPathByField(field), applicationType, Filter_2.FILTER_TYPE_FIELD, [], aggregationSort, limit), _a));
+        this.aggregations = tslib_1.__assign(tslib_1.__assign({}, this.aggregations), (_a = {}, _a[filterName] = Aggregation_1.Aggregation.create(filterName, Item_1.Item.getPathByField(field), applicationType, Filter_2.FILTER_TYPE_FIELD, [], aggregationSort, limit), _a));
         return this;
     };
     /**
@@ -3669,14 +3640,14 @@ var Query = /** @class */ (function () {
      * @return {Query}
      */
     Query.prototype.aggregateByRange = function (filterName, field, options, applicationType, rangeType, aggregationSort, limit) {
+        var _a;
         if (rangeType === void 0) { rangeType = Filter_2.FILTER_TYPE_RANGE; }
         if (aggregationSort === void 0) { aggregationSort = Aggregation_2.AGGREGATION_SORT_BY_COUNT_DESC; }
         if (limit === void 0) { limit = Aggregation_2.AGGREGATION_NO_LIMIT; }
-        var _a;
         if (options.length === 0) {
             return this;
         }
-        this.aggregations = tslib_1.__assign({}, this.aggregations, (_a = {}, _a[filterName] = Aggregation_1.Aggregation.create(filterName, Item_1.Item.getPathByField(field), applicationType, rangeType, options, aggregationSort, limit), _a));
+        this.aggregations = tslib_1.__assign(tslib_1.__assign({}, this.aggregations), (_a = {}, _a[filterName] = Aggregation_1.Aggregation.create(filterName, Item_1.Item.getPathByField(field), applicationType, rangeType, options, aggregationSort, limit), _a));
         return this;
     };
     /**
@@ -3974,12 +3945,12 @@ var Query = /** @class */ (function () {
      * @return {Query}
      */
     Query.prototype.excludeUUIDs = function () {
+        var _a;
         var uuids = [];
         for (var _i = 0; _i < arguments.length; _i++) {
             uuids[_i] = arguments[_i];
         }
-        var _a;
-        this.filters = tslib_1.__assign({}, this.filters, (_a = {}, _a["excluded_ids"] = Filter_1.Filter.create("_id", uuids.map(function (uuid) { return uuid.composedUUID(); }), Filter_2.FILTER_EXCLUDE, Filter_2.FILTER_TYPE_FIELD), _a));
+        this.filters = tslib_1.__assign(tslib_1.__assign({}, this.filters), (_a = {}, _a["excluded_ids"] = Filter_1.Filter.create("_id", uuids.map(function (uuid) { return uuid.composedUUID(); }), Filter_2.FILTER_EXCLUDE, Filter_2.FILTER_TYPE_FIELD), _a));
         return this;
     };
     /**
@@ -4134,6 +4105,25 @@ var Query = /** @class */ (function () {
         return this.UUID;
     };
     /**
+     * Force Index UUID.
+     *
+     * @param indexUUID
+     *
+     * @return {Query}
+     */
+    Query.prototype.forceIndexUUID = function (indexUUID) {
+        this.indexUUID = indexUUID;
+        return this;
+    };
+    /**
+     * Get IndexUUID
+     *
+     * @return {IndexUUID|null}
+     */
+    Query.prototype.getIndexUUID = function () {
+        return this.indexUUID;
+    };
+    /**
      * To array
      *
      * @return {any}
@@ -4227,9 +4217,9 @@ var Query = /** @class */ (function () {
         /**
          * Filter fields
          */
-        if (this.filterFields instanceof Array &&
-            this.filterFields.length > 0) {
-            array.filter_fields = this.filterFields;
+        if (this.searchableFields instanceof Array &&
+            this.searchableFields.length > 0) {
+            array.searchable_fields = this.searchableFields;
         }
         /**
          * Score strategies
@@ -4254,10 +4244,7 @@ var Query = /** @class */ (function () {
          * User
          */
         if (this.user instanceof User_1.User) {
-            var userAsArray = this.user.toArray();
-            if (Object.keys(userAsArray).length > 0) {
-                array.user = userAsArray;
-            }
+            array.user = this.user.toArray();
         }
         array.metadata = this.metadata;
         if (this.subqueries instanceof Object &&
@@ -4267,6 +4254,9 @@ var Query = /** @class */ (function () {
                 var subquery = this.subqueries[i];
                 array.subqueries[i] = subquery.toArray();
             }
+        }
+        if (this.indexUUID instanceof IndexUUID_1.IndexUUID) {
+            array.index_uuid = this.indexUUID.toArray();
         }
         /**
          * items promoted
@@ -4380,14 +4370,17 @@ var Query = /** @class */ (function () {
         query.metadata = typeof array.metadata === typeof {}
             ? array.metadata
             : {};
-        query.filterFields = array.filter_fields instanceof Array
-            ? array.filter_fields
+        query.searchableFields = array.searchable_fields instanceof Array
+            ? array.searchable_fields
             : [];
         query.scoreStrategies = array.score_strategies instanceof Object
             ? ScoreStrategies_1.ScoreStrategies.createFromArray(array.score_strategies)
             : undefined;
         query.user = array.user instanceof Object
             ? User_1.User.createFromArray(array.user)
+            : undefined;
+        query.indexUUID = array.index_uuid instanceof Object
+            ? IndexUUID_1.IndexUUID.createFromArray(array.index_uuid)
             : undefined;
         return query;
     };
@@ -4411,8 +4404,8 @@ exports.__esModule = true;
 /**
  * Aggregation constants
  */
-exports.RANGE_ZERO = 0;
-exports.RANGE_INFINITE = -1;
+exports.RANGE_MINUS_INFINITE = null;
+exports.RANGE_INFINITE = null;
 exports.RANGE_SEPARATOR = "..";
 /**
  * Filter class
@@ -4431,7 +4424,7 @@ var Range = /** @class */ (function () {
         var parts = string.split(exports.RANGE_SEPARATOR);
         var from = parts[0];
         var to = parts[1];
-        var finalFrom = exports.RANGE_ZERO;
+        var finalFrom = exports.RANGE_MINUS_INFINITE;
         var finalTo = exports.RANGE_INFINITE;
         if (from != "") {
             finalFrom = parseInt(from);
@@ -4450,7 +4443,7 @@ var Range = /** @class */ (function () {
      */
     Range.arrayToString = function (values) {
         var finalValues = ["", ""];
-        if (values[0] != exports.RANGE_ZERO) {
+        if (values[0] != exports.RANGE_MINUS_INFINITE) {
             finalValues[0] = String(values[0]);
         }
         if (values[1] != exports.RANGE_INFINITE) {
@@ -5173,11 +5166,13 @@ var InvalidFormatError_1 = __webpack_require__(/*! ../Error/InvalidFormatError *
 var InvalidTokenError_1 = __webpack_require__(/*! ../Error/InvalidTokenError */ "./node_modules/apisearch/lib/Error/InvalidTokenError.js");
 var ResourceExistsError_1 = __webpack_require__(/*! ../Error/ResourceExistsError */ "./node_modules/apisearch/lib/Error/ResourceExistsError.js");
 var ResourceNotAvailableError_1 = __webpack_require__(/*! ../Error/ResourceNotAvailableError */ "./node_modules/apisearch/lib/Error/ResourceNotAvailableError.js");
+var UnknownError_1 = __webpack_require__(/*! ../Error/UnknownError */ "./node_modules/apisearch/lib/Error/UnknownError.js");
+var Response_1 = __webpack_require__(/*! ../Http/Response */ "./node_modules/apisearch/lib/Http/Response.js");
+var Index_1 = __webpack_require__(/*! ../Model/Index */ "./node_modules/apisearch/lib/Model/Index.js");
 var Item_1 = __webpack_require__(/*! ../Model/Item */ "./node_modules/apisearch/lib/Model/Item.js");
 var ItemUUID_1 = __webpack_require__(/*! ../Model/ItemUUID */ "./node_modules/apisearch/lib/Model/ItemUUID.js");
 var Result_1 = __webpack_require__(/*! ../Result/Result */ "./node_modules/apisearch/lib/Result/Result.js");
 var Repository_1 = __webpack_require__(/*! ./Repository */ "./node_modules/apisearch/lib/Repository/Repository.js");
-var Index_1 = __webpack_require__(/*! ../Model/Index */ "./node_modules/apisearch/lib/Model/Index.js");
 /**
  * Aggregation class
  */
@@ -5210,6 +5205,8 @@ var HttpRepository = /** @class */ (function (_super) {
      * Generate item document by a simple object.
      *
      * @param object
+     *
+     * @returns {void}
      */
     HttpRepository.prototype.addObject = function (object) {
         var item = this
@@ -5223,6 +5220,8 @@ var HttpRepository = /** @class */ (function (_super) {
      * Delete item document by uuid.
      *
      * @param object
+     *
+     * @returns {void}
      */
     HttpRepository.prototype.deleteObject = function (object) {
         var itemUUID = this
@@ -5235,120 +5234,125 @@ var HttpRepository = /** @class */ (function (_super) {
     /**
      * Flush update items
      *
-     * @param itemsToUpdate
+     * @param {Item[]} itemsToUpdate
      *
      * @return {Promise<void>}
      */
     HttpRepository.prototype.flushUpdateItems = function (itemsToUpdate) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var response_1;
             return tslib_1.__generator(this, function (_a) {
-                if (itemsToUpdate.length === 0) {
-                    return [2 /*return*/];
+                switch (_a.label) {
+                    case 0:
+                        if (itemsToUpdate.length === 0) {
+                            return [2 /*return*/];
+                        }
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, this.httpClient.get("/" + this.appId + "/indices/" + this.indexId + "/items", "put", this.getCredentials(), {}, itemsToUpdate.map(function (item) {
+                                return item.toArray();
+                            }))];
+                    case 2:
+                        _a.sent();
+                        return [3 /*break*/, 4];
+                    case 3:
+                        response_1 = _a.sent();
+                        throw this.createErrorFromResponse(response_1);
+                    case 4: return [2 /*return*/];
                 }
-                return [2 /*return*/, this
-                        .httpClient
-                        .get("/" + this.appId + "/indices/" + this.indexId + "/items", "put", this.getCredentials(), {}, itemsToUpdate.map(function (item) {
-                        return item.toArray();
-                    }))
-                        .then(function (response) {
-                        HttpRepository.throwTransportableExceptionIfNeeded(response);
-                    })];
             });
         });
     };
     /**
      * Flush delete items
      *
-     * @param itemsToDelete
+     * @param {ItemUUID[]} itemsToDelete
      *
      * @return {Promise<void>}
      */
     HttpRepository.prototype.flushDeleteItems = function (itemsToDelete) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var response_2;
             return tslib_1.__generator(this, function (_a) {
-                if (itemsToDelete.length === 0) {
-                    return [2 /*return*/];
+                switch (_a.label) {
+                    case 0:
+                        if (itemsToDelete.length === 0) {
+                            return [2 /*return*/];
+                        }
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, this.httpClient.get("/" + this.appId + "/indices/" + this.indexId + "/items", "delete", this.getCredentials(), {}, itemsToDelete.map(function (itemUUID) {
+                                return itemUUID.toArray();
+                            }))];
+                    case 2:
+                        _a.sent();
+                        return [3 /*break*/, 4];
+                    case 3:
+                        response_2 = _a.sent();
+                        throw this.createErrorFromResponse(response_2);
+                    case 4: return [2 /*return*/];
                 }
-                return [2 /*return*/, this
-                        .httpClient
-                        .get("/" + this.appId + "/indices/" + this.indexId + "/items", "delete", this.getCredentials(), {}, itemsToDelete.map(function (itemUUID) {
-                        return itemUUID.toArray();
-                    }))
-                        .then(function (response) {
-                        HttpRepository.throwTransportableExceptionIfNeeded(response);
-                    })];
             });
         });
     };
     /**
      * Query
      *
-     * @param query
+     * @param {Query} query
      *
      * @return {Promise<Result>}
      */
     HttpRepository.prototype.query = function (query) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var _this = this;
+            var response, response_3, result;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this
-                            .httpClient
-                            .get("/" + this.appId + "/indices/" + this.indexId, "get", this.getCredentials(), {
-                            query: JSON.stringify(query.toArray())
-                        }, {})
-                            .then(function (response) {
-                            HttpRepository.throwTransportableExceptionIfNeeded(response);
-                            var result = Result_1.Result.createFromArray(response.getBody());
-                            return _this.applyTransformersToResult(result);
-                        })];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.httpClient.get("/" + this.appId + "/indices/" + this.indexId, "get", this.getCredentials(), {
+                                query: JSON.stringify(query.toArray())
+                            }, {})];
+                    case 1:
+                        response = _a.sent();
+                        return [3 /*break*/, 3];
+                    case 2:
+                        response_3 = _a.sent();
+                        throw this.createErrorFromResponse(response_3);
+                    case 3:
+                        result = Result_1.Result.createFromArray(response.getBody());
+                        return [2 /*return*/, this.applyTransformersToResult(result)];
                 }
             });
         });
     };
     /**
-     * Apply transformers to results
-     *
-     * @param result
-     *
-     * @return {Result}
-     */
-    HttpRepository.prototype.applyTransformersToResult = function (result) {
-        var subresults = result.getSubresults();
-        if (Object.keys(subresults).length > 0) {
-            Object.keys(subresults).map(function (key) {
-                subresults[key] = this.applyTransformersToResult(subresults[key]);
-            }.bind(this));
-            return Result_1.Result.createMultiresults(subresults);
-        }
-        return Result_1.Result.create(result.getQueryUUID(), result.getTotalItems(), result.getTotalHits(), result.getAggregations(), result.getSuggests(), this
-            .transformer
-            .fromItems(result.getItems()));
-    };
-    /**
      * Update items
      *
-     * @param query
-     * @param changes
+     * @param {Query} query
+     * @param {Changes} changes
      *
      * @return {Promise<void>}
      */
     HttpRepository.prototype.updateItems = function (query, changes) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var response_4;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this
-                            .httpClient
-                            .get("/" + this.appId + "/indices/" + this.indexId + "/items/update-by-query", "post", this.getCredentials(), {}, {
-                            query: query.toArray(),
-                            changes: changes.toArray()
-                        })
-                            .then(function (response) {
-                            HttpRepository.throwTransportableExceptionIfNeeded(response);
-                            return;
-                        })];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.httpClient.get("/" + this.appId + "/indices/" + this.indexId + "/items/update-by-query", "put", this.getCredentials(), {}, {
+                                changes: changes.toArray(),
+                                query: query.toArray()
+                            })];
+                    case 1:
+                        _a.sent();
+                        return [3 /*break*/, 3];
+                    case 2:
+                        response_4 = _a.sent();
+                        throw this.createErrorFromResponse(response_4);
+                    case 3: return [2 /*return*/];
                 }
             });
         });
@@ -5356,26 +5360,26 @@ var HttpRepository = /** @class */ (function (_super) {
     /**
      * Create index
      *
-     * @param indexUUID
-     * @param config
+     * @param {IndexUUID} indexUUID
+     * @param {Config} config
      *
      * @return {Promise<void>}
      */
     HttpRepository.prototype.createIndex = function (indexUUID, config) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var response_5;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this
-                            .httpClient
-                            .get("/" + this.appId + "/indices", "put", this.getCredentials(), {}, {
-                            index: indexUUID.toArray(),
-                            config: config.toArray()
-                        })
-                            .then(function (response) {
-                            HttpRepository.throwTransportableExceptionIfNeeded(response);
-                            return;
-                        })];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.httpClient.get("/" + this.appId + "/indices/" + indexUUID.composedUUID(), "put", this.getCredentials(), {}, config.toArray())];
+                    case 1:
+                        _a.sent();
+                        return [3 /*break*/, 3];
+                    case 2:
+                        response_5 = _a.sent();
+                        throw this.createErrorFromResponse(response_5);
+                    case 3: return [2 /*return*/];
                 }
             });
         });
@@ -5383,22 +5387,25 @@ var HttpRepository = /** @class */ (function (_super) {
     /**
      * Delete index
      *
-     * @param indexUUID
+     * @param {IndexUUID} indexUUID
      *
      * @return {Promise<void>}
      */
     HttpRepository.prototype.deleteIndex = function (indexUUID) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var response_6;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this
-                            .httpClient
-                            .get("/" + this.appId + "/indices/" + this.indexId, "delete", this.getCredentials(), {}, {})
-                            .then(function (response) {
-                            HttpRepository.throwTransportableExceptionIfNeeded(response);
-                            return;
-                        })];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.httpClient.get("/" + this.appId + "/indices/" + this.indexId, "delete", this.getCredentials(), {}, {})];
+                    case 1:
+                        _a.sent();
+                        return [3 /*break*/, 3];
+                    case 2:
+                        response_6 = _a.sent();
+                        throw this.createErrorFromResponse(response_6);
+                    case 3: return [2 /*return*/];
                 }
             });
         });
@@ -5406,22 +5413,25 @@ var HttpRepository = /** @class */ (function (_super) {
     /**
      * Reset index
      *
-     * @param indexUUID
+     * @param {IndexUUID} indexUUID
      *
      * @return {Promise<void>}
      */
     HttpRepository.prototype.resetIndex = function (indexUUID) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var response_7;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this
-                            .httpClient
-                            .get("/" + this.appId + "/indices/" + this.indexId + '/reset', "post", this.getCredentials(), {}, {})
-                            .then(function (response) {
-                            HttpRepository.throwTransportableExceptionIfNeeded(response);
-                            return;
-                        })];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.httpClient.get("/" + this.appId + "/indices/" + this.indexId + "/reset", "put", this.getCredentials(), {}, {})];
+                    case 1:
+                        _a.sent();
+                        return [3 /*break*/, 3];
+                    case 2:
+                        response_7 = _a.sent();
+                        throw this.createErrorFromResponse(response_7);
+                    case 3: return [2 /*return*/];
                 }
             });
         });
@@ -5429,22 +5439,25 @@ var HttpRepository = /** @class */ (function (_super) {
     /**
      * Check index
      *
-     * @param indexUUID
+     * @param {IndexUUID} indexUUID
      *
      * @return {Promise<boolean>}
      */
     HttpRepository.prototype.checkIndex = function (indexUUID) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var response, response_8;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this
-                            .httpClient
-                            .get("/" + this.appId + "/indices/" + this.indexId + '/reset', "head", this.getCredentials(), {}, {})
-                            .then(function (response) {
-                            HttpRepository.throwTransportableExceptionIfNeeded(response);
-                            return response.getCode() === 200;
-                        })];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.httpClient.get("/" + this.appId + "/indices/" + this.indexId, "head", this.getCredentials(), {}, {})];
+                    case 1:
+                        response = _a.sent();
+                        return [3 /*break*/, 3];
+                    case 2:
+                        response_8 = _a.sent();
+                        throw this.createErrorFromResponse(response_8);
+                    case 3: return [2 /*return*/, response.getCode() === 200];
                 }
             });
         });
@@ -5456,21 +5469,25 @@ var HttpRepository = /** @class */ (function (_super) {
      */
     HttpRepository.prototype.getIndices = function () {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
-            return tslib_1.__generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this
-                            .httpClient
-                            .get("/" + this.appId + "/indices/", "get", this.getCredentials(), {}, {})
-                            .then(function (response) {
-                            HttpRepository.throwTransportableExceptionIfNeeded(response);
-                            var result = [];
-                            for (var _i = 0, _a = response.getBody(); _i < _a.length; _i++) {
-                                var indexAsArray = _a[_i];
-                                result.push(Index_1.Index.createFromArray(indexAsArray));
-                            }
-                            return result;
-                        })];
-                    case 1: return [2 /*return*/, _a.sent()];
+            var response, response_9, result, _i, _a, indexAsArray;
+            return tslib_1.__generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _b.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.httpClient.get("/" + this.appId + "/indices/", "get", this.getCredentials(), {}, {})];
+                    case 1:
+                        response = _b.sent();
+                        return [3 /*break*/, 3];
+                    case 2:
+                        response_9 = _b.sent();
+                        throw this.createErrorFromResponse(response_9);
+                    case 3:
+                        result = [];
+                        for (_i = 0, _a = response.getBody(); _i < _a.length; _i++) {
+                            indexAsArray = _a[_i];
+                            result.push(Index_1.Index.createFromArray(indexAsArray));
+                        }
+                        return [2 /*return*/, result];
                 }
             });
         });
@@ -5478,23 +5495,26 @@ var HttpRepository = /** @class */ (function (_super) {
     /**
      * Configure index
      *
-     * @param indexUUID
-     * @param config
+     * @param {IndexUUID} indexUUID
+     * @param {Config} config
      *
      * @return {Promise<void>}
      */
     HttpRepository.prototype.configureIndex = function (indexUUID, config) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var response_10;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this
-                            .httpClient
-                            .get("/" + this.appId + "/indices/" + this.indexId + '/configure', "post", this.getCredentials(), {}, config.toArray())
-                            .then(function (response) {
-                            HttpRepository.throwTransportableExceptionIfNeeded(response);
-                            return;
-                        })];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.httpClient.get("/" + this.appId + "/indices/" + this.indexId + "/configure", "put", this.getCredentials(), {}, config.toArray())];
+                    case 1:
+                        _a.sent();
+                        return [3 /*break*/, 3];
+                    case 2:
+                        response_10 = _a.sent();
+                        throw this.createErrorFromResponse(response_10);
+                    case 3: return [2 /*return*/];
                 }
             });
         });
@@ -5511,26 +5531,53 @@ var HttpRepository = /** @class */ (function (_super) {
         };
     };
     /**
-     * throw error if needed
+     * Apply transformers to results
      *
-     * @param response
+     * @param {Result} result
+     *
+     * @return {Result}
      */
-    HttpRepository.throwTransportableExceptionIfNeeded = function (response) {
-        if (typeof response.getCode() == "undefined") {
-            return;
+    HttpRepository.prototype.applyTransformersToResult = function (result) {
+        var subresults = result.getSubresults();
+        if (Object.keys(subresults).length > 0) {
+            Object.keys(subresults).map(function (key) {
+                subresults[key] = this.applyTransformersToResult(subresults[key]);
+            }.bind(this));
+            return Result_1.Result.createMultiresults(subresults);
         }
-        switch (response.getCode()) {
-            case ResourceNotAvailableError_1.ResourceNotAvailableError.getTransportableHTTPError():
-                throw new ResourceNotAvailableError_1.ResourceNotAvailableError(response.getBody().message);
-            case InvalidTokenError_1.InvalidTokenError.getTransportableHTTPError():
-                throw new InvalidTokenError_1.InvalidTokenError(response.getBody().message);
-            case InvalidFormatError_1.InvalidFormatError.getTransportableHTTPError():
-                throw new InvalidFormatError_1.InvalidFormatError(response.getBody().message);
-            case ResourceExistsError_1.ResourceExistsError.getTransportableHTTPError():
-                throw new ResourceExistsError_1.ResourceExistsError(response.getBody().message);
-            case ConnectionError_1.ConnectionError.getTransportableHTTPError():
-                throw new ConnectionError_1.ConnectionError(response.getBody().message);
+        return Result_1.Result.create(result.getQueryUUID(), result.getTotalItems(), result.getTotalHits(), result.getAggregations(), result.getSuggests(), this
+            .transformer
+            .fromItems(result.getItems()));
+    };
+    /**
+     * Create exception to match an error response
+     *
+     * @param any response
+     */
+    HttpRepository.prototype.createErrorFromResponse = function (response) {
+        var error;
+        if (response instanceof Response_1.Response) {
+            switch (response.getCode()) {
+                case ResourceNotAvailableError_1.ResourceNotAvailableError.getTransportableHTTPError():
+                    error = new ResourceNotAvailableError_1.ResourceNotAvailableError(response.getBody().message);
+                    break;
+                case InvalidTokenError_1.InvalidTokenError.getTransportableHTTPError():
+                    error = new InvalidTokenError_1.InvalidTokenError(response.getBody().message);
+                    break;
+                case InvalidFormatError_1.InvalidFormatError.getTransportableHTTPError():
+                    error = new InvalidFormatError_1.InvalidFormatError(response.getBody().message);
+                    break;
+                case ResourceExistsError_1.ResourceExistsError.getTransportableHTTPError():
+                    error = new ResourceExistsError_1.ResourceExistsError(response.getBody().message);
+                    break;
+                case ConnectionError_1.ConnectionError.getTransportableHTTPError():
+                    error = new ConnectionError_1.ConnectionError(response.getBody().message);
+                    break;
+            }
         }
+        return undefined === error
+            ? UnknownError_1.UnknownError.createUnknownError()
+            : error;
     };
     return HttpRepository;
 }(Repository_1.Repository));
@@ -5617,10 +5664,11 @@ var Repository = /** @class */ (function () {
      * @param bulkNumber
      * @param skipIfLess
      *
-     * @return {Promise<void>}
+     * @return {Promise<any[]>}
      */
     Repository.prototype.flush = function (bulkNumber, skipIfLess) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var promise, resetCachedElements;
             var _this = this;
             return tslib_1.__generator(this, function (_a) {
                 if (!bulkNumber) {
@@ -5633,20 +5681,21 @@ var Repository = /** @class */ (function () {
                     this.itemsToUpdate.length < bulkNumber) {
                     return [2 /*return*/];
                 }
-                return [2 /*return*/, Promise.all(Repository
-                        .chunkArray(this.itemsToUpdate, bulkNumber)
-                        .map(function (arrayOfItems) {
-                        return _this.flushUpdateItems(arrayOfItems);
-                    })
-                        .concat(Repository
-                        .chunkArray(this.itemsToDelete, bulkNumber)
-                        .map(function (arrayOfItemsUUID) {
-                        return _this.flushDeleteItems(arrayOfItemsUUID);
-                    }))).then(function (_) {
-                        _this.resetCachedElements();
-                    })["catch"](function (_) {
-                        _this.resetCachedElements();
-                    })];
+                promise = Promise.all(Repository
+                    .chunkArray(this.itemsToUpdate, bulkNumber)
+                    .map(function (arrayOfItems) {
+                    return _this.flushUpdateItems(arrayOfItems);
+                })
+                    .concat(Repository
+                    .chunkArray(this.itemsToDelete, bulkNumber)
+                    .map(function (arrayOfItemsUUID) {
+                    return _this.flushDeleteItems(arrayOfItemsUUID);
+                })));
+                resetCachedElements = function () {
+                    _this.resetCachedElements();
+                };
+                promise.then(resetCachedElements, resetCachedElements);
+                return [2 /*return*/, promise];
             });
         });
     };
@@ -6214,7 +6263,7 @@ var ResultAggregation = /** @class */ (function () {
      * @return {{}}
      */
     ResultAggregation.prototype.getAllElements = function () {
-        return tslib_1.__assign({}, this.activeElements, this.counters);
+        return tslib_1.__assign(tslib_1.__assign({}, this.activeElements), this.counters);
     };
     /**
      * Get total elements
@@ -6622,7 +6671,6 @@ exports.__esModule = true;
 var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var Apisearch_1 = __webpack_require__(/*! ./Apisearch */ "./node_modules/apisearch/lib/Apisearch.js");
 exports["default"] = Apisearch_1["default"];
-tslib_1.__exportStar(__webpack_require__(/*! ./Cache/InMemoryCache */ "./node_modules/apisearch/lib/Cache/InMemoryCache.js"), exports);
 tslib_1.__exportStar(__webpack_require__(/*! ./Config/Config */ "./node_modules/apisearch/lib/Config/Config.js"), exports);
 tslib_1.__exportStar(__webpack_require__(/*! ./Config/Synonym */ "./node_modules/apisearch/lib/Config/Synonym.js"), exports);
 tslib_1.__exportStar(__webpack_require__(/*! ./Error/ConnectionError */ "./node_modules/apisearch/lib/Error/ConnectionError.js"), exports);
@@ -6692,7 +6740,6 @@ var buildURL = __webpack_require__(/*! ./../helpers/buildURL */ "./node_modules/
 var parseHeaders = __webpack_require__(/*! ./../helpers/parseHeaders */ "./node_modules/axios/lib/helpers/parseHeaders.js");
 var isURLSameOrigin = __webpack_require__(/*! ./../helpers/isURLSameOrigin */ "./node_modules/axios/lib/helpers/isURLSameOrigin.js");
 var createError = __webpack_require__(/*! ../core/createError */ "./node_modules/axios/lib/core/createError.js");
-var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(/*! ./../helpers/btoa */ "./node_modules/axios/lib/helpers/btoa.js");
 
 module.exports = function xhrAdapter(config) {
   return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -6704,22 +6751,6 @@ module.exports = function xhrAdapter(config) {
     }
 
     var request = new XMLHttpRequest();
-    var loadEvent = 'onreadystatechange';
-    var xDomain = false;
-
-    // For IE 8/9 CORS support
-    // Only supports POST and GET calls and doesn't returns the response headers.
-    // DON'T do this for testing b/c XMLHttpRequest is mocked, not XDomainRequest.
-    if ( true &&
-        typeof window !== 'undefined' &&
-        window.XDomainRequest && !('withCredentials' in request) &&
-        !isURLSameOrigin(config.url)) {
-      request = new window.XDomainRequest();
-      loadEvent = 'onload';
-      xDomain = true;
-      request.onprogress = function handleProgress() {};
-      request.ontimeout = function handleTimeout() {};
-    }
 
     // HTTP basic authentication
     if (config.auth) {
@@ -6734,8 +6765,8 @@ module.exports = function xhrAdapter(config) {
     request.timeout = config.timeout;
 
     // Listen for ready state
-    request[loadEvent] = function handleLoad() {
-      if (!request || (request.readyState !== 4 && !xDomain)) {
+    request.onreadystatechange = function handleLoad() {
+      if (!request || request.readyState !== 4) {
         return;
       }
 
@@ -6752,9 +6783,8 @@ module.exports = function xhrAdapter(config) {
       var responseData = !config.responseType || config.responseType === 'text' ? request.responseText : request.response;
       var response = {
         data: responseData,
-        // IE sends 1223 instead of 204 (https://github.com/axios/axios/issues/201)
-        status: request.status === 1223 ? 204 : request.status,
-        statusText: request.status === 1223 ? 'No Content' : request.statusText,
+        status: request.status,
+        statusText: request.statusText,
         headers: responseHeaders,
         config: config,
         request: request
@@ -7567,54 +7597,6 @@ module.exports = function bind(fn, thisArg) {
 
 /***/ }),
 
-/***/ "./node_modules/axios/lib/helpers/btoa.js":
-/*!************************************************!*\
-  !*** ./node_modules/axios/lib/helpers/btoa.js ***!
-  \************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-// btoa polyfill for IE<10 courtesy https://github.com/davidchambers/Base64.js
-
-var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
-
-function E() {
-  this.message = 'String contains an invalid character';
-}
-E.prototype = new Error;
-E.prototype.code = 5;
-E.prototype.name = 'InvalidCharacterError';
-
-function btoa(input) {
-  var str = String(input);
-  var output = '';
-  for (
-    // initialize result and counter
-    var block, charCode, idx = 0, map = chars;
-    // if the next str index does not exist:
-    //   change the mapping table to "="
-    //   check if d has no fractional digits
-    str.charAt(idx | 0) || (map = '=', idx % 1);
-    // "8 - idx % 1 * 8" generates the sequence 2, 4, 6, 8
-    output += map.charAt(63 & block >> 8 - idx % 1 * 8)
-  ) {
-    charCode = str.charCodeAt(idx += 3 / 4);
-    if (charCode > 0xFF) {
-      throw new E();
-    }
-    block = block << 8 | charCode;
-  }
-  return output;
-}
-
-module.exports = btoa;
-
-
-/***/ }),
-
 /***/ "./node_modules/axios/lib/helpers/buildURL.js":
 /*!****************************************************!*\
   !*** ./node_modules/axios/lib/helpers/buildURL.js ***!
@@ -8029,7 +8011,7 @@ module.exports = function spread(callback) {
 
 
 var bind = __webpack_require__(/*! ./helpers/bind */ "./node_modules/axios/lib/helpers/bind.js");
-var isBuffer = __webpack_require__(/*! is-buffer */ "./node_modules/is-buffer/index.js");
+var isBuffer = __webpack_require__(/*! is-buffer */ "./node_modules/axios/node_modules/is-buffer/index.js");
 
 /*global toString:true*/
 
@@ -8329,6 +8311,28 @@ module.exports = {
   extend: extend,
   trim: trim
 };
+
+
+/***/ }),
+
+/***/ "./node_modules/axios/node_modules/is-buffer/index.js":
+/*!************************************************************!*\
+  !*** ./node_modules/axios/node_modules/is-buffer/index.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/*!
+ * Determine if an object is a Buffer
+ *
+ * @author   Feross Aboukhadijeh <https://feross.org>
+ * @license  MIT
+ */
+
+module.exports = function isBuffer (obj) {
+  return obj != null && obj.constructor != null &&
+    typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
+}
 
 
 /***/ }),
@@ -10434,7 +10438,7 @@ module.exports = function kindOf(val) {
 };
 
 function ctorName(val) {
-  return val.constructor ? val.constructor.name : null;
+  return typeof val.constructor === 'function' ? val.constructor.name : null;
 }
 
 function isArray(val) {
@@ -12199,38 +12203,6 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 /***/ }),
 
-/***/ "./node_modules/is-buffer/index.js":
-/*!*****************************************!*\
-  !*** ./node_modules/is-buffer/index.js ***!
-  \*****************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/*!
- * Determine if an object is a Buffer
- *
- * @author   Feross Aboukhadijeh <https://feross.org>
- * @license  MIT
- */
-
-// The _isBuffer check is for Safari 5-7 support, because it's missing
-// Object.prototype.constructor. Remove this eventually
-module.exports = function (obj) {
-  return obj != null && (isBuffer(obj) || isSlowBuffer(obj) || !!obj._isBuffer)
-}
-
-function isBuffer (obj) {
-  return !!obj.constructor && typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
-}
-
-// For Node v0.10 support. Remove this eventually.
-function isSlowBuffer (obj) {
-  return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
-}
-
-
-/***/ }),
-
 /***/ "./node_modules/is-plain-object/index.js":
 /*!***********************************************!*\
   !*** ./node_modules/is-plain-object/index.js ***!
@@ -13430,7 +13402,7 @@ module.exports = function kindOf(val) {
 };
 
 function ctorName(val) {
-  return val.constructor ? val.constructor.name : null;
+  return typeof val.constructor === 'function' ? val.constructor.name : null;
 }
 
 function isArray(val) {
@@ -14439,6 +14411,7 @@ exports.manageCurrentFilterItems = manageCurrentFilterItems;
 exports.__esModule = true;
 var cloneDeep = __webpack_require__(/*! clone-deep */ "./node_modules/clone-deep/index.js");
 var Constants_1 = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
+var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
 var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
 /**
  * Define aggregations setup
@@ -14450,10 +14423,16 @@ var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts
  * @param applicationType
  * @param sortBy
  * @param fetchLimit
+ * @param ranges
  */
-function aggregationSetup(environmentId, currentQuery, filterName, aggregationField, applicationType, sortBy, fetchLimit) {
+function aggregationSetup(environmentId, currentQuery, filterName, aggregationField, applicationType, sortBy, fetchLimit, ranges) {
     var clonedQuery = cloneDeep(currentQuery);
-    clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy, fetchLimit);
+    if (ranges.length > 0) {
+        clonedQuery.aggregateByRange(filterName, aggregationField, ranges, applicationType, apisearch_1.FILTER_TYPE_RANGE, sortBy, fetchLimit);
+    }
+    else {
+        clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy, fetchLimit);
+    }
     var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
     dispatcher.dispatch({
         type: "UPDATE_APISEARCH_SETUP",
@@ -14476,11 +14455,18 @@ exports.aggregationSetup = aggregationSetup;
  * @param applicationType
  * @param sortBy
  * @param fetchLimit
+ * @param ranges
  */
-function filterAction(environmentId, currentQuery, repository, filterName, filterField, aggregationField, filterValues, applicationType, sortBy, fetchLimit) {
+function filterAction(environmentId, currentQuery, repository, filterName, filterField, aggregationField, filterValues, applicationType, sortBy, fetchLimit, ranges) {
     var clonedQuery = cloneDeep(currentQuery);
-    clonedQuery.filterBy(filterName, filterField, filterValues, applicationType, false, sortBy);
-    clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy, fetchLimit);
+    if (ranges.length > 0) {
+        clonedQuery.filterByRange(filterName, filterField, ranges, filterValues, applicationType, apisearch_1.FILTER_TYPE_RANGE, false, sortBy);
+        clonedQuery.aggregateByRange(filterName, aggregationField, ranges, applicationType, apisearch_1.FILTER_TYPE_RANGE, sortBy, fetchLimit);
+    }
+    else {
+        clonedQuery.filterBy(filterName, filterField, filterValues, applicationType, false, sortBy);
+        clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy, fetchLimit);
+    }
     clonedQuery.page = 1;
     var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
     repository
@@ -14552,6 +14538,7 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
             var aggregationField = props.aggregationField;
             var applicationType = props.applicationType;
             var sortBy = props.sortBy;
+            var ranges = props.ranges;
             var fetchLimit = props.fetchLimit;
             var repository = props.repository;
             var currentQuery = props.currentQuery;
@@ -14568,7 +14555,7 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
              */
             MultipleFilterActions_1.filterAction(environmentId, currentQuery, repository, filterName, filterField, (aggregationField
                 ? aggregationField
-                : filterField), Helpers_1.manageCurrentFilterItems(selectedFilterAsString, valuesAsString), applicationType, sortBy, fetchLimit);
+                : filterField), Helpers_1.manageCurrentFilterItems(selectedFilterAsString, valuesAsString), applicationType, sortBy, fetchLimit, ranges);
         };
         /**
          * Handle show more
@@ -14604,6 +14591,7 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
         var aggregationField = props.aggregationField;
         var applicationType = props.applicationType;
         var sortBy = props.sortBy;
+        var ranges = props.ranges;
         var fetchLimit = props.fetchLimit;
         var viewLimit = props.viewLimit;
         var currentQuery = props.currentQuery;
@@ -14621,7 +14609,7 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
          */
         MultipleFilterActions_1.aggregationSetup(environmentId, currentQuery, filterName, (aggregationField
             ? aggregationField
-            : filterField), applicationType, sortBy, fetchLimit);
+            : filterField), applicationType, sortBy, fetchLimit, ranges);
     };
     /**
      * Component will recieve props
@@ -14710,6 +14698,7 @@ MultipleFilterComponent.defaultProps = {
     fetchLimit: 10,
     viewLimit: null,
     sortBy: ['_term', 'desc'],
+    ranges: [],
     classNames: {
         container: '',
         top: '',
@@ -15883,15 +15872,16 @@ var MultipleFilter = /** @class */ (function (_super) {
      * @param fetchLimit
      * @param viewLimit
      * @param sortBy
+     * @param ranges
      * @param classNames
      * @param template
      * @param formatData
      */
     function MultipleFilter(_a) {
-        var target = _a.target, filterName = _a.filterName, filterField = _a.filterField, aggregationField = _a.aggregationField, applicationType = _a.applicationType, fetchLimit = _a.fetchLimit, viewLimit = _a.viewLimit, sortBy = _a.sortBy, classNames = _a.classNames, template = _a.template, formatData = _a.formatData;
+        var target = _a.target, filterName = _a.filterName, filterField = _a.filterField, aggregationField = _a.aggregationField, applicationType = _a.applicationType, fetchLimit = _a.fetchLimit, viewLimit = _a.viewLimit, sortBy = _a.sortBy, ranges = _a.ranges, classNames = _a.classNames, template = _a.template, formatData = _a.formatData;
         var _this = _super.call(this) || this;
         _this.target = target;
-        _this.component = preact_1.h(MultipleFilterComponent_1["default"], { target: target, filterName: filterName, filterField: filterField, aggregationField: aggregationField, applicationType: applicationType, fetchLimit: fetchLimit, viewLimit: viewLimit, sortBy: sortBy, classNames: __assign({}, MultipleFilterComponent_1["default"].defaultProps.classNames, classNames), template: __assign({}, MultipleFilterComponent_1["default"].defaultProps.template, template), formatData: formatData });
+        _this.component = preact_1.h(MultipleFilterComponent_1["default"], { target: target, filterName: filterName, filterField: filterField, aggregationField: aggregationField, applicationType: applicationType, fetchLimit: fetchLimit, viewLimit: viewLimit, sortBy: sortBy, ranges: ranges, classNames: __assign({}, MultipleFilterComponent_1["default"].defaultProps.classNames, classNames), template: __assign({}, MultipleFilterComponent_1["default"].defaultProps.template, template), formatData: formatData });
         return _this;
     }
     /**

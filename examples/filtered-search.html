@@ -83,6 +83,7 @@
                 </div>
             </div>
             <div class="column is-2">
+                <div class="multiple-filter-decade" style="margin-bottom: 1rem"></div>
                 <div class="multiple-filter-year" style="margin-bottom: 1rem"></div>
             </div>
         </div>
@@ -172,6 +173,28 @@
                     {name: 'Oldest', value: 'year:asc'},
                     {name: 'Newest', value: 'year:desc'}
                 ]
+            }),
+            ui.widgets.multipleFilter({
+                target: '.multiple-filter-decade',
+                filterName: 'decade',
+                filterField: 'year',
+                applicationType: 8,
+                fetchLimit: 30,
+                viewLimit: 12,
+                sortBy: ['_count', 'desc'],
+                ranges: ['..1950', '1950..1970', '1970..2000', '2000..2010', '2010..'],
+                template: {
+                    top: '<i class="fa fa-cog"></i>&nbsp;Decades',
+                    item: document.getElementById('multiple-filter-item-template').text,
+                    showMore: '<button class="button"><i class="fa fa-plus"></i>&nbsp;Show more</button>',
+                    showLess: '<button class="button"><i class="fa fa-minus"></i>&nbsp;Show less</button>',
+                },
+                classNames: {
+                    container: 'panel',
+                    top: 'panel-heading',
+                    item: 'panel-block',
+                    showMoreContainer: 'panel-block'
+                }
             }),
             ui.widgets.multipleFilter({
                 target: '.multiple-filter-year',

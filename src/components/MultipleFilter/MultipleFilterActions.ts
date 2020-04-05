@@ -5,6 +5,7 @@ import {Repository} from "apisearch";
 import {Query} from "apisearch";
 import * as cloneDeep from "clone-deep";
 import {APISEARCH_DISPATCHER} from "../../Constants";
+import {FILTER_TYPE_RANGE} from "apisearch"
 import container from "../../Container";
 
 /**
@@ -17,6 +18,7 @@ import container from "../../Container";
  * @param applicationType
  * @param sortBy
  * @param fetchLimit
+ * @param ranges
  */
 export function aggregationSetup(
     environmentId: string,
@@ -26,16 +28,29 @@ export function aggregationSetup(
     applicationType: number,
     sortBy: string[],
     fetchLimit: number,
+    ranges: string[]
 ) {
     const clonedQuery = cloneDeep(currentQuery);
 
-    clonedQuery.aggregateBy(
-        filterName,
-        aggregationField,
-        applicationType,
-        sortBy,
-        fetchLimit,
-    );
+    if (ranges.length > 0) {
+        clonedQuery.aggregateByRange(
+            filterName,
+            aggregationField,
+            ranges,
+            applicationType,
+            FILTER_TYPE_RANGE,
+            sortBy,
+            fetchLimit,
+        );
+    } else {
+        clonedQuery.aggregateBy(
+            filterName,
+            aggregationField,
+            applicationType,
+            sortBy,
+            fetchLimit,
+        );
+    }
 
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
 
@@ -60,6 +75,7 @@ export function aggregationSetup(
  * @param applicationType
  * @param sortBy
  * @param fetchLimit
+ * @param ranges
  */
 export function filterAction(
     environmentId: string,
@@ -72,25 +88,51 @@ export function filterAction(
     applicationType: number,
     sortBy: string[],
     fetchLimit: number,
+    ranges: string[]
 ) {
     const clonedQuery = cloneDeep(currentQuery);
 
-    clonedQuery.filterBy(
-        filterName,
-        filterField,
-        filterValues,
-        applicationType,
-        false,
-        sortBy,
-    );
+    if (ranges.length > 0) {
+        clonedQuery.filterByRange(
+            filterName,
+            filterField,
+            ranges,
+            filterValues,
+            applicationType,
+            FILTER_TYPE_RANGE,
+            false,
+            sortBy,
+        );
 
-    clonedQuery.aggregateBy(
-        filterName,
-        aggregationField,
-        applicationType,
-        sortBy,
-        fetchLimit,
-    );
+        clonedQuery.aggregateByRange(
+            filterName,
+            aggregationField,
+            ranges,
+            applicationType,
+            FILTER_TYPE_RANGE,
+            sortBy,
+            fetchLimit,
+        );
+
+    } else {
+        clonedQuery.filterBy(
+            filterName,
+            filterField,
+            filterValues,
+            applicationType,
+            false,
+            sortBy,
+        );
+
+        clonedQuery.aggregateBy(
+            filterName,
+            aggregationField,
+            applicationType,
+            sortBy,
+            fetchLimit,
+        );
+    }
+
     clonedQuery.page = 1;
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
 

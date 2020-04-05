@@ -1,6 +1,6 @@
 {
   "name": "apisearch-ui",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "description": "Javascript User Interface of Apisearch.",
   "main": "lib/index.js",
   "scripts": {
@@ -35,7 +35,7 @@
     "@types/chai": "^4.1.7",
     "@types/mocha": "^5.2.6",
     "@types/node": "^10.14.4",
-    "sass": "^1.17.3",
+    "sass": "^1.26.3",
     "ts-loader": "^4.5.0",
     "ts-node": "^7.0.1",
     "tslint": "^5.14.0",
@@ -45,7 +45,7 @@
     "webpack-merge": "^4.2.1"
   },
   "dependencies": {
-    "apisearch": "^0.2.19",
+    "apisearch": "^0.2.23",
     "clone-deep": "^4.0.1",
     "flux": "^3.1.3",
     "hogan.js": "^3.0.2",
