@@ -222,8 +222,8 @@
                 filterField: 'genre_id',
                 aggregationField: 'genre_data',
                 applicationType: 8,
-                fetchLimit: 15,
-                viewLimit: 5,
+                fetchLimit: 30,
+                viewLimit: -5,
                 sortBy: ['_count', 'desc'],
                 template: {
                     top: '<i class="fa fa-user"></i>&nbsp; Genre',
@@ -248,7 +248,7 @@
                 showMoreActive: false,
                 template: {
                     top: '<i class="fa fa-star"></i>&nbsp; Rating',
-                    item: document.getElementById('multiple-filter-item-template').text
+                    item: document.getElementById('multiple-filter-item-template').text,
                 },
                 classNames: {
                     container: 'panel',

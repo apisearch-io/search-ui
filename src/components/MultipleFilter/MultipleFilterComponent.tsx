@@ -230,7 +230,11 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
         /**
          * Check available view limit
          */
-        const isViewLimitProperlySet = (viewLimit && viewLimit < fetchLimit);
+        const isViewLimitProperlySet = (
+            viewLimit &&
+            viewLimit < fetchLimit &&
+            allItemsLength > viewLimit
+        );
 
         return (
             <div className={`as-multipleFilter ${containerClassName}`}>

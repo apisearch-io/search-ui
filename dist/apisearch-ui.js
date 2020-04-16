@@ -14675,7 +14675,9 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
         /**
          * Check available view limit
          */
-        var isViewLimitProperlySet = (viewLimit && viewLimit < fetchLimit);
+        var isViewLimitProperlySet = (viewLimit &&
+            viewLimit < fetchLimit &&
+            allItemsLength > viewLimit);
         return (preact_1.h("div", { className: "as-multipleFilter " + containerClassName },
             preact_1.h(Template_1["default"], { template: topTemplate, className: "as-multipleFilter__top " + topClassName }),
             preact_1.h("div", { className: "as-multipleFilter__itemsList " + itemsListClassName }, items.map(function (item) {
