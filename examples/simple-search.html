@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>AS UI - Simple search</title>
+    <title>AS UI - Simple search - Albums from 2000s</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.0/css/bulma.min.css">
 
@@ -115,7 +115,7 @@
                 itemsPerPage: 16,
                 highlightsEnabled: true,
                 filter: function(query) {
-                    query.filterUniverseBy('year', ['2011']);
+                    query.filterUniverseByRange('year', ['2000..']);
                 },
                 classNames: {
                     container: 'column'
@@ -140,6 +140,7 @@
                     container: 'select'
                 },
                 options: [
+                    {name: '_score Desc', value: 'score:'},
                     {name: 'Oldest', value: 'year:asc'},
                     {name: 'Newest', value: 'year:desc'}
                 ]

@@ -7,6 +7,7 @@ import {Query} from "apisearch";
 import * as cloneDeep from "clone-deep";
 import {APISEARCH_DISPATCHER} from "../../Constants";
 import container from "../../Container";
+import {SORT_BY_SCORE} from "apisearch";
 
 /**
  * ON change search action
@@ -25,15 +26,17 @@ export function onChangeSearchAction(
     const clonedQuery = cloneDeep(currentQuery);
     const filterData = splitQueryValue(selectedOption);
 
-    clonedQuery
-        .sortBy(Apisearch
-            .createEmptySortBy()
-            .byFieldValue(
-                filterData.field,
-                filterData.sort,
-            ),
+    const sortBy = Apisearch.createEmptySortBy();
+    if (filterData.field == 'score') {
+        sortBy.byValue(SORT_BY_SCORE);
+    } else {
+        sortBy.byFieldValue(
+            filterData.field,
+            filterData.sort,
         );
+    }
 
+    clonedQuery.sortBy(sortBy);
     clonedQuery.page = 1;
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
 

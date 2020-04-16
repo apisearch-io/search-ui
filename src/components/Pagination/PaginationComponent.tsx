@@ -62,6 +62,24 @@ class PaginationComponent extends Component<PaginationProps> {
     render() {
 
         const props = this.props;
+        const currentResult = props.currentResult;
+        const currentQuerySize = props.currentQuery.getSize();
+        const totalPages = getTotalPages(
+            currentResult.getTotalHits(),
+            currentQuerySize
+        );
+
+
+        /**
+         * Hide container if hits are empty
+         */
+        if (
+            currentResult.getTotalHits() === 0 ||
+            totalPages === 1
+        ) {
+            return null;
+        }
+
         const padding = props.padding;
         const goFirstLast = props.goFirstLast;
         const containerClassName = props.classNames.container;
@@ -80,17 +98,12 @@ class PaginationComponent extends Component<PaginationProps> {
         const lastTemplate = props.template.last;
 
         const currentQueryPage = props.currentQuery.getPage();
-        const currentQuerySize = props.currentQuery.getSize();
-        const currentResult = props.currentResult;
 
         /**
          * Get Total pages
          */
-        let totalPages = getTotalPages(
-            currentResult.getTotalHits(),
-            currentQuerySize
-        );
-        let pages = totalPagesToArray(totalPages);
+
+        const pages = totalPagesToArray(totalPages);
 
         /**
          *  Get pages spectre
@@ -99,7 +112,7 @@ class PaginationComponent extends Component<PaginationProps> {
         const isTouchingLeft = currentQueryPage <= (padding + 1);
         const isTouchingRight = (currentQueryPage + padding) >= totalPages;
 
-        let spectre = pages.slice(
+        const spectre = pages.slice(
             getStart(
                 totalPages,
                 padding,
@@ -121,15 +134,8 @@ class PaginationComponent extends Component<PaginationProps> {
         /**
          * Dynamic disabled classes
          */
-        let previousDisabledClass = (currentQueryPage === 1) ? disabledClassName : '';
-        let nextDisabledClass = (currentQueryPage === totalPages) ? disabledClassName : '';
-
-        /**
-         * Hide container if hits are empty
-         */
-        if (currentResult.getTotalHits() === 0) {
-            return null;
-        }
+        const previousDisabledClass = (currentQueryPage === 1) ? disabledClassName : '';
+        const nextDisabledClass = (currentQueryPage === totalPages) ? disabledClassName : '';
 
         return (
             <ul className={`as-pagination ${containerClassName}`}>
