@@ -15463,6 +15463,7 @@ var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch
 var cloneDeep = __webpack_require__(/*! clone-deep */ "./node_modules/clone-deep/index.js");
 var Constants_1 = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
 var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
+var apisearch_2 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
 /**
  * ON change search action
  *
@@ -15474,10 +15475,14 @@ var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts
 function onChangeSearchAction(environmentId, currentQuery, repository, selectedOption) {
     var clonedQuery = cloneDeep(currentQuery);
     var filterData = splitQueryValue(selectedOption);
-    clonedQuery
-        .sortBy(apisearch_1["default"]
-        .createEmptySortBy()
-        .byFieldValue(filterData.field, filterData.sort));
+    var sortBy = apisearch_1["default"].createEmptySortBy();
+    if (filterData.field == 'score') {
+        sortBy.byValue(apisearch_2.SORT_BY_SCORE);
+    }
+    else {
+        sortBy.byFieldValue(filterData.field, filterData.sort);
+    }
+    clonedQuery.sortBy(sortBy);
     clonedQuery.page = 1;
     var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
     repository
