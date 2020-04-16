@@ -14669,6 +14669,9 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
         var allItems = this.state.activeAggregations.concat(this.state.currentAggregations);
         var allItemsLength = allItems.length;
         var items = allItems.slice(0, this.state.viewLimit);
+        if (allItems.length == 0) {
+            return null;
+        }
         /**
          * Check available view limit
          */
@@ -15003,6 +15006,16 @@ var PaginationComponent = /** @class */ (function (_super) {
     PaginationComponent.prototype.render = function () {
         var _this = this;
         var props = this.props;
+        var currentResult = props.currentResult;
+        var currentQuerySize = props.currentQuery.getSize();
+        var totalPages = Helpers_1.getTotalPages(currentResult.getTotalHits(), currentQuerySize);
+        /**
+         * Hide container if hits are empty
+         */
+        if (currentResult.getTotalHits() === 0 ||
+            totalPages === 1) {
+            return null;
+        }
         var padding = props.padding;
         var goFirstLast = props.goFirstLast;
         var containerClassName = props.classNames.container;
@@ -15019,12 +15032,9 @@ var PaginationComponent = /** @class */ (function (_super) {
         var firstTemplate = props.template.first;
         var lastTemplate = props.template.last;
         var currentQueryPage = props.currentQuery.getPage();
-        var currentQuerySize = props.currentQuery.getSize();
-        var currentResult = props.currentResult;
         /**
          * Get Total pages
          */
-        var totalPages = Helpers_1.getTotalPages(currentResult.getTotalHits(), currentQuerySize);
         var pages = Helpers_1.totalPagesToArray(totalPages);
         /**
          *  Get pages spectre
@@ -15038,12 +15048,6 @@ var PaginationComponent = /** @class */ (function (_super) {
          */
         var previousDisabledClass = (currentQueryPage === 1) ? disabledClassName : '';
         var nextDisabledClass = (currentQueryPage === totalPages) ? disabledClassName : '';
-        /**
-         * Hide container if hits are empty
-         */
-        if (currentResult.getTotalHits() === 0) {
-            return null;
-        }
         return (preact_1.h("ul", { className: "as-pagination " + containerClassName },
             preact_1.h(NavigationComponent_1["default"], { isVisible: goFirstLast, classNames: "as-pagination__item as-pagination__item--first " + firstClassName + " " + previousDisabledClass, template: firstTemplate, handleClick: function () { return _this.handleClick(1); } }),
             preact_1.h(NavigationComponent_1["default"], { isVisible: true, classNames: "as-pagination__item as-pagination__item--previous " + previousClassName + " " + previousDisabledClass, template: previousTemplate, handleClick: function () { return _this.handleClick(currentQueryPage - 1); } }),

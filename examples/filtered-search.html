@@ -181,8 +181,7 @@
                 applicationType: 8,
                 fetchLimit: 30,
                 viewLimit: 12,
-                sortBy: ['_count', 'desc'],
-                ranges: ['..1950', '1950..1970', '1970..2000', '2000..2010', '2010..'],
+                ranges: ['..1950', '1950..1970', '1970..2000', '2000..2010', '2010..2020'],
                 template: {
                     top: '<i class="fa fa-cog"></i>&nbsp;Decades',
                     item: document.getElementById('multiple-filter-item-template').text,
@@ -203,7 +202,7 @@
                 applicationType: 8,
                 fetchLimit: 30,
                 viewLimit: 12,
-                sortBy: ['_count', 'desc'],
+                sortBy: ['_term', 'desc'],
                 template: {
                     top: '<i class="fa fa-cog"></i>&nbsp;Years',
                     item: document.getElementById('multiple-filter-item-template').text,
@@ -290,7 +289,7 @@
                 highlightsEnabled: true,
                 template: {
                     itemsList: document.getElementById('result-search-tpl').text,
-                }
+                },
             }),
             ui.widgets.pagination({
                 target: '.pagination',
