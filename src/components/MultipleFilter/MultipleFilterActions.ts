@@ -28,15 +28,16 @@ export function aggregationSetup(
     applicationType: number,
     sortBy: string[],
     fetchLimit: number,
-    ranges: string[]
+    ranges: any
 ) {
     const clonedQuery = cloneDeep(currentQuery);
+    const rangesValues = Object.keys(ranges);
 
-    if (ranges.length > 0) {
+    if (rangesValues.length > 0) {
         clonedQuery.aggregateByRange(
             filterName,
             aggregationField,
-            ranges,
+            rangesValues,
             applicationType,
             FILTER_TYPE_RANGE,
             sortBy,
@@ -76,6 +77,7 @@ export function aggregationSetup(
  * @param sortBy
  * @param fetchLimit
  * @param ranges
+ * @param labels
  */
 export function filterAction(
     environmentId: string,
@@ -88,15 +90,18 @@ export function filterAction(
     applicationType: number,
     sortBy: string[],
     fetchLimit: number,
-    ranges: string[]
+    ranges: object,
+    labels: object
 ) {
     const clonedQuery = cloneDeep(currentQuery);
+    const rangesValues = Object.keys(ranges);
 
-    if (ranges.length > 0) {
+    if (rangesValues.length > 0) {
+
         clonedQuery.filterByRange(
             filterName,
             filterField,
-            ranges,
+            rangesValues,
             filterValues,
             applicationType,
             FILTER_TYPE_RANGE,
@@ -107,7 +112,7 @@ export function filterAction(
         clonedQuery.aggregateByRange(
             filterName,
             aggregationField,
-            ranges,
+            rangesValues,
             applicationType,
             FILTER_TYPE_RANGE,
             sortBy,

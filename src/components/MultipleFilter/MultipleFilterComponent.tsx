@@ -130,6 +130,7 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
         const applicationType = props.applicationType;
         const sortBy = props.sortBy;
         const ranges = props.ranges;
+        const labels = props.labels;
         const fetchLimit = props.fetchLimit;
         const repository = props.repository;
         const currentQuery = props.currentQuery;
@@ -164,7 +165,8 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
             applicationType,
             sortBy,
             fetchLimit,
-            ranges
+            ranges,
+            labels
         );
     };
 
@@ -212,6 +214,9 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
         const showLessTemplate = props.template.showLess;
 
         const formatData = props.formatData;
+        const labels = Object.keys(props.ranges).length > 0
+            ? props.ranges
+            : props.labels;
 
         /**
          * Get aggregation items
@@ -245,10 +250,12 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
 
                 <div className={`as-multipleFilter__itemsList ${itemsListClassName}`}>
                 {items.map(item => {
+                    const values = item.getValues();
+                    values.name = labels[values.name] ? labels[values.name] : values.name;
                     const reducedTemplateData = {
                         n: item.getN(),
                         isActive: item.isUsed(),
-                        values: item.getValues()
+                        values: values
                     };
                     const formattedTemplateData = formatData(reducedTemplateData);
                     return (
@@ -291,7 +298,8 @@ MultipleFilterComponent.defaultProps = {
     fetchLimit: 10,
     viewLimit: null,
     sortBy: ['_term', 'desc'],
-    ranges: [],
+    ranges: {},
+    labels: {},
     classNames: {
         container: '',
         top: '',

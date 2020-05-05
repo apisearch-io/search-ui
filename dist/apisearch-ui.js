@@ -14427,8 +14427,9 @@ var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts
  */
 function aggregationSetup(environmentId, currentQuery, filterName, aggregationField, applicationType, sortBy, fetchLimit, ranges) {
     var clonedQuery = cloneDeep(currentQuery);
-    if (ranges.length > 0) {
-        clonedQuery.aggregateByRange(filterName, aggregationField, ranges, applicationType, apisearch_1.FILTER_TYPE_RANGE, sortBy, fetchLimit);
+    var rangesValues = Object.keys(ranges);
+    if (rangesValues.length > 0) {
+        clonedQuery.aggregateByRange(filterName, aggregationField, rangesValues, applicationType, apisearch_1.FILTER_TYPE_RANGE, sortBy, fetchLimit);
     }
     else {
         clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy, fetchLimit);
@@ -14456,12 +14457,14 @@ exports.aggregationSetup = aggregationSetup;
  * @param sortBy
  * @param fetchLimit
  * @param ranges
+ * @param labels
  */
-function filterAction(environmentId, currentQuery, repository, filterName, filterField, aggregationField, filterValues, applicationType, sortBy, fetchLimit, ranges) {
+function filterAction(environmentId, currentQuery, repository, filterName, filterField, aggregationField, filterValues, applicationType, sortBy, fetchLimit, ranges, labels) {
     var clonedQuery = cloneDeep(currentQuery);
-    if (ranges.length > 0) {
-        clonedQuery.filterByRange(filterName, filterField, ranges, filterValues, applicationType, apisearch_1.FILTER_TYPE_RANGE, false, sortBy);
-        clonedQuery.aggregateByRange(filterName, aggregationField, ranges, applicationType, apisearch_1.FILTER_TYPE_RANGE, sortBy, fetchLimit);
+    var rangesValues = Object.keys(ranges);
+    if (rangesValues.length > 0) {
+        clonedQuery.filterByRange(filterName, filterField, rangesValues, filterValues, applicationType, apisearch_1.FILTER_TYPE_RANGE, false, sortBy);
+        clonedQuery.aggregateByRange(filterName, aggregationField, rangesValues, applicationType, apisearch_1.FILTER_TYPE_RANGE, sortBy, fetchLimit);
     }
     else {
         clonedQuery.filterBy(filterName, filterField, filterValues, applicationType, false, sortBy);
@@ -14539,6 +14542,7 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
             var applicationType = props.applicationType;
             var sortBy = props.sortBy;
             var ranges = props.ranges;
+            var labels = props.labels;
             var fetchLimit = props.fetchLimit;
             var repository = props.repository;
             var currentQuery = props.currentQuery;
@@ -14555,7 +14559,7 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
              */
             MultipleFilterActions_1.filterAction(environmentId, currentQuery, repository, filterName, filterField, (aggregationField
                 ? aggregationField
-                : filterField), Helpers_1.manageCurrentFilterItems(selectedFilterAsString, valuesAsString), applicationType, sortBy, fetchLimit, ranges);
+                : filterField), Helpers_1.manageCurrentFilterItems(selectedFilterAsString, valuesAsString), applicationType, sortBy, fetchLimit, ranges, labels);
         };
         /**
          * Handle show more
@@ -14663,6 +14667,9 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
         var showMoreTemplate = props.template.showMore;
         var showLessTemplate = props.template.showLess;
         var formatData = props.formatData;
+        var labels = Object.keys(props.ranges).length > 0
+            ? props.ranges
+            : props.labels;
         /**
          * Get aggregation items
          */
@@ -14681,10 +14688,12 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
         return (preact_1.h("div", { className: "as-multipleFilter " + containerClassName },
             preact_1.h(Template_1["default"], { template: topTemplate, className: "as-multipleFilter__top " + topClassName }),
             preact_1.h("div", { className: "as-multipleFilter__itemsList " + itemsListClassName }, items.map(function (item) {
+                var values = item.getValues();
+                values.name = labels[values.name] ? labels[values.name] : values.name;
                 var reducedTemplateData = {
                     n: item.getN(),
                     isActive: item.isUsed(),
-                    values: item.getValues()
+                    values: values
                 };
                 var formattedTemplateData = formatData(reducedTemplateData);
                 return (preact_1.h("div", { className: "as-multipleFilter__item " +
@@ -14703,7 +14712,8 @@ MultipleFilterComponent.defaultProps = {
     fetchLimit: 10,
     viewLimit: null,
     sortBy: ['_term', 'desc'],
-    ranges: [],
+    ranges: {},
+    labels: {},
     classNames: {
         container: '',
         top: '',
@@ -15884,15 +15894,16 @@ var MultipleFilter = /** @class */ (function (_super) {
      * @param viewLimit
      * @param sortBy
      * @param ranges
+     * @param labels
      * @param classNames
      * @param template
      * @param formatData
      */
     function MultipleFilter(_a) {
-        var target = _a.target, filterName = _a.filterName, filterField = _a.filterField, aggregationField = _a.aggregationField, applicationType = _a.applicationType, fetchLimit = _a.fetchLimit, viewLimit = _a.viewLimit, sortBy = _a.sortBy, ranges = _a.ranges, classNames = _a.classNames, template = _a.template, formatData = _a.formatData;
+        var target = _a.target, filterName = _a.filterName, filterField = _a.filterField, aggregationField = _a.aggregationField, applicationType = _a.applicationType, fetchLimit = _a.fetchLimit, viewLimit = _a.viewLimit, sortBy = _a.sortBy, ranges = _a.ranges, labels = _a.labels, classNames = _a.classNames, template = _a.template, formatData = _a.formatData;
         var _this = _super.call(this) || this;
         _this.target = target;
-        _this.component = preact_1.h(MultipleFilterComponent_1["default"], { target: target, filterName: filterName, filterField: filterField, aggregationField: aggregationField, applicationType: applicationType, fetchLimit: fetchLimit, viewLimit: viewLimit, sortBy: sortBy, ranges: ranges, classNames: __assign({}, MultipleFilterComponent_1["default"].defaultProps.classNames, classNames), template: __assign({}, MultipleFilterComponent_1["default"].defaultProps.template, template), formatData: formatData });
+        _this.component = preact_1.h(MultipleFilterComponent_1["default"], { target: target, filterName: filterName, filterField: filterField, aggregationField: aggregationField, applicationType: applicationType, fetchLimit: fetchLimit, viewLimit: viewLimit, sortBy: sortBy, ranges: ranges, labels: labels, classNames: __assign({}, MultipleFilterComponent_1["default"].defaultProps.classNames, classNames), template: __assign({}, MultipleFilterComponent_1["default"].defaultProps.template, template), formatData: formatData });
         return _this;
     }
     /**

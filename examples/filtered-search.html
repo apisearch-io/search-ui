@@ -181,7 +181,13 @@
                 applicationType: 8,
                 fetchLimit: 30,
                 viewLimit: 12,
-                ranges: ['..1950', '1950..1970', '1970..2000', '2000..2010', '2010..2020'],
+                ranges: {
+                    '..1950': 'Until 50s',
+                    '1950..1970': 'From 50s to 70s',
+                    '1970..2000': 'From 70s to 2000',
+                    '2000..2010': 'First decade of 2000s',
+                    '2010..2020': 'Last decade'
+                },
                 template: {
                     top: '<i class="fa fa-cog"></i>&nbsp;Decades',
                     item: document.getElementById('multiple-filter-item-template').text,
@@ -203,6 +209,9 @@
                 fetchLimit: 30,
                 viewLimit: 12,
                 sortBy: ['_term', 'desc'],
+                labels: {
+                    '1985': 'Marc birthday'
+                },
                 template: {
                     top: '<i class="fa fa-cog"></i>&nbsp;Years',
                     item: document.getElementById('multiple-filter-item-template').text,
