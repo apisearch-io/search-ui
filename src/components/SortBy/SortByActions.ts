@@ -50,6 +50,9 @@ export function onChangeSearchAction(
                     result,
                 },
             });
+        })
+        .catch((error) => {
+            // Do nothing
         });
 }
 

@@ -60,7 +60,7 @@
                     <div class="card-content">
                         <div class="media">
                             <div class="media-left">
-                                <img src="{{metadata.img}}" width="60px">
+                                <img src="{{metadata.image}}" width="60px">
                             </div>
                             <div class="media-content">
                                 <strong>
@@ -93,11 +93,12 @@
     <script type="text/javascript">
         // UI Instance
         const ui = apisearchUI.create({
-            app_id: '9c078fa1a748',
-            index_id: 'e742fbfbac24',
-            token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
+            app_id: 'as-29be77d7-2f64-4522',
+            index_id: 'eu1-prod-d53da03a-d49c-483c',
+            token: 'eu1-8438694d-5839-4179-9f73-a55630f3cd4d',
             options: {
-                endpoint: 'https://apisearch.global.ssl.fastly.net',
+                endpoint: 'https://eu1.apisearch.io',
+                override_queries: true
             }
         });
 
@@ -140,7 +141,7 @@
                     container: 'select'
                 },
                 options: [
-                    {name: '_score Desc', value: 'score:'},
+                    {name: 'Score', value: 'score:'},
                     {name: 'Oldest', value: 'year:asc'},
                     {name: 'Newest', value: 'year:desc'}
                 ]

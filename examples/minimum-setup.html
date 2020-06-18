@@ -103,11 +103,11 @@
 
     // UI Instance
     const ui = apisearchUI.create({
-        app_id: '9c078fa1a748',
-        index_id: 'e742fbfbac24',
-        token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
+        app_id: 'as-29be77d7-2f64-4522',
+        index_id: 'eu1-prod-d53da03a-d49c-483c',
+        token: 'eu1-8438694d-5839-4179-9f73-a55630f3cd4d',
         options: {
-            endpoint: 'https://apisearch.global.ssl.fastly.net',
+            endpoint: 'https://eu1.apisearch.io',
         }
     });
 
@@ -127,8 +127,7 @@
         ui.widgets.multipleFilter({
             target: '.multiple-filter-genre',
             filterName: 'genre',
-            filterField: 'genre_id',
-            aggregationField: 'genre_data',
+            filterField: 'categories',
             fetchLimit: 15,
             viewLimit: 8,
             sortBy: ['_count', 'desc'],
@@ -143,7 +142,12 @@
             fetchLimit: 30,
             viewLimit: 15,
             sortBy: ['_count', 'desc'],
-            ranges: ['..1950', '1950..1970', '1970..2000', '2000..2010', '2010..'],
+            ranges: {
+                '..1950': 'Until 50ths',
+                '1950..1970': '50ths to 70ths',
+                '1970..2000': '70ths to 2000',
+                '2000..': 'This century'
+            },
             template: {
                 top: 'Decade'
             }
