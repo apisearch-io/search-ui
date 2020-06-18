@@ -4,6 +4,11 @@ import {defaultItemsListTemplate} from "./defaultTemplates";
 import {configureQuery} from "./ResultActions";
 import {ResultProps} from "./ResultProps";
 import {ItemUUID} from "apisearch/lib/Model/ItemUUID";
+import container from "../../Container";
+import {
+    APISEARCH_UI,
+    APISEARCH_CONFIG,
+} from "../../Constants";
 
 /**
  * Result Component
@@ -52,6 +57,10 @@ class ResultComponent extends Component<ResultProps> {
         const containerClassName = props.classNames.container;
         const itemsListClassName = props.classNames.itemsList;
         const placeholderClassName = props.classNames.placeholder;
+        const environmentId = props.environmentId;
+        const config = container.get(`${APISEARCH_CONFIG}__${environmentId}`);
+        const apisearchUI = container.get(`${APISEARCH_UI}__${environmentId}`);
+        const apisearchReference = apisearchUI.reference;
 
         const itemsListTemplate = props.template.itemsList;
         const placeholderTemplate = props.template.placeholder;
@@ -75,9 +84,34 @@ class ResultComponent extends Component<ResultProps> {
             ...reducedTemplateData,
             items: (reducedTemplateData.items)
                 ? reducedTemplateData
-                   .items
-                   .map(item => formatData(item))
-                : []
+                    .items
+                    .map(function(item) {
+                        let appId = config.app_id;
+                        const appUUID = item.getAppUUID();
+                        if (typeof appUUID === "object") {
+                            appId = appUUID.composedUUID();
+                        }
+
+                        let indexId = config.index_id;
+                        const indexUUID = item.getIndexUUID();
+                        if (typeof indexUUID === "object") {
+                            indexId = indexUUID.composedUUID();
+                        }
+
+                        const itemId = item.getUUID().composedUUID();
+                        const userId = config.user_id;
+                        const clickParameters = typeof userId === "string"
+                            ? appId+'", "'+indexId+'", "'+itemId+'", "'+userId
+                            : appId+'", "'+indexId+'", "'+itemId;
+
+                        return {
+                            ...formatData(item),
+                            ...{
+                                'click': apisearchReference + '.click("'+clickParameters+'"); return true;'
+                            }
+                        }
+                    })
+                : [],
         };
 
         return (

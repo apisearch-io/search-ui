@@ -252,10 +252,12 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
                 {items.map(item => {
                     const values = item.getValues();
                     values.name = labels[values.name] ? labels[values.name] : values.name;
+                    const uid = Math.floor(Math.random() * 10000000000);
                     const reducedTemplateData = {
                         n: item.getN(),
                         isActive: item.isUsed(),
-                        values: values
+                        values: values,
+                        uid: uid
                     };
                     const formattedTemplateData = formatData(reducedTemplateData);
                     return (

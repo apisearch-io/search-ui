@@ -10,6 +10,7 @@ import {
     APISEARCH_REPOSITORY,
     APISEARCH_STORE,
     APISEARCH_UI,
+    APISEARCH_CONFIG,
 } from "./Constants";
 
 /**
@@ -26,6 +27,7 @@ export function bootstrap(
     const repositoryId = `${APISEARCH_REPOSITORY}__${configAsString}`;
     const storeId = `${APISEARCH_STORE}__${environmentId}`;
     const dispatcherId = `${APISEARCH_DISPATCHER}__${environmentId}`;
+    const configId = `${APISEARCH_CONFIG}__${environmentId}`;
     const asuiId = `${APISEARCH_UI}__${environmentId}`;
 
     /**
@@ -47,6 +49,13 @@ export function bootstrap(
      */
     container.register(dispatcherId, () => {
         return new Dispatcher();
+    });
+
+    /**
+     * Register Apisearch config
+     */
+    container.register(configId, () => {
+        return config;
     });
 
     /**

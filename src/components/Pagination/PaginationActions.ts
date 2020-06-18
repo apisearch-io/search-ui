@@ -35,5 +35,8 @@ export function paginationChangeAction(
                     result,
                 },
             });
+        })
+        .catch((error) => {
+            // Do nothing
         });
 }

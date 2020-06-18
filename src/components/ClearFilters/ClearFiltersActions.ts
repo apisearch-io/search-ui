@@ -38,5 +38,8 @@ export function clearFiltersAction(
                     result,
                 },
             });
-        });
+        })
+        .catch((error) => {
+            // Do nothing
+        });;
 }

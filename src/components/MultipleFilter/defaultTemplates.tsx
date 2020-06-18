@@ -1,13 +1,13 @@
 export const defaultItemTemplate = `
-    <input 
-        type="checkbox" 
-        id="filter_{{values.id}}"
-        class="as-multipleFilter__itemCheckbox" 
+    <input
+        type="checkbox"
+        id="filter_{{uid}}"
+        class="as-multipleFilter__itemCheckbox"
         {{#isActive}}checked="checked"{{/isActive}}
     >
-    <label 
+    <label
         class="as-multipleFilter__itemName"
-        for="filter_{{values.id}}"
+        for="filter_{{uid}}"
     >
         {{{values.name}}}
     </label>

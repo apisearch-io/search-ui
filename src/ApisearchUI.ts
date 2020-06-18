@@ -1,6 +1,6 @@
 import { h, render } from "preact";
 
-import {Repository} from "apisearch";
+import {HttpRepository, ItemUUID} from "apisearch";
 import apisearch from "apisearch";
 import { initialDataFetchAction } from "./ApisearchActions";
 import {bootstrap} from "./Bootstrap";
@@ -17,7 +17,8 @@ import widgets from "./widgets/Widgets";
 export default class ApisearchUI {
 
     private environmentId: string;
-    private repository: Repository;
+    private reference: ApisearchUI;
+    private repository: HttpRepository;
     private activeWidgets: Widget[];
     private store: Store;
     public widgets: any;
@@ -31,7 +32,7 @@ export default class ApisearchUI {
      */
     public constructor(
         environmentId: string,
-        repository: Repository,
+        repository: HttpRepository,
         store: Store,
     ) {
         /**
@@ -178,9 +179,35 @@ export default class ApisearchUI {
          */
         apisearchUI.widgets = widgets;
 
+        const uiId = `ui_${Math.ceil(Math.random() * (9999999 - 1) + 1)}`;
+        apisearchUI.reference = uiId;
+        window[uiId] = apisearchUI;
+
         /**
          * Return ApisearchUI instance
          */
         return apisearchUI;
+    }
+
+    /**
+     * Click
+     *
+     * @param app_id
+     * @param index_id
+     * @param item_id
+     * @param user_id
+     *
+     * @return {any}
+     */
+    public click(
+        app_id: string,
+        index_id: string,
+        item_id: string,
+        user_id: string
+    )
+    {
+        this
+            .repository
+            .click(app_id, index_id, item_id, user_id);
     }
 }

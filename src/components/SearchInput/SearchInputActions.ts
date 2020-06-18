@@ -37,5 +37,8 @@ export function simpleSearchAction(
                     result,
                 },
             });
+    })
+    .catch((error) => {
+        // Do nothing
     });
 }

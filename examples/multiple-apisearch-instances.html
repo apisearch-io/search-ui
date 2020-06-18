@@ -90,7 +90,7 @@
             <div class="card-content">
                 <div class="media">
                     <div class="media-left">
-                        <img src="{{metadata.img}}" alt="{{metadata.title}}">
+                        <img src="{{metadata.image}}" alt="{{metadata.title}}">
                     </div>
                     <div class="media-content">
                         <strong>{{metadata.title}}</strong>
@@ -104,11 +104,12 @@
     <script type="text/javascript">
         // UI Instance 1
         const firstUI = apisearchUI.create({
-            app_id: '9c078fa1a748',
-            index_id: 'e742fbfbac24',
-            token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
+            app_id: 'as-29be77d7-2f64-4522',
+            index_id: 'eu1-prod-d53da03a-d49c-483c',
+            token: 'eu1-8438694d-5839-4179-9f73-a55630f3cd4d',
             options: {
-                endpoint: 'https://apisearch.global.ssl.fastly.net',
+                endpoint: 'https://eu1.apisearch.io',
+                override_queries: true
             }
         });
 
@@ -135,11 +136,12 @@
     <script type="text/javascript">
         // UI Instance 2
         const secondUI = apisearchUI.create({
-            app_id: '9c078fa1a748',
-            index_id: 'e742fbfbac24',
-            token: 'daf93c2b-40bc-49f2-870e-f8f62ea524ad',
+            app_id: 'as-29be77d7-2f64-4522',
+            index_id: 'eu1-prod-d53da03a-d49c-483c',
+            token: 'eu1-8438694d-5839-4179-9f73-a55630f3cd4d',
             options: {
-                endpoint: 'https://apisearch.global.ssl.fastly.net',
+                endpoint: 'https://eu1.apisearch.io',
+                override_queries: true
             }
         });
 
@@ -147,6 +149,7 @@
             secondUI.widgets.searchInput({
                 target: '.input-instance-two',
                 placeholder: 'Type something on instance two...',
+                startSearchOn: 3,
                 classNames: {
                     input: 'input'
                 }
@@ -160,7 +163,9 @@
             })
         );
 
-        secondUI.init();
+        secondUI.init({
+            firstQuery: false
+        });
     </script>
 </body>
 </html>

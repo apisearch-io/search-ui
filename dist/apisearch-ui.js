@@ -2196,6 +2196,8 @@ var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.j
 var InvalidFormatError_1 = __webpack_require__(/*! ../Error/InvalidFormatError */ "./node_modules/apisearch/lib/Error/InvalidFormatError.js");
 var Coordinate_1 = __webpack_require__(/*! ./Coordinate */ "./node_modules/apisearch/lib/Model/Coordinate.js");
 var ItemUUID_1 = __webpack_require__(/*! ./ItemUUID */ "./node_modules/apisearch/lib/Model/ItemUUID.js");
+var AppUUID_1 = __webpack_require__(/*! ./AppUUID */ "./node_modules/apisearch/lib/Model/AppUUID.js");
+var IndexUUID_1 = __webpack_require__(/*! ./IndexUUID */ "./node_modules/apisearch/lib/Model/IndexUUID.js");
 /**
  * Item class
  */
@@ -2482,6 +2484,22 @@ var Item = /** @class */ (function () {
         return this.score;
     };
     /**
+     * Set appUUID
+     *
+     * @return {AppUUID}
+     */
+    Item.prototype.getAppUUID = function () {
+        return this.appUUID;
+    };
+    /**
+     * Set indexUUID
+     *
+     * @return {IndexUUID}
+     */
+    Item.prototype.getIndexUUID = function () {
+        return this.indexUUID;
+    };
+    /**
      * To array
      */
     Item.prototype.toArray = function () {
@@ -2518,6 +2536,12 @@ var Item = /** @class */ (function () {
         if (typeof this.score != "undefined") {
             itemAsArray.score = this.score;
         }
+        if (typeof this.appUUID != "undefined") {
+            itemAsArray.app_uuid = this.appUUID.toArray();
+        }
+        if (typeof this.indexUUID != "undefined") {
+            itemAsArray.index_uuid = this.indexUUID.toArray();
+        }
         return itemAsArray;
     };
     /**
@@ -2553,6 +2577,14 @@ var Item = /** @class */ (function () {
         if (typeof array.score != "undefined" &&
             array.score != null) {
             item.score = array.score;
+        }
+        if (typeof array.app_uuid != "undefined" &&
+            array.app_uuid != null) {
+            item.appUUID = AppUUID_1.AppUUID.createFromArray(array.app_uuid);
+        }
+        if (typeof array.index_uuid != "undefined" &&
+            array.index_uuid != null) {
+            item.indexUUID = IndexUUID_1.IndexUUID.createFromArray(array.index_uuid);
         }
         return item;
     };
@@ -3514,7 +3546,7 @@ var Query = /** @class */ (function () {
      *
      * @param filterName
      * @param field
-     * @param options
+     * @param ranges
      * @param values
      * @param applicationType
      * @param rangeType
@@ -3523,7 +3555,7 @@ var Query = /** @class */ (function () {
      *
      * @return {Query}
      */
-    Query.prototype.filterByRange = function (filterName, field, options, values, applicationType, rangeType, aggregate, aggregationSort) {
+    Query.prototype.filterByRange = function (filterName, field, ranges, values, applicationType, rangeType, aggregate, aggregationSort) {
         var _a;
         if (applicationType === void 0) { applicationType = Filter_2.FILTER_AT_LEAST_ONE; }
         if (rangeType === void 0) { rangeType = Filter_2.FILTER_TYPE_RANGE; }
@@ -3537,7 +3569,7 @@ var Query = /** @class */ (function () {
             delete this.filters[filterName];
         }
         if (aggregate) {
-            this.aggregateByRange(filterName, fieldPath, options, applicationType, rangeType, aggregationSort);
+            this.aggregateByRange(filterName, fieldPath, ranges, applicationType, rangeType, aggregationSort);
         }
         return this;
     };
@@ -3631,7 +3663,7 @@ var Query = /** @class */ (function () {
      *
      * @param filterName
      * @param field
-     * @param options
+     * @param ranges
      * @param applicationType
      * @param rangeType
      * @param aggregationSort
@@ -3639,15 +3671,15 @@ var Query = /** @class */ (function () {
      *
      * @return {Query}
      */
-    Query.prototype.aggregateByRange = function (filterName, field, options, applicationType, rangeType, aggregationSort, limit) {
+    Query.prototype.aggregateByRange = function (filterName, field, ranges, applicationType, rangeType, aggregationSort, limit) {
         var _a;
         if (rangeType === void 0) { rangeType = Filter_2.FILTER_TYPE_RANGE; }
         if (aggregationSort === void 0) { aggregationSort = Aggregation_2.AGGREGATION_SORT_BY_COUNT_DESC; }
         if (limit === void 0) { limit = Aggregation_2.AGGREGATION_NO_LIMIT; }
-        if (options.length === 0) {
+        if (ranges.length === 0) {
             return this;
         }
-        this.aggregations = tslib_1.__assign(tslib_1.__assign({}, this.aggregations), (_a = {}, _a[filterName] = Aggregation_1.Aggregation.create(filterName, Item_1.Item.getPathByField(field), applicationType, rangeType, options, aggregationSort, limit), _a));
+        this.aggregations = tslib_1.__assign(tslib_1.__assign({}, this.aggregations), (_a = {}, _a[filterName] = Aggregation_1.Aggregation.create(filterName, Item_1.Item.getPathByField(field), applicationType, rangeType, ranges, aggregationSort, limit), _a));
         return this;
     };
     /**
@@ -5515,6 +5547,43 @@ var HttpRepository = /** @class */ (function (_super) {
                         response_10 = _a.sent();
                         throw this.createErrorFromResponse(response_10);
                     case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    /**
+     * Click
+     *
+     * @param {string} app_id
+     * @param {string} index_id
+     * @param {string} item_id
+     * @param {string} user_id
+     *
+     * @return {Promise<void>}
+     */
+    HttpRepository.prototype.click = function (app_id, index_id, item_id, user_id) {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var parameters, response_11;
+            return tslib_1.__generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        parameters = {};
+                        if (typeof user_id != "undefined") {
+                            parameters.user_id = user_id;
+                        }
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, this.httpClient.get("/" + app_id + "/indices/" + index_id + "/items/" + item_id + '/click', "post", {
+                                token: this.token
+                            }, parameters, {})];
+                    case 2:
+                        _a.sent();
+                        return [3 /*break*/, 4];
+                    case 3:
+                        response_11 = _a.sent();
+                        throw this.createErrorFromResponse(response_11);
+                    case 4: return [2 /*return*/];
                 }
             });
         });
@@ -13900,10 +13969,28 @@ var ApisearchUI = /** @class */ (function () {
          * Add widgets
          */
         apisearchUI.widgets = Widgets_1["default"];
+        var uiId = "ui_" + Math.ceil(Math.random() * (9999999 - 1) + 1);
+        apisearchUI.reference = uiId;
+        window[uiId] = apisearchUI;
         /**
          * Return ApisearchUI instance
          */
         return apisearchUI;
+    };
+    /**
+     * Click
+     *
+     * @param app_id
+     * @param index_id
+     * @param item_id
+     * @param user_id
+     *
+     * @return {any}
+     */
+    ApisearchUI.prototype.click = function (app_id, index_id, item_id, user_id) {
+        this
+            .repository
+            .click(app_id, index_id, item_id, user_id);
     };
     return ApisearchUI;
 }());
@@ -13939,6 +14026,7 @@ function bootstrap(environmentId, config) {
     var repositoryId = Constants_1.APISEARCH_REPOSITORY + "__" + configAsString;
     var storeId = Constants_1.APISEARCH_STORE + "__" + environmentId;
     var dispatcherId = Constants_1.APISEARCH_DISPATCHER + "__" + environmentId;
+    var configId = Constants_1.APISEARCH_CONFIG + "__" + environmentId;
     var asuiId = Constants_1.APISEARCH_UI + "__" + environmentId;
     /**
      * Register Apisearch repository
@@ -13957,6 +14045,12 @@ function bootstrap(environmentId, config) {
      */
     Container_1["default"].register(dispatcherId, function () {
         return new flux_1.Dispatcher();
+    });
+    /**
+     * Register Apisearch config
+     */
+    Container_1["default"].register(configId, function () {
+        return config;
     });
     /**
      * Apisearch UI Instance
@@ -13987,6 +14081,7 @@ exports.APISEARCH_REPOSITORY = "apisearch_repository";
 exports.APISEARCH_STORE = "apisearch_store";
 exports.APISEARCH_DISPATCHER = "apisearch_dispatcher";
 exports.APISEARCH_UI = "apisearch_ui";
+exports.APISEARCH_CONFIG = "apisearch_config";
 
 
 /***/ }),
@@ -14203,7 +14298,10 @@ function clearFiltersAction(environmentId, currentQuery, repository) {
                 result: result
             }
         });
+    })["catch"](function (error) {
+        // Do nothing
     });
+    ;
 }
 exports.clearFiltersAction = clearFiltersAction;
 
@@ -14483,7 +14581,7 @@ function filterAction(environmentId, currentQuery, repository, filterName, filte
             }
         });
     })["catch"](function (error) {
-        return null;
+        // Do nothing
     });
 }
 exports.filterAction = filterAction;
@@ -14690,10 +14788,12 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
             preact_1.h("div", { className: "as-multipleFilter__itemsList " + itemsListClassName }, items.map(function (item) {
                 var values = item.getValues();
                 values.name = labels[values.name] ? labels[values.name] : values.name;
+                var uid = Math.floor(Math.random() * 10000000000);
                 var reducedTemplateData = {
                     n: item.getN(),
                     isActive: item.isUsed(),
-                    values: values
+                    values: values,
+                    uid: uid
                 };
                 var formattedTemplateData = formatData(reducedTemplateData);
                 return (preact_1.h("div", { className: "as-multipleFilter__item " +
@@ -14779,7 +14879,7 @@ exports["default"] = ShowMoreComponent;
 "use strict";
 
 exports.__esModule = true;
-exports.defaultItemTemplate = "\n    <input \n        type=\"checkbox\" \n        id=\"filter_{{values.id}}\"\n        class=\"as-multipleFilter__itemCheckbox\" \n        {{#isActive}}checked=\"checked\"{{/isActive}}\n    >\n    <label \n        class=\"as-multipleFilter__itemName\"\n        for=\"filter_{{values.id}}\"\n    >\n        {{{values.name}}}\n    </label>\n    <span class=\"as-multipleFilter__itemNumber\">\n        {{n}}\n    </span>\n";
+exports.defaultItemTemplate = "\n    <input\n        type=\"checkbox\"\n        id=\"filter_{{uid}}\"\n        class=\"as-multipleFilter__itemCheckbox\"\n        {{#isActive}}checked=\"checked\"{{/isActive}}\n    >\n    <label\n        class=\"as-multipleFilter__itemName\"\n        for=\"filter_{{uid}}\"\n    >\n        {{{values.name}}}\n    </label>\n    <span class=\"as-multipleFilter__itemNumber\">\n        {{n}}\n    </span>\n";
 
 
 /***/ }),
@@ -14946,6 +15046,8 @@ function paginationChangeAction(environmentId, currentQuery, repository, selecte
                 result: result
             }
         });
+    })["catch"](function (error) {
+        // Do nothing
     });
 }
 exports.paginationChangeAction = paginationChangeAction;
@@ -15197,6 +15299,8 @@ var Template_1 = __webpack_require__(/*! ../Template */ "./src/components/Templa
 var defaultTemplates_1 = __webpack_require__(/*! ./defaultTemplates */ "./src/components/Result/defaultTemplates.tsx");
 var ResultActions_1 = __webpack_require__(/*! ./ResultActions */ "./src/components/Result/ResultActions.ts");
 var ItemUUID_1 = __webpack_require__(/*! apisearch/lib/Model/ItemUUID */ "./node_modules/apisearch/lib/Model/ItemUUID.js");
+var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
+var Constants_1 = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
 /**
  * Result Component
  */
@@ -15234,6 +15338,10 @@ var ResultComponent = /** @class */ (function (_super) {
         var containerClassName = props.classNames.container;
         var itemsListClassName = props.classNames.itemsList;
         var placeholderClassName = props.classNames.placeholder;
+        var environmentId = props.environmentId;
+        var config = Container_1["default"].get(Constants_1.APISEARCH_CONFIG + "__" + environmentId);
+        var apisearchUI = Container_1["default"].get(Constants_1.APISEARCH_UI + "__" + environmentId);
+        var apisearchReference = apisearchUI.reference;
         var itemsListTemplate = props.template.itemsList;
         var placeholderTemplate = props.template.placeholder;
         var formatData = props.formatData;
@@ -15252,7 +15360,26 @@ var ResultComponent = /** @class */ (function (_super) {
         var formattedTemplateData = __assign({}, reducedTemplateData, { items: (reducedTemplateData.items)
                 ? reducedTemplateData
                     .items
-                    .map(function (item) { return formatData(item); })
+                    .map(function (item) {
+                    var appId = config.app_id;
+                    var appUUID = item.getAppUUID();
+                    if (typeof appUUID === "object") {
+                        appId = appUUID.composedUUID();
+                    }
+                    var indexId = config.index_id;
+                    var indexUUID = item.getIndexUUID();
+                    if (typeof indexUUID === "object") {
+                        indexId = indexUUID.composedUUID();
+                    }
+                    var itemId = item.getUUID().composedUUID();
+                    var userId = config.user_id;
+                    var clickParameters = typeof userId === "string"
+                        ? appId + '", "' + indexId + '", "' + itemId + '", "' + userId
+                        : appId + '", "' + indexId + '", "' + itemId;
+                    return __assign({}, formatData(item), {
+                        'click': apisearchReference + '.click("' + clickParameters + '"); return true;'
+                    });
+                })
                 : [] });
         return (preact_1.h("div", { className: "as-result " + containerClassName }, (placeholderTemplate && dirty)
             ? preact_1.h(Template_1["default"], { template: placeholderTemplate, className: "as-result__placeholder " + placeholderClassName })
@@ -15293,7 +15420,7 @@ exports["default"] = ResultComponent;
 "use strict";
 
 exports.__esModule = true;
-exports.defaultItemsListTemplate = "\n    <ul>\n    {{#items}}\n        <li class=\"as-result__item\">\n            <strong>Uuid:</strong> {{uuid.type}} - {{uuid.id}} <br />\n            <strong>Metadata:</strong> {{metadata}} <br />\n            <strong>Indexed metadata:</strong> {{indexedMetadata}}\n        </li>\n    {{/items}}\n    </ul>\n    {{^items}}No result{{/items}}\n";
+exports.defaultItemsListTemplate = "\n    <ul>\n    {{#items}}\n        <li class=\"as-result__item\">\n            <strong>Score:</strong> {{score}}<br />\n            <strong>Uuid:</strong> {{uuid.type}} - {{uuid.id}}<br />\n            <strong>Title:</strong> {{metadata.title}}<br />\n            <strong>Description:</strong> {{metadata.description}}<br />\n            <strong>Link:</strong> <a href=\"{{metadata.link}}\" onclick=\"{{click}}\" target=\"_blank\">{{metadata.link}}</a>\n        </li>\n    {{/items}}\n    </ul>\n    {{^items}}No result{{/items}}\n";
 
 
 /***/ }),
@@ -15334,6 +15461,8 @@ function simpleSearchAction(environmentId, currentQuery, repository, queryText) 
                 result: result
             }
         });
+    })["catch"](function (error) {
+        // Do nothing
     });
 }
 exports.simpleSearchAction = simpleSearchAction;
@@ -15511,6 +15640,8 @@ function onChangeSearchAction(environmentId, currentQuery, repository, selectedO
                 result: result
             }
         });
+    })["catch"](function (error) {
+        // Do nothing
     });
 }
 exports.onChangeSearchAction = onChangeSearchAction;

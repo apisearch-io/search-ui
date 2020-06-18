@@ -153,6 +153,6 @@ export function filterAction(
             });
         })
         .catch((error) => {
-            return null;
+            // Do nothing
         });
 }

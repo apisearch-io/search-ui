@@ -2,9 +2,11 @@ export const defaultItemsListTemplate = `
     <ul>
     {{#items}}
         <li class="as-result__item">
-            <strong>Uuid:</strong> {{uuid.type}} - {{uuid.id}} <br />
-            <strong>Metadata:</strong> {{metadata}} <br />
-            <strong>Indexed metadata:</strong> {{indexedMetadata}}
+            <strong>Score:</strong> {{score}}<br />
+            <strong>Uuid:</strong> {{uuid.type}} - {{uuid.id}}<br />
+            <strong>Title:</strong> {{metadata.title}}<br />
+            <strong>Description:</strong> {{metadata.description}}<br />
+            <strong>Link:</strong> <a href="{{metadata.link}}" onclick="{{click}}" target="_blank">{{metadata.link}}</a>
         </li>
     {{/items}}
     </ul>
