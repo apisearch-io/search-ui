@@ -41,7 +41,10 @@ export function bootstrap(
      * Register apisearch store
      */
     container.register(storeId, () => {
-        return new Store();
+        return new Store(
+            config.coordinate,
+            config.options.min_score
+        );
     });
 
     /**

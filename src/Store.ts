@@ -1,6 +1,5 @@
 import apisearch from "apisearch";
-import {Query} from "apisearch";
-import {Result} from "apisearch";
+import {Query, Result, Coordinate, QUERY_DEFAULT_PAGE, QUERY_DEFAULT_SIZE} from "apisearch";
 import { EventEmitter } from "events";
 
 /**
@@ -14,8 +13,17 @@ class Store extends EventEmitter {
 
     /**
      * Constructor
+     *
+     * @param {Coordinate}
+     * @param {number}
      */
-    constructor() {
+    constructor(
+        coordinate: {
+            lat: number,
+            lon: number
+        },
+        minScore: number
+    ) {
         super();
 
         /**
@@ -26,7 +34,17 @@ class Store extends EventEmitter {
         /**
          * Current query instance
          */
-        this.currentQuery = apisearch.createQueryMatchAll();
+        this.currentQuery = (
+                coordinate &&
+                coordinate.lat != undefined &&
+                coordinate.lon != undefined
+                )
+            ? apisearch.createQueryLocated(new Coordinate(coordinate.lat, coordinate.lon), '', QUERY_DEFAULT_PAGE, QUERY_DEFAULT_SIZE)
+            : apisearch.createQueryMatchAll();
+
+        if (minScore) {
+            this.currentQuery.setMinScore(minScore);
+        }
 
         /**
          * Data received

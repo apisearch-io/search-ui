@@ -14038,7 +14038,7 @@ function bootstrap(environmentId, config) {
      * Register apisearch store
      */
     Container_1["default"].register(storeId, function () {
-        return new Store_1["default"]();
+        return new Store_1["default"](config.coordinate, config.options.min_score);
     });
     /**
      * Register an event dispatcher
@@ -14169,6 +14169,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 exports.__esModule = true;
 var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
+var apisearch_2 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
 var events_1 = __webpack_require__(/*! events */ "./node_modules/events/events.js");
 /**
  * Flux pattern store class
@@ -14177,8 +14178,11 @@ var Store = /** @class */ (function (_super) {
     __extends(Store, _super);
     /**
      * Constructor
+     *
+     * @param {Coordinate}
+     * @param {number}
      */
-    function Store() {
+    function Store(coordinate, minScore) {
         var _this = _super.call(this) || this;
         /**
          * Store initial state
@@ -14187,7 +14191,14 @@ var Store = /** @class */ (function (_super) {
         /**
          * Current query instance
          */
-        _this.currentQuery = apisearch_1["default"].createQueryMatchAll();
+        _this.currentQuery = (coordinate &&
+            coordinate.lat != undefined &&
+            coordinate.lon != undefined)
+            ? apisearch_1["default"].createQueryLocated(new apisearch_2.Coordinate(coordinate.lat, coordinate.lon), '', apisearch_2.QUERY_DEFAULT_PAGE, apisearch_2.QUERY_DEFAULT_SIZE)
+            : apisearch_1["default"].createQueryMatchAll();
+        if (minScore) {
+            _this.currentQuery.setMinScore(minScore);
+        }
         /**
          * Data received
          */
@@ -15605,10 +15616,10 @@ exports.__esModule = true;
  * SortBy actions
  */
 var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
+var apisearch_2 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
 var cloneDeep = __webpack_require__(/*! clone-deep */ "./node_modules/clone-deep/index.js");
 var Constants_1 = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
 var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
-var apisearch_2 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
 /**
  * ON change search action
  *
@@ -15621,7 +15632,15 @@ function onChangeSearchAction(environmentId, currentQuery, repository, selectedO
     var clonedQuery = cloneDeep(currentQuery);
     var filterData = splitQueryValue(selectedOption);
     var sortBy = apisearch_1["default"].createEmptySortBy();
-    if (filterData.field == 'score') {
+    if (filterData.field == 'distance') {
+        sortBy.byValue({
+            type: apisearch_2.SORT_BY_TYPE_DISTANCE,
+            unit: filterData.sort
+                ? filterData.sort
+                : 'km'
+        });
+    }
+    else if (filterData.field == 'score') {
         sortBy.byValue(apisearch_2.SORT_BY_SCORE);
     }
     else {

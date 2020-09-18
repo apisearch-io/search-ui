@@ -2,12 +2,10 @@
  * SortBy actions
  */
 import Apisearch from "apisearch";
-import {Repository} from "apisearch";
-import {Query} from "apisearch";
+import {Repository, Query, SORT_BY_SCORE, SORT_BY_TYPE_DISTANCE} from "apisearch";
 import * as cloneDeep from "clone-deep";
 import {APISEARCH_DISPATCHER} from "../../Constants";
 import container from "../../Container";
-import {SORT_BY_SCORE} from "apisearch";
 
 /**
  * ON change search action
@@ -27,7 +25,14 @@ export function onChangeSearchAction(
     const filterData = splitQueryValue(selectedOption);
 
     const sortBy = Apisearch.createEmptySortBy();
-    if (filterData.field == 'score') {
+    if (filterData.field == 'distance') {
+        sortBy.byValue({
+            type: SORT_BY_TYPE_DISTANCE,
+            unit: filterData.sort
+                ? filterData.sort
+                : 'km'
+        });
+    } else if (filterData.field == 'score') {
         sortBy.byValue(SORT_BY_SCORE);
     } else {
         sortBy.byFieldValue(
