@@ -50,7 +50,14 @@ class SortByComponent extends Component<SortByProps> {
 
         const containerClassName = props.classNames.container;
         const selectClassName = props.classNames.select;
-        const options = props.options;
+        let options = props.options;
+        const coordinate = props.currentQuery.toArray().coordinate;
+
+        if (!coordinate) {
+            options = options.filter(function(o) {
+                return o.value != 'distance';
+            });
+        }
 
         return (
             <div className={`as-sortBy ${containerClassName}`}>

@@ -15745,6 +15745,12 @@ var SortByComponent = /** @class */ (function (_super) {
         var containerClassName = props.classNames.container;
         var selectClassName = props.classNames.select;
         var options = props.options;
+        var coordinate = props.currentQuery.toArray().coordinate;
+        if (!coordinate) {
+            options = options.filter(function (o) {
+                return o.value != 'distance';
+            });
+        }
         return (preact_1.h("div", { className: "as-sortBy " + containerClassName },
             preact_1.h("select", { className: "as-sortBy__selector " + selectClassName, onChange: this.handleChange }, options.map(function (option) { return (preact_1.h("option", { value: option.value }, option.name)); }))));
     };
