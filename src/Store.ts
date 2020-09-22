@@ -10,6 +10,7 @@ class Store extends EventEmitter {
     private dirty;
     private currentQuery: Query;
     private currentResult: Result;
+    private currentVisibleResults: boolean;
 
     /**
      * Constructor
@@ -80,6 +81,15 @@ class Store extends EventEmitter {
     }
 
     /**
+     * Results are visible
+     *
+     * @return {boolean}
+     */
+    public resultsAreVisible(): boolean {
+        return this.currentVisibleResults;
+    }
+
+    /**
      * Handle Dispatched actions
      *
      * This is what we call a reducer
@@ -92,6 +102,8 @@ class Store extends EventEmitter {
          */
         if (action.type === "UPDATE_APISEARCH_SETUP") {
             this.currentQuery = action.payload.query;
+
+            return;
         }
 
         /**
@@ -99,12 +111,14 @@ class Store extends EventEmitter {
          * Dispatches an 'render' event
          */
         if (action.type === "RENDER_INITIAL_DATA") {
-            const { result, query } = action.payload;
+            const { result, query, visibleResults } = action.payload;
 
             this.currentResult = result;
             this.currentQuery = query;
+            this.currentVisibleResults = query != undefined;
 
             this.emit("render");
+            return;
         }
 
         /**
@@ -112,13 +126,18 @@ class Store extends EventEmitter {
          * Dispatches a 'render' event
          */
         if (action.type === "RENDER_FETCHED_DATA") {
-            const { result, query } = action.payload;
+            const { result, query, visibleResults } = action.payload;
 
             this.dirty = false;
             this.currentResult = result;
             this.currentQuery = query;
 
+            if (visibleResults != undefined) {
+                this.currentVisibleResults = visibleResults;
+            }
+
             this.emit("render");
+            return;
         }
     }
 }

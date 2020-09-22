@@ -14230,6 +14230,14 @@ var Store = /** @class */ (function (_super) {
         return this.currentResult;
     };
     /**
+     * Results are visible
+     *
+     * @return {boolean}
+     */
+    Store.prototype.resultsAreVisible = function () {
+        return this.currentVisibleResults;
+    };
+    /**
      * Handle Dispatched actions
      *
      * This is what we call a reducer
@@ -14242,27 +14250,34 @@ var Store = /** @class */ (function (_super) {
          */
         if (action.type === "UPDATE_APISEARCH_SETUP") {
             this.currentQuery = action.payload.query;
+            return;
         }
         /**
          * Is triggered when a initial data is received
          * Dispatches an 'render' event
          */
         if (action.type === "RENDER_INITIAL_DATA") {
-            var _a = action.payload, result = _a.result, query = _a.query;
+            var _a = action.payload, result = _a.result, query = _a.query, visibleResults = _a.visibleResults;
             this.currentResult = result;
             this.currentQuery = query;
+            this.currentVisibleResults = query != undefined;
             this.emit("render");
+            return;
         }
         /**
          * When action triggers a re-rendering
          * Dispatches a 'render' event
          */
         if (action.type === "RENDER_FETCHED_DATA") {
-            var _b = action.payload, result = _b.result, query = _b.query;
+            var _b = action.payload, result = _b.result, query = _b.query, visibleResults = _b.visibleResults;
             this.dirty = false;
             this.currentResult = result;
             this.currentQuery = query;
+            if (visibleResults != undefined) {
+                this.currentVisibleResults = visibleResults;
+            }
             this.emit("render");
+            return;
         }
     };
     return Store;
@@ -15358,20 +15373,22 @@ var ResultComponent = /** @class */ (function (_super) {
         var formatData = props.formatData;
         var currentResult = props.currentResult;
         var currentQuery = props.currentQuery;
+        var currentVisibleResults = props.currentVisibleResults;
+        if (!currentVisibleResults) {
+            return (preact_1.h("div", { className: "as-result " + containerClassName }));
+        }
         /**
          * Data accessible to the template
          */
+        var items = currentResult.getItems();
         var reducedTemplateData = {
-            query: currentQuery.getQueryText(),
-            items: currentResult.getItems()
+            query: currentQuery.getQueryText()
         };
         /**
          * Format each item data
          */
-        var formattedTemplateData = __assign({}, reducedTemplateData, { items: (reducedTemplateData.items)
-                ? reducedTemplateData
-                    .items
-                    .map(function (item) {
+        var formattedTemplateData = __assign({}, reducedTemplateData, { items: (items)
+                ? items.map(function (item) {
                     var appId = config.app_id;
                     var appUUID = item.getAppUUID();
                     if (typeof appUUID === "object") {
@@ -15456,12 +15473,24 @@ var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts
  * @param currentQuery
  * @param repository
  * @param queryText
+ * @param visibleResults
  */
-function simpleSearchAction(environmentId, currentQuery, repository, queryText) {
+function simpleSearchAction(environmentId, currentQuery, repository, queryText, visibleResults) {
+    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
     var clonedQuery = cloneDeep(currentQuery);
     clonedQuery.filters._query.values = [queryText];
     clonedQuery.page = 1;
-    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
+    if (!visibleResults) {
+        dispatcher.dispatch({
+            type: "RENDER_FETCHED_DATA",
+            payload: {
+                query: clonedQuery,
+                result: null,
+                visibleResults: visibleResults
+            }
+        });
+        return;
+    }
     repository
         .query(clonedQuery)
         .then(function (result) {
@@ -15469,7 +15498,8 @@ function simpleSearchAction(environmentId, currentQuery, repository, queryText) 
             type: "RENDER_FETCHED_DATA",
             payload: {
                 query: clonedQuery,
-                result: result
+                result: result,
+                visibleResults: visibleResults
             }
         });
     })["catch"](function (error) {
@@ -15530,26 +15560,23 @@ var SearchInputComponent = /** @class */ (function (_super) {
             var environmentId = props.environmentId;
             var currentQuery = props.currentQuery;
             var repository = props.repository;
-            /**
-             * Search when string is bigger than {startSearchOn}
-             */
-            if (e.target.value.length < startSearchOn) {
-                return;
-            }
+            var visibleResults = e.target.value.length >= startSearchOn;
             /**
              * Dispatch input search action
              */
-            SearchInputActions_1.simpleSearchAction(environmentId, currentQuery, repository, e.target.value);
+            SearchInputActions_1.simpleSearchAction(environmentId, currentQuery, repository, e.target.value, visibleResults);
         };
         /**
          * Clear search
          */
         _this.clearSearch = function () {
             var props = _this.props;
+            var startSearchOn = props.startSearchOn;
             var environmentId = props.environmentId;
             var currentQuery = props.currentQuery;
             var repository = props.repository;
-            SearchInputActions_1.simpleSearchAction(environmentId, currentQuery, repository, '');
+            var visibleResults = 0 == startSearchOn;
+            SearchInputActions_1.simpleSearchAction(environmentId, currentQuery, repository, '', visibleResults);
         };
         return _this;
     }
@@ -16227,7 +16254,7 @@ var Result = /** @class */ (function (_super) {
      * @param repository
      */
     Result.prototype.render = function (environmentId, store, repository) {
-        this.component.attributes = __assign({}, this.component.attributes, { environmentId: environmentId, repository: repository, dirty: store.isDirty(), currentResult: store.getCurrentResult(), currentQuery: store.getCurrentQuery() });
+        this.component.attributes = __assign({}, this.component.attributes, { environmentId: environmentId, repository: repository, dirty: store.isDirty(), currentResult: store.getCurrentResult(), currentQuery: store.getCurrentQuery(), currentVisibleResults: store.resultsAreVisible() });
         var targetNode = document.querySelector(this.target);
         preact_1.render(this.component, targetNode, targetNode.lastChild);
     };

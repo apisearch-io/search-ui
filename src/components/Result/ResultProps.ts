@@ -29,4 +29,5 @@ export interface ResultProps {
     dirty?: boolean;
     currentResult?: Result;
     currentQuery?: Query;
+    currentVisibleResults?: boolean;
 }

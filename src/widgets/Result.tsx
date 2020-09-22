@@ -76,6 +76,7 @@ class Result extends Widget {
             dirty: store.isDirty(),
             currentResult: store.getCurrentResult(),
             currentQuery: store.getCurrentQuery(),
+            currentVisibleResults: store.resultsAreVisible(),
         };
 
         let targetNode = document.querySelector(this.target);

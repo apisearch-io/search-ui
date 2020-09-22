@@ -20,13 +20,7 @@ class SearchInputComponent extends Component<SearchInputProps> {
         const environmentId = props.environmentId;
         const currentQuery = props.currentQuery;
         const repository = props.repository;
-
-        /**
-         * Search when string is bigger than {startSearchOn}
-         */
-        if (e.target.value.length < startSearchOn) {
-            return;
-        }
+        const visibleResults = e.target.value.length >= startSearchOn;
 
         /**
          * Dispatch input search action
@@ -35,7 +29,8 @@ class SearchInputComponent extends Component<SearchInputProps> {
             environmentId,
             currentQuery,
             repository,
-            e.target.value
+            e.target.value,
+            visibleResults
         );
     };
 
@@ -45,15 +40,18 @@ class SearchInputComponent extends Component<SearchInputProps> {
     clearSearch = () => {
 
         const props = this.props;
+        const startSearchOn = props.startSearchOn;
         const environmentId = props.environmentId;
         const currentQuery = props.currentQuery;
         const repository = props.repository;
+        const visibleResults = 0 == startSearchOn;
 
         simpleSearchAction(
             environmentId,
             currentQuery,
             repository,
-            ''
+            '',
+            visibleResults
         )
     };
 

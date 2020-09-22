@@ -14,19 +14,34 @@ import container from "../../Container";
  * @param currentQuery
  * @param repository
  * @param queryText
+ * @param visibleResults
  */
 export function simpleSearchAction(
     environmentId: string,
     currentQuery: Query,
     repository: Repository,
     queryText: string,
+    visibleResults: boolean
 ) {
+    const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
     const clonedQuery = cloneDeep(currentQuery);
 
     clonedQuery.filters._query.values = [queryText];
     clonedQuery.page = 1;
 
-    const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
+    if (!visibleResults) {
+        dispatcher.dispatch({
+            type: "RENDER_FETCHED_DATA",
+            payload: {
+                query: clonedQuery,
+                result: null,
+                visibleResults: visibleResults
+            },
+        });
+
+        return;
+    }
+
     repository
         .query(clonedQuery)
         .then((result) => {
@@ -34,11 +49,12 @@ export function simpleSearchAction(
                 type: "RENDER_FETCHED_DATA",
                 payload: {
                     query: clonedQuery,
-                    result,
+                    result: result,
+                    visibleResults: visibleResults
                 },
             });
-    })
-    .catch((error) => {
-        // Do nothing
-    });
+        })
+        .catch((error) => {
+            // Do nothing
+        });
 }

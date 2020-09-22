@@ -68,13 +68,20 @@ class ResultComponent extends Component<ResultProps> {
         const formatData = props.formatData;
         const currentResult = props.currentResult;
         const currentQuery = props.currentQuery;
+        const currentVisibleResults = props.currentVisibleResults;
+
+        if (!currentVisibleResults) {
+            return (
+                <div className={`as-result ${containerClassName}`}></div>
+            )
+        }
 
         /**
          * Data accessible to the template
          */
+        const items = currentResult.getItems();
         let reducedTemplateData = {
-            query: currentQuery.getQueryText(),
-            items: currentResult.getItems()
+            query: currentQuery.getQueryText()
         };
 
         /**
@@ -82,35 +89,33 @@ class ResultComponent extends Component<ResultProps> {
          */
         let formattedTemplateData = {
             ...reducedTemplateData,
-            items: (reducedTemplateData.items)
-                ? reducedTemplateData
-                    .items
-                    .map(function(item) {
-                        let appId = config.app_id;
-                        const appUUID = item.getAppUUID();
-                        if (typeof appUUID === "object") {
-                            appId = appUUID.composedUUID();
-                        }
+            items: (items)
+                ? items.map(function(item) {
+                    let appId = config.app_id;
+                    const appUUID = item.getAppUUID();
+                    if (typeof appUUID === "object") {
+                        appId = appUUID.composedUUID();
+                    }
 
-                        let indexId = config.index_id;
-                        const indexUUID = item.getIndexUUID();
-                        if (typeof indexUUID === "object") {
-                            indexId = indexUUID.composedUUID();
-                        }
+                    let indexId = config.index_id;
+                    const indexUUID = item.getIndexUUID();
+                    if (typeof indexUUID === "object") {
+                        indexId = indexUUID.composedUUID();
+                    }
 
-                        const itemId = item.getUUID().composedUUID();
-                        const userId = config.user_id;
-                        const clickParameters = typeof userId === "string"
-                            ? appId+'", "'+indexId+'", "'+itemId+'", "'+userId
-                            : appId+'", "'+indexId+'", "'+itemId;
+                    const itemId = item.getUUID().composedUUID();
+                    const userId = config.user_id;
+                    const clickParameters = typeof userId === "string"
+                        ? appId+'", "'+indexId+'", "'+itemId+'", "'+userId
+                        : appId+'", "'+indexId+'", "'+itemId;
 
-                        return {
-                            ...formatData(item),
-                            ...{
-                                'click': apisearchReference + '.click("'+clickParameters+'"); return true;'
-                            }
+                    return {
+                        ...formatData(item),
+                        ...{
+                            'click': apisearchReference + '.click("'+clickParameters+'"); return true;'
                         }
-                    })
+                    }
+                })
                 : [],
         };
 
