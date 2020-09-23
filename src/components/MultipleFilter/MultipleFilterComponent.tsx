@@ -76,13 +76,17 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
     }
 
     /**
-     * Component will recieve props
+     * Component will receive props
      *
      * @param props
      */
     componentWillReceiveProps(props) {
 
         const filterName = props.filterName;
+        if (props.currentResult == null) {
+            return;
+        }
+
         const aggregation = props.currentResult.getAggregation(filterName);
 
         if (typeof aggregation.getCounters === "function") {
@@ -196,7 +200,6 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
      * @return {any}
      */
     render() {
-
         const props = this.props;
         const viewLimit = props.viewLimit;
         const fetchLimit = props.fetchLimit;

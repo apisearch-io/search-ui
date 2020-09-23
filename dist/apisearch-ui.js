@@ -14458,6 +14458,9 @@ var InformationComponent = /** @class */ (function (_super) {
         var containerTemplate = props.template.container;
         var formatData = props.formatData;
         var currentResult = props.currentResult;
+        if (props.currentResult == null) {
+            return;
+        }
         /**
          * Data accessible to the template
          */
@@ -14740,12 +14743,15 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
             : filterField), applicationType, sortBy, fetchLimit, ranges);
     };
     /**
-     * Component will recieve props
+     * Component will receive props
      *
      * @param props
      */
     MultipleFilterComponent.prototype.componentWillReceiveProps = function (props) {
         var filterName = props.filterName;
+        if (props.currentResult == null) {
+            return;
+        }
         var aggregation = props.currentResult.getAggregation(filterName);
         if (typeof aggregation.getCounters === "function") {
             /**
@@ -15147,6 +15153,9 @@ var PaginationComponent = /** @class */ (function (_super) {
         var _this = this;
         var props = this.props;
         var currentResult = props.currentResult;
+        if (props.currentResult == null) {
+            return;
+        }
         var currentQuerySize = props.currentQuery.getSize();
         var totalPages = Helpers_1.getTotalPages(currentResult.getTotalHits(), currentQuerySize);
         /**

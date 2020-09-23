@@ -14,6 +14,10 @@ class InformationComponent extends Component<InformationProps> {
         const formatData = props.formatData;
         const currentResult = props.currentResult;
 
+        if (props.currentResult == null) {
+            return;
+        }
+
         /**
          * Data accessible to the template
          */

@@ -63,6 +63,10 @@ class PaginationComponent extends Component<PaginationProps> {
 
         const props = this.props;
         const currentResult = props.currentResult;
+        if (props.currentResult == null) {
+            return;
+        }
+
         const currentQuerySize = props.currentQuery.getSize();
         const totalPages = getTotalPages(
             currentResult.getTotalHits(),
