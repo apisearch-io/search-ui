@@ -112,7 +112,7 @@ class ResultComponent extends Component<ResultProps> {
                     return {
                         ...formatData(item),
                         ...{
-                            'click': apisearchReference + '.click("'+clickParameters+'"); return true;'
+                            'click': apisearchReference + '.click("'+clickParameters+'");'
                         }
                     }
                 })

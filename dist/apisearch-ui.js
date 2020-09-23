@@ -15405,7 +15405,7 @@ var ResultComponent = /** @class */ (function (_super) {
                         ? appId + '", "' + indexId + '", "' + itemId + '", "' + userId
                         : appId + '", "' + indexId + '", "' + itemId;
                     return __assign({}, formatData(item), {
-                        'click': apisearchReference + '.click("' + clickParameters + '"); return true;'
+                        'click': apisearchReference + '.click("' + clickParameters + '");'
                     });
                 })
                 : [] });
