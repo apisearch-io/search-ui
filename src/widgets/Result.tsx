@@ -33,7 +33,8 @@ class Result extends Widget {
         highlightsEnabled,
         classNames,
         template,
-        formatData
+        formatData,
+        fadeInSelector
     }) {
         super();
         this.target = target;
@@ -54,6 +55,7 @@ class Result extends Widget {
                 ...template
             }}
             formatData={formatData}
+            fadeInSelector={fadeInSelector}
         />
     }
 
@@ -69,8 +71,8 @@ class Result extends Widget {
         store:Store,
         repository:Repository
     ) {
-        this.component.attributes = {
-            ...this.component.attributes,
+        this.component.props = {
+            ...this.component.props,
             environmentId: environmentId,
             repository: repository,
             dirty: store.isDirty(),
@@ -80,11 +82,9 @@ class Result extends Widget {
         };
 
         let targetNode = document.querySelector(this.target);
-
         render(
             this.component,
-            targetNode,
-            targetNode.lastChild
+            targetNode
         )
     }
 }

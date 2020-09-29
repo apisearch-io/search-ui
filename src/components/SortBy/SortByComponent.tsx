@@ -1,13 +1,34 @@
 import { h, render, Component } from 'preact';
 import {SortByProps} from './SortByProps';
 import {
-    onChangeSearchAction
+    onChangeSearchAction,
+    initialSortBySetup
 } from "./SortByActions";
 
 /**
  * SortBy Filter Component
  */
 class SortByComponent extends Component<SortByProps> {
+
+    /**
+     * Components will mount
+     */
+    componentWillMount() {
+
+        const props = this.props;
+        const environmentId = props.environmentId;
+        const options = props.options;
+        const currentQuery = props.currentQuery;
+
+        /**
+         * Dispatch action
+         */
+        initialSortBySetup(
+            environmentId,
+            currentQuery,
+            options[0].value,
+        );
+    }
 
     /**
      * Should component update

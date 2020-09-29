@@ -8,6 +8,32 @@ import {APISEARCH_DISPATCHER} from "../../Constants";
 import container from "../../Container";
 
 /**
+ * Initial sortBy
+ *
+ * @param environmentId
+ * @param currentQuery
+ * @param initialOption
+ */
+export function initialSortBySetup(
+    environmentId: string,
+    currentQuery: Query,
+    initialOption: string
+) {
+    const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
+    const clonedQuery = cloneDeep(currentQuery);
+
+    applySortByToQuery(clonedQuery, initialOption);
+    clonedQuery.page = 1;
+
+    dispatcher.dispatch({
+        type: "UPDATE_APISEARCH_SETUP",
+        payload: {
+            query: clonedQuery,
+        },
+    });
+}
+
+/**
  * ON change search action
  *
  * @param environmentId
@@ -22,26 +48,7 @@ export function onChangeSearchAction(
     selectedOption: string,
 ) {
     const clonedQuery = cloneDeep(currentQuery);
-    const filterData = splitQueryValue(selectedOption);
-
-    const sortBy = Apisearch.createEmptySortBy();
-    if (filterData.field == 'distance') {
-        sortBy.byValue({
-            type: SORT_BY_TYPE_DISTANCE,
-            unit: filterData.sort
-                ? filterData.sort
-                : 'km'
-        });
-    } else if (filterData.field == 'score') {
-        sortBy.byValue(SORT_BY_SCORE);
-    } else {
-        sortBy.byFieldValue(
-            filterData.field,
-            filterData.sort,
-        );
-    }
-
-    clonedQuery.sortBy(sortBy);
+    applySortByToQuery(clonedQuery, selectedOption);
     clonedQuery.page = 1;
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
 
@@ -59,6 +66,37 @@ export function onChangeSearchAction(
         .catch((error) => {
             // Do nothing
         });
+}
+
+/**
+ * Apply sort by to query
+ *
+ * @param Query
+ * @param string
+ */
+function applySortByToQuery(query, selectedOption) {
+
+    const sortByData = splitQueryValue(selectedOption);
+    const sortBy = Apisearch.createEmptySortBy();
+    if (sortByData.field == 'distance') {
+        sortBy.byValue({
+            type: SORT_BY_TYPE_DISTANCE,
+            unit: sortByData.sort
+                ? sortByData.sort
+                : 'km'
+        });
+    } else if (sortByData.field == 'score') {
+        sortBy.byValue(SORT_BY_SCORE);
+    } else {
+        sortBy.byFieldValue(
+            sortByData.field,
+            sortByData.sort,
+        );
+    }
+
+    query.sortBy(sortBy);
+
+    return query;
 }
 
 /**

@@ -41,5 +41,5 @@ export function clearFiltersAction(
         })
         .catch((error) => {
             // Do nothing
-        });;
+        });
 }

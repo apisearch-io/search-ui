@@ -28,7 +28,9 @@ class ClearFiltersComponent extends Component<ClearFiltersProps, ClearFiltersSta
             Object.keys(filters).length > 1
         );
 
-        this.setState({showClearFilters: areFiltersActive});
+        this.setState(prevState => {
+            return {showClearFilters: areFiltersActive};
+        });
     }
 
     /**
@@ -41,7 +43,9 @@ class ClearFiltersComponent extends Component<ClearFiltersProps, ClearFiltersSta
         const currentQuery = props.currentQuery;
         const repository = props.repository;
 
-        this.setState({showClearFilters: false});
+        this.setState(prevState => {
+            return {showClearFilters: false};
+        });
 
         /**
          * Dispatch a clear filter action

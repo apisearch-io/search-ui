@@ -39,7 +39,8 @@ class MultipleFilter extends Widget {
         labels,
         classNames,
         template,
-        formatData
+        formatData,
+        activeFirst
     }) {
         super();
         this.target = target;
@@ -63,6 +64,7 @@ class MultipleFilter extends Widget {
                 ...template
             }}
             formatData={formatData}
+            activeFirst={activeFirst}
         />
     }
 
@@ -78,8 +80,8 @@ class MultipleFilter extends Widget {
         store:Store,
         repository:Repository
     ){
-        this.component.attributes = {
-            ...this.component.attributes,
+        this.component.props = {
+            ...this.component.props,
             environmentId: environmentId,
             repository: repository,
             dirty: store.isDirty(),
@@ -88,11 +90,9 @@ class MultipleFilter extends Widget {
         };
 
         let targetNode = document.querySelector(this.target);
-
         render(
             this.component,
-            targetNode,
-            targetNode.lastChild
+            targetNode
         )
     }
 }

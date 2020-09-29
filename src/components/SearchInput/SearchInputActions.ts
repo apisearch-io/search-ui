@@ -8,6 +8,32 @@ import {APISEARCH_DISPATCHER} from "../../Constants";
 import container from "../../Container";
 
 /**
+ * Initial Search
+ *
+ * @param environmentId
+ * @param currentQuery
+ * @param initialSearch
+ */
+export function initialSearchSetup(
+    environmentId: string,
+    currentQuery: Query,
+    initialSearch: string
+) {
+    const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
+    const clonedQuery = cloneDeep(currentQuery);
+
+    clonedQuery.filters._query.values = [initialSearch];
+    clonedQuery.page = 1;
+
+    dispatcher.dispatch({
+        type: "UPDATE_APISEARCH_SETUP",
+        payload: {
+            query: clonedQuery,
+        },
+    });
+}
+
+/**
  * Search action
  *
  * @param environmentId

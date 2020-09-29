@@ -1,11 +1,40 @@
 import { h, Component } from 'preact';
 import Template from "../Template";
 import {InformationProps} from "./InformationProps";
+import {InformationState} from "./InformationState";
 
 /**
  * Result Information Component
  */
-class InformationComponent extends Component<InformationProps> {
+class InformationComponent extends Component<InformationProps, InformationState> {
+
+    /**
+     * Constructor
+     */
+    constructor(props) {
+        super(props);
+        this.state = {
+            hits: 0,
+            total: 0
+        }
+    }
+
+    /**
+     * Component will receive props
+     *
+     * @param props
+     */
+    componentWillReceiveProps(props) {
+
+        this.setState(prevState => {
+            return {
+               hits: props.currentResult.getTotalHits(),
+               total: props.currentResult.getTotalItems()
+           };
+        });
+    }
+
+
     render() {
 
         const props = this.props;
@@ -22,8 +51,8 @@ class InformationComponent extends Component<InformationProps> {
          * Data accessible to the template
          */
         let reducedTemplateData = {
-            total_hits: currentResult.getTotalHits().toLocaleString(),
-            total_items: currentResult.getTotalItems().toLocaleString()
+            total_hits: this.state.hits.toLocaleString(),
+            total_items: this.state.total.toLocaleString()
         };
 
         let formattedTemplateData = formatData(reducedTemplateData);

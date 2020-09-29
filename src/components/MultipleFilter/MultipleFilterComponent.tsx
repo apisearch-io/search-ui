@@ -24,8 +24,7 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
         super();
         this.state = {
             viewLimit: 0,
-            activeAggregations: [],
-            currentAggregations: []
+            aggregations: []
         }
     }
 
@@ -50,10 +49,12 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
          * Set view items limit
          */
         const isViewLimitProperlySet = (viewLimit && viewLimit < fetchLimit);
-        this.setState({
-            viewLimit: (isViewLimitProperlySet)
-                ? viewLimit
-                : fetchLimit
+        this.setState(prevState => {
+            return {
+               viewLimit: (isViewLimitProperlySet)
+                   ? viewLimit
+                   : fetchLimit
+           };
         });
 
         /**
@@ -97,25 +98,27 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
             let counters = aggregation.getCounters();
             let countersAsArray:Counter[] = Object.values(counters);
 
-            this.setState({
-                /**
-                 * Current used aggregations
-                 */
-                activeAggregations: countersAsArray.filter(
-                    counter =>
-                        true === counter.isUsed()
-                ),
-                /**
-                 * Current inactive aggregations
-                 */
-                currentAggregations: countersAsArray.filter(
-                    counter =>
-                        (
-                            false === counter.isUsed() ||
-                            null === counter.isUsed()
-                        )
-                )
-            })
+            const aggregations = props.activeFirst
+                ? [
+                    ...countersAsArray.filter(
+                        counter =>
+                            true === counter.isUsed()
+                    ),
+                    ...countersAsArray.filter(
+                        counter =>
+                            (
+                                false === counter.isUsed() ||
+                                null === counter.isUsed()
+                            )
+                    )
+                ]
+                : countersAsArray;
+
+            this.setState(prevState => {
+                return {
+                    aggregations: aggregations
+                };
+            });
         }
     }
 
@@ -125,7 +128,6 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
      * @param selectedFilter
      */
     handleClick = (selectedFilter) => {
-
         const props = this.props;
         const environmentId = props.environmentId;
         const filterName = props.filterName;
@@ -179,11 +181,11 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
      */
     handleShowMore = () => {
 
-        const activeAggregations = this.state.activeAggregations;
-        const currentAggregations = this.state.currentAggregations;
-        const viewLimit = activeAggregations.length + currentAggregations.length;
+        const viewLimit = this.state.aggregations.length;
 
-        this.setState({viewLimit});
+        this.setState(prevState => {
+            return {viewLimit};
+        });
     };
 
     /**
@@ -191,7 +193,9 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
      */
     handleShowLess = () => {
         const viewLimit = this.props.viewLimit;
-        this.setState({viewLimit});
+        this.setState(prevState => {
+            return {viewLimit};
+        });
     };
 
     /**
@@ -224,10 +228,7 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
         /**
          * Get aggregation items
          */
-        const allItems = [
-            ...this.state.activeAggregations,
-            ...this.state.currentAggregations
-        ];
+        const allItems = this.state.aggregations;
         const allItemsLength = allItems.length;
         const items = allItems.slice(0, this.state.viewLimit);
 
@@ -319,7 +320,8 @@ MultipleFilterComponent.defaultProps = {
         showMore: '+ Show more',
         showLess: '- Show less'
     },
-    formatData: data => data
+    formatData: data => data,
+    activeFirst: true
 };
 
 export default MultipleFilterComponent;

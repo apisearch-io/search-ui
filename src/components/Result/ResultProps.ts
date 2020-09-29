@@ -24,6 +24,7 @@ export interface ResultProps {
         placeholder: null,
     };
     formatData: Function;
+    fadeInSelector: string,
     environmentId?: string;
     repository?: Repository;
     dirty?: boolean;

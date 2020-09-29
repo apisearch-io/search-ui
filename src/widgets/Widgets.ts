@@ -5,6 +5,8 @@ import pagination from "./Pagination";
 import result from "./Result";
 import searchInput from "./SearchInput";
 import sortBy from "./SortBy";
+import checkboxFilter from "./CheckboxFilter";
+import rangeFilter from "./RangeFilter";
 
 /**
  * Widget factories
@@ -17,4 +19,6 @@ export default {
     information: information,
     result: result,
     pagination: pagination,
+    checkboxFilter: checkboxFilter,
+    rangeFilter: rangeFilter
 };

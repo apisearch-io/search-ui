@@ -1,7 +1,9 @@
 import { h, Component } from 'preact';
+import { useRef, useState, useEffect } from 'preact/compat';
 import Template from "../Template";
 import {defaultItemsListTemplate} from "./defaultTemplates";
 import {configureQuery} from "./ResultActions";
+import {ResultState} from "./ResultState";
 import {ResultProps} from "./ResultProps";
 import {ItemUUID} from "apisearch/lib/Model/ItemUUID";
 import container from "../../Container";
@@ -13,7 +15,77 @@ import {
 /**
  * Result Component
  */
-class ResultComponent extends Component<ResultProps> {
+class ResultComponent extends Component<ResultProps, ResultState> {
+    /**
+     * Constructor
+     */
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            itemsId: [],
+            focus: props.fadeInSelector == ''
+        }
+    }
+
+    /**
+     * Hook that change state once mouse clicks inside or outside the container
+     */
+    addMouseDownListeners(ref, fadeInSelector) {
+        useEffect(() => {
+            const self = this;
+
+            /**
+             * Alert if clicked on outside of element
+             */
+            function handleClickOutside(event) {
+
+                self.setState(prevState => {
+                    return {
+                        itemsId: prevState.itemsId,
+                        focus: !ref.current || event.target.closest(fadeInSelector)
+                    };
+                });
+            }
+
+            // Bind the event listener
+            document.addEventListener("mousedown", handleClickOutside);
+            return () => {
+                // Unbind the event listener on clean up
+                document.removeEventListener("mousedown", handleClickOutside);
+            };
+        }, [ref]);
+    }
+
+    /**
+     * Component will receive props
+     *
+     * @param props
+     */
+    componentWillReceiveProps(props) {
+
+        let itemsId = [];
+        if (props.currentResult == null) {
+            this.setState(prevState => {
+                return {
+                   itemsId: itemsId
+               };
+            });
+            return;
+        }
+
+        const items = props.currentResult.getItems();
+
+        items.map(function(item) {
+            itemsId.push(item.uuid.composedUUID());
+        });
+
+        this.setState(prevState => {
+            return {
+               itemsId: itemsId
+           };
+        });
+    }
 
     /**
      * Component will mount
@@ -51,7 +123,6 @@ class ResultComponent extends Component<ResultProps> {
      * @return {any}
      */
     render() {
-
         const props = this.props;
         const dirty = props.dirty;
         const containerClassName = props.classNames.container;
@@ -69,8 +140,12 @@ class ResultComponent extends Component<ResultProps> {
         const currentResult = props.currentResult;
         const currentQuery = props.currentQuery;
         const currentVisibleResults = props.currentVisibleResults;
+        const wrapperRef = useRef(null);
+        if (props.fadeInSelector != '') {
+            this.addMouseDownListeners(wrapperRef, props.fadeInSelector);
+        }
 
-        if (!currentVisibleResults) {
+        if (!currentVisibleResults || !this.state.focus) {
             return (
                 <div className={`as-result ${containerClassName}`}></div>
             )
@@ -120,7 +195,7 @@ class ResultComponent extends Component<ResultProps> {
         };
 
         return (
-            <div className={`as-result ${containerClassName}`}>
+            <div className={`as-result ${containerClassName}`} ref={wrapperRef}>
                 {(placeholderTemplate && dirty)
                     ? <Template
                         template={placeholderTemplate}
@@ -153,7 +228,8 @@ ResultComponent.defaultProps = {
         itemsList: defaultItemsListTemplate,
         placeholder: null
     },
-    formatData: data => data
+    formatData: data => data,
+    fadeInSelector: ''
 };
 
 export default ResultComponent;

@@ -38,8 +38,8 @@ class SortBy extends Widget {
         store:Store,
         repository:Repository
     ){
-        this.component.attributes = {
-            ...this.component.attributes,
+        this.component.props = {
+            ...this.component.props,
             environmentId: environmentId,
             repository: repository,
             dirty: store.isDirty(),
@@ -51,8 +51,7 @@ class SortBy extends Widget {
 
         render(
             this.component,
-            targetNode,
-            targetNode.lastChild
+            targetNode
         )
     }
 }

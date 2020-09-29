@@ -4,12 +4,15 @@
     <meta charset="UTF-8">
     <title>AS UI - Suggested search</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.0/css/bulma.min.css">
-
-    <!-- ApisearchUI library -->
-    <script src="../dist/apisearch-ui.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="../dist/apisearch-ui.css">
+
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="../dist/apisearch-ui.js"></script>
     <style>
         .yellow {
             color: #eec800;
@@ -20,7 +23,59 @@
         .search.navbar-item {
             min-width: 25rem
         }
+
+        .slider {
+            width: 100%;
+            max-width: 500px;
+            height: 50px;
+            border: 1px solid grey;
+        }
+
+        .thumb {
+            font-size: 0.9em;
+            text-align: center;
+            background-color: black;
+            color: white;
+            cursor: pointer;
+            border: 5px solid gray;
+            box-sizing: border-box;
+            top: 1px;
+            width: 50px;
+            height: 48px;
+            line-height: 38px;
+        }
+
+        .thumb.active {
+            background-color: grey;
+        }
+
+        .track {
+            position: relative;
+            background: #ddd;
+            top: 20px;
+            height: 10px;
+        }
     </style>
+
+    <script>
+        $(document).ready(function() {
+            $("#range-slider").slider({
+                range: true,
+                min: 1900,
+                max: 2020,
+                values: [ 1900, 2020 ],
+                slide: function( event, ui ) {
+                    $("#amount span").text(ui.values[0] + "€ - " + ui.values[1] + '€' );
+                },
+                stop: function( event, ui ) {
+                    document.getElementById("price-max").setAttribute('value', ui.values[1]);
+                    document.getElementById("price-min").setAttribute('value', ui.values[0]);
+                }
+            });
+
+            $("#amount span").text($("#range-slider").slider("values", 0) + '€ - ' + $("#range-slider").slider("values", 1) + '€');
+        });
+    </script>
 </head>
 
 <body>
@@ -65,7 +120,10 @@
 <div class="container is-fluid">
     <div class="columns" style="margin-top: 1rem">
         <div class="column is-2">
-            <div class="multiple-filter-genre" style="margin-bottom: 1rem"></div>
+            <div id="amount">Price range: <span style="color:#f0d666; font-weight:bold;"></span></div>
+            <div id="range-slider" class="mt-2" style="margin-top: 1rem;"></div>
+            <div class="range-filter-year" style="display: none"></div>
+            <div class="multiple-filter-genre" style="margin-bottom: 1rem; margin-top: 1rem;"></div>
             <div class="multiple-filter-rating"></div>
         </div>
         <div class="column">
@@ -119,7 +177,8 @@
     ui.addWidgets(
         ui.widgets.searchInput({
             target: '.search',
-            placeholder: 'Type to search...'
+            placeholder: 'Type to search...',
+            autofocus: true,
         }),
         ui.widgets.sortBy({
             target: '.sort-by',
@@ -146,6 +205,7 @@
             fetchLimit: 30,
             viewLimit: 15,
             sortBy: ['_count', 'desc'],
+            activeFirst: false,
             ranges: {
                 '..1950': 'Until 50ths',
                 '1950..1970': '50ths to 70ths',
@@ -162,6 +222,7 @@
             filterField: 'year',
             fetchLimit: 30,
             viewLimit: 15,
+            activeFirst: false,
             sortBy: ['_count', 'desc'],
             template: {
                 top: 'Years'
@@ -171,11 +232,30 @@
             target: '.multiple-filter-rating',
             filterName: 'rating',
             filterField: 'rating',
-            applicationType: 4,
+            activeFirst: false,
             template: {
                 top: 'Rating'
             },
             formatData: itemsToStarRating
+        }),
+        ui.widgets.rangeFilter({
+            target: '.range-filter-year',
+            filterName: 'Year range',
+            filterField: 'year',
+            minValue: 1900,
+            maxValue: 2020,
+            from: {
+                initialValue: 1900,
+                attributes: {
+                    id: "price-min"
+                }
+            },
+            to: {
+                initialValue: 2020,
+                attributes: {
+                    id: "price-max"
+                }
+            }
         }),
         ui.widgets.clearFilters({
             target: '.clear-filters'

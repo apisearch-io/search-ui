@@ -11,6 +11,7 @@ export interface SearchInputProps {
     autofocus: boolean;
     startSearchOn: number;
     clearSearch: boolean;
+    initialSearch: string;
     withContainer: boolean;
     classNames: {
         container: string,

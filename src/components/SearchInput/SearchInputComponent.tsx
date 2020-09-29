@@ -1,5 +1,5 @@
 import { h, Component } from 'preact';
-import {simpleSearchAction} from "./SearchInputActions";
+import {simpleSearchAction, initialSearchSetup} from "./SearchInputActions";
 import Template from "../Template";
 import {SearchInputProps} from "./SearchInputProps";
 
@@ -7,6 +7,26 @@ import {SearchInputProps} from "./SearchInputProps";
  * SearchInput Component
  */
 class SearchInputComponent extends Component<SearchInputProps> {
+
+    /**
+     * Components will mount
+     */
+    componentWillMount() {
+
+        const props = this.props;
+        const environmentId = props.environmentId;
+        const initialSearch = props.initialSearch;
+        const currentQuery = props.currentQuery;
+
+        /**
+         * Dispatch action
+         */
+        initialSearchSetup(
+            environmentId,
+            currentQuery,
+            initialSearch,
+        );
+    }
 
     /**
      * Handle search
@@ -112,6 +132,7 @@ SearchInputComponent.defaultProps = {
     autofocus: false,
     startSearchOn: 0,
     clearSearch: true,
+    initialSearch: '',
     withContainer: true,
     classNames: {
         container: '',

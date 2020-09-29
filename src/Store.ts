@@ -51,6 +51,7 @@ class Store extends EventEmitter {
          * Data received
          */
         this.currentResult = apisearch.createEmptyResult();
+        this.currentVisibleResults = false;
     }
 
     /**

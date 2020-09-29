@@ -31,7 +31,8 @@ class SearchInput extends Widget{
         withContainer,
         autofocus,
         classNames,
-        template
+        template,
+        initialSearch
     }) {
         super();
         this.target = target;
@@ -51,6 +52,7 @@ class SearchInput extends Widget{
                 ...SearchInputComponent.defaultProps.template,
                 ...template
             }}
+            initialSearch={initialSearch}
         />
     }
 
@@ -66,8 +68,8 @@ class SearchInput extends Widget{
         store:Store,
         repository:Repository
     ){
-        this.component.attributes = {
-            ...this.component.attributes,
+        this.component.props = {
+            ...this.component.props,
             environmentId: environmentId,
             repository: repository,
             dirty: store.isDirty(),
@@ -90,17 +92,16 @@ class SearchInput extends Widget{
         if (!isInput) {
             render(
                 this.component,
-                targetNode,
-                targetNode.lastChild
+                targetNode
             )
         }
 
         if (isInput && this.isFirstRender) {
-            this.component.attributes = {
-                ...this.component.attributes,
+            this.component.props = {
+                ...this.component.props,
                 withContainer: false,
                 htmlNodeInheritProps: {
-                    ...this.component.attributes.htmlNodeInheritedProps,
+                    ...this.component.props.htmlNodeInheritedProps,
                     ...getNodeAttributes(targetNode)
                 }
             };

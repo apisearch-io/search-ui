@@ -31,6 +31,7 @@ export interface MultipleFilterProps {
         showLess: string,
     };
     formatData: Function;
+    activeFirst: boolean;
     environmentId?: string;
     repository?: Repository;
     dirty?: boolean;

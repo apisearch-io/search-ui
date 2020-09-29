@@ -1,4 +1,4 @@
-import { h, render } from "preact";
+import { h } from "preact";
 
 import {HttpRepository, ItemUUID} from "apisearch";
 import apisearch from "apisearch";

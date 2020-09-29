@@ -3,6 +3,5 @@
  */
 export interface MultipleFilterState {
     viewLimit: number;
-    activeAggregations: any[];
-    currentAggregations: any[];
+    aggregations: any[];
 }

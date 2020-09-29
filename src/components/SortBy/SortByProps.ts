@@ -3,7 +3,7 @@ import {Query} from "apisearch";
 import {Result} from "apisearch";
 
 /**
- * Created by mmoreram on 9/07/18.
+ * SortByProps
  */
 export interface SortByProps {
     target: any;

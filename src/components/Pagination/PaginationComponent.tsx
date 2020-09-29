@@ -1,6 +1,7 @@
 import { h, Component } from 'preact';
 import Template from "../Template";
 import {paginationChangeAction} from "./PaginationActions";
+import {PaginationState} from "./PaginationState";
 import NavigationComponent from "./NavigationComponent";
 import {
     getTotalPages,
@@ -13,7 +14,32 @@ import {PaginationProps} from "./PaginationProps";
 /**
  * Pagination Component
  */
-class PaginationComponent extends Component<PaginationProps> {
+class PaginationComponent extends Component<PaginationProps, PaginationState> {
+
+    /**
+     * Constructor
+     */
+    constructor() {
+        super();
+        this.state = {
+            page: 1
+        }
+    }
+
+    /**
+     * Component will receive props
+     *
+     * @param props
+     */
+    componentWillReceiveProps(props) {
+
+        const page = props.currentQuery.getPage();
+        this.setState(prevState => {
+            return {
+                page: page
+            };
+        });
+    }
 
     /**
      * Handle click

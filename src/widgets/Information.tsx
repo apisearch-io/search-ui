@@ -51,8 +51,8 @@ class Information extends Widget {
         store:Store,
         repository:Repository
     ){
-        this.component.attributes = {
-            ...this.component.attributes,
+        this.component.props = {
+            ...this.component.props,
             environmentId: environmentId,
             repository: repository,
             dirty: store.isDirty(),
@@ -64,8 +64,7 @@ class Information extends Widget {
 
         render(
             this.component,
-            targetNode,
-            targetNode.lastChild
+            targetNode
         )
     }
 }
