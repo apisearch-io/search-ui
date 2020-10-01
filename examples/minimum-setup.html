@@ -68,8 +68,8 @@
                     $("#amount span").text(ui.values[0] + "€ - " + ui.values[1] + '€' );
                 },
                 stop: function( event, ui ) {
-                    document.getElementById("price-max").setAttribute('value', ui.values[1]);
                     document.getElementById("price-min").setAttribute('value', ui.values[0]);
+                    document.getElementById("price-max").setAttribute('value', ui.values[1]);
                 }
             });
 
