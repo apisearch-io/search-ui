@@ -32,11 +32,7 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
             // Use traditional 'for loops' for IE 11
             for(const mutation of mutationsList) {
                 if (mutation.attributeName === 'value') {
-                console.log(mutation);
                     const value = mutation.target["defaultValue"];
-                    console.log(field);
-                    console.log(value);
-                    console.log(that.state);
 
                     if (
                         (
@@ -184,8 +180,6 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
             function handleChange(event) {
                 const target = event.target;
                 const parentNode = target.parentNode;
-                console.log(parentNode.getElementsByClassName('as-rangeFilter__from')[0].value);
-                console.log(parentNode.getElementsByClassName('as-rangeFilter__to')[0].value);
                 self.applyFilter(
                     parentNode.getElementsByClassName('as-rangeFilter__from')[0].value,
                     parentNode.getElementsByClassName('as-rangeFilter__to')[0].value
