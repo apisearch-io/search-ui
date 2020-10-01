@@ -15561,6 +15561,18 @@ var SearchInputComponent = /** @class */ (function (_super) {
         SearchInputActions_1.initialSearchSetup(environmentId, currentQuery, initialSearch);
     };
     /**
+     * Component will receive props
+     *
+     * @param props
+     */
+    SearchInputComponent.prototype.componentWillReceiveProps = function (props) {
+        this.setState(function (prevState) {
+            return {
+                query: props.currentQuery.filters._query.values[0]
+            };
+        });
+    };
+    /**
      * Search
      *
      * @return {any}

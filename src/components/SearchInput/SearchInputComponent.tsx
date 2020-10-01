@@ -2,11 +2,12 @@ import { h, Component } from 'preact';
 import {simpleSearchAction, initialSearchSetup} from "./SearchInputActions";
 import Template from "../Template";
 import {SearchInputProps} from "./SearchInputProps";
+import {SearchInputState} from "./SearchInputState";
 
 /**
  * SearchInput Component
  */
-class SearchInputComponent extends Component<SearchInputProps> {
+class SearchInputComponent extends Component<SearchInputProps, SearchInputState> {
 
     /**
      * Components will mount
@@ -26,6 +27,20 @@ class SearchInputComponent extends Component<SearchInputProps> {
             currentQuery,
             initialSearch,
         );
+    }
+
+    /**
+     * Component will receive props
+     *
+     * @param props
+     */
+    componentWillReceiveProps(props) {
+
+        this.setState(prevState => {
+            return {
+               query: props.currentQuery.filters._query.values[0]
+           };
+        });
     }
 
     /**

@@ -21,6 +21,17 @@
             border-radius: .2rem;
             width: 1.5rem;
         }
+
+        .as-searchInput {
+            position: relative;
+        }
+
+        .as-searchInput div {
+            position: absolute;
+            top: 3px;
+            right:12px;
+            font-weight: bold;
+        }
     </style>
 </head>
 
@@ -117,6 +128,7 @@
             firstUI.widgets.searchInput({
                 target: '.input-instance-one',
                 placeholder: 'Type something on instance one...',
+                clearSearch: true,
                 classNames: {
                     input: 'input'
                 }
@@ -150,6 +162,7 @@
                 target: '.input-instance-two',
                 placeholder: 'Type something on instance two...',
                 startSearchOn: 3,
+                clearSearch: true,
                 classNames: {
                     input: 'input'
                 }
