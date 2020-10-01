@@ -14943,11 +14943,7 @@ var RangeFilterComponent = /** @class */ (function (_super) {
             for (var _i = 0, mutationsList_1 = mutationsList; _i < mutationsList_1.length; _i++) {
                 var mutation = mutationsList_1[_i];
                 if (mutation.attributeName === 'value') {
-                    console.log(mutation);
                     var value = mutation.target["defaultValue"];
-                    console.log(field);
-                    console.log(value);
-                    console.log(that.state);
                     if ((field === 'from' &&
                         value === that.state.valueFrom) ||
                         (field === 'to' &&
@@ -15054,8 +15050,6 @@ var RangeFilterComponent = /** @class */ (function (_super) {
             function handleChange(event) {
                 var target = event.target;
                 var parentNode = target.parentNode;
-                console.log(parentNode.getElementsByClassName('as-rangeFilter__from')[0].value);
-                console.log(parentNode.getElementsByClassName('as-rangeFilter__to')[0].value);
                 self.applyFilter(parentNode.getElementsByClassName('as-rangeFilter__from')[0].value, parentNode.getElementsByClassName('as-rangeFilter__to')[0].value);
             }
             // Bind the event listener
