@@ -15696,7 +15696,9 @@ var SearchInputComponent = /** @class */ (function (_super) {
         var clearSearchTemplate = props.template.clearSearch;
         var currentQueryText = props.currentQuery.getQueryText();
         var htmlNodeInheritProps = props.htmlNodeInheritProps;
-        var suggestions = props.currentResult.getSuggestions();
+        var suggestions = props.currentResult
+            ? props.currentResult.getSuggestions()
+            : [];
         var hasSuggestions = suggestions.length > 0;
         var showAutocomplete = props.autocomplete;
         var keyDownCallback = showAutocomplete

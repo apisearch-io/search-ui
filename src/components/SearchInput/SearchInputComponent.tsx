@@ -148,7 +148,10 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
         const clearSearchTemplate = props.template.clearSearch;
         const currentQueryText = props.currentQuery.getQueryText();
         const htmlNodeInheritProps = props.htmlNodeInheritProps;
-        const suggestions = props.currentResult.getSuggestions();
+        const suggestions = props.currentResult
+            ? props.currentResult.getSuggestions()
+            : [];
+
         const hasSuggestions = suggestions.length > 0;
         const showAutocomplete = props.autocomplete;
 
