@@ -92,21 +92,21 @@
 
     // Widgets setup
     ui.addWidgets(
+        ui.widgets.result({
+            target: '#results',
+            itemsPerPage: 8,
+            highlightsEnabled: true,
+            suggestionsEnabled: true,
+            formatData: itemsToStarRating,
+            template: {
+                itemsList: document.getElementById('result-template').text
+            }
+        }),
         ui.widgets.searchInput({
             target: '#search2',
             placeholder: 'Type to search...',
             autocomplete: true,
             initialSearch: initialSearch,
-            startSearchOn: 3,
-        }),
-        ui.widgets.result({
-            target: '#results',
-            itemsPerPage: 8,
-            highlightsEnabled: true,
-            formatData: itemsToStarRating,
-            template: {
-                itemsList: document.getElementById('result-template').text
-            }
         })
     );
 

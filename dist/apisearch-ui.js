@@ -15127,6 +15127,12 @@ function configureQuery(environmentId, currentQuery, itemsPerPage, highlightsEna
      */
     if (suggestionsEnabled) {
         clonedQuery.enableSuggestions();
+        if (suggestionsEnabled == true) {
+            clonedQuery.setMetadataValue('number_of_suggestions', null);
+        }
+        else if (suggestionsEnabled > 0) {
+            clonedQuery.setMetadataValue('number_of_suggestions', suggestionsEnabled);
+        }
     }
     /**
      * Promoted uuids
@@ -15498,6 +15504,10 @@ function initialSearchSetup(environmentId, currentQuery, initialSearch, autocomp
     clonedQuery.page = 1;
     if (autocomplete) {
         clonedQuery.enableSuggestions();
+        var metadata = clonedQuery.getMetadata();
+        if (metadata.number_of_suggestions === undefined) {
+            clonedQuery.setMetadataValue('number_of_suggestions', 1);
+        }
     }
     dispatcher.dispatch({
         type: "UPDATE_APISEARCH_SETUP",

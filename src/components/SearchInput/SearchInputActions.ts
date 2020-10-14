@@ -29,6 +29,10 @@ export function initialSearchSetup(
 
     if (autocomplete) {
         clonedQuery.enableSuggestions();
+        const metadata = clonedQuery.getMetadata();
+        if (metadata.number_of_suggestions === undefined) {
+            clonedQuery.setMetadataValue('number_of_suggestions', 1);
+        }
     }
 
     dispatcher.dispatch({

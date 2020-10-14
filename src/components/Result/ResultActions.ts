@@ -26,7 +26,7 @@ export function configureQuery(
     currentQuery: Query,
     itemsPerPage: number,
     highlightsEnabled: boolean,
-    suggestionsEnabled: boolean,
+    suggestionsEnabled: boolean|number,
     promotedUUIDs: ItemUUID[],
     excludedUUIDs: ItemUUID[],
     fields: string[],
@@ -57,6 +57,11 @@ export function configureQuery(
      */
     if (suggestionsEnabled) {
         clonedQuery.enableSuggestions();
+        if (suggestionsEnabled == true) {
+            clonedQuery.setMetadataValue('number_of_suggestions', null);
+        } else if (suggestionsEnabled > 0) {
+            clonedQuery.setMetadataValue('number_of_suggestions', suggestionsEnabled);
+        }
     }
 
     /**
