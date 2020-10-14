@@ -2,5 +2,5 @@
  * SearchInputState
  */
 export interface SearchInputState {
-    query: string
+    queryText: string
 }

@@ -15,6 +15,7 @@ import container from "../../Container";
  * @param currentQuery
  * @param itemsPerPage
  * @param highlightsEnabled
+ * @param suggestionsEnabled
  * @param promotedUUIDs
  * @param excludedUUIDs
  * @param fields
@@ -25,6 +26,7 @@ export function configureQuery(
     currentQuery: Query,
     itemsPerPage: number,
     highlightsEnabled: boolean,
+    suggestionsEnabled: boolean,
     promotedUUIDs: ItemUUID[],
     excludedUUIDs: ItemUUID[],
     fields: string[],
@@ -48,6 +50,13 @@ export function configureQuery(
      */
     if (highlightsEnabled) {
         clonedQuery.enableHighlights();
+    }
+
+    /**
+     * Enabling highlights on query result
+     */
+    if (suggestionsEnabled) {
+        clonedQuery.enableSuggestions();
     }
 
     /**

@@ -11,6 +11,7 @@ export interface ResultProps {
     fields: string[];
     itemsPerPage: number;
     highlightsEnabled: boolean;
+    suggestionsEnabled: boolean;
     promote: ItemUUID[];
     exclude: ItemUUID[];
     filter: Function,

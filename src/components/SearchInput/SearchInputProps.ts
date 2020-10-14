@@ -3,12 +3,13 @@ import {Query} from "apisearch";
 import {Result} from "apisearch";
 
 /**
- * Created by mmoreram on 9/07/18.
+ * Search Input Props
  */
 export interface SearchInputProps {
     target: any;
     placeholder: string;
     autofocus: boolean;
+    autocomplete: boolean;
     startSearchOn: number;
     clearSearch: boolean;
     initialSearch: string;

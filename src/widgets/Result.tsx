@@ -9,6 +9,8 @@ import Store from "../Store";
  */
 class Result extends Widget {
 
+    private targetNode: any;
+
     /**
      * Constructor
      *
@@ -19,9 +21,11 @@ class Result extends Widget {
      * @param exclude
      * @param filter
      * @param highlightsEnabled
+     * @param suggestionsEnabled
      * @param classNames
      * @param template
      * @param formatData
+     * @param fadeInSelector
      */
     constructor({
         target,
@@ -31,6 +35,7 @@ class Result extends Widget {
         exclude,
         filter,
         highlightsEnabled,
+        suggestionsEnabled,
         classNames,
         template,
         formatData,
@@ -38,6 +43,7 @@ class Result extends Widget {
     }) {
         super();
         this.target = target;
+        this.targetNode = document.querySelector(this.target);
         this.component = <ResultComponent
             target={target}
             fields={fields}
@@ -46,6 +52,7 @@ class Result extends Widget {
             exclude={exclude}
             filter={filter}
             highlightsEnabled={highlightsEnabled}
+            suggestionsEnabled={suggestionsEnabled}
             classNames={{
                 ...ResultComponent.defaultProps.classNames,
                 ...classNames
@@ -81,10 +88,9 @@ class Result extends Widget {
             currentVisibleResults: store.resultsAreVisible(),
         };
 
-        let targetNode = document.querySelector(this.target);
         render(
             this.component,
-            targetNode
+            this.targetNode
         )
     }
 }

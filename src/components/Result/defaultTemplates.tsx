@@ -4,8 +4,8 @@ export const defaultItemsListTemplate = `
         <li class="as-result__item">
             <strong>Score:</strong> {{score}}<br />
             <strong>Uuid:</strong> {{uuid.type}} - {{uuid.id}}<br />
-            <strong>Title:</strong> {{metadata.title}}<br />
-            <strong>Description:</strong> {{metadata.description}}<br />
+            <strong>Title:</strong> {{{fields.title}}}<br />
+            <strong>Description:</strong> {{fields.description}}<br />
             <strong>Link:</strong> <a href="{{metadata.link}}" onclick="{{click}}" target="_blank">{{metadata.link}}</a>
         </li>
     {{/items}}

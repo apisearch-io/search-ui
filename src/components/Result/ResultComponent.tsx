@@ -43,7 +43,7 @@ class ResultComponent extends Component<ResultProps, ResultState> {
                 self.setState(prevState => {
                     return {
                         itemsId: prevState.itemsId,
-                        focus: !ref.current || event.target.closest(fadeInSelector)
+                        focus: event.target.closest(fadeInSelector) != null
                     };
                 });
             }
@@ -102,6 +102,7 @@ class ResultComponent extends Component<ResultProps, ResultState> {
             props.currentQuery,
             props.itemsPerPage,
             props.highlightsEnabled,
+            props.suggestionsEnabled,
             props.promote.map((itemUUID) => {
                 return itemUUID instanceof ItemUUID
                     ? itemUUID
@@ -156,7 +157,8 @@ class ResultComponent extends Component<ResultProps, ResultState> {
          */
         const items = currentResult.getItems();
         let reducedTemplateData = {
-            query: currentQuery.getQueryText()
+            query: currentQuery.getQueryText(),
+            suggestions: currentResult.getSuggestions(),
         };
 
         /**
@@ -184,9 +186,11 @@ class ResultComponent extends Component<ResultProps, ResultState> {
                         ? appId+'", "'+indexId+'", "'+itemId+'", "'+userId
                         : appId+'", "'+indexId+'", "'+itemId;
 
+                    const fields = Object.assign(item.getMetadata(), item.getIndexedMetadata(), item.getHighlights());
                     return {
                         ...formatData(item),
                         ...{
+                            'fields': fields,
                             'click': apisearchReference + '.click("'+clickParameters+'");'
                         }
                     }

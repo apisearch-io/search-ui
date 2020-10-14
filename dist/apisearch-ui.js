@@ -2567,7 +2567,7 @@ var Item = /** @class */ (function () {
             item.distance = array.distance;
         }
         if (typeof array.highlights == "object" &&
-            array.distance != null) {
+            array.highlights != null) {
             item.highlights = array.highlights;
         }
         if (typeof array.is_promoted != "undefined" &&
@@ -4241,7 +4241,7 @@ var Query = /** @class */ (function () {
             array.suggestions_enabled = true;
         }
         if (this.highlightsEnabled === true) {
-            array.highlights_enabled = true;
+            array.highlight_enabled = true;
         }
         if (this.aggregationsEnabled === false) {
             array.aggregations_enabled = false;
@@ -4371,8 +4371,8 @@ var Query = /** @class */ (function () {
         query.aggregationsEnabled = typeof array.aggregations_enabled === "boolean"
             ? array.aggregations_enabled
             : true;
-        query.highlightsEnabled = typeof array.highlights_enabled === "boolean"
-            ? array.highlights_enabled
+        query.highlightsEnabled = typeof array.highlight_enabled === "boolean"
+            ? array.highlight_enabled
             : false;
         query.fuzziness = array.fuzziness;
         query.minScore = array.min_score ? array.min_score : exports.NO_MIN_SCORE;
@@ -5614,7 +5614,7 @@ var HttpRepository = /** @class */ (function (_super) {
             }.bind(this));
             return Result_1.Result.createMultiresults(subresults);
         }
-        return Result_1.Result.create(result.getQueryUUID(), result.getTotalItems(), result.getTotalHits(), result.getAggregations(), result.getSuggests(), this
+        return Result_1.Result.create(result.getQueryUUID(), result.getTotalItems(), result.getTotalHits(), result.getAggregations(), result.getSuggestions(), this
             .transformer
             .fromItems(result.getItems()));
     };
@@ -5962,7 +5962,7 @@ var Result = /** @class */ (function () {
      */
     function Result(queryUUID, totalItems, totalHits) {
         this.items = [];
-        this.suggests = [];
+        this.suggestions = [];
         this.subresults = {};
         this.queryUUID = queryUUID;
         this.totalItems = totalItems;
@@ -5975,15 +5975,15 @@ var Result = /** @class */ (function () {
      * @param totalItems
      * @param totalHits
      * @param aggregations
-     * @param suggests
+     * @param suggestions
      * @param items
      *
      * @returns {Result}
      */
-    Result.create = function (queryUUID, totalItems, totalHits, aggregations, suggests, items) {
+    Result.create = function (queryUUID, totalItems, totalHits, aggregations, suggestions, items) {
         var result = new Result(queryUUID, totalItems, totalHits);
         result.aggregations = aggregations;
-        result.suggests = suggests;
+        result.suggestions = suggestions;
         result.items = items;
         return result;
     };
@@ -6110,20 +6110,12 @@ var Result = /** @class */ (function () {
             : this.aggregations.hasNotEmptyAggregation(name);
     };
     /**
-     * Add suggest
-     *
-     * @param suggest
-     */
-    Result.prototype.addSuggest = function (suggest) {
-        this.suggests.push(suggest);
-    };
-    /**
-     * Get suggests
+     * Get suggestions
      *
      * @return {string[]}
      */
-    Result.prototype.getSuggests = function () {
-        return this.suggests;
+    Result.prototype.getSuggestions = function () {
+        return this.suggestions;
     };
     /**
      * Get query uuid
@@ -6160,7 +6152,7 @@ var Result = /** @class */ (function () {
     /**
      * to array
      *
-     * @return {{query: any, total_items: number, total_hits: number, items:any[], aggregations: any, suggests: string[]}}
+     * @return {{query: any, total_items: number, total_hits: number, items:any[], aggregations: any, suggestions: string[]}}
      */
     Result.prototype.toArray = function () {
         var array = {
@@ -6171,7 +6163,7 @@ var Result = /** @class */ (function () {
             aggregations: this.aggregations == null
                 ? null
                 : this.aggregations.toArray(),
-            suggests: this.suggests
+            suggests: this.suggestions
         };
         if (this.subresults instanceof Object &&
             Object.keys(this.subresults).length) {
@@ -6201,7 +6193,7 @@ var Result = /** @class */ (function () {
             ? ResultAggregations_1.ResultAggregations.createFromArray(array.aggregations)
             : null, array.suggests
             ? array.suggests
-            : null, array.items instanceof Array
+            : [], array.items instanceof Array
             ? array.items.map(function (itemAsArray) { return Item_1.Item.createFromArray(itemAsArray); })
             : []);
         /**
@@ -15107,12 +15099,13 @@ var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts
  * @param currentQuery
  * @param itemsPerPage
  * @param highlightsEnabled
+ * @param suggestionsEnabled
  * @param promotedUUIDs
  * @param excludedUUIDs
  * @param fields
  * @param filter
  */
-function configureQuery(environmentId, currentQuery, itemsPerPage, highlightsEnabled, promotedUUIDs, excludedUUIDs, fields, filter) {
+function configureQuery(environmentId, currentQuery, itemsPerPage, highlightsEnabled, suggestionsEnabled, promotedUUIDs, excludedUUIDs, fields, filter) {
     var clonedQuery = cloneDeep(currentQuery);
     filter(clonedQuery);
     /**
@@ -15128,6 +15121,12 @@ function configureQuery(environmentId, currentQuery, itemsPerPage, highlightsEna
      */
     if (highlightsEnabled) {
         clonedQuery.enableHighlights();
+    }
+    /**
+     * Enabling highlights on query result
+     */
+    if (suggestionsEnabled) {
+        clonedQuery.enableSuggestions();
     }
     /**
      * Promoted uuids
@@ -15226,7 +15225,7 @@ var ResultComponent = /** @class */ (function (_super) {
                 self.setState(function (prevState) {
                     return {
                         itemsId: prevState.itemsId,
-                        focus: !ref.current || event.target.closest(fadeInSelector)
+                        focus: event.target.closest(fadeInSelector) != null
                     };
                 });
             }
@@ -15271,7 +15270,7 @@ var ResultComponent = /** @class */ (function (_super) {
         /**
          * Dispatch action
          */
-        ResultActions_1.configureQuery(props.environmentId, props.currentQuery, props.itemsPerPage, props.highlightsEnabled, props.promote.map(function (itemUUID) {
+        ResultActions_1.configureQuery(props.environmentId, props.currentQuery, props.itemsPerPage, props.highlightsEnabled, props.suggestionsEnabled, props.promote.map(function (itemUUID) {
             return itemUUID instanceof ItemUUID_1.ItemUUID
                 ? itemUUID
                 : ItemUUID_1.ItemUUID.createFromArray(itemUUID);
@@ -15314,7 +15313,8 @@ var ResultComponent = /** @class */ (function (_super) {
          */
         var items = currentResult.getItems();
         var reducedTemplateData = {
-            query: currentQuery.getQueryText()
+            query: currentQuery.getQueryText(),
+            suggestions: currentResult.getSuggestions(),
         };
         /**
          * Format each item data
@@ -15336,7 +15336,9 @@ var ResultComponent = /** @class */ (function (_super) {
                     var clickParameters = typeof userId === "string"
                         ? appId + '", "' + indexId + '", "' + itemId + '", "' + userId
                         : appId + '", "' + indexId + '", "' + itemId;
+                    var fields = Object.assign(item.getMetadata(), item.getIndexedMetadata(), item.getHighlights());
                     return __assign(__assign({}, formatData(item)), {
+                        'fields': fields,
                         'click': apisearchReference + '.click("' + clickParameters + '");'
                     });
                 })
@@ -15382,7 +15384,87 @@ exports["default"] = ResultComponent;
 
 exports.__esModule = true;
 exports.defaultItemsListTemplate = void 0;
-exports.defaultItemsListTemplate = "\n    <ul>\n    {{#items}}\n        <li class=\"as-result__item\">\n            <strong>Score:</strong> {{score}}<br />\n            <strong>Uuid:</strong> {{uuid.type}} - {{uuid.id}}<br />\n            <strong>Title:</strong> {{metadata.title}}<br />\n            <strong>Description:</strong> {{metadata.description}}<br />\n            <strong>Link:</strong> <a href=\"{{metadata.link}}\" onclick=\"{{click}}\" target=\"_blank\">{{metadata.link}}</a>\n        </li>\n    {{/items}}\n    </ul>\n    {{^items}}No result{{/items}}\n";
+exports.defaultItemsListTemplate = "\n    <ul>\n    {{#items}}\n        <li class=\"as-result__item\">\n            <strong>Score:</strong> {{score}}<br />\n            <strong>Uuid:</strong> {{uuid.type}} - {{uuid.id}}<br />\n            <strong>Title:</strong> {{{fields.title}}}<br />\n            <strong>Description:</strong> {{fields.description}}<br />\n            <strong>Link:</strong> <a href=\"{{metadata.link}}\" onclick=\"{{click}}\" target=\"_blank\">{{metadata.link}}</a>\n        </li>\n    {{/items}}\n    </ul>\n    {{^items}}No result{{/items}}\n";
+
+
+/***/ }),
+
+/***/ "./src/components/SearchInput/AutocompleteComponent.tsx":
+/*!**************************************************************!*\
+  !*** ./src/components/SearchInput/AutocompleteComponent.tsx ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+exports.__esModule = true;
+var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+/**
+ * Autocomplete Component
+ */
+var AutocompleteComponent = /** @class */ (function (_super) {
+    __extends(AutocompleteComponent, _super);
+    /**
+     * Constructor
+     */
+    function AutocompleteComponent(props) {
+        var _this = _super.call(this, props) || this;
+        _this.state = {
+            suggestion: ''
+        };
+        return _this;
+    }
+    /**
+     * Component will receive props
+     *
+     * @param props
+     */
+    AutocompleteComponent.prototype.componentWillReceiveProps = function (props) {
+        if (props.suggestions.length > 0) {
+            this.setState(function (prevState) {
+                return {
+                    suggestion: props.suggestions[0]
+                };
+            });
+        }
+        else {
+            this.setState(function (prevState) {
+                return {
+                    suggestion: ''
+                };
+            });
+        }
+    };
+    /**
+     * Render
+     *
+     * @return {any}
+     */
+    AutocompleteComponent.prototype.render = function () {
+        var suggestion = this.state.suggestion;
+        var queryText = this.props.queryText;
+        var inputClassName = this.props.inputClassName;
+        var queryTextLength = queryText.length;
+        var formattedSuggestion = queryText + suggestion.substring(queryTextLength);
+        return (preact_1.h("input", { type: 'text', className: "as-searchInput__input as-searchInput__autocomplete " + inputClassName, placeholder: formattedSuggestion, style: "position: absolute; top: 0px; left: 0px; background-color: white;" }));
+    };
+    return AutocompleteComponent;
+}(preact_1.Component));
+exports["default"] = AutocompleteComponent;
 
 
 /***/ }),
@@ -15407,12 +15489,16 @@ var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts
  * @param environmentId
  * @param currentQuery
  * @param initialSearch
+ * @param autocomplete
  */
-function initialSearchSetup(environmentId, currentQuery, initialSearch) {
+function initialSearchSetup(environmentId, currentQuery, initialSearch, autocomplete) {
     var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
     var clonedQuery = cloneDeep(currentQuery);
     clonedQuery.filters._query.values = [initialSearch];
     clonedQuery.page = 1;
+    if (autocomplete) {
+        clonedQuery.enableSuggestions();
+    }
     dispatcher.dispatch({
         type: "UPDATE_APISEARCH_SETUP",
         payload: {
@@ -15503,13 +15589,17 @@ exports.__esModule = true;
 var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
 var SearchInputActions_1 = __webpack_require__(/*! ./SearchInputActions */ "./src/components/SearchInput/SearchInputActions.ts");
 var Template_1 = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
+var AutocompleteComponent_1 = __webpack_require__(/*! ./AutocompleteComponent */ "./src/components/SearchInput/AutocompleteComponent.tsx");
 /**
  * SearchInput Component
  */
 var SearchInputComponent = /** @class */ (function (_super) {
     __extends(SearchInputComponent, _super);
-    function SearchInputComponent() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
+    /**
+     * Constructor
+     */
+    function SearchInputComponent(props) {
+        var _this = _super.call(this, props) || this;
         /**
          * Handle search
          *
@@ -15539,6 +15629,9 @@ var SearchInputComponent = /** @class */ (function (_super) {
             var visibleResults = 0 == startSearchOn;
             SearchInputActions_1.simpleSearchAction(environmentId, currentQuery, repository, '', visibleResults);
         };
+        if (props.autocomplete) {
+            _this.state = { queryText: '' };
+        }
         return _this;
     }
     /**
@@ -15549,10 +15642,11 @@ var SearchInputComponent = /** @class */ (function (_super) {
         var environmentId = props.environmentId;
         var initialSearch = props.initialSearch;
         var currentQuery = props.currentQuery;
+        var autocomplete = props.autocomplete;
         /**
          * Dispatch action
          */
-        SearchInputActions_1.initialSearchSetup(environmentId, currentQuery, initialSearch);
+        SearchInputActions_1.initialSearchSetup(environmentId, currentQuery, initialSearch, autocomplete);
     };
     /**
      * Component will receive props
@@ -15560,18 +15654,37 @@ var SearchInputComponent = /** @class */ (function (_super) {
      * @param props
      */
     SearchInputComponent.prototype.componentWillReceiveProps = function (props) {
-        this.setState(function (prevState) {
-            return {
-                query: props.currentQuery.filters._query.values[0]
-            };
-        });
+        if (props.autocomplete) {
+            this.setState({
+                queryText: props.currentQuery.getQueryText()
+            });
+        }
     };
+    /**
+     * Key down
+     */
+    SearchInputComponent.prototype.handleKeyDown = function (e) {
+        switch (e.keyCode) {
+            case 39:
+            case 9:
+                var props = this.props;
+                var environmentId = props.environmentId;
+                var currentQuery = props.currentQuery;
+                var repository = props.repository;
+                if (this.props.currentResult.getSuggestions().length > 0) {
+                    SearchInputActions_1.simpleSearchAction(environmentId, currentQuery, repository, this.props.currentResult.getSuggestions()[0], true);
+                }
+                break;
+        }
+    };
+    SearchInputComponent.prototype.doNothing = function (e) { };
     /**
      * Search
      *
      * @return {any}
      */
     SearchInputComponent.prototype.render = function () {
+        var _this = this;
         var props = this.props;
         var placeholder = props.placeholder;
         var autofocus = props.autofocus;
@@ -15583,9 +15696,23 @@ var SearchInputComponent = /** @class */ (function (_super) {
         var clearSearchTemplate = props.template.clearSearch;
         var currentQueryText = props.currentQuery.getQueryText();
         var htmlNodeInheritProps = props.htmlNodeInheritProps;
-        var searchInput = (preact_1.h("input", __assign({ type: 'text', className: "as-searchInput__input " + inputClassName, placeholder: placeholder, autofocus: autofocus }, htmlNodeInheritProps, { onInput: this.handleSearch, value: currentQueryText })));
+        var suggestions = props.currentResult.getSuggestions();
+        var hasSuggestions = suggestions.length > 0;
+        var showAutocomplete = props.autocomplete;
+        var keyDownCallback = showAutocomplete
+            ? function (e) { return _this.handleKeyDown(e); }
+            : function (e) { return _this.doNothing(e); };
+        var style = showAutocomplete
+            ? 'position: relative; top: 0px; left: 0px; background-color: transparent; border-color: transparent;'
+            : '';
+        var searchInput = (preact_1.h("input", __assign({ type: 'text', className: "as-searchInput__input " + inputClassName, placeholder: placeholder, autofocus: autofocus }, htmlNodeInheritProps, { onInput: this.handleSearch, value: currentQueryText, style: style, onKeyDown: keyDownCallback })));
+        if (showAutocomplete) {
+            searchInput = (preact_1.h("div", { style: "position: relative" },
+                preact_1.h(AutocompleteComponent_1["default"], { suggestions: suggestions, queryText: currentQueryText, inputClassName: inputClassName }),
+                searchInput));
+        }
         if (withContainer) {
-            return (preact_1.h("div", { className: "as-searchInput " + containerClassName },
+            searchInput = (preact_1.h("div", { className: "as-searchInput " + containerClassName },
                 searchInput,
                 (clearSearch && currentQueryText && currentQueryText.length !== 0)
                     ? (preact_1.h("div", { className: "as-searchInput__clearSearch " + clearSearchClassName, onClick: this.clearSearch },
@@ -15598,6 +15725,7 @@ var SearchInputComponent = /** @class */ (function (_super) {
 SearchInputComponent.defaultProps = {
     placeholder: '',
     autofocus: false,
+    autocomplete: false,
     startSearchOn: 0,
     clearSearch: true,
     initialSearch: '',
@@ -16448,15 +16576,18 @@ var Result = /** @class */ (function (_super) {
      * @param exclude
      * @param filter
      * @param highlightsEnabled
+     * @param suggestionsEnabled
      * @param classNames
      * @param template
      * @param formatData
+     * @param fadeInSelector
      */
     function Result(_a) {
-        var target = _a.target, fields = _a.fields, itemsPerPage = _a.itemsPerPage, promote = _a.promote, exclude = _a.exclude, filter = _a.filter, highlightsEnabled = _a.highlightsEnabled, classNames = _a.classNames, template = _a.template, formatData = _a.formatData, fadeInSelector = _a.fadeInSelector;
+        var target = _a.target, fields = _a.fields, itemsPerPage = _a.itemsPerPage, promote = _a.promote, exclude = _a.exclude, filter = _a.filter, highlightsEnabled = _a.highlightsEnabled, suggestionsEnabled = _a.suggestionsEnabled, classNames = _a.classNames, template = _a.template, formatData = _a.formatData, fadeInSelector = _a.fadeInSelector;
         var _this = _super.call(this) || this;
         _this.target = target;
-        _this.component = preact_1.h(ResultComponent_1["default"], { target: target, fields: fields, itemsPerPage: itemsPerPage, promote: promote, exclude: exclude, filter: filter, highlightsEnabled: highlightsEnabled, classNames: __assign(__assign({}, ResultComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, ResultComponent_1["default"].defaultProps.template), template), formatData: formatData, fadeInSelector: fadeInSelector });
+        _this.targetNode = document.querySelector(_this.target);
+        _this.component = preact_1.h(ResultComponent_1["default"], { target: target, fields: fields, itemsPerPage: itemsPerPage, promote: promote, exclude: exclude, filter: filter, highlightsEnabled: highlightsEnabled, suggestionsEnabled: suggestionsEnabled, classNames: __assign(__assign({}, ResultComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, ResultComponent_1["default"].defaultProps.template), template), formatData: formatData, fadeInSelector: fadeInSelector });
         return _this;
     }
     /**
@@ -16468,8 +16599,7 @@ var Result = /** @class */ (function (_super) {
      */
     Result.prototype.render = function (environmentId, store, repository) {
         this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, dirty: store.isDirty(), currentResult: store.getCurrentResult(), currentQuery: store.getCurrentQuery(), currentVisibleResults: store.resultsAreVisible() });
-        var targetNode = document.querySelector(this.target);
-        preact_1.render(this.component, targetNode);
+        preact_1.render(this.component, this.targetNode);
     };
     return Result;
 }(Widget_1["default"]));
@@ -16538,11 +16668,10 @@ var SearchInput = /** @class */ (function (_super) {
      * @param template
      */
     function SearchInput(_a) {
-        var target = _a.target, placeholder = _a.placeholder, startSearchOn = _a.startSearchOn, clearSearch = _a.clearSearch, withContainer = _a.withContainer, autofocus = _a.autofocus, classNames = _a.classNames, template = _a.template, initialSearch = _a.initialSearch;
+        var target = _a.target, placeholder = _a.placeholder, startSearchOn = _a.startSearchOn, clearSearch = _a.clearSearch, withContainer = _a.withContainer, autofocus = _a.autofocus, autocomplete = _a.autocomplete, classNames = _a.classNames, template = _a.template, initialSearch = _a.initialSearch;
         var _this = _super.call(this) || this;
         _this.target = target;
-        _this.isFirstRender = true;
-        _this.component = preact_1.h(SearchInputComponent_1["default"], { target: target, placeholder: placeholder, autofocus: autofocus, startSearchOn: startSearchOn, clearSearch: clearSearch, withContainer: withContainer, classNames: __assign(__assign({}, SearchInputComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, SearchInputComponent_1["default"].defaultProps.template), template), initialSearch: initialSearch });
+        _this.component = preact_1.h(SearchInputComponent_1["default"], { target: target, placeholder: placeholder, autofocus: autofocus, autocomplete: autocomplete, startSearchOn: startSearchOn, clearSearch: clearSearch, withContainer: withContainer, classNames: __assign(__assign({}, SearchInputComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, SearchInputComponent_1["default"].defaultProps.template), template), initialSearch: initialSearch });
         return _this;
     }
     /**
@@ -16557,22 +16686,26 @@ var SearchInput = /** @class */ (function (_super) {
                 autocomplete: 'off',
                 spellcheck: false
             } });
-        var targetNode = document.querySelector(this.target);
-        /**
-         * Checking if the targeted element is an input
-         * or is another container element.
-         */
-        var isInput = isInputElement(targetNode);
-        if (!isInput) {
-            preact_1.render(this.component, targetNode);
+        if (!this.targetNode) {
+            var targetNode = document.querySelector(this.target);
+            var isInput = isInputElement(targetNode);
+            if (isInput) {
+                this.component.props = __assign(__assign({}, this.component.props), { withContainer: false, htmlNodeInheritProps: __assign(__assign({}, this.component.props.htmlNodeInheritedProps), getNodeAttributes(targetNode)) });
+                var parentNode = targetNode.parentNode;
+                targetNode.remove();
+                this.targetNode = parentNode;
+            }
+            else {
+                this.targetNode = targetNode;
+            }
         }
-        if (isInput && this.isFirstRender) {
-            this.component.props = __assign(__assign({}, this.component.props), { withContainer: false, htmlNodeInheritProps: __assign(__assign({}, this.component.props.htmlNodeInheritedProps), getNodeAttributes(targetNode)) });
-            var parentNode = targetNode.parentNode;
-            preact_1.render(this.component, parentNode, parentNode.childNodes[0]);
-            targetNode.remove();
+        if (this.isSecondRender == undefined) {
+            this.isSecondRender = true;
         }
-        this.isFirstRender = false;
+        else if (this.isSecondRender == true) {
+            this.isSecondRender = false;
+        }
+        preact_1.render(this.component, this.targetNode);
     };
     return SearchInput;
 }(Widget_1["default"]));

@@ -70,12 +70,7 @@
                             </div>
                             <div class="media-content">
                                 <strong>
-                                    {{#highlights.title}}
-                                        {{highlights.title}}
-                                    {{/highlights.title}}
-                                    {{^highlights.title}}
-                                        {{metadata.title}}
-                                    {{/highlights.title}}
+                                    {{{fields.title}}}
                                 </strong>
                                 {{#metadata.author}}
                                 <p class="has-text-info is-size-7">@{{name}}</p>
@@ -103,8 +98,7 @@
             index_id: 'eu1-prod-d53da03a-d49c-483c',
             token: 'eu1-8438694d-5839-4179-9f73-a55630f3cd4d',
             options: {
-                endpoint: 'https://eu1.apisearch.io',
-                override_queries: true
+                endpoint: 'https://eu1.apisearch.io'
             }
         });
 
@@ -135,6 +129,7 @@
                 target: '.search',
                 placeholder: 'Search something...',
                 autofocus: true,
+                autocomplete: true,
                 classNames: {
                     container: 'column',
                     input: 'input'
@@ -162,7 +157,7 @@
         );
 
         // Init the magic!
-        ui.init();
+        ui.init({firstQuery: true});
     </script>
 </body>
 </html>

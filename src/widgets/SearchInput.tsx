@@ -9,7 +9,8 @@ import Store from "../Store";
  */
 class SearchInput extends Widget{
 
-    private isFirstRender:boolean;
+    private targetNode: any;
+    private isSecondRender: boolean;
 
     /**
      * Constructor
@@ -30,17 +31,18 @@ class SearchInput extends Widget{
         clearSearch,
         withContainer,
         autofocus,
+        autocomplete,
         classNames,
         template,
         initialSearch
     }) {
         super();
         this.target = target;
-        this.isFirstRender = true;
         this.component = <SearchInputComponent
             target={target}
             placeholder={placeholder}
             autofocus={autofocus}
+            autocomplete={autocomplete}
             startSearchOn={startSearchOn}
             clearSearch={clearSearch}
             withContainer={withContainer}
@@ -81,42 +83,38 @@ class SearchInput extends Widget{
             }
         };
 
-        let targetNode = document.querySelector(this.target);
+        if (!this.targetNode) {
+            const targetNode = document.querySelector(this.target)
+            const isInput = isInputElement(targetNode);
 
-        /**
-         * Checking if the targeted element is an input
-         * or is another container element.
-         */
-        let isInput = isInputElement(targetNode);
+            if (isInput) {
+                this.component.props = {
+                    ...this.component.props,
+                    withContainer: false,
+                    htmlNodeInheritProps: {
+                        ...this.component.props.htmlNodeInheritedProps,
+                        ...getNodeAttributes(targetNode)
+                    }
+                };
 
-        if (!isInput) {
-            render(
-                this.component,
-                targetNode
-            )
+                const parentNode = targetNode.parentNode;
+                targetNode.remove();
+                this.targetNode = parentNode;
+            } else {
+                this.targetNode = targetNode;
+            }
         }
 
-        if (isInput && this.isFirstRender) {
-            this.component.props = {
-                ...this.component.props,
-                withContainer: false,
-                htmlNodeInheritProps: {
-                    ...this.component.props.htmlNodeInheritedProps,
-                    ...getNodeAttributes(targetNode)
-                }
-            };
-            let parentNode = targetNode.parentNode;
-
-            render(
-                this.component,
-                parentNode,
-                parentNode.childNodes[0]
-            );
-
-            targetNode.remove();
+        if (this.isSecondRender == undefined) {
+            this.isSecondRender = true;
+        } else if (this.isSecondRender == true) {
+            this.isSecondRender = false;
         }
 
-        this.isFirstRender = false;
+        render(
+            this.component,
+            this.targetNode
+        )
     }
 }
 
