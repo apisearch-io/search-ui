@@ -13120,6 +13120,41 @@ exports.initialDataFetchAction = initialDataFetchAction;
 
 /***/ }),
 
+/***/ "./src/ApisearchHelper.ts":
+/*!********************************!*\
+  !*** ./src/ApisearchHelper.ts ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var SortByHelper_1 = __webpack_require__(/*! ./components/SortBy/SortByHelper */ "./src/components/SortBy/SortByHelper.ts");
+/**
+ * ApisearchUI class
+ */
+var ApisearchHelper = /** @class */ (function () {
+    function ApisearchHelper() {
+    }
+    /**
+     * Click
+     *
+     * @param query
+     * @param sort_by
+     *
+     * @return {any}
+     */
+    ApisearchHelper.prototype.sortBy = function (query, sort_by) {
+        SortByHelper_1.applySortByToQuery(query, sort_by);
+    };
+    return ApisearchHelper;
+}());
+exports["default"] = ApisearchHelper;
+
+
+/***/ }),
+
 /***/ "./src/ApisearchUI.ts":
 /*!****************************!*\
   !*** ./src/ApisearchUI.ts ***!
@@ -13144,6 +13179,7 @@ var Constants_1 = __webpack_require__(/*! ./Constants */ "./src/Constants.ts");
 var Container_1 = __webpack_require__(/*! ./Container */ "./src/Container.ts");
 var Environment_1 = __webpack_require__(/*! ./Environment */ "./src/Environment.ts");
 var Widgets_1 = __webpack_require__(/*! ./widgets/Widgets */ "./src/widgets/Widgets.ts");
+var ApisearchHelper_1 = __webpack_require__(/*! ./ApisearchHelper */ "./src/ApisearchHelper.ts");
 /**
  * ApisearchUI class
  */
@@ -13163,6 +13199,7 @@ var ApisearchUI = /** @class */ (function () {
         this.repository = repository;
         this.activeWidgets = [];
         this.widgets = Widgets_1["default"];
+        this.helper = new ApisearchHelper_1["default"]();
         /**
          * Store related properties
          */
@@ -13489,8 +13526,8 @@ var Store = /** @class */ (function (_super) {
     /**
      * Constructor
      *
-     * @param {Coordinate}
-     * @param {number}
+     * @param coordinate
+     * @param minScore
      */
     function Store(coordinate, minScore) {
         var _this = _super.call(this) || this;
@@ -13514,6 +13551,8 @@ var Store = /** @class */ (function (_super) {
          */
         _this.currentResult = apisearch_1["default"].createEmptyResult();
         _this.currentVisibleResults = false;
+        _this.sessionUID = _this.createUID(16);
+        _this.currentQuery.setMetadataValue('session_uid', _this.sessionUID);
         return _this;
     }
     /**
@@ -13590,6 +13629,18 @@ var Store = /** @class */ (function (_super) {
             this.emit("render");
             return;
         }
+    };
+    /**
+     * Create an uid
+     */
+    Store.prototype.createUID = function (length) {
+        var result = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for (var i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
     };
     return Store;
 }(events_1.EventEmitter));
@@ -15087,7 +15138,7 @@ exports["default"] = RangeFilterComponent;
 "use strict";
 
 exports.__esModule = true;
-exports.configureQuery = void 0;
+exports.infiniteScrollNextPageAction = exports.configureQuery = void 0;
 var cloneDeep = __webpack_require__(/*! clone-deep */ "./node_modules/clone-deep/index.js");
 var Constants_1 = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
 var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
@@ -15155,6 +15206,33 @@ function configureQuery(environmentId, currentQuery, itemsPerPage, highlightsEna
     });
 }
 exports.configureQuery = configureQuery;
+/**
+ * Pagination change
+ *
+ * @param environmentId
+ * @param currentQuery
+ * @param repository
+ * @param nextPage
+ */
+function infiniteScrollNextPageAction(environmentId, currentQuery, repository, nextPage) {
+    var clonedQuery = cloneDeep(currentQuery);
+    clonedQuery.page = nextPage;
+    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
+    repository
+        .query(clonedQuery)
+        .then(function (result) {
+        dispatcher.dispatch({
+            type: "RENDER_FETCHED_DATA",
+            payload: {
+                query: clonedQuery,
+                result: result,
+            },
+        });
+    })["catch"](function (error) {
+        // Do nothing
+    });
+}
+exports.infiniteScrollNextPageAction = infiniteScrollNextPageAction;
 
 
 /***/ }),
@@ -15211,8 +15289,23 @@ var ResultComponent = /** @class */ (function (_super) {
      */
     function ResultComponent(props) {
         var _this = _super.call(this, props) || this;
+        _this.observer = compat_1.useRef();
+        _this.endResultsBoxRef = compat_1.useCallback(function (node) {
+            if (_this.observer.current instanceof IntersectionObserver)
+                _this.observer.current.disconnect();
+            _this.observer.current = new IntersectionObserver(function (entries) {
+                if (entries[0].isIntersecting) {
+                    var _a = _this.props, environmentId = _a.environmentId, currentQuery = _a.currentQuery, repository = _a.repository;
+                    ResultActions_1.infiniteScrollNextPageAction(environmentId, currentQuery, repository, _this.state.page + 1);
+                }
+            });
+            if ((_this.observer.current instanceof IntersectionObserver) && node)
+                _this.observer.current.observe(node);
+        }, []);
         _this.state = {
-            itemsId: [],
+            items: [],
+            page: 0,
+            hasNewPage: false,
             focus: props.fadeInSelector == ''
         };
         return _this;
@@ -15230,7 +15323,8 @@ var ResultComponent = /** @class */ (function (_super) {
             function handleClickOutside(event) {
                 self.setState(function (prevState) {
                     return {
-                        itemsId: prevState.itemsId,
+                        items: prevState.items,
+                        page: prevState.page,
                         focus: event.target.closest(fadeInSelector) != null
                     };
                 });
@@ -15249,22 +15343,32 @@ var ResultComponent = /** @class */ (function (_super) {
      * @param props
      */
     ResultComponent.prototype.componentWillReceiveProps = function (props) {
-        var itemsId = [];
         if (props.currentResult == null) {
             this.setState(function (prevState) {
                 return {
-                    itemsId: itemsId
+                    items: [],
+                    page: 0,
+                    hasNewPage: false
                 };
             });
             return;
         }
-        var items = props.currentResult.getItems();
-        items.map(function (item) {
-            itemsId.push(item.uuid.composedUUID());
-        });
+        var currentResult = props.currentResult;
+        var currentQuery = props.currentQuery;
+        var items = currentResult.getItems();
+        var currentPage = currentQuery.getPage();
+        var hasNewPage = (currentResult.getTotalHits() > (currentPage * currentQuery.getSize()));
+        var hasInfiniteScroll = (props.infiniteScroll !== false) &&
+            ((props.infiniteScroll === true) ||
+                (props.infiniteScroll >= 0));
+        if (hasInfiniteScroll && currentPage > 1) {
+            items = this.state.items.concat(items);
+        }
         this.setState(function (prevState) {
             return {
-                itemsId: itemsId
+                items: items,
+                page: props.currentQuery.getPage(),
+                hasNewPage: hasNewPage
             };
         });
     };
@@ -15308,6 +15412,15 @@ var ResultComponent = /** @class */ (function (_super) {
         var currentQuery = props.currentQuery;
         var currentVisibleResults = props.currentVisibleResults;
         var wrapperRef = compat_1.useRef(null);
+        var hasInfiniteScrollNextPage = (props.infiniteScroll !== false) &&
+            ((props.infiniteScroll === true) ||
+                (props.infiniteScroll >= 0)) &&
+            this.state.hasNewPage;
+        var infiniteScrollMargin = hasInfiniteScrollNextPage
+            ? (props.infiniteScroll === true
+                ? 0
+                : props.infiniteScroll)
+            : undefined;
         if (props.fadeInSelector != '') {
             this.addMouseDownListeners(wrapperRef, props.fadeInSelector);
         }
@@ -15317,7 +15430,7 @@ var ResultComponent = /** @class */ (function (_super) {
         /**
          * Data accessible to the template
          */
-        var items = currentResult.getItems();
+        var items = this.state.items;
         var reducedTemplateData = {
             query: currentQuery.getQueryText(),
             suggestions: currentResult.getSuggestions(),
@@ -15349,9 +15462,13 @@ var ResultComponent = /** @class */ (function (_super) {
                     });
                 })
                 : [] });
-        return (preact_1.h("div", { className: "as-result " + containerClassName, ref: wrapperRef }, (placeholderTemplate && dirty)
-            ? preact_1.h(Template_1["default"], { template: placeholderTemplate, className: "as-result__placeholder " + placeholderClassName })
-            : preact_1.h(Template_1["default"], { template: itemsListTemplate, data: formattedTemplateData, className: "as-result__itemsList " + itemsListClassName })));
+        return (preact_1.h("div", { className: "as-result " + containerClassName, ref: wrapperRef, style: "position: relative" },
+            (placeholderTemplate && dirty)
+                ? preact_1.h(Template_1["default"], { template: placeholderTemplate, className: "as-result__placeholder " + placeholderClassName })
+                : preact_1.h(Template_1["default"], { template: itemsListTemplate, data: formattedTemplateData, className: "as-result__itemsList " + itemsListClassName }),
+            hasInfiniteScrollNextPage
+                ? preact_1.h("div", { ref: this.endResultsBoxRef, style: "position: absolute; bottom: " + infiniteScrollMargin + "px;" })
+                : ""));
     };
     return ResultComponent;
 }(preact_1.Component));
@@ -15767,14 +15884,10 @@ exports["default"] = SearchInputComponent;
 
 exports.__esModule = true;
 exports.onChangeSearchAction = exports.initialSortBySetup = void 0;
-/**
- * SortBy actions
- */
-var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
-var apisearch_2 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
 var cloneDeep = __webpack_require__(/*! clone-deep */ "./node_modules/clone-deep/index.js");
 var Constants_1 = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
 var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
+var SortByHelper_1 = __webpack_require__(/*! ./SortByHelper */ "./src/components/SortBy/SortByHelper.ts");
 /**
  * Initial sortBy
  *
@@ -15785,7 +15898,7 @@ var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts
 function initialSortBySetup(environmentId, currentQuery, initialOption) {
     var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
     var clonedQuery = cloneDeep(currentQuery);
-    applySortByToQuery(clonedQuery, initialOption);
+    SortByHelper_1.applySortByToQuery(clonedQuery, initialOption);
     clonedQuery.page = 1;
     dispatcher.dispatch({
         type: "UPDATE_APISEARCH_SETUP",
@@ -15805,7 +15918,7 @@ exports.initialSortBySetup = initialSortBySetup;
  */
 function onChangeSearchAction(environmentId, currentQuery, repository, selectedOption) {
     var clonedQuery = cloneDeep(currentQuery);
-    applySortByToQuery(clonedQuery, selectedOption);
+    SortByHelper_1.applySortByToQuery(clonedQuery, selectedOption);
     clonedQuery.page = 1;
     var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
     repository
@@ -15823,46 +15936,6 @@ function onChangeSearchAction(environmentId, currentQuery, repository, selectedO
     });
 }
 exports.onChangeSearchAction = onChangeSearchAction;
-/**
- * Apply sort by to query
- *
- * @param Query
- * @param string
- */
-function applySortByToQuery(query, selectedOption) {
-    var sortByData = splitQueryValue(selectedOption);
-    var sortBy = apisearch_1["default"].createEmptySortBy();
-    if (sortByData.field == 'distance') {
-        sortBy.byValue({
-            type: apisearch_2.SORT_BY_TYPE_DISTANCE,
-            unit: sortByData.sort
-                ? sortByData.sort
-                : 'km'
-        });
-    }
-    else if (sortByData.field == 'score') {
-        sortBy.byValue(apisearch_2.SORT_BY_SCORE);
-    }
-    else {
-        sortBy.byFieldValue(sortByData.field, sortByData.sort);
-    }
-    query.sortBy(sortBy);
-    return query;
-}
-/**
- * Split sort by string representation
- *
- * @param string
- *
- * @return {{field: string, sort: string}}
- */
-function splitQueryValue(string) {
-    var queryValue = string.split(":");
-    return {
-        field: queryValue[0],
-        sort: queryValue[1],
-    };
-}
 
 
 /***/ }),
@@ -15964,6 +16037,67 @@ SortByComponent.defaultProps = {
     }
 };
 exports["default"] = SortByComponent;
+
+
+/***/ }),
+
+/***/ "./src/components/SortBy/SortByHelper.ts":
+/*!***********************************************!*\
+  !*** ./src/components/SortBy/SortByHelper.ts ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+exports.applySortByToQuery = void 0;
+/**
+ * SortBy actions
+ */
+var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
+var apisearch_2 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
+/**
+ * Apply sort by to query
+ *
+ * @param query Query
+ * @param selectedOption string
+ */
+function applySortByToQuery(query, selectedOption) {
+    var sortByData = splitQueryValue(selectedOption);
+    var sortBy = apisearch_1["default"].createEmptySortBy();
+    if (sortByData.field == 'distance') {
+        sortBy.byValue({
+            type: apisearch_2.SORT_BY_TYPE_DISTANCE,
+            unit: sortByData.sort
+                ? sortByData.sort
+                : 'km'
+        });
+    }
+    else if (sortByData.field == 'score') {
+        sortBy.byValue(apisearch_2.SORT_BY_SCORE);
+    }
+    else {
+        sortBy.byFieldValue(sortByData.field, sortByData.sort);
+    }
+    query.sortBy(sortBy);
+    return query;
+}
+exports.applySortByToQuery = applySortByToQuery;
+/**
+ * Split sort by string representation
+ *
+ * @param string
+ *
+ * @return {{field: string, sort: string}}
+ */
+function splitQueryValue(string) {
+    var queryValue = string.split(":");
+    return {
+        field: queryValue[0],
+        sort: queryValue[1],
+    };
+}
 
 
 /***/ }),
@@ -16593,13 +16727,14 @@ var Result = /** @class */ (function (_super) {
      * @param template
      * @param formatData
      * @param fadeInSelector
+     * @param infiniteScroll
      */
     function Result(_a) {
-        var target = _a.target, fields = _a.fields, itemsPerPage = _a.itemsPerPage, promote = _a.promote, exclude = _a.exclude, filter = _a.filter, highlightsEnabled = _a.highlightsEnabled, suggestionsEnabled = _a.suggestionsEnabled, classNames = _a.classNames, template = _a.template, formatData = _a.formatData, fadeInSelector = _a.fadeInSelector;
+        var target = _a.target, fields = _a.fields, itemsPerPage = _a.itemsPerPage, promote = _a.promote, exclude = _a.exclude, filter = _a.filter, highlightsEnabled = _a.highlightsEnabled, suggestionsEnabled = _a.suggestionsEnabled, classNames = _a.classNames, template = _a.template, formatData = _a.formatData, fadeInSelector = _a.fadeInSelector, infiniteScroll = _a.infiniteScroll;
         var _this = _super.call(this) || this;
         _this.target = target;
         _this.targetNode = document.querySelector(_this.target);
-        _this.component = preact_1.h(ResultComponent_1["default"], { target: target, fields: fields, itemsPerPage: itemsPerPage, promote: promote, exclude: exclude, filter: filter, highlightsEnabled: highlightsEnabled, suggestionsEnabled: suggestionsEnabled, classNames: __assign(__assign({}, ResultComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, ResultComponent_1["default"].defaultProps.template), template), formatData: formatData, fadeInSelector: fadeInSelector });
+        _this.component = preact_1.h(ResultComponent_1["default"], { target: target, fields: fields, itemsPerPage: itemsPerPage, promote: promote, exclude: exclude, filter: filter, highlightsEnabled: highlightsEnabled, suggestionsEnabled: suggestionsEnabled, classNames: __assign(__assign({}, ResultComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, ResultComponent_1["default"].defaultProps.template), template), formatData: formatData, fadeInSelector: fadeInSelector, infiniteScroll: infiniteScroll });
         return _this;
     }
     /**

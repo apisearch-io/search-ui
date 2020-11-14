@@ -1,6 +1,4 @@
-import { h } from "preact";
-
-import {HttpRepository, ItemUUID} from "apisearch";
+import {HttpRepository} from "apisearch";
 import apisearch from "apisearch";
 import { initialDataFetchAction } from "./ApisearchActions";
 import {bootstrap} from "./Bootstrap";
@@ -10,17 +8,18 @@ import {createEnvironmentId} from "./Environment";
 import Store from "./Store";
 import Widget from "./widgets/Widget";
 import widgets from "./widgets/Widgets";
+import ApisearchHelper from "./ApisearchHelper";
 
 /**
  * ApisearchUI class
  */
 export default class ApisearchUI {
 
-    private environmentId: string;
-    private reference: ApisearchUI;
-    private repository: HttpRepository;
+    readonly environmentId: string;
+    readonly repository: HttpRepository;
+    readonly store: Store;
+    readonly helper: ApisearchHelper;
     private activeWidgets: Widget[];
-    private store: Store;
     public widgets: any;
 
     /**
@@ -42,6 +41,7 @@ export default class ApisearchUI {
         this.repository = repository;
         this.activeWidgets = [];
         this.widgets = widgets;
+        this.helper = new ApisearchHelper();
 
         /**
          * Store related properties

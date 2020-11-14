@@ -2,6 +2,8 @@
  * ResultState
  */
 export interface ResultState {
-    itemsId: string[];
-    focus: boolean
+    items: any[];
+    page: number;
+    hasNewPage: boolean;
+    focus: boolean;
 }

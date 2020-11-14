@@ -7,16 +7,17 @@ import { EventEmitter } from "events";
  */
 class Store extends EventEmitter {
 
-    private dirty;
+    private dirty: boolean;
     private currentQuery: Query;
     private currentResult: Result;
     private currentVisibleResults: boolean;
+    private sessionUID: string;
 
     /**
      * Constructor
      *
-     * @param {Coordinate}
-     * @param {number}
+     * @param coordinate
+     * @param minScore
      */
     constructor(
         coordinate: {
@@ -52,6 +53,8 @@ class Store extends EventEmitter {
          */
         this.currentResult = apisearch.createEmptyResult();
         this.currentVisibleResults = false;
+        this.sessionUID = this.createUID(16);
+        this.currentQuery.setMetadataValue('session_uid', this.sessionUID);
     }
 
     /**
@@ -140,6 +143,20 @@ class Store extends EventEmitter {
             this.emit("render");
             return;
         }
+    }
+
+    /**
+     * Create an uid
+     */
+    public createUID(length) {
+       var result = '';
+       var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+       var charactersLength = characters.length;
+       for ( var i = 0; i < length; i++ ) {
+          result += characters.charAt(Math.floor(Math.random() * charactersLength));
+       }
+
+       return result;
     }
 }
 

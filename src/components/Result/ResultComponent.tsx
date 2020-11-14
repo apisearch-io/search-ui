@@ -1,8 +1,8 @@
 import { h, Component } from 'preact';
-import { useRef, useState, useEffect } from 'preact/compat';
+import { useRef, useEffect, useCallback } from 'preact/compat';
 import Template from "../Template";
 import {defaultItemsListTemplate} from "./defaultTemplates";
-import {configureQuery} from "./ResultActions";
+import {configureQuery, infiniteScrollNextPageAction} from "./ResultActions";
 import {ResultState} from "./ResultState";
 import {ResultProps} from "./ResultProps";
 import {ItemUUID} from "apisearch/lib/Model/ItemUUID";
@@ -16,6 +16,30 @@ import {
  * Result Component
  */
 class ResultComponent extends Component<ResultProps, ResultState> {
+
+    observer = useRef();
+    endResultsBoxRef = useCallback(node => {
+        if (this.observer.current instanceof IntersectionObserver) this.observer.current.disconnect()
+        this.observer.current = new IntersectionObserver(entries => {
+            if (entries[0].isIntersecting) {
+                const {
+                    environmentId,
+                    currentQuery,
+                    repository
+                } = this.props;
+
+                infiniteScrollNextPageAction(
+                    environmentId,
+                    currentQuery,
+                    repository,
+                    this.state.page + 1
+                )
+            }
+        })
+
+        if ((this.observer.current instanceof IntersectionObserver) && node) this.observer.current.observe(node)
+    }, []);
+
     /**
      * Constructor
      */
@@ -23,7 +47,9 @@ class ResultComponent extends Component<ResultProps, ResultState> {
         super(props);
 
         this.state = {
-            itemsId: [],
+            items: [],
+            page: 0,
+            hasNewPage: false,
             focus: props.fadeInSelector == ''
         }
     }
@@ -42,7 +68,8 @@ class ResultComponent extends Component<ResultProps, ResultState> {
 
                 self.setState(prevState => {
                     return {
-                        itemsId: prevState.itemsId,
+                        items: prevState.items,
+                        page: prevState.page,
                         focus: event.target.closest(fadeInSelector) != null
                     };
                 });
@@ -64,26 +91,40 @@ class ResultComponent extends Component<ResultProps, ResultState> {
      */
     componentWillReceiveProps(props) {
 
-        let itemsId = [];
         if (props.currentResult == null) {
             this.setState(prevState => {
                 return {
-                   itemsId: itemsId
+                    items: [],
+                    page: 0,
+                    hasNewPage: false
                };
             });
             return;
         }
 
-        const items = props.currentResult.getItems();
+        const currentResult = props.currentResult;
+        const currentQuery = props.currentQuery;
+        let items = currentResult.getItems();
+        const currentPage = currentQuery.getPage();
+        const hasNewPage = (currentResult.getTotalHits() > (currentPage * currentQuery.getSize()));
 
-        items.map(function(item) {
-            itemsId.push(item.uuid.composedUUID());
-        });
+        const hasInfiniteScroll =
+            (props.infiniteScroll !== false) &&
+            (
+                (props.infiniteScroll === true) ||
+                (props.infiniteScroll >= 0)
+            );
+
+        if (hasInfiniteScroll && currentPage > 1) {
+            items = this.state.items.concat(items);
+        }
 
         this.setState(prevState => {
             return {
-               itemsId: itemsId
-           };
+                items: items,
+                page: props.currentQuery.getPage(),
+                hasNewPage: hasNewPage
+            };
         });
     }
 
@@ -142,6 +183,22 @@ class ResultComponent extends Component<ResultProps, ResultState> {
         const currentQuery = props.currentQuery;
         const currentVisibleResults = props.currentVisibleResults;
         const wrapperRef = useRef(null);
+        const hasInfiniteScrollNextPage =
+            (props.infiniteScroll !== false) &&
+            (
+                (props.infiniteScroll === true) ||
+                (props.infiniteScroll >= 0)
+            ) &&
+            this.state.hasNewPage;
+
+        const infiniteScrollMargin = hasInfiniteScrollNextPage
+            ? (
+                props.infiniteScroll === true
+                    ? 0
+                    : props.infiniteScroll
+            )
+            : undefined;
+
         if (props.fadeInSelector != '') {
             this.addMouseDownListeners(wrapperRef, props.fadeInSelector);
         }
@@ -155,7 +212,8 @@ class ResultComponent extends Component<ResultProps, ResultState> {
         /**
          * Data accessible to the template
          */
-        const items = currentResult.getItems();
+
+        const items = this.state.items;
         let reducedTemplateData = {
             query: currentQuery.getQueryText(),
             suggestions: currentResult.getSuggestions(),
@@ -199,7 +257,7 @@ class ResultComponent extends Component<ResultProps, ResultState> {
         };
 
         return (
-            <div className={`as-result ${containerClassName}`} ref={wrapperRef}>
+            <div className={`as-result ${containerClassName}`} ref={wrapperRef} style={"position: relative"}>
                 {(placeholderTemplate && dirty)
                     ? <Template
                         template={placeholderTemplate}
@@ -210,6 +268,13 @@ class ResultComponent extends Component<ResultProps, ResultState> {
                         data={formattedTemplateData}
                         className={`as-result__itemsList ${itemsListClassName}`}
                     />
+                }
+                {hasInfiniteScrollNextPage
+                    ? <div
+                        ref={this.endResultsBoxRef}
+                        style={`position: absolute; bottom: ${infiniteScrollMargin}px;`}
+                   />
+                    : ""
                 }
             </div>
         )

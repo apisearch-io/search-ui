@@ -26,6 +26,7 @@ class Result extends Widget {
      * @param template
      * @param formatData
      * @param fadeInSelector
+     * @param infiniteScroll
      */
     constructor({
         target,
@@ -39,7 +40,8 @@ class Result extends Widget {
         classNames,
         template,
         formatData,
-        fadeInSelector
+        fadeInSelector,
+        infiniteScroll,
     }) {
         super();
         this.target = target;
@@ -63,6 +65,7 @@ class Result extends Widget {
             }}
             formatData={formatData}
             fadeInSelector={fadeInSelector}
+            infiniteScroll={infiniteScroll}
         />
     }
 

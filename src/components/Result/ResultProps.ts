@@ -32,4 +32,5 @@ export interface ResultProps {
     currentResult?: Result;
     currentQuery?: Query;
     currentVisibleResults?: boolean;
+    infiniteScroll?: boolean|number;
 }

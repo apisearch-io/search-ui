@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>AS UI - Infinite Scroll</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.0/css/bulma.min.css">
+
+    <!-- ApisearchUI library -->
+    <script type="application/javascript" src="../dist/apisearch-ui.js"></script>
+
+    <!-- custom styles -->
+    <style type="text/css">
+        em {
+            background: #b4acff;
+            font-style: inherit;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Navbar -->
+<nav class="navbar is-light" role="navigation" aria-label="main navigation">
+    <!-- Logo -->
+    <div class="navbar-brand">
+        <a class="navbar-item" href="https://apisearch.io">
+            <img class="has-text-centered"
+                 src="http://apisearch.io/assets/media/apisearch-long-logo.png"
+                 width="200px"
+            >
+        </a>
+    </div>
+
+    <!-- SearchInput -->
+    <div class="search navbar-item"></div>
+
+    <!-- Information -->
+    <div class="information navbar-item"></div>
+
+    <!-- End -->
+    <div class="navbar-end">
+        <a class="navbar-item is-hidden-desktop-only" href="#" target="_blank">
+                <span class="icon" style="color: #333;">
+                  <i class="fa fa-lg fa-github"></i>
+                </span>
+        </a>
+    </div>
+</nav>
+
+<div class="notification is-link">
+    Infinite Scroll for the newest albums
+</div>
+
+
+<!-- Result -->
+<div class="result column"></div>
+
+<script type="text/template" id="result-search-tpl">
+    <div class="columns is-multiline is-variable">
+        {{#items}}
+        <div class="column is-narrow">
+            <div class="card" style="border-radius: .2rem">
+                <div class="card-content">
+                    <object data="{{metadata.image}}" type="image/png" style="width: 200px; height: 200px">
+                        <img loading="lazy" src="notfound.png" style="width: 200px; height: 200px" alt="{{metadata.title}}">
+                    </object>
+                </div>
+            </div>
+        </div>
+        {{/items}}
+    </div>
+    {{^items}}
+    <div class="notification">Empty set of results with this search: <b>{{query}}</b> 🙉</div>
+    {{/items}}
+</script>
+
+<script type="text/javascript">
+    // UI Instance
+    const ui = apisearchUI.create({
+        app_id: 'as-29be77d7-2f64-4522',
+        index_id: 'eu1-prod-d53da03a-d49c-483c',
+        token: 'eu1-8438694d-5839-4179-9f73-a55630f3cd4d',
+        options: {
+            endpoint: 'https://eu1.apisearch.io'
+        }
+    });
+
+    const {
+        result,
+        searchInput,
+        sortBy,
+        information
+    } = ui.widgets;
+
+    // Widgets setup
+    ui.addWidgets(
+        result({
+            target: '.result',
+            itemsPerPage: 50,
+            highlightsEnabled: true,
+            infiniteScroll: 500,
+            classNames: {
+                container: 'column'
+            },
+            filter: function(query) {
+                ui.helper.sortBy(query, 'year:desc');
+            },
+            template: {
+                itemsList: document.getElementById('result-search-tpl').text,
+            }
+        }),
+        searchInput({
+            target: '.search',
+            placeholder: 'Search something...',
+            autofocus: true,
+            autocomplete: true,
+            classNames: {
+                container: 'column',
+                input: 'input'
+            }
+        }),
+        information({
+            target: '.information',
+            template: {
+                container: '<span class="tag is-primary">' +
+                    '<i class="fa fa-bolt"></i> &nbsp; Matched {{total_hits}} of {{total_items}}!' +
+                    '</span>'
+            }
+        })
+    );
+
+    // Init the magic!
+    ui.init({firstQuery: true});
+</script>
+</body>
+</html>
