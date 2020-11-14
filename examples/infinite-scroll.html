@@ -109,6 +109,13 @@
             },
             template: {
                 itemsList: document.getElementById('result-search-tpl').text,
+            },
+            formatData: function(item) {
+                item.metadata.image = ('file:' === protocol)
+                    ? item.metadata.image
+                    : item.metadata.image.replace('http://', '//');
+
+                return item;
             }
         }),
         searchInput({
