@@ -14037,7 +14037,8 @@ var InformationComponent = /** @class */ (function (_super) {
         var _this = _super.call(this, props) || this;
         _this.state = {
             hits: 0,
-            total: 0
+            total: 0,
+            visible: false
         };
         return _this;
     }
@@ -14048,10 +14049,17 @@ var InformationComponent = /** @class */ (function (_super) {
      */
     InformationComponent.prototype.componentWillReceiveProps = function (props) {
         this.setState(function (prevState) {
-            return {
-                hits: props.currentResult.getTotalHits(),
-                total: props.currentResult.getTotalItems()
-            };
+            return (props.currentResult == null)
+                ? {
+                    hits: 0,
+                    total: 0,
+                    visible: false
+                }
+                : {
+                    hits: props.currentResult.getTotalHits(),
+                    total: props.currentResult.getTotalItems(),
+                    visible: true
+                };
         });
     };
     InformationComponent.prototype.render = function () {
@@ -14059,8 +14067,7 @@ var InformationComponent = /** @class */ (function (_super) {
         var containerClassName = props.classNames.container;
         var containerTemplate = props.template.container;
         var formatData = props.formatData;
-        var currentResult = props.currentResult;
-        if (props.currentResult == null) {
+        if (!this.state.visible) {
             return;
         }
         /**
@@ -14374,6 +14381,11 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
     MultipleFilterComponent.prototype.componentWillReceiveProps = function (props) {
         var filterName = props.filterName;
         if (props.currentResult == null) {
+            this.setState(function (prevState) {
+                return {
+                    aggregations: []
+                };
+            });
             return;
         }
         var aggregation = props.currentResult.getAggregation(filterName);
@@ -14977,6 +14989,11 @@ var RangeFilterComponent = /** @class */ (function (_super) {
         _this.uid = Math.random().toString(16).substr(2, 12);
         _this.observerFrom = _this.configureObserver('from');
         _this.observerTo = _this.configureObserver('to');
+        _this.state = {
+            valueFrom: 0,
+            valueTo: 0,
+            visible: false
+        };
         return _this;
     }
     RangeFilterComponent.prototype.configureObserver = function (field) {
@@ -15018,10 +15035,17 @@ var RangeFilterComponent = /** @class */ (function (_super) {
         var filterIsNotFound = props.currentQuery.getFilter(filterName) == null;
         if (filterIsNotFound) {
             this.setState(function (prevState) {
-                return {
-                    valueFrom: props.minValue,
-                    valueTo: props.maxValue
-                };
+                return (props.currentResult == null)
+                    ? {
+                        valueFrom: 0,
+                        valueTo: 0,
+                        visible: false
+                    }
+                    : {
+                        valueFrom: props.minValue,
+                        valueTo: props.maxValue,
+                        visible: true
+                    };
             });
         }
     };
@@ -15073,15 +15097,8 @@ var RangeFilterComponent = /** @class */ (function (_super) {
         var to = props.to;
         var minValue = props.minValue;
         var maxValue = props.maxValue;
-        var initialFrom = Math.max(from.initialValue, minValue);
-        var initialTo = Math.min(to.initialValue, maxValue);
-        var currentFromValue = this.state.valueFrom
-            ? this.state.valueFrom
-            : initialFrom;
-        var currentToValue = this.state.valueTo
-            ? this.state.valueTo
-            : initialTo;
         var ref = compat_1.useRef(null);
+        var visible = state.visible ? 'block' : 'none';
         compat_1.useEffect(function () {
             var self = _this;
             if (!ref.current) {
@@ -15102,7 +15119,7 @@ var RangeFilterComponent = /** @class */ (function (_super) {
                 ref.current.removeEventListener("change", handleChange);
             };
         }, [ref]);
-        return (preact_1.h("div", { className: "as-rangeFilter" },
+        return (preact_1.h("div", { className: "as-rangeFilter", style: "display: " + visible },
             preact_1.h("label", { "class": "as-rangeFilter__label" }, filterName),
             preact_1.h("input", __assign({ type: "number", "class": "as-rangeFilter__from " + from["class"] + " as-rangeFilter__from__" + this.uid }, from.attributes, { value: this.state.valueFrom, min: minValue, max: maxValue, ref: ref, autocomplete: "off" })),
             preact_1.h("input", __assign({ type: "number", "class": "as-rangeFilter__to " + to["class"] + " as-rangeFilter__to__" + this.uid }, to.attributes, { value: this.state.valueTo, min: minValue, max: maxValue, autocomplete: "off" }))));
@@ -15458,6 +15475,7 @@ var ResultComponent = /** @class */ (function (_super) {
                     var fields = Object.assign(item.getMetadata(), item.getIndexedMetadata(), item.getHighlights());
                     return __assign(__assign({}, formatData(item)), {
                         'fields': fields,
+                        'key': 'item_' + itemId,
                         'click': apisearchReference + '.click("' + clickParameters + '");'
                     });
                 })
@@ -15507,7 +15525,7 @@ exports["default"] = ResultComponent;
 
 exports.__esModule = true;
 exports.defaultItemsListTemplate = void 0;
-exports.defaultItemsListTemplate = "\n    <ul>\n    {{#items}}\n        <li class=\"as-result__item\">\n            <strong>Score:</strong> {{score}}<br />\n            <strong>Uuid:</strong> {{uuid.type}} - {{uuid.id}}<br />\n            <strong>Title:</strong> {{{fields.title}}}<br />\n            <strong>Description:</strong> {{fields.description}}<br />\n            <strong>Link:</strong> <a href=\"{{metadata.link}}\" onclick=\"{{click}}\" target=\"_blank\">{{metadata.link}}</a>\n        </li>\n    {{/items}}\n    </ul>\n    {{^items}}No result{{/items}}\n";
+exports.defaultItemsListTemplate = "\n    <ul>\n    {{#items}}\n        <li class=\"as-result__item\" key=\"{{key}}\">\n            <strong>Score:</strong> {{score}}<br />\n            <strong>Uuid:</strong> {{uuid.type}} - {{uuid.id}}<br />\n            <strong>Title:</strong> {{{fields.title}}}<br />\n            <strong>Description:</strong> {{fields.description}}<br />\n            <strong>Link:</strong> <a href=\"{{metadata.link}}\" onclick=\"{{click}}\" target=\"_blank\">{{metadata.link}}</a>\n        </li>\n    {{/items}}\n    </ul>\n    {{^items}}No result{{/items}}\n";
 
 
 /***/ }),
@@ -15826,7 +15844,6 @@ var SearchInputComponent = /** @class */ (function (_super) {
         var suggestions = props.currentResult
             ? props.currentResult.getSuggestions()
             : [];
-        var hasSuggestions = suggestions.length > 0;
         var showAutocomplete = props.autocomplete;
         var keyDownCallback = showAutocomplete
             ? function (e) { return _this.handleKeyDown(e); }
@@ -15982,10 +15999,14 @@ var SortByComponent = /** @class */ (function (_super) {
             var environmentId = props.environmentId;
             var currentQuery = props.currentQuery;
             var repository = props.repository;
+            var currentOption = e.target.value;
+            _this.setState({
+                value: currentOption
+            });
             /**
              * Dispatch action
              */
-            SortByActions_1.onChangeSearchAction(environmentId, currentQuery, repository, e.target.value);
+            SortByActions_1.onChangeSearchAction(environmentId, currentQuery, repository, currentOption);
         };
         return _this;
     }
@@ -15997,18 +16018,29 @@ var SortByComponent = /** @class */ (function (_super) {
         var environmentId = props.environmentId;
         var options = props.options;
         var currentQuery = props.currentQuery;
+        var currentOption = options[0].value;
+        this.setState({
+            value: currentOption,
+            visible: false
+        });
         /**
          * Dispatch action
          */
-        SortByActions_1.initialSortBySetup(environmentId, currentQuery, options[0].value);
+        SortByActions_1.initialSortBySetup(environmentId, currentQuery, currentOption);
     };
     /**
-     * Should component update
+     * Component will receive props
      *
-     * @return {boolean}
+     * @param props
      */
-    SortByComponent.prototype.shouldComponentUpdate = function () {
-        return false;
+    SortByComponent.prototype.componentWillReceiveProps = function (props) {
+        this.setState(function (prevState) {
+            return {
+                visible: (props.currentResult != null)
+                    ? (props.currentResult.getTotalHits() > 0)
+                    : false
+            };
+        });
     };
     /**
      * Render
@@ -16018,6 +16050,9 @@ var SortByComponent = /** @class */ (function (_super) {
     SortByComponent.prototype.render = function (props, state) {
         var containerClassName = props.classNames.container;
         var selectClassName = props.classNames.select;
+        if (!state.visible) {
+            return;
+        }
         var options = props.options;
         var coordinate = props.currentQuery.toArray().coordinate;
         if (!coordinate) {
@@ -16811,8 +16846,10 @@ var SearchInput = /** @class */ (function (_super) {
      * @param clearSearch
      * @param withContainer
      * @param autofocus
+     * @param autocomplete
      * @param classNames
      * @param template
+     * @param initialSearch
      */
     function SearchInput(_a) {
         var target = _a.target, placeholder = _a.placeholder, startSearchOn = _a.startSearchOn, clearSearch = _a.clearSearch, withContainer = _a.withContainer, autofocus = _a.autofocus, autocomplete = _a.autocomplete, classNames = _a.classNames, template = _a.template, initialSearch = _a.initialSearch;
@@ -16940,6 +16977,7 @@ var SortBy = /** @class */ (function (_super) {
         var target = _a.target, classNames = _a.classNames, options = _a.options;
         var _this = _super.call(this) || this;
         _this.target = target;
+        _this.targetNode = document.querySelector(_this.target);
         _this.component = preact_1.h(SortByComponent_1["default"], { target: target, classNames: __assign(__assign({}, SortByComponent_1["default"].defaultProps.classNames), classNames), options: options });
         return _this;
     }
@@ -16952,8 +16990,7 @@ var SortBy = /** @class */ (function (_super) {
      */
     SortBy.prototype.render = function (environmentId, store, repository) {
         this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, dirty: store.isDirty(), currentResult: store.getCurrentResult(), currentQuery: store.getCurrentQuery() });
-        var targetNode = document.querySelector(this.target);
-        preact_1.render(this.component, targetNode);
+        preact_1.render(this.component, this.targetNode);
     };
     return SortBy;
 }(Widget_1["default"]));

@@ -15,7 +15,8 @@ class InformationComponent extends Component<InformationProps, InformationState>
         super(props);
         this.state = {
             hits: 0,
-            total: 0
+            total: 0,
+            visible: false
         }
     }
 
@@ -27,13 +28,19 @@ class InformationComponent extends Component<InformationProps, InformationState>
     componentWillReceiveProps(props) {
 
         this.setState(prevState => {
-            return {
-               hits: props.currentResult.getTotalHits(),
-               total: props.currentResult.getTotalItems()
-           };
+            return (props.currentResult == null)
+                ? {
+                    hits: 0,
+                    total: 0,
+                    visible: false
+                }
+                : {
+                    hits: props.currentResult.getTotalHits(),
+                    total: props.currentResult.getTotalItems(),
+                    visible: true
+                };
         });
     }
-
 
     render() {
 
@@ -41,9 +48,8 @@ class InformationComponent extends Component<InformationProps, InformationState>
         const containerClassName = props.classNames.container;
         const containerTemplate = props.template.container;
         const formatData = props.formatData;
-        const currentResult = props.currentResult;
 
-        if (props.currentResult == null) {
+        if (!this.state.visible) {
             return;
         }
 

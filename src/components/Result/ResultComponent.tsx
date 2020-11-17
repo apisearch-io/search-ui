@@ -249,6 +249,7 @@ class ResultComponent extends Component<ResultProps, ResultState> {
                         ...formatData(item),
                         ...{
                             'fields': fields,
+                            'key': 'item_' + itemId,
                             'click': apisearchReference + '.click("'+clickParameters+'");'
                         }
                     }

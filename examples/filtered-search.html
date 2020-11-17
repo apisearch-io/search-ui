@@ -65,6 +65,10 @@
         </div>
     </nav>
 
+    <div class="notification is-link">
+        Search at least 3 characters to start receiving results. For example, type "Enya"
+    </div>
+
     <!-- Result -->
     <div class="container is-fluid">
         <div class="columns" style="margin-top: 1rem">
@@ -92,35 +96,23 @@
     <script type="text/template" id="result-search-tpl">
         <div class="columns is-multiline is-variable">
             {{#items}}
-            <div class="column is-narrow is-one-quarter">
+            <div class="column is-one-quarter">
+
                 <div class="card" style="border-radius: .2rem">
-                    <div class="card-image">
-                        <figure class="image is-4by3">
-                            <img src="{{metadata.image}}" alt="Placeholder image">
-                        </figure>
+                    <div class="card-content" style="position: relative">
+                        <object data="{{metadata.image}}" type="image/png" style="max-height: 300px;">
+                            <img src="notfound.png" style="max-height: 300px;" alt="{{metadata.title}}">
+                        </object><br>
+                        {{{fields.title}}}<br>
+                        {{#metadata.author}}
+                        <p class="has-text-info is-size-7">@{{name}}</p>
+                        {{/metadata.author}}
+                        <span class="has-text-grey is-size-7">
+                            <strong>Year: </strong>
+                            {{indexedMetadata.year}}
+                        </span>
+                        <button onclick="alert('Album {{uuid.id}} clicked')" style="float:right">Click</button>
                     </div>
-                    <div class="card-content">
-                        <div class="media">
-                            <div class="media-content">
-                                <strong>
-                                {{#highlights.title}}
-                                    {{{highlights.title}}}
-                                {{/highlights.title}}
-                                {{^highlights.title}}
-                                    {{metadata.title}}
-                                {{/highlights.title}}
-                                </strong>
-                                {{#metadata.author}}
-                                <p class="has-text-info is-size-7">@{{name}}</p>
-                                {{/metadata.author}}
-                                <span class="has-text-grey is-size-7">
-                                    <strong>Year: </strong>
-                                    {{indexedMetadata.year}}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <button onclick="alert('Album {{uuid.id}} clicked')">Click</button>
                 </div>
             </div>
             {{/items}}
@@ -164,6 +156,7 @@
                 target: '.search',
                 placeholder: 'Search something...',
                 autofocus: true,
+                startSearchOn: 3,
                 classNames: {
                     container: 'column',
                     input: 'input'
@@ -238,7 +231,7 @@
                 filterField: 'categories',
                 applicationType: 8,
                 fetchLimit: 30,
-                viewLimit: 30,
+                viewLimit: 10,
                 sortBy: ['_count', 'desc'],
                 template: {
                     top: '<i class="fa fa-user"></i>&nbsp; Genre',
@@ -300,7 +293,7 @@
             }),
             ui.widgets.result({
                 target: '.result',
-                itemsPerPage: 8,
+                itemsPerPage: 30,
                 highlightsEnabled: true,
                 template: {
                     itemsList: document.getElementById('result-search-tpl').text,
@@ -329,7 +322,7 @@
         );
 
         // Init the magic!
-        ui.init();
+        ui.init({firstQuery: false});
     </script>
 </body>
 </html>

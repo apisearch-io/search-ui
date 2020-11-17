@@ -9,6 +9,8 @@ import Store from "../Store";
  */
 class SortBy extends Widget {
 
+    private targetNode: any;
+
     constructor({
         target,
         classNames,
@@ -16,6 +18,7 @@ class SortBy extends Widget {
     }) {
         super();
         this.target = target;
+        this.targetNode = document.querySelector(this.target);
         this.component = <SortByComponent
             target={target}
             classNames={{
@@ -47,11 +50,9 @@ class SortBy extends Widget {
             currentQuery: store.getCurrentQuery(),
         };
 
-        let targetNode = document.querySelector(this.target);
-
         render(
             this.component,
-            targetNode
+            this.targetNode
         )
     }
 }

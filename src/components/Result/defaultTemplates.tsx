@@ -1,7 +1,7 @@
 export const defaultItemsListTemplate = `
     <ul>
     {{#items}}
-        <li class="as-result__item">
+        <li class="as-result__item" key="{{key}}">
             <strong>Score:</strong> {{score}}<br />
             <strong>Uuid:</strong> {{uuid.type}} - {{uuid.id}}<br />
             <strong>Title:</strong> {{{fields.title}}}<br />

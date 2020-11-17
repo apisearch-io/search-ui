@@ -152,7 +152,6 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
             ? props.currentResult.getSuggestions()
             : [];
 
-        const hasSuggestions = suggestions.length > 0;
         const showAutocomplete = props.autocomplete;
 
         const keyDownCallback = showAutocomplete

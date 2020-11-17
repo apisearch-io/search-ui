@@ -85,6 +85,12 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
 
         const filterName = props.filterName;
         if (props.currentResult == null) {
+            this.setState(prevState => {
+                return {
+                    aggregations: []
+                };
+            });
+
             return;
         }
 

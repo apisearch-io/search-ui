@@ -58,11 +58,11 @@
 <script type="text/template" id="result-search-tpl">
     <div class="columns is-multiline is-variable">
         {{#items}}
-        <div class="column is-narrow" style="width: 200px; height: 200px">
+        <div class="column is-narrow" key="{{key}}" style="width: 172px; height: 178.5px">
             <div class="card" style="border-radius: .2rem">
                 <div class="card-content">
-                    <object data="{{metadata.image}}" type="image/png" style="width: inherit; height: inherit">
-                        <img src="notfound.png" style="width: inherit; height: inherit" alt="{{metadata.title}}">
+                    <object data="{{metadata.image}}" type="image/png" style="width: 100px; height: 100px">
+                        <img src="notfound.png" style="width: 100px; height: 100px" alt="{{metadata.title}}">
                     </object>
                 </div>
             </div>

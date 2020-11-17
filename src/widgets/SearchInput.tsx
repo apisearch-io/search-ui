@@ -21,8 +21,10 @@ class SearchInput extends Widget{
      * @param clearSearch
      * @param withContainer
      * @param autofocus
+     * @param autocomplete
      * @param classNames
      * @param template
+     * @param initialSearch
      */
     constructor({
         target,

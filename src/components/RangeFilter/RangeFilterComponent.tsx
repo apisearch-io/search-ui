@@ -1,9 +1,7 @@
-import { h, render, Component } from 'preact';
-import { useRef, useState, useEffect } from 'preact/compat';
-import ResizeObserver from 'resize-observer-polyfill';
+import { h, Component } from 'preact';
+import { useRef, useEffect } from 'preact/compat';
 import {RangeFilterProps} from './RangeFilterProps';
 import {RangeFilterState} from './RangeFilterState';
-import Template from "../Template";
 import {
     onChangeSearchAction
 } from "./RangeFilterActions";
@@ -16,13 +14,18 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
     private observerFrom;
     private observerTo;
     private uid;
-    private values;
 
     constructor() {
         super();
         this.uid = Math.random().toString(16).substr(2, 12);
         this.observerFrom = this.configureObserver('from');
         this.observerTo = this.configureObserver('to');
+
+        this.state = {
+            valueFrom: 0,
+            valueTo: 0,
+            visible: false
+        }
     }
 
     configureObserver(field) {
@@ -85,10 +88,17 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
 
         if (filterIsNotFound) {
             this.setState(prevState => {
-                return {
-                    valueFrom: props.minValue,
-                    valueTo: props.maxValue
-                };
+                return (props.currentResult == null)
+                    ? {
+                        valueFrom: 0,
+                        valueTo: 0,
+                        visible: false
+                    }
+                    : {
+                        valueFrom: props.minValue,
+                        valueTo: props.maxValue,
+                        visible: true
+                    }
             });
         }
     }
@@ -155,20 +165,10 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
         const filterName = props.filterName;
         const from = props.from;
         const to = props.to;
-
         const minValue = props.minValue;
         const maxValue = props.maxValue;
-        const initialFrom = Math.max(from.initialValue, minValue);
-        const initialTo = Math.min(to.initialValue, maxValue);
-
-        const currentFromValue = this.state.valueFrom
-            ? this.state.valueFrom
-            : initialFrom;
-        const currentToValue = this.state.valueTo
-            ? this.state.valueTo
-            : initialTo;
-
         const ref = useRef(null);
+        const visible = state.visible ? 'block' : 'none';
 
         useEffect(() => {
             const self = this;
@@ -196,7 +196,7 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
         }, [ref]);
 
         return (
-            <div className={`as-rangeFilter`}>
+            <div className={`as-rangeFilter`} style={`display: ${visible}`}>
                 <label
                     class="as-rangeFilter__label"
                 >

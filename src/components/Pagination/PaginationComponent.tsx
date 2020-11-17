@@ -99,7 +99,6 @@ class PaginationComponent extends Component<PaginationProps, PaginationState> {
             currentQuerySize
         );
 
-
         /**
          * Hide container if hits are empty
          */

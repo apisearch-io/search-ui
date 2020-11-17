@@ -1,5 +1,6 @@
 import { h, render, Component } from 'preact';
 import {SortByProps} from './SortByProps';
+import {SortByState} from './SortByState';
 import {
     onChangeSearchAction,
     initialSortBySetup
@@ -8,7 +9,7 @@ import {
 /**
  * SortBy Filter Component
  */
-class SortByComponent extends Component<SortByProps> {
+class SortByComponent extends Component<SortByProps, SortByState> {
 
     /**
      * Components will mount
@@ -19,6 +20,12 @@ class SortByComponent extends Component<SortByProps> {
         const environmentId = props.environmentId;
         const options = props.options;
         const currentQuery = props.currentQuery;
+        const currentOption = options[0].value;
+
+        this.setState({
+            value: currentOption,
+            visible: false
+        });
 
         /**
          * Dispatch action
@@ -26,17 +33,24 @@ class SortByComponent extends Component<SortByProps> {
         initialSortBySetup(
             environmentId,
             currentQuery,
-            options[0].value,
+            currentOption,
         );
     }
 
     /**
-     * Should component update
+     * Component will receive props
      *
-     * @return {boolean}
+     * @param props
      */
-    shouldComponentUpdate() {
-        return false;
+    componentWillReceiveProps(props) {
+
+        this.setState(prevState => {
+            return {
+                visible: (props.currentResult != null)
+                    ? (props.currentResult.getTotalHits() > 0)
+                    : false
+            }
+        })
     }
 
     /**
@@ -50,6 +64,11 @@ class SortByComponent extends Component<SortByProps> {
         const environmentId = props.environmentId;
         const currentQuery = props.currentQuery;
         const repository = props.repository;
+        const currentOption = e.target.value;
+
+        this.setState({
+            value: currentOption
+        });
 
         /**
          * Dispatch action
@@ -58,7 +77,7 @@ class SortByComponent extends Component<SortByProps> {
             environmentId,
             currentQuery,
             repository,
-            e.target.value
+            currentOption
         );
     };
 
@@ -71,6 +90,11 @@ class SortByComponent extends Component<SortByProps> {
 
         const containerClassName = props.classNames.container;
         const selectClassName = props.classNames.select;
+
+        if (!state.visible) {
+            return;
+        }
+
         let options = props.options;
         const coordinate = props.currentQuery.toArray().coordinate;
 
