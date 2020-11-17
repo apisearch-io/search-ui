@@ -13180,6 +13180,7 @@ var Container_1 = __webpack_require__(/*! ./Container */ "./src/Container.ts");
 var Environment_1 = __webpack_require__(/*! ./Environment */ "./src/Environment.ts");
 var Widgets_1 = __webpack_require__(/*! ./widgets/Widgets */ "./src/widgets/Widgets.ts");
 var ApisearchHelper_1 = __webpack_require__(/*! ./ApisearchHelper */ "./src/ApisearchHelper.ts");
+var ApisearchUIFactory_1 = __webpack_require__(/*! ./ApisearchUIFactory */ "./src/ApisearchUIFactory.ts");
 /**
  * ApisearchUI class
  */
@@ -13287,7 +13288,7 @@ var ApisearchUI = /** @class */ (function () {
      *
      * @param config
      *
-     * @return {any}
+     * @return {ApisearchUI}
      */
     ApisearchUI.create = function (config) {
         apisearch_1["default"].ensureRepositoryConfigIsValid(config);
@@ -13319,6 +13320,16 @@ var ApisearchUI = /** @class */ (function () {
         return apisearchUI;
     };
     /**
+     * Create instance
+     *
+     * @param config
+     *
+     * @return {ApisearchUIFactory}
+     */
+    ApisearchUI.factory = function (config) {
+        return ApisearchUIFactory_1["default"].fromConfig(config);
+    };
+    /**
      * Click
      *
      * @param app_id
@@ -13336,6 +13347,50 @@ var ApisearchUI = /** @class */ (function () {
     return ApisearchUI;
 }());
 exports["default"] = ApisearchUI;
+
+
+/***/ }),
+
+/***/ "./src/ApisearchUIFactory.ts":
+/*!***********************************!*\
+  !*** ./src/ApisearchUIFactory.ts ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var ApisearchUI_1 = __webpack_require__(/*! ./ApisearchUI */ "./src/ApisearchUI.ts");
+/**
+ * ApisearchUIFactory class
+ */
+var ApisearchUIFactory = /** @class */ (function () {
+    function ApisearchUIFactory() {
+    }
+    /**
+     * Create instance
+     *
+     * @param config
+     *
+     * @return {ApisearchUIFactory}
+     */
+    ApisearchUIFactory.fromConfig = function (config) {
+        var instance = new ApisearchUIFactory;
+        instance.config = config;
+        return instance;
+    };
+    /**
+     * Create UI
+     *
+     * @return {ApisearchUI}
+     */
+    ApisearchUIFactory.prototype.createUI = function () {
+        return ApisearchUI_1["default"].create(this.config);
+    };
+    return ApisearchUIFactory;
+}());
+exports["default"] = ApisearchUIFactory;
 
 
 /***/ }),

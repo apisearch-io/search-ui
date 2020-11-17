@@ -114,7 +114,7 @@
 
     <script type="text/javascript">
         // UI Instance 1
-        const firstUI = apisearchUI.create({
+        const apisearchUIFactory = apisearchUI.factory({
             app_id: 'as-29be77d7-2f64-4522',
             index_id: 'eu1-prod-d53da03a-d49c-483c',
             token: 'eu1-8438694d-5839-4179-9f73-a55630f3cd4d',
@@ -124,6 +124,7 @@
             }
         });
 
+        firstUI = apisearchUIFactory.createUI();
         firstUI.addWidgets(
             firstUI.widgets.searchInput({
                 target: '.input-instance-one',
@@ -147,16 +148,7 @@
 
     <script type="text/javascript">
         // UI Instance 2
-        const secondUI = apisearchUI.create({
-            app_id: 'as-29be77d7-2f64-4522',
-            index_id: 'eu1-prod-d53da03a-d49c-483c',
-            token: 'eu1-8438694d-5839-4179-9f73-a55630f3cd4d',
-            options: {
-                endpoint: 'https://eu1.apisearch.io',
-                override_queries: true
-            }
-        });
-
+        secondUI = firstUI = apisearchUIFactory.createUI();
         secondUI.addWidgets(
             secondUI.widgets.searchInput({
                 target: '.input-instance-two',

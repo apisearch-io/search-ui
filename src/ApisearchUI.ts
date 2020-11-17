@@ -9,6 +9,7 @@ import Store from "./Store";
 import Widget from "./widgets/Widget";
 import widgets from "./widgets/Widgets";
 import ApisearchHelper from "./ApisearchHelper";
+import ApisearchUIFactory from "./ApisearchUIFactory";
 
 /**
  * ApisearchUI class
@@ -143,7 +144,7 @@ export default class ApisearchUI {
      *
      * @param config
      *
-     * @return {any}
+     * @return {ApisearchUI}
      */
     public static create(config: any): ApisearchUI {
 
@@ -187,6 +188,17 @@ export default class ApisearchUI {
          * Return ApisearchUI instance
          */
         return apisearchUI;
+    }
+
+    /**
+     * Create instance
+     *
+     * @param config
+     *
+     * @return {ApisearchUIFactory}
+     */
+    public static factory(config: any): ApisearchUIFactory{
+        return ApisearchUIFactory.fromConfig(config);
     }
 
     /**
