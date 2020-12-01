@@ -14125,12 +14125,21 @@ var InformationComponent = /** @class */ (function (_super) {
         if (!this.state.visible) {
             return;
         }
+        var currentQuery = this.props.currentQuery;
+        var size = currentQuery.getSize();
+        var page = currentQuery.getPage();
+        var from = (page - 1) * size;
+        var to = from + size;
         /**
          * Data accessible to the template
          */
         var reducedTemplateData = {
             total_hits: this.state.hits.toLocaleString(),
-            total_items: this.state.total.toLocaleString()
+            total_items: this.state.total.toLocaleString(),
+            page: page,
+            size: size,
+            from: from,
+            to: to
         };
         var formattedTemplateData = formatData(reducedTemplateData);
         return (preact_1.h(Template_1["default"], { template: containerTemplate, data: formattedTemplateData, className: "as-information " + containerClassName }));
@@ -15200,6 +15209,124 @@ exports["default"] = RangeFilterComponent;
 
 /***/ }),
 
+/***/ "./src/components/Reload/ReloadActions.ts":
+/*!************************************************!*\
+  !*** ./src/components/Reload/ReloadActions.ts ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+exports.reloadAction = void 0;
+var cloneDeep = __webpack_require__(/*! clone-deep */ "./node_modules/clone-deep/index.js");
+var Constants_1 = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
+var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
+/**
+ * Clear filters action
+ *
+ * @param environmentId
+ * @param currentQuery
+ * @param repository
+ */
+function reloadAction(environmentId, currentQuery, repository) {
+    var clonedQuery = cloneDeep(currentQuery);
+    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
+    repository
+        .query(clonedQuery)
+        .then(function (result) {
+        dispatcher.dispatch({
+            type: "RENDER_FETCHED_DATA",
+            payload: {
+                query: clonedQuery,
+                result: result,
+            },
+        });
+    })["catch"](function (error) {
+        // Do nothing
+    });
+}
+exports.reloadAction = reloadAction;
+
+
+/***/ }),
+
+/***/ "./src/components/Reload/ReloadComponent.tsx":
+/*!***************************************************!*\
+  !*** ./src/components/Reload/ReloadComponent.tsx ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+exports.__esModule = true;
+var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+var Template_1 = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
+var ReloadActions_1 = __webpack_require__(/*! ./ReloadActions */ "./src/components/Reload/ReloadActions.ts");
+/**
+ * ReloadComponent
+ */
+var ReloadComponent = /** @class */ (function (_super) {
+    __extends(ReloadComponent, _super);
+    function ReloadComponent() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        /**
+         * Handle click
+         */
+        _this.handleClick = function () {
+            var props = _this.props;
+            var environmentId = props.environmentId;
+            var currentQuery = props.currentQuery;
+            var repository = props.repository;
+            /**
+             * Dispatch a clear filter action
+             */
+            ReloadActions_1.reloadAction(environmentId, currentQuery, repository);
+        };
+        return _this;
+    }
+    /**
+     * Render
+     *
+     * @return {}
+     */
+    ReloadComponent.prototype.render = function () {
+        var props = this.props;
+        var containerClassName = props.classNames.container;
+        var containerTemplate = props.template.container;
+        return (preact_1.h("div", { className: "as-clearFilters " + containerClassName, onClick: this.handleClick },
+            preact_1.h(Template_1["default"], { template: containerTemplate })));
+    };
+    return ReloadComponent;
+}(preact_1.Component));
+ReloadComponent.defaultProps = {
+    classNames: {
+        container: ''
+    },
+    template: {
+        container: 'Reload'
+    }
+};
+exports["default"] = ReloadComponent;
+
+
+/***/ }),
+
 /***/ "./src/components/Result/ResultActions.ts":
 /*!************************************************!*\
   !*** ./src/components/Result/ResultActions.ts ***!
@@ -15854,11 +15981,9 @@ var SearchInputComponent = /** @class */ (function (_super) {
      * @param props
      */
     SearchInputComponent.prototype.componentWillReceiveProps = function (props) {
-        if (props.autocomplete) {
-            this.setState({
-                queryText: props.currentQuery.getQueryText()
-            });
-        }
+        this.setState({
+            queryText: props.currentQuery.getQueryText()
+        });
     };
     /**
      * Key down
@@ -16760,6 +16885,86 @@ exports["default"] = (function (settings) { return new RangeFilter(settings); })
 
 /***/ }),
 
+/***/ "./src/widgets/Reload.tsx":
+/*!********************************!*\
+  !*** ./src/widgets/Reload.tsx ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+exports.__esModule = true;
+var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+var ReloadComponent_1 = __webpack_require__(/*! ../components/Reload/ReloadComponent */ "./src/components/Reload/ReloadComponent.tsx");
+var Widget_1 = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
+/**
+ * Reload
+ */
+var Reload = /** @class */ (function (_super) {
+    __extends(Reload, _super);
+    /**
+     * Constructor
+     *
+     * @param target
+     * @param classNames
+     * @param template
+     */
+    function Reload(_a) {
+        var target = _a.target, classNames = _a.classNames, template = _a.template;
+        var _this = _super.call(this) || this;
+        _this.target = target;
+        _this.component = preact_1.h(ReloadComponent_1["default"], { target: target, classNames: __assign(__assign({}, ReloadComponent_1["default"].defaultProps.classNames), classNames), template: template });
+        return _this;
+    }
+    /**
+     * Widget
+     *
+     * @param environmentId
+     * @param store
+     * @param repository
+     */
+    Reload.prototype.render = function (environmentId, store, repository) {
+        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, dirty: store.isDirty(), currentResult: store.getCurrentResult(), currentQuery: store.getCurrentQuery() });
+        var targetNode = document.querySelector(this.target);
+        preact_1.render(this.component, targetNode);
+    };
+    return Reload;
+}(Widget_1["default"]));
+/**
+ * Reload filter
+ *
+ * @param settings
+ */
+exports["default"] = (function (settings) { return new Reload(settings); });
+
+
+/***/ }),
+
 /***/ "./src/widgets/Result.tsx":
 /*!********************************!*\
   !*** ./src/widgets/Result.tsx ***!
@@ -17101,6 +17306,7 @@ var SearchInput_1 = __webpack_require__(/*! ./SearchInput */ "./src/widgets/Sear
 var SortBy_1 = __webpack_require__(/*! ./SortBy */ "./src/widgets/SortBy.tsx");
 var CheckboxFilter_1 = __webpack_require__(/*! ./CheckboxFilter */ "./src/widgets/CheckboxFilter.tsx");
 var RangeFilter_1 = __webpack_require__(/*! ./RangeFilter */ "./src/widgets/RangeFilter.tsx");
+var Reload_1 = __webpack_require__(/*! ./Reload */ "./src/widgets/Reload.tsx");
 /**
  * Widget factories
  */
@@ -17113,7 +17319,8 @@ exports["default"] = {
     result: Result_1["default"],
     pagination: Pagination_1["default"],
     checkboxFilter: CheckboxFilter_1["default"],
-    rangeFilter: RangeFilter_1["default"]
+    rangeFilter: RangeFilter_1["default"],
+    reload: Reload_1["default"],
 };
 
 

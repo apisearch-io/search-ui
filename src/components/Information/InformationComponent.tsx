@@ -53,12 +53,22 @@ class InformationComponent extends Component<InformationProps, InformationState>
             return;
         }
 
+        const currentQuery = this.props.currentQuery;
+        const size = currentQuery.getSize();
+        const page = currentQuery.getPage();
+        const from = (page-1)*size;
+        const to = from + size;
+
         /**
          * Data accessible to the template
          */
         let reducedTemplateData = {
             total_hits: this.state.hits.toLocaleString(),
-            total_items: this.state.total.toLocaleString()
+            total_items: this.state.total.toLocaleString(),
+            page: page,
+            size: size,
+            from: from,
+            to: to
         };
 
         let formattedTemplateData = formatData(reducedTemplateData);

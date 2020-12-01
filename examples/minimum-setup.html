@@ -225,7 +225,10 @@
             target: '.clear-filters'
         }),
         ui.widgets.information({
-            target: '.information'
+            target: '.information',
+            template: {
+                container: 'Found {{total_hits}} from {{total_items}}<br>Seeing {{size}} items from page {{page}} - From {{from}} to {{to}}'
+            }
         }),
         ui.widgets.result({
             target: '.result',

@@ -7,6 +7,7 @@ import searchInput from "./SearchInput";
 import sortBy from "./SortBy";
 import checkboxFilter from "./CheckboxFilter";
 import rangeFilter from "./RangeFilter";
+import reload from "./Reload";
 
 /**
  * Widget factories
@@ -20,5 +21,6 @@ export default {
     result: result,
     pagination: pagination,
     checkboxFilter: checkboxFilter,
-    rangeFilter: rangeFilter
+    rangeFilter: rangeFilter,
+    reload: reload,
 };

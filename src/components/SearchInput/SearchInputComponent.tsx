@@ -47,11 +47,9 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
      * @param props
      */
     componentWillReceiveProps(props) {
-        if (props.autocomplete) {
-            this.setState({
-                queryText: props.currentQuery.getQueryText()
-            });
-        }
+        this.setState({
+            queryText: props.currentQuery.getQueryText()
+        });
     }
 
     /**

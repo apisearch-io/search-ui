@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>AS UI - Suggested search</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.0/css/bulma.min.css">
 
     <!-- ApisearchUI library -->
@@ -46,6 +46,9 @@
         <!-- Information -->
         <div class="information navbar-item"></div>
 
+        <!-- Reload -->
+        <div class="reload navbar-item"></div>
+
         <!-- End -->
         <div class="navbar-end">
             <!-- Clear filters -->
@@ -59,7 +62,7 @@
                target="_blank"
             >
                 <span class="icon" style="color: #333;">
-                  <i class="fa fa-lg fa-github"></i>
+                  <i class="fab fa-lg fa-github"></i>
                 </span>
             </a>
         </div>
@@ -289,6 +292,12 @@
                 target: '.information',
                 template: {
                     container: document.getElementById('information-container-template').text
+                }
+            }),
+            ui.widgets.reload({
+                target: '.reload',
+                template: {
+                    container: '<button class="button"><i class="fas fa-sync"></i></button>'
                 }
             }),
             ui.widgets.result({
