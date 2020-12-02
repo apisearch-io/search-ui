@@ -67,7 +67,7 @@ class InformationComponent extends Component<InformationProps, InformationState>
             total_items: this.state.total.toLocaleString(),
             page: page,
             size: size,
-            from: from,
+            from: from+1,
             to: to
         };
 
