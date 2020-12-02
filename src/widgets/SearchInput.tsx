@@ -25,6 +25,7 @@ class SearchInput extends Widget{
      * @param classNames
      * @param template
      * @param initialSearch
+     * @param searchableFields
      */
     constructor({
         target,
@@ -36,7 +37,8 @@ class SearchInput extends Widget{
         autocomplete,
         classNames,
         template,
-        initialSearch
+        initialSearch,
+        searchableFields
     }) {
         super();
         this.target = target;
@@ -48,6 +50,7 @@ class SearchInput extends Widget{
             startSearchOn={startSearchOn}
             clearSearch={clearSearch}
             withContainer={withContainer}
+            searchableFields={searchableFields}
             classNames={{
                 ...SearchInputComponent.defaultProps.classNames,
                 ...classNames

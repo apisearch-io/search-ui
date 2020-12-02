@@ -14,18 +14,24 @@ import container from "../../Container";
  * @param currentQuery
  * @param initialSearch
  * @param autocomplete
+ * @param searchableFields
  */
 export function initialSearchSetup(
     environmentId: string,
     currentQuery: Query,
     initialSearch: string,
-    autocomplete: boolean
+    autocomplete: boolean,
+    searchableFields: string[]
 ) {
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
     const clonedQuery = cloneDeep(currentQuery);
 
     clonedQuery.filters._query.values = [initialSearch];
     clonedQuery.page = 1;
+
+    if (searchableFields.length > 0) {
+        clonedQuery.searchableFields = searchableFields;
+    }
 
     if (autocomplete) {
         clonedQuery.enableSuggestions();

@@ -15813,12 +15813,16 @@ var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts
  * @param currentQuery
  * @param initialSearch
  * @param autocomplete
+ * @param searchableFields
  */
-function initialSearchSetup(environmentId, currentQuery, initialSearch, autocomplete) {
+function initialSearchSetup(environmentId, currentQuery, initialSearch, autocomplete, searchableFields) {
     var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
     var clonedQuery = cloneDeep(currentQuery);
     clonedQuery.filters._query.values = [initialSearch];
     clonedQuery.page = 1;
+    if (searchableFields.length > 0) {
+        clonedQuery.searchableFields = searchableFields;
+    }
     if (autocomplete) {
         clonedQuery.enableSuggestions();
         var metadata = clonedQuery.getMetadata();
@@ -15970,10 +15974,11 @@ var SearchInputComponent = /** @class */ (function (_super) {
         var initialSearch = props.initialSearch;
         var currentQuery = props.currentQuery;
         var autocomplete = props.autocomplete;
+        var searchableFields = props.searchableFields;
         /**
          * Dispatch action
          */
-        SearchInputActions_1.initialSearchSetup(environmentId, currentQuery, initialSearch, autocomplete);
+        SearchInputActions_1.initialSearchSetup(environmentId, currentQuery, initialSearch, autocomplete, searchableFields);
     };
     /**
      * Component will receive props
@@ -16056,6 +16061,7 @@ SearchInputComponent.defaultProps = {
     clearSearch: true,
     initialSearch: '',
     withContainer: true,
+    searchableFields: [],
     classNames: {
         container: '',
         input: '',
@@ -17110,12 +17116,13 @@ var SearchInput = /** @class */ (function (_super) {
      * @param classNames
      * @param template
      * @param initialSearch
+     * @param searchableFields
      */
     function SearchInput(_a) {
-        var target = _a.target, placeholder = _a.placeholder, startSearchOn = _a.startSearchOn, clearSearch = _a.clearSearch, withContainer = _a.withContainer, autofocus = _a.autofocus, autocomplete = _a.autocomplete, classNames = _a.classNames, template = _a.template, initialSearch = _a.initialSearch;
+        var target = _a.target, placeholder = _a.placeholder, startSearchOn = _a.startSearchOn, clearSearch = _a.clearSearch, withContainer = _a.withContainer, autofocus = _a.autofocus, autocomplete = _a.autocomplete, classNames = _a.classNames, template = _a.template, initialSearch = _a.initialSearch, searchableFields = _a.searchableFields;
         var _this = _super.call(this) || this;
         _this.target = target;
-        _this.component = preact_1.h(SearchInputComponent_1["default"], { target: target, placeholder: placeholder, autofocus: autofocus, autocomplete: autocomplete, startSearchOn: startSearchOn, clearSearch: clearSearch, withContainer: withContainer, classNames: __assign(__assign({}, SearchInputComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, SearchInputComponent_1["default"].defaultProps.template), template), initialSearch: initialSearch });
+        _this.component = preact_1.h(SearchInputComponent_1["default"], { target: target, placeholder: placeholder, autofocus: autofocus, autocomplete: autocomplete, startSearchOn: startSearchOn, clearSearch: clearSearch, withContainer: withContainer, searchableFields: searchableFields, classNames: __assign(__assign({}, SearchInputComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, SearchInputComponent_1["default"].defaultProps.template), template), initialSearch: initialSearch });
         return _this;
     }
     /**

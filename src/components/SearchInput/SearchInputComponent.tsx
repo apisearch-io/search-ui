@@ -29,6 +29,7 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
         const initialSearch = props.initialSearch;
         const currentQuery = props.currentQuery;
         const autocomplete = props.autocomplete;
+        const searchableFields = props.searchableFields;
 
         /**
          * Dispatch action
@@ -38,6 +39,7 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
             currentQuery,
             initialSearch,
             autocomplete,
+            searchableFields
         );
     }
 
@@ -216,6 +218,7 @@ SearchInputComponent.defaultProps = {
     clearSearch: true,
     initialSearch: '',
     withContainer: true,
+    searchableFields: [],
     classNames: {
         container: '',
         input: '',

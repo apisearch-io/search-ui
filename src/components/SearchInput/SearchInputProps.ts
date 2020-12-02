@@ -14,6 +14,7 @@ export interface SearchInputProps {
     clearSearch: boolean;
     initialSearch: string;
     withContainer: boolean;
+    searchableFields: string[],
     classNames: {
         container: string,
         input: string,
