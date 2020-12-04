@@ -31,9 +31,8 @@
                 range: true,
                 min: 1900,
                 max: 2020,
-                values: [ 1900, 2020 ],
                 slide: function( event, ui ) {
-                    $("#amount span").text(ui.values[0] + "€ - " + ui.values[1] + '€' );
+                    $("#amount span").text(ui.values[0] + " - " + ui.values[1] );
                 },
                 stop: function( event, ui ) {
                     document.getElementById("price-min").setAttribute('value', ui.values[0]);
@@ -41,7 +40,7 @@
                 }
             });
 
-            $("#amount span").text($("#range-slider").slider("values", 0) + '€ - ' + $("#range-slider").slider("values", 1) + '€');
+            $("#amount span").text($("#range-slider").slider("values", 0) + ' - ' + $("#range-slider").slider("values", 1));
         });
     </script>
 </head>
@@ -88,7 +87,7 @@
 <div class="container is-fluid">
     <div class="columns" style="margin-top: 1rem">
         <div class="column is-2">
-            <div id="amount">Price range: <span style="color:#f0d666; font-weight:bold;"></span></div>
+            <div id="amount">Year range: <span style="color:#f0d666; font-weight:bold;"></span></div>
             <div id="range-slider" class="mt-2" style="margin-top: 1rem;"></div>
             <div class="range-filter-year" style="display: none"></div>
             <div class="multiple-filter-genre" style="margin-bottom: 1rem; margin-top: 1rem;"></div>
@@ -203,8 +202,9 @@
             formatData: itemsToStarRating
         }),
         ui.widgets.rangeFilter({
+            widgetName: 'year-range',
             target: '.range-filter-year',
-            filterName: 'Year range',
+            filterName: 'year-range',
             filterField: 'year',
             minValue: 1900,
             maxValue: 2020,
@@ -219,6 +219,15 @@
                 attributes: {
                     id: "price-max"
                 }
+            },
+            callback: function(from, to) {
+                setTimeout(function() {
+                    $("#range-slider").slider(
+                        'option',
+                        'values',
+                        [from, to]
+                    );
+                }, 50)
             }
         }),
         ui.widgets.clearFilters({

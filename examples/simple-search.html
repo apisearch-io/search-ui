@@ -100,18 +100,11 @@
             options: {
                 endpoint: 'https://eu1.apisearch.io'
             }
-        });
-
-        const {
-            result,
-            searchInput,
-            sortBy,
-            information
-        } = ui.widgets;
+        }, 'hash');
 
         // Widgets setup
         ui.addWidgets(
-            result({
+            ui.widgets.result({
                 target: '.result',
                 itemsPerPage: 16,
                 highlightsEnabled: true,
@@ -125,7 +118,7 @@
                     itemsList: document.getElementById('result-search-tpl').text,
                 }
             }),
-            searchInput({
+            ui.widgets.searchInput({
                 target: '.search',
                 placeholder: 'Search something...',
                 autofocus: true,
@@ -136,18 +129,18 @@
                 },
                 searchableFields: ['searchable_metadata.title^1']
             }),
-            sortBy({
+            ui.widgets.sortBy({
                 target: '.sort-by',
                 classNames: {
                     container: 'select'
                 },
                 options: [
-                    {name: 'Score', value: 'score:'},
+                    {name: 'Score', value: 'score'},
                     {name: 'Oldest', value: 'year:asc'},
                     {name: 'Newest', value: 'year:desc'}
                 ]
             }),
-            information({
+            ui.widgets.information({
                 target: '.information',
                 template: {
                     container: '<span class="tag is-primary">' +

@@ -18,8 +18,8 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
     constructor() {
         super();
         this.uid = Math.random().toString(16).substr(2, 12);
-        this.observerFrom = this.configureObserver('from');
-        this.observerTo = this.configureObserver('to');
+        this.observerFrom = this.configureFromObserver();
+        this.observerTo = this.configureToObserver();
 
         this.state = {
             valueFrom: 0,
@@ -28,32 +28,35 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
         }
     }
 
-    configureObserver(field) {
+    configureFromObserver() {
         const that = this;
 
         return new MutationObserver(function(mutationsList, observer) {
             // Use traditional 'for loops' for IE 11
             for(const mutation of mutationsList) {
                 if (mutation.attributeName === 'value') {
-                    const value = mutation.target["defaultValue"];
-
-                    if (
-                        (
-                            field === 'from' &&
-                            value === that.state.valueFrom
-                        ) ||
-                        (
-                            field === 'to' &&
-                            value === that.state.valueTo
-                        )
-                    ) {
+                    const value = parseInt(mutation.target["defaultValue"]);
+                    if (value == that.state.valueFrom) {
                         return;
                     }
+                    that.handleSliderChange([value, that.state.valueTo]);
+                }
+            }
+        });
+    }
 
+    configureToObserver() {
+        const that = this;
 
-                    field == 'from'
-                        ? that.handleSliderChange([value, that.state.valueTo])
-                        : that.handleSliderChange([that.state.valueFrom, value]);
+        return new MutationObserver(function(mutationsList, observer) {
+            // Use traditional 'for loops' for IE 11
+            for(const mutation of mutationsList) {
+                if (mutation.attributeName === 'value') {
+                    const value = parseInt(mutation.target["defaultValue"]);
+                    if (value == that.state.valueTo) {
+                        return;
+                    }
+                    that.handleSliderChange([that.state.valueFrom, value]);
                 }
             }
         });
@@ -84,7 +87,8 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
     componentWillReceiveProps(props) {
 
         const filterName = props.filterName;
-        const filterIsNotFound = props.currentQuery.getFilter(filterName) == null;
+        const filter = props.currentQuery.getFilter(filterName);
+        const filterIsNotFound = filter == null;
 
         if (filterIsNotFound) {
             this.setState(prevState => {
@@ -100,6 +104,17 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
                         visible: true
                     }
             });
+        } else {
+            const values = filter.getValues();
+            if (values.length > 0) {
+                const parts = values[0].split('..');
+                this.setState(prevState => {
+                    return {
+                        valueFrom: parts[0],
+                        valueTo: parts[1]
+                    }
+                });
+            }
         }
     }
 
@@ -109,9 +124,10 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
      * @param e
      */
     handleChange(e) {
+        const uid = this.uid;
         this.applyFilter(
-            e.target.parentNode.getElementsByClassName('as-rangeFilter__from')[0].value,
-            e.target.parentNode.getElementsByClassName('as-rangeFilter__to')[0].value
+            e.target.parentNode.getElementsByClassName('as-rangeFilter__from__' + uid)[0].value,
+            e.target.parentNode.getElementsByClassName('as-rangeFilter__to__' + uid)[0].value
         );
     };
 
@@ -173,6 +189,7 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
         useEffect(() => {
             const self = this;
             if (!ref.current) { return; }
+            const uid = this.uid;
 
             /**
              * Alert if clicked on outside of element
@@ -181,8 +198,8 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
                 const target = event.target;
                 const parentNode = target.parentNode;
                 self.applyFilter(
-                    parentNode.getElementsByClassName('as-rangeFilter__from')[0].value,
-                    parentNode.getElementsByClassName('as-rangeFilter__to')[0].value
+                    parentNode.getElementsByClassName('as-rangeFilter__from__' + uid)[0].value,
+                    parentNode.getElementsByClassName('as-rangeFilter__to__' + uid)[0].value
                 );
             }
 
@@ -195,6 +212,10 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
 
         }, [ref]);
 
+        if (typeof props.callback == 'function') {
+            props.callback(this.state.valueFrom, this.state.valueTo);
+        }
+
         return (
             <div className={`as-rangeFilter`} style={`display: ${visible}`}>
                 <label
@@ -204,17 +225,16 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
                 </label>
                 <input
                     type="number"
-                    class={`as-rangeFilter__from ${from.class} as-rangeFilter__from__${this.uid}`}
+                    class={`as-rangeFilter__from ${from.class} as-rangeFilter__${this.uid} as-rangeFilter__from__${this.uid}`}
                     {...from.attributes}
                     value={this.state.valueFrom}
                     min={minValue}
                     max={maxValue}
-                    ref={ref}
                     autocomplete={`off`}
                 />
                 <input
                     type="number"
-                    class={`as-rangeFilter__to ${to.class} as-rangeFilter__to__${this.uid}`}
+                    class={`as-rangeFilter__to ${to.class} as-rangeFilter__${this.uid} as-rangeFilter__to__${this.uid}`}
                     {...to.attributes}
                     value={this.state.valueTo}
                     min={minValue}

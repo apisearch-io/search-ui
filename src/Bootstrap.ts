@@ -14,14 +14,14 @@ import {
 } from "./Constants";
 
 /**
- * Bootstrap application
- *
  * @param environmentId
  * @param config
+ * @param history
  */
 export function bootstrap(
     environmentId: string,
     config: any,
+    history: boolean|string,
 ) {
     const configAsString = JSON.stringify(config);
     const repositoryId = `${APISEARCH_REPOSITORY}__${configAsString}`;
@@ -43,7 +43,8 @@ export function bootstrap(
     container.register(storeId, () => {
         return new Store(
             config.coordinate,
-            config.options.min_score
+            config.options.min_score,
+            history
         );
     });
 

@@ -237,6 +237,7 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
         const allItems = this.state.aggregations;
         const allItemsLength = allItems.length;
         const items = allItems.slice(0, this.state.viewLimit);
+        const that = this;
 
         if (allItems.length == 0) {
             return null;
@@ -277,7 +278,11 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
                                 `${itemClassName} ` +
                                 `${(item.used) ? activeClassName : ''}`
                             }
-                            onClick={() => this.handleClick(item.values.id)}
+                            onClick={function(e) {
+                                e.stopPropagation();
+                                e.preventDefault();
+                                that.handleClick(item.values.id);
+                            }}
                         >
                             <Template
                                 template={itemTemplate}

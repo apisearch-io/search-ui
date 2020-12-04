@@ -70,6 +70,39 @@ class Pagination extends Widget {
             targetNode
         )
     }
+
+    /**
+     * @param query
+     * @param object
+     */
+    public toUrlObject(
+        query: any,
+        object: any
+    )
+    {
+        const page = query.page;
+        if (page > 1) {
+            object.page = page;
+        }
+    }
+
+    /**
+     * @param object
+     * @param query
+     */
+    public fromUrlObject(
+        object: any,
+        query: any
+    )
+    {
+        const page = object.page;
+        if (
+            page !== undefined &&
+            page > 1
+        ) {
+            query.page = page;
+        }
+    }
 }
 
 /**

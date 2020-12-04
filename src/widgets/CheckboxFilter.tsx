@@ -53,6 +53,56 @@ class CheckboxFilter extends Widget {
             targetNode
         )
     }
+
+    /**
+     * @param query
+     * @param object
+     */
+    public toUrlObject(
+        query: any,
+        object: any
+    )
+    {
+        const filterName = this.component.props.filterName;
+        const aggregation = query.aggregations[filterName];
+        if (
+            aggregation !== undefined &&
+            query.filters[filterName] !== undefined
+        ) {
+            const filterValues = query.filters[filterName].values;
+            if (filterValues.length > 0) {
+                object[filterName] = filterValues;
+            }
+        }
+    }
+
+    /**
+     * @param object
+     * @param query
+     */
+    public fromUrlObject(
+        object: any,
+        query: any
+    )
+    {
+        const filterName = this.component.props.filterName;
+        const aggregation = query.aggregations[filterName];
+        const fieldValues = object[filterName];
+
+        if (
+            aggregation !== undefined &&
+            fieldValues !== undefined &&
+            Array.isArray(fieldValues) &&
+            fieldValues.length > 0
+        ) {
+            query.filters[filterName] = {
+                field: 'indexed_metadata.' + this.component.props.filterField,
+                values: fieldValues,
+                application_type: this.component.props.application_type,
+                filter_type: this.component.props.filterType
+            };
+        }
+    }
 }
 
 /**
@@ -60,4 +110,4 @@ class CheckboxFilter extends Widget {
  *
  * @param settings
  */
-export default settings => new CheckboxFilter(settings);
+export default (settings) => new CheckboxFilter(settings);

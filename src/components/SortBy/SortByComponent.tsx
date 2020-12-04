@@ -43,9 +43,9 @@ class SortByComponent extends Component<SortByProps, SortByState> {
      * @param props
      */
     componentWillReceiveProps(props) {
-
         this.setState(prevState => {
             return {
+                value: props.currentQuery.getSortBy().getFirstSortAsString(),
                 visible: (props.currentResult != null)
                     ? (props.currentResult.getTotalHits() > 0)
                     : false
@@ -109,6 +109,7 @@ class SortByComponent extends Component<SortByProps, SortByState> {
                 <select
                     className={`as-sortBy__selector ${selectClassName}`}
                     onChange={this.handleChange}
+                    value={state.value}
                 >
                     {options.map(option => (
                         <option value={option.value}>{option.name}</option>

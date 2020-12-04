@@ -9,6 +9,9 @@ import Store from "../Store";
  */
 class RangeFilter extends Widget {
 
+    private currentFrom: number;
+    private currentTo: number;
+
     constructor({
         target,
         filterName,
@@ -16,16 +19,20 @@ class RangeFilter extends Widget {
         minValue,
         maxValue,
         from,
-        to
+        to,
+        callback,
     }) {
         super();
         this.target = target;
+        this.currentFrom = from.initialValue;
+        this.currentTo = to.initialValue;
         this.component = <RangeFilterComponent
             target={target}
             filterName={filterName}
             filterField={filterField}
             minValue={minValue}
             maxValue={maxValue}
+            callback={callback}
             from={{
                 ...RangeFilterComponent.defaultProps.from,
                 ...from
@@ -64,6 +71,49 @@ class RangeFilter extends Widget {
             this.component,
             targetNode
         )
+    }
+
+    /**
+     * @param query
+     * @param object
+     */
+    public toUrlObject(
+        query: any,
+        object: any
+    )
+    {
+        const filterName = this.component.props.filterName;
+        if (query.filters[filterName] !== undefined) {
+            const filterValues = query.filters[filterName].values;
+            if (filterValues.length > 0) {
+                object[filterName] = filterValues;
+            }
+        }
+    }
+
+    /**
+     * @param object
+     * @param query
+     */
+    public fromUrlObject(
+        object: any,
+        query: any
+    )
+    {
+        const filterName = this.component.props.filterName;
+        const fieldValues = object[filterName];
+
+        if (
+            fieldValues !== undefined &&
+            Array.isArray(fieldValues) &&
+            fieldValues.length > 0
+        ) {
+            query.filters[filterName] = {
+                field: 'indexed_metadata.' + this.component.props.filterField,
+                values: fieldValues,
+                filter_type: 'range'
+            };
+        }
     }
 }
 

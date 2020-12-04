@@ -21,6 +21,7 @@ export interface RangeFilterProps {
         attributes: any,
         initialValue: number
     };
+    callback: (from: number, to:number) => void;
     environmentId?: string;
     repository?: Repository;
     dirty?: boolean;

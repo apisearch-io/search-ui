@@ -96,6 +96,36 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ({
 
+/***/ "./node_modules/@babel/runtime/helpers/esm/extends.js":
+/*!************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/extends.js ***!
+  \************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return _extends; });
+function _extends() {
+  _extends = Object.assign || function (target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+
+    return target;
+  };
+
+  return _extends.apply(this, arguments);
+}
+
+/***/ }),
+
 /***/ "./node_modules/apisearch/lib/Apisearch.js":
 /*!*************************************************!*\
   !*** ./node_modules/apisearch/lib/Apisearch.js ***!
@@ -4881,7 +4911,8 @@ exports.ScoreStrategy = ScoreStrategy;
 "use strict";
 
 exports.__esModule = true;
-var Item_1 = __webpack_require__(/*! ../Model/Item */ "./node_modules/apisearch/lib/Model/Item.js");
+var __1 = __webpack_require__(/*! .. */ "./node_modules/apisearch/lib/index.js");
+var Filter_1 = __webpack_require__(/*! ./Filter */ "./node_modules/apisearch/lib/Query/Filter.js");
 /**
  export * Sort by constants
  */
@@ -4929,8 +4960,6 @@ exports.SORT_BY_LOCATION_MI_ASC = {
     type: exports.SORT_BY_TYPE_DISTANCE,
     unit: "mi"
 };
-var Coordinate_1 = __webpack_require__(/*! ../Model/Coordinate */ "./node_modules/apisearch/lib/Model/Coordinate.js");
-var Filter_1 = __webpack_require__(/*! ./Filter */ "./node_modules/apisearch/lib/Query/Filter.js");
 /**
  * ScoreStrategy
  */
@@ -5000,7 +5029,7 @@ var SortBy = /** @class */ (function () {
     SortBy.prototype.byFieldValue = function (field, order) {
         this.sortsBy.push({
             type: exports.SORT_BY_TYPE_FIELD,
-            field: Item_1.Item.getPathByField(field),
+            field: __1.Item.getPathByField(field),
             order: order
         });
         return this;
@@ -5036,7 +5065,7 @@ var SortBy = /** @class */ (function () {
      */
     SortBy.prototype.byNestedFieldAndFilter = function (field, order, filter, mode) {
         if (mode === void 0) { mode = exports.SORT_BY_MODE_AVG; }
-        var fieldPath = Item_1.Item.getPathByField(filter.getField());
+        var fieldPath = __1.Item.getPathByField(filter.getField());
         var filterAsArray = filter.toArray();
         filterAsArray.field = fieldPath;
         filter = Filter_1.Filter.createFromArray(filterAsArray);
@@ -5107,6 +5136,30 @@ var SortBy = /** @class */ (function () {
         return false;
     };
     /**
+     * get first sort value as string
+     *
+     * @return {string}
+     */
+    SortBy.prototype.getFirstSortAsString = function () {
+        if (this.sortsBy[0] === undefined) {
+            return 'score';
+        }
+        var firstSortBy = this.sortsBy[0];
+        if (firstSortBy.type === exports.SORT_BY_TYPE_RANDOM) {
+            return 'random';
+        }
+        if (firstSortBy.type === exports.SORT_BY_TYPE_DISTANCE) {
+            return firstSortBy.type + ':' + firstSortBy.unit;
+        }
+        if (firstSortBy.type === exports.SORT_BY_TYPE_SCORE) {
+            return 'score';
+        }
+        var field = firstSortBy.field;
+        var order = firstSortBy.order;
+        var fieldParts = field.split('.');
+        return fieldParts[1] + ':' + order;
+    };
+    /**
      * To array
      *
      * @return {[]}
@@ -5120,7 +5173,7 @@ var SortBy = /** @class */ (function () {
                 sortsByAsArray[i].filter = sortsByAsArray[i].filter.toArray();
             }
             if (sortsByAsArray[i].coordinate !== null &&
-                sortsByAsArray[i].coordinate instanceof Coordinate_1.Coordinate) {
+                sortsByAsArray[i].coordinate instanceof __1.Coordinate) {
                 sortsByAsArray[i].coordinate = sortsByAsArray[i].coordinate.toArray();
             }
         }
@@ -5147,7 +5200,7 @@ var SortBy = /** @class */ (function () {
             }
             if (element.coordinate != null &&
                 typeof element.coordinate === typeof {}) {
-                element.coordinate = Coordinate_1.Coordinate.createFromArray(element.coordinate);
+                element.coordinate = __1.Coordinate.createFromArray(element.coordinate);
             }
             sortBy.sortsBy.push(element);
         }
@@ -5169,7 +5222,7 @@ var SortBy = /** @class */ (function () {
             }
             if (sortBy.coordinate != null &&
                 typeof sortBy.coordinate == typeof {}) {
-                sortByAsArray.coordinate = Coordinate_1.Coordinate.createFromArray(sortBy.coordinate.toArray());
+                sortByAsArray.coordinate = __1.Coordinate.createFromArray(sortBy.coordinate.toArray());
             }
             newSortBy.sortsBy.push(sortByAsArray);
         }
@@ -5360,6 +5413,70 @@ var HttpRepository = /** @class */ (function (_super) {
         });
     };
     /**
+     * Get similar items
+     *
+     * @param {Query} query
+     * @param {ItemUUID[]} itemUUIDs
+     * @param {number} similarity
+     *
+     * @return {Promise<Result>}
+     */
+    HttpRepository.prototype.getSimilarItems = function (query, itemUUIDs, similarity) {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var response, response_4, result;
+            return tslib_1.__generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.httpClient.get("/" + this.appId + "/indices/" + this.indexId + '/similar-items', "get", this.getCredentials(), {}, {
+                                query: query.toArray(),
+                                items_uuid: itemUUIDs.map(function (itemUUID) {
+                                    return itemUUID.toArray();
+                                }),
+                                similarity: similarity
+                            })];
+                    case 1:
+                        response = _a.sent();
+                        return [3 /*break*/, 3];
+                    case 2:
+                        response_4 = _a.sent();
+                        throw this.createErrorFromResponse(response_4);
+                    case 3:
+                        result = Result_1.Result.createFromArray(response.getBody());
+                        return [2 /*return*/, this.applyTransformersToResult(result)];
+                }
+            });
+        });
+    };
+    /**
+     * Get recommended items
+     *
+     * @param {Query} query
+     *
+     * @return {Promise<Result>}
+     */
+    HttpRepository.prototype.getRecommendedItems = function (query) {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var response, response_5, result;
+            return tslib_1.__generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.httpClient.get("/" + this.appId + "/indices/" + this.indexId + '/recommended-items', "get", this.getCredentials(), {}, query.toArray())];
+                    case 1:
+                        response = _a.sent();
+                        return [3 /*break*/, 3];
+                    case 2:
+                        response_5 = _a.sent();
+                        throw this.createErrorFromResponse(response_5);
+                    case 3:
+                        result = Result_1.Result.createFromArray(response.getBody());
+                        return [2 /*return*/, this.applyTransformersToResult(result)];
+                }
+            });
+        });
+    };
+    /**
      * Update items
      *
      * @param {Query} query
@@ -5369,7 +5486,7 @@ var HttpRepository = /** @class */ (function (_super) {
      */
     HttpRepository.prototype.updateItems = function (query, changes) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var response_4;
+            var response_6;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -5382,8 +5499,8 @@ var HttpRepository = /** @class */ (function (_super) {
                         _a.sent();
                         return [3 /*break*/, 3];
                     case 2:
-                        response_4 = _a.sent();
-                        throw this.createErrorFromResponse(response_4);
+                        response_6 = _a.sent();
+                        throw this.createErrorFromResponse(response_6);
                     case 3: return [2 /*return*/];
                 }
             });
@@ -5399,7 +5516,7 @@ var HttpRepository = /** @class */ (function (_super) {
      */
     HttpRepository.prototype.createIndex = function (indexUUID, config) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var response_5;
+            var response_7;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -5409,8 +5526,8 @@ var HttpRepository = /** @class */ (function (_super) {
                         _a.sent();
                         return [3 /*break*/, 3];
                     case 2:
-                        response_5 = _a.sent();
-                        throw this.createErrorFromResponse(response_5);
+                        response_7 = _a.sent();
+                        throw this.createErrorFromResponse(response_7);
                     case 3: return [2 /*return*/];
                 }
             });
@@ -5425,7 +5542,7 @@ var HttpRepository = /** @class */ (function (_super) {
      */
     HttpRepository.prototype.deleteIndex = function (indexUUID) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var response_6;
+            var response_8;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -5435,8 +5552,8 @@ var HttpRepository = /** @class */ (function (_super) {
                         _a.sent();
                         return [3 /*break*/, 3];
                     case 2:
-                        response_6 = _a.sent();
-                        throw this.createErrorFromResponse(response_6);
+                        response_8 = _a.sent();
+                        throw this.createErrorFromResponse(response_8);
                     case 3: return [2 /*return*/];
                 }
             });
@@ -5451,7 +5568,7 @@ var HttpRepository = /** @class */ (function (_super) {
      */
     HttpRepository.prototype.resetIndex = function (indexUUID) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var response_7;
+            var response_9;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -5461,8 +5578,8 @@ var HttpRepository = /** @class */ (function (_super) {
                         _a.sent();
                         return [3 /*break*/, 3];
                     case 2:
-                        response_7 = _a.sent();
-                        throw this.createErrorFromResponse(response_7);
+                        response_9 = _a.sent();
+                        throw this.createErrorFromResponse(response_9);
                     case 3: return [2 /*return*/];
                 }
             });
@@ -5477,7 +5594,7 @@ var HttpRepository = /** @class */ (function (_super) {
      */
     HttpRepository.prototype.checkIndex = function (indexUUID) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var response, response_8;
+            var response, response_10;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -5487,8 +5604,8 @@ var HttpRepository = /** @class */ (function (_super) {
                         response = _a.sent();
                         return [3 /*break*/, 3];
                     case 2:
-                        response_8 = _a.sent();
-                        throw this.createErrorFromResponse(response_8);
+                        response_10 = _a.sent();
+                        throw this.createErrorFromResponse(response_10);
                     case 3: return [2 /*return*/, response.getCode() === 200];
                 }
             });
@@ -5501,7 +5618,7 @@ var HttpRepository = /** @class */ (function (_super) {
      */
     HttpRepository.prototype.getIndices = function () {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var response, response_9, result, _i, _a, indexAsArray;
+            var response, response_11, result, _i, _a, indexAsArray;
             return tslib_1.__generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -5511,8 +5628,8 @@ var HttpRepository = /** @class */ (function (_super) {
                         response = _b.sent();
                         return [3 /*break*/, 3];
                     case 2:
-                        response_9 = _b.sent();
-                        throw this.createErrorFromResponse(response_9);
+                        response_11 = _b.sent();
+                        throw this.createErrorFromResponse(response_11);
                     case 3:
                         result = [];
                         for (_i = 0, _a = response.getBody(); _i < _a.length; _i++) {
@@ -5534,7 +5651,7 @@ var HttpRepository = /** @class */ (function (_super) {
      */
     HttpRepository.prototype.configureIndex = function (indexUUID, config) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var response_10;
+            var response_12;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -5544,8 +5661,8 @@ var HttpRepository = /** @class */ (function (_super) {
                         _a.sent();
                         return [3 /*break*/, 3];
                     case 2:
-                        response_10 = _a.sent();
-                        throw this.createErrorFromResponse(response_10);
+                        response_12 = _a.sent();
+                        throw this.createErrorFromResponse(response_12);
                     case 3: return [2 /*return*/];
                 }
             });
@@ -5563,7 +5680,7 @@ var HttpRepository = /** @class */ (function (_super) {
      */
     HttpRepository.prototype.click = function (app_id, index_id, item_id, user_id) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var parameters, response_11;
+            var parameters, response_13;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -5581,8 +5698,8 @@ var HttpRepository = /** @class */ (function (_super) {
                         _a.sent();
                         return [3 /*break*/, 4];
                     case 3:
-                        response_11 = _a.sent();
-                        throw this.createErrorFromResponse(response_11);
+                        response_13 = _a.sent();
+                        throw this.createErrorFromResponse(response_13);
                     case 4: return [2 /*return*/];
                 }
             });
@@ -11218,6 +11335,43 @@ module.exports = Dispatcher;
 
 /***/ }),
 
+/***/ "./node_modules/history/index.js":
+/*!***************************************!*\
+  !*** ./node_modules/history/index.js ***!
+  \***************************************/
+/*! exports provided: Action, createBrowserHistory, createHashHistory, createMemoryHistory, createPath, parsePath */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Action", function() { return m; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createBrowserHistory", function() { return createBrowserHistory; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createHashHistory", function() { return createHashHistory; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createMemoryHistory", function() { return createMemoryHistory; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createPath", function() { return E; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "parsePath", function() { return F; });
+/* harmony import */ var _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/extends */ "./node_modules/@babel/runtime/helpers/esm/extends.js");
+var m,x=m||(m={});x.Pop="POP";x.Push="PUSH";x.Replace="REPLACE";var y= true?function(a){return Object.freeze(a)}:undefined;function z(a,b){if(!a){"undefined"!==typeof console&&console.warn(b);try{throw Error(b);}catch(g){}}}function A(a){a.preventDefault();a.returnValue=""}
+function B(){var a=[];return{get length(){return a.length},push:function(b){a.push(b);return function(){a=a.filter(function(a){return a!==b})}},call:function(b){a.forEach(function(a){return a&&a(b)})}}}function D(){return Math.random().toString(36).substr(2,8)}function E(a){var b=a.pathname,g=a.search;a=a.hash;return(void 0===b?"/":b)+(void 0===g?"":g)+(void 0===a?"":a)}
+function F(a){var b={};if(a){var g=a.indexOf("#");0<=g&&(b.hash=a.substr(g),a=a.substr(0,g));g=a.indexOf("?");0<=g&&(b.search=a.substr(g),a=a.substr(0,g));a&&(b.pathname=a)}return b}
+function createBrowserHistory(a){function b(){var a=h.location,d=f.state||{};return[d.idx,y({pathname:a.pathname,search:a.search,hash:a.hash,state:d.usr||null,key:d.key||"default"})]}function g(a){return"string"===typeof a?a:E(a)}function t(a,d){void 0===d&&(d=null);return y(Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({},l,{},"string"===typeof a?F(a):a,{state:d,key:D()}))}function v(a){n=a;a=b();q=a[0];l=a[1];c.call({action:n,location:l})}function w(a,d){function c(){w(a,d)}var k=m.Push,C=t(a,d);if(!e.length||(e.call({action:k,
+location:C,retry:c}),!1)){var b=[{usr:C.state,key:C.key,idx:q+1},g(C)];C=b[0];b=b[1];try{f.pushState(C,"",b)}catch(G){h.location.assign(b)}v(k)}}function u(a,d){function c(){u(a,d)}var b=m.Replace,k=t(a,d);e.length&&(e.call({action:b,location:k,retry:c}),1)||(k=[{usr:k.state,key:k.key,idx:q},g(k)],f.replaceState(k[0],"",k[1]),v(b))}function r(a){f.go(a)}void 0===a&&(a={});a=a.window;var h=void 0===a?document.defaultView:a,f=h.history,p=null;h.addEventListener("popstate",function(){if(p)e.call(p),
+p=null;else{var a=m.Pop,d=b(),c=d[0];d=d[1];if(e.length)if(null!=c){var f=q-c;f&&(p={action:a,location:d,retry:function(){r(-1*f)}},r(f))}else true?z(!1,"You are trying to block a POP navigation to a location that was not created by the history library. The block will fail silently in production, but in general you should do all navigation with the history library (instead of using window.history.pushState directly) to avoid this situation."):undefined;else v(a)}});var n=
+m.Pop;a=b();var q=a[0],l=a[1],c=B(),e=B();null==q&&(q=0,f.replaceState(Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({},f.state,{idx:q}),""));return{get action(){return n},get location(){return l},createHref:g,push:w,replace:u,go:r,back:function(){r(-1)},forward:function(){r(1)},listen:function(a){return c.push(a)},block:function(a){var d=e.push(a);1===e.length&&h.addEventListener("beforeunload",A);return function(){d();e.length||h.removeEventListener("beforeunload",A)}}}};
+function createHashHistory(a){function b(){var a=F(f.location.hash.substr(1)),c=a.pathname,b=a.search;a=a.hash;var e=p.state||{};return[e.idx,y({pathname:void 0===c?"/":c,search:void 0===b?"":b,hash:void 0===a?"":a,state:e.usr||null,key:e.key||"default"})]}function g(){if(n)k.call(n),n=null;else{var a=m.Pop,c=b(),e=c[0];c=c[1];if(k.length)if(null!=e){var f=l-e;f&&(n={action:a,location:c,retry:function(){h(-1*f)}},h(f))}else true?z(!1,"You are trying to block a POP navigation to a location that was not created by the history library. The block will fail silently in production, but in general you should do all navigation with the history library (instead of using window.history.pushState directly) to avoid this situation."):
+undefined;else w(a)}}function t(a){var d=document.querySelector("base"),c="";d&&d.getAttribute("href")&&(d=f.location.href,c=d.indexOf("#"),c=-1===c?d:d.slice(0,c));return c+"#"+("string"===typeof a?a:E(a))}function v(a,b){void 0===b&&(b=null);return y(Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({},c,{},"string"===typeof a?F(a):a,{state:b,key:D()}))}function w(a){q=a;a=b();l=a[0];c=a[1];e.call({action:q,location:c})}function u(a,c){function d(){u(a,c)}var b=m.Push,e=v(a,c); true?z("/"===e.pathname.charAt(0),
+"Relative pathnames are not supported in hash history.push("+JSON.stringify(a)+")"):undefined;if(!k.length||(k.call({action:b,location:e,retry:d}),!1)){var g=[{usr:e.state,key:e.key,idx:l+1},t(e)];e=g[0];g=g[1];try{p.pushState(e,"",g)}catch(H){f.location.assign(g)}w(b)}}function r(a,c){function d(){r(a,c)}var e=m.Replace,b=v(a,c); true?z("/"===b.pathname.charAt(0),"Relative pathnames are not supported in hash history.replace("+JSON.stringify(a)+")"):undefined;k.length&&(k.call({action:e,
+location:b,retry:d}),1)||(b=[{usr:b.state,key:b.key,idx:l},t(b)],p.replaceState(b[0],"",b[1]),w(e))}function h(a){p.go(a)}void 0===a&&(a={});a=a.window;var f=void 0===a?document.defaultView:a,p=f.history,n=null;f.addEventListener("popstate",g);f.addEventListener("hashchange",function(){var a=b()[1];E(a)!==E(c)&&g()});var q=m.Pop;a=b();var l=a[0],c=a[1],e=B(),k=B();null==l&&(l=0,p.replaceState(Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({},p.state,{idx:l}),""));return{get action(){return q},get location(){return c},createHref:t,push:u,
+replace:r,go:h,back:function(){h(-1)},forward:function(){h(1)},listen:function(a){return e.push(a)},block:function(a){var c=k.push(a);1===k.length&&f.addEventListener("beforeunload",A);return function(){c();k.length||f.removeEventListener("beforeunload",A)}}}};
+function createMemoryHistory(a){function b(a,b){void 0===b&&(b=null);return y(Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({},n,{},"string"===typeof a?F(a):a,{state:b,key:D()}))}function g(a,b,f){return!l.length||(l.call({action:a,location:b,retry:f}),!1)}function t(a,b){p=a;n=b;q.call({action:p,location:n})}function v(a,e){var c=m.Push,d=b(a,e); true?z("/"===n.pathname.charAt(0),"Relative pathnames are not supported in memory history.push("+JSON.stringify(a)+")"):undefined;g(c,d,function(){v(a,e)})&&
+(f+=1,h.splice(f,h.length,d),t(c,d))}function w(a,e){var c=m.Replace,d=b(a,e); true?z("/"===n.pathname.charAt(0),"Relative pathnames are not supported in memory history.replace("+JSON.stringify(a)+")"):undefined;g(c,d,function(){w(a,e)})&&(h[f]=d,t(c,d))}function u(a){var b=Math.min(Math.max(f+a,0),h.length-1),c=m.Pop,d=h[b];g(c,d,function(){u(a)})&&(f=b,t(c,d))}void 0===a&&(a={});var r=a;a=r.initialEntries;r=r.initialIndex;var h=(void 0===a?["/"]:a).map(function(a){var b=
+y(Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({pathname:"/",search:"",hash:"",state:null,key:D()},"string"===typeof a?F(a):a)); true?z("/"===b.pathname.charAt(0),"Relative pathnames are not supported in createMemoryHistory({ initialEntries }) (invalid entry: "+JSON.stringify(a)+")"):undefined;return b}),f=Math.min(Math.max(null==r?h.length-1:r,0),h.length-1),p=m.Pop,n=h[f],q=B(),l=B();return{get index(){return f},get action(){return p},get location(){return n},createHref:function(a){return"string"===typeof a?
+a:E(a)},push:v,replace:w,go:u,back:function(){u(-1)},forward:function(){u(1)},listen:function(a){return q.push(a)},block:function(a){return l.push(a)}}};
+//# sourceMappingURL=index.js.map
+
+
+/***/ }),
+
 /***/ "./node_modules/hogan.js/lib/compiler.js":
 /*!***********************************************!*\
   !*** ./node_modules/hogan.js/lib/compiler.js ***!
@@ -13081,45 +13235,6 @@ module.exports = g;
 
 /***/ }),
 
-/***/ "./src/ApisearchActions.ts":
-/*!*********************************!*\
-  !*** ./src/ApisearchActions.ts ***!
-  \*********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-exports.initialDataFetchAction = void 0;
-var Constants_1 = __webpack_require__(/*! ./Constants */ "./src/Constants.ts");
-var Container_1 = __webpack_require__(/*! ./Container */ "./src/Container.ts");
-/**
- * Initial data fetching action
- *
- * @param environmentId
- * @param query
- * @param repository
- */
-function initialDataFetchAction(environmentId, query, repository) {
-    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
-    repository
-        .query(query)
-        .then(function (result) {
-        dispatcher.dispatch({
-            type: "RENDER_INITIAL_DATA",
-            payload: {
-                query: query,
-                result: result,
-            },
-        });
-    });
-}
-exports.initialDataFetchAction = initialDataFetchAction;
-
-
-/***/ }),
-
 /***/ "./src/ApisearchHelper.ts":
 /*!********************************!*\
   !*** ./src/ApisearchHelper.ts ***!
@@ -13173,7 +13288,6 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 };
 exports.__esModule = true;
 var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
-var ApisearchActions_1 = __webpack_require__(/*! ./ApisearchActions */ "./src/ApisearchActions.ts");
 var Bootstrap_1 = __webpack_require__(/*! ./Bootstrap */ "./src/Bootstrap.ts");
 var Constants_1 = __webpack_require__(/*! ./Constants */ "./src/Constants.ts");
 var Container_1 = __webpack_require__(/*! ./Container */ "./src/Container.ts");
@@ -13218,6 +13332,8 @@ var ApisearchUI = /** @class */ (function () {
          * 1.- Register all events on the store
          */
         this.store.on("render", function () { return _this.render(); });
+        this.store.on("toUrlObject", function (query, object) { return _this.toUrlObject(query, object); });
+        this.store.on("fromUrlObject", function (object, query) { return _this.fromUrlObject(object, query); });
         /**
          * 2.- Trigger the initial render: (Mount the components)
          *     To let components setup its configuration on componentWillMount()
@@ -13229,7 +13345,7 @@ var ApisearchUI = /** @class */ (function () {
          */
         if (typeof firstQuery === "undefined" ||
             true === firstQuery) {
-            ApisearchActions_1.initialDataFetchAction(this.environmentId, this.store.getCurrentQuery(), this.repository);
+            this.store.fetchInitialQuery(this.environmentId, this.repository);
         }
     };
     /**
@@ -13273,6 +13389,24 @@ var ApisearchUI = /** @class */ (function () {
         });
     };
     /**
+     * @param query
+     * @param object
+     */
+    ApisearchUI.prototype.toUrlObject = function (query, object) {
+        this.activeWidgets.map(function (widget) {
+            widget.toUrlObject(query, object);
+        });
+    };
+    /**
+     * @param object
+     * @param query
+     */
+    ApisearchUI.prototype.fromUrlObject = function (object, query) {
+        this.activeWidgets.map(function (widget) {
+            widget.fromUrlObject(object, query);
+        });
+    };
+    /**
      * Attach a function into an event
      *
      * @param eventName
@@ -13284,13 +13418,12 @@ var ApisearchUI = /** @class */ (function () {
             .on(eventName, action);
     };
     /**
-     * Create instance
-     *
      * @param config
+     * @param history
      *
      * @return {ApisearchUI}
      */
-    ApisearchUI.create = function (config) {
+    ApisearchUI.create = function (config, history) {
         apisearch_1["default"].ensureRepositoryConfigIsValid(config);
         /**
          * Build environment Id
@@ -13299,7 +13432,7 @@ var ApisearchUI = /** @class */ (function () {
         /**
          * Bootstrapping ApisearchUI application
          */
-        Bootstrap_1.bootstrap(environmentId, config);
+        Bootstrap_1.bootstrap(environmentId, config, history);
         /**
          * Register handleActions method (store reducer)
          * into the event dispatcher
@@ -13381,12 +13514,13 @@ var ApisearchUIFactory = /** @class */ (function () {
         return instance;
     };
     /**
-     * Create UI
+     * @param history
      *
      * @return {ApisearchUI}
      */
-    ApisearchUIFactory.prototype.createUI = function () {
-        return ApisearchUI_1["default"].create(this.config);
+    ApisearchUIFactory.prototype.createUI = function (history) {
+        if (history === void 0) { history = false; }
+        return ApisearchUI_1["default"].create(this.config, history);
     };
     return ApisearchUIFactory;
 }());
@@ -13413,12 +13547,11 @@ var Container_1 = __webpack_require__(/*! ./Container */ "./src/Container.ts");
 var Store_1 = __webpack_require__(/*! ./Store */ "./src/Store.ts");
 var Constants_1 = __webpack_require__(/*! ./Constants */ "./src/Constants.ts");
 /**
- * Bootstrap application
- *
  * @param environmentId
  * @param config
+ * @param history
  */
-function bootstrap(environmentId, config) {
+function bootstrap(environmentId, config, history) {
     var configAsString = JSON.stringify(config);
     var repositoryId = Constants_1.APISEARCH_REPOSITORY + "__" + configAsString;
     var storeId = Constants_1.APISEARCH_STORE + "__" + environmentId;
@@ -13435,7 +13568,7 @@ function bootstrap(environmentId, config) {
      * Register apisearch store
      */
     Container_1["default"].register(storeId, function () {
-        return new Store_1["default"](config.coordinate, config.options.min_score);
+        return new Store_1["default"](config.coordinate, config.options.min_score, history);
     });
     /**
      * Register an event dispatcher
@@ -13547,6 +13680,30 @@ exports.createEnvironmentId = function () { return "env_" + Math.ceil(Math.rando
 
 /***/ }),
 
+/***/ "./src/LocationState.ts":
+/*!******************************!*\
+  !*** ./src/LocationState.ts ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+exports.isLocationState = void 0;
+function isLocationState(object) {
+    var myInterface = object;
+    if (myInterface === null) {
+        return false;
+    }
+    return ((myInterface.query !== undefined) &&
+        (myInterface.result !== undefined));
+}
+exports.isLocationState = isLocationState;
+
+
+/***/ }),
+
 /***/ "./src/Store.ts":
 /*!**********************!*\
   !*** ./src/Store.ts ***!
@@ -13573,6 +13730,10 @@ exports.__esModule = true;
 var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
 var apisearch_2 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
 var events_1 = __webpack_require__(/*! events */ "./node_modules/events/events.js");
+var history_1 = __webpack_require__(/*! history */ "./node_modules/history/index.js");
+var LocationState_1 = __webpack_require__(/*! ./LocationState */ "./src/LocationState.ts");
+var Container_1 = __webpack_require__(/*! ./Container */ "./src/Container.ts");
+var Constants_1 = __webpack_require__(/*! ./Constants */ "./src/Constants.ts");
 /**
  * Flux pattern store class
  */
@@ -13583,31 +13744,49 @@ var Store = /** @class */ (function (_super) {
      *
      * @param coordinate
      * @param minScore
+     * @param history
      */
-    function Store(coordinate, minScore) {
+    function Store(coordinate, minScore, history) {
         var _this = _super.call(this) || this;
-        /**
-         * Store initial state
-         */
+        _this.historyPrefix = '';
+        _this.fromBackHistoryState = false;
         _this.dirty = true;
-        /**
-         * Current query instance
-         */
-        _this.currentQuery = (coordinate &&
-            coordinate.lat != undefined &&
-            coordinate.lon != undefined)
-            ? apisearch_1["default"].createQueryLocated(new apisearch_2.Coordinate(coordinate.lat, coordinate.lon), '', apisearch_2.QUERY_DEFAULT_PAGE, apisearch_2.QUERY_DEFAULT_SIZE)
-            : apisearch_1["default"].createQueryMatchAll();
+        var initialQuery = Store.loadInitialQuery(coordinate);
         if (minScore) {
-            _this.currentQuery.setMinScore(minScore);
+            initialQuery.setMinScore(minScore);
         }
         /**
          * Data received
          */
         _this.currentResult = apisearch_1["default"].createEmptyResult();
         _this.currentVisibleResults = false;
-        _this.sessionUID = _this.createUID(16);
-        _this.currentQuery.setMetadataValue('session_uid', _this.sessionUID);
+        initialQuery.setMetadataValue('session_uid', Store.createUID(16));
+        _this.currentQuery = initialQuery;
+        _this.history = (history === true) ? 'hash' : history;
+        if (!history) {
+            return _this;
+        }
+        if (_this.history === 'hash') {
+            _this.historyInstance = history_1.createHashHistory();
+        }
+        else {
+            _this.historyInstance = history_1.createBrowserHistory();
+            _this.historyPrefix = '?' + _this.history + '=';
+        }
+        _this.historyInstance.listen(function (event) {
+            if (event.action === 'POP' &&
+                LocationState_1.isLocationState(event.location.state)) {
+                _this.fromBackHistoryState = true;
+                _this.handleActions({
+                    type: "RENDER_FETCHED_DATA",
+                    payload: {
+                        query: apisearch_2.Query.createFromArray(event.location.state.query),
+                        result: apisearch_2.Result.createFromArray(event.location.state.result),
+                        visibleResults: event.location.state.visibleResults
+                    }
+                });
+            }
+        });
         return _this;
     }
     /**
@@ -13662,10 +13841,11 @@ var Store = /** @class */ (function (_super) {
          * Dispatches an 'render' event
          */
         if (action.type === "RENDER_INITIAL_DATA") {
-            var _a = action.payload, result = _a.result, query = _a.query, visibleResults = _a.visibleResults;
+            var _a = action.payload, result = _a.result, query = _a.query, _ = _a._;
             this.currentResult = result;
             this.currentQuery = query;
             this.currentVisibleResults = query != undefined;
+            this.pushQueryToHistory(query, result, this.currentVisibleResults);
             this.emit("render");
             return;
         }
@@ -13681,6 +13861,10 @@ var Store = /** @class */ (function (_super) {
             if (visibleResults != undefined) {
                 this.currentVisibleResults = visibleResults;
             }
+            if (!this.fromBackHistoryState) {
+                this.pushQueryToHistory(query, result, visibleResults);
+            }
+            this.fromBackHistoryState = false;
             this.emit("render");
             return;
         }
@@ -13688,7 +13872,7 @@ var Store = /** @class */ (function (_super) {
     /**
      * Create an uid
      */
-    Store.prototype.createUID = function (length) {
+    Store.createUID = function (length) {
         var result = '';
         var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         var charactersLength = characters.length;
@@ -13696,6 +13880,107 @@ var Store = /** @class */ (function (_super) {
             result += characters.charAt(Math.floor(Math.random() * charactersLength));
         }
         return result;
+    };
+    /**
+     * @param environmentId
+     * @param repository
+     */
+    Store.prototype.fetchInitialQuery = function (environmentId, repository) {
+        var _this = this;
+        var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
+        this.currentQuery = this.loadQuery(this.currentQuery);
+        repository
+            .query(this.currentQuery)
+            .then(function (result) {
+            dispatcher.dispatch({
+                type: "RENDER_INITIAL_DATA",
+                payload: {
+                    query: _this.currentQuery,
+                    result: result,
+                },
+            });
+        });
+    };
+    /**
+     * @param coordinate
+     */
+    Store.loadInitialQuery = function (coordinate) {
+        var withCoordinate = (coordinate &&
+            coordinate.lat != undefined &&
+            coordinate.lon != undefined);
+        var q = {};
+        if (withCoordinate) {
+            q.coordinate = coordinate;
+        }
+        return apisearch_2.Query.createFromArray(q);
+    };
+    /**
+     * @param query
+     */
+    Store.prototype.loadQuery = function (query) {
+        if (typeof this.history !== "string") {
+            return query;
+        }
+        var queryAsObject = query.toArray();
+        var urlObject = this.loadUrlObjectFromHash();
+        this.emit("fromUrlObject", urlObject, queryAsObject);
+        return apisearch_2.Query.createFromArray(queryAsObject);
+    };
+    /**
+     * @private
+     */
+    Store.prototype.loadUrlObjectFromHash = function () {
+        if (typeof this.history !== "string") {
+            return {};
+        }
+        var urlHash = '';
+        if (this.history === 'hash') {
+            urlHash = window.location.hash.substr(1);
+        }
+        else {
+            var urlParams = new URLSearchParams(window.location.search);
+            urlHash = urlParams.get(this.history);
+        }
+        return (urlHash !== '' &&
+            urlHash !== undefined &&
+            urlHash !== null &&
+            urlHash !== '' &&
+            urlHash !== '/')
+            ? JSON.parse(decodeURI(urlHash))
+            : {};
+    };
+    /**
+     *
+     * @param query
+     * @param result
+     * @param visibleResults
+     */
+    Store.prototype.pushQueryToHistory = function (query, result, visibleResults) {
+        if (this.historyInstance === undefined ||
+            (typeof this.history !== "string")) {
+            return;
+        }
+        var queryAsObject = query.toArray();
+        var urlObject = {};
+        this.emit("toUrlObject", queryAsObject, urlObject);
+        var state = {
+            query: query.toArray(),
+            result: result.toArray(),
+            visibleResults: visibleResults
+        };
+        var objectAsJson = decodeURI(JSON.stringify(urlObject));
+        var path = '';
+        if (this.history === 'hash') {
+            path = objectAsJson;
+        }
+        else {
+            var pathPieces = history_1.parsePath(window.location.href);
+            var urlParams = new URLSearchParams(pathPieces.search);
+            urlParams.set(this.history, objectAsJson);
+            pathPieces.search = '?' + urlParams.toString();
+            path = history_1.createPath(pathPieces);
+        }
+        this.historyInstance.push(path, state);
     };
     return Store;
 }(events_1.EventEmitter));
@@ -14479,7 +14764,6 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
      * @return {any}
      */
     MultipleFilterComponent.prototype.render = function () {
-        var _this = this;
         var props = this.props;
         var viewLimit = props.viewLimit;
         var fetchLimit = props.fetchLimit;
@@ -14503,6 +14787,7 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
         var allItems = this.state.aggregations;
         var allItemsLength = allItems.length;
         var items = allItems.slice(0, this.state.viewLimit);
+        var that = this;
         if (allItems.length == 0) {
             return null;
         }
@@ -14527,7 +14812,11 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
                 var formattedTemplateData = formatData(reducedTemplateData);
                 return (preact_1.h("div", { className: "as-multipleFilter__item " +
                         (itemClassName + " ") +
-                        ("" + ((item.used) ? activeClassName : '')), onClick: function () { return _this.handleClick(item.values.id); } },
+                        ("" + ((item.used) ? activeClassName : '')), onClick: function (e) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        that.handleClick(item.values.id);
+                    } },
                     preact_1.h(Template_1["default"], { template: itemTemplate, data: formattedTemplateData })));
             })),
             (isViewLimitProperlySet)
@@ -14967,24 +15256,28 @@ exports["default"] = PaginationComponent;
 
 exports.__esModule = true;
 exports.onChangeSearchAction = void 0;
+/**
+ * SortBy actions
+ */
 var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
 var cloneDeep = __webpack_require__(/*! clone-deep */ "./node_modules/clone-deep/index.js");
 var Constants_1 = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
 var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
 /**
- * ON change search action
  *
  * @param environmentId
  * @param currentQuery
  * @param repository
- * @param selectedOption
+ * @param filterName
+ * @param filterField
+ * @param minValue
+ * @param maxValue
+ * @param from
+ * @param to
  */
 function onChangeSearchAction(environmentId, currentQuery, repository, filterName, filterField, minValue, maxValue, from, to) {
     var clonedQuery = cloneDeep(currentQuery);
-    if (minValue != from ||
-        maxValue != to) {
-        clonedQuery.filterByRange(filterName, filterField, [], [from + ".." + to], apisearch_1.FILTER_AT_LEAST_ONE, apisearch_1.FILTER_TYPE_RANGE, false);
-    }
+    clonedQuery.filterByRange(filterName, filterField, [], [from + ".." + to], apisearch_1.FILTER_AT_LEAST_ONE, apisearch_1.FILTER_TYPE_RANGE, false);
     clonedQuery.page = 1;
     var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
     repository
@@ -15051,8 +15344,8 @@ var RangeFilterComponent = /** @class */ (function (_super) {
     function RangeFilterComponent() {
         var _this = _super.call(this) || this;
         _this.uid = Math.random().toString(16).substr(2, 12);
-        _this.observerFrom = _this.configureObserver('from');
-        _this.observerTo = _this.configureObserver('to');
+        _this.observerFrom = _this.configureFromObserver();
+        _this.observerTo = _this.configureToObserver();
         _this.state = {
             valueFrom: 0,
             valueTo: 0,
@@ -15060,23 +15353,34 @@ var RangeFilterComponent = /** @class */ (function (_super) {
         };
         return _this;
     }
-    RangeFilterComponent.prototype.configureObserver = function (field) {
+    RangeFilterComponent.prototype.configureFromObserver = function () {
         var that = this;
         return new MutationObserver(function (mutationsList, observer) {
             // Use traditional 'for loops' for IE 11
             for (var _i = 0, mutationsList_1 = mutationsList; _i < mutationsList_1.length; _i++) {
                 var mutation = mutationsList_1[_i];
                 if (mutation.attributeName === 'value') {
-                    var value = mutation.target["defaultValue"];
-                    if ((field === 'from' &&
-                        value === that.state.valueFrom) ||
-                        (field === 'to' &&
-                            value === that.state.valueTo)) {
+                    var value = parseInt(mutation.target["defaultValue"]);
+                    if (value == that.state.valueFrom) {
                         return;
                     }
-                    field == 'from'
-                        ? that.handleSliderChange([value, that.state.valueTo])
-                        : that.handleSliderChange([that.state.valueFrom, value]);
+                    that.handleSliderChange([value, that.state.valueTo]);
+                }
+            }
+        });
+    };
+    RangeFilterComponent.prototype.configureToObserver = function () {
+        var that = this;
+        return new MutationObserver(function (mutationsList, observer) {
+            // Use traditional 'for loops' for IE 11
+            for (var _i = 0, mutationsList_2 = mutationsList; _i < mutationsList_2.length; _i++) {
+                var mutation = mutationsList_2[_i];
+                if (mutation.attributeName === 'value') {
+                    var value = parseInt(mutation.target["defaultValue"]);
+                    if (value == that.state.valueTo) {
+                        return;
+                    }
+                    that.handleSliderChange([that.state.valueFrom, value]);
                 }
             }
         });
@@ -15096,7 +15400,8 @@ var RangeFilterComponent = /** @class */ (function (_super) {
      */
     RangeFilterComponent.prototype.componentWillReceiveProps = function (props) {
         var filterName = props.filterName;
-        var filterIsNotFound = props.currentQuery.getFilter(filterName) == null;
+        var filter = props.currentQuery.getFilter(filterName);
+        var filterIsNotFound = filter == null;
         if (filterIsNotFound) {
             this.setState(function (prevState) {
                 return (props.currentResult == null)
@@ -15112,6 +15417,18 @@ var RangeFilterComponent = /** @class */ (function (_super) {
                     };
             });
         }
+        else {
+            var values = filter.getValues();
+            if (values.length > 0) {
+                var parts_1 = values[0].split('..');
+                this.setState(function (prevState) {
+                    return {
+                        valueFrom: parts_1[0],
+                        valueTo: parts_1[1]
+                    };
+                });
+            }
+        }
     };
     /**
      * Handle change
@@ -15119,7 +15436,8 @@ var RangeFilterComponent = /** @class */ (function (_super) {
      * @param e
      */
     RangeFilterComponent.prototype.handleChange = function (e) {
-        this.applyFilter(e.target.parentNode.getElementsByClassName('as-rangeFilter__from')[0].value, e.target.parentNode.getElementsByClassName('as-rangeFilter__to')[0].value);
+        var uid = this.uid;
+        this.applyFilter(e.target.parentNode.getElementsByClassName('as-rangeFilter__from__' + uid)[0].value, e.target.parentNode.getElementsByClassName('as-rangeFilter__to__' + uid)[0].value);
     };
     ;
     RangeFilterComponent.prototype.handleSliderChange = function (values) {
@@ -15168,13 +15486,14 @@ var RangeFilterComponent = /** @class */ (function (_super) {
             if (!ref.current) {
                 return;
             }
+            var uid = _this.uid;
             /**
              * Alert if clicked on outside of element
              */
             function handleChange(event) {
                 var target = event.target;
                 var parentNode = target.parentNode;
-                self.applyFilter(parentNode.getElementsByClassName('as-rangeFilter__from')[0].value, parentNode.getElementsByClassName('as-rangeFilter__to')[0].value);
+                self.applyFilter(parentNode.getElementsByClassName('as-rangeFilter__from__' + uid)[0].value, parentNode.getElementsByClassName('as-rangeFilter__to__' + uid)[0].value);
             }
             // Bind the event listener
             ref.current.addEventListener("change", handleChange);
@@ -15183,10 +15502,13 @@ var RangeFilterComponent = /** @class */ (function (_super) {
                 ref.current.removeEventListener("change", handleChange);
             };
         }, [ref]);
+        if (typeof props.callback == 'function') {
+            props.callback(this.state.valueFrom, this.state.valueTo);
+        }
         return (preact_1.h("div", { className: "as-rangeFilter", style: "display: " + visible },
             preact_1.h("label", { "class": "as-rangeFilter__label" }, filterName),
-            preact_1.h("input", __assign({ type: "number", "class": "as-rangeFilter__from " + from["class"] + " as-rangeFilter__from__" + this.uid }, from.attributes, { value: this.state.valueFrom, min: minValue, max: maxValue, ref: ref, autocomplete: "off" })),
-            preact_1.h("input", __assign({ type: "number", "class": "as-rangeFilter__to " + to["class"] + " as-rangeFilter__to__" + this.uid }, to.attributes, { value: this.state.valueTo, min: minValue, max: maxValue, autocomplete: "off" }))));
+            preact_1.h("input", __assign({ type: "number", "class": "as-rangeFilter__from " + from["class"] + " as-rangeFilter__" + this.uid + " as-rangeFilter__from__" + this.uid }, from.attributes, { value: this.state.valueFrom, min: minValue, max: maxValue, autocomplete: "off" })),
+            preact_1.h("input", __assign({ type: "number", "class": "as-rangeFilter__to " + to["class"] + " as-rangeFilter__" + this.uid + " as-rangeFilter__to__" + this.uid }, to.attributes, { value: this.state.valueTo, min: minValue, max: maxValue, autocomplete: "off" }))));
     };
     return RangeFilterComponent;
 }(preact_1.Component));
@@ -16222,6 +16544,7 @@ var SortByComponent = /** @class */ (function (_super) {
     SortByComponent.prototype.componentWillReceiveProps = function (props) {
         this.setState(function (prevState) {
             return {
+                value: props.currentQuery.getSortBy().getFirstSortAsString(),
                 visible: (props.currentResult != null)
                     ? (props.currentResult.getTotalHits() > 0)
                     : false
@@ -16247,7 +16570,7 @@ var SortByComponent = /** @class */ (function (_super) {
             });
         }
         return (preact_1.h("div", { className: "as-sortBy " + containerClassName },
-            preact_1.h("select", { className: "as-sortBy__selector " + selectClassName, onChange: this.handleChange }, options.map(function (option) { return (preact_1.h("option", { value: option.value }, option.name)); }))));
+            preact_1.h("select", { className: "as-sortBy__selector " + selectClassName, onChange: this.handleChange, value: state.value }, options.map(function (option) { return (preact_1.h("option", { value: option.value }, option.name)); }))));
     };
     return SortByComponent;
 }(preact_1.Component));
@@ -16472,6 +16795,41 @@ var CheckboxFilter = /** @class */ (function (_super) {
         this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, dirty: store.isDirty(), currentResult: store.getCurrentResult(), currentQuery: store.getCurrentQuery() });
         var targetNode = document.querySelector(this.target);
         preact_1.render(this.component, targetNode);
+    };
+    /**
+     * @param query
+     * @param object
+     */
+    CheckboxFilter.prototype.toUrlObject = function (query, object) {
+        var filterName = this.component.props.filterName;
+        var aggregation = query.aggregations[filterName];
+        if (aggregation !== undefined &&
+            query.filters[filterName] !== undefined) {
+            var filterValues = query.filters[filterName].values;
+            if (filterValues.length > 0) {
+                object[filterName] = filterValues;
+            }
+        }
+    };
+    /**
+     * @param object
+     * @param query
+     */
+    CheckboxFilter.prototype.fromUrlObject = function (object, query) {
+        var filterName = this.component.props.filterName;
+        var aggregation = query.aggregations[filterName];
+        var fieldValues = object[filterName];
+        if (aggregation !== undefined &&
+            fieldValues !== undefined &&
+            Array.isArray(fieldValues) &&
+            fieldValues.length > 0) {
+            query.filters[filterName] = {
+                field: 'indexed_metadata.' + this.component.props.filterField,
+                values: fieldValues,
+                application_type: this.component.props.application_type,
+                filter_type: this.component.props.filterType
+            };
+        }
     };
     return CheckboxFilter;
 }(Widget_1["default"]));
@@ -16704,6 +17062,7 @@ var MultipleFilter = /** @class */ (function (_super) {
      * @param classNames
      * @param template
      * @param formatData
+     * @param activeFirst
      */
     function MultipleFilter(_a) {
         var target = _a.target, filterName = _a.filterName, filterField = _a.filterField, aggregationField = _a.aggregationField, applicationType = _a.applicationType, fetchLimit = _a.fetchLimit, viewLimit = _a.viewLimit, sortBy = _a.sortBy, ranges = _a.ranges, labels = _a.labels, classNames = _a.classNames, template = _a.template, formatData = _a.formatData, activeFirst = _a.activeFirst;
@@ -16723,6 +17082,43 @@ var MultipleFilter = /** @class */ (function (_super) {
         this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, dirty: store.isDirty(), currentResult: store.getCurrentResult(), currentQuery: store.getCurrentQuery() });
         var targetNode = document.querySelector(this.target);
         preact_1.render(this.component, targetNode);
+    };
+    /**
+     * @param query
+     * @param object
+     */
+    MultipleFilter.prototype.toUrlObject = function (query, object) {
+        var filterName = this.component.props.filterName;
+        var aggregation = query.aggregations[filterName];
+        if (aggregation !== undefined &&
+            query.filters[filterName] !== undefined) {
+            var filterValues = query.filters[filterName].values;
+            if (filterValues.length > 0) {
+                object[filterName] = filterValues;
+            }
+        }
+    };
+    /**
+     * @param object
+     * @param query
+     */
+    MultipleFilter.prototype.fromUrlObject = function (object, query) {
+        var filterName = this.component.props.filterName;
+        var aggregation = query.aggregations[filterName];
+        var fieldValues = object[filterName];
+        var rangesValues = Object.keys(this.component.props.ranges);
+        var filterType = (rangesValues.length > 0) ? 'range' : 'field';
+        if (aggregation !== undefined &&
+            fieldValues !== undefined &&
+            Array.isArray(fieldValues) &&
+            fieldValues.length > 0) {
+            query.filters[filterName] = {
+                field: 'indexed_metadata.' + this.component.props.filterField,
+                values: fieldValues,
+                application_type: this.component.props.application_type,
+                filter_type: filterType
+            };
+        }
     };
     return MultipleFilter;
 }(Widget_1["default"]));
@@ -16806,6 +17202,27 @@ var Pagination = /** @class */ (function (_super) {
         var targetNode = document.querySelector(this.target);
         preact_1.render(this.component, targetNode);
     };
+    /**
+     * @param query
+     * @param object
+     */
+    Pagination.prototype.toUrlObject = function (query, object) {
+        var page = query.page;
+        if (page > 1) {
+            object.page = page;
+        }
+    };
+    /**
+     * @param object
+     * @param query
+     */
+    Pagination.prototype.fromUrlObject = function (object, query) {
+        var page = object.page;
+        if (page !== undefined &&
+            page > 1) {
+            query.page = page;
+        }
+    };
     return Pagination;
 }(Widget_1["default"]));
 /**
@@ -16861,10 +17278,12 @@ var Widget_1 = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
 var RangeFilter = /** @class */ (function (_super) {
     __extends(RangeFilter, _super);
     function RangeFilter(_a) {
-        var target = _a.target, filterName = _a.filterName, filterField = _a.filterField, minValue = _a.minValue, maxValue = _a.maxValue, from = _a.from, to = _a.to;
+        var target = _a.target, filterName = _a.filterName, filterField = _a.filterField, minValue = _a.minValue, maxValue = _a.maxValue, from = _a.from, to = _a.to, callback = _a.callback;
         var _this = _super.call(this) || this;
         _this.target = target;
-        _this.component = preact_1.h(RangeFilterComponent_1["default"], { target: target, filterName: filterName, filterField: filterField, minValue: minValue, maxValue: maxValue, from: __assign(__assign({}, RangeFilterComponent_1["default"].defaultProps.from), from), to: __assign(__assign({}, RangeFilterComponent_1["default"].defaultProps.to), to) });
+        _this.currentFrom = from.initialValue;
+        _this.currentTo = to.initialValue;
+        _this.component = preact_1.h(RangeFilterComponent_1["default"], { target: target, filterName: filterName, filterField: filterField, minValue: minValue, maxValue: maxValue, callback: callback, from: __assign(__assign({}, RangeFilterComponent_1["default"].defaultProps.from), from), to: __assign(__assign({}, RangeFilterComponent_1["default"].defaultProps.to), to) });
         return _this;
     }
     /**
@@ -16878,6 +17297,36 @@ var RangeFilter = /** @class */ (function (_super) {
         this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, dirty: store.isDirty(), currentResult: store.getCurrentResult(), currentQuery: store.getCurrentQuery() });
         var targetNode = document.querySelector(this.target);
         preact_1.render(this.component, targetNode);
+    };
+    /**
+     * @param query
+     * @param object
+     */
+    RangeFilter.prototype.toUrlObject = function (query, object) {
+        var filterName = this.component.props.filterName;
+        if (query.filters[filterName] !== undefined) {
+            var filterValues = query.filters[filterName].values;
+            if (filterValues.length > 0) {
+                object[filterName] = filterValues;
+            }
+        }
+    };
+    /**
+     * @param object
+     * @param query
+     */
+    RangeFilter.prototype.fromUrlObject = function (object, query) {
+        var filterName = this.component.props.filterName;
+        var fieldValues = object[filterName];
+        if (fieldValues !== undefined &&
+            Array.isArray(fieldValues) &&
+            fieldValues.length > 0) {
+            query.filters[filterName] = {
+                field: 'indexed_metadata.' + this.component.props.filterField,
+                values: fieldValues,
+                filter_type: 'range'
+            };
+        }
     };
     return RangeFilter;
 }(Widget_1["default"]));
@@ -17158,6 +17607,28 @@ var SearchInput = /** @class */ (function (_super) {
         }
         preact_1.render(this.component, this.targetNode);
     };
+    /**
+     * @param query
+     * @param object
+     */
+    SearchInput.prototype.toUrlObject = function (query, object) {
+        var q = query.q;
+        if (q !== undefined &&
+            q !== '') {
+            object.q = q;
+        }
+    };
+    /**
+     * @param object
+     * @param query
+     */
+    SearchInput.prototype.fromUrlObject = function (object, query) {
+        var q = object.q;
+        if (q !== undefined &&
+            q !== '') {
+            query.q = q;
+        }
+    };
     return SearchInput;
 }(Widget_1["default"]));
 /**
@@ -17234,6 +17705,7 @@ var __assign = (this && this.__assign) || function () {
 exports.__esModule = true;
 var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
 var SortByComponent_1 = __webpack_require__(/*! ../components/SortBy/SortByComponent */ "./src/components/SortBy/SortByComponent.tsx");
+var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
 var Widget_1 = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
 /**
  * SortBy
@@ -17258,6 +17730,42 @@ var SortBy = /** @class */ (function (_super) {
     SortBy.prototype.render = function (environmentId, store, repository) {
         this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, dirty: store.isDirty(), currentResult: store.getCurrentResult(), currentQuery: store.getCurrentQuery() });
         preact_1.render(this.component, this.targetNode);
+    };
+    /**
+     * @param query
+     * @param object
+     */
+    SortBy.prototype.toUrlObject = function (query, object) {
+        if (query.sort !== undefined) {
+            var sort = query.sort[0];
+            var sortInstance = apisearch_1.SortBy.createFromArray(query.sort);
+            var sortAsString = sortInstance.getFirstSortAsString();
+            var firstSortAsString = this.component.props.options[0].value;
+            if (sortAsString !== firstSortAsString) {
+                var sortField = sort.field.substr(17);
+                var sortOrder = sort.order;
+                object.sort = sortField + ':' + sortOrder;
+            }
+        }
+    };
+    /**
+     * @param object
+     * @param query
+     */
+    SortBy.prototype.fromUrlObject = function (object, query) {
+        if (object.sort !== undefined) {
+            if (query.sort == undefined) {
+                query.sort = [{}];
+            }
+            if (object.sort === 'score') {
+                query.sort[0].field = '_score';
+                query.sort[0].order = 'desc';
+                return;
+            }
+            var sortParts = object.sort.split(':');
+            query.sort[0].field = 'indexed_metadata.' + sortParts[0];
+            query.sort[0].order = sortParts[1];
+        }
     };
     return SortBy;
 }(Widget_1["default"]));
@@ -17287,6 +17795,18 @@ exports.__esModule = true;
 var Widget = /** @class */ (function () {
     function Widget() {
     }
+    /**
+     * @param query
+     * @param object
+     */
+    Widget.prototype.toUrlObject = function (query, object) {
+    };
+    /**
+     * @param object
+     * @param query
+     */
+    Widget.prototype.fromUrlObject = function (object, query) {
+    };
     return Widget;
 }());
 exports["default"] = Widget;

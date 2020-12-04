@@ -1,6 +1,5 @@
 import {HttpRepository} from "apisearch";
 import apisearch from "apisearch";
-import { initialDataFetchAction } from "./ApisearchActions";
 import {bootstrap} from "./Bootstrap";
 import {APISEARCH_DISPATCHER, APISEARCH_UI} from "./Constants";
 import container from "./Container";
@@ -60,6 +59,8 @@ export default class ApisearchUI {
          * 1.- Register all events on the store
          */
         this.store.on("render", () => this.render());
+        this.store.on("toUrlObject", (query:any, object:any) => this.toUrlObject(query, object));
+        this.store.on("fromUrlObject", (object:any, query:any) => this.fromUrlObject(object, query));
 
         /**
          * 2.- Trigger the initial render: (Mount the components)
@@ -75,9 +76,8 @@ export default class ApisearchUI {
             typeof firstQuery === "undefined" ||
             true === firstQuery
         ) {
-            initialDataFetchAction(
+            this.store.fetchInitialQuery(
                 this.environmentId,
-                this.store.getCurrentQuery(),
                 this.repository,
             );
         }
@@ -124,6 +124,41 @@ export default class ApisearchUI {
         });
     }
 
+
+    /**
+     * @param query
+     * @param object
+     */
+    public toUrlObject(
+        query: any,
+        object: any
+    )
+    {
+        this.activeWidgets.map((widget) => {
+            widget.toUrlObject(
+                query,
+                object,
+            );
+        });
+    }
+
+    /**
+     * @param object
+     * @param query
+     */
+    public fromUrlObject(
+        object: any,
+        query: any
+    )
+    {
+        this.activeWidgets.map((widget) => {
+            widget.fromUrlObject(
+                object,
+                query,
+            );
+        });
+    }
+
     /**
      * Attach a function into an event
      *
@@ -140,13 +175,15 @@ export default class ApisearchUI {
     }
 
     /**
-     * Create instance
-     *
      * @param config
+     * @param history
      *
      * @return {ApisearchUI}
      */
-    public static create(config: any): ApisearchUI {
+    public static create(
+        config: any,
+        history: boolean|string
+    ): ApisearchUI {
 
         apisearch.ensureRepositoryConfigIsValid(config);
 
@@ -161,6 +198,7 @@ export default class ApisearchUI {
         bootstrap(
             environmentId,
             config,
+            history
         );
 
         /**

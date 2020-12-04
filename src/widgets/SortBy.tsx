@@ -1,6 +1,6 @@
 import { h, render } from 'preact';
 import SortByComponent from "../components/SortBy/SortByComponent";
-import {Repository} from "apisearch";
+import {Repository, SortBy as ApisearchSortBy} from "apisearch";
 import Widget from "./Widget";
 import Store from "../Store";
 
@@ -54,6 +54,59 @@ class SortBy extends Widget {
             this.component,
             this.targetNode
         )
+    }
+
+    /**
+     * @param query
+     * @param object
+     */
+    public toUrlObject(
+        query: any,
+        object: any
+    )
+    {
+        if (
+            query.sort !== undefined
+        ) {
+            const sort = query.sort[0];
+            const sortInstance = ApisearchSortBy.createFromArray(query.sort);
+            const sortAsString = sortInstance.getFirstSortAsString();
+            const firstSortAsString = this.component.props.options[0].value
+
+            if (sortAsString !== firstSortAsString) {
+                const sortField = sort.field.substr(17);
+                const sortOrder = sort.order;
+                object.sort = sortField + ':' + sortOrder;
+            }
+        }
+
+
+    }
+
+    /**
+     * @param object
+     * @param query
+     */
+    public fromUrlObject(
+        object: any,
+        query: any
+    )
+    {
+        if (object.sort !== undefined) {
+            if (query.sort == undefined) {
+                query.sort = [{}];
+            }
+
+            if (object.sort === 'score') {
+                query.sort[0].field = '_score';
+                query.sort[0].order = 'desc';
+                return;
+            }
+
+            const sortParts = object.sort.split(':');
+            query.sort[0].field = 'indexed_metadata.' + sortParts[0];
+            query.sort[0].order = sortParts[1];
+        }
     }
 }
 

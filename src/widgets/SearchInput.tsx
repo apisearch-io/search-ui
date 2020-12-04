@@ -121,6 +121,42 @@ class SearchInput extends Widget{
             this.targetNode
         )
     }
+
+    /**
+     * @param query
+     * @param object
+     */
+    public toUrlObject(
+        query: any,
+        object: any
+    )
+    {
+        const q = query.q;
+        if (
+            q !== undefined &&
+            q !== ''
+        ) {
+            object.q = q;
+        }
+    }
+
+    /**
+     * @param object
+     * @param query
+     */
+    public fromUrlObject(
+        object: any,
+        query: any
+    )
+    {
+        const q = object.q;
+        if (
+            q !== undefined &&
+            q !== ''
+        ) {
+            query.q = q;
+        }
+    }
 }
 
 /**

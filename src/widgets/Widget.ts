@@ -1,4 +1,4 @@
-import {Repository} from "apisearch";
+import {Query, Repository} from "apisearch";
 import Store from "../Store";
 
 /**
@@ -21,4 +21,28 @@ export default abstract class Widget {
         store: Store,
         repository: Repository,
     );
+
+    /**
+     * @param query
+     * @param object
+     */
+    public toUrlObject(
+        query: any,
+        object: any
+    )
+    {
+
+    }
+
+    /**
+     * @param object
+     * @param query
+     */
+    public fromUrlObject(
+        object: any,
+        query: any
+    )
+    {
+
+    }
 }
