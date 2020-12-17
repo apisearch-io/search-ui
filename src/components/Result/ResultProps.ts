@@ -33,4 +33,5 @@ export interface ResultProps {
     currentQuery?: Query;
     currentVisibleResults?: boolean;
     infiniteScroll?: boolean|number;
+    fieldsConciliation: string[];
 }

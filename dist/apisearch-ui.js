@@ -13965,7 +13965,7 @@ var Store = /** @class */ (function (_super) {
         this.emit("toUrlObject", queryAsObject, urlObject);
         var state = {
             query: query.toArray(),
-            result: result.toArray(),
+            result: result ? result.toArray() : null,
             visibleResults: visibleResults
         };
         var objectAsJson = decodeURI(JSON.stringify(urlObject));
@@ -15976,9 +15976,16 @@ var ResultComponent = /** @class */ (function (_super) {
                     var clickParameters = typeof userId === "string"
                         ? appId + '", "' + indexId + '", "' + itemId + '", "' + userId
                         : appId + '", "' + indexId + '", "' + itemId;
-                    var fields = Object.assign(item.getMetadata(), item.getIndexedMetadata(), item.getHighlights());
+                    var mainFields = {};
+                    Object.assign(mainFields, item.getMetadata(), item.getIndexedMetadata(), item.getHighlights());
+                    var fieldsConciliation = {};
+                    Object.keys(props.fieldsConciliation).map(function (field, index) {
+                        var _a;
+                        fieldsConciliation[field] = (_a = mainFields[props.fieldsConciliation[field]]) !== null && _a !== void 0 ? _a : undefined;
+                    });
+                    Object.assign(mainFields, fieldsConciliation);
                     return __assign(__assign({}, formatData(item)), {
-                        'fields': fields,
+                        'fields': mainFields,
                         'key': 'item_' + itemId,
                         'click': apisearchReference + '.click("' + clickParameters + '");'
                     });
@@ -16011,7 +16018,8 @@ ResultComponent.defaultProps = {
         placeholder: null
     },
     formatData: function (data) { return data; },
-    fadeInSelector: ''
+    fadeInSelector: '',
+    fieldsConciliation: {}
 };
 exports["default"] = ResultComponent;
 
@@ -17478,13 +17486,14 @@ var Result = /** @class */ (function (_super) {
      * @param formatData
      * @param fadeInSelector
      * @param infiniteScroll
+     * @param fieldsConciliation
      */
     function Result(_a) {
-        var target = _a.target, fields = _a.fields, itemsPerPage = _a.itemsPerPage, promote = _a.promote, exclude = _a.exclude, filter = _a.filter, highlightsEnabled = _a.highlightsEnabled, suggestionsEnabled = _a.suggestionsEnabled, classNames = _a.classNames, template = _a.template, formatData = _a.formatData, fadeInSelector = _a.fadeInSelector, infiniteScroll = _a.infiniteScroll;
+        var target = _a.target, fields = _a.fields, itemsPerPage = _a.itemsPerPage, promote = _a.promote, exclude = _a.exclude, filter = _a.filter, highlightsEnabled = _a.highlightsEnabled, suggestionsEnabled = _a.suggestionsEnabled, classNames = _a.classNames, template = _a.template, formatData = _a.formatData, fadeInSelector = _a.fadeInSelector, infiniteScroll = _a.infiniteScroll, fieldsConciliation = _a.fieldsConciliation;
         var _this = _super.call(this) || this;
         _this.target = target;
         _this.targetNode = document.querySelector(_this.target);
-        _this.component = preact_1.h(ResultComponent_1["default"], { target: target, fields: fields, itemsPerPage: itemsPerPage, promote: promote, exclude: exclude, filter: filter, highlightsEnabled: highlightsEnabled, suggestionsEnabled: suggestionsEnabled, classNames: __assign(__assign({}, ResultComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, ResultComponent_1["default"].defaultProps.template), template), formatData: formatData, fadeInSelector: fadeInSelector, infiniteScroll: infiniteScroll });
+        _this.component = preact_1.h(ResultComponent_1["default"], { target: target, fields: fields, itemsPerPage: itemsPerPage, promote: promote, exclude: exclude, filter: filter, highlightsEnabled: highlightsEnabled, suggestionsEnabled: suggestionsEnabled, classNames: __assign(__assign({}, ResultComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, ResultComponent_1["default"].defaultProps.template), template), formatData: formatData, fadeInSelector: fadeInSelector, infiniteScroll: infiniteScroll, fieldsConciliation: fieldsConciliation });
         return _this;
     }
     /**

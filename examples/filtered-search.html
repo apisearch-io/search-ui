@@ -103,16 +103,16 @@
 
                 <div class="card" style="border-radius: .2rem">
                     <div class="card-content" style="position: relative">
-                        <object data="{{metadata.image}}" type="image/png" style="max-height: 300px;">
-                            <img src="notfound.png" style="max-height: 300px;" alt="{{metadata.title}}">
+                        <object data="{{fields.img}}" type="image/png" style="max-height: 300px;">
+                            <img src="notfound.png" style="max-height: 300px;" alt="{{fields.title}}">
                         </object><br>
                         {{{fields.title}}}<br>
-                        {{#metadata.author}}
-                        <p class="has-text-info is-size-7">@{{name}}</p>
-                        {{/metadata.author}}
+                        {{#fields.author}}
+                            <p class="has-text-info is-size-7">@{{name}}</p>
+                        {{/fields.author}}
                         <span class="has-text-grey is-size-7">
                             <strong>Year: </strong>
-                            {{indexedMetadata.year}}
+                            {{fields.mapped_year}}
                         </span>
                         <button onclick="alert('Album {{uuid.id}} clicked')" style="float:right">Click</button>
                     </div>
@@ -151,7 +151,7 @@
             options: {
                 endpoint: 'https://eu1.apisearch.io'
             }
-        });
+        }, 'hash');
 
         // Widgets setup
         ui.addWidgets(
@@ -171,9 +171,9 @@
                     container: 'select'
                 },
                 options: [
+                    {name: 'Score', value: 'score'},
                     {name: 'Oldest', value: 'year:asc'},
                     {name: 'Newest', value: 'year:desc'},
-                    {name: 'Score', value: 'score'},
                     {name: 'Distance', value: 'distance'}
                 ]
             }),
@@ -307,6 +307,10 @@
                 template: {
                     itemsList: document.getElementById('result-search-tpl').text,
                 },
+                fieldsConciliation: {
+                    'mapped_year': 'year',
+                    'img': 'image',
+                }
             }),
             ui.widgets.pagination({
                 target: '.pagination',

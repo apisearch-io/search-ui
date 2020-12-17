@@ -244,11 +244,28 @@ class ResultComponent extends Component<ResultProps, ResultState> {
                         ? appId+'", "'+indexId+'", "'+itemId+'", "'+userId
                         : appId+'", "'+indexId+'", "'+itemId;
 
-                    const fields = Object.assign(item.getMetadata(), item.getIndexedMetadata(), item.getHighlights());
+                    let mainFields = {};
+                    Object.assign(
+                        mainFields,
+                        item.getMetadata(),
+                        item.getIndexedMetadata(),
+                        item.getHighlights()
+                    );
+
+                    const fieldsConciliation = {};
+                    Object.keys(props.fieldsConciliation).map(function(field, index) {
+                        fieldsConciliation[field] = mainFields[props.fieldsConciliation[field]] ?? undefined;
+                    })
+
+                    Object.assign(
+                        mainFields,
+                        fieldsConciliation
+                    );
+
                     return {
                         ...formatData(item),
                         ...{
-                            'fields': fields,
+                            'fields': mainFields,
                             'key': 'item_' + itemId,
                             'click': apisearchReference + '.click("'+clickParameters+'");'
                         }
@@ -299,7 +316,8 @@ ResultComponent.defaultProps = {
         placeholder: null
     },
     formatData: data => data,
-    fadeInSelector: ''
+    fadeInSelector: '',
+    fieldsConciliation: {}
 };
 
 export default ResultComponent;

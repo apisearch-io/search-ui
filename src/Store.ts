@@ -318,7 +318,7 @@ class Store extends EventEmitter {
 
         const state: LocationState = {
             query: query.toArray(),
-            result: result.toArray(),
+            result: result ? result.toArray() : null,
             visibleResults: visibleResults
         };
 
