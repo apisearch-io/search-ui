@@ -5,7 +5,6 @@
   "main": "lib/index.js",
   "scripts": {
     "dev": "webpack --config ./webpack.dev.js --progress --colors --watch",
-    "test": "jest --config jest.config.js",
     "build:lib": "tsc --outDir lib -m commonjs",
     "build:dev": "webpack --config ./webpack.dev.js --mode development",
     "build:min": "webpack --config ./webpack.min.js --mode production",
@@ -48,10 +47,10 @@
   "dependencies": {
     "apisearch": "^0.2.33",
     "clone-deep": "^4.0.1",
-    "flux": "^3.1.3",
-    "node-fetch": ">=2.6.1",
+    "flux": "^4.0.1",
+    "history": "^5",
     "hogan.js": "^3.0.2",
-    "preact": "^10",
-    "history": "^5"
+    "node-fetch": ">=2.6.1",
+    "preact": "^10"
   }
 }

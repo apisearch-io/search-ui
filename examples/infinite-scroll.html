@@ -14,6 +14,13 @@
             background: #b4acff;
             font-style: inherit;
         }
+
+        .as-searchInput__clearSearch {
+            position: absolute;
+            top: 25px;
+            right: 40px;
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -83,7 +90,8 @@
         index_id: 'eu1-prod-d53da03a-d49c-483c',
         token: 'eu1-8438694d-5839-4179-9f73-a55630f3cd4d',
         options: {
-            endpoint: 'https://eu1.apisearch.io'
+            endpoint: 'https://eu1.apisearch.io',
+            override_queries: true
         }
     });
 

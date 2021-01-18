@@ -28,6 +28,7 @@ class Result extends Widget {
      * @param fadeInSelector
      * @param infiniteScroll
      * @param fieldsConciliation
+     * @param minScore
      */
     constructor({
         target,
@@ -43,7 +44,8 @@ class Result extends Widget {
         formatData,
         fadeInSelector,
         infiniteScroll,
-        fieldsConciliation
+        fieldsConciliation,
+        minScore
     }) {
         super();
         this.target = target;
@@ -69,6 +71,7 @@ class Result extends Widget {
             fadeInSelector={fadeInSelector}
             infiniteScroll={infiniteScroll}
             fieldsConciliation={fieldsConciliation}
+            minScore={minScore}
         />
     }
 

@@ -11022,48 +11022,47 @@ function once(emitter, name) {
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
+ * 
  */
 
 
-
+var validateFormat =  true ? function (format) {
+  if (format === undefined) {
+    throw new Error('invariant(...): Second argument must be a string.');
+  }
+} : undefined;
 /**
  * Use invariant() to assert state which your program assumes to be true.
  *
- * Provide sprintf-style format (only %s is supported) and arguments
- * to provide information about what broke and what you were
- * expecting.
+ * Provide sprintf-style format (only %s is supported) and arguments to provide
+ * information about what broke and what you were expecting.
  *
- * The invariant message will be stripped in production, but the invariant
- * will remain to ensure logic does not differ in production.
+ * The invariant message will be stripped in production, but the invariant will
+ * remain to ensure logic does not differ in production.
  */
 
-var validateFormat = function validateFormat(format) {};
+function invariant(condition, format) {
+  for (var _len = arguments.length, args = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+    args[_key - 2] = arguments[_key];
+  }
 
-if (true) {
-  validateFormat = function validateFormat(format) {
-    if (format === undefined) {
-      throw new Error('invariant requires an error message argument');
-    }
-  };
-}
-
-function invariant(condition, format, a, b, c, d, e, f) {
   validateFormat(format);
 
   if (!condition) {
     var error;
+
     if (format === undefined) {
       error = new Error('Minified exception occurred; use the non-minified dev environment ' + 'for the full error message and additional helpful warnings.');
     } else {
-      var args = [a, b, c, d, e, f];
       var argIndex = 0;
       error = new Error(format.replace(/%s/g, function () {
-        return args[argIndex++];
+        return String(args[argIndex++]);
       }));
       error.name = 'Invariant Violation';
     }
 
-    error.framesToPop = 1; // we don't care about invariant's own frame
+    error.framesToPop = 1; // Skip invariant's own stack frame.
+
     throw error;
   }
 }
@@ -11115,15 +11114,11 @@ module.exports.Dispatcher = __webpack_require__(/*! ./lib/Dispatcher */ "./node_
  */
 
 
-
-exports.__esModule = true;
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var invariant = __webpack_require__(/*! fbjs/lib/invariant */ "./node_modules/fbjs/lib/invariant.js");
 
 var _prefix = 'ID_';
-
 /**
  * Dispatcher is used to broadcast payloads to registered callbacks. This is
  * different from generic pub-sub systems in two ways:
@@ -11212,9 +11207,19 @@ var _prefix = 'ID_';
  * `FlightPriceStore`.
  */
 
-var Dispatcher = (function () {
+var Dispatcher = /*#__PURE__*/function () {
   function Dispatcher() {
-    _classCallCheck(this, Dispatcher);
+    _defineProperty(this, "_callbacks", void 0);
+
+    _defineProperty(this, "_isDispatching", void 0);
+
+    _defineProperty(this, "_isHandled", void 0);
+
+    _defineProperty(this, "_isPending", void 0);
+
+    _defineProperty(this, "_lastID", void 0);
+
+    _defineProperty(this, "_pendingPayload", void 0);
 
     this._callbacks = {};
     this._isDispatching = false;
@@ -11222,114 +11227,126 @@ var Dispatcher = (function () {
     this._isPending = {};
     this._lastID = 1;
   }
-
   /**
    * Registers a callback to be invoked with every dispatched payload. Returns
    * a token that can be used with `waitFor()`.
    */
 
-  Dispatcher.prototype.register = function register(callback) {
+
+  var _proto = Dispatcher.prototype;
+
+  _proto.register = function register(callback) {
     var id = _prefix + this._lastID++;
     this._callbacks[id] = callback;
     return id;
-  };
-
+  }
   /**
    * Removes a callback based on its token.
    */
+  ;
 
-  Dispatcher.prototype.unregister = function unregister(id) {
-    !this._callbacks[id] ?  true ? invariant(false, 'Dispatcher.unregister(...): `%s` does not map to a registered callback.', id) : undefined : undefined;
+  _proto.unregister = function unregister(id) {
+    !this._callbacks[id] ?  true ? invariant(false, 'Dispatcher.unregister(...): `%s` does not map to a registered callback.', id) : undefined : void 0;
     delete this._callbacks[id];
-  };
-
+  }
   /**
    * Waits for the callbacks specified to be invoked before continuing execution
    * of the current callback. This method should only be used by a callback in
    * response to a dispatched payload.
    */
+  ;
 
-  Dispatcher.prototype.waitFor = function waitFor(ids) {
-    !this._isDispatching ?  true ? invariant(false, 'Dispatcher.waitFor(...): Must be invoked while dispatching.') : undefined : undefined;
+  _proto.waitFor = function waitFor(ids) {
+    !this._isDispatching ?  true ? invariant(false, 'Dispatcher.waitFor(...): Must be invoked while dispatching.') : undefined : void 0;
+
     for (var ii = 0; ii < ids.length; ii++) {
       var id = ids[ii];
+
       if (this._isPending[id]) {
-        !this._isHandled[id] ?  true ? invariant(false, 'Dispatcher.waitFor(...): Circular dependency detected while ' + 'waiting for `%s`.', id) : undefined : undefined;
+        !this._isHandled[id] ?  true ? invariant(false, 'Dispatcher.waitFor(...): Circular dependency detected while ' + 'waiting for `%s`.', id) : undefined : void 0;
         continue;
       }
-      !this._callbacks[id] ?  true ? invariant(false, 'Dispatcher.waitFor(...): `%s` does not map to a registered callback.', id) : undefined : undefined;
+
+      !this._callbacks[id] ?  true ? invariant(false, 'Dispatcher.waitFor(...): `%s` does not map to a registered callback.', id) : undefined : void 0;
+
       this._invokeCallback(id);
     }
-  };
-
+  }
   /**
    * Dispatches a payload to all registered callbacks.
    */
+  ;
 
-  Dispatcher.prototype.dispatch = function dispatch(payload) {
-    !!this._isDispatching ?  true ? invariant(false, 'Dispatch.dispatch(...): Cannot dispatch in the middle of a dispatch.') : undefined : undefined;
+  _proto.dispatch = function dispatch(payload) {
+    !!this._isDispatching ?  true ? invariant(false, 'Dispatch.dispatch(...): Cannot dispatch in the middle of a dispatch.') : undefined : void 0;
+
     this._startDispatching(payload);
+
     try {
       for (var id in this._callbacks) {
         if (this._isPending[id]) {
           continue;
         }
+
         this._invokeCallback(id);
       }
     } finally {
       this._stopDispatching();
     }
-  };
-
+  }
   /**
    * Is this Dispatcher currently dispatching.
    */
+  ;
 
-  Dispatcher.prototype.isDispatching = function isDispatching() {
+  _proto.isDispatching = function isDispatching() {
     return this._isDispatching;
-  };
-
+  }
   /**
    * Call the callback stored with the given id. Also do some internal
    * bookkeeping.
    *
    * @internal
    */
+  ;
 
-  Dispatcher.prototype._invokeCallback = function _invokeCallback(id) {
+  _proto._invokeCallback = function _invokeCallback(id) {
     this._isPending[id] = true;
-    this._callbacks[id](this._pendingPayload);
-    this._isHandled[id] = true;
-  };
 
+    this._callbacks[id](this._pendingPayload);
+
+    this._isHandled[id] = true;
+  }
   /**
    * Set up bookkeeping needed when dispatching.
    *
    * @internal
    */
+  ;
 
-  Dispatcher.prototype._startDispatching = function _startDispatching(payload) {
+  _proto._startDispatching = function _startDispatching(payload) {
     for (var id in this._callbacks) {
       this._isPending[id] = false;
       this._isHandled[id] = false;
     }
+
     this._pendingPayload = payload;
     this._isDispatching = true;
-  };
-
+  }
   /**
    * Clear bookkeeping used for dispatching.
    *
    * @internal
    */
+  ;
 
-  Dispatcher.prototype._stopDispatching = function _stopDispatching() {
+  _proto._stopDispatching = function _stopDispatching() {
     delete this._pendingPayload;
     this._isDispatching = false;
   };
 
   return Dispatcher;
-})();
+}();
 
 module.exports = Dispatcher;
 
@@ -13842,6 +13859,7 @@ var Store = /** @class */ (function (_super) {
          */
         if (action.type === "RENDER_INITIAL_DATA") {
             var _a = action.payload, result = _a.result, query = _a.query, _ = _a._;
+            this.dirty = false;
             this.currentResult = result;
             this.currentQuery = query;
             this.currentVisibleResults = query != undefined;
@@ -15676,8 +15694,9 @@ var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts
  * @param excludedUUIDs
  * @param fields
  * @param filter
+ * @param minScore
  */
-function configureQuery(environmentId, currentQuery, itemsPerPage, highlightsEnabled, suggestionsEnabled, promotedUUIDs, excludedUUIDs, fields, filter) {
+function configureQuery(environmentId, currentQuery, itemsPerPage, highlightsEnabled, suggestionsEnabled, promotedUUIDs, excludedUUIDs, fields, filter, minScore) {
     var clonedQuery = cloneDeep(currentQuery);
     filter(clonedQuery);
     /**
@@ -15717,6 +15736,9 @@ function configureQuery(environmentId, currentQuery, itemsPerPage, highlightsEna
      */
     for (var i in excludedUUIDs) {
         clonedQuery.excludeUUID(excludedUUIDs[i]);
+    }
+    if (minScore > 0) {
+        clonedQuery.minScore = minScore;
     }
     var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
     dispatcher.dispatch({
@@ -15909,7 +15931,7 @@ var ResultComponent = /** @class */ (function (_super) {
             return itemUUID instanceof ItemUUID_1.ItemUUID
                 ? itemUUID
                 : ItemUUID_1.ItemUUID.createFromArray(itemUUID);
-        }), props.fields, props.filter);
+        }), props.fields, props.filter, props.minScore);
     };
     /**
      * Render
@@ -15917,6 +15939,7 @@ var ResultComponent = /** @class */ (function (_super) {
      * @return {any}
      */
     ResultComponent.prototype.render = function () {
+        var _a;
         var props = this.props;
         var dirty = props.dirty;
         var containerClassName = props.classNames.container;
@@ -15927,7 +15950,7 @@ var ResultComponent = /** @class */ (function (_super) {
         var apisearchUI = Container_1["default"].get(Constants_1.APISEARCH_UI + "__" + environmentId);
         var apisearchReference = apisearchUI.reference;
         var itemsListTemplate = props.template.itemsList;
-        var placeholderTemplate = props.template.placeholder;
+        var placeholderTemplate = (_a = props.template.placeholder) !== null && _a !== void 0 ? _a : '';
         var formatData = props.formatData;
         var currentResult = props.currentResult;
         var currentQuery = props.currentQuery;
@@ -15992,7 +16015,7 @@ var ResultComponent = /** @class */ (function (_super) {
                 })
                 : [] });
         return (preact_1.h("div", { className: "as-result " + containerClassName, ref: wrapperRef, style: "position: relative" },
-            (placeholderTemplate && dirty)
+            (dirty)
                 ? preact_1.h(Template_1["default"], { template: placeholderTemplate, className: "as-result__placeholder " + placeholderClassName })
                 : preact_1.h(Template_1["default"], { template: itemsListTemplate, data: formattedTemplateData, className: "as-result__itemsList " + itemsListClassName }),
             hasInfiniteScrollNextPage
@@ -16402,6 +16425,67 @@ SearchInputComponent.defaultProps = {
     }
 };
 exports["default"] = SearchInputComponent;
+
+
+/***/ }),
+
+/***/ "./src/components/Snapshot/SnapshotComponent.tsx":
+/*!*******************************************************!*\
+  !*** ./src/components/Snapshot/SnapshotComponent.tsx ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+exports.__esModule = true;
+var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+/**
+ * SnapshotComponent
+ */
+var SnapshotComponent = /** @class */ (function (_super) {
+    __extends(SnapshotComponent, _super);
+    function SnapshotComponent() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    /**
+     * Component receive props
+     *
+     * @param props
+     */
+    SnapshotComponent.prototype.componentWillReceiveProps = function (props) {
+        var query = props.currentQuery;
+        this.setState(function (prevState) {
+            return { query: query };
+        });
+    };
+    /**
+     * Render
+     *
+     * @return {}
+     */
+    SnapshotComponent.prototype.render = function () {
+        var queryAsJson = this.state.query == undefined
+            ? ''
+            : JSON.stringify(this.state.query.toArray());
+        return (preact_1.h("div", null, queryAsJson));
+    };
+    return SnapshotComponent;
+}(preact_1.Component));
+exports["default"] = SnapshotComponent;
 
 
 /***/ }),
@@ -17487,13 +17571,14 @@ var Result = /** @class */ (function (_super) {
      * @param fadeInSelector
      * @param infiniteScroll
      * @param fieldsConciliation
+     * @param minScore
      */
     function Result(_a) {
-        var target = _a.target, fields = _a.fields, itemsPerPage = _a.itemsPerPage, promote = _a.promote, exclude = _a.exclude, filter = _a.filter, highlightsEnabled = _a.highlightsEnabled, suggestionsEnabled = _a.suggestionsEnabled, classNames = _a.classNames, template = _a.template, formatData = _a.formatData, fadeInSelector = _a.fadeInSelector, infiniteScroll = _a.infiniteScroll, fieldsConciliation = _a.fieldsConciliation;
+        var target = _a.target, fields = _a.fields, itemsPerPage = _a.itemsPerPage, promote = _a.promote, exclude = _a.exclude, filter = _a.filter, highlightsEnabled = _a.highlightsEnabled, suggestionsEnabled = _a.suggestionsEnabled, classNames = _a.classNames, template = _a.template, formatData = _a.formatData, fadeInSelector = _a.fadeInSelector, infiniteScroll = _a.infiniteScroll, fieldsConciliation = _a.fieldsConciliation, minScore = _a.minScore;
         var _this = _super.call(this) || this;
         _this.target = target;
         _this.targetNode = document.querySelector(_this.target);
-        _this.component = preact_1.h(ResultComponent_1["default"], { target: target, fields: fields, itemsPerPage: itemsPerPage, promote: promote, exclude: exclude, filter: filter, highlightsEnabled: highlightsEnabled, suggestionsEnabled: suggestionsEnabled, classNames: __assign(__assign({}, ResultComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, ResultComponent_1["default"].defaultProps.template), template), formatData: formatData, fadeInSelector: fadeInSelector, infiniteScroll: infiniteScroll, fieldsConciliation: fieldsConciliation });
+        _this.component = preact_1.h(ResultComponent_1["default"], { target: target, fields: fields, itemsPerPage: itemsPerPage, promote: promote, exclude: exclude, filter: filter, highlightsEnabled: highlightsEnabled, suggestionsEnabled: suggestionsEnabled, classNames: __assign(__assign({}, ResultComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, ResultComponent_1["default"].defaultProps.template), template), formatData: formatData, fadeInSelector: fadeInSelector, infiniteScroll: infiniteScroll, fieldsConciliation: fieldsConciliation, minScore: minScore });
         return _this;
     }
     /**
@@ -17678,6 +17763,84 @@ exports["default"] = (function (settings) { return new SearchInput(settings); })
 
 /***/ }),
 
+/***/ "./src/widgets/Snapshot.tsx":
+/*!**********************************!*\
+  !*** ./src/widgets/Snapshot.tsx ***!
+  \**********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+exports.__esModule = true;
+var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+var Widget_1 = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
+var SnapshotComponent_1 = __webpack_require__(/*! ../components/Snapshot/SnapshotComponent */ "./src/components/Snapshot/SnapshotComponent.tsx");
+/**
+ * Snapshot
+ */
+var Snapshot = /** @class */ (function (_super) {
+    __extends(Snapshot, _super);
+    /**
+     * Constructor
+     *
+     * @param target
+     * @param classNames
+     * @param template
+     */
+    function Snapshot(_a) {
+        var target = _a.target, classNames = _a.classNames, template = _a.template;
+        var _this = _super.call(this) || this;
+        _this.target = target;
+        _this.component = preact_1.h(SnapshotComponent_1["default"], { target: target });
+        return _this;
+    }
+    /**
+     * Widget
+     *
+     * @param environmentId
+     * @param store
+     * @param repository
+     */
+    Snapshot.prototype.render = function (environmentId, store, repository) {
+        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, dirty: store.isDirty(), currentResult: store.getCurrentResult(), currentQuery: store.getCurrentQuery() });
+        var targetNode = document.querySelector(this.target);
+        preact_1.render(this.component, targetNode);
+    };
+    return Snapshot;
+}(Widget_1["default"]));
+/**
+ * @param settings
+ */
+exports["default"] = (function (settings) { return new Snapshot(settings); });
+
+
+/***/ }),
+
 /***/ "./src/widgets/SortBy.tsx":
 /*!********************************!*\
   !*** ./src/widgets/SortBy.tsx ***!
@@ -17843,6 +18006,7 @@ var SortBy_1 = __webpack_require__(/*! ./SortBy */ "./src/widgets/SortBy.tsx");
 var CheckboxFilter_1 = __webpack_require__(/*! ./CheckboxFilter */ "./src/widgets/CheckboxFilter.tsx");
 var RangeFilter_1 = __webpack_require__(/*! ./RangeFilter */ "./src/widgets/RangeFilter.tsx");
 var Reload_1 = __webpack_require__(/*! ./Reload */ "./src/widgets/Reload.tsx");
+var Snapshot_1 = __webpack_require__(/*! ./Snapshot */ "./src/widgets/Snapshot.tsx");
 /**
  * Widget factories
  */
@@ -17857,6 +18021,7 @@ exports["default"] = {
     checkboxFilter: CheckboxFilter_1["default"],
     rangeFilter: RangeFilter_1["default"],
     reload: Reload_1["default"],
+    snapshot: Snapshot_1["default"],
 };
 
 

@@ -25,13 +25,6 @@
         .as-searchInput {
             position: relative;
         }
-
-        .as-searchInput div {
-            position: absolute;
-            top: 3px;
-            right:12px;
-            font-weight: bold;
-        }
     </style>
 </head>
 
@@ -50,10 +43,13 @@
 
         <!-- End -->
         <div class="navbar-end">
-            <a class="navbar-item is-hidden-desktop-only" href="https://github.com/alexhoma/javascript-search-ui" target="_blank">
-                    <span class="icon" style="color: #333;">
-                      <i class="fa fa-lg fa-github"></i>
-                    </span>
+            <a class="navbar-item is-hidden-desktop-only"
+               href="https://github.com/apisearch/search-ui"
+               target="_blank"
+            >
+                <span class="icon" style="color: #333;">
+                  <i class="fa fa-lg fa-github"></i>
+                </span>
             </a>
         </div>
     </nav>
@@ -76,7 +72,7 @@
             </div>
             <div class="columns">
                 <!-- Apisearch Instance 1 -->
-                <div class="column is-half">
+                <div class="column is-third">
                     <h1 class="title is-4 has-text-info">First instance</h1>
                     <hr>
                     <div class="input-instance-one"></div>
@@ -84,12 +80,23 @@
                 </div>
 
                 <!-- Apisearch Instance 2 -->
-                <div class="column is-half">
+                <div class="column is-third">
                     <h1 class="title is-4 has-text-danger">Second instance</h1>
                     <hr>
                     <div class="input-instance-two"></div>
                     <div class="result-instance-two"></div>
                     <div class="information-instance-two"></div>
+                </div>
+
+                <!-- Apisearch Instance 3 -->
+                <div class="column is-third">
+                    <h1 class="title is-4 has-text-default">Third instance</h1>
+                    <hr>
+                    <div style="position: relative">
+                        <input class="input-instance-three">
+                        <i class="fa fa-search" style="position:absolute; top:10px; right: 10px;"></i>
+                    </div>
+                    <div class="result-instance-three"></div>
                 </div>
             </div>
         </section>
@@ -161,6 +168,34 @@
             }),
             secondUI.widgets.result({
                 target: '.result-instance-two',
+                itemsPerPage: 5,
+                template: {
+                    itemsList: document.getElementById('result-template').text,
+                }
+            })
+        );
+
+        secondUI.init({
+            firstQuery: false
+        });
+    </script>
+
+    <script type="text/javascript">
+        // UI Instance 3
+        secondUI = firstUI = apisearchUIFactory.createUI();
+        secondUI.addWidgets(
+            secondUI.widgets.searchInput({
+                target: '.input-instance-three',
+                placeholder: 'Type something on instance three...',
+                startSearchOn: 3,
+                autocomplete: true,
+                clearSearch: false,
+                classNames: {
+                    input: 'input'
+                }
+            }),
+            secondUI.widgets.result({
+                target: '.result-instance-three',
                 itemsPerPage: 5,
                 template: {
                     itemsList: document.getElementById('result-template').text,

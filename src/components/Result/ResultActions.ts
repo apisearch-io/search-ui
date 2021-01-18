@@ -20,6 +20,7 @@ import container from "../../Container";
  * @param excludedUUIDs
  * @param fields
  * @param filter
+ * @param minScore
  */
 export function configureQuery(
     environmentId: string,
@@ -30,7 +31,8 @@ export function configureQuery(
     promotedUUIDs: ItemUUID[],
     excludedUUIDs: ItemUUID[],
     fields: string[],
-    filter: Function
+    filter: Function,
+    minScore: number
 ) {
     const clonedQuery = cloneDeep(currentQuery);
     filter(clonedQuery);
@@ -76,6 +78,10 @@ export function configureQuery(
      */
     for (const i in excludedUUIDs) {
         clonedQuery.excludeUUID(excludedUUIDs[i]);
+    }
+
+    if (minScore > 0) {
+        clonedQuery.minScore = minScore;
     }
 
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);

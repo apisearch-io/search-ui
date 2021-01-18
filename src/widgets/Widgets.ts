@@ -8,6 +8,7 @@ import sortBy from "./SortBy";
 import checkboxFilter from "./CheckboxFilter";
 import rangeFilter from "./RangeFilter";
 import reload from "./Reload";
+import snapshot from "./Snapshot";
 
 /**
  * Widget factories
@@ -23,4 +24,5 @@ export default {
     checkboxFilter: checkboxFilter,
     rangeFilter: rangeFilter,
     reload: reload,
+    snapshot: snapshot,
 };

@@ -23,6 +23,14 @@
         .search.navbar-item {
             min-width: 25rem
         }
+
+        #snapshot {
+            margin-left: 20px;
+            margin-right: 20px;
+            font-size: 12px;
+            margin-top: 10px;
+            color: #777;
+        }
     </style>
 
     <script>
@@ -73,7 +81,7 @@
         <div class="navbar-item sort-by"></div>
 
         <a class="navbar-item is-hidden-desktop-only"
-           href="https://github.com/alexhoma/javascript-search-ui"
+           href="https://github.com/apisearch/search-ui"
            target="_blank"
         >
             <span class="icon" style="color: #333;">
@@ -81,6 +89,10 @@
             </span>
         </a>
     </div>
+</nav>
+
+<nav class="navbar" role="navigation" aria-label="main navigation">
+    <span id="snapshot" class="small"></span>
 </nav>
 
 <!-- Result -->
@@ -232,6 +244,9 @@
         }),
         ui.widgets.clearFilters({
             target: '.clear-filters'
+        }),
+        ui.widgets.snapshot({
+            target: '#snapshot'
         }),
         ui.widgets.information({
             target: '.information',

@@ -146,6 +146,7 @@ class Store extends EventEmitter {
         if (action.type === "RENDER_INITIAL_DATA") {
             const { result, query, _ } = action.payload;
 
+            this.dirty = false;
             this.currentResult = result;
             this.currentQuery = query;
             this.currentVisibleResults = query != undefined;

@@ -155,7 +155,8 @@ class ResultComponent extends Component<ResultProps, ResultState> {
                     : ItemUUID.createFromArray(itemUUID)
             }),
             props.fields,
-            props.filter
+            props.filter,
+            props.minScore
         );
     }
 
@@ -176,7 +177,7 @@ class ResultComponent extends Component<ResultProps, ResultState> {
         const apisearchReference = apisearchUI.reference;
 
         const itemsListTemplate = props.template.itemsList;
-        const placeholderTemplate = props.template.placeholder;
+        const placeholderTemplate = props.template.placeholder ?? '';
 
         const formatData = props.formatData;
         const currentResult = props.currentResult;
@@ -276,7 +277,7 @@ class ResultComponent extends Component<ResultProps, ResultState> {
 
         return (
             <div className={`as-result ${containerClassName}`} ref={wrapperRef} style={"position: relative"}>
-                {(placeholderTemplate && dirty)
+                {(dirty)
                     ? <Template
                         template={placeholderTemplate}
                         className={`as-result__placeholder ${placeholderClassName}`}

@@ -3,7 +3,7 @@ import {Query} from "apisearch";
 import {Result} from "apisearch";
 
 /**
- * ClearFiltersProps
+ * ReloadProps
  */
 export interface ReloadProps {
     target: any;
