@@ -268,6 +268,7 @@ class ResultComponent extends Component<ResultProps, ResultState> {
                         ...{
                             'fields': mainFields,
                             'key': 'item_' + itemId,
+                            'uuid_composed': itemId,
                             'click': apisearchReference + '.click("'+clickParameters+'");'
                         }
                     }
