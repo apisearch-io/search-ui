@@ -74,9 +74,11 @@ class SortBy extends Widget {
             const firstSortAsString = this.component.props.options[0].value
 
             if (sortAsString !== firstSortAsString) {
-                const sortField = sort.field.substr(17);
-                const sortOrder = sort.order;
-                object.sort = sortField + ':' + sortOrder;
+               if (sort.type == 'distance') {
+                    object.sort = 'distance:' + sort.unit + ':' + sort.coordinate.lat + ':' + sort.coordinate.lon;
+                } else {
+                    object.sort = sort.field.substr(17) + ':' + sort.order;
+                }
             }
         }
 
@@ -100,6 +102,18 @@ class SortBy extends Widget {
             if (object.sort === 'score') {
                 query.sort[0].field = '_score';
                 query.sort[0].order = 'desc';
+                return;
+            }
+
+            if (object.sort.indexOf('distance:') === 0) {
+                const distanceSortParts = object.sort.split(':');
+                query.sort[0].type = distanceSortParts[0];
+                query.sort[0].unit = distanceSortParts[1];
+                query.sort[0].coordinate = {
+                    'lat': distanceSortParts[2],
+                    'lon': distanceSortParts[3],
+                };
+
                 return;
             }
 
