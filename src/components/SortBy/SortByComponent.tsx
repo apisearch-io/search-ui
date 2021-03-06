@@ -1,4 +1,4 @@
-import { h, render, Component } from 'preact';
+import { h, Component } from 'preact';
 import {SortByProps} from './SortByProps';
 import {SortByState} from './SortByState';
 import {

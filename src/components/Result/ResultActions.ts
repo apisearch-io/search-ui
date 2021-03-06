@@ -3,9 +3,9 @@
  */
 import {ItemUUID, Repository} from "apisearch";
 import {Query} from "apisearch";
-import * as cloneDeep from "clone-deep";
 import {APISEARCH_DISPATCHER} from "../../Constants";
 import container from "../../Container";
+import Clone from "../Clone";
 
 /**
  *
@@ -34,7 +34,7 @@ export function configureQuery(
     filter: Function,
     minScore: number
 ) {
-    const clonedQuery = cloneDeep(currentQuery);
+    const clonedQuery = Clone.object(currentQuery);
     filter(clonedQuery);
 
     /**
@@ -85,11 +85,8 @@ export function configureQuery(
     }
 
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
-    dispatcher.dispatch({
-        type: "UPDATE_APISEARCH_SETUP",
-        payload: {
-            query: clonedQuery,
-        },
+    dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
+        query: clonedQuery,
     });
 }
 
@@ -107,19 +104,16 @@ export function infiniteScrollNextPageAction(
     repository: Repository,
     nextPage: number,
 ) {
-    const clonedQuery = cloneDeep(currentQuery);
+    const clonedQuery = Clone.object(currentQuery);
     clonedQuery.page = nextPage;
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
 
     repository
         .query(clonedQuery)
         .then((result) => {
-            dispatcher.dispatch({
-                type: "RENDER_FETCHED_DATA",
-                payload: {
-                    query: clonedQuery,
-                    result,
-                },
+            dispatcher.dispatch("RENDER_FETCHED_DATA", {
+                query: clonedQuery,
+                result: result,
             });
         })
         .catch((error) => {

@@ -3,10 +3,10 @@
  */
 import {Repository} from "apisearch";
 import {Query} from "apisearch";
-import * as cloneDeep from "clone-deep";
 import {APISEARCH_DISPATCHER} from "../../Constants";
 import {FILTER_TYPE_RANGE} from "apisearch"
 import container from "../../Container";
+import Clone from "../Clone";
 
 /**
  * Define aggregations setup
@@ -30,7 +30,7 @@ export function aggregationSetup(
     fetchLimit: number,
     ranges: any
 ) {
-    const clonedQuery = cloneDeep(currentQuery);
+    const clonedQuery = Clone.object(currentQuery);
     const rangesValues = Object.keys(ranges);
 
     if (rangesValues.length > 0) {
@@ -55,11 +55,8 @@ export function aggregationSetup(
 
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
 
-    dispatcher.dispatch({
-        type: "UPDATE_APISEARCH_SETUP",
-        payload: {
-            query: clonedQuery,
-        },
+    dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
+        query: clonedQuery,
     });
 }
 
@@ -93,7 +90,7 @@ export function filterAction(
     ranges: object,
     labels: object
 ) {
-    const clonedQuery = cloneDeep(currentQuery);
+    const clonedQuery = Clone.object(currentQuery);
     const rangesValues = Object.keys(ranges);
 
     if (rangesValues.length > 0) {
@@ -144,12 +141,9 @@ export function filterAction(
     repository
         .query(clonedQuery)
         .then((result) => {
-            dispatcher.dispatch({
-                type: "RENDER_FETCHED_DATA",
-                payload: {
-                    query: clonedQuery,
-                    result,
-                },
+            dispatcher.dispatch("RENDER_FETCHED_DATA", {
+                query: clonedQuery,
+                result: result,
             });
         })
         .catch((error) => {

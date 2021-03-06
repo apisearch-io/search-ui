@@ -1,5 +1,4 @@
-import {Dispatcher} from "flux";
-
+import {Dispatcher} from "./Dispatcher";
 import apisearch from "apisearch";
 import ApisearchUI from "./ApisearchUI";
 import container from "./Container";

@@ -1,6 +1,5 @@
 import { h, Component } from 'preact';
 
-import * as cloneDeep from 'clone-deep';
 import { aggregationSetup, filterAction } from "./MultipleFilterActions";
 import { manageCurrentFilterItems } from "./Helpers";
 

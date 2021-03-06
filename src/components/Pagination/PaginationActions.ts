@@ -3,9 +3,9 @@
  */
 import {Repository} from "apisearch";
 import {Query} from "apisearch";
-import * as cloneDeep from "clone-deep";
 import {APISEARCH_DISPATCHER} from "../../Constants";
 import container from "../../Container";
+import Clone from "../Clone";
 
 /**
  * Pagination change
@@ -21,19 +21,16 @@ export function paginationChangeAction(
     repository: Repository,
     selectedPage: number,
 ) {
-    const clonedQuery = cloneDeep(currentQuery);
+    const clonedQuery = Clone.object(currentQuery);
     clonedQuery.page = selectedPage;
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
 
     repository
         .query(clonedQuery)
         .then((result) => {
-            dispatcher.dispatch({
-                type: "RENDER_FETCHED_DATA",
-                payload: {
-                    query: clonedQuery,
-                    result,
-                },
+            dispatcher.dispatch("RENDER_FETCHED_DATA", {
+                query: clonedQuery,
+                result: result,
             });
         })
         .catch((error) => {

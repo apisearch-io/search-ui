@@ -1,5 +1,5 @@
 import apisearch, {Repository} from "apisearch";
-import {Query, Result, Coordinate} from "apisearch";
+import {Query, Result} from "apisearch";
 import {EventEmitter} from "events";
 import {
     createHashHistory,
@@ -74,13 +74,10 @@ class Store extends EventEmitter {
                 isLocationState(event.location.state)
             ) {
                 this.fromBackHistoryState = true;
-                this.handleActions({
-                    type: "RENDER_FETCHED_DATA",
-                    payload: {
-                        query: Query.createFromArray(event.location.state.query),
-                        result: Result.createFromArray(event.location.state.result),
-                        visibleResults: event.location.state.visibleResults
-                    }
+                this.renderFetchedData({
+                    query: Query.createFromArray(event.location.state.query),
+                    result: Result.createFromArray(event.location.state.result),
+                    visibleResults: event.location.state.visibleResults
                 })
             }
         })
@@ -123,71 +120,59 @@ class Store extends EventEmitter {
     }
 
     /**
-     * Handle Dispatched actions
-     *
-     * This is what we call a reducer
-     * on a Redux architecture
+     * @param payload
      */
-    public handleActions(action) {
-        /**
-         * When action only sets up store definitions
-         * Does not dispatch any event
-         */
-        if (action.type === "UPDATE_APISEARCH_SETUP") {
-            this.currentQuery = action.payload.query;
+    public updateApisearchSetup(payload: any)
+    {
+        this.currentQuery = payload.query;
+    }
 
-            return;
+    /**
+     * @param payload
+     */
+    public renderInitialData(payload: any)
+    {
+        const { result, query, _ } = payload;
+
+        this.dirty = false;
+        this.currentResult = result;
+        this.currentQuery = query;
+        this.currentVisibleResults = query != undefined;
+
+        this.pushQueryToHistory(
+            query,
+            result,
+            this.currentVisibleResults
+        )
+
+        this.emit("render");
+    }
+
+    /**
+     * @param payload
+     */
+    public renderFetchedData(payload: any)
+    {
+        const { result, query, visibleResults } = payload;
+
+        this.dirty = false;
+        this.currentResult = result;
+        this.currentQuery = query;
+
+        if (visibleResults != undefined) {
+            this.currentVisibleResults = visibleResults;
         }
 
-        /**
-         * Is triggered when a initial data is received
-         * Dispatches an 'render' event
-         */
-        if (action.type === "RENDER_INITIAL_DATA") {
-            const { result, query, _ } = action.payload;
-
-            this.dirty = false;
-            this.currentResult = result;
-            this.currentQuery = query;
-            this.currentVisibleResults = query != undefined;
-
+        if (!this.fromBackHistoryState) {
             this.pushQueryToHistory(
                 query,
                 result,
-                this.currentVisibleResults
+                visibleResults
             )
-
-            this.emit("render");
-            return;
         }
+        this.fromBackHistoryState = false;
 
-        /**
-         * When action triggers a re-rendering
-         * Dispatches a 'render' event
-         */
-        if (action.type === "RENDER_FETCHED_DATA") {
-            const { result, query, visibleResults } = action.payload;
-
-            this.dirty = false;
-            this.currentResult = result;
-            this.currentQuery = query;
-
-            if (visibleResults != undefined) {
-                this.currentVisibleResults = visibleResults;
-            }
-
-            if (!this.fromBackHistoryState) {
-                this.pushQueryToHistory(
-                    query,
-                    result,
-                    visibleResults
-                )
-            }
-            this.fromBackHistoryState = false;
-
-            this.emit("render");
-            return;
-        }
+        this.emit("render");
     }
 
     /**
@@ -218,12 +203,9 @@ class Store extends EventEmitter {
         repository
             .query(this.currentQuery)
             .then((result) => {
-                dispatcher.dispatch({
-                    type: "RENDER_INITIAL_DATA",
-                    payload: {
-                        query: this.currentQuery,
-                        result: result,
-                    },
+                dispatcher.dispatch("RENDER_INITIAL_DATA", {
+                    query: this.currentQuery,
+                    result: result,
                 });
             });
     }

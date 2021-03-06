@@ -2,9 +2,9 @@
  * SortBy actions
  */
 import {Repository, Query, FILTER_AT_LEAST_ONE, FILTER_TYPE_RANGE} from "apisearch";
-import * as cloneDeep from "clone-deep";
 import {APISEARCH_DISPATCHER} from "../../Constants";
 import container from "../../Container";
+import Clone from "../Clone";
 
 /**
  *
@@ -29,7 +29,7 @@ export function onChangeSearchAction(
     from: number,
     to: number
 ) {
-    const clonedQuery = cloneDeep(currentQuery);
+    const clonedQuery = Clone.object(currentQuery);
     clonedQuery.filterByRange(filterName, filterField, [], [from+".."+to], FILTER_AT_LEAST_ONE, FILTER_TYPE_RANGE, false);
 
     clonedQuery.page = 1;
@@ -38,12 +38,9 @@ export function onChangeSearchAction(
     repository
         .query(clonedQuery)
         .then((result) => {
-            dispatcher.dispatch({
-                type: "RENDER_FETCHED_DATA",
-                payload: {
-                    query: clonedQuery,
-                    result,
-                },
+            dispatcher.dispatch("RENDER_FETCHED_DATA", {
+                query: clonedQuery,
+                result: result,
             });
         })
         .catch((error) => {

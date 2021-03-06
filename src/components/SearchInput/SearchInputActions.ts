@@ -3,9 +3,9 @@
  */
 import {Repository} from "apisearch";
 import {Query} from "apisearch";
-import * as cloneDeep from "clone-deep";
 import {APISEARCH_DISPATCHER} from "../../Constants";
 import container from "../../Container";
+import Clone from "../Clone";
 
 /**
  * Initial Search
@@ -24,7 +24,7 @@ export function initialSearchSetup(
     searchableFields: string[]
 ) {
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
-    const clonedQuery = cloneDeep(currentQuery);
+    const clonedQuery = Clone.object(currentQuery);
 
     clonedQuery.filters._query.values = [initialSearch];
     clonedQuery.page = 1;
@@ -41,11 +41,8 @@ export function initialSearchSetup(
         }
     }
 
-    dispatcher.dispatch({
-        type: "UPDATE_APISEARCH_SETUP",
-        payload: {
-            query: clonedQuery,
-        },
+    dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
+        query: clonedQuery,
     });
 }
 
@@ -66,19 +63,16 @@ export function simpleSearchAction(
     visibleResults: boolean
 ) {
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
-    const clonedQuery = cloneDeep(currentQuery);
+    const clonedQuery = Clone.object(currentQuery);
 
     clonedQuery.filters._query.values = [queryText];
     clonedQuery.page = 1;
 
     if (!visibleResults) {
-        dispatcher.dispatch({
-            type: "RENDER_FETCHED_DATA",
-            payload: {
-                query: clonedQuery,
-                result: null,
-                visibleResults: visibleResults
-            },
+        dispatcher.dispatch("RENDER_FETCHED_DATA", {
+            query: clonedQuery,
+            result: null,
+            visibleResults: visibleResults
         });
 
         return;
@@ -87,13 +81,10 @@ export function simpleSearchAction(
     repository
         .query(clonedQuery)
         .then((result) => {
-            dispatcher.dispatch({
-                type: "RENDER_FETCHED_DATA",
-                payload: {
-                    query: clonedQuery,
-                    result: result,
-                    visibleResults: visibleResults
-                },
+            dispatcher.dispatch("RENDER_FETCHED_DATA", {
+                query: clonedQuery,
+                result: result,
+                visibleResults: visibleResults
             });
         })
         .catch((error) => {

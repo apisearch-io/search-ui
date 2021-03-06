@@ -1,11 +1,10 @@
 /**
  * Checkbox filter actions
  */
-import Apisearch from "apisearch";
 import {Repository, Query, FILTER_TYPE_FIELD, FILTER_MUST_ALL} from "apisearch";
-import * as cloneDeep from "clone-deep";
 import {APISEARCH_DISPATCHER} from "../../Constants";
 import container from "../../Container";
+import Clone from "../Clone";
 
 
 /**
@@ -22,26 +21,23 @@ export function aggregationSetup(
     filterName: string,
     aggregationField: string
 ) {
-    const clonedQuery = cloneDeep(currentQuery);
+    const clonedQuery = Clone.object(currentQuery);
     clonedQuery.aggregateBy(filterName, aggregationField, FILTER_TYPE_FIELD);
 
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
 
-    dispatcher.dispatch({
-        type: "UPDATE_APISEARCH_SETUP",
-        payload: {
-            query: clonedQuery,
-        },
+    dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
+        query: clonedQuery,
     });
 }
 
 /**
- * ON change search action
- *
  * @param environmentId
  * @param currentQuery
  * @param repository
- * @param selectedOption
+ * @param filterName
+ * @param filterField
+ * @param isChecked
  */
 export function onChangeSearchAction(
     environmentId: string,
@@ -51,7 +47,7 @@ export function onChangeSearchAction(
     filterField: string,
     isChecked: boolean,
 ) {
-    const clonedQuery = cloneDeep(currentQuery);
+    const clonedQuery = Clone.object(currentQuery);
 
     clonedQuery.filterBy(filterName, filterField, isChecked
         ? ["true"]
@@ -64,13 +60,9 @@ export function onChangeSearchAction(
     repository
         .query(clonedQuery)
         .then((result) => {
-
-            dispatcher.dispatch({
-                type: "RENDER_FETCHED_DATA",
-                payload: {
-                    query: clonedQuery,
-                    result,
-                },
+            dispatcher.dispatch("RENDER_FETCHED_DATA", {
+                query: clonedQuery,
+                result: result,
             });
         })
         .catch((error) => {

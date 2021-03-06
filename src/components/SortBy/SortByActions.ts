@@ -2,10 +2,10 @@
  * SortBy actions
  */
 import {Repository, Query} from "apisearch";
-import * as cloneDeep from "clone-deep";
 import {APISEARCH_DISPATCHER} from "../../Constants";
 import container from "../../Container";
 import {applySortByToQuery} from "./SortByHelper"
+import Clone from "../Clone";
 
 /**
  * Initial sortBy
@@ -20,16 +20,13 @@ export function initialSortBySetup(
     initialOption: string
 ) {
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
-    const clonedQuery = cloneDeep(currentQuery);
+    const clonedQuery = Clone.object(currentQuery);
 
     applySortByToQuery(clonedQuery, initialOption);
     clonedQuery.page = 1;
 
-    dispatcher.dispatch({
-        type: "UPDATE_APISEARCH_SETUP",
-        payload: {
-            query: clonedQuery,
-        },
+    dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
+        query: clonedQuery,
     });
 }
 
@@ -47,7 +44,7 @@ export function onChangeSearchAction(
     repository: Repository,
     selectedOption: string,
 ) {
-    const clonedQuery = cloneDeep(currentQuery);
+    const clonedQuery = Clone.object(currentQuery);
     applySortByToQuery(clonedQuery, selectedOption);
     clonedQuery.page = 1;
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
@@ -55,12 +52,9 @@ export function onChangeSearchAction(
     repository
         .query(clonedQuery)
         .then((result) => {
-            dispatcher.dispatch({
-                type: "RENDER_FETCHED_DATA",
-                payload: {
-                    query: clonedQuery,
-                    result,
-                },
+            dispatcher.dispatch("RENDER_FETCHED_DATA", {
+                query: clonedQuery,
+                result: result,
             });
         })
         .catch((error) => {

@@ -217,11 +217,9 @@ export default class ApisearchUI {
          */
         const apisearchUI = container.get(`${APISEARCH_UI}__${environmentId}`);
         const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
-        dispatcher.register(
-            apisearchUI.store.handleActions.bind(
-                apisearchUI.store,
-            ),
-        );
+        dispatcher.registerListener("RENDER_INITIAL_DATA", (payload) => apisearchUI.store.renderInitialData(payload));
+        dispatcher.registerListener("RENDER_FETCHED_DATA", (payload) => apisearchUI.store.renderFetchedData(payload));
+        dispatcher.registerListener("UPDATE_APISEARCH_SETUP", (payload) => apisearchUI.store.updateApisearchSetup(payload));
 
         /**
          * Add widgets
