@@ -42,7 +42,10 @@ class ReloadComponent extends Component<ReloadProps> {
         return ( <div className={`as-clearFilters ${containerClassName}`}
                       onClick={this.handleClick}
             >
-                <Template template={containerTemplate} />
+                <Template
+                    template={containerTemplate}
+                    dictionary={this.props.dictionary}
+                />
             </div>
         )
     }
@@ -54,7 +57,7 @@ ReloadComponent.defaultProps = {
     },
     template: {
         container: 'Reload'
-    }
+    },
 };
 
 export default ReloadComponent;

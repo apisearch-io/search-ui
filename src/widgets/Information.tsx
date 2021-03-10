@@ -40,17 +40,17 @@ class Information extends Widget {
     }
 
     /**
-     * Widget
-     *
      * @param environmentId
      * @param store
      * @param repository
+     * @param dictionary
      */
-    render(
-        environmentId:string,
-        store:Store,
-        repository:Repository
-    ){
+    public render(
+        environmentId: string,
+        store: Store,
+        repository: Repository,
+        dictionary: { [key: string]: string; }
+    ) {
         this.component.props = {
             ...this.component.props,
             environmentId: environmentId,
@@ -58,6 +58,7 @@ class Information extends Widget {
             dirty: store.isDirty(),
             currentResult: store.getCurrentResult(),
             currentQuery: store.getCurrentQuery(),
+            dictionary: dictionary,
         };
 
         let targetNode = document.querySelector(this.target);

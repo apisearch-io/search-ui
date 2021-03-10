@@ -16,7 +16,10 @@ function NavigationComponent({
                 className={classNames}
                 onClick={handleClick}
             >
-                <Template template={template} />
+                <Template
+                    template={template}
+                    dictionary={this.props.dictionary}
+                />
             </li>
         )
         : null

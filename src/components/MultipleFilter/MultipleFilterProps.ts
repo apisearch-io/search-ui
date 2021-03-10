@@ -37,4 +37,5 @@ export interface MultipleFilterProps {
     dirty?: boolean;
     currentResult?: Result;
     currentQuery?: Query;
+    dictionary?: { [key: string]: string; };
 }

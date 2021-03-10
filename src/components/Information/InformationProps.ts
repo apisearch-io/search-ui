@@ -19,4 +19,5 @@ export interface InformationProps {
     dirty?: boolean;
     currentResult?: Result;
     currentQuery?: Query;
+    dictionary?: { [key: string]: string; };
 }

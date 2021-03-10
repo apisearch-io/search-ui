@@ -31,8 +31,9 @@ export interface ResultProps {
     dirty?: boolean;
     currentResult?: Result;
     currentQuery?: Query;
+    dictionary?: { [key: string]: string; };
     currentVisibleResults?: boolean;
     infiniteScroll?: boolean|number;
     fieldsConciliation: string[];
-    minScore: number
+    minScore: number;
 }

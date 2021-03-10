@@ -257,6 +257,7 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
                 <Template
                     template={topTemplate}
                     className={`as-multipleFilter__top ${topClassName}`}
+                    dictionary={this.props.dictionary}
                 />
 
                 <div className={`as-multipleFilter__itemsList ${itemsListClassName}`}>
@@ -287,6 +288,7 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
                             <Template
                                 template={itemTemplate}
                                 data={formattedTemplateData}
+                                dictionary={this.props.dictionary}
                             />
                         </div>
                     )
@@ -302,6 +304,7 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
                         showMoreContainerClassName={showMoreContainerClassName}
                         showMoreTemplate={showMoreTemplate}
                         showLessTemplate={showLessTemplate}
+                        dictionary={this.props.dictionary}
                     /> : null
                 }
             </div>

@@ -72,7 +72,10 @@ class ClearFiltersComponent extends Component<ClearFiltersProps, ClearFiltersSta
             ? ( <div className={`as-clearFilters ${containerClassName}`}
                      onClick={this.handleClick}
                 >
-                    <Template template={containerTemplate} />
+                    <Template
+                        template={containerTemplate}
+                        dictionary={this.props.dictionary}
+                    />
                 </div>
             ) : null
     }

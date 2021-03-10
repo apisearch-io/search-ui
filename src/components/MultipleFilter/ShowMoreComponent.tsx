@@ -15,7 +15,8 @@ const ShowMoreComponent = ({
     handleShowLess,
     showMoreContainerClassName,
     showMoreTemplate,
-    showLessTemplate
+    showLessTemplate,
+    dictionary
 }) => {
     return (allItemsLength > currentLimit)
         ? (
@@ -25,6 +26,7 @@ const ShowMoreComponent = ({
                 <Template
                     template={showMoreTemplate}
                     className={`as-showMore--more`}
+                    dictionary={dictionary}
                 />
             </div>
         )
@@ -36,6 +38,7 @@ const ShowMoreComponent = ({
                     <Template
                         template={showLessTemplate}
                         className={`as-showMore--less`}
+                        dictionary={dictionary}
                     />
                 </div>
             )

@@ -202,7 +202,10 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
                                 className={`as-searchInput__clearSearch ${clearSearchClassName}`}
                                 onClick={this.clearSearch}
                             >
-                                <Template template={clearSearchTemplate}/>
+                                <Template
+                                    template={clearSearchTemplate}
+                                    dictionary={this.props.dictionary}
+                                />
                             </div>
                         ) : null
                     }

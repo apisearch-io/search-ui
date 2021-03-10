@@ -283,11 +283,13 @@ class ResultComponent extends Component<ResultProps, ResultState> {
                     ? <Template
                         template={placeholderTemplate}
                         className={`as-result__placeholder ${placeholderClassName}`}
+                        dictionary={this.props.dictionary}
                     />
                     : <Template
                         template={itemsListTemplate}
                         data={formattedTemplateData}
                         className={`as-result__itemsList ${itemsListClassName}`}
+                        dictionary={this.props.dictionary}
                     />
                 }
                 {hasInfiniteScrollNextPage

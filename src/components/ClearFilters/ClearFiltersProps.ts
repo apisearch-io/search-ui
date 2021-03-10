@@ -18,4 +18,5 @@ export interface ClearFiltersProps {
     dirty?: boolean;
     currentResult?: Result;
     currentQuery?: Query;
+    dictionary?: { [key: string]: string; };
 }

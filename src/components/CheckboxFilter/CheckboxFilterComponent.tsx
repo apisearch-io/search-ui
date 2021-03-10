@@ -1,8 +1,6 @@
-import { h, render, Component } from 'preact';
+import { h, Component } from 'preact';
 import {CheckboxFilterProps} from './CheckboxFilterProps';
 import {CheckboxFilterState} from './CheckboxFilterState';
-import {FILTER_TYPE_RANGE} from "apisearch"
-import Template from "../Template";
 import {
     aggregationSetup,
     onChangeSearchAction

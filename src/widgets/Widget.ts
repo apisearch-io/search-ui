@@ -1,4 +1,4 @@
-import {Query, Repository} from "apisearch";
+import {Repository} from "apisearch";
 import Store from "../Store";
 
 /**
@@ -10,16 +10,16 @@ export default abstract class Widget {
     protected component: any;
 
     /**
-     * Widget
-     *
      * @param environmentId
      * @param store
      * @param repository
+     * @param dictionary
      */
     public abstract render(
         environmentId: string,
         store: Store,
         repository: Repository,
+        dictionary: { [key: string]: string; }
     );
 
     /**

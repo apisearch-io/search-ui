@@ -32,4 +32,5 @@ export interface SearchInputProps {
         autocomplete?: string,
         spellcheck?: boolean,
     };
+    dictionary?: { [key: string]: string; }
 }

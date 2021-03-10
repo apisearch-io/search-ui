@@ -78,6 +78,7 @@ class InformationComponent extends Component<InformationProps, InformationState>
                 template={containerTemplate}
                 data={formattedTemplateData}
                 className={`as-information ${containerClassName}`}
+                dictionary={this.props.dictionary}
             />
         )
     }

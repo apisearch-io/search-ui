@@ -49,7 +49,7 @@
     "clone-deep": "^4.0.1",
     "flux": "^4.0.1",
     "history": "^5",
-    "hogan.js": "^3.0.2",
+    "mustache": "^4.1.0",
     "node-fetch": ">=2.6.1",
     "preact": "^10"
   }

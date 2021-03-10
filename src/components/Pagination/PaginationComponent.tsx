@@ -191,6 +191,7 @@ class PaginationComponent extends Component<PaginationProps, PaginationState> {
                         <Template
                             template={itemTemplate}
                             data={{page: page.toLocaleString('de-DE')}}
+                            dictionary={this.props.dictionary}
                         />
                     </li>
                 ))}

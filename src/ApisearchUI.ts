@@ -21,6 +21,7 @@ export default class ApisearchUI {
     readonly helper: ApisearchHelper;
     private activeWidgets: Widget[];
     public widgets: any;
+    private dictionary: { [key: string]: string; };
 
     /**
      * Constructor
@@ -42,6 +43,7 @@ export default class ApisearchUI {
         this.activeWidgets = [];
         this.widgets = widgets;
         this.helper = new ApisearchHelper();
+        this.dictionary = {};
 
         /**
          * Store related properties
@@ -84,6 +86,13 @@ export default class ApisearchUI {
     }
 
     /**
+     * @param dictionary
+     */
+    public setDictionary(dictionary: { [key: string]: string; }) {
+        this.dictionary = dictionary;
+    }
+
+    /**
      * Add new widget
      *
      * @param widget
@@ -120,6 +129,7 @@ export default class ApisearchUI {
                 this.environmentId,
                 this.store,
                 this.repository,
+                this.dictionary
             );
         });
     }

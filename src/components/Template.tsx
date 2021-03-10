@@ -1,6 +1,6 @@
 import { h, Component } from 'preact';
-import * as Hogan from 'hogan.js';
 import {TemplateProps} from "./TemplateProps";
+import * as Mustache from 'mustache';
 
 /**
  * Template
@@ -12,15 +12,21 @@ class Template extends Component<TemplateProps> {
      *
      * @param template
      * @param result
+     * @param dictionary
      *
      * @return {any}
      */
-    renderTemplate = (template, result) => {
-        /**
-         * Compile template using hogan.js
-         */
-        let compiledTemplate = Hogan.compile(template);
-        let output = compiledTemplate.render(result);
+    renderTemplate = (template, result, dictionary) => {
+
+        let trans = function() {
+            return function(text, render) {
+                return dictionary[text] ?? text;
+            }
+        }
+
+        let output = Mustache.render(template, {...result, ...{
+            'trans': trans
+        }});
 
         return {
             __html: output
@@ -38,11 +44,12 @@ class Template extends Component<TemplateProps> {
         const template = props.template;
         const data = props.data;
         const className = props.className;
+        const dictionary = props.dictionary ?? {};
 
         return (template)
             ? <div
                 className={className}
-                dangerouslySetInnerHTML={this.renderTemplate(template, data)}
+                dangerouslySetInnerHTML={this.renderTemplate(template, data, dictionary)}
             />
             : null
         ;

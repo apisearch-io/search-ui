@@ -141,7 +141,7 @@
 
     <script type="text/template" id="information-container-template">
         <span class="tag is-primary">
-            <i class="fa fa-bolt"></i> &nbsp; Found {{total_hits}}!
+            <i class="fa fa-bolt"></i> &nbsp; {{#trans}}found{{/trans}} {{total_hits}}!
         </span>
     </script>
 
@@ -160,13 +160,21 @@
             }
         }, 'hash');
 
+        ui.setDictionary({
+            'show_more': 'Veure més',
+            'show_less': 'Veure menys',
+            'clear_search': 'Neteja la cerca',
+            'found': 'Trobats',
+            'decades': "Decades CAT"
+        })
+
         // Widgets setup
         ui.addWidgets(
             ui.widgets.searchInput({
                 target: '.search',
                 placeholder: 'Search something...',
                 autofocus: true,
-                startSearchOn: 3,
+                // startSearchOn: 3,
                 classNames: {
                     container: 'column',
                     input: 'input'
@@ -199,10 +207,8 @@
                     '2010..2020': 'Last decade'
                 },
                 template: {
-                    top: '<i class="fa fa-cog"></i>&nbsp;Decades',
+                    top: '<i class="fa fa-cog"></i>&nbsp;{{#trans}}decades{{/trans}}',
                     item: document.getElementById('multiple-filter-item-template').text,
-                    showMore: '<button class="button"><i class="fa fa-plus"></i>&nbsp;Show more</button>',
-                    showLess: '<button class="button"><i class="fa fa-minus"></i>&nbsp;Show less</button>',
                 },
                 classNames: {
                     container: 'panel',
@@ -225,8 +231,8 @@
                 template: {
                     top: '<i class="fa fa-cog"></i>&nbsp;Years',
                     item: document.getElementById('multiple-filter-item-template').text,
-                    showMore: '<button class="button"><i class="fa fa-plus"></i>&nbsp;Show more</button>',
-                    showLess: '<button class="button"><i class="fa fa-minus"></i>&nbsp;Show less</button>',
+                    showMore: '<button class="button"><i class="fa fa-plus"></i>&nbsp;{{#trans}}show_more{{/trans}}</button>',
+                    showLess: '<button class="button"><i class="fa fa-minus"></i>&nbsp;{{#trans}}show_less{{/trans}}</button>',
                 },
                 classNames: {
                     container: 'panel',
@@ -246,8 +252,8 @@
                 template: {
                     top: '<i class="fa fa-user"></i>&nbsp; Genre',
                     item: document.getElementById('multiple-filter-item-template').text,
-                    showMore: '<button class="button"><i class="fa fa-plus"></i>&nbsp;Show more</button>',
-                    showLess: '<button class="button"><i class="fa fa-minus"></i>&nbsp;Show less</button>',
+                    showMore: '<button class="button"><i class="fa fa-plus"></i>&nbsp;{{#trans}}show_more{{/trans}}</button>',
+                    showLess: '<button class="button"><i class="fa fa-minus"></i>&nbsp;{{#trans}}show_less{{/trans}}</button>',
                 },
                 classNames: {
                     container: 'panel',
@@ -267,6 +273,8 @@
                 template: {
                     top: '<i class="fa fa-star"></i>&nbsp; Rating',
                     item: document.getElementById('multiple-filter-item-template').text,
+                    showMore: '<button class="button"><i class="fa fa-plus"></i>&nbsp;{{#trans}}show_more{{/trans}}</button>',
+                    showLess: '<button class="button"><i class="fa fa-minus"></i>&nbsp;{{#trans}}show_less{{/trans}}</button>',
                 },
                 classNames: {
                     container: 'panel',
@@ -292,7 +300,7 @@
             ui.widgets.clearFilters({
                 target: '.clear-filters',
                 template: {
-                    container: '<button class="button"><i class="fa fa-remove"></i>&nbsp;Clear filters</button>'
+                    container: '<button class="button"><i class="fa fa-remove"></i>&nbsp;{{#trans}}clear_search{{/trans}}</button>'
                 }
             }),
             ui.widgets.information({
@@ -342,7 +350,7 @@
         );
 
         // Init the magic!
-        ui.init({firstQuery: false});
+        ui.init({firstQuery: true});
     </script>
 </body>
 </html>
