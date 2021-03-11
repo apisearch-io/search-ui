@@ -263,10 +263,11 @@ class ResultComponent extends Component<ResultProps, ResultState> {
                         fieldsConciliation
                     );
 
+                    item.fields = mainFields;
+
                     return {
                         ...formatData(item),
                         ...{
-                            'fields': mainFields,
                             'key': 'item_' + itemId,
                             'uuid_composed': itemId,
                             'click': apisearchReference + '.click("'+clickParameters+'");'

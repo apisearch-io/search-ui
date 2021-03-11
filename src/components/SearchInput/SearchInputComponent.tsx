@@ -1,14 +1,17 @@
-import { h, Component } from 'preact';
+import {h, Component} from 'preact';
 import {simpleSearchAction, initialSearchSetup} from "./SearchInputActions";
 import Template from "../Template";
 import {SearchInputProps} from "./SearchInputProps";
 import {SearchInputState} from "./SearchInputState";
 import AutocompleteComponent from "./AutocompleteComponent";
+import {useRef} from "preact/compat";
 
 /**
  * SearchInput Component
  */
 class SearchInputComponent extends Component<SearchInputProps, SearchInputState> {
+    private inputRef = useRef(null);
+
     /**
      * Constructor
      */
@@ -172,6 +175,7 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
             value={currentQueryText}
             style={style}
             onKeyDown={keyDownCallback}
+            ref={this.inputRef}
         />)
 
         if (showAutocomplete) {

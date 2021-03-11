@@ -16243,8 +16243,8 @@ var ResultComponent = /** @class */ (function (_super) {
                         fieldsConciliation[field] = (_a = mainFields[props.fieldsConciliation[field]]) !== null && _a !== void 0 ? _a : undefined;
                     });
                     Object.assign(mainFields, fieldsConciliation);
+                    item.fields = mainFields;
                     return __assign(__assign({}, formatData(item)), {
-                        'fields': mainFields,
                         'key': 'item_' + itemId,
                         'uuid_composed': itemId,
                         'click': apisearchReference + '.click("' + clickParameters + '");'
@@ -16511,6 +16511,7 @@ var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/pre
 var SearchInputActions_1 = __webpack_require__(/*! ./SearchInputActions */ "./src/components/SearchInput/SearchInputActions.ts");
 var Template_1 = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
 var AutocompleteComponent_1 = __webpack_require__(/*! ./AutocompleteComponent */ "./src/components/SearchInput/AutocompleteComponent.tsx");
+var compat_1 = __webpack_require__(/*! preact/compat */ "./node_modules/preact/compat/dist/compat.module.js");
 /**
  * SearchInput Component
  */
@@ -16521,6 +16522,7 @@ var SearchInputComponent = /** @class */ (function (_super) {
      */
     function SearchInputComponent(props) {
         var _this = _super.call(this, props) || this;
+        _this.inputRef = compat_1.useRef(null);
         /**
          * Handle search
          *
@@ -16626,7 +16628,7 @@ var SearchInputComponent = /** @class */ (function (_super) {
         var style = showAutocomplete
             ? 'position: relative; top: 0px; left: 0px; background-color: transparent; border-color: transparent;'
             : '';
-        var searchInput = (preact_1.h("input", __assign({ type: 'text', className: "as-searchInput__input " + inputClassName, placeholder: placeholder, autofocus: autofocus }, htmlNodeInheritProps, { onInput: this.handleSearch, value: currentQueryText, style: style, onKeyDown: keyDownCallback })));
+        var searchInput = (preact_1.h("input", __assign({ type: 'text', className: "as-searchInput__input " + inputClassName, placeholder: placeholder, autofocus: autofocus }, htmlNodeInheritProps, { onInput: this.handleSearch, value: currentQueryText, style: style, onKeyDown: keyDownCallback, ref: this.inputRef })));
         if (showAutocomplete) {
             searchInput = (preact_1.h("div", { style: "position: relative" },
                 preact_1.h(AutocompleteComponent_1["default"], { suggestions: suggestions, queryText: currentQueryText, inputClassName: inputClassName }),
