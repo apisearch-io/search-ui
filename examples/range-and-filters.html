@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>AS UI - Suggested search</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.0/css/bulma.min.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script type="application/javascript" src="../dist/apisearch-ui.js"></script>
+
+    <!-- custom styles -->
+    <style>
+        em {
+            background: #b4acff;
+            font-style: inherit;
+        }
+        .as-multipleFilter__item {
+            cursor: pointer;
+        }
+        .as-multipleFilter__item:hover {
+            background: whitesmoke;
+        }
+        .as-pagination__item {
+            cursor: pointer
+        }
+
+        .as-searchInput__clearSearch {
+            position: absolute;
+            top: 25px;
+            right: 40px;
+            cursor: pointer;
+        }
+
+        .yellow {
+            color: #eec800;
+        }
+        .grey {
+            color: #eaeaea;
+        }
+        .search.navbar-item {
+            min-width: 25rem
+        }
+    </style>
+
+    <script>
+        $(document).ready(function() {
+            $("#rating-slider").slider({
+                range: true,
+                min: 0,
+                max: 5,
+                slide: function( event, ui ) {
+                    console.log(ui.values);
+                    $("#rating span").text(ui.values[0] + " - " + ui.values[1] );
+                },
+                stop: function( event, ui ) {
+                    document.getElementById("rating-min").setAttribute('value', ui.values[0]);
+                    document.getElementById("rating-max").setAttribute('value', ui.values[1]);
+                }
+            });
+
+            setTimeout(function() {
+                $("#rating span").text($("#rating-slider").slider("values", 0) + ' - ' + $("#rating-slider").slider("values", 1));
+            }, 300);
+        });
+    </script>
+</head>
+
+<body>
+<!-- Navbar -->
+<nav class="navbar is-light" role="navigation" aria-label="main navigation">
+    <!-- Logo -->
+    <div class="navbar-brand">
+        <a class="navbar-item" href="https://apisearch.io">
+            <img class="has-text-centered"
+                 src="https://apisearch.io/assets/images/apisearch-long-logo.png"
+                 width="200px"
+            >
+        </a>
+    </div>
+
+    <!-- SearchInput -->
+    <div class="search navbar-item"></div>
+
+    <!-- Information -->
+    <div class="information navbar-item"></div>
+
+    <!-- Reload -->
+    <div class="reload navbar-item"></div>
+
+    <!-- End -->
+    <div class="navbar-end">
+        <!-- Clear filters -->
+        <div class="navbar-item clear-filters"></div>
+
+        <!-- Sort by -->
+        <div class="navbar-item sort-by"></div>
+
+        <a class="navbar-item is-hidden-desktop-only"
+           href="https://github.com/apisearch/search-ui"
+           target="_blank"
+        >
+                <span class="icon" style="color: #333;">
+                  <i class="fab fa-lg fa-github"></i>
+                </span>
+        </a>
+    </div>
+</nav>
+
+<div class="notification is-link">
+    Search at least 3 characters to start receiving results. For example, type "Batman"
+</div>
+
+<!-- Result -->
+<div class="container is-fluid">
+    <div class="columns" style="margin-top: 1rem">
+        <div class="column is-2">
+            <div id="rating">Rating range: <span style="color:#f0d666; font-weight:bold;"></span></div>
+            <div id="rating-slider" style="margin-top: 1rem; margin-bottom: 2rem;"></div>
+            <div class="range-filter-rating" style="display: none"></div>
+
+            <div class="multiple-filter-color" style="margin-bottom: 1rem"></div>
+            <div class="multiple-filter-rating" style="margin-bottom: 1rem"></div>
+            <div class="multiple-filter-rating-blocks" style="margin-bottom: 1rem"></div>
+            <div class="multiple-filter-collections"></div>
+        </div>
+        <div class="column">
+            <div class="columns">
+                <div class="result column"></div>
+            </div>
+            <div class="columns">
+                <div class="column is-one-quarter"></div>
+                <div class="pagination column"></div>
+                <div class="column is-one-quarter"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/template" id="result-search-tpl">
+    <div class="columns is-multiline is-variable">
+        {{#items}}
+        <div class="column is-one-quarter">
+
+            <div class="card" style="border-radius: .2rem">
+                <div class="card-content" style="position: relative">
+                    <object data="https://raw.githubusercontent.com/apisearch-io/funko-database/master/img/{{metadata.image}}" type="image/png" style="width: 100px; height: 100px">
+                        <img src="notfound.png" style="width: 100px; height: 100px" alt="{{metadata.title}}">
+                    </object><br>
+                    {{{fields.title}}}<br>
+                    <span class="has-text-grey is-size-7">
+                            <strong>Collection: </strong>
+                            {{fields.collection.name}}
+                        </span>
+                    <button onclick="alert('Album {{uuid.id}} clicked')" style="float:right">Click</button>
+                </div>
+            </div>
+        </div>
+        {{/items}}
+    </div>
+    {{^items}}
+    <div class="notification">
+        Empty set of results for <b>{{query}}</b> 🙉
+    </div>
+    {{/items}}
+</script>
+
+<script type="text/template" id="multiple-filter-item-template">
+    <input type="checkbox" id="filter_{{values.id}}" {{#isActive}}checked="checked"{{/isActive}}>
+    <label for="filter_{{values.id}}">{{{values.name}}} ({{n}})</label>
+</script>
+
+<script type="text/template" id="information-container-template">
+    <span class="tag is-primary">
+            <i class="fa fa-bolt"></i> &nbsp; Found {{total_hits}}!
+        </span>
+</script>
+
+<script type="text/javascript">
+
+    // UI Instance
+    const ui = apisearchUI.create({
+        app_id: 'as-29be77d7-2f64-4522',
+        index_id: 'eu1-2de60e18-5fae-4155',
+        token: 'eu1-8438694d-5839-4179-9f73-a55630f3cd4d',
+        coordinate: {
+            lat: 1.111,
+            lon: 2.000
+        },
+        options: {
+            endpoint: 'https://eu1.apisearch.io',
+            override_queries: true
+        }
+    }, 'hash');
+
+    // Widgets setup
+    ui.addWidgets(
+        ui.widgets.searchInput({
+            target: '.search',
+            placeholder: 'Search something...',
+            autofocus: true,
+            classNames: {
+                container: 'column',
+                input: 'input'
+            }
+        }),
+        ui.widgets.sortBy({
+            target: '.sort-by',
+            classNames: {
+                container: 'select'
+            },
+            options: [
+                {name: 'Score', value: 'score'},
+                {name: 'Better first', value: 'rating_5:desc'},
+                {name: 'Worst first', value: 'rating_5:asc'},
+                {name: 'Distance', value: 'distance'}
+            ]
+        }),
+        ui.widgets.multipleFilter({
+            target: '.multiple-filter-color',
+            filterName: 'color',
+            filterField: 'color',
+            applicationType: 8,
+            template: {
+                top: '<i class="fa fa-cog"></i>&nbsp;Colors',
+                item: document.getElementById('multiple-filter-item-template').text,
+                showMore: '<button class="button"><i class="fa fa-plus"></i>&nbsp;Show more</button>',
+                showLess: '<button class="button"><i class="fa fa-minus"></i>&nbsp;Show less</button>',
+            },
+            classNames: {
+                container: 'panel',
+                top: 'panel-heading',
+                item: 'panel-block',
+                showMoreContainer: 'panel-block'
+            }
+        }),
+        ui.widgets.multipleFilter({
+            target: '.multiple-filter-rating',
+            filterName: 'rating',
+            filterField: 'rating_5',
+            applicationType: 8,
+            template: {
+                top: '<i class="fa fa-cog"></i>&nbsp;Rating',
+                item: document.getElementById('multiple-filter-item-template').text,
+                showMore: '<button class="button"><i class="fa fa-plus"></i>&nbsp;Show more</button>',
+                showLess: '<button class="button"><i class="fa fa-minus"></i>&nbsp;Show less</button>',
+            },
+            classNames: {
+                container: 'panel',
+                top: 'panel-heading',
+                item: 'panel-block',
+                showMoreContainer: 'panel-block'
+            },
+            formatData: function(itemData) {
+                let ratingNumber = parseInt(itemData.values.id);
+                itemData.values.name = "";
+
+                for(let index = 0; index < 5; index++) {
+                    if (index < ratingNumber) {
+                        itemData.values.name += '<i class="fa fa-star"></i>';
+                    } else {
+                        itemData.values.name += '<i class="fa fa-star-o"></i>';
+                    }
+                }
+
+                return itemData;
+            }
+        }),
+        ui.widgets.multipleFilter({
+            target: '.multiple-filter-rating-blocks',
+            filterName: 'rating_blocks',
+            filterField: 'rating_5',
+            applicationType: 8,
+            viewLimit: 12,
+            ranges: {
+                '0..2': 'Less than 2 stars',
+                '2..5': 'From 2 to 4 stars',
+                '5..': '5 stars. Da bests!',
+            },
+            template: {
+                top: '<i class="fa fa-cog"></i>&nbsp;Rating groups',
+                item: document.getElementById('multiple-filter-item-template').text,
+                showMore: '<button class="button"><i class="fa fa-plus"></i>&nbsp;Show more</button>',
+                showLess: '<button class="button"><i class="fa fa-minus"></i>&nbsp;Show less</button>',
+            },
+            classNames: {
+                container: 'panel',
+                top: 'panel-heading',
+                item: 'panel-block',
+                showMoreContainer: 'panel-block'
+            }
+        }),
+        ui.widgets.multipleFilter({
+            target: '.multiple-filter-collections',
+            filterName: 'collections',
+            filterField: 'collection',
+            applicationType: 8,
+            fetchLimit: 30,
+            viewLimit: 12,
+            sortBy: ['_term', 'desc'],
+            template: {
+                top: '<i class="fa fa-cog"></i>&nbsp;Collections',
+                item: document.getElementById('multiple-filter-item-template').text,
+                showMore: '<button class="button"><i class="fa fa-plus"></i>&nbsp;Show more</button>',
+                showLess: '<button class="button"><i class="fa fa-minus"></i>&nbsp;Show less</button>',
+            },
+            classNames: {
+                container: 'panel',
+                top: 'panel-heading',
+                item: 'panel-block',
+                showMoreContainer: 'panel-block'
+            }
+        }),
+        ui.widgets.rangeFilter({
+            widgetName: 'rating-range',
+            target: '.range-filter-rating',
+            filterName: 'rating-range',
+            filterField: 'rating_5',
+            minValue: 0,
+            maxValue: 5,
+            from: {
+                initialValue: 0,
+                attributes: {
+                    id: "rating-min"
+                }
+            },
+            to: {
+                initialValue: 5,
+                attributes: {
+                    id: "rating-max"
+                }
+            },
+            callback: function(from, to) {
+                setTimeout(function() {
+                    $("#rating-slider").slider(
+                        'option',
+                        'values',
+                        [from, to]
+                    );
+                }, 50)
+            }
+        }),
+        ui.widgets.clearFilters({
+            target: '.clear-filters',
+            template: {
+                container: '<button class="button"><i class="fa fa-remove"></i>&nbsp;Clear filters</button>'
+            }
+        }),
+        ui.widgets.information({
+            target: '.information',
+            template: {
+                container: document.getElementById('information-container-template').text
+            }
+        }),
+        ui.widgets.reload({
+            target: '.reload',
+            template: {
+                container: '<button class="button"><i class="fas fa-sync"></i></button>'
+            }
+        }),
+        ui.widgets.result({
+            target: '.result',
+            itemsPerPage: 30,
+            highlightsEnabled: true,
+            template: {
+                itemsList: document.getElementById('result-search-tpl').text,
+            },
+            fieldsConciliation: {
+                'mapped_year': 'year',
+                'img': 'image',
+            }
+        }),
+        ui.widgets.pagination({
+            target: '.pagination',
+            padding: 2,
+            goFirstLast: true,
+            classNames: {
+                container: 'pagination-list',
+                item: 'pagination-link',
+                active: 'is-current',
+                next: 'pagination-link',
+                previous: 'pagination-link',
+                first: 'pagination-link',
+                last: 'pagination-link',
+            },
+            template: {
+                previous: '<i class="fa fa-caret-left"></i>',
+                next: '<i class="fa fa-caret-right"></i>',
+                first: '<i class="fa fa-caret-left"></i><i class="fa fa-caret-left"></i>',
+                last: '<i class="fa fa-caret-right"></i><i class="fa fa-caret-right"></i>'
+            }
+        })
+    );
+
+    // Init the magic!
+    ui.init({firstQuery: true});
+</script>
+</body>
+</html>

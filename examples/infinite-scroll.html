@@ -32,7 +32,7 @@
     <div class="navbar-brand">
         <a class="navbar-item" href="https://apisearch.io">
             <img class="has-text-centered"
-                 src="http://apisearch.io/assets/media/apisearch-long-logo.png"
+                 src="https://apisearch.io/assets/images/apisearch-long-logo.png"
                  width="200px"
             >
         </a>
@@ -44,15 +44,12 @@
     <!-- Information -->
     <div class="information navbar-item"></div>
 
-    <!-- Sortby -->
-    <div class="sortby navbar-item"></div>
-
     <!-- End -->
     <div class="navbar-end">
         <a class="navbar-item is-hidden-desktop-only" href="#" target="_blank">
-                <span class="icon" style="color: #333;">
-                  <i class="fa fa-lg fa-github"></i>
-                </span>
+            <span class="icon" style="color: #333;">
+              <i class="fa fa-lg fa-github"></i>
+            </span>
         </a>
     </div>
 </nav>
@@ -71,7 +68,9 @@
         <div class="column is-narrow" key="{{key}}" style="width: 172px; height: 178.5px">
             <div class="card" style="border-radius: .2rem">
                 <div class="card-content">
-                    {{metadata.name_trans.ca}} - {{distance}}
+                    <object data="https://raw.githubusercontent.com/apisearch-io/funko-database/master/img/{{metadata.image}}" type="image/png" style="width: 100px; height: 100px">
+                        <img src="notfound.png" style="width: 100px; height: 100px" alt="{{metadata.title}}">
+                    </object>
                 </div>
             </div>
         </div>
@@ -87,18 +86,14 @@
 
     // UI Instance
     const ui = apisearchUI.create({
-        app_id: 'as-cbb098bd-5ae9-4fb9',
-        index_id: 'eu1-cde175fd-3b4a-4d16',
-        token: 'eu1-55aa9c62-f5df-40a8-b2f5-d12e5cd3468b',
-        coordinate: {
-            lat: 40.234,
-            lon: 2.34
-        },
+        app_id: 'as-29be77d7-2f64-4522',
+        index_id: 'eu1-2de60e18-5fae-4155',
+        token: 'eu1-8438694d-5839-4179-9f73-a55630f3cd4d',
         options: {
             endpoint: 'https://eu1.apisearch.io',
             override_queries: true
         }
-    }, 'hash');
+    });
 
     const {
         result,
@@ -138,13 +133,6 @@
                     '<i class="fa fa-bolt"></i> &nbsp; Matched {{total_hits}} of {{total_items}}!' +
                     '</span>'
             }
-        }),
-        sortBy({
-            target: '.sortby',
-            options: [
-                {name: 'Score', value: 'score'},
-                {name: 'Distance', value: 'distance:km'},
-            ]
         })
     );
 

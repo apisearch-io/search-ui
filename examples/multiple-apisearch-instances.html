@@ -25,187 +25,199 @@
         .as-searchInput {
             position: relative;
         }
+
+        .as-searchInput__clearSearch {
+            position: absolute;
+            top: 5px;
+            right: 30px;
+            cursor: pointer;
+        }
     </style>
 </head>
 
 <body>
-    <!-- Navbar -->
-    <nav class="navbar is-light" role="navigation" aria-label="main navigation">
-        <!-- Logo -->
-        <div class="navbar-brand">
-            <a class="navbar-item" href="https://apisearch.io">
-                <img class="has-text-centered"
-                     src="http://apisearch.io/assets/media/apisearch-long-logo.png"
-                     width="200px"
-                >
-            </a>
-        </div>
-
-        <!-- End -->
-        <div class="navbar-end">
-            <a class="navbar-item is-hidden-desktop-only"
-               href="https://github.com/apisearch/search-ui"
-               target="_blank"
+<!-- Navbar -->
+<nav class="navbar is-light" role="navigation" aria-label="main navigation">
+    <!-- Logo -->
+    <div class="navbar-brand">
+        <a class="navbar-item" href="https://apisearch.io">
+            <img class="has-text-centered"
+                 src="https://apisearch.io/assets/images/apisearch-long-logo.png"
+                 width="200px"
             >
+        </a>
+    </div>
+
+    <!-- End -->
+    <div class="navbar-end">
+        <a class="navbar-item is-hidden-desktop-only"
+           href="https://github.com/apisearch/search-ui"
+           target="_blank"
+        >
                 <span class="icon" style="color: #333;">
                   <i class="fa fa-lg fa-github"></i>
                 </span>
-            </a>
-        </div>
-    </nav>
+        </a>
+    </div>
+</nav>
 
-    <!-- Container -->
-    <div class="container is-fluid">
-        <section class="section">
-            <div class="columns">
-                <div class="column is-full">
-                    <h1 class="title">Work with two instances (or more) at the same time.</h1>
-                    <div class="content">
-                        <p>With ApisearchUI you can work with one or more instances without disturb
+<!-- Container -->
+<div class="container is-fluid">
+    <section class="section">
+        <div class="columns">
+            <div class="column is-full">
+                <h1 class="title">Work with two instances (or more) at the same time.</h1>
+                <div class="content">
+                    <p>With ApisearchUI you can work with one or more instances without disturb
                         each other results. So if you type something on the first one, the results
                         on the second one won't be affected.</p>
-                        <blockquote>Note that the two instances work separately but they are using the same
+                    <blockquote>Note that the two instances work separately but they are using the same
                         client and index. So all queries made from the first instace are cached
                         for the second one (if you have the cache set to true, of course).</blockquote>
-                    </div>
-                </div>
-            </div>
-            <div class="columns">
-                <!-- Apisearch Instance 1 -->
-                <div class="column is-third">
-                    <h1 class="title is-4 has-text-info">First instance</h1>
-                    <hr>
-                    <div class="input-instance-one"></div>
-                    <div class="result-instance-one"></div>
-                </div>
-
-                <!-- Apisearch Instance 2 -->
-                <div class="column is-third">
-                    <h1 class="title is-4 has-text-danger">Second instance</h1>
-                    <hr>
-                    <div class="input-instance-two"></div>
-                    <div class="result-instance-two"></div>
-                    <div class="information-instance-two"></div>
-                </div>
-
-                <!-- Apisearch Instance 3 -->
-                <div class="column is-third">
-                    <h1 class="title is-4 has-text-default">Third instance</h1>
-                    <hr>
-                    <div style="position: relative">
-                        <input class="input-instance-three">
-                        <i class="fa fa-search" style="position:absolute; top:10px; right: 10px;"></i>
-                    </div>
-                    <div class="result-instance-three"></div>
-                </div>
-            </div>
-        </section>
-    </div>
-
-    <script type="text/template" id="result-template">
-        {{#items}}
-        <div class="card" style="border-radius: .2rem; margin-top: .5rem">
-            <div class="card-content">
-                <div class="media">
-                    <div class="media-left">
-                        <img src="{{metadata.image}}" alt="{{metadata.title}}">
-                    </div>
-                    <div class="media-content">
-                        <strong>{{metadata.title}}</strong>
-                    </div>
                 </div>
             </div>
         </div>
-        {{/items}}
-    </script>
+        <div class="columns">
+            <!-- Apisearch Instance 1 -->
+            <div class="column is-third">
+                <h1 class="title is-4 has-text-info">First instance</h1>
+                <hr>
+                <div class="input-instance-one"></div>
+                <div class="result-instance-one"></div>
+            </div>
 
-    <script type="text/javascript">
-        // UI Instance 1
-        const apisearchUIFactory = apisearchUI.factory({
-            app_id: 'as-29be77d7-2f64-4522',
-            index_id: 'eu1-prod-d53da03a-d49c-483c',
-            token: 'eu1-8438694d-5839-4179-9f73-a55630f3cd4d',
-            options: {
-                endpoint: 'https://eu1.apisearch.io',
-                override_queries: true
+            <!-- Apisearch Instance 2 -->
+            <div class="column is-third">
+                <h1 class="title is-4 has-text-danger">Second instance</h1>
+                <hr>
+                <div class="input-instance-two" style="position: relative;"></div>
+                <div class="result-instance-two"></div>
+                <div class="information-instance-two"></div>
+            </div>
+
+            <!-- Apisearch Instance 3 -->
+            <div class="column is-third">
+                <h1 class="title is-4 has-text-default">Third instance</h1>
+                <hr>
+                <div style="position: relative">
+                    <input class="input-instance-three">
+                    <i class="fa fa-search" style="position:absolute; top:10px; right: 10px;"></i>
+                </div>
+                <div class="result-instance-three"></div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script type="text/template" id="result-template">
+    {{#items}}
+    <div class="card" style="border-radius: .2rem; margin-top: .5rem">
+        <div class="card-content">
+            <div class="media">
+                <div class="media-left">
+                    <object data="https://raw.githubusercontent.com/apisearch-io/funko-database/master/img/{{metadata.image}}" type="image/png" style="width: 50px; height: 50px">
+                        <img src="notfound.png" alt="{{metadata.title}}" style="width: 50px; height: 50px">
+                    </object>
+                </div>
+                <div class="media-content">
+                    <strong>{{fields.title}}</strong>
+                </div>
+                <div class="">
+                    {{fields.collection.name}}
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/items}}
+</script>
+
+<script type="text/javascript">
+    // UI Instance 1
+    const apisearchUIFactory = apisearchUI.factory({
+        app_id: 'as-29be77d7-2f64-4522',
+        index_id: 'eu1-2de60e18-5fae-4155',
+        token: 'eu1-8438694d-5839-4179-9f73-a55630f3cd4d',
+        options: {
+            endpoint: 'https://eu1.apisearch.io',
+            override_queries: true
+        }
+    });
+
+    firstUI = apisearchUIFactory.createUI();
+    firstUI.addWidgets(
+        firstUI.widgets.searchInput({
+            target: '.input-instance-one',
+            placeholder: 'Type something on instance one...',
+            clearSearch: true,
+            classNames: {
+                input: 'input'
             }
-        });
+        }),
+        firstUI.widgets.result({
+            target: '.result-instance-one',
+            itemsPerPage: 5,
+            template: {
+                itemsList: document.getElementById('result-template').text,
+            }
+        })
+    );
 
-        firstUI = apisearchUIFactory.createUI();
-        firstUI.addWidgets(
-            firstUI.widgets.searchInput({
-                target: '.input-instance-one',
-                placeholder: 'Type something on instance one...',
-                clearSearch: true,
-                classNames: {
-                    input: 'input'
-                }
-            }),
-            firstUI.widgets.result({
-                target: '.result-instance-one',
-                itemsPerPage: 5,
-                template: {
-                    itemsList: document.getElementById('result-template').text,
-                }
-            })
-        );
+    firstUI.init();
+</script>
 
-        firstUI.init();
-    </script>
+<script type="text/javascript">
+    // UI Instance 2
+    secondUI = firstUI = apisearchUIFactory.createUI();
+    secondUI.addWidgets(
+        secondUI.widgets.searchInput({
+            target: '.input-instance-two',
+            placeholder: 'Type something on instance two...',
+            startSearchOn: 3,
+            clearSearch: true,
+            classNames: {
+                input: 'input'
+            }
+        }),
+        secondUI.widgets.result({
+            target: '.result-instance-two',
+            itemsPerPage: 5,
+            template: {
+                itemsList: document.getElementById('result-template').text,
+            }
+        })
+    );
 
-    <script type="text/javascript">
-        // UI Instance 2
-        secondUI = firstUI = apisearchUIFactory.createUI();
-        secondUI.addWidgets(
-            secondUI.widgets.searchInput({
-                target: '.input-instance-two',
-                placeholder: 'Type something on instance two...',
-                startSearchOn: 3,
-                clearSearch: true,
-                classNames: {
-                    input: 'input'
-                }
-            }),
-            secondUI.widgets.result({
-                target: '.result-instance-two',
-                itemsPerPage: 5,
-                template: {
-                    itemsList: document.getElementById('result-template').text,
-                }
-            })
-        );
+    secondUI.init({
+        firstQuery: false
+    });
+</script>
 
-        secondUI.init({
-            firstQuery: false
-        });
-    </script>
+<script type="text/javascript">
+    // UI Instance 3
+    secondUI = firstUI = apisearchUIFactory.createUI();
+    secondUI.addWidgets(
+        secondUI.widgets.searchInput({
+            target: '.input-instance-three',
+            placeholder: 'Type something on instance three...',
+            startSearchOn: 3,
+            autocomplete: true,
+            clearSearch: false,
+            classNames: {
+                input: 'input'
+            }
+        }),
+        secondUI.widgets.result({
+            target: '.result-instance-three',
+            itemsPerPage: 5,
+            template: {
+                itemsList: document.getElementById('result-template').text,
+            }
+        })
+    );
 
-    <script type="text/javascript">
-        // UI Instance 3
-        secondUI = firstUI = apisearchUIFactory.createUI();
-        secondUI.addWidgets(
-            secondUI.widgets.searchInput({
-                target: '.input-instance-three',
-                placeholder: 'Type something on instance three...',
-                startSearchOn: 3,
-                autocomplete: true,
-                clearSearch: false,
-                classNames: {
-                    input: 'input'
-                }
-            }),
-            secondUI.widgets.result({
-                target: '.result-instance-three',
-                itemsPerPage: 5,
-                template: {
-                    itemsList: document.getElementById('result-template').text,
-                }
-            })
-        );
-
-        secondUI.init({
-            firstQuery: false
-        });
-    </script>
+    secondUI.init({
+        firstQuery: false
+    });
+</script>
 </body>
 </html>
