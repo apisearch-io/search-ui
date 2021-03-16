@@ -46,10 +46,8 @@
   },
   "dependencies": {
     "apisearch": "^0.2.35",
-    "clone-deep": "^4.0.1",
     "history": "^5",
     "mustache": "^4.1.0",
-    "node-fetch": ">=2.6.1",
     "preact": "^10"
   }
 }

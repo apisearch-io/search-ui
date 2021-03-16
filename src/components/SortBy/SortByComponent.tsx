@@ -19,7 +19,7 @@ class SortByComponent extends Component<SortByProps, SortByState> {
         const props = this.props;
         const environmentId = props.environmentId;
         const options = props.options;
-        const currentQuery = props.currentQuery;
+        const currentQuery = props.store.getCurrentQuery();
         const currentOption = options[0].value;
 
         this.setState({
@@ -45,9 +45,9 @@ class SortByComponent extends Component<SortByProps, SortByState> {
     componentWillReceiveProps(props) {
         this.setState(prevState => {
             return {
-                value: props.currentQuery.getSortBy().getFirstSortAsString(),
-                visible: (props.currentResult != null)
-                    ? (props.currentResult.getTotalHits() > 0)
+                value: props.store.getCurrentQuery().getSortBy().getFirstSortAsString(),
+                visible: (props.store.getCurrentResult() != null)
+                    ? (props.store.getCurrentResult().getTotalHits() > 0)
                     : false
             }
         })
@@ -62,7 +62,7 @@ class SortByComponent extends Component<SortByProps, SortByState> {
 
         const props = this.props;
         const environmentId = props.environmentId;
-        const currentQuery = props.currentQuery;
+        const currentQuery = props.store.getCurrentQuery();
         const repository = props.repository;
         const currentOption = e.target.value;
 
@@ -96,7 +96,7 @@ class SortByComponent extends Component<SortByProps, SortByState> {
         }
 
         let options = props.options;
-        const coordinate = props.currentQuery.toArray().coordinate;
+        const coordinate = props.store.getCurrentQuery().toArray().coordinate;
 
         if (!coordinate) {
             options = options.filter(function(o) {

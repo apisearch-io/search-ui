@@ -33,7 +33,7 @@ class PaginationComponent extends Component<PaginationProps, PaginationState> {
      */
     componentWillReceiveProps(props) {
 
-        const page = props.currentQuery.getPage();
+        const page = props.store.getCurrentQuery().getPage();
         this.setState(prevState => {
             return {
                 page: page
@@ -48,12 +48,13 @@ class PaginationComponent extends Component<PaginationProps, PaginationState> {
      */
     handleClick = (page) => {
         const {
-            currentResult,
+            store,
             environmentId,
-            currentQuery,
             repository
         } = this.props;
 
+        const currentResult = store.getCurrentResult();
+        const currentQuery = store.getCurrentQuery();
         let totalPages = getTotalPages(
             currentResult.getTotalHits(),
             currentQuery.getSize()
@@ -88,12 +89,12 @@ class PaginationComponent extends Component<PaginationProps, PaginationState> {
     render() {
 
         const props = this.props;
-        const currentResult = props.currentResult;
-        if (props.currentResult == null) {
+        const currentResult = props.store.getCurrentResult();
+        if (props.store.getCurrentResult() == null) {
             return;
         }
 
-        const currentQuerySize = props.currentQuery.getSize();
+        const currentQuerySize = props.store.getCurrentQuery().getSize();
         const totalPages = getTotalPages(
             currentResult.getTotalHits(),
             currentQuerySize
@@ -126,7 +127,7 @@ class PaginationComponent extends Component<PaginationProps, PaginationState> {
         const firstTemplate = props.template.first;
         const lastTemplate = props.template.last;
 
-        const currentQueryPage = props.currentQuery.getPage();
+        const currentQueryPage = props.store.getCurrentQuery().getPage();
 
         /**
          * Get Total pages

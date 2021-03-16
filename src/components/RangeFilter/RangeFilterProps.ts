@@ -1,6 +1,5 @@
 import {Repository} from "apisearch";
-import {Query} from "apisearch";
-import {Result} from "apisearch";
+import Store from "../../Store";
 
 /**
  * RangeFilterProps
@@ -24,7 +23,5 @@ export interface RangeFilterProps {
     callback: (from: number, to:number) => void;
     environmentId?: string;
     repository?: Repository;
-    dirty?: boolean;
-    currentResult?: Result;
-    currentQuery?: Query;
+    store?: Store;
 }

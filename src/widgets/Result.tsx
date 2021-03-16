@@ -91,9 +91,7 @@ class Result extends Widget {
             ...this.component.props,
             environmentId: environmentId,
             repository: repository,
-            dirty: store.isDirty(),
-            currentResult: store.getCurrentResult(),
-            currentQuery: store.getCurrentQuery(),
+            store: store,
             currentVisibleResults: store.resultsAreVisible(),
             dictionary: dictionary,
         };

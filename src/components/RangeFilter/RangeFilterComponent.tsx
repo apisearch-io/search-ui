@@ -87,12 +87,12 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
     componentWillReceiveProps(props) {
 
         const filterName = props.filterName;
-        const filter = props.currentQuery.getFilter(filterName);
+        const filter = props.store.getCurrentQuery().getFilter(filterName);
         const filterIsNotFound = filter == null;
 
         if (filterIsNotFound) {
             this.setState(prevState => {
-                return (props.currentResult == null)
+                return (props.store.getCurrentResult() == null)
                     ? {
                         valueFrom: 0,
                         valueTo: 0,
@@ -148,7 +148,7 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
     private applyFilter(valueFrom, valueTo) {
         const props = this.props;
         const environmentId = props.environmentId;
-        const currentQuery = props.currentQuery;
+        const currentQuery = props.store.getCurrentQuery();
         const repository = props.repository;
         const filterName = props.filterName;
         const filterField = props.filterField;

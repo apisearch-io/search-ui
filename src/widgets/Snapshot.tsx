@@ -44,9 +44,7 @@ class Snapshot extends Widget {
             ...this.component.props,
             environmentId: environmentId,
             repository: repository,
-            dirty: store.isDirty(),
-            currentResult: store.getCurrentResult(),
-            currentQuery: store.getCurrentQuery(),
+            store: store,
         };
 
         let targetNode = document.querySelector(this.target);

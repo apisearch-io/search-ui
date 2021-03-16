@@ -30,7 +30,7 @@ class CheckboxFilterComponent extends Component<CheckboxFilterProps, CheckboxFil
         const environmentId = props.environmentId;
         const filterName = props.filterName;
         const aggregationField = props.filterField;
-        const currentQuery = props.currentQuery;
+        const currentQuery = props.store.getCurrentQuery();
 
         /**
          * Dispatch action
@@ -51,11 +51,11 @@ class CheckboxFilterComponent extends Component<CheckboxFilterProps, CheckboxFil
     componentWillReceiveProps(props) {
 
         const filterName = props.filterName;
-        const filter = props.currentQuery.getFilter(filterName);
+        const filter = props.store.getCurrentQuery().getFilter(filterName);
         const isNowActive = filter != null;
 
         let n = 0;
-        const aggregation = props.currentResult.getAggregation(filterName);
+        const aggregation = props.store.getCurrentResult().getAggregation(filterName);
         if (aggregation != null) {
             const counters = aggregation.getCounters();
             for (let i in counters) {
@@ -84,7 +84,7 @@ class CheckboxFilterComponent extends Component<CheckboxFilterProps, CheckboxFil
 
         const props = this.props;
         const environmentId = props.environmentId;
-        const currentQuery = props.currentQuery;
+        const currentQuery = props.store.getCurrentQuery();
         const repository = props.repository;
         const filterName = props.filterName;
         const filterField = props.filterField;

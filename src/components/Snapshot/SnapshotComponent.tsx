@@ -13,7 +13,7 @@ class SnapshotComponent extends Component<SnapshotProps, SnapshotState> {
      * @param props
      */
     componentWillReceiveProps(props) {
-        let query = props.currentQuery;
+        let query = props.store.getCurrentQuery();
 
         this.setState(prevState => {
             return {query: query};

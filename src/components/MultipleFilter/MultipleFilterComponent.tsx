@@ -42,7 +42,7 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
         const ranges = props.ranges;
         const fetchLimit = props.fetchLimit;
         const viewLimit = props.viewLimit;
-        const currentQuery = props.currentQuery;
+        const currentQuery = props.store.getCurrentQuery();
 
         /**
          * Set view items limit
@@ -83,7 +83,7 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
     componentWillReceiveProps(props) {
 
         const filterName = props.filterName;
-        if (props.currentResult == null) {
+        if (props.store.getCurrentResult() == null) {
             this.setState(prevState => {
                 return {
                     aggregations: []
@@ -93,8 +93,7 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
             return;
         }
 
-        const aggregation = props.currentResult.getAggregation(filterName);
-
+        const aggregation = props.store.getCurrentResult().getAggregation(filterName);
         if (typeof aggregation.getCounters === "function") {
 
             /**
@@ -144,8 +143,8 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
         const labels = props.labels;
         const fetchLimit = props.fetchLimit;
         const repository = props.repository;
-        const currentQuery = props.currentQuery;
-        const aggregation = props.currentResult.getAggregation(filterName);
+        const currentQuery = props.store.getCurrentQuery();
+        const aggregation = props.store.getCurrentResult().getAggregation(filterName);
         const selectedFilterAsString = String(selectedFilter);
         const currentActiveFilterValues = aggregation instanceof ResultAggregation
             ? Object.values(aggregation.getActiveElements())

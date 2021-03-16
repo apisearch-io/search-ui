@@ -1,6 +1,5 @@
 import {Repository} from "apisearch";
-import {Query} from "apisearch";
-import {Result} from "apisearch";
+import Store from "../../Store";
 
 /**
  * Search Input Props
@@ -25,9 +24,7 @@ export interface SearchInputProps {
     };
     environmentId?: string;
     repository?: Repository;
-    dirty?: boolean;
-    currentResult?: Result;
-    currentQuery?: Query;
+    store?: Store;
     htmlNodeInheritProps?: {
         autocomplete?: string,
         spellcheck?: boolean,

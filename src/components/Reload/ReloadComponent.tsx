@@ -15,7 +15,7 @@ class ReloadComponent extends Component<ReloadProps> {
 
         const props = this.props;
         const environmentId = props.environmentId;
-        const currentQuery = props.currentQuery;
+        const currentQuery = props.store.getCurrentQuery();
         const repository = props.repository;
 
         /**

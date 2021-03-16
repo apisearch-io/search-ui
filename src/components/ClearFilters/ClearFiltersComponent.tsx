@@ -23,7 +23,7 @@ class ClearFiltersComponent extends Component<ClearFiltersProps, ClearFiltersSta
      * @param props
      */
     componentWillReceiveProps(props) {
-        let filters = props.currentQuery.getFilters();
+        let filters = props.store.getCurrentQuery().getFilters();
         let areFiltersActive = (
             Object.keys(filters).length > 1
         );
@@ -40,7 +40,7 @@ class ClearFiltersComponent extends Component<ClearFiltersProps, ClearFiltersSta
 
         const props = this.props;
         const environmentId = props.environmentId;
-        const currentQuery = props.currentQuery;
+        const currentQuery = props.store.getCurrentQuery();
         const repository = props.repository;
 
         this.setState(prevState => {

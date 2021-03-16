@@ -30,7 +30,7 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
         const props = this.props;
         const environmentId = props.environmentId;
         const initialSearch = props.initialSearch;
-        const currentQuery = props.currentQuery;
+        const currentQuery = props.store.getCurrentQuery();
         const autocomplete = props.autocomplete;
         const searchableFields = props.searchableFields;
 
@@ -53,7 +53,7 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
      */
     componentWillReceiveProps(props) {
         this.setState({
-            queryText: props.currentQuery.getQueryText()
+            queryText: props.store.getCurrentQuery().getQueryText()
         });
     }
 
@@ -63,11 +63,10 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
      * @param e
      */
     handleSearch = (e) => {
-
         const props = this.props;
         const startSearchOn = props.startSearchOn;
         const environmentId = props.environmentId;
-        const currentQuery = props.currentQuery;
+        const currentQuery = props.store.getCurrentQuery();
         const repository = props.repository;
         const visibleResults = e.target.value.length >= startSearchOn;
 
@@ -91,7 +90,7 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
         const props = this.props;
         const startSearchOn = props.startSearchOn;
         const environmentId = props.environmentId;
-        const currentQuery = props.currentQuery;
+        const currentQuery = props.store.getCurrentQuery();
         const repository = props.repository;
         const visibleResults = 0 == startSearchOn;
 
@@ -114,15 +113,15 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
             case 9:
                 const props = this.props;
                 const environmentId = props.environmentId;
-                const currentQuery = props.currentQuery;
+                const currentQuery = props.store.getCurrentQuery();
                 const repository = props.repository;
 
-                if (this.props.currentResult.getSuggestions().length > 0) {
+                if (this.props.store.getCurrentResult().getSuggestions().length > 0) {
                     simpleSearchAction(
                         environmentId,
                         currentQuery,
                         repository,
-                        this.props.currentResult.getSuggestions()[0],
+                        this.props.store.getCurrentResult().getSuggestions()[0],
                         true
                     )
                 }
@@ -149,10 +148,10 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
         const inputClassName = props.classNames.input;
         const clearSearchClassName = props.classNames.clearSearch;
         const clearSearchTemplate = props.template.clearSearch;
-        const currentQueryText = props.currentQuery.getQueryText();
+        const currentQueryText = props.store.getCurrentQuery().getQueryText();
         const htmlNodeInheritProps = props.htmlNodeInheritProps;
-        const suggestions = props.currentResult
-            ? props.currentResult.getSuggestions()
+        const suggestions = props.store.getCurrentResult()
+            ? props.store.getCurrentResult().getSuggestions()
             : [];
 
         const showAutocomplete = props.autocomplete;

@@ -24,13 +24,13 @@ class ResultComponent extends Component<ResultProps, ResultState> {
             if (entries[0].isIntersecting) {
                 const {
                     environmentId,
-                    currentQuery,
+                    store,
                     repository
                 } = this.props;
 
                 infiniteScrollNextPageAction(
                     environmentId,
-                    currentQuery,
+                    store.getCurrentQuery(),
                     repository,
                     this.state.page + 1
                 )
@@ -91,7 +91,7 @@ class ResultComponent extends Component<ResultProps, ResultState> {
      */
     componentWillReceiveProps(props) {
 
-        if (props.currentResult == null) {
+        if (props.store.getCurrentResult() == null) {
             this.setState(prevState => {
                 return {
                     items: [],
@@ -102,8 +102,8 @@ class ResultComponent extends Component<ResultProps, ResultState> {
             return;
         }
 
-        const currentResult = props.currentResult;
-        const currentQuery = props.currentQuery;
+        const currentResult = props.store.getCurrentResult();
+        const currentQuery = props.store.getCurrentQuery();
         let items = currentResult.getItems();
         const currentPage = currentQuery.getPage();
         const hasNewPage = (currentResult.getTotalHits() > (currentPage * currentQuery.getSize()));
@@ -122,7 +122,7 @@ class ResultComponent extends Component<ResultProps, ResultState> {
         this.setState(prevState => {
             return {
                 items: items,
-                page: props.currentQuery.getPage(),
+                page: props.store.getCurrentQuery().getPage(),
                 hasNewPage: hasNewPage
             };
         });
@@ -140,7 +140,7 @@ class ResultComponent extends Component<ResultProps, ResultState> {
          */
         configureQuery(
             props.environmentId,
-            props.currentQuery,
+            props.store.getCurrentQuery(),
             props.itemsPerPage,
             props.highlightsEnabled,
             props.suggestionsEnabled,
@@ -167,7 +167,7 @@ class ResultComponent extends Component<ResultProps, ResultState> {
      */
     render() {
         const props = this.props;
-        const dirty = props.dirty;
+        const dirty = props.store.isDirty();
         const containerClassName = props.classNames.container;
         const itemsListClassName = props.classNames.itemsList;
         const placeholderClassName = props.classNames.placeholder;
@@ -180,8 +180,8 @@ class ResultComponent extends Component<ResultProps, ResultState> {
         const placeholderTemplate = props.template.placeholder ?? '';
 
         const formatData = props.formatData;
-        const currentResult = props.currentResult;
-        const currentQuery = props.currentQuery;
+        const currentResult = props.store.getCurrentResult();
+        const currentQuery = props.store.getCurrentQuery();
         const currentVisibleResults = props.currentVisibleResults;
         const wrapperRef = useRef(null);
         const hasInfiniteScrollNextPage =

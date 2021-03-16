@@ -28,15 +28,15 @@ class InformationComponent extends Component<InformationProps, InformationState>
     componentWillReceiveProps(props) {
 
         this.setState(prevState => {
-            return (props.currentResult == null)
+            return (props.store.getCurrentResult() == null)
                 ? {
                     hits: 0,
                     total: 0,
                     visible: false
                 }
                 : {
-                    hits: props.currentResult.getTotalHits(),
-                    total: props.currentResult.getTotalItems(),
+                    hits: props.store.getCurrentResult().getTotalHits(),
+                    total: props.store.getCurrentResult().getTotalItems(),
                     visible: true
                 };
         });
@@ -53,7 +53,7 @@ class InformationComponent extends Component<InformationProps, InformationState>
             return;
         }
 
-        const currentQuery = this.props.currentQuery;
+        const currentQuery = this.props.store.getCurrentQuery();
         const size = currentQuery.getSize();
         const page = currentQuery.getPage();
         const from = (page-1)*size;

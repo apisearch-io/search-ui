@@ -11531,7 +11531,7 @@ var CheckboxFilterComponent = /** @class */ (function (_super) {
         _this.handleChange = function (e) {
             var props = _this.props;
             var environmentId = props.environmentId;
-            var currentQuery = props.currentQuery;
+            var currentQuery = props.store.getCurrentQuery();
             var repository = props.repository;
             var filterName = props.filterName;
             var filterField = props.filterField;
@@ -11554,7 +11554,7 @@ var CheckboxFilterComponent = /** @class */ (function (_super) {
         var environmentId = props.environmentId;
         var filterName = props.filterName;
         var aggregationField = props.filterField;
-        var currentQuery = props.currentQuery;
+        var currentQuery = props.store.getCurrentQuery();
         /**
          * Dispatch action
          */
@@ -11567,10 +11567,10 @@ var CheckboxFilterComponent = /** @class */ (function (_super) {
      */
     CheckboxFilterComponent.prototype.componentWillReceiveProps = function (props) {
         var filterName = props.filterName;
-        var filter = props.currentQuery.getFilter(filterName);
+        var filter = props.store.getCurrentQuery().getFilter(filterName);
         var isNowActive = filter != null;
         var n = 0;
-        var aggregation = props.currentResult.getAggregation(filterName);
+        var aggregation = props.store.getCurrentResult().getAggregation(filterName);
         if (aggregation != null) {
             var counters = aggregation.getCounters();
             for (var i in counters) {
@@ -11703,7 +11703,7 @@ var ClearFiltersComponent = /** @class */ (function (_super) {
         _this.handleClick = function () {
             var props = _this.props;
             var environmentId = props.environmentId;
-            var currentQuery = props.currentQuery;
+            var currentQuery = props.store.getCurrentQuery();
             var repository = props.repository;
             _this.setState(function (prevState) {
                 return { showClearFilters: false };
@@ -11722,7 +11722,7 @@ var ClearFiltersComponent = /** @class */ (function (_super) {
      * @param props
      */
     ClearFiltersComponent.prototype.componentWillReceiveProps = function (props) {
-        var filters = props.currentQuery.getFilters();
+        var filters = props.store.getCurrentQuery().getFilters();
         var areFiltersActive = (Object.keys(filters).length > 1);
         this.setState(function (prevState) {
             return { showClearFilters: areFiltersActive };
@@ -11828,15 +11828,15 @@ var InformationComponent = /** @class */ (function (_super) {
      */
     InformationComponent.prototype.componentWillReceiveProps = function (props) {
         this.setState(function (prevState) {
-            return (props.currentResult == null)
+            return (props.store.getCurrentResult() == null)
                 ? {
                     hits: 0,
                     total: 0,
                     visible: false
                 }
                 : {
-                    hits: props.currentResult.getTotalHits(),
-                    total: props.currentResult.getTotalItems(),
+                    hits: props.store.getCurrentResult().getTotalHits(),
+                    total: props.store.getCurrentResult().getTotalItems(),
                     visible: true
                 };
         });
@@ -11849,7 +11849,7 @@ var InformationComponent = /** @class */ (function (_super) {
         if (!this.state.visible) {
             return;
         }
-        var currentQuery = this.props.currentQuery;
+        var currentQuery = this.props.store.getCurrentQuery();
         var size = currentQuery.getSize();
         var page = currentQuery.getPage();
         var from = (page - 1) * size;
@@ -12082,8 +12082,8 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
             var labels = props.labels;
             var fetchLimit = props.fetchLimit;
             var repository = props.repository;
-            var currentQuery = props.currentQuery;
-            var aggregation = props.currentResult.getAggregation(filterName);
+            var currentQuery = props.store.getCurrentQuery();
+            var aggregation = props.store.getCurrentResult().getAggregation(filterName);
             var selectedFilterAsString = String(selectedFilter);
             var currentActiveFilterValues = aggregation instanceof apisearch_1.ResultAggregation
                 ? Object.values(aggregation.getActiveElements())
@@ -12136,7 +12136,7 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
         var ranges = props.ranges;
         var fetchLimit = props.fetchLimit;
         var viewLimit = props.viewLimit;
-        var currentQuery = props.currentQuery;
+        var currentQuery = props.store.getCurrentQuery();
         /**
          * Set view items limit
          */
@@ -12162,7 +12162,7 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
      */
     MultipleFilterComponent.prototype.componentWillReceiveProps = function (props) {
         var filterName = props.filterName;
-        if (props.currentResult == null) {
+        if (props.store.getCurrentResult() == null) {
             this.setState(function (prevState) {
                 return {
                     aggregations: []
@@ -12170,7 +12170,7 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
             });
             return;
         }
-        var aggregation = props.currentResult.getAggregation(filterName);
+        var aggregation = props.store.getCurrentResult().getAggregation(filterName);
         if (typeof aggregation.getCounters === "function") {
             /**
              * Getting aggregation from aggregations
@@ -12552,7 +12552,9 @@ var PaginationComponent = /** @class */ (function (_super) {
          * @param page
          */
         _this.handleClick = function (page) {
-            var _a = _this.props, currentResult = _a.currentResult, environmentId = _a.environmentId, currentQuery = _a.currentQuery, repository = _a.repository;
+            var _a = _this.props, store = _a.store, environmentId = _a.environmentId, repository = _a.repository;
+            var currentResult = store.getCurrentResult();
+            var currentQuery = store.getCurrentQuery();
             var totalPages = Helpers_1.getTotalPages(currentResult.getTotalHits(), currentQuery.getSize());
             /**
              * Do not let go further
@@ -12580,7 +12582,7 @@ var PaginationComponent = /** @class */ (function (_super) {
      * @param props
      */
     PaginationComponent.prototype.componentWillReceiveProps = function (props) {
-        var page = props.currentQuery.getPage();
+        var page = props.store.getCurrentQuery().getPage();
         this.setState(function (prevState) {
             return {
                 page: page
@@ -12595,11 +12597,11 @@ var PaginationComponent = /** @class */ (function (_super) {
     PaginationComponent.prototype.render = function () {
         var _this = this;
         var props = this.props;
-        var currentResult = props.currentResult;
-        if (props.currentResult == null) {
+        var currentResult = props.store.getCurrentResult();
+        if (props.store.getCurrentResult() == null) {
             return;
         }
-        var currentQuerySize = props.currentQuery.getSize();
+        var currentQuerySize = props.store.getCurrentQuery().getSize();
         var totalPages = Helpers_1.getTotalPages(currentResult.getTotalHits(), currentQuerySize);
         /**
          * Hide container if hits are empty
@@ -12623,7 +12625,7 @@ var PaginationComponent = /** @class */ (function (_super) {
         var previousTemplate = props.template.previous;
         var firstTemplate = props.template.first;
         var lastTemplate = props.template.last;
-        var currentQueryPage = props.currentQuery.getPage();
+        var currentQueryPage = props.store.getCurrentQuery().getPage();
         /**
          * Get Total pages
          */
@@ -12828,11 +12830,11 @@ var RangeFilterComponent = /** @class */ (function (_super) {
      */
     RangeFilterComponent.prototype.componentWillReceiveProps = function (props) {
         var filterName = props.filterName;
-        var filter = props.currentQuery.getFilter(filterName);
+        var filter = props.store.getCurrentQuery().getFilter(filterName);
         var filterIsNotFound = filter == null;
         if (filterIsNotFound) {
             this.setState(function (prevState) {
-                return (props.currentResult == null)
+                return (props.store.getCurrentResult() == null)
                     ? {
                         valueFrom: 0,
                         valueTo: 0,
@@ -12884,7 +12886,7 @@ var RangeFilterComponent = /** @class */ (function (_super) {
     RangeFilterComponent.prototype.applyFilter = function (valueFrom, valueTo) {
         var props = this.props;
         var environmentId = props.environmentId;
-        var currentQuery = props.currentQuery;
+        var currentQuery = props.store.getCurrentQuery();
         var repository = props.repository;
         var filterName = props.filterName;
         var filterField = props.filterField;
@@ -13038,7 +13040,7 @@ var ReloadComponent = /** @class */ (function (_super) {
         _this.handleClick = function () {
             var props = _this.props;
             var environmentId = props.environmentId;
-            var currentQuery = props.currentQuery;
+            var currentQuery = props.store.getCurrentQuery();
             var repository = props.repository;
             /**
              * Dispatch a clear filter action
@@ -13239,8 +13241,8 @@ var ResultComponent = /** @class */ (function (_super) {
                 _this.observer.current.disconnect();
             _this.observer.current = new IntersectionObserver(function (entries) {
                 if (entries[0].isIntersecting) {
-                    var _a = _this.props, environmentId = _a.environmentId, currentQuery = _a.currentQuery, repository = _a.repository;
-                    ResultActions_1.infiniteScrollNextPageAction(environmentId, currentQuery, repository, _this.state.page + 1);
+                    var _a = _this.props, environmentId = _a.environmentId, store = _a.store, repository = _a.repository;
+                    ResultActions_1.infiniteScrollNextPageAction(environmentId, store.getCurrentQuery(), repository, _this.state.page + 1);
                 }
             });
             if ((_this.observer.current instanceof IntersectionObserver) && node)
@@ -13287,7 +13289,7 @@ var ResultComponent = /** @class */ (function (_super) {
      * @param props
      */
     ResultComponent.prototype.componentWillReceiveProps = function (props) {
-        if (props.currentResult == null) {
+        if (props.store.getCurrentResult() == null) {
             this.setState(function (prevState) {
                 return {
                     items: [],
@@ -13297,8 +13299,8 @@ var ResultComponent = /** @class */ (function (_super) {
             });
             return;
         }
-        var currentResult = props.currentResult;
-        var currentQuery = props.currentQuery;
+        var currentResult = props.store.getCurrentResult();
+        var currentQuery = props.store.getCurrentQuery();
         var items = currentResult.getItems();
         var currentPage = currentQuery.getPage();
         var hasNewPage = (currentResult.getTotalHits() > (currentPage * currentQuery.getSize()));
@@ -13311,7 +13313,7 @@ var ResultComponent = /** @class */ (function (_super) {
         this.setState(function (prevState) {
             return {
                 items: items,
-                page: props.currentQuery.getPage(),
+                page: props.store.getCurrentQuery().getPage(),
                 hasNewPage: hasNewPage
             };
         });
@@ -13324,7 +13326,7 @@ var ResultComponent = /** @class */ (function (_super) {
         /**
          * Dispatch action
          */
-        ResultActions_1.configureQuery(props.environmentId, props.currentQuery, props.itemsPerPage, props.highlightsEnabled, props.suggestionsEnabled, props.promote.map(function (itemUUID) {
+        ResultActions_1.configureQuery(props.environmentId, props.store.getCurrentQuery(), props.itemsPerPage, props.highlightsEnabled, props.suggestionsEnabled, props.promote.map(function (itemUUID) {
             return itemUUID instanceof ItemUUID_1.ItemUUID
                 ? itemUUID
                 : ItemUUID_1.ItemUUID.createFromArray(itemUUID);
@@ -13342,7 +13344,7 @@ var ResultComponent = /** @class */ (function (_super) {
     ResultComponent.prototype.render = function () {
         var _a;
         var props = this.props;
-        var dirty = props.dirty;
+        var dirty = props.store.isDirty();
         var containerClassName = props.classNames.container;
         var itemsListClassName = props.classNames.itemsList;
         var placeholderClassName = props.classNames.placeholder;
@@ -13353,8 +13355,8 @@ var ResultComponent = /** @class */ (function (_super) {
         var itemsListTemplate = props.template.itemsList;
         var placeholderTemplate = (_a = props.template.placeholder) !== null && _a !== void 0 ? _a : '';
         var formatData = props.formatData;
-        var currentResult = props.currentResult;
-        var currentQuery = props.currentQuery;
+        var currentResult = props.store.getCurrentResult();
+        var currentQuery = props.store.getCurrentQuery();
         var currentVisibleResults = props.currentVisibleResults;
         var wrapperRef = compat_1.useRef(null);
         var hasInfiniteScrollNextPage = (props.infiniteScroll !== false) &&
@@ -13688,7 +13690,7 @@ var SearchInputComponent = /** @class */ (function (_super) {
             var props = _this.props;
             var startSearchOn = props.startSearchOn;
             var environmentId = props.environmentId;
-            var currentQuery = props.currentQuery;
+            var currentQuery = props.store.getCurrentQuery();
             var repository = props.repository;
             var visibleResults = e.target.value.length >= startSearchOn;
             /**
@@ -13703,7 +13705,7 @@ var SearchInputComponent = /** @class */ (function (_super) {
             var props = _this.props;
             var startSearchOn = props.startSearchOn;
             var environmentId = props.environmentId;
-            var currentQuery = props.currentQuery;
+            var currentQuery = props.store.getCurrentQuery();
             var repository = props.repository;
             var visibleResults = 0 == startSearchOn;
             SearchInputActions_1.simpleSearchAction(environmentId, currentQuery, repository, '', visibleResults);
@@ -13720,7 +13722,7 @@ var SearchInputComponent = /** @class */ (function (_super) {
         var props = this.props;
         var environmentId = props.environmentId;
         var initialSearch = props.initialSearch;
-        var currentQuery = props.currentQuery;
+        var currentQuery = props.store.getCurrentQuery();
         var autocomplete = props.autocomplete;
         var searchableFields = props.searchableFields;
         /**
@@ -13735,7 +13737,7 @@ var SearchInputComponent = /** @class */ (function (_super) {
      */
     SearchInputComponent.prototype.componentWillReceiveProps = function (props) {
         this.setState({
-            queryText: props.currentQuery.getQueryText()
+            queryText: props.store.getCurrentQuery().getQueryText()
         });
     };
     /**
@@ -13747,10 +13749,10 @@ var SearchInputComponent = /** @class */ (function (_super) {
             case 9:
                 var props = this.props;
                 var environmentId = props.environmentId;
-                var currentQuery = props.currentQuery;
+                var currentQuery = props.store.getCurrentQuery();
                 var repository = props.repository;
-                if (this.props.currentResult.getSuggestions().length > 0) {
-                    SearchInputActions_1.simpleSearchAction(environmentId, currentQuery, repository, this.props.currentResult.getSuggestions()[0], true);
+                if (this.props.store.getCurrentResult().getSuggestions().length > 0) {
+                    SearchInputActions_1.simpleSearchAction(environmentId, currentQuery, repository, this.props.store.getCurrentResult().getSuggestions()[0], true);
                 }
                 break;
         }
@@ -13772,10 +13774,10 @@ var SearchInputComponent = /** @class */ (function (_super) {
         var inputClassName = props.classNames.input;
         var clearSearchClassName = props.classNames.clearSearch;
         var clearSearchTemplate = props.template.clearSearch;
-        var currentQueryText = props.currentQuery.getQueryText();
+        var currentQueryText = props.store.getCurrentQuery().getQueryText();
         var htmlNodeInheritProps = props.htmlNodeInheritProps;
-        var suggestions = props.currentResult
-            ? props.currentResult.getSuggestions()
+        var suggestions = props.store.getCurrentResult()
+            ? props.store.getCurrentResult().getSuggestions()
             : [];
         var showAutocomplete = props.autocomplete;
         var keyDownCallback = showAutocomplete
@@ -13862,7 +13864,7 @@ var SnapshotComponent = /** @class */ (function (_super) {
      * @param props
      */
     SnapshotComponent.prototype.componentWillReceiveProps = function (props) {
-        var query = props.currentQuery;
+        var query = props.store.getCurrentQuery();
         this.setState(function (prevState) {
             return { query: query };
         });
@@ -13986,7 +13988,7 @@ var SortByComponent = /** @class */ (function (_super) {
         _this.handleChange = function (e) {
             var props = _this.props;
             var environmentId = props.environmentId;
-            var currentQuery = props.currentQuery;
+            var currentQuery = props.store.getCurrentQuery();
             var repository = props.repository;
             var currentOption = e.target.value;
             _this.setState({
@@ -14006,7 +14008,7 @@ var SortByComponent = /** @class */ (function (_super) {
         var props = this.props;
         var environmentId = props.environmentId;
         var options = props.options;
-        var currentQuery = props.currentQuery;
+        var currentQuery = props.store.getCurrentQuery();
         var currentOption = options[0].value;
         this.setState({
             value: currentOption,
@@ -14025,9 +14027,9 @@ var SortByComponent = /** @class */ (function (_super) {
     SortByComponent.prototype.componentWillReceiveProps = function (props) {
         this.setState(function (prevState) {
             return {
-                value: props.currentQuery.getSortBy().getFirstSortAsString(),
-                visible: (props.currentResult != null)
-                    ? (props.currentResult.getTotalHits() > 0)
+                value: props.store.getCurrentQuery().getSortBy().getFirstSortAsString(),
+                visible: (props.store.getCurrentResult() != null)
+                    ? (props.store.getCurrentResult().getTotalHits() > 0)
                     : false
             };
         });
@@ -14044,7 +14046,7 @@ var SortByComponent = /** @class */ (function (_super) {
             return;
         }
         var options = props.options;
-        var coordinate = props.currentQuery.toArray().coordinate;
+        var coordinate = props.store.getCurrentQuery().toArray().coordinate;
         if (!coordinate) {
             options = options.filter(function (o) {
                 return o.value != 'distance';
@@ -14290,7 +14292,7 @@ var CheckboxFilter = /** @class */ (function (_super) {
      * @param dictionary
      */
     CheckboxFilter.prototype.render = function (environmentId, store, repository, dictionary) {
-        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, dirty: store.isDirty(), currentResult: store.getCurrentResult(), currentQuery: store.getCurrentQuery() });
+        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store });
         var targetNode = document.querySelector(this.target);
         preact_1.render(this.component, targetNode);
     };
@@ -14404,7 +14406,7 @@ var ClearFilters = /** @class */ (function (_super) {
      * @param dictionary
      */
     ClearFilters.prototype.render = function (environmentId, store, repository, dictionary) {
-        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, dirty: store.isDirty(), currentResult: store.getCurrentResult(), currentQuery: store.getCurrentQuery(), dictionary: dictionary });
+        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store, dictionary: dictionary });
         var targetNode = document.querySelector(this.target);
         preact_1.render(this.component, targetNode);
     };
@@ -14484,7 +14486,7 @@ var Information = /** @class */ (function (_super) {
      * @param dictionary
      */
     Information.prototype.render = function (environmentId, store, repository, dictionary) {
-        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, dirty: store.isDirty(), currentResult: store.getCurrentResult(), currentQuery: store.getCurrentQuery(), dictionary: dictionary });
+        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store, dictionary: dictionary });
         var targetNode = document.querySelector(this.target);
         preact_1.render(this.component, targetNode);
     };
@@ -14574,7 +14576,7 @@ var MultipleFilter = /** @class */ (function (_super) {
      * @param dictionary
      */
     MultipleFilter.prototype.render = function (environmentId, store, repository, dictionary) {
-        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, dirty: store.isDirty(), currentResult: store.getCurrentResult(), currentQuery: store.getCurrentQuery(), dictionary: dictionary });
+        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store, dictionary: dictionary });
         var targetNode = document.querySelector(this.target);
         preact_1.render(this.component, targetNode);
     };
@@ -14692,7 +14694,7 @@ var Pagination = /** @class */ (function (_super) {
      * @param dictionary
      */
     Pagination.prototype.render = function (environmentId, store, repository, dictionary) {
-        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, dirty: store.isDirty(), currentResult: store.getCurrentResult(), currentQuery: store.getCurrentQuery(), dictionary: dictionary });
+        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store, dictionary: dictionary });
         var targetNode = document.querySelector(this.target);
         preact_1.render(this.component, targetNode);
     };
@@ -14787,7 +14789,7 @@ var RangeFilter = /** @class */ (function (_super) {
      * @param dictionary
      */
     RangeFilter.prototype.render = function (environmentId, store, repository, dictionary) {
-        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, dirty: store.isDirty(), currentResult: store.getCurrentResult(), currentQuery: store.getCurrentQuery() });
+        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store });
         var targetNode = document.querySelector(this.target);
         preact_1.render(this.component, targetNode);
     };
@@ -14896,7 +14898,7 @@ var Reload = /** @class */ (function (_super) {
      * @param dictionary
      */
     Reload.prototype.render = function (environmentId, store, repository, dictionary) {
-        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, dirty: store.isDirty(), currentResult: store.getCurrentResult(), currentQuery: store.getCurrentQuery(), dictionary: dictionary });
+        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store, dictionary: dictionary });
         var targetNode = document.querySelector(this.target);
         preact_1.render(this.component, targetNode);
     };
@@ -14988,7 +14990,7 @@ var Result = /** @class */ (function (_super) {
      * @param dictionary
      */
     Result.prototype.render = function (environmentId, store, repository, dictionary) {
-        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, dirty: store.isDirty(), currentResult: store.getCurrentResult(), currentQuery: store.getCurrentQuery(), currentVisibleResults: store.resultsAreVisible(), dictionary: dictionary });
+        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store, currentVisibleResults: store.resultsAreVisible(), dictionary: dictionary });
         preact_1.render(this.component, this.targetNode);
     };
     return Result;
@@ -15074,7 +15076,7 @@ var SearchInput = /** @class */ (function (_super) {
      * @param dictionary
      */
     SearchInput.prototype.render = function (environmentId, store, repository, dictionary) {
-        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, dirty: store.isDirty(), currentResult: store.getCurrentResult(), currentQuery: store.getCurrentQuery(), htmlNodeInheritProps: {
+        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store, htmlNodeInheritProps: {
                 autocomplete: 'off',
                 spellcheck: false
             }, dictionary: dictionary });
@@ -15224,7 +15226,7 @@ var Snapshot = /** @class */ (function (_super) {
      * @param dictionary
      */
     Snapshot.prototype.render = function (environmentId, store, repository, dictionary) {
-        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, dirty: store.isDirty(), currentResult: store.getCurrentResult(), currentQuery: store.getCurrentQuery() });
+        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store });
         var targetNode = document.querySelector(this.target);
         preact_1.render(this.component, targetNode);
     };
@@ -15296,7 +15298,7 @@ var SortBy = /** @class */ (function (_super) {
      * @param dictionary
      */
     SortBy.prototype.render = function (environmentId, store, repository, dictionary) {
-        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, dirty: store.isDirty(), currentResult: store.getCurrentResult(), currentQuery: store.getCurrentQuery() });
+        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store });
         preact_1.render(this.component, this.targetNode);
     };
     /**

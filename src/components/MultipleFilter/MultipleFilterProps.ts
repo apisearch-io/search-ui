@@ -1,6 +1,5 @@
 import {Repository} from "apisearch";
-import {Query} from "apisearch";
-import {Result} from "apisearch";
+import Store from "../../Store";
 
 /**
  * MultipleFilterProps
@@ -34,8 +33,6 @@ export interface MultipleFilterProps {
     activeFirst: boolean;
     environmentId?: string;
     repository?: Repository;
-    dirty?: boolean;
-    currentResult?: Result;
-    currentQuery?: Query;
+    store?: Store;
     dictionary?: { [key: string]: string; };
 }

@@ -1,6 +1,5 @@
 import {Repository} from "apisearch";
-import {Query} from "apisearch";
-import {Result} from "apisearch";
+import Store from "../../Store";
 
 /**
  * CheckboxFilterProps
@@ -12,7 +11,5 @@ export interface CheckboxFilterProps {
     label?: string;
     environmentId?: string;
     repository?: Repository;
-    dirty?: boolean;
-    currentResult?: Result;
-    currentQuery?: Query;
+    store?: Store;
 }

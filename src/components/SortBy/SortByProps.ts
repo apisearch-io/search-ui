@@ -1,6 +1,5 @@
 import {Repository} from "apisearch";
-import {Query} from "apisearch";
-import {Result} from "apisearch";
+import Store from "../../Store";
 
 /**
  * SortByProps
@@ -14,7 +13,5 @@ export interface SortByProps {
     options: any;
     environmentId?: string;
     repository?: Repository;
-    dirty?: boolean;
-    currentResult?: Result;
-    currentQuery?: Query;
+    store?: Store;
 }
