@@ -9,37 +9,41 @@ import Store from "../Store";
  */
 class RangeFilter extends Widget {
 
-    private currentFrom: number;
-    private currentTo: number;
-
     constructor({
         target,
         filterName,
         filterField,
         minValue,
         maxValue,
-        from,
-        to,
+        minMaxCallback,
+        step,
         callback,
+        template,
+        classNames,
+        attributes,
     }) {
         super();
         this.target = target;
-        this.currentFrom = from.initialValue;
-        this.currentTo = to.initialValue;
         this.component = <RangeFilterComponent
             target={target}
             filterName={filterName}
             filterField={filterField}
             minValue={minValue}
             maxValue={maxValue}
+            minMaxCallback={minMaxCallback}
+            step={step}
             callback={callback}
-            from={{
-                ...RangeFilterComponent.defaultProps.from,
-                ...from
+            template={{
+                ...RangeFilterComponent.defaultProps.template,
+                ...template
             }}
-            to={{
-                ...RangeFilterComponent.defaultProps.to,
-                ...to
+            classNames={{
+                ...RangeFilterComponent.defaultProps.classNames,
+                ...classNames
+            }}
+            attributes={{
+                ...RangeFilterComponent.defaultProps.attributes,
+                ...attributes
             }}
         />
     }

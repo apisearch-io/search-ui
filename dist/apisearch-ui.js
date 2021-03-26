@@ -6349,20 +6349,21 @@ var Counter_1 = __webpack_require__(/*! ./Counter */ "./node_modules/apisearch/l
  */
 var ResultAggregation = /** @class */ (function () {
     /**
-     * Constructor
-     *
      * @param name
      * @param applicationType
      * @param totalElements
      * @param activeElements
+     * @param metadata
      */
-    function ResultAggregation(name, applicationType, totalElements, activeElements) {
+    function ResultAggregation(name, applicationType, totalElements, activeElements, metadata) {
+        if (metadata === void 0) { metadata = {}; }
         this.counters = {};
         this.highestActiveElement = 0;
         this.name = name;
         this.applicationType = applicationType;
         this.totalElements = totalElements;
         this.activeElements = {};
+        this.metadata = metadata;
         for (var i in activeElements) {
             var activeElement = activeElements[i];
             this.activeElements[activeElement] = activeElement;
@@ -6406,6 +6407,12 @@ var ResultAggregation = /** @class */ (function () {
      */
     ResultAggregation.prototype.getCounters = function () {
         return this.counters;
+    };
+    /**
+     *
+     */
+    ResultAggregation.prototype.getMetadata = function () {
+        return this.metadata;
     };
     /**
      * Return if the aggregation belongs to a filter.
@@ -6509,7 +6516,8 @@ var ResultAggregation = /** @class */ (function () {
         var array = {
             name: this.name,
             counters: [],
-            active_elements: []
+            active_elements: [],
+            metadata: this.metadata
         };
         for (var i in this.counters) {
             array.counters.push(this.counters[i].toArray());
@@ -6534,6 +6542,9 @@ var ResultAggregation = /** @class */ (function () {
         }
         if (array.active_elements.length === 0) {
             delete array.active_elements;
+        }
+        if (Object.keys(array.metadata).length === 0) {
+            delete array.metadata;
         }
         return array;
     };
@@ -6567,6 +6578,9 @@ var ResultAggregation = /** @class */ (function () {
         aggregation.highestActiveElement = typeof array.highest_active_level === "number"
             ? array.highest_active_level
             : 0;
+        aggregation.metadata = typeof array.metadata === typeof {}
+            ? array.metadata
+            : {};
         return aggregation;
     };
     return ResultAggregation;
@@ -11252,6 +11266,14 @@ var Store = /** @class */ (function (_super) {
         return this.currentResult;
     };
     /**
+     * Get current result
+     *
+     * @return {boolean}
+     */
+    Store.prototype.hasProperResult = function () {
+        return this.currentResult.getTotalItems() > 0;
+    };
+    /**
      * Results are visible
      *
      * @return {boolean}
@@ -12688,7 +12710,7 @@ exports["default"] = PaginationComponent;
 "use strict";
 
 exports.__esModule = true;
-exports.onChangeSearchAction = void 0;
+exports.onChangeSearchAction = exports.deleteMinMaxAggregation = exports.addMinMaxAggregation = void 0;
 /**
  * SortBy actions
  */
@@ -12697,20 +12719,51 @@ var Constants_1 = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts
 var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
 var Clone_1 = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
 /**
- *
+ * @param environmentId
+ * @param currentQuery
+ * @param filterName
+ * @param filterField
+ */
+function addMinMaxAggregation(environmentId, currentQuery, filterName, filterField) {
+    var clonedQuery = Clone_1["default"].object(currentQuery);
+    clonedQuery.aggregateByRange(filterName, filterField, ['..'], apisearch_1.FILTER_MUST_ALL, 'range_min_max');
+    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
+    dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
+        query: clonedQuery,
+    });
+}
+exports.addMinMaxAggregation = addMinMaxAggregation;
+/**
+ * @param environmentId
+ * @param currentQuery
+ * @param filterName
+ */
+function deleteMinMaxAggregation(environmentId, currentQuery, filterName) {
+    var clonedQuery = Clone_1["default"].object(currentQuery);
+    delete clonedQuery.aggregations[filterName];
+    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
+    dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
+        query: clonedQuery,
+    });
+}
+exports.deleteMinMaxAggregation = deleteMinMaxAggregation;
+/**
  * @param environmentId
  * @param currentQuery
  * @param repository
  * @param filterName
  * @param filterField
- * @param minValue
- * @param maxValue
  * @param from
  * @param to
+ * @param deleteMinMaxAggregation
  */
-function onChangeSearchAction(environmentId, currentQuery, repository, filterName, filterField, minValue, maxValue, from, to) {
+function onChangeSearchAction(environmentId, currentQuery, repository, filterName, filterField, from, to, deleteMinMaxAggregation) {
     var clonedQuery = Clone_1["default"].object(currentQuery);
-    clonedQuery.filterByRange(filterName, filterField, [], [from + ".." + to], apisearch_1.FILTER_AT_LEAST_ONE, apisearch_1.FILTER_TYPE_RANGE, false);
+    var toWithIncluded = to + ']';
+    clonedQuery.filterByRange(filterName, filterField, [], [from + ".." + toWithIncluded], apisearch_1.FILTER_AT_LEAST_ONE, apisearch_1.FILTER_TYPE_RANGE, false);
+    if (deleteMinMaxAggregation) {
+        delete clonedQuery.aggregations[filterName];
+    }
     clonedQuery.page = 1;
     var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
     repository
@@ -12766,6 +12819,7 @@ exports.__esModule = true;
 var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
 var compat_1 = __webpack_require__(/*! preact/compat */ "./node_modules/preact/compat/dist/compat.module.js");
 var RangeFilterActions_1 = __webpack_require__(/*! ./RangeFilterActions */ "./src/components/RangeFilter/RangeFilterActions.ts");
+var Template_1 = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
 /**
  * Range Filter Component
  */
@@ -12773,16 +12827,38 @@ var RangeFilterComponent = /** @class */ (function (_super) {
     __extends(RangeFilterComponent, _super);
     function RangeFilterComponent() {
         var _this = _super.call(this) || this;
+        _this.minMaxAssigned = false;
         _this.uid = Math.random().toString(16).substr(2, 12);
         _this.observerFrom = _this.configureFromObserver();
         _this.observerTo = _this.configureToObserver();
-        _this.state = {
-            valueFrom: 0,
-            valueTo: 0,
-            visible: false
-        };
+        _this.setState(function (prevState) {
+            return {
+                valueFrom: undefined,
+                valueTo: undefined,
+                visible: false
+            };
+        });
         return _this;
     }
+    /**
+     *
+     */
+    RangeFilterComponent.prototype.shouldCheckMinMax = function () {
+        return (this.props.minValue === undefined ||
+            this.props.maxValue === undefined);
+    };
+    /**
+     * Components will mount
+     */
+    RangeFilterComponent.prototype.componentWillMount = function () {
+        var props = this.props;
+        /**
+         * Check min and max ONLY when both are defined
+         */
+        if (this.shouldCheckMinMax()) {
+            RangeFilterActions_1.addMinMaxAggregation(props.environmentId, props.store.getCurrentQuery(), props.filterName, props.filterField);
+        }
+    };
     RangeFilterComponent.prototype.configureFromObserver = function () {
         var that = this;
         return new MutationObserver(function (mutationsList, observer) {
@@ -12824,43 +12900,6 @@ var RangeFilterComponent = /** @class */ (function (_super) {
         this.observerTo.disconnect();
     };
     /**
-     * Component will receive props
-     *
-     * @param props
-     */
-    RangeFilterComponent.prototype.componentWillReceiveProps = function (props) {
-        var filterName = props.filterName;
-        var filter = props.store.getCurrentQuery().getFilter(filterName);
-        var filterIsNotFound = filter == null;
-        if (filterIsNotFound) {
-            this.setState(function (prevState) {
-                return (props.store.getCurrentResult() == null)
-                    ? {
-                        valueFrom: 0,
-                        valueTo: 0,
-                        visible: false
-                    }
-                    : {
-                        valueFrom: props.minValue,
-                        valueTo: props.maxValue,
-                        visible: true
-                    };
-            });
-        }
-        else {
-            var values = filter.getValues();
-            if (values.length > 0) {
-                var parts_1 = values[0].split('..');
-                this.setState(function (prevState) {
-                    return {
-                        valueFrom: parts_1[0],
-                        valueTo: parts_1[1]
-                    };
-                });
-            }
-        }
-    };
-    /**
      * Handle change
      *
      * @param e
@@ -12874,43 +12913,55 @@ var RangeFilterComponent = /** @class */ (function (_super) {
         this.setState(function (prevState) {
             return {
                 valueFrom: values[0],
-                valueTo: values[1]
+                valueTo: values[1],
+                visible: true
             };
         });
         this.applyFilter(values[0], values[1]);
     };
     ;
     /**
-     * Apply filter
+     * @param props
      */
-    RangeFilterComponent.prototype.applyFilter = function (valueFrom, valueTo) {
-        var props = this.props;
-        var environmentId = props.environmentId;
-        var currentQuery = props.store.getCurrentQuery();
-        var repository = props.repository;
+    RangeFilterComponent.prototype.componentWillReceiveProps = function (props) {
         var filterName = props.filterName;
-        var filterField = props.filterField;
-        var minValue = props.minValue;
-        var maxValue = props.maxValue;
-        /**
-         * Dispatch action
-         */
-        RangeFilterActions_1.onChangeSearchAction(environmentId, currentQuery, repository, filterName, filterField, minValue, maxValue, valueFrom, valueTo);
+        var filter = props.store.getCurrentQuery().getFilter(filterName);
+        var filterIsFound = filter !== null;
+        if (filterIsFound) {
+            var values = filter.getValues();
+            if (values.length > 0) {
+                var parts_1 = values[0].split('..');
+                this.setState(function (prevState) {
+                    return {
+                        valueFrom: parseInt(parts_1[0]),
+                        valueTo: parseInt(parts_1[1]),
+                        visible: true
+                    };
+                });
+            }
+        }
+        else {
+            this.setState(function (prevState) {
+                return {
+                    visible: true
+                };
+            });
+        }
     };
     /**
-     * Render
-     *
-     * @return {any}
+     * @param props
+     * @param state
      */
     RangeFilterComponent.prototype.render = function (props, state) {
         var _this = this;
+        var _a, _b, _c, _d, _e, _f;
         var filterName = props.filterName;
-        var from = props.from;
-        var to = props.to;
-        var minValue = props.minValue;
-        var maxValue = props.maxValue;
         var ref = compat_1.useRef(null);
-        var visible = state.visible ? 'block' : 'none';
+        var topTemplate = props.template.top;
+        var sliderTemplate = props.template.slider;
+        var containerClassName = props.classNames.container;
+        var topClassName = props.classNames.top;
+        var that = this;
         compat_1.useEffect(function () {
             var self = _this;
             if (!ref.current) {
@@ -12932,29 +12983,96 @@ var RangeFilterComponent = /** @class */ (function (_super) {
                 ref.current.removeEventListener("change", handleChange);
             };
         }, [ref]);
-        if (typeof props.callback == 'function') {
+        var aggregations = this.props.store.getCurrentResult().getAggregations();
+        if (props.store.hasProperResult() && this.minMaxAssigned === false) {
+            if (this.shouldCheckMinMax()) {
+                var currentAggregation = aggregations.getAggregation(filterName);
+                if (currentAggregation !== null) {
+                    var currentAggregationMetadata = currentAggregation.getMetadata();
+                    this.minValue = (_b = (_a = props.minValue) !== null && _a !== void 0 ? _a : currentAggregationMetadata['min']) !== null && _b !== void 0 ? _b : undefined;
+                    this.maxValue = (_d = (_c = props.maxValue) !== null && _c !== void 0 ? _c : currentAggregationMetadata['max']) !== null && _d !== void 0 ? _d : undefined;
+                    this.minMaxAssigned = true;
+                    this.setState(function (prevState) {
+                        var _a, _b;
+                        return {
+                            valueFrom: (_a = _this.state.valueFrom) !== null && _a !== void 0 ? _a : _this.minValue,
+                            valueTo: (_b = _this.state.valueTo) !== null && _b !== void 0 ? _b : _this.maxValue,
+                            visible: true
+                        };
+                    });
+                    if (typeof props.minMaxCallback == 'function') {
+                        props.minMaxCallback(this.minValue, this.maxValue, props.step);
+                    }
+                    /**
+                     * Dispatch action
+                     */
+                    RangeFilterActions_1.deleteMinMaxAggregation(props.environmentId, props.store.getCurrentQuery(), filterName);
+                }
+            }
+            else {
+                this.minMaxAssigned = true;
+                this.setState(function (prevState) {
+                    var _a, _b;
+                    return {
+                        valueFrom: (_a = _this.state.valueFrom) !== null && _a !== void 0 ? _a : props.minValue,
+                        valueTo: (_b = _this.state.valueTo) !== null && _b !== void 0 ? _b : props.maxValue,
+                        visible: true
+                    };
+                });
+                if (typeof props.minMaxCallback == 'function') {
+                    props.minMaxCallback(props.minValue, props.maxValue, props.step);
+                }
+            }
+        }
+        var minValue = (_e = this.minValue) !== null && _e !== void 0 ? _e : props.minValue;
+        var maxValue = (_f = this.maxValue) !== null && _f !== void 0 ? _f : props.maxValue;
+        if (this.minMaxAssigned &&
+            typeof props.callback == 'function' &&
+            this.state.valueFrom !== undefined &&
+            this.state.valueTo !== undefined) {
             props.callback(this.state.valueFrom, this.state.valueTo);
         }
-        return (preact_1.h("div", { className: "as-rangeFilter", style: "display: " + visible },
-            preact_1.h("label", { "class": "as-rangeFilter__label" }, filterName),
-            preact_1.h("input", __assign({ type: "number", "class": "as-rangeFilter__from " + from["class"] + " as-rangeFilter__" + this.uid + " as-rangeFilter__from__" + this.uid }, from.attributes, { value: this.state.valueFrom, min: minValue, max: maxValue, autocomplete: "off" })),
-            preact_1.h("input", __assign({ type: "number", "class": "as-rangeFilter__to " + to["class"] + " as-rangeFilter__" + this.uid + " as-rangeFilter__to__" + this.uid }, to.attributes, { value: this.state.valueTo, min: minValue, max: maxValue, autocomplete: "off" }))));
+        return (preact_1.h("div", { className: "as-rangeFilter " + containerClassName },
+            preact_1.h(Template_1["default"], { template: topTemplate, className: "as-rangeFilter__top " + topClassName, dictionary: this.props.dictionary }),
+            preact_1.h("div", { "class": "slider" },
+                preact_1.h(Template_1["default"], { template: sliderTemplate, dictionary: this.props.dictionary })),
+            preact_1.h("input", __assign({ type: "number", "class": "as-rangeFilter__from " + props.classNames.input + " as-rangeFilter__" + this.uid + " as-rangeFilter__from__" + this.uid }, props.attributes.from, { value: this.state.valueFrom, min: minValue, max: maxValue, step: props.step, onChange: function (e) {
+                    that.handleSliderChange([parseInt(e.target.value), that.state.valueTo]);
+                }, autocomplete: "off" })),
+            preact_1.h("input", __assign({ type: "number", "class": "as-rangeFilter__to " + props.classNames.input + " as-rangeFilter__" + this.uid + " as-rangeFilter__to__" + this.uid }, props.attributes.to, { value: this.state.valueTo, min: minValue, max: maxValue, step: props.step, onChange: function (e) {
+                    that.handleSliderChange([that.state.valueFrom, parseInt(e.target.value)]);
+                }, autocomplete: "off" }))));
+    };
+    /**
+     * Apply filter
+     */
+    RangeFilterComponent.prototype.applyFilter = function (valueFrom, valueTo) {
+        var props = this.props;
+        /**
+         * Dispatch action
+         */
+        RangeFilterActions_1.onChangeSearchAction(props.environmentId, props.store.getCurrentQuery(), props.repository, props.filterName, props.filterField, valueFrom, valueTo, this.minMaxAssigned);
     };
     return RangeFilterComponent;
 }(preact_1.Component));
 RangeFilterComponent.defaultProps = {
-    minValue: 0,
-    maxValue: 100,
-    from: {
-        "class": "",
-        attributes: {},
-        initialValue: 0
+    maxValueIncluded: true,
+    step: 1,
+    classNames: {
+        container: '',
+        top: '',
+        input: '',
+        from: '',
+        to: ''
     },
-    to: {
-        "class": "",
-        attributes: {},
-        initialValue: 100
-    }
+    attributes: {
+        from: '',
+        to: ''
+    },
+    template: {
+        top: '',
+        slider: ''
+    },
 };
 exports["default"] = RangeFilterComponent;
 
@@ -14774,12 +14892,10 @@ var Widget_1 = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
 var RangeFilter = /** @class */ (function (_super) {
     __extends(RangeFilter, _super);
     function RangeFilter(_a) {
-        var target = _a.target, filterName = _a.filterName, filterField = _a.filterField, minValue = _a.minValue, maxValue = _a.maxValue, from = _a.from, to = _a.to, callback = _a.callback;
+        var target = _a.target, filterName = _a.filterName, filterField = _a.filterField, minValue = _a.minValue, maxValue = _a.maxValue, minMaxCallback = _a.minMaxCallback, step = _a.step, callback = _a.callback, template = _a.template, classNames = _a.classNames, attributes = _a.attributes;
         var _this = _super.call(this) || this;
         _this.target = target;
-        _this.currentFrom = from.initialValue;
-        _this.currentTo = to.initialValue;
-        _this.component = preact_1.h(RangeFilterComponent_1["default"], { target: target, filterName: filterName, filterField: filterField, minValue: minValue, maxValue: maxValue, callback: callback, from: __assign(__assign({}, RangeFilterComponent_1["default"].defaultProps.from), from), to: __assign(__assign({}, RangeFilterComponent_1["default"].defaultProps.to), to) });
+        _this.component = preact_1.h(RangeFilterComponent_1["default"], { target: target, filterName: filterName, filterField: filterField, minValue: minValue, maxValue: maxValue, minMaxCallback: minMaxCallback, step: step, callback: callback, template: __assign(__assign({}, RangeFilterComponent_1["default"].defaultProps.template), template), classNames: __assign(__assign({}, RangeFilterComponent_1["default"].defaultProps.classNames), classNames), attributes: __assign(__assign({}, RangeFilterComponent_1["default"].defaultProps.attributes), attributes) });
         return _this;
     }
     /**

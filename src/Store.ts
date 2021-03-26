@@ -111,6 +111,15 @@ class Store extends EventEmitter {
     }
 
     /**
+     * Get current result
+     *
+     * @return {boolean}
+     */
+    public hasProperResult(): boolean {
+        return this.currentResult.getTotalItems() > 0;
+    }
+
+    /**
      * Results are visible
      *
      * @return {boolean}

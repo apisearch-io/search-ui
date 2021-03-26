@@ -40,32 +40,13 @@
         .grey {
             color: #eaeaea;
         }
+        .hidden {
+            display: none!important;
+        }
         .search.navbar-item {
             min-width: 25rem
         }
     </style>
-
-    <script>
-        $(document).ready(function() {
-            $("#rating-slider").slider({
-                range: true,
-                min: 0,
-                max: 5,
-                slide: function( event, ui ) {
-                    console.log(ui.values);
-                    $("#rating span").text(ui.values[0] + " - " + ui.values[1] );
-                },
-                stop: function( event, ui ) {
-                    document.getElementById("rating-min").setAttribute('value', ui.values[0]);
-                    document.getElementById("rating-max").setAttribute('value', ui.values[1]);
-                }
-            });
-
-            setTimeout(function() {
-                $("#rating span").text($("#rating-slider").slider("values", 0) + ' - ' + $("#rating-slider").slider("values", 1));
-            }, 300);
-        });
-    </script>
 </head>
 
 <body>
@@ -118,9 +99,7 @@
     <div class="columns" style="margin-top: 1rem">
         <div class="column is-2">
             <div id="rating">Rating range: <span style="color:#f0d666; font-weight:bold;"></span></div>
-            <div id="rating-slider" style="margin-top: 1rem; margin-bottom: 2rem;"></div>
-            <div class="range-filter-rating" style="display: none"></div>
-
+            <div class="range-filter-rating"></div>
             <div class="multiple-filter-color" style="margin-bottom: 1rem"></div>
             <div class="multiple-filter-rating" style="margin-bottom: 1rem"></div>
             <div class="multiple-filter-rating-blocks" style="margin-bottom: 1rem"></div>
@@ -146,9 +125,7 @@
 
             <div class="card" style="border-radius: .2rem">
                 <div class="card-content" style="position: relative">
-                    <object data="https://raw.githubusercontent.com/apisearch-io/funko-database/master/img/{{metadata.image}}" type="image/png" style="width: 100px; height: 100px">
-                        <img src="notfound.png" style="width: 100px; height: 100px" alt="{{metadata.title}}">
-                    </object><br>
+                    <img src="https://raw.githubusercontent.com/apisearch-io/funko-database/master/img/{{metadata.image}}" type="image/png" style="width: 100px; height: 100px"><br>
                     {{{fields.title}}}<br>
                     <span class="has-text-grey is-size-7">
                             <strong>Collection: </strong>
@@ -183,15 +160,11 @@
     // UI Instance
     const ui = apisearchUI.create({
         app_id: 'as-29be77d7-2f64-4522',
-        index_id: 'eu1-2de60e18-5fae-4155',
-        token: 'eu1-8438694d-5839-4179-9f73-a55630f3cd4d',
-        coordinate: {
-            lat: 1.111,
-            lon: 2.000
-        },
+        index_id: 'loc-1-8f578f47-7610-491c',
+        token: 'loc-1-d8e48c90-3503-465a-827d-44f07c8f2fde',
         options: {
-            endpoint: 'https://eu1.apisearch.io',
-            override_queries: true
+            endpoint: 'http://localhost:8400',
+            override_queries: false
         }
     }, 'hash');
 
@@ -316,30 +289,53 @@
         ui.widgets.rangeFilter({
             widgetName: 'rating-range',
             target: '.range-filter-rating',
-            filterName: 'rating-range',
+            filterName: 'rating_range',
             filterField: 'rating_5',
-            minValue: 0,
+            minValue: 1,
             maxValue: 5,
-            from: {
-                initialValue: 0,
-                attributes: {
-                    id: "rating-min"
-                }
+            step: 2,
+            classNames: {
+                container: 'panel',
+                input: '',
             },
-            to: {
-                initialValue: 5,
-                attributes: {
-                    id: "rating-max"
-                }
+            attributes: {
+                from: {id: "rating-min"},
+                to: {id: "rating-max"},
+            },
+            template: {
+                top: '<i class="fa fa-cog"></i>&nbsp;Rating slider',
+                slider: '<div id="rating-slider" style="margin-top: 1rem; margin-bottom: 2rem;"></div>'
+            },
+            minMaxCallback: function(min, max, step) {
+                const $ratingSlider = $("#rating-slider");
+                const $sliderSpan = $("#rating span");
+                $ratingSlider.slider({
+                    range: true,
+                    min: min,
+                    max: max,
+                    step: step,
+                    slide: function( event, ui ) {
+                        $sliderSpan.text(ui.values[0] + " - " + ui.values[1] );
+                    },
+                    stop: function( event, ui ) {
+                        document.getElementById("rating-min").setAttribute('value', ui.values[0]);
+                        document.getElementById("rating-max").setAttribute('value', ui.values[1]);
+                    }
+                });
+
+
             },
             callback: function(from, to) {
                 setTimeout(function() {
-                    $("#rating-slider").slider(
+                    const $ratingSlider = $("#rating-slider");
+                    const $sliderSpan = $("#rating span");
+                    $ratingSlider.slider(
                         'option',
                         'values',
                         [from, to]
                     );
-                }, 50)
+                    $sliderSpan.text($ratingSlider.slider("values", 0) + ' - ' + $ratingSlider.slider("values", 1));
+                }, 50);
             }
         }),
         ui.widgets.clearFilters({
