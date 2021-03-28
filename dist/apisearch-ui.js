@@ -12831,6 +12831,7 @@ var RangeFilterComponent = /** @class */ (function (_super) {
         _this.uid = Math.random().toString(16).substr(2, 12);
         _this.observerFrom = _this.configureFromObserver();
         _this.observerTo = _this.configureToObserver();
+        _this.rangeUid = 'range-' + _this.uid;
         _this.setState(function (prevState) {
             return {
                 valueFrom: undefined,
@@ -13001,7 +13002,7 @@ var RangeFilterComponent = /** @class */ (function (_super) {
                         };
                     });
                     if (typeof props.minMaxCallback == 'function') {
-                        props.minMaxCallback(this.minValue, this.maxValue, props.step);
+                        props.minMaxCallback(this.minValue, this.maxValue, props.step, this.rangeUid);
                     }
                     /**
                      * Dispatch action
@@ -13020,7 +13021,7 @@ var RangeFilterComponent = /** @class */ (function (_super) {
                     };
                 });
                 if (typeof props.minMaxCallback == 'function') {
-                    props.minMaxCallback(props.minValue, props.maxValue, props.step);
+                    props.minMaxCallback(props.minValue, props.maxValue, props.step, this.rangeUid);
                 }
             }
         }
@@ -13030,9 +13031,9 @@ var RangeFilterComponent = /** @class */ (function (_super) {
             typeof props.callback == 'function' &&
             this.state.valueFrom !== undefined &&
             this.state.valueTo !== undefined) {
-            props.callback(this.state.valueFrom, this.state.valueTo);
+            props.callback(this.state.valueFrom, this.state.valueTo, this.rangeUid);
         }
-        return (preact_1.h("div", { className: "as-rangeFilter " + containerClassName },
+        return (preact_1.h("div", { id: this.rangeUid, className: "as-rangeFilter " + containerClassName },
             preact_1.h(Template_1["default"], { template: topTemplate, className: "as-rangeFilter__top " + topClassName, dictionary: this.props.dictionary }),
             preact_1.h("div", { "class": "slider" },
                 preact_1.h(Template_1["default"], { template: sliderTemplate, dictionary: this.props.dictionary })),

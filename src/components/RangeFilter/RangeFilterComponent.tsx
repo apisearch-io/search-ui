@@ -19,11 +19,13 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
     private observerFrom;
     private observerTo;
     private uid = Math.random().toString(16).substr(2, 12);
+    private rangeUid;
 
     constructor() {
         super();
         this.observerFrom = this.configureFromObserver();
         this.observerTo = this.configureToObserver();
+        this.rangeUid = 'range-' + this.uid;
         this.setState(prevState => {
             return {
                 valueFrom: undefined,
@@ -228,7 +230,7 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
                     });
 
                     if (typeof props.minMaxCallback == 'function') {
-                        props.minMaxCallback(this.minValue, this.maxValue, props.step);
+                        props.minMaxCallback(this.minValue, this.maxValue, props.step, this.rangeUid);
                     }
 
                     /**
@@ -251,7 +253,7 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
                 });
 
                 if (typeof props.minMaxCallback == 'function') {
-                    props.minMaxCallback(props.minValue, props.maxValue, props.step);
+                    props.minMaxCallback(props.minValue, props.maxValue, props.step, this.rangeUid);
                 }
             }
         }
@@ -265,11 +267,11 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
             this.state.valueFrom !== undefined &&
             this.state.valueTo !== undefined
         ) {
-            props.callback(this.state.valueFrom, this.state.valueTo);
+            props.callback(this.state.valueFrom, this.state.valueTo, this.rangeUid);
         }
 
         return (
-            <div className={`as-rangeFilter ${containerClassName}`}>
+            <div id={this.rangeUid} className={`as-rangeFilter ${containerClassName}`}>
                 <Template
                     template={topTemplate}
                     className={`as-rangeFilter__top ${topClassName}`}

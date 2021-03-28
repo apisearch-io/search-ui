@@ -304,10 +304,10 @@
             },
             template: {
                 top: '<i class="fa fa-cog"></i>&nbsp;Rating slider',
-                slider: '<div id="rating-slider" style="margin-top: 1rem; margin-bottom: 2rem;"></div>'
+                slider: '<div class="rating-slider" style="margin-top: 1rem; margin-bottom: 2rem;"></div>'
             },
-            minMaxCallback: function(min, max, step) {
-                const $ratingSlider = $("#rating-slider");
+            minMaxCallback: function(min, max, step, rangeUID) {
+                const $ratingSlider = $("#" + rangeUID + ' .rating-slider');
                 const $sliderSpan = $("#rating span");
                 $ratingSlider.slider({
                     range: true,
@@ -325,9 +325,9 @@
 
 
             },
-            callback: function(from, to) {
+            callback: function(from, to, rangeUID) {
                 setTimeout(function() {
-                    const $ratingSlider = $("#rating-slider");
+                    const $ratingSlider = $("#" + rangeUID + ' .rating-slider');
                     const $sliderSpan = $("#rating span");
                     $ratingSlider.slider(
                         'option',
