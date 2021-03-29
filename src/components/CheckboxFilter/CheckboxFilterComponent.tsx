@@ -5,21 +5,13 @@ import {
     aggregationSetup,
     onChangeSearchAction
 } from "./CheckboxFilterActions";
+import Template from "../Template";
+import {defaultItemTemplate} from "./defaultTemplates";
 
 /**
  * Checkbox Filter Component
  */
 class CheckboxFilterComponent extends Component<CheckboxFilterProps, CheckboxFilterState> {
-    /**
-     * Constructor
-     */
-    constructor(props) {
-        super(props);
-        this.state = {
-            isActive: false,
-            n: 0
-        }
-    }
 
     /**
      * Component will mount
@@ -50,55 +42,34 @@ class CheckboxFilterComponent extends Component<CheckboxFilterProps, CheckboxFil
      */
     componentWillReceiveProps(props) {
 
-        const filterName = props.filterName;
-        const filter = props.store.getCurrentQuery().getFilter(filterName);
-        const isNowActive = filter != null;
-
-        let n = 0;
-        const aggregation = props.store.getCurrentResult().getAggregation(filterName);
-        if (aggregation != null) {
-            const counters = aggregation.getCounters();
-            for (let i in counters) {
-                let counter = counters[i];
-                if (counter.values.name == 'true') {
-                    n = counter.getN();
-                }
-
-            };
-        }
-
         this.setState(prevState => {
             return {
-                isActive: isNowActive,
-                n: n
+                aggregation: props
+                    .store
+                    .getCurrentResult()
+                    .getAggregation(props.filterName)
            };
         });
     }
 
     /**
-     * Handle change
-     *
-     * @param e
+     * @param activeElement
      */
-    handleChange = (e) => {
+    handleChange = (activeElement) => {
 
         const props = this.props;
-        const environmentId = props.environmentId;
-        const currentQuery = props.store.getCurrentQuery();
-        const repository = props.repository;
-        const filterName = props.filterName;
-        const filterField = props.filterField;
 
         /**
          * Dispatch action
          */
         onChangeSearchAction(
-            environmentId,
-            currentQuery,
-            repository,
-            filterName,
-            filterField,
-            e.target.checked
+            props.environmentId,
+            props.store.getCurrentQuery(),
+            props.repository,
+            props.filterName,
+            props.filterField,
+            activeElement,
+            props.filterValue,
         );
     };
 
@@ -109,31 +80,85 @@ class CheckboxFilterComponent extends Component<CheckboxFilterProps, CheckboxFil
      */
     render(props, state) {
 
+        const containerClassName = props.classNames.container;
+        const topClassName = props.classNames.top;
+        const itemClassName = props.classNames.item;
+        const activeClassName = props.classNames.active;
+
+        const topTemplate = props.template.top;
+        const itemTemplate = props.template.item;
+
+        let n = 0;
+        let isActive = false;
+        const aggregation = state.aggregation;
+        if (aggregation != null) {
+            const counters = aggregation.getCounters();
+            for (let i in counters) {
+                let counter = counters[i];
+                if (counter.values.name == props.filterValue) {
+                    n = counter.getN();
+                    isActive = counter.isUsed();
+                    break;
+                }
+            }
+        }
+
         let label = props.label
             ? props.label
             : props.filterName;
-        let attributes = {};
-        const n = this.state.n;
-        if (this.state.isActive) {
-            attributes['checked'] = 'checked';
-        }
+
+        const that = this;
+        const uid = Math.floor(Math.random() * 10000000000);
+        const templateData = {
+            n: n,
+            isActive: isActive,
+            label: label,
+            uid: uid
+        };
 
         return (
-            <div className={`as-checkboxFilter`}>
-                <input
-                    type="checkbox"
-                    class="as-checkboxFilter__checkbox"
-                    {...attributes}
-                    onClick={this.handleChange}
+            <div className={`as-checkboxFilter ${containerClassName}`}>
+                <Template
+                    template={topTemplate}
+                    className={`as-multipleFilter__top ${topClassName}`}
+                    dictionary={this.props.dictionary}
                 />
-                <label
-                    class="as-checkboxFilter__label"
+
+                <div
+                    className={
+                        `as-multipleFilter__item ` +
+                        `${itemClassName} ` +
+                        `${(isActive) ? activeClassName : ''}`
+                    }
+                    onClick={function(e) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        that.handleChange(!isActive);
+                    }}
                 >
-                    {label} ({n})
-                </label>
+                    <Template
+                        template={itemTemplate}
+                        data={templateData}
+                        dictionary={this.props.dictionary}
+                    />
+                </div>
             </div>
-        );
+        )
     }
+}
+
+CheckboxFilterComponent.defaultProps = {
+    filterValue: 'true',
+    classNames: {
+        container: '',
+        top: '',
+        item: '',
+        active: 'as-checkboxFilter__item--active',
+    },
+    template: {
+        top: null,
+        item: defaultItemTemplate,
+    },
 }
 
 export default CheckboxFilterComponent;

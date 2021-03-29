@@ -13,7 +13,10 @@ class CheckboxFilter extends Widget {
         target,
         filterName,
         filterField,
-        label
+        label,
+        filterValue,
+        classNames,
+        template,
     }) {
         super();
         this.target = target;
@@ -22,6 +25,15 @@ class CheckboxFilter extends Widget {
             filterName={filterName}
             filterField={filterField}
             label={label}
+            filterValue={filterValue}
+            classNames={{
+                ...CheckboxFilterComponent.defaultProps.classNames,
+                ...classNames
+            }}
+            template={{
+                ...CheckboxFilterComponent.defaultProps.template,
+                ...template
+            }}
         />
     }
 
@@ -42,6 +54,7 @@ class CheckboxFilter extends Widget {
             environmentId: environmentId,
             repository: repository,
             store: store,
+            dictionary: dictionary
         };
 
         let targetNode = document.querySelector(this.target);

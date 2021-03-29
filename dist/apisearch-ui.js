@@ -11475,11 +11475,12 @@ exports.aggregationSetup = aggregationSetup;
  * @param filterName
  * @param filterField
  * @param isChecked
+ * @param filterValue
  */
-function onChangeSearchAction(environmentId, currentQuery, repository, filterName, filterField, isChecked) {
+function onChangeSearchAction(environmentId, currentQuery, repository, filterName, filterField, isChecked, filterValue) {
     var clonedQuery = Clone_1["default"].object(currentQuery);
     clonedQuery.filterBy(filterName, filterField, isChecked
-        ? ["true"]
+        ? [filterValue]
         : [], apisearch_1.FILTER_MUST_ALL, false);
     clonedQuery.page = 1;
     var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
@@ -11521,50 +11522,27 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 exports.__esModule = true;
 var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
 var CheckboxFilterActions_1 = __webpack_require__(/*! ./CheckboxFilterActions */ "./src/components/CheckboxFilter/CheckboxFilterActions.ts");
+var Template_1 = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
+var defaultTemplates_1 = __webpack_require__(/*! ./defaultTemplates */ "./src/components/CheckboxFilter/defaultTemplates.tsx");
 /**
  * Checkbox Filter Component
  */
 var CheckboxFilterComponent = /** @class */ (function (_super) {
     __extends(CheckboxFilterComponent, _super);
-    /**
-     * Constructor
-     */
-    function CheckboxFilterComponent(props) {
-        var _this = _super.call(this, props) || this;
+    function CheckboxFilterComponent() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
         /**
-         * Handle change
-         *
-         * @param e
+         * @param activeElement
          */
-        _this.handleChange = function (e) {
+        _this.handleChange = function (activeElement) {
             var props = _this.props;
-            var environmentId = props.environmentId;
-            var currentQuery = props.store.getCurrentQuery();
-            var repository = props.repository;
-            var filterName = props.filterName;
-            var filterField = props.filterField;
             /**
              * Dispatch action
              */
-            CheckboxFilterActions_1.onChangeSearchAction(environmentId, currentQuery, repository, filterName, filterField, e.target.checked);
-        };
-        _this.state = {
-            isActive: false,
-            n: 0
+            CheckboxFilterActions_1.onChangeSearchAction(props.environmentId, props.store.getCurrentQuery(), props.repository, props.filterName, props.filterField, activeElement, props.filterValue);
         };
         return _this;
     }
@@ -11588,25 +11566,12 @@ var CheckboxFilterComponent = /** @class */ (function (_super) {
      * @param props
      */
     CheckboxFilterComponent.prototype.componentWillReceiveProps = function (props) {
-        var filterName = props.filterName;
-        var filter = props.store.getCurrentQuery().getFilter(filterName);
-        var isNowActive = filter != null;
-        var n = 0;
-        var aggregation = props.store.getCurrentResult().getAggregation(filterName);
-        if (aggregation != null) {
-            var counters = aggregation.getCounters();
-            for (var i in counters) {
-                var counter = counters[i];
-                if (counter.values.name == 'true') {
-                    n = counter.getN();
-                }
-            }
-            ;
-        }
         this.setState(function (prevState) {
             return {
-                isActive: isNowActive,
-                n: n
+                aggregation: props
+                    .store
+                    .getCurrentResult()
+                    .getAggregation(props.filterName)
             };
         });
     };
@@ -11616,25 +11581,80 @@ var CheckboxFilterComponent = /** @class */ (function (_super) {
      * @return {any}
      */
     CheckboxFilterComponent.prototype.render = function (props, state) {
+        var containerClassName = props.classNames.container;
+        var topClassName = props.classNames.top;
+        var itemClassName = props.classNames.item;
+        var activeClassName = props.classNames.active;
+        var topTemplate = props.template.top;
+        var itemTemplate = props.template.item;
+        var n = 0;
+        var isActive = false;
+        var aggregation = state.aggregation;
+        if (aggregation != null) {
+            var counters = aggregation.getCounters();
+            for (var i in counters) {
+                var counter = counters[i];
+                if (counter.values.name == props.filterValue) {
+                    n = counter.getN();
+                    isActive = counter.isUsed();
+                    break;
+                }
+            }
+        }
         var label = props.label
             ? props.label
             : props.filterName;
-        var attributes = {};
-        var n = this.state.n;
-        if (this.state.isActive) {
-            attributes['checked'] = 'checked';
-        }
-        return (preact_1.h("div", { className: "as-checkboxFilter" },
-            preact_1.h("input", __assign({ type: "checkbox", "class": "as-checkboxFilter__checkbox" }, attributes, { onClick: this.handleChange })),
-            preact_1.h("label", { "class": "as-checkboxFilter__label" },
-                label,
-                " (",
-                n,
-                ")")));
+        var that = this;
+        var uid = Math.floor(Math.random() * 10000000000);
+        var templateData = {
+            n: n,
+            isActive: isActive,
+            label: label,
+            uid: uid
+        };
+        return (preact_1.h("div", { className: "as-checkboxFilter " + containerClassName },
+            preact_1.h(Template_1["default"], { template: topTemplate, className: "as-multipleFilter__top " + topClassName, dictionary: this.props.dictionary }),
+            preact_1.h("div", { className: "as-multipleFilter__item " +
+                    (itemClassName + " ") +
+                    ("" + ((isActive) ? activeClassName : '')), onClick: function (e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    that.handleChange(!isActive);
+                } },
+                preact_1.h(Template_1["default"], { template: itemTemplate, data: templateData, dictionary: this.props.dictionary }))));
     };
     return CheckboxFilterComponent;
 }(preact_1.Component));
+CheckboxFilterComponent.defaultProps = {
+    filterValue: 'true',
+    classNames: {
+        container: '',
+        top: '',
+        item: '',
+        active: 'as-checkboxFilter__item--active',
+    },
+    template: {
+        top: null,
+        item: defaultTemplates_1.defaultItemTemplate,
+    },
+};
 exports["default"] = CheckboxFilterComponent;
+
+
+/***/ }),
+
+/***/ "./src/components/CheckboxFilter/defaultTemplates.tsx":
+/*!************************************************************!*\
+  !*** ./src/components/CheckboxFilter/defaultTemplates.tsx ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+exports.defaultItemTemplate = void 0;
+exports.defaultItemTemplate = "\n    <input\n        type=\"checkbox\"\n        class=\"as-checkboxFilter__checkbox\"\n        id=\"filter_{{uid}}\"\n        {{#isActive}}checked=\"checked\"{{/isActive}}\n    />\n    <label\n        class=\"as-checkboxFilter__label\"\n        for=\"filter_{{uid}}\"\n    >\n        {{{label}}}\n    </label>\n    <span class=\"as-checkboxFilter__itemNumber\">\n        {{n}}\n    </span>\n";
 
 
 /***/ }),
@@ -14398,10 +14418,10 @@ var Widget_1 = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
 var CheckboxFilter = /** @class */ (function (_super) {
     __extends(CheckboxFilter, _super);
     function CheckboxFilter(_a) {
-        var target = _a.target, filterName = _a.filterName, filterField = _a.filterField, label = _a.label;
+        var target = _a.target, filterName = _a.filterName, filterField = _a.filterField, label = _a.label, filterValue = _a.filterValue, classNames = _a.classNames, template = _a.template;
         var _this = _super.call(this) || this;
         _this.target = target;
-        _this.component = preact_1.h(CheckboxFilterComponent_1["default"], { target: target, filterName: filterName, filterField: filterField, label: label });
+        _this.component = preact_1.h(CheckboxFilterComponent_1["default"], { target: target, filterName: filterName, filterField: filterField, label: label, filterValue: filterValue, classNames: __assign(__assign({}, CheckboxFilterComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, CheckboxFilterComponent_1["default"].defaultProps.template), template) });
         return _this;
     }
     /**
@@ -14411,7 +14431,7 @@ var CheckboxFilter = /** @class */ (function (_super) {
      * @param dictionary
      */
     CheckboxFilter.prototype.render = function (environmentId, store, repository, dictionary) {
-        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store });
+        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store, dictionary: dictionary });
         var targetNode = document.querySelector(this.target);
         preact_1.render(this.component, targetNode);
     };

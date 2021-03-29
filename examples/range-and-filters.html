@@ -99,7 +99,8 @@
     <div class="columns" style="margin-top: 1rem">
         <div class="column is-2">
             <div id="rating">Rating range: <span style="color:#f0d666; font-weight:bold;"></span></div>
-            <div class="range-filter-rating"></div>
+            <div class="range-filter-rating" style="margin-bottom: 1rem"></div>
+            <div class="rating-checkbox" style="margin-bottom: 1rem"></div>
             <div class="multiple-filter-color" style="margin-bottom: 1rem"></div>
             <div class="multiple-filter-rating" style="margin-bottom: 1rem"></div>
             <div class="multiple-filter-rating-blocks" style="margin-bottom: 1rem"></div>
@@ -284,6 +285,21 @@
                 top: 'panel-heading',
                 item: 'panel-block',
                 showMoreContainer: 'panel-block'
+            }
+        }),
+        ui.widgets.checkboxFilter({
+            target: '.rating-checkbox',
+            filterName: 'only-best',
+            filterField: 'rating_5',
+            label: "Only the best",
+            filterValue: "5",
+            template: {
+                top: '<i class="fa fa-cog"></i>&nbsp;Checkbox rating'
+            },
+            classNames: {
+                container: 'panel',
+                top: 'panel-heading',
+                item: 'panel-block'
             }
         }),
         ui.widgets.rangeFilter({

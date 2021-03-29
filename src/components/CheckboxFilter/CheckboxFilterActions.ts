@@ -38,6 +38,7 @@ export function aggregationSetup(
  * @param filterName
  * @param filterField
  * @param isChecked
+ * @param filterValue
  */
 export function onChangeSearchAction(
     environmentId: string,
@@ -46,11 +47,12 @@ export function onChangeSearchAction(
     filterName: string,
     filterField: string,
     isChecked: boolean,
+    filterValue: string,
 ) {
     const clonedQuery = Clone.object(currentQuery);
 
     clonedQuery.filterBy(filterName, filterField, isChecked
-        ? ["true"]
+        ? [filterValue]
         : []
     , FILTER_MUST_ALL, false);
 
