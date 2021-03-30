@@ -1,8 +1,7 @@
 /**
  * Clear filters actions
  */
-import {Repository} from "apisearch";
-import {Query} from "apisearch";
+import {HttpRepository, Repository, CacheClient, Query} from "apisearch";
 import {APISEARCH_DISPATCHER} from "../../Constants";
 import container from "../../Container";
 import Clone from "../Clone";
@@ -21,6 +20,12 @@ export function reloadAction(
 ) {
     const clonedQuery = Clone.object(currentQuery);
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
+    if (repository instanceof HttpRepository) {
+        const httpClient = repository.getHttpClient();
+        if (httpClient instanceof CacheClient) {
+            httpClient.flushCache();
+        }
+    }
 
     repository
         .query(clonedQuery)

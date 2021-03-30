@@ -157,18 +157,19 @@
 </script>
 
 <script type="text/javascript">
-
-    // UI Instance
-    const ui = apisearchUI.create({
+    // UI Instance 1
+    const apisearchUIFactory = apisearchUI.factory({
         app_id: 'as-29be77d7-2f64-4522',
-        index_id: 'loc-1-8f578f47-7610-491c',
-        token: 'loc-1-d8e48c90-3503-465a-827d-44f07c8f2fde',
+        index_id: 'eu1-2de60e18-5fae-4155',
+        token: 'eu1-8438694d-5839-4179-9f73-a55630f3cd4d',
         options: {
-            endpoint: 'http://localhost:8400',
-            override_queries: false
+            endpoint: 'https://eu1.apisearch.io',
+            override_queries: true,
+            use_cache: true
         }
     }, 'hash');
 
+    ui = apisearchUIFactory.createUI();
     // Widgets setup
     ui.addWidgets(
         ui.widgets.searchInput({
