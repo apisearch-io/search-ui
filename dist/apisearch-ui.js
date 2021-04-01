@@ -11931,8 +11931,8 @@ var CheckboxFilterComponent = /** @class */ (function (_super) {
             uid: uid
         };
         return (preact_1.h("div", { className: "as-checkboxFilter " + containerClassName },
-            preact_1.h(Template_1["default"], { template: topTemplate, className: "as-multipleFilter__top " + topClassName, dictionary: this.props.dictionary }),
-            preact_1.h("div", { className: "as-multipleFilter__item " +
+            preact_1.h(Template_1["default"], { template: topTemplate, className: "as-checkboxFilter__top " + topClassName, dictionary: this.props.dictionary }),
+            preact_1.h("div", { className: "as-checkboxFilter__item " +
                     (itemClassName + " ") +
                     ("" + ((isActive) ? activeClassName : '')), onClick: function (e) {
                     e.stopPropagation();
@@ -14596,6 +14596,204 @@ function splitQueryValue(string) {
 
 /***/ }),
 
+/***/ "./src/components/Suggestions/SuggestionsFilterActions.ts":
+/*!****************************************************************!*\
+  !*** ./src/components/Suggestions/SuggestionsFilterActions.ts ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+exports.onWordClickAction = exports.enableSuggestions = void 0;
+var Constants_1 = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
+var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
+var Clone_1 = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
+/**
+ * @param environmentId
+ * @param currentQuery
+ */
+function enableSuggestions(environmentId, currentQuery) {
+    var clonedQuery = Clone_1["default"].object(currentQuery);
+    clonedQuery.enableSuggestions();
+    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
+    dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
+        query: clonedQuery,
+    });
+}
+exports.enableSuggestions = enableSuggestions;
+/**
+ * @param environmentId
+ * @param currentQuery
+ * @param repository
+ * @param word
+ */
+function onWordClickAction(environmentId, currentQuery, repository, word) {
+    var clonedQuery = Clone_1["default"].object(currentQuery);
+    clonedQuery.filters._query.values = [word];
+    clonedQuery.page = 1;
+    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
+    repository
+        .query(clonedQuery)
+        .then(function (result) {
+        dispatcher.dispatch("RENDER_FETCHED_DATA", {
+            query: clonedQuery,
+            result: result,
+        });
+    })["catch"](function (error) {
+        // Do nothing
+    });
+}
+exports.onWordClickAction = onWordClickAction;
+
+
+/***/ }),
+
+/***/ "./src/components/Suggestions/SuggestionsFilterComponent.tsx":
+/*!*******************************************************************!*\
+  !*** ./src/components/Suggestions/SuggestionsFilterComponent.tsx ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+exports.__esModule = true;
+var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+var defaultTemplates_1 = __webpack_require__(/*! ./defaultTemplates */ "./src/components/Suggestions/defaultTemplates.tsx");
+var SuggestionsFilterActions_1 = __webpack_require__(/*! ./SuggestionsFilterActions */ "./src/components/Suggestions/SuggestionsFilterActions.ts");
+var Template_1 = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
+/**
+ * Suggestion Filter Component
+ */
+var SuggestionsFilterComponent = /** @class */ (function (_super) {
+    __extends(SuggestionsFilterComponent, _super);
+    function SuggestionsFilterComponent() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        /**
+         * @param word
+         */
+        _this.handleClick = function (word) {
+            var props = _this.props;
+            /**
+             * Dispatch action
+             */
+            SuggestionsFilterActions_1.onWordClickAction(props.environmentId, props.store.getCurrentQuery(), props.repository, word);
+        };
+        return _this;
+    }
+    /**
+     * Component will mount
+     */
+    SuggestionsFilterComponent.prototype.componentWillMount = function () {
+        this.setState(function (prevState) {
+            return {
+                words: []
+            };
+        });
+        var props = this.props;
+        var environmentId = props.environmentId;
+        var currentQuery = props.store.getCurrentQuery();
+        /**
+         * Dispatch action
+         */
+        SuggestionsFilterActions_1.enableSuggestions(environmentId, currentQuery);
+    };
+    /**
+     * Component will receive props
+     *
+     * @param props
+     */
+    SuggestionsFilterComponent.prototype.componentWillReceiveProps = function (props) {
+        this.setState(function (prevState) {
+            return {
+                words: props
+                    .store
+                    .getCurrentResult()
+                    .getSuggestions()
+            };
+        });
+    };
+    /**
+     * Render
+     *
+     * @return {any}
+     */
+    SuggestionsFilterComponent.prototype.render = function (props, state) {
+        var _this = this;
+        var currentSearch = props.store.getCurrentQuery().getQueryText();
+        var currentSearchLength = currentSearch.length;
+        var containerClassName = props.classNames.container;
+        var topClassName = props.classNames.top;
+        var itemsListClassName = props.classNames.itemsList;
+        var itemClassName = props.classNames.item;
+        var topTemplate = props.template.top;
+        var itemTemplate = props.template.item;
+        var that = this;
+        return (preact_1.h("div", { className: "as-suggestions " + containerClassName },
+            preact_1.h(Template_1["default"], { template: topTemplate, className: "as-suggestions__top " + topClassName, dictionary: this.props.dictionary }),
+            preact_1.h("div", { className: "as-suggestions__itemsList " + itemsListClassName }, state.words.map(function (word) {
+                var templateData = {
+                    word: word,
+                    highlightedWord: "<em>" + word.substr(0, currentSearchLength) + "</em>" + word.substr(currentSearchLength)
+                };
+                return (preact_1.h("div", { className: "as-suggestions__item " + itemClassName, onClick: function (e) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        that.handleClick(word);
+                    } },
+                    preact_1.h(Template_1["default"], { template: itemTemplate, data: templateData, dictionary: _this.props.dictionary })));
+            }))));
+    };
+    return SuggestionsFilterComponent;
+}(preact_1.Component));
+SuggestionsFilterComponent.defaultProps = {
+    classNames: {
+        container: '',
+        top: '',
+        itemsList: '',
+        item: '',
+    },
+    template: {
+        top: null,
+        item: defaultTemplates_1.defaultItemTemplate,
+    },
+};
+exports["default"] = SuggestionsFilterComponent;
+
+
+/***/ }),
+
+/***/ "./src/components/Suggestions/defaultTemplates.tsx":
+/*!*********************************************************!*\
+  !*** ./src/components/Suggestions/defaultTemplates.tsx ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+exports.defaultItemTemplate = void 0;
+exports.defaultItemTemplate = "\n    <span>{{{highlightedWord}}}</span>\n";
+
+
+/***/ }),
+
 /***/ "./src/components/Template.tsx":
 /*!*************************************!*\
   !*** ./src/components/Template.tsx ***!
@@ -15827,6 +16025,90 @@ exports["default"] = (function (settings) { return new SortBy(settings); });
 
 /***/ }),
 
+/***/ "./src/widgets/Suggestions.tsx":
+/*!*************************************!*\
+  !*** ./src/widgets/Suggestions.tsx ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+exports.__esModule = true;
+var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+var Widget_1 = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
+var SuggestionsFilterComponent_1 = __webpack_require__(/*! ../components/Suggestions/SuggestionsFilterComponent */ "./src/components/Suggestions/SuggestionsFilterComponent.tsx");
+/**
+ * SuggestionsFilter
+ */
+var SuggestionsFilter = /** @class */ (function (_super) {
+    __extends(SuggestionsFilter, _super);
+    function SuggestionsFilter(_a) {
+        var target = _a.target, classNames = _a.classNames, template = _a.template;
+        var _this = _super.call(this) || this;
+        _this.target = target;
+        _this.component = preact_1.h(SuggestionsFilterComponent_1["default"], { target: target, classNames: __assign(__assign({}, SuggestionsFilterComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, SuggestionsFilterComponent_1["default"].defaultProps.template), template) });
+        return _this;
+    }
+    /**
+     * @param environmentId
+     * @param store
+     * @param repository
+     * @param dictionary
+     */
+    SuggestionsFilter.prototype.render = function (environmentId, store, repository, dictionary) {
+        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store, dictionary: dictionary });
+        var targetNode = document.querySelector(this.target);
+        preact_1.render(this.component, targetNode);
+    };
+    /**
+     * @param query
+     * @param object
+     */
+    SuggestionsFilter.prototype.toUrlObject = function (query, object) {
+    };
+    /**
+     * @param object
+     * @param query
+     */
+    SuggestionsFilter.prototype.fromUrlObject = function (object, query) {
+    };
+    return SuggestionsFilter;
+}(Widget_1["default"]));
+/**
+ * CheckboxFilter widget
+ *
+ * @param settings
+ */
+exports["default"] = (function (settings) { return new SuggestionsFilter(settings); });
+
+
+/***/ }),
+
 /***/ "./src/widgets/Widget.ts":
 /*!*******************************!*\
   !*** ./src/widgets/Widget.ts ***!
@@ -15883,6 +16165,7 @@ var CheckboxFilter_1 = __webpack_require__(/*! ./CheckboxFilter */ "./src/widget
 var RangeFilter_1 = __webpack_require__(/*! ./RangeFilter */ "./src/widgets/RangeFilter.tsx");
 var Reload_1 = __webpack_require__(/*! ./Reload */ "./src/widgets/Reload.tsx");
 var Snapshot_1 = __webpack_require__(/*! ./Snapshot */ "./src/widgets/Snapshot.tsx");
+var Suggestions_1 = __webpack_require__(/*! ./Suggestions */ "./src/widgets/Suggestions.tsx");
 /**
  * Widget factories
  */
@@ -15898,6 +16181,7 @@ exports["default"] = {
     rangeFilter: RangeFilter_1["default"],
     reload: Reload_1["default"],
     snapshot: Snapshot_1["default"],
+    suggestions: Suggestions_1["default"]
 };
 
 

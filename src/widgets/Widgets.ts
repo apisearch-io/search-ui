@@ -9,6 +9,7 @@ import checkboxFilter from "./CheckboxFilter";
 import rangeFilter from "./RangeFilter";
 import reload from "./Reload";
 import snapshot from "./Snapshot";
+import suggestions from "./Suggestions";
 
 /**
  * Widget factories
@@ -25,4 +26,5 @@ export default {
     rangeFilter: rangeFilter,
     reload: reload,
     snapshot: snapshot,
+    suggestions: suggestions
 };

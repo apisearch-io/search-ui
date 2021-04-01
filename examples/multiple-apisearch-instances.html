@@ -32,6 +32,16 @@
             right: 30px;
             cursor: pointer;
         }
+
+        .as-suggestions__item {
+            color: #777;
+            cursor: pointer;
+        }
+
+        .as-suggestions__item em {
+            background: initial;
+            color: #222;!important;
+        }
     </style>
 </head>
 
@@ -83,6 +93,7 @@
                 <h1 class="title is-4 has-text-info">First instance</h1>
                 <hr>
                 <div class="input-instance-one"></div>
+                <div id="suggestions-instance-one"></div>
                 <div class="result-instance-one"></div>
             </div>
 
@@ -115,9 +126,7 @@
         <div class="card-content">
             <div class="media">
                 <div class="media-left">
-                    <object data="https://raw.githubusercontent.com/apisearch-io/funko-database/master/img/{{metadata.image}}" type="image/png" style="width: 50px; height: 50px">
-                        <img src="notfound.png" alt="{{metadata.title}}" style="width: 50px; height: 50px">
-                    </object>
+                    <img src="https://raw.githubusercontent.com/apisearch-io/funko-database/master/img/{{metadata.image}}" type="image/png" style="width: 100px; height: 100px"><br>
                 </div>
                 <div class="media-content">
                     <strong>{{fields.title}}</strong>
@@ -160,6 +169,9 @@
             template: {
                 itemsList: document.getElementById('result-template').text,
             }
+        }),
+        firstUI.widgets.suggestions({
+            target: '#suggestions-instance-one',
         })
     );
 
@@ -168,7 +180,7 @@
 
 <script type="text/javascript">
     // UI Instance 2
-    secondUI = firstUI = apisearchUIFactory.createUI();
+    secondUI = apisearchUIFactory.createUI();
     secondUI.addWidgets(
         secondUI.widgets.searchInput({
             target: '.input-instance-two',
@@ -195,9 +207,9 @@
 
 <script type="text/javascript">
     // UI Instance 3
-    secondUI = firstUI = apisearchUIFactory.createUI();
-    secondUI.addWidgets(
-        secondUI.widgets.searchInput({
+    thirdUI = apisearchUIFactory.createUI();
+    thirdUI.addWidgets(
+        thirdUI.widgets.searchInput({
             target: '.input-instance-three',
             placeholder: 'Type something on instance three...',
             startSearchOn: 3,
@@ -207,7 +219,7 @@
                 input: 'input'
             }
         }),
-        secondUI.widgets.result({
+        thirdUI.widgets.result({
             target: '.result-instance-three',
             itemsPerPage: 5,
             template: {
@@ -216,7 +228,7 @@
         })
     );
 
-    secondUI.init({
+    thirdUI.init({
         firstQuery: false
     });
 </script>

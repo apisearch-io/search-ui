@@ -1,27 +1,19 @@
-/**
- * Checkbox filter actions
- */
-import {Repository, Query, FILTER_TYPE_FIELD, FILTER_MUST_ALL} from "apisearch";
+import {Repository, Query} from "apisearch";
 import {APISEARCH_DISPATCHER} from "../../Constants";
 import container from "../../Container";
 import Clone from "../Clone";
 
+
 /**
- * Define aggregations setup
- *
  * @param environmentId
  * @param currentQuery
- * @param filterName
- * @param aggregationField
  */
-export function aggregationSetup(
+export function enableSuggestions(
     environmentId: string,
-    currentQuery: Query,
-    filterName: string,
-    aggregationField: string
+    currentQuery: Query
 ) {
     const clonedQuery = Clone.object(currentQuery);
-    clonedQuery.aggregateBy(filterName, aggregationField, FILTER_TYPE_FIELD);
+    clonedQuery.enableSuggestions();
 
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
 
@@ -34,28 +26,19 @@ export function aggregationSetup(
  * @param environmentId
  * @param currentQuery
  * @param repository
- * @param filterName
- * @param filterField
- * @param isChecked
- * @param filterValue
+ * @param word
  */
-export function onChangeSearchAction(
+export function onWordClickAction(
     environmentId: string,
     currentQuery: Query,
     repository: Repository,
-    filterName: string,
-    filterField: string,
-    isChecked: boolean,
-    filterValue: string,
+    word: string
 ) {
     const clonedQuery = Clone.object(currentQuery);
 
-    clonedQuery.filterBy(filterName, filterField, isChecked
-        ? [filterValue]
-        : []
-    , FILTER_MUST_ALL, false);
-
+    clonedQuery.filters._query.values = [word];
     clonedQuery.page = 1;
+
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
 
     repository

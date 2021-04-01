@@ -120,13 +120,13 @@ class CheckboxFilterComponent extends Component<CheckboxFilterProps, CheckboxFil
             <div className={`as-checkboxFilter ${containerClassName}`}>
                 <Template
                     template={topTemplate}
-                    className={`as-multipleFilter__top ${topClassName}`}
+                    className={`as-checkboxFilter__top ${topClassName}`}
                     dictionary={this.props.dictionary}
                 />
 
                 <div
                     className={
-                        `as-multipleFilter__item ` +
+                        `as-checkboxFilter__item ` +
                         `${itemClassName} ` +
                         `${(isActive) ? activeClassName : ''}`
                     }
