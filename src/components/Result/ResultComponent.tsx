@@ -147,12 +147,12 @@ class ResultComponent extends Component<ResultProps, ResultState> {
             props.promote.map((itemUUID) => {
                 return itemUUID instanceof ItemUUID
                     ? itemUUID
-                    : ItemUUID.createFromArray(itemUUID)
+                    : ItemUUID.createFromArray(itemUUID);
             }),
             props.exclude.map((itemUUID) => {
                 return itemUUID instanceof ItemUUID
                     ? itemUUID
-                    : ItemUUID.createFromArray(itemUUID)
+                    : ItemUUID.createFromArray(itemUUID);
             }),
             props.fields,
             props.filter,

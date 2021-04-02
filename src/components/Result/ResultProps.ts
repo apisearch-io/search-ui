@@ -13,7 +13,7 @@ export interface ResultProps {
     suggestionsEnabled: boolean|number;
     promote: ItemUUID[];
     exclude: ItemUUID[];
-    filter: Function,
+    filter: (Query) => void,
     classNames: {
         container: string,
         itemsList: string,
@@ -23,7 +23,7 @@ export interface ResultProps {
         itemsList: string,
         placeholder: null,
     };
-    formatData: Function;
+    formatData: (Item) => {Item},
     fadeInSelector: string,
     environmentId?: string;
     repository?: Repository;
