@@ -5,7 +5,7 @@ import ApisearchUI from "./ApisearchUI";
  */
 export default class ApisearchUIFactory {
 
-    private config:any;
+    private config: any;
 
     /**
      * Create instance
@@ -16,7 +16,7 @@ export default class ApisearchUIFactory {
      */
     public static fromConfig(config: any): ApisearchUIFactory {
 
-        const instance = new ApisearchUIFactory;
+        const instance = new ApisearchUIFactory();
         instance.config = config;
 
         return instance;
@@ -27,11 +27,10 @@ export default class ApisearchUIFactory {
      *
      * @return {ApisearchUI}
      */
-    public createUI(history: boolean|string = false)
-    {
+    public createUI(history: boolean|string = false) {
         return ApisearchUI.create(
             this.config,
-            history
+            history,
         );
     }
 }

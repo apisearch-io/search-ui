@@ -31,19 +31,21 @@ class Store extends EventEmitter {
      * @param coordinate
      * @param minScore
      * @param history
+     * @param userId
      */
     constructor(
         coordinate: {
             lat: number,
-            lon: number
+            lon: number,
         },
         minScore: number,
         history: boolean|string,
+        userId: string,
     ) {
         super();
 
         this.dirty = true;
-        let initialQuery = Store.loadInitialQuery(coordinate)
+        const initialQuery = Store.loadInitialQuery(coordinate, userId);
 
         if (minScore) {
             initialQuery.setMinScore(minScore);
@@ -146,7 +148,7 @@ class Store extends EventEmitter {
         this.dirty = false;
         this.currentResult = result;
         this.currentQuery = query;
-        this.currentVisibleResults = query != undefined;
+        this.currentVisibleResults = query !== undefined;
 
         this.pushQueryToHistory(
             query,
@@ -168,7 +170,7 @@ class Store extends EventEmitter {
         this.currentResult = result;
         this.currentQuery = query;
 
-        if (visibleResults != undefined) {
+        if (visibleResults !== undefined) {
             this.currentVisibleResults = visibleResults;
         }
 
@@ -176,8 +178,8 @@ class Store extends EventEmitter {
             this.pushQueryToHistory(
                 query,
                 result,
-                visibleResults
-            )
+                visibleResults,
+            );
         }
         this.fromBackHistoryState = false;
 
@@ -187,9 +189,9 @@ class Store extends EventEmitter {
     /**
      * Create an uid
      */
-    static createUID(length) {
-       let result = '';
-       const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    public static createUID(length) {
+       let result = "";
+       const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
        const charactersLength = characters.length;
        for ( let i = 0; i < length; i++ ) {
           result += characters.charAt(Math.floor(Math.random() * charactersLength));
@@ -221,21 +223,25 @@ class Store extends EventEmitter {
 
     /**
      * @param coordinate
+     * @param userId
      */
     private static loadInitialQuery(coordinate: {
         lat: number,
-        lon: number
-    }) : Query
-    {
+        lon: number,
+    }, userId: string): Query {
         const withCoordinate = (
             coordinate &&
-            coordinate.lat != undefined &&
-            coordinate.lon != undefined
+            coordinate.lat !== undefined &&
+            coordinate.lon !== undefined
         );
 
-        const q:any = {};
+        const q: any = {};
         if (withCoordinate) {
             q.coordinate = coordinate;
+        }
+
+        if (userId !== "") {
+            q.user = {id: userId};
         }
 
         return Query.createFromArray(q);
@@ -244,13 +250,12 @@ class Store extends EventEmitter {
     /**
      * @param query
      */
-    private loadQuery(query: Query) : Query
-    {
+    private loadQuery(query: Query): Query {
         if (typeof this.history !== "string") {
             return query;
         }
 
-        let queryAsObject = query.toArray();
+        const queryAsObject = query.toArray();
         const urlObject = this.loadUrlObjectFromHash();
         this.emit("fromUrlObject", urlObject, queryAsObject);
 
@@ -266,8 +271,8 @@ class Store extends EventEmitter {
             return {};
         }
 
-        let urlHash = '';
-        if (this.history === 'hash') {
+        let urlHash = "";
+        if (this.history === "hash") {
             urlHash = window.location.hash.substr(1);
         } else {
             const urlParams = new URLSearchParams(window.location.search);

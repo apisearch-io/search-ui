@@ -43,7 +43,8 @@ export function bootstrap(
         return new Store(
             config.coordinate,
             config.options.min_score,
-            history
+            history,
+            config.user_id ?? "",
         );
     });
 

@@ -11035,13 +11035,13 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 };
 exports.__esModule = true;
 var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
+var ApisearchHelper_1 = __webpack_require__(/*! ./ApisearchHelper */ "./src/ApisearchHelper.ts");
+var ApisearchUIFactory_1 = __webpack_require__(/*! ./ApisearchUIFactory */ "./src/ApisearchUIFactory.ts");
 var Bootstrap_1 = __webpack_require__(/*! ./Bootstrap */ "./src/Bootstrap.ts");
 var Constants_1 = __webpack_require__(/*! ./Constants */ "./src/Constants.ts");
 var Container_1 = __webpack_require__(/*! ./Container */ "./src/Container.ts");
 var Environment_1 = __webpack_require__(/*! ./Environment */ "./src/Environment.ts");
 var Widgets_1 = __webpack_require__(/*! ./widgets/Widgets */ "./src/widgets/Widgets.ts");
-var ApisearchHelper_1 = __webpack_require__(/*! ./ApisearchHelper */ "./src/ApisearchHelper.ts");
-var ApisearchUIFactory_1 = __webpack_require__(/*! ./ApisearchUIFactory */ "./src/ApisearchUIFactory.ts");
 /**
  * ApisearchUI class
  */
@@ -11178,6 +11178,7 @@ var ApisearchUI = /** @class */ (function () {
      * @return {ApisearchUI}
      */
     ApisearchUI.create = function (config, history) {
+        var _a;
         apisearch_1["default"].ensureRepositoryConfigIsValid(config);
         /**
          * Build environment Id
@@ -11202,6 +11203,7 @@ var ApisearchUI = /** @class */ (function () {
         apisearchUI.widgets = Widgets_1["default"];
         var uiId = "ui_" + Math.ceil(Math.random() * (9999999 - 1) + 1);
         apisearchUI.reference = uiId;
+        apisearchUI.userId = (_a = config.user_id) !== null && _a !== void 0 ? _a : "";
         window[uiId] = apisearchUI;
         /**
          * Return ApisearchUI instance
@@ -11221,17 +11223,16 @@ var ApisearchUI = /** @class */ (function () {
     /**
      * Click
      *
-     * @param app_id
-     * @param index_id
-     * @param item_id
-     * @param user_id
+     * @param appId
+     * @param indexId
+     * @param itemId
      *
      * @return {any}
      */
-    ApisearchUI.prototype.click = function (app_id, index_id, item_id, user_id) {
+    ApisearchUI.prototype.click = function (appId, indexId, itemId) {
         this
             .repository
-            .click(app_id, index_id, item_id, user_id);
+            .click(appId, indexId, itemId, this.userId);
     };
     return ApisearchUI;
 }());
@@ -11265,7 +11266,7 @@ var ApisearchUIFactory = /** @class */ (function () {
      * @return {ApisearchUIFactory}
      */
     ApisearchUIFactory.fromConfig = function (config) {
-        var instance = new ApisearchUIFactory;
+        var instance = new ApisearchUIFactory();
         instance.config = config;
         return instance;
     };
@@ -11324,7 +11325,8 @@ function bootstrap(environmentId, config, history) {
      * Register apisearch store
      */
     Container_1["default"].register(storeId, function () {
-        return new Store_1["default"](config.coordinate, config.options.min_score, history);
+        var _a;
+        return new Store_1["default"](config.coordinate, config.options.min_score, history, (_a = config.user_id) !== null && _a !== void 0 ? _a : "");
     });
     /**
      * Register an event dispatcher
@@ -11537,13 +11539,14 @@ var Store = /** @class */ (function (_super) {
      * @param coordinate
      * @param minScore
      * @param history
+     * @param userId
      */
-    function Store(coordinate, minScore, history) {
+    function Store(coordinate, minScore, history, userId) {
         var _this = _super.call(this) || this;
         _this.historyPrefix = '';
         _this.fromBackHistoryState = false;
         _this.dirty = true;
-        var initialQuery = Store.loadInitialQuery(coordinate);
+        var initialQuery = Store.loadInitialQuery(coordinate, userId);
         if (minScore) {
             initialQuery.setMinScore(minScore);
         }
@@ -11632,7 +11635,7 @@ var Store = /** @class */ (function (_super) {
         this.dirty = false;
         this.currentResult = result;
         this.currentQuery = query;
-        this.currentVisibleResults = query != undefined;
+        this.currentVisibleResults = query !== undefined;
         this.pushQueryToHistory(query, result, this.currentVisibleResults);
         this.emit("render");
     };
@@ -11644,7 +11647,7 @@ var Store = /** @class */ (function (_super) {
         this.dirty = false;
         this.currentResult = result;
         this.currentQuery = query;
-        if (visibleResults != undefined) {
+        if (visibleResults !== undefined) {
             this.currentVisibleResults = visibleResults;
         }
         if (!this.fromBackHistoryState) {
@@ -11657,8 +11660,8 @@ var Store = /** @class */ (function (_super) {
      * Create an uid
      */
     Store.createUID = function (length) {
-        var result = '';
-        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var result = "";
+        var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         var charactersLength = characters.length;
         for (var i = 0; i < length; i++) {
             result += characters.charAt(Math.floor(Math.random() * charactersLength));
@@ -11684,14 +11687,18 @@ var Store = /** @class */ (function (_super) {
     };
     /**
      * @param coordinate
+     * @param userId
      */
-    Store.loadInitialQuery = function (coordinate) {
+    Store.loadInitialQuery = function (coordinate, userId) {
         var withCoordinate = (coordinate &&
-            coordinate.lat != undefined &&
-            coordinate.lon != undefined);
+            coordinate.lat !== undefined &&
+            coordinate.lon !== undefined);
         var q = {};
         if (withCoordinate) {
             q.coordinate = coordinate;
+        }
+        if (userId !== "") {
+            q.user = { id: userId };
         }
         return apisearch_2.Query.createFromArray(q);
     };
@@ -11714,8 +11721,8 @@ var Store = /** @class */ (function (_super) {
         if (typeof this.history !== "string") {
             return {};
         }
-        var urlHash = '';
-        if (this.history === 'hash') {
+        var urlHash = "";
+        if (this.history === "hash") {
             urlHash = window.location.hash.substr(1);
         }
         else {

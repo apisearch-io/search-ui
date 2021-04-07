@@ -1,5 +1,7 @@
 import {HttpRepository} from "apisearch";
 import apisearch from "apisearch";
+import ApisearchHelper from "./ApisearchHelper";
+import ApisearchUIFactory from "./ApisearchUIFactory";
 import {bootstrap} from "./Bootstrap";
 import {APISEARCH_DISPATCHER, APISEARCH_UI} from "./Constants";
 import container from "./Container";
@@ -7,21 +9,20 @@ import {createEnvironmentId} from "./Environment";
 import Store from "./Store";
 import Widget from "./widgets/Widget";
 import widgets from "./widgets/Widgets";
-import ApisearchHelper from "./ApisearchHelper";
-import ApisearchUIFactory from "./ApisearchUIFactory";
 
 /**
  * ApisearchUI class
  */
 export default class ApisearchUI {
 
-    readonly environmentId: string;
-    readonly repository: HttpRepository;
-    readonly store: Store;
-    readonly helper: ApisearchHelper;
-    private activeWidgets: Widget[];
     public widgets: any;
+    private readonly environmentId: string;
+    private readonly repository: HttpRepository;
+    private readonly store: Store;
+    private readonly helper: ApisearchHelper;
+    private activeWidgets: Widget[];
     private dictionary: { [key: string]: string; };
+    private userId: string;
 
     /**
      * Constructor
@@ -61,8 +62,8 @@ export default class ApisearchUI {
          * 1.- Register all events on the store
          */
         this.store.on("render", () => this.render());
-        this.store.on("toUrlObject", (query:any, object:any) => this.toUrlObject(query, object));
-        this.store.on("fromUrlObject", (object:any, query:any) => this.fromUrlObject(object, query));
+        this.store.on("toUrlObject", (query: any, object: any) => this.toUrlObject(query, object));
+        this.store.on("fromUrlObject", (object: any, query: any) => this.fromUrlObject(object, query));
 
         /**
          * 2.- Trigger the initial render: (Mount the components)
@@ -129,11 +130,10 @@ export default class ApisearchUI {
                 this.environmentId,
                 this.store,
                 this.repository,
-                this.dictionary
+                this.dictionary,
             );
         });
     }
-
 
     /**
      * @param query
@@ -141,9 +141,8 @@ export default class ApisearchUI {
      */
     public toUrlObject(
         query: any,
-        object: any
-    )
-    {
+        object: any,
+    ) {
         this.activeWidgets.map((widget) => {
             widget.toUrlObject(
                 query,
@@ -158,9 +157,8 @@ export default class ApisearchUI {
      */
     public fromUrlObject(
         object: any,
-        query: any
-    )
-    {
+        query: any,
+    ) {
         this.activeWidgets.map((widget) => {
             widget.fromUrlObject(
                 object,
@@ -192,7 +190,7 @@ export default class ApisearchUI {
      */
     public static create(
         config: any,
-        history: boolean|string
+        history: boolean|string,
     ): ApisearchUI {
 
         apisearch.ensureRepositoryConfigIsValid(config);
@@ -208,7 +206,7 @@ export default class ApisearchUI {
         bootstrap(
             environmentId,
             config,
-            history
+            history,
         );
 
         /**
@@ -228,6 +226,7 @@ export default class ApisearchUI {
 
         const uiId = `ui_${Math.ceil(Math.random() * (9999999 - 1) + 1)}`;
         apisearchUI.reference = uiId;
+        apisearchUI.userId = config.user_id ?? "";
         window[uiId] = apisearchUI;
 
         /**
@@ -250,22 +249,19 @@ export default class ApisearchUI {
     /**
      * Click
      *
-     * @param app_id
-     * @param index_id
-     * @param item_id
-     * @param user_id
+     * @param appId
+     * @param indexId
+     * @param itemId
      *
      * @return {any}
      */
     public click(
-        app_id: string,
-        index_id: string,
-        item_id: string,
-        user_id: string
-    )
-    {
+        appId: string,
+        indexId: string,
+        itemId: string,
+    ) {
         this
             .repository
-            .click(app_id, index_id, item_id, user_id);
+            .click(appId, indexId, itemId, this.userId);
     }
 }
