@@ -271,7 +271,7 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
                     };
                     const formattedTemplateData = formatData(reducedTemplateData);
                     return (
-                        <div
+                        <li
                             className={
                                 `as-multipleFilter__item ` +
                                 `${itemClassName} ` +
@@ -288,7 +288,7 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
                                 data={formattedTemplateData}
                                 dictionary={this.props.dictionary}
                             />
-                        </div>
+                        </li>
                     )
                 })}
                 </ul>
