@@ -258,7 +258,7 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
                     dictionary={this.props.dictionary}
                 />
 
-                <div className={`as-multipleFilter__itemsList ${itemsListClassName}`}>
+                <ul className={`as-multipleFilter__itemsList ${itemsListClassName}`}>
                 {items.map(item => {
                     const values = item.getValues();
                     values.name = labels[values.name] ? labels[values.name] : values.name;
@@ -291,7 +291,7 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
                         </div>
                     )
                 })}
-                </div>
+                </ul>
 
                 {(isViewLimitProperlySet)
                     ? <ShowMoreComponent
