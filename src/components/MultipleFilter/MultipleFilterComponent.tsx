@@ -258,40 +258,42 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
                     dictionary={this.props.dictionary}
                 />
 
-                <ul className={`as-multipleFilter__itemsList ${itemsListClassName}`}>
-                {items.map(item => {
-                    const values = item.getValues();
-                    values.name = labels[values.name] ? labels[values.name] : values.name;
-                    const uid = Math.floor(Math.random() * 10000000000);
-                    const reducedTemplateData = {
-                        n: item.getN(),
-                        isActive: item.isUsed(),
-                        values: values,
-                        uid: uid
-                    };
-                    const formattedTemplateData = formatData(reducedTemplateData);
-                    return (
-                        <li
-                            className={
-                                `as-multipleFilter__item ` +
-                                `${itemClassName} ` +
-                                `${(item.used) ? activeClassName : ''}`
-                            }
-                            onClick={function(e) {
-                                e.stopPropagation();
-                                e.preventDefault();
-                                that.handleClick(item.values.id);
-                            }}
-                        >
-                            <Template
-                                template={itemTemplate}
-                                data={formattedTemplateData}
-                                dictionary={this.props.dictionary}
-                            />
-                        </li>
-                    )
-                })}
-                </ul>
+                <div className={`as-multipleFilter__itemsList ${itemsListClassName}`}>
+                    <ul>
+                        {items.map(item => {
+                            const values = item.getValues();
+                            values.name = labels[values.name] ? labels[values.name] : values.name;
+                            const uid = Math.floor(Math.random() * 10000000000);
+                            const reducedTemplateData = {
+                                n: item.getN(),
+                                isActive: item.isUsed(),
+                                values: values,
+                                uid: uid
+                            };
+                            const formattedTemplateData = formatData(reducedTemplateData);
+                            return (
+                                <li
+                                    className={
+                                        `as-multipleFilter__item ` +
+                                        `${itemClassName} ` +
+                                        `${(item.used) ? activeClassName : ''}`
+                                    }
+                                    onClick={function(e) {
+                                        e.stopPropagation();
+                                        e.preventDefault();
+                                        that.handleClick(item.values.id);
+                                    }}
+                                >
+                                    <Template
+                                        template={itemTemplate}
+                                        data={formattedTemplateData}
+                                        dictionary={this.props.dictionary}
+                                    />
+                                </li>
+                            )
+                        })}
+                    </ul>
+                </div>
 
                 {(isViewLimitProperlySet)
                     ? <ShowMoreComponent
