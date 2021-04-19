@@ -13320,7 +13320,7 @@ var RangeFilterComponent = /** @class */ (function (_super) {
      */
     RangeFilterComponent.prototype.render = function (props, state) {
         var _this = this;
-        var _a, _b, _c, _d, _e, _f;
+        var _a, _b, _c, _d;
         var filterName = props.filterName;
         var ref = compat_1.useRef(null);
         var topTemplate = props.template.top;
@@ -13355,8 +13355,14 @@ var RangeFilterComponent = /** @class */ (function (_super) {
                 var currentAggregation = aggregations.getAggregation(filterName);
                 if (currentAggregation !== null) {
                     var currentAggregationMetadata = currentAggregation.getMetadata();
-                    this.minValue = (_b = (_a = props.minValue) !== null && _a !== void 0 ? _a : currentAggregationMetadata['min']) !== null && _b !== void 0 ? _b : undefined;
-                    this.maxValue = (_d = (_c = props.maxValue) !== null && _c !== void 0 ? _c : currentAggregationMetadata['max']) !== null && _d !== void 0 ? _d : undefined;
+                    var currentAggregationMetadataMin = currentAggregationMetadata['min']
+                        ? Math.floor(currentAggregationMetadata)
+                        : undefined;
+                    var currentAggregationMetadataMax = currentAggregationMetadata['max']
+                        ? Math.ceil(currentAggregationMetadata['max'])
+                        : undefined;
+                    this.minValue = (_a = props.minValue) !== null && _a !== void 0 ? _a : currentAggregationMetadataMin;
+                    this.maxValue = (_b = props.maxValue) !== null && _b !== void 0 ? _b : currentAggregationMetadataMax;
                     this.minMaxAssigned = true;
                     this.setState(function (prevState) {
                         var _a, _b;
@@ -13390,8 +13396,8 @@ var RangeFilterComponent = /** @class */ (function (_super) {
                 }
             }
         }
-        var minValue = (_e = this.minValue) !== null && _e !== void 0 ? _e : props.minValue;
-        var maxValue = (_f = this.maxValue) !== null && _f !== void 0 ? _f : props.maxValue;
+        var minValue = (_c = this.minValue) !== null && _c !== void 0 ? _c : props.minValue;
+        var maxValue = (_d = this.maxValue) !== null && _d !== void 0 ? _d : props.maxValue;
         if (this.minMaxAssigned &&
             typeof props.callback == 'function' &&
             this.state.valueFrom !== undefined &&

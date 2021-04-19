@@ -217,9 +217,17 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
             if (this.shouldCheckMinMax()) {
                 let currentAggregation = aggregations.getAggregation(filterName);
                 if (currentAggregation !== null) {
-                    let currentAggregationMetadata = currentAggregation.getMetadata();
-                    this.minValue = props.minValue ?? currentAggregationMetadata['min'] ?? undefined;
-                    this.maxValue = props.maxValue ?? currentAggregationMetadata['max'] ?? undefined;
+                    const currentAggregationMetadata = currentAggregation.getMetadata();
+                    const currentAggregationMetadataMin = currentAggregationMetadata['min']
+                        ? Math.floor(currentAggregationMetadata)
+                        : undefined;
+
+                    const currentAggregationMetadataMax = currentAggregationMetadata['max']
+                        ? Math.ceil(currentAggregationMetadata['max'])
+                        : undefined;
+
+                    this.minValue = props.minValue ?? currentAggregationMetadataMin;
+                    this.maxValue = props.maxValue ?? currentAggregationMetadataMax;
                     this.minMaxAssigned = true;
                     this.setState(prevState => {
                         return {
