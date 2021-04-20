@@ -122,8 +122,11 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
                         currentQuery,
                         repository,
                         this.props.store.getCurrentResult().getSuggestions()[0],
-                        true
-                    )
+                        true,
+                    );
+
+                    e.preventDefault();
+                    return;
                 }
 
                 break;
