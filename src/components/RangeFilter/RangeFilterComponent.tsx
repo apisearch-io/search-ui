@@ -309,42 +309,44 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
                     />
                 </div>
 
-                <input
-                    type={type}
-                    class={`as-rangeFilter__from ${props.classNames.input} as-rangeFilter__${this.uid} as-rangeFilter__from__${this.uid}`}
-                    {...props.attributes.from}
-                    value={this.state.valueFrom}
-                    min={minValue}
-                    max={maxValue}
-                    step={props.step}
-                    onClick={function(e) {
-                        if (isNotNative) return false;
-                        that.handleSliderChange([parseInt((e.target as HTMLInputElement).value), that.state.valueTo])
-                    }}
-                    onChange={function(e) {
-                        if (isNative) return false;
-                        that.handleSliderChange([parseInt((e.target as HTMLInputElement).value), that.state.valueTo])
-                    }}
-                    autocomplete={`off`}
-                />
-                <input
-                    type={type}
-                    class={`as-rangeFilter__to ${props.classNames.input} as-rangeFilter__${this.uid} as-rangeFilter__to__${this.uid}`}
-                    {...props.attributes.to}
-                    value={this.state.valueTo}
-                    min={minValue}
-                    max={maxValue}
-                    step={props.step}
-                    onClick={function(e) {
-                        if (isNotNative) return false;
-                        that.handleSliderChange([that.state.valueFrom, parseInt((e.target as HTMLInputElement).value)])
-                    }}
-                    onChange={function(e) {
-                        if (isNative) return false;
-                        that.handleSliderChange([that.state.valueFrom, parseInt((e.target as HTMLInputElement).value)])
-                    }}
-                    autocomplete={`off`}
-                />
+                <div class="as-rangeFilter__wrapper">
+                    <input
+                        type={type}
+                        class={`as-rangeFilter__from ${props.classNames.input} as-rangeFilter__${this.uid} as-rangeFilter__from__${this.uid}`}
+                        {...props.attributes.from}
+                        value={this.state.valueFrom}
+                        min={minValue}
+                        max={maxValue}
+                        step={props.step}
+                        onClick={function(e) {
+                            if (isNotNative) return false;
+                            that.handleSliderChange([parseInt((e.target as HTMLInputElement).value), that.state.valueTo])
+                        }}
+                        onChange={function(e) {
+                            if (isNative) return false;
+                            that.handleSliderChange([parseInt((e.target as HTMLInputElement).value), that.state.valueTo])
+                        }}
+                        autocomplete={`off`}
+                    />
+                    <input
+                        type={type}
+                        class={`as-rangeFilter__to ${props.classNames.input} as-rangeFilter__${this.uid} as-rangeFilter__to__${this.uid}`}
+                        {...props.attributes.to}
+                        value={this.state.valueTo}
+                        min={minValue}
+                        max={maxValue}
+                        step={props.step}
+                        onClick={function(e) {
+                            if (isNotNative) return false;
+                            that.handleSliderChange([that.state.valueFrom, parseInt((e.target as HTMLInputElement).value)])
+                        }}
+                        onChange={function(e) {
+                            if (isNative) return false;
+                            that.handleSliderChange([that.state.valueFrom, parseInt((e.target as HTMLInputElement).value)])
+                        }}
+                        autocomplete={`off`}
+                    />
+                </div>
             </div>
         );
     }

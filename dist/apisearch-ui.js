@@ -13419,24 +13419,25 @@ var RangeFilterComponent = /** @class */ (function (_super) {
             preact_1.h(Template_1["default"], { template: topTemplate, className: "as-rangeFilter__top " + topClassName, dictionary: this.props.dictionary }),
             preact_1.h("div", { "class": "slider" },
                 preact_1.h(Template_1["default"], { template: sliderTemplate, dictionary: this.props.dictionary })),
-            preact_1.h("input", __assign({ type: type, "class": "as-rangeFilter__from " + props.classNames.input + " as-rangeFilter__" + this.uid + " as-rangeFilter__from__" + this.uid }, props.attributes.from, { value: this.state.valueFrom, min: minValue, max: maxValue, step: props.step, onClick: function (e) {
-                    if (isNotNative)
-                        return false;
-                    that.handleSliderChange([parseInt(e.target.value), that.state.valueTo]);
-                }, onChange: function (e) {
-                    if (isNative)
-                        return false;
-                    that.handleSliderChange([parseInt(e.target.value), that.state.valueTo]);
-                }, autocomplete: "off" })),
-            preact_1.h("input", __assign({ type: type, "class": "as-rangeFilter__to " + props.classNames.input + " as-rangeFilter__" + this.uid + " as-rangeFilter__to__" + this.uid }, props.attributes.to, { value: this.state.valueTo, min: minValue, max: maxValue, step: props.step, onClick: function (e) {
-                    if (isNotNative)
-                        return false;
-                    that.handleSliderChange([that.state.valueFrom, parseInt(e.target.value)]);
-                }, onChange: function (e) {
-                    if (isNative)
-                        return false;
-                    that.handleSliderChange([that.state.valueFrom, parseInt(e.target.value)]);
-                }, autocomplete: "off" }))));
+            preact_1.h("div", { "class": "as-rangeFilter__wrapper" },
+                preact_1.h("input", __assign({ type: type, "class": "as-rangeFilter__from " + props.classNames.input + " as-rangeFilter__" + this.uid + " as-rangeFilter__from__" + this.uid }, props.attributes.from, { value: this.state.valueFrom, min: minValue, max: maxValue, step: props.step, onClick: function (e) {
+                        if (isNotNative)
+                            return false;
+                        that.handleSliderChange([parseInt(e.target.value), that.state.valueTo]);
+                    }, onChange: function (e) {
+                        if (isNative)
+                            return false;
+                        that.handleSliderChange([parseInt(e.target.value), that.state.valueTo]);
+                    }, autocomplete: "off" })),
+                preact_1.h("input", __assign({ type: type, "class": "as-rangeFilter__to " + props.classNames.input + " as-rangeFilter__" + this.uid + " as-rangeFilter__to__" + this.uid }, props.attributes.to, { value: this.state.valueTo, min: minValue, max: maxValue, step: props.step, onClick: function (e) {
+                        if (isNotNative)
+                            return false;
+                        that.handleSliderChange([that.state.valueFrom, parseInt(e.target.value)]);
+                    }, onChange: function (e) {
+                        if (isNative)
+                            return false;
+                        that.handleSliderChange([that.state.valueFrom, parseInt(e.target.value)]);
+                    }, autocomplete: "off" })))));
     };
     /**
      * Apply filter
