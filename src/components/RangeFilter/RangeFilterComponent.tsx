@@ -130,6 +130,15 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
     };
 
     handleSliderChange(values) {
+
+        if (
+            values[0] === this.state.valueFrom &&
+            values[1] === this.state.valueTo
+        ) {
+            return false;
+        }
+
+
         this.setState(prevState => {
             return {
                 valueFrom: values[0],
@@ -268,6 +277,10 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
 
         const minValue = this.minValue ?? props.minValue;
         const maxValue = this.maxValue ?? props.maxValue;
+        const isNative = props.native;
+        const isNotNative = !isNative;
+        const type = isNative ? 'range' : 'number';
+        const eventName = 'onClick';
 
         if (
             this.minMaxAssigned &&
@@ -294,27 +307,37 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
                 </div>
 
                 <input
-                    type="number"
+                    type={type}
                     class={`as-rangeFilter__from ${props.classNames.input} as-rangeFilter__${this.uid} as-rangeFilter__from__${this.uid}`}
                     {...props.attributes.from}
                     value={this.state.valueFrom}
                     min={minValue}
                     max={maxValue}
                     step={props.step}
+                    onClick={function(e) {
+                        if (isNotNative) return false;
+                        that.handleSliderChange([parseInt((e.target as HTMLInputElement).value), that.state.valueTo])
+                    }}
                     onChange={function(e) {
+                        if (isNative) return false;
                         that.handleSliderChange([parseInt((e.target as HTMLInputElement).value), that.state.valueTo])
                     }}
                     autocomplete={`off`}
                 />
                 <input
-                    type="number"
+                    type={type}
                     class={`as-rangeFilter__to ${props.classNames.input} as-rangeFilter__${this.uid} as-rangeFilter__to__${this.uid}`}
                     {...props.attributes.to}
                     value={this.state.valueTo}
                     min={minValue}
                     max={maxValue}
                     step={props.step}
+                    onClick={function(e) {
+                        if (isNotNative) return false;
+                        that.handleSliderChange([that.state.valueFrom, parseInt((e.target as HTMLInputElement).value)])
+                    }}
                     onChange={function(e) {
+                        if (isNative) return false;
                         that.handleSliderChange([that.state.valueFrom, parseInt((e.target as HTMLInputElement).value)])
                     }}
                     autocomplete={`off`}
@@ -348,6 +371,7 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
 RangeFilterComponent.defaultProps = {
     maxValueIncluded: true,
     step: 1,
+    native: false,
     classNames: {
         container: '',
         top: '',

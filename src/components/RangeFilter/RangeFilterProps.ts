@@ -18,12 +18,13 @@ export interface RangeFilterProps {
         top: string,
         input: string,
         from: string,
-        to: string
-    },
+        to: string,
+    };
     attributes: {
         from: string,
-        to: string
-    }
+        to: string,
+    };
+    native: boolean;
     template: {
         top: string,
         slider: string,

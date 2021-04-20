@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script type="application/javascript" src="../dist/apisearch-ui.js"></script>
 
     <!-- custom styles -->
@@ -310,7 +309,7 @@
             filterField: 'rating_5',
             minValue: 1,
             maxValue: 5,
-            step: 2,
+            step: 1,
             classNames: {
                 container: 'panel',
                 input: '',
@@ -323,36 +322,10 @@
                 top: '<i class="fa fa-cog"></i>&nbsp;Rating slider',
                 slider: '<div class="rating-slider" style="margin-top: 1rem; margin-bottom: 2rem;"></div>'
             },
-            minMaxCallback: function(min, max, step, rangeUID) {
-                const $ratingSlider = $("#" + rangeUID + ' .rating-slider');
-                const $sliderSpan = $("#rating span");
-                $ratingSlider.slider({
-                    range: true,
-                    min: min,
-                    max: max,
-                    step: step,
-                    slide: function( event, ui ) {
-                        $sliderSpan.text(ui.values[0] + " - " + ui.values[1] );
-                    },
-                    stop: function( event, ui ) {
-                        document.getElementById("rating-min").setAttribute('value', ui.values[0]);
-                        document.getElementById("rating-max").setAttribute('value', ui.values[1]);
-                    }
-                });
-
-
-            },
+            native: true,
             callback: function(from, to, rangeUID) {
-                setTimeout(function() {
-                    const $ratingSlider = $("#" + rangeUID + ' .rating-slider');
-                    const $sliderSpan = $("#rating span");
-                    $ratingSlider.slider(
-                        'option',
-                        'values',
-                        [from, to]
-                    );
-                    $sliderSpan.text($ratingSlider.slider("values", 0) + ' - ' + $ratingSlider.slider("values", 1));
-                }, 50);
+                const $sliderSpan = $("#rating span");
+                $sliderSpan.text(from + ' - ' + to);
             }
         }),
         ui.widgets.clearFilters({

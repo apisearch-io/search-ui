@@ -21,6 +21,7 @@ class RangeFilter extends Widget {
         template,
         classNames,
         attributes,
+        native,
     }) {
         super();
         this.target = target;
@@ -33,19 +34,20 @@ class RangeFilter extends Widget {
             minMaxCallback={minMaxCallback}
             step={step}
             callback={callback}
+            native={native}
             template={{
                 ...RangeFilterComponent.defaultProps.template,
-                ...template
+                ...template,
             }}
             classNames={{
                 ...RangeFilterComponent.defaultProps.classNames,
-                ...classNames
+                ...classNames,
             }}
             attributes={{
                 ...RangeFilterComponent.defaultProps.attributes,
-                ...attributes
+                ...attributes,
             }}
-        />
+        />;
     }
 
     /**
