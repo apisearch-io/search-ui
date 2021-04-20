@@ -138,7 +138,6 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
             return false;
         }
 
-
         this.setState(prevState => {
             return {
                 valueFrom: values[0],
@@ -288,7 +287,11 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
             this.state.valueFrom !== undefined &&
             this.state.valueTo !== undefined
         ) {
-            props.callback(this.state.valueFrom, this.state.valueTo, this.rangeUid);
+            props.callback(
+                Math.min(state.valueFrom, state.valueTo),
+                Math.max(state.valueFrom, state.valueTo),
+                this.rangeUid
+            );
         }
 
         return (

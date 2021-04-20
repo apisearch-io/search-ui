@@ -45,6 +45,107 @@
         .search.navbar-item {
             min-width: 25rem
         }
+
+        input[type=range] {
+            -webkit-appearance: none;
+            border: 1px solid white;
+            width: 240px;
+            position: absolute;
+            left: 0;
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 240px;
+            height: 5px;
+            background: #ddd;
+            border: none;
+            border-radius: 3px;
+
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            border: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: #70b2e3;
+            color: #70b2e3;
+            margin-top: -4px;
+            cursor: pointer;
+            position: relative;
+            z-index: 1;
+        }
+
+        input[type=range]:focus {
+            outline: none;
+        }
+
+        input[type=range]:focus::-webkit-slider-runnable-track {
+            background: #ccc;
+        }
+
+        input[type=range]::-moz-range-track {
+            width: 300px;
+            height: 5px;
+            background: #ddd;
+            border: none;
+            border-radius: 3px;
+        }
+
+        input[type=range]::-moz-range-thumb {
+            border: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: #21c1ff;
+
+        }
+
+        input[type=range]:-moz-focusring {
+            outline: 1px solid white;
+            outline-offset: -1px;
+        }
+
+        input[type=range]::-ms-track {
+            width: 300px;
+            height: 5px;
+            /*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead */
+            background: transparent;
+            /*leave room for the larger thumb to overflow with a transparent border */
+            border-color: transparent;
+            border-width: 6px 0;
+            /*remove default tick marks*/
+            color: transparent;
+            z-index: -4;
+
+        }
+
+        input[type=range]::-ms-fill-lower {
+            background: #777;
+            border-radius: 10px;
+        }
+
+        input[type=range]::-ms-fill-upper {
+            background: #ddd;
+            border-radius: 10px;
+        }
+
+        input[type=range]::-ms-thumb {
+            border: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: #21c1ff;
+        }
+
+        input[type=range]:focus::-ms-fill-lower {
+            background: #888;
+        }
+
+        input[type=range]:focus::-ms-fill-upper {
+            background: #ccc;
+        }
     </style>
 </head>
 
@@ -98,7 +199,7 @@
     <div class="columns" style="margin-top: 1rem">
         <div class="column is-2">
             <div id="rating">Rating range: <span style="color:#f0d666; font-weight:bold;"></span></div>
-            <div class="range-filter-rating" style="margin-bottom: 1rem"></div>
+            <div class="range-filter-rating" style="height: 90px;"></div>
             <div class="rating-checkbox" style="margin-bottom: 1rem"></div>
             <div class="multiple-filter-color" style="margin-bottom: 1rem"></div>
             <div class="multiple-filter-rating" style="margin-bottom: 1rem"></div>

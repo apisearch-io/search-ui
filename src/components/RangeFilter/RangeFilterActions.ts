@@ -79,8 +79,10 @@ export function onChangeSearchAction(
     deleteMinMaxAggregation: boolean
 ) {
     const clonedQuery = Clone.object(currentQuery);
-    const toWithIncluded = to + ']';
-    clonedQuery.filterByRange(filterName, filterField, [], [from+".."+toWithIncluded], FILTER_AT_LEAST_ONE, FILTER_TYPE_RANGE, false);
+    const realFrom = Math.min(from, to);
+    const realTto = Math.max(from, to);
+    const toWithIncluded = realTto + ']';;
+    clonedQuery.filterByRange(filterName, filterField, [], [realFrom+".."+toWithIncluded], FILTER_AT_LEAST_ONE, FILTER_TYPE_RANGE, false);
     if (deleteMinMaxAggregation) {
         delete clonedQuery.aggregations[filterName];
     }

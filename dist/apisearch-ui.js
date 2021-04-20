@@ -13124,8 +13124,11 @@ exports.deleteMinMaxAggregation = deleteMinMaxAggregation;
  */
 function onChangeSearchAction(environmentId, currentQuery, repository, filterName, filterField, from, to, deleteMinMaxAggregation) {
     var clonedQuery = Clone_1["default"].object(currentQuery);
-    var toWithIncluded = to + ']';
-    clonedQuery.filterByRange(filterName, filterField, [], [from + ".." + toWithIncluded], apisearch_1.FILTER_AT_LEAST_ONE, apisearch_1.FILTER_TYPE_RANGE, false);
+    var realFrom = Math.min(from, to);
+    var realTto = Math.max(from, to);
+    var toWithIncluded = realTto + ']';
+    ;
+    clonedQuery.filterByRange(filterName, filterField, [], [realFrom + ".." + toWithIncluded], apisearch_1.FILTER_AT_LEAST_ONE, apisearch_1.FILTER_TYPE_RANGE, false);
     if (deleteMinMaxAggregation) {
         delete clonedQuery.aggregations[filterName];
     }
@@ -13410,7 +13413,7 @@ var RangeFilterComponent = /** @class */ (function (_super) {
             typeof props.callback == 'function' &&
             this.state.valueFrom !== undefined &&
             this.state.valueTo !== undefined) {
-            props.callback(this.state.valueFrom, this.state.valueTo, this.rangeUid);
+            props.callback(Math.min(state.valueFrom, state.valueTo), Math.max(state.valueFrom, state.valueTo), this.rangeUid);
         }
         return (preact_1.h("div", { id: this.rangeUid, className: "as-rangeFilter " + containerClassName },
             preact_1.h(Template_1["default"], { template: topTemplate, className: "as-rangeFilter__top " + topClassName, dictionary: this.props.dictionary }),
