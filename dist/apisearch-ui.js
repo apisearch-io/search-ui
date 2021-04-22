@@ -11325,8 +11325,8 @@ function bootstrap(environmentId, config, history) {
      * Register apisearch store
      */
     Container_1["default"].register(storeId, function () {
-        var _a;
-        return new Store_1["default"](config.coordinate, config.options.min_score, history, (_a = config.user_id) !== null && _a !== void 0 ? _a : "");
+        var _a, _b;
+        return new Store_1["default"](config.coordinate, config.options.min_score, history, (_a = config.user_id) !== null && _a !== void 0 ? _a : "", (_b = config.options.generate_random_session_uuid) !== null && _b !== void 0 ? _b : false);
     });
     /**
      * Register an event dispatcher
@@ -11534,14 +11534,13 @@ var Constants_1 = __webpack_require__(/*! ./Constants */ "./src/Constants.ts");
 var Store = /** @class */ (function (_super) {
     __extends(Store, _super);
     /**
-     * Constructor
-     *
      * @param coordinate
      * @param minScore
      * @param history
      * @param userId
+     * @param generateRandomSessionUUID
      */
-    function Store(coordinate, minScore, history, userId) {
+    function Store(coordinate, minScore, history, userId, generateRandomSessionUUID) {
         var _this = _super.call(this) || this;
         _this.historyPrefix = '';
         _this.fromBackHistoryState = false;
@@ -11555,7 +11554,9 @@ var Store = /** @class */ (function (_super) {
          */
         _this.currentResult = apisearch_1["default"].createEmptyResult();
         _this.currentVisibleResults = false;
-        initialQuery.setMetadataValue('session_uid', Store.createUID(16));
+        if (generateRandomSessionUUID) {
+            initialQuery.setMetadataValue('session_uid', Store.createUID(16));
+        }
         _this.currentQuery = initialQuery;
         _this.history = (history === true) ? 'hash' : history;
         if (!history) {

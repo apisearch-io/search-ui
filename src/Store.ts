@@ -26,12 +26,11 @@ class Store extends EventEmitter {
     private fromBackHistoryState: boolean = false;
 
     /**
-     * Constructor
-     *
      * @param coordinate
      * @param minScore
      * @param history
      * @param userId
+     * @param generateRandomSessionUUID
      */
     constructor(
         coordinate: {
@@ -41,6 +40,7 @@ class Store extends EventEmitter {
         minScore: number,
         history: boolean|string,
         userId: string,
+        generateRandomSessionUUID: boolean,
     ) {
         super();
 
@@ -56,7 +56,9 @@ class Store extends EventEmitter {
          */
         this.currentResult = apisearch.createEmptyResult();
         this.currentVisibleResults = false;
-        initialQuery.setMetadataValue('session_uid', Store.createUID(16));
+        if (generateRandomSessionUUID) {
+            initialQuery.setMetadataValue('session_uid', Store.createUID(16));
+        }
         this.currentQuery = initialQuery;
         this.history = (history === true) ? 'hash' : history;
         if (!history) {
