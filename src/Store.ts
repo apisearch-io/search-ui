@@ -17,6 +17,7 @@ import {APISEARCH_DISPATCHER} from "./Constants";
 class Store extends EventEmitter {
 
     private dirty: boolean;
+    private userId: string;
     private history: boolean|string;
     private currentQuery: Query;
     private currentResult: Result;
@@ -135,8 +136,7 @@ class Store extends EventEmitter {
     /**
      * @param payload
      */
-    public updateApisearchSetup(payload: any)
-    {
+    public updateApisearchSetup(payload: any) {
         this.currentQuery = payload.query;
     }
 
@@ -213,8 +213,14 @@ class Store extends EventEmitter {
         const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
         this.currentQuery = this.loadQuery(this.currentQuery);
 
+        /**
+         * In initial query, we must delete user
+         */
+        const queryAsArray = this.currentQuery.toArray();
+        queryAsArray.user = null;
+
         repository
-            .query(this.currentQuery)
+            .query(Query.createFromArray(queryAsArray))
             .then((result) => {
                 dispatcher.dispatch("RENDER_INITIAL_DATA", {
                     query: this.currentQuery,
@@ -327,7 +333,7 @@ class Store extends EventEmitter {
         if (this.history === 'hash') {
             path = objectAsJson;
         } else {
-            let pathPieces = parsePath(window.location.href);
+            const pathPieces = parsePath(window.location.href);
             const urlParams = new URLSearchParams(pathPieces.search);
             urlParams.set(this.history, objectAsJson);
             pathPieces.search = '?' + urlParams.toString();
