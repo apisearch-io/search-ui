@@ -94,7 +94,9 @@
                 <hr>
                 <div class="input-instance-one"></div>
                 <div id="suggestions-instance-one"></div>
-                <div class="result-instance-one"></div>
+                <div class="result-instance-one">
+
+                </div>
             </div>
 
             <!-- Apisearch Instance 2 -->
@@ -166,7 +168,7 @@
         }),
         firstUI.widgets.result({
             target: '.result-instance-one',
-            itemsPerPage: 5,
+            itemsPerPage: 20,
             template: {
                 itemsList: document.getElementById('result-template').text,
             }

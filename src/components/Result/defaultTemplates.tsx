@@ -1,14 +1,26 @@
 export const defaultItemsListTemplate = `
-    <ul>
+    <div>
     {{#items}}
-        <li class="as-result__item" key="{{key}}" data-id="{{uuid_composed}}">
+        <div class="as-result__item" data-id="{{uuid_composed}}">
             <strong>Score:</strong> {{score}}<br />
             <strong>Uuid:</strong> {{uuid.type}} - {{uuid.id}}<br />
             <strong>Title:</strong> {{{fields.title}}}<br />
             <strong>Description:</strong> {{fields.description}}<br />
             <strong>Link:</strong> <a href="{{metadata.link}}" onclick="{{click}}" target="_blank">{{metadata.link}}</a>
-        </li>
+        </div>
     {{/items}}
-    </ul>
-    {{^items}}No result{{/items}}
+    </div>
+    {{^items}}No results{{/items}}
+`;
+
+export const defaultItemTemplate = `
+    <strong>Score:</strong> {{score}}<br />
+    <strong>Uuid:</strong> {{uuid.type}} - {{uuid.id}}<br />
+    <strong>Title:</strong> {{{fields.title}}}<br />
+    <strong>Description:</strong> {{fields.description}}<br />
+    <strong>Link:</strong> <a href="{{metadata.link}}" onclick="{{click}}" target="_blank">{{metadata.link}}</a>
+`;
+
+export const defaultNoResultsItemTemplate = `
+    No results
 `;

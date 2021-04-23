@@ -81,6 +81,22 @@
     {{/items}}
 </script>
 
+
+<script type="text/template" id="result-item-search-tpl">
+    <div class="column is-narrow" key="{{key}}" style="width: 172px; height: 178.5px">
+        <div class="card" style="border-radius: .2rem">
+            <div class="card-content">
+                <div style="color: #777; font-size: 12px; height: 0px;">{{score}}</div>
+                <img src="https://raw.githubusercontent.com/apisearch-io/funko-database/master/img/{{metadata.image}}" type="image/png" style="width: 100px; height: 100px"><br>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/template" id="no-results-search-tpl">
+    <div class="notification">Empty set of results with this search: <b>{{query}}</b> 🙉</div>
+</script>
+
 <script type="text/javascript">
     // UI Instance
     const ui = apisearchUI.create({
@@ -110,10 +126,12 @@
             highlightsEnabled: true,
             infiniteScroll: 500,
             classNames: {
-                container: 'column'
+                container: 'column',
+                itemsList: 'columns is-multiline is-variable'
             },
             template: {
-                itemsList: document.getElementById('result-search-tpl').text,
+                item: document.getElementById('result-item-search-tpl').text,
+                noResults: document.getElementById('no-results-search-tpl').text,
             },
             formatData(item) {
                 item.metadata.lol = '<span style="color: red">LOLAMEN</span>';

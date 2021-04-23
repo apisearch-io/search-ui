@@ -260,7 +260,7 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
 
                 <div className={`as-multipleFilter__itemsList ${itemsListClassName}`}>
                     <ul>
-                        {items.map(item => {
+                        {items.map((item) => {
                             const values = item.getValues();
                             values.name = labels[values.name] ? labels[values.name] : values.name;
                             const uid = Math.floor(Math.random() * 10000000000);

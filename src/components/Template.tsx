@@ -16,7 +16,7 @@ class Template extends Component<TemplateProps> {
      *
      * @return {any}
      */
-    renderTemplate = (template, result, dictionary) => {
+    private renderTemplate = (template, result, dictionary) => {
 
         let trans = function() {
             return function(text, render) {
@@ -38,7 +38,7 @@ class Template extends Component<TemplateProps> {
      *
      * @return {any}
      */
-    render() {
+    public render() {
 
         const props = this.props;
         const template = props.template;

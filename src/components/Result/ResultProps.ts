@@ -13,18 +13,22 @@ export interface ResultProps {
     suggestionsEnabled: boolean|number;
     promote: ItemUUID[];
     exclude: ItemUUID[];
-    filter: (Query) => void,
+    filter: (Query) => void;
     classNames: {
         container: string,
         itemsList: string,
+        item: string,
+        noResults: string,
         placeholder: string,
     };
     template: {
         itemsList: string,
+        item: string,
+        noResults: string,
         placeholder: null,
     };
-    formatData: (Item) => {Item},
-    fadeInSelector: string,
+    formatData: (Item) => {Item};
+    fadeInSelector: string;
     environmentId?: string;
     repository?: Repository;
     store?: Store;

@@ -13671,6 +13671,66 @@ exports["default"] = ReloadComponent;
 
 /***/ }),
 
+/***/ "./src/components/Result/Item.tsx":
+/*!****************************************!*\
+  !*** ./src/components/Result/Item.tsx ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+exports.__esModule = true;
+var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+var Template_1 = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
+/**
+ * Item
+ */
+var Item = /** @class */ (function (_super) {
+    __extends(Item, _super);
+    function Item() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    /**
+     * @param nextProps
+     * @param nextState
+     */
+    Item.prototype.shouldComponentUpdate = function (nextProps, nextState) {
+        return this.props.data.uuid_composed !== nextProps.data.uuid_composed;
+    };
+    /**
+     * Render
+     *
+     * @return {any}
+     */
+    Item.prototype.render = function () {
+        var _a;
+        var props = this.props;
+        var template = props.template;
+        var data = props.data;
+        var dictionary = (_a = props.dictionary) !== null && _a !== void 0 ? _a : {};
+        return preact_1.h(Template_1["default"], { template: template, data: data, className: "as-result__itemsList " + props.className, dictionary: dictionary });
+    };
+    return Item;
+}(preact_1.Component));
+exports["default"] = Item;
+
+
+/***/ }),
+
 /***/ "./src/components/Result/ResultActions.ts":
 /*!************************************************!*\
   !*** ./src/components/Result/ResultActions.ts ***!
@@ -13816,6 +13876,7 @@ var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/pre
 var compat_1 = __webpack_require__(/*! preact/compat */ "./node_modules/preact/compat/dist/compat.module.js");
 var Template_1 = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
 var defaultTemplates_1 = __webpack_require__(/*! ./defaultTemplates */ "./src/components/Result/defaultTemplates.tsx");
+var Item_1 = __webpack_require__(/*! ./Item */ "./src/components/Result/Item.tsx");
 var ResultActions_1 = __webpack_require__(/*! ./ResultActions */ "./src/components/Result/ResultActions.ts");
 var ItemUUID_1 = __webpack_require__(/*! apisearch/lib/Model/ItemUUID */ "./node_modules/apisearch/lib/Model/ItemUUID.js");
 var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
@@ -13830,6 +13891,7 @@ var ResultComponent = /** @class */ (function (_super) {
      */
     function ResultComponent(props) {
         var _this = _super.call(this, props) || this;
+        _this.fromLoadingNextPage = false;
         _this.observer = compat_1.useRef();
         _this.endResultsBoxRef = compat_1.useCallback(function (node) {
             if (_this.observer.current instanceof IntersectionObserver) {
@@ -13838,6 +13900,7 @@ var ResultComponent = /** @class */ (function (_super) {
             _this.observer.current = new IntersectionObserver(function (entries) {
                 if (entries[0].isIntersecting) {
                     var _a = _this.props, environmentId = _a.environmentId, store = _a.store, repository = _a.repository;
+                    _this.fromLoadingNextPage = true;
                     ResultActions_1.infiniteScrollNextPageAction(environmentId, store.getCurrentQuery(), repository, _this.state.page + 1);
                 }
             });
@@ -13901,15 +13964,13 @@ var ResultComponent = /** @class */ (function (_super) {
         var items = currentResult.getItems();
         var currentPage = currentQuery.getPage();
         var hasNewPage = (currentResult.getTotalHits() > (currentPage * currentQuery.getSize()));
-        var hasInfiniteScroll = (props.infiniteScroll !== false) &&
-            ((props.infiniteScroll === true) ||
-                (props.infiniteScroll >= 0));
-        if (hasInfiniteScroll && currentPage > 1) {
-            items = this.state.items.concat(items);
-        }
+        var currentItems = this.fromLoadingNextPage
+            ? this.state.items.concat(items)
+            : items;
+        this.fromLoadingNextPage = false;
         this.setState(function (prevState) {
             return {
-                items: items,
+                items: currentItems,
                 page: props.store.getCurrentQuery().getPage(),
                 hasNewPage: hasNewPage,
             };
@@ -13939,19 +14000,15 @@ var ResultComponent = /** @class */ (function (_super) {
      * @return {any}
      */
     ResultComponent.prototype.render = function () {
+        var _this = this;
         var _a;
         var props = this.props;
         var dirty = props.store.isDirty();
         var containerClassName = props.classNames.container;
         var itemsListClassName = props.classNames.itemsList;
         var placeholderClassName = props.classNames.placeholder;
-        var environmentId = props.environmentId;
-        var config = Container_1["default"].get(Constants_1.APISEARCH_CONFIG + "__" + environmentId);
-        var apisearchUI = Container_1["default"].get(Constants_1.APISEARCH_UI + "__" + environmentId);
-        var apisearchReference = apisearchUI.reference;
         var itemsListTemplate = props.template.itemsList;
         var placeholderTemplate = (_a = props.template.placeholder) !== null && _a !== void 0 ? _a : "";
-        var formatData = props.formatData;
         var currentResult = props.store.getCurrentResult();
         var currentQuery = props.store.getCurrentQuery();
         var currentVisibleResults = props.currentVisibleResults;
@@ -13980,51 +14037,77 @@ var ResultComponent = /** @class */ (function (_super) {
             suggestions: currentResult.getSuggestions(),
         };
         /**
-         * Format each item data
+         * Uses defined a custom items list. Old version
          */
-        var formattedTemplateData = __assign(__assign({}, reducedTemplateData), { items: (items)
-                ? items.map(function (item) {
-                    var appId = config.app_id;
-                    var appUUID = item.getAppUUID();
-                    if (typeof appUUID === "object") {
-                        appId = appUUID.composedUUID();
-                    }
-                    var indexId = config.index_id;
-                    var indexUUID = item.getIndexUUID();
-                    if (typeof indexUUID === "object") {
-                        indexId = indexUUID.composedUUID();
-                    }
-                    var itemId = item.getUUID().composedUUID();
-                    var userId = config.user_id;
-                    var clickParameters = typeof userId === "string"
-                        ? appId + '", "' + indexId + '", "' + itemId + '", "' + userId
-                        : appId + '", "' + indexId + '", "' + itemId;
-                    var mainFields = {};
-                    Object.assign(mainFields, item.getMetadata(), item.getIndexedMetadata(), item.getHighlights());
-                    var fieldsConciliation = {};
-                    Object.keys(props.fieldsConciliation).map(function (field, index) {
-                        var _a;
-                        fieldsConciliation[field] = (_a = mainFields[props.fieldsConciliation[field]]) !== null && _a !== void 0 ? _a : undefined;
-                    });
-                    Object.assign(mainFields, fieldsConciliation);
-                    item.fields = mainFields;
-                    return __assign(__assign({}, formatData(item)), {
-                        key: "item_" + itemId,
-                        uuid_composed: itemId,
-                        click: apisearchReference + '.click("' + clickParameters + '");',
-                        striptags: function () {
-                            return function (val, render) { return render(val).replace(/(<([^>]+)>)/ig, ""); };
-                        },
-                    });
-                })
-                : [] });
-        return (preact_1.h("div", { className: "as-result " + containerClassName, ref: wrapperRef, style: "position: relative" },
+        if (props.template.itemsList !== defaultTemplates_1.defaultItemsListTemplate) {
+            return (preact_1.h("div", { className: "as-result " + containerClassName, ref: wrapperRef, style: "position: relative" },
+                (dirty)
+                    ? preact_1.h(Template_1["default"], { template: placeholderTemplate, className: "as-result__placeholder " + placeholderClassName, dictionary: this.props.dictionary })
+                    : preact_1.h(Template_1["default"], { template: itemsListTemplate, data: __assign(__assign({}, reducedTemplateData), { items: (items)
+                                ? items.map(function (item) { return _this.hydrateItem(item); })
+                                : [] }), className: "as-result__itemsList " + itemsListClassName, dictionary: this.props.dictionary }),
+                hasInfiniteScrollNextPage
+                    ? preact_1.h("div", { ref: this.endResultsBoxRef, style: "bottom: " + infiniteScrollMargin + "px; position: relative;" })
+                    : ""));
+        }
+        /**
+         * New version
+         */
+        return (preact_1.h("div", { className: "as-result " + containerClassName, ref: wrapperRef },
             (dirty)
                 ? preact_1.h(Template_1["default"], { template: placeholderTemplate, className: "as-result__placeholder " + placeholderClassName, dictionary: this.props.dictionary })
-                : preact_1.h(Template_1["default"], { template: itemsListTemplate, data: formattedTemplateData, className: "as-result__itemsList " + itemsListClassName, dictionary: this.props.dictionary }),
+                : ((items.length > 0)
+                    ? (preact_1.h("div", { className: "as-result__itemsList " + props.classNames.itemsList }, items.map(function (item) {
+                        return preact_1.h(Item_1["default"], { data: __assign(__assign({}, reducedTemplateData), _this.hydrateItem(item)), template: props.template.item, className: "as-result__item " + props.classNames.item, dictionary: _this.props.dictionary });
+                    })))
+                    : preact_1.h(Template_1["default"], { template: props.template.noResults, data: {
+                            query: currentQuery.getQueryText(),
+                        }, className: "as-result__noresults " + props.classNames.noResults, dictionary: this.props.dictionary })),
             hasInfiniteScrollNextPage
-                ? preact_1.h("div", { ref: this.endResultsBoxRef, style: "position: absolute; bottom: " + infiniteScrollMargin + "px;" })
+                ? preact_1.h("div", { ref: this.endResultsBoxRef, style: "bottom: " + infiniteScrollMargin + "px; position: relative;" })
                 : ""));
+    };
+    /**
+     * @param item
+     */
+    ResultComponent.prototype.hydrateItem = function (item) {
+        var props = this.props;
+        var environmentId = props.environmentId;
+        var config = Container_1["default"].get(Constants_1.APISEARCH_CONFIG + "__" + environmentId);
+        var apisearchUI = Container_1["default"].get(Constants_1.APISEARCH_UI + "__" + environmentId);
+        var apisearchReference = apisearchUI.reference;
+        var appId = config.app_id;
+        var appUUID = item.getAppUUID();
+        if (typeof appUUID === "object") {
+            appId = appUUID.composedUUID();
+        }
+        var indexId = config.index_id;
+        var indexUUID = item.getIndexUUID();
+        if (typeof indexUUID === "object") {
+            indexId = indexUUID.composedUUID();
+        }
+        var itemId = item.getUUID().composedUUID();
+        var userId = config.user_id;
+        var clickParameters = typeof userId === "string"
+            ? appId + '", "' + indexId + '", "' + itemId + '", "' + userId
+            : appId + '", "' + indexId + '", "' + itemId;
+        var mainFields = {};
+        Object.assign(mainFields, item.getMetadata(), item.getIndexedMetadata(), item.getHighlights());
+        var fieldsConciliation = {};
+        Object.keys(props.fieldsConciliation).map(function (field, index) {
+            var _a;
+            fieldsConciliation[field] = (_a = mainFields[props.fieldsConciliation[field]]) !== null && _a !== void 0 ? _a : undefined;
+        });
+        Object.assign(mainFields, fieldsConciliation);
+        item.fields = mainFields;
+        return __assign(__assign({}, props.formatData(item)), {
+            key: "item_" + itemId,
+            uuid_composed: itemId,
+            click: apisearchReference + '.click("' + clickParameters + '");',
+            striptags: function () {
+                return function (val, render) { return render(val).replace(/(<([^>]+)>)/ig, ""); };
+            },
+        });
     };
     return ResultComponent;
 }(preact_1.Component));
@@ -14038,10 +14121,14 @@ ResultComponent.defaultProps = {
     classNames: {
         container: "",
         itemsList: "",
+        item: "",
+        noResults: "",
         placeholder: "",
     },
     template: {
         itemsList: defaultTemplates_1.defaultItemsListTemplate,
+        item: defaultTemplates_1.defaultItemTemplate,
+        noResults: defaultTemplates_1.defaultNoResultsItemTemplate,
         placeholder: null,
     },
     formatData: function (data) { return data; },
@@ -14063,8 +14150,10 @@ exports["default"] = ResultComponent;
 "use strict";
 
 exports.__esModule = true;
-exports.defaultItemsListTemplate = void 0;
-exports.defaultItemsListTemplate = "\n    <ul>\n    {{#items}}\n        <li class=\"as-result__item\" key=\"{{key}}\" data-id=\"{{uuid_composed}}\">\n            <strong>Score:</strong> {{score}}<br />\n            <strong>Uuid:</strong> {{uuid.type}} - {{uuid.id}}<br />\n            <strong>Title:</strong> {{{fields.title}}}<br />\n            <strong>Description:</strong> {{fields.description}}<br />\n            <strong>Link:</strong> <a href=\"{{metadata.link}}\" onclick=\"{{click}}\" target=\"_blank\">{{metadata.link}}</a>\n        </li>\n    {{/items}}\n    </ul>\n    {{^items}}No result{{/items}}\n";
+exports.defaultNoResultsItemTemplate = exports.defaultItemTemplate = exports.defaultItemsListTemplate = void 0;
+exports.defaultItemsListTemplate = "\n    <div>\n    {{#items}}\n        <div class=\"as-result__item\" data-id=\"{{uuid_composed}}\">\n            <strong>Score:</strong> {{score}}<br />\n            <strong>Uuid:</strong> {{uuid.type}} - {{uuid.id}}<br />\n            <strong>Title:</strong> {{{fields.title}}}<br />\n            <strong>Description:</strong> {{fields.description}}<br />\n            <strong>Link:</strong> <a href=\"{{metadata.link}}\" onclick=\"{{click}}\" target=\"_blank\">{{metadata.link}}</a>\n        </div>\n    {{/items}}\n    </div>\n    {{^items}}No results{{/items}}\n";
+exports.defaultItemTemplate = "\n    <strong>Score:</strong> {{score}}<br />\n    <strong>Uuid:</strong> {{uuid.type}} - {{uuid.id}}<br />\n    <strong>Title:</strong> {{{fields.title}}}<br />\n    <strong>Description:</strong> {{fields.description}}<br />\n    <strong>Link:</strong> <a href=\"{{metadata.link}}\" onclick=\"{{click}}\" target=\"_blank\">{{metadata.link}}</a>\n";
+exports.defaultNoResultsItemTemplate = "\n    No results\n";
 
 
 /***/ }),

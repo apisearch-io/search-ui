@@ -1,7 +1,8 @@
 import { h, Component } from 'preact';
 import { useRef, useEffect, useCallback } from 'preact/compat';
 import Template from "../Template";
-import {defaultItemsListTemplate} from "./defaultTemplates";
+import {defaultItemsListTemplate, defaultItemTemplate, defaultNoResultsItemTemplate} from "./defaultTemplates";
+import Item from "./Item";
 import {configureQuery, infiniteScrollNextPageAction} from "./ResultActions";
 import {ResultState} from "./ResultState";
 import {ResultProps} from "./ResultProps";
@@ -17,6 +18,7 @@ import {
  */
 class ResultComponent extends Component<ResultProps, ResultState> {
 
+    private fromLoadingNextPage: boolean = false;
     private observer = useRef();
     private endResultsBoxRef = useCallback((node) => {
         if (this.observer.current instanceof IntersectionObserver) {
@@ -31,6 +33,7 @@ class ResultComponent extends Component<ResultProps, ResultState> {
                     repository,
                 } = this.props;
 
+                this.fromLoadingNextPage = true;
                 infiniteScrollNextPageAction(
                     environmentId,
                     store.getCurrentQuery(),
@@ -109,24 +112,17 @@ class ResultComponent extends Component<ResultProps, ResultState> {
 
         const currentResult = props.store.getCurrentResult();
         const currentQuery = props.store.getCurrentQuery();
-        let items = currentResult.getItems();
+        const items = currentResult.getItems();
         const currentPage = currentQuery.getPage();
         const hasNewPage = (currentResult.getTotalHits() > (currentPage * currentQuery.getSize()));
+        const currentItems = this.fromLoadingNextPage
+            ? this.state.items.concat(items)
+            : items;
 
-        const hasInfiniteScroll =
-            (props.infiniteScroll !== false) &&
-            (
-                (props.infiniteScroll === true) ||
-                (props.infiniteScroll >= 0)
-            );
-
-        if (hasInfiniteScroll && currentPage > 1) {
-            items = this.state.items.concat(items);
-        }
-
+        this.fromLoadingNextPage = false;
         this.setState((prevState) => {
             return {
-                items: items,
+                items: currentItems,
                 page: props.store.getCurrentQuery().getPage(),
                 hasNewPage: hasNewPage,
             };
@@ -176,15 +172,8 @@ class ResultComponent extends Component<ResultProps, ResultState> {
         const containerClassName = props.classNames.container;
         const itemsListClassName = props.classNames.itemsList;
         const placeholderClassName = props.classNames.placeholder;
-        const environmentId = props.environmentId;
-        const config = container.get(`${APISEARCH_CONFIG}__${environmentId}`);
-        const apisearchUI = container.get(`${APISEARCH_UI}__${environmentId}`);
-        const apisearchReference = apisearchUI.reference;
-
         const itemsListTemplate = props.template.itemsList;
         const placeholderTemplate = props.template.placeholder ?? "";
-
-        const formatData = props.formatData;
         const currentResult = props.store.getCurrentResult();
         const currentQuery = props.store.getCurrentQuery();
         const currentVisibleResults = props.currentVisibleResults;
@@ -226,89 +215,147 @@ class ResultComponent extends Component<ResultProps, ResultState> {
         };
 
         /**
-         * Format each item data
+         * Uses defined a custom items list. Old version
          */
-        const formattedTemplateData = {
-            ...reducedTemplateData,
-            items: (items)
-                ? items.map((item) => {
-                    let appId = config.app_id;
-                    const appUUID = item.getAppUUID();
-                    if (typeof appUUID === "object") {
-                        appId = appUUID.composedUUID();
+        if (props.template.itemsList !== defaultItemsListTemplate) {
+            return (
+                <div className={`as-result ${containerClassName}`} ref={wrapperRef} style={"position: relative"}>
+                    {(dirty)
+                        ? <Template
+                            template={placeholderTemplate}
+                            className={`as-result__placeholder ${placeholderClassName}`}
+                            dictionary={this.props.dictionary}
+                        />
+                        : <Template
+                            template={itemsListTemplate}
+                            data={{
+                                ...reducedTemplateData,
+                                items: (items)
+                                    ? items.map((item) => this.hydrateItem(item))
+                                    : [],
+                            }}
+                            className={`as-result__itemsList ${itemsListClassName}`}
+                            dictionary={this.props.dictionary}
+                        />
                     }
-
-                    let indexId = config.index_id;
-                    const indexUUID = item.getIndexUUID();
-                    if (typeof indexUUID === "object") {
-                        indexId = indexUUID.composedUUID();
+                    {hasInfiniteScrollNextPage
+                        ? <div
+                            ref={this.endResultsBoxRef}
+                            style={`bottom: ${infiniteScrollMargin}px; position: relative;`}
+                       />
+                        : ""
                     }
+                </div>
+            );
+        }
 
-                    const itemId = item.getUUID().composedUUID();
-                    const userId = config.user_id;
-                    const clickParameters = typeof userId === "string"
-                        ? appId + '", "' + indexId + '", "' + itemId + '", "' + userId
-                        : appId + '", "' + indexId + '", "' + itemId;
-
-                    const mainFields = {};
-                    Object.assign(
-                        mainFields,
-                        item.getMetadata(),
-                        item.getIndexedMetadata(),
-                        item.getHighlights(),
-                    );
-
-                    const fieldsConciliation = {};
-                    Object.keys(props.fieldsConciliation).map((field, index) => {
-                        fieldsConciliation[field] = mainFields[props.fieldsConciliation[field]] ?? undefined;
-                    });
-
-                    Object.assign(
-                        mainFields,
-                        fieldsConciliation,
-                    );
-
-                    item.fields = mainFields;
-
-                    return {
-                        ...formatData(item),
-                        ...{
-                            key: "item_" + itemId,
-                            uuid_composed: itemId,
-                            click: apisearchReference + '.click("' + clickParameters + '");',
-                            striptags: () => {
-                                return (val, render) => render(val).replace(/(<([^>]+)>)/ig, "");
-                            },
-                        },
-                    };
-                })
-                : [],
-        };
-
+        /**
+         * New version
+         */
         return (
-            <div className={`as-result ${containerClassName}`} ref={wrapperRef} style={"position: relative"}>
+            <div className={`as-result ${containerClassName}`} ref={wrapperRef}>
                 {(dirty)
                     ? <Template
                         template={placeholderTemplate}
                         className={`as-result__placeholder ${placeholderClassName}`}
                         dictionary={this.props.dictionary}
                     />
-                    : <Template
-                        template={itemsListTemplate}
-                        data={formattedTemplateData}
-                        className={`as-result__itemsList ${itemsListClassName}`}
-                        dictionary={this.props.dictionary}
-                    />
+                    : ((items.length > 0)
+                        ? (
+                            <div className={`as-result__itemsList ${props.classNames.itemsList}`}>
+                                {items.map((item) => {
+                                    return <Item
+                                        data={{
+                                            ...reducedTemplateData,
+                                            ...this.hydrateItem(item),
+                                        }}
+                                        template={props.template.item}
+                                        className={`as-result__item ${props.classNames.item}`}
+                                        dictionary={this.props.dictionary}
+                                    />;
+                                })}
+                            </div>
+                        )
+                        : <Template
+                            template={props.template.noResults}
+                            data={{
+                                query: currentQuery.getQueryText(),
+                            }}
+                            className={`as-result__noresults ${props.classNames.noResults}`}
+                            dictionary={this.props.dictionary}
+                        />
+                    )
                 }
                 {hasInfiniteScrollNextPage
                     ? <div
                         ref={this.endResultsBoxRef}
-                        style={`position: absolute; bottom: ${infiniteScrollMargin}px;`}
-                   />
+                        style={`bottom: ${infiniteScrollMargin}px; position: relative;`}
+                    />
                     : ""
                 }
             </div>
-        )
+        );
+    }
+
+    /**
+     * @param item
+     */
+    private hydrateItem(item: any) {
+        const props = this.props;
+        const environmentId = props.environmentId;
+        const config = container.get(`${APISEARCH_CONFIG}__${environmentId}`);
+        const apisearchUI = container.get(`${APISEARCH_UI}__${environmentId}`);
+        const apisearchReference = apisearchUI.reference;
+
+        let appId = config.app_id;
+        const appUUID = item.getAppUUID();
+        if (typeof appUUID === "object") {
+            appId = appUUID.composedUUID();
+        }
+
+        let indexId = config.index_id;
+        const indexUUID = item.getIndexUUID();
+        if (typeof indexUUID === "object") {
+            indexId = indexUUID.composedUUID();
+        }
+
+        const itemId = item.getUUID().composedUUID();
+        const userId = config.user_id;
+        const clickParameters = typeof userId === "string"
+            ? appId + '", "' + indexId + '", "' + itemId + '", "' + userId
+            : appId + '", "' + indexId + '", "' + itemId;
+
+        const mainFields = {};
+        Object.assign(
+            mainFields,
+            item.getMetadata(),
+            item.getIndexedMetadata(),
+            item.getHighlights(),
+        );
+
+        const fieldsConciliation = {};
+        Object.keys(props.fieldsConciliation).map((field, index) => {
+            fieldsConciliation[field] = mainFields[props.fieldsConciliation[field]] ?? undefined;
+        });
+
+        Object.assign(
+            mainFields,
+            fieldsConciliation,
+        );
+
+        item.fields = mainFields;
+
+        return {
+            ...props.formatData(item),
+            ...{
+                key: "item_" + itemId,
+                uuid_composed: itemId,
+                click: apisearchReference + '.click("' + clickParameters + '");',
+                striptags: () => {
+                    return (val, render) => render(val).replace(/(<([^>]+)>)/ig, "");
+                },
+            },
+        };
     }
 }
 
@@ -322,10 +369,14 @@ ResultComponent.defaultProps = {
     classNames: {
         container: "",
         itemsList: "",
+        item: "",
+        noResults: "",
         placeholder: "",
     },
     template: {
         itemsList: defaultItemsListTemplate,
+        item: defaultItemTemplate,
+        noResults: defaultNoResultsItemTemplate,
         placeholder: null,
     },
     formatData: (data) => data,
