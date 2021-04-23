@@ -13,17 +13,23 @@ import Clone from "../Clone";
  * @param environmentId
  * @param currentQuery
  * @param repository
+ * @param filterToClear
  */
 export function clearFiltersAction(
     environmentId: string,
     currentQuery: Query,
     repository: Repository,
+    filterToClear: string = null,
 ) {
     const clonedQuery = Clone.object(currentQuery);
 
-    clonedQuery.filters = {
-        _query: currentQuery.getFilter("_query"),
-    };
+    if (filterToClear === null) {
+        clonedQuery.filters = {
+            _query: currentQuery.getFilter("_query"),
+        };
+    } else {
+        delete clonedQuery.filters[filterToClear];
+    }
 
     clonedQuery.page = 1;
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);

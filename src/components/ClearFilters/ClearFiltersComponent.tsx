@@ -1,3 +1,4 @@
+import {Filter} from "apisearch";
 import { h, Component } from 'preact';
 import Template from "../Template";
 import {clearFiltersAction} from "./ClearFiltersActions";
@@ -14,7 +15,10 @@ class ClearFiltersComponent extends Component<ClearFiltersProps, ClearFiltersSta
      */
     constructor() {
         super();
-        this.state = {showClearFilters: false}
+        this.state = {
+            appliedFilters: [],
+            showClearFilters: false,
+        };
     }
 
     /**
@@ -22,29 +26,32 @@ class ClearFiltersComponent extends Component<ClearFiltersProps, ClearFiltersSta
      *
      * @param props
      */
-    componentWillReceiveProps(props) {
-        let filters = props.store.getCurrentQuery().getFilters();
-        let areFiltersActive = (
-            Object.keys(filters).length > 1
-        );
+    public componentWillReceiveProps(props) {
+        const appliedFiltersFormatted = this.getFiltersToShow();
 
-        this.setState(prevState => {
-            return {showClearFilters: areFiltersActive};
+        this.setState((prevState) => {
+            return {
+                appliedFilters: appliedFiltersFormatted,
+                showClearFilters: appliedFiltersFormatted.length > 0,
+            };
         });
     }
 
     /**
      * Handle click
      */
-    handleClick = () => {
+    public handleClick = () => {
 
         const props = this.props;
         const environmentId = props.environmentId;
         const currentQuery = props.store.getCurrentQuery();
         const repository = props.repository;
 
-        this.setState(prevState => {
-            return {showClearFilters: false};
+        this.setState((prevState) => {
+            return {
+                appliedFilters: [],
+                showClearFilters: false,
+            };
         });
 
         /**
@@ -53,41 +60,104 @@ class ClearFiltersComponent extends Component<ClearFiltersProps, ClearFiltersSta
         clearFiltersAction(
             environmentId,
             currentQuery,
-            repository
-        )
-    };
+            repository,
+        );
+    }
+
+    /**
+     * Handle individual click
+     */
+    public handleIndividualClick = (filterKey) => {
+
+        const props = this.props;
+        const environmentId = props.environmentId;
+        const currentQuery = props.store.getCurrentQuery();
+        const repository = props.repository;
+
+        /**
+         * Dispatch a clear filter action
+         */
+        clearFiltersAction(
+            environmentId,
+            currentQuery,
+            repository,
+            filterKey,
+        );
+    }
+
+    /**
+     * @param filterToAvoid
+     */
+    private getFiltersToShow(filterToAvoid = null) {
+        const appliedFilters = this.props.store.getCurrentQuery().getFilters();
+        const appliedFiltersFormatted = [];
+        for (const [key, filter] of Object.entries(appliedFilters)) {
+            if (filter instanceof Filter && (key !== "_query") && (key !== filterToAvoid)) {
+                appliedFiltersFormatted.push({
+                    filter: key,
+                    num: filter.getValues().length,
+                });
+            }
+        }
+
+        return appliedFiltersFormatted;
+    }
 
     /**
      * Render
      *
      * @return {}
      */
-    render() {
+    public render() {
 
         const props = this.props;
         const containerClassName = props.classNames.container;
+        const filtersListClassName = props.classNames.filtersList;
+        const filterClassName = props.classNames.filter;
+
         const containerTemplate = props.template.container;
+        const filterTemplate = props.template.filter;
+        console.log(filterTemplate);
+        const appliedFiltersFormatted = this.state.appliedFilters;
+        const individualFilterClear = props.showIndividualFilterClear
+            ? <ul className={`as-clearFilters__filtersList ${filtersListClassName}`}>
+                {appliedFiltersFormatted.map((filter) => {
+                    return <li className={`as-clearFilters__filter ${filterClassName}`} onClick={() => this.handleIndividualClick(filter.filter)}>
+                        <Template
+                            template={filterTemplate}
+                            dictionary={this.props.dictionary}
+                            data={filter}
+                        />
+                    </li>;
+                })}
+            </ul>
+            : "";
 
         return (this.state.showClearFilters)
-            ? ( <div className={`as-clearFilters ${containerClassName}`}
-                     onClick={this.handleClick}
-                >
-                    <Template
-                        template={containerTemplate}
-                        dictionary={this.props.dictionary}
-                    />
+            ? ( <div className={`as-clearFilters ${containerClassName}`}>
+                    <div onClick={this.handleClick}>
+                        <Template
+                            template={containerTemplate}
+                            dictionary={this.props.dictionary}
+                        />
+                    </div>
+                    {individualFilterClear}
                 </div>
-            ) : null
+            ) : null;
     }
 }
 
 ClearFiltersComponent.defaultProps = {
     classNames: {
-        container: ''
+        container: "",
+        filter: "",
+        filtersList: "",
     },
+    showIndividualFilterClear: false,
     template: {
-        container: 'Clear filters'
-    }
+        container: "Clear filters",
+        filter: "Clear {{filter}} ({{num}})",
+    },
 };
 
 export default ClearFiltersComponent;

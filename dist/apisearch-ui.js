@@ -12029,12 +12029,19 @@ var Clone_1 = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
  * @param environmentId
  * @param currentQuery
  * @param repository
+ * @param filterToClear
  */
-function clearFiltersAction(environmentId, currentQuery, repository) {
+function clearFiltersAction(environmentId, currentQuery, repository, filterToClear) {
+    if (filterToClear === void 0) { filterToClear = null; }
     var clonedQuery = Clone_1["default"].object(currentQuery);
-    clonedQuery.filters = {
-        _query: currentQuery.getFilter("_query"),
-    };
+    if (filterToClear === null) {
+        clonedQuery.filters = {
+            _query: currentQuery.getFilter("_query"),
+        };
+    }
+    else {
+        delete clonedQuery.filters[filterToClear];
+    }
     clonedQuery.page = 1;
     var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
     repository
@@ -12076,6 +12083,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 exports.__esModule = true;
+var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
 var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
 var Template_1 = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
 var ClearFiltersActions_1 = __webpack_require__(/*! ./ClearFiltersActions */ "./src/components/ClearFilters/ClearFiltersActions.ts");
@@ -12098,14 +12106,33 @@ var ClearFiltersComponent = /** @class */ (function (_super) {
             var currentQuery = props.store.getCurrentQuery();
             var repository = props.repository;
             _this.setState(function (prevState) {
-                return { showClearFilters: false };
+                return {
+                    appliedFilters: [],
+                    showClearFilters: false,
+                };
             });
             /**
              * Dispatch a clear filter action
              */
             ClearFiltersActions_1.clearFiltersAction(environmentId, currentQuery, repository);
         };
-        _this.state = { showClearFilters: false };
+        /**
+         * Handle individual click
+         */
+        _this.handleIndividualClick = function (filterKey) {
+            var props = _this.props;
+            var environmentId = props.environmentId;
+            var currentQuery = props.store.getCurrentQuery();
+            var repository = props.repository;
+            /**
+             * Dispatch a clear filter action
+             */
+            ClearFiltersActions_1.clearFiltersAction(environmentId, currentQuery, repository, filterKey);
+        };
+        _this.state = {
+            appliedFilters: [],
+            showClearFilters: false,
+        };
         return _this;
     }
     /**
@@ -12114,11 +12141,31 @@ var ClearFiltersComponent = /** @class */ (function (_super) {
      * @param props
      */
     ClearFiltersComponent.prototype.componentWillReceiveProps = function (props) {
-        var filters = props.store.getCurrentQuery().getFilters();
-        var areFiltersActive = (Object.keys(filters).length > 1);
+        var appliedFiltersFormatted = this.getFiltersToShow();
         this.setState(function (prevState) {
-            return { showClearFilters: areFiltersActive };
+            return {
+                appliedFilters: appliedFiltersFormatted,
+                showClearFilters: appliedFiltersFormatted.length > 0,
+            };
         });
+    };
+    /**
+     * @param filterToAvoid
+     */
+    ClearFiltersComponent.prototype.getFiltersToShow = function (filterToAvoid) {
+        if (filterToAvoid === void 0) { filterToAvoid = null; }
+        var appliedFilters = this.props.store.getCurrentQuery().getFilters();
+        var appliedFiltersFormatted = [];
+        for (var _i = 0, _a = Object.entries(appliedFilters); _i < _a.length; _i++) {
+            var _b = _a[_i], key = _b[0], filter = _b[1];
+            if (filter instanceof apisearch_1.Filter && (key !== "_query") && (key !== filterToAvoid)) {
+                appliedFiltersFormatted.push({
+                    filter: key,
+                    num: filter.getValues().length,
+                });
+            }
+        }
+        return appliedFiltersFormatted;
     };
     /**
      * Render
@@ -12126,22 +12173,40 @@ var ClearFiltersComponent = /** @class */ (function (_super) {
      * @return {}
      */
     ClearFiltersComponent.prototype.render = function () {
+        var _this = this;
         var props = this.props;
         var containerClassName = props.classNames.container;
+        var filtersListClassName = props.classNames.filtersList;
+        var filterClassName = props.classNames.filter;
         var containerTemplate = props.template.container;
+        var filterTemplate = props.template.filter;
+        console.log(filterTemplate);
+        var appliedFiltersFormatted = this.state.appliedFilters;
+        var individualFilterClear = props.showIndividualFilterClear
+            ? preact_1.h("ul", { className: "as-clearFilters__filtersList " + filtersListClassName }, appliedFiltersFormatted.map(function (filter) {
+                return preact_1.h("li", { className: "as-clearFilters__filter " + filterClassName, onClick: function () { return _this.handleIndividualClick(filter.filter); } },
+                    preact_1.h(Template_1["default"], { template: filterTemplate, dictionary: _this.props.dictionary, data: filter }));
+            }))
+            : "";
         return (this.state.showClearFilters)
-            ? (preact_1.h("div", { className: "as-clearFilters " + containerClassName, onClick: this.handleClick },
-                preact_1.h(Template_1["default"], { template: containerTemplate, dictionary: this.props.dictionary }))) : null;
+            ? (preact_1.h("div", { className: "as-clearFilters " + containerClassName },
+                preact_1.h("div", { onClick: this.handleClick },
+                    preact_1.h(Template_1["default"], { template: containerTemplate, dictionary: this.props.dictionary })),
+                individualFilterClear)) : null;
     };
     return ClearFiltersComponent;
 }(preact_1.Component));
 ClearFiltersComponent.defaultProps = {
     classNames: {
-        container: ''
+        container: "",
+        filter: "",
+        filtersList: "",
     },
+    showIndividualFilterClear: false,
     template: {
-        container: 'Clear filters'
-    }
+        container: "Clear filters",
+        filter: "Clear {{filter}} ({{num}})",
+    },
 };
 exports["default"] = ClearFiltersComponent;
 
@@ -15126,13 +15191,14 @@ var ClearFilters = /** @class */ (function (_super) {
      *
      * @param target
      * @param classNames
+     * @param showIndividualFilterClear
      * @param template
      */
     function ClearFilters(_a) {
-        var target = _a.target, classNames = _a.classNames, template = _a.template;
+        var target = _a.target, classNames = _a.classNames, template = _a.template, showIndividualFilterClear = _a.showIndividualFilterClear;
         var _this = _super.call(this) || this;
         _this.target = target;
-        _this.component = preact_1.h(ClearFiltersComponent_1["default"], { target: target, classNames: __assign(__assign({}, ClearFiltersComponent_1["default"].defaultProps.classNames), classNames), template: template });
+        _this.component = preact_1.h(ClearFiltersComponent_1["default"], { target: target, classNames: __assign(__assign({}, ClearFiltersComponent_1["default"].defaultProps.classNames), classNames), showIndividualFilterClear: showIndividualFilterClear, template: __assign(__assign({}, ClearFiltersComponent_1["default"].defaultProps.template), template) });
         return _this;
     }
     /**
@@ -15143,8 +15209,7 @@ var ClearFilters = /** @class */ (function (_super) {
      */
     ClearFilters.prototype.render = function (environmentId, store, repository, dictionary) {
         this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store, dictionary: dictionary });
-        var targetNode = document.querySelector(this.target);
-        preact_1.render(this.component, targetNode);
+        preact_1.render(this.component, document.querySelector(this.target));
     };
     return ClearFilters;
 }(Widget_1["default"]));

@@ -8,9 +8,13 @@ export interface ClearFiltersProps {
     target: any;
     classNames: {
         container: string,
+        filter: string,
+        filtersList: string,
     };
+    showIndividualFilterClear: boolean;
     template: {
         container: string,
+        filter: string,
     };
     environmentId?: string;
     repository?: Repository;

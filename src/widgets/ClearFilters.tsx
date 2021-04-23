@@ -14,12 +14,14 @@ class ClearFilters extends Widget {
      *
      * @param target
      * @param classNames
+     * @param showIndividualFilterClear
      * @param template
      */
     constructor({
         target,
         classNames,
-        template
+        template,
+        showIndividualFilterClear,
     }) {
         super();
         this.target = target;
@@ -27,10 +29,14 @@ class ClearFilters extends Widget {
             target={target}
             classNames={{
                 ...ClearFiltersComponent.defaultProps.classNames,
-                ...classNames
+                ...classNames,
             }}
-            template={template}
-        />
+            showIndividualFilterClear={showIndividualFilterClear}
+            template={{
+                ...ClearFiltersComponent.defaultProps.template,
+                ...template,
+            }}
+        />;
     }
 
     /**
@@ -53,12 +59,10 @@ class ClearFilters extends Widget {
             dictionary: dictionary,
         };
 
-        let targetNode = document.querySelector(this.target);
-
         render(
             this.component,
-            targetNode
-        )
+            document.querySelector(this.target),
+        );
     }
 }
 
@@ -67,4 +71,4 @@ class ClearFilters extends Widget {
  *
  * @param settings
  */
-export default settings => new ClearFilters(settings);
+export default (settings) => new ClearFilters(settings);
