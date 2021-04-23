@@ -117,7 +117,6 @@ class ClearFiltersComponent extends Component<ClearFiltersProps, ClearFiltersSta
 
         const containerTemplate = props.template.container;
         const filterTemplate = props.template.filter;
-        console.log(filterTemplate);
         const appliedFiltersFormatted = this.state.appliedFilters;
         const individualFilterClear = props.showIndividualFilterClear
             ? <ul className={`as-clearFilters__filtersList ${filtersListClassName}`}>

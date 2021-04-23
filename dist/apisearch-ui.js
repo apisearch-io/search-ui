@@ -12180,7 +12180,6 @@ var ClearFiltersComponent = /** @class */ (function (_super) {
         var filterClassName = props.classNames.filter;
         var containerTemplate = props.template.container;
         var filterTemplate = props.template.filter;
-        console.log(filterTemplate);
         var appliedFiltersFormatted = this.state.appliedFilters;
         var individualFilterClear = props.showIndividualFilterClear
             ? preact_1.h("ul", { className: "as-clearFilters__filtersList " + filtersListClassName }, appliedFiltersFormatted.map(function (filter) {
