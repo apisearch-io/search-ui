@@ -17,27 +17,32 @@ import {
  */
 class ResultComponent extends Component<ResultProps, ResultState> {
 
-    observer = useRef();
-    endResultsBoxRef = useCallback(node => {
-        if (this.observer.current instanceof IntersectionObserver) this.observer.current.disconnect()
-        this.observer.current = new IntersectionObserver(entries => {
+    private observer = useRef();
+    private endResultsBoxRef = useCallback((node) => {
+        if (this.observer.current instanceof IntersectionObserver) {
+            this.observer.current.disconnect();
+        }
+
+        this.observer.current = new IntersectionObserver((entries) => {
             if (entries[0].isIntersecting) {
                 const {
                     environmentId,
                     store,
-                    repository
+                    repository,
                 } = this.props;
 
                 infiniteScrollNextPageAction(
                     environmentId,
                     store.getCurrentQuery(),
                     repository,
-                    this.state.page + 1
-                )
+                    this.state.page + 1,
+                );
             }
-        })
+        });
 
-        if ((this.observer.current instanceof IntersectionObserver) && node) this.observer.current.observe(node)
+        if ((this.observer.current instanceof IntersectionObserver) && node) {
+            this.observer.current.observe(node);
+        }
     }, []);
 
     /**
@@ -50,14 +55,14 @@ class ResultComponent extends Component<ResultProps, ResultState> {
             items: [],
             page: 0,
             hasNewPage: false,
-            focus: props.fadeInSelector == ''
-        }
+            focus: props.fadeInSelector === "",
+        };
     }
 
     /**
      * Hook that change state once mouse clicks inside or outside the container
      */
-    addMouseDownListeners(ref, fadeInSelector) {
+    private addMouseDownListeners(ref, fadeInSelector) {
         useEffect(() => {
             const self = this;
 
@@ -66,11 +71,11 @@ class ResultComponent extends Component<ResultProps, ResultState> {
              */
             function handleClickOutside(event) {
 
-                self.setState(prevState => {
+                self.setState((prevState) => {
                     return {
                         items: prevState.items,
                         page: prevState.page,
-                        focus: event.target.closest(fadeInSelector) != null
+                        focus: event.target.closest(fadeInSelector) != null,
                     };
                 });
             }
@@ -89,14 +94,14 @@ class ResultComponent extends Component<ResultProps, ResultState> {
      *
      * @param props
      */
-    componentWillReceiveProps(props) {
+    public componentWillReceiveProps(props) {
 
         if (props.store.getCurrentResult() == null) {
-            this.setState(prevState => {
+            this.setState((prevState) => {
                 return {
                     items: [],
                     page: 0,
-                    hasNewPage: false
+                    hasNewPage: false,
                };
             });
             return;
@@ -119,11 +124,11 @@ class ResultComponent extends Component<ResultProps, ResultState> {
             items = this.state.items.concat(items);
         }
 
-        this.setState(prevState => {
+        this.setState((prevState) => {
             return {
                 items: items,
                 page: props.store.getCurrentQuery().getPage(),
-                hasNewPage: hasNewPage
+                hasNewPage: hasNewPage,
             };
         });
     }
@@ -131,7 +136,7 @@ class ResultComponent extends Component<ResultProps, ResultState> {
     /**
      * Component will mount
      */
-    componentWillMount() {
+    public componentWillMount() {
 
         const props = this.props;
 
@@ -156,7 +161,7 @@ class ResultComponent extends Component<ResultProps, ResultState> {
             }),
             props.fields,
             props.filter,
-            props.minScore
+            props.minScore,
         );
     }
 
@@ -165,7 +170,7 @@ class ResultComponent extends Component<ResultProps, ResultState> {
      *
      * @return {any}
      */
-    render() {
+    public render() {
         const props = this.props;
         const dirty = props.store.isDirty();
         const containerClassName = props.classNames.container;
@@ -177,7 +182,7 @@ class ResultComponent extends Component<ResultProps, ResultState> {
         const apisearchReference = apisearchUI.reference;
 
         const itemsListTemplate = props.template.itemsList;
-        const placeholderTemplate = props.template.placeholder ?? '';
+        const placeholderTemplate = props.template.placeholder ?? "";
 
         const formatData = props.formatData;
         const currentResult = props.store.getCurrentResult();
@@ -200,14 +205,14 @@ class ResultComponent extends Component<ResultProps, ResultState> {
             )
             : undefined;
 
-        if (props.fadeInSelector != '') {
+        if (props.fadeInSelector !== "") {
             this.addMouseDownListeners(wrapperRef, props.fadeInSelector);
         }
 
         if (!currentVisibleResults || !this.state.focus) {
             return (
                 <div className={`as-result ${containerClassName}`}></div>
-            )
+            );
         }
 
         /**
@@ -215,7 +220,7 @@ class ResultComponent extends Component<ResultProps, ResultState> {
          */
 
         const items = this.state.items;
-        let reducedTemplateData = {
+        const reducedTemplateData = {
             query: currentQuery.getQueryText(),
             suggestions: currentResult.getSuggestions(),
         };
@@ -223,10 +228,10 @@ class ResultComponent extends Component<ResultProps, ResultState> {
         /**
          * Format each item data
          */
-        let formattedTemplateData = {
+        const formattedTemplateData = {
             ...reducedTemplateData,
             items: (items)
-                ? items.map(function(item) {
+                ? items.map((item) => {
                     let appId = config.app_id;
                     const appUUID = item.getAppUUID();
                     if (typeof appUUID === "object") {
@@ -242,25 +247,25 @@ class ResultComponent extends Component<ResultProps, ResultState> {
                     const itemId = item.getUUID().composedUUID();
                     const userId = config.user_id;
                     const clickParameters = typeof userId === "string"
-                        ? appId+'", "'+indexId+'", "'+itemId+'", "'+userId
-                        : appId+'", "'+indexId+'", "'+itemId;
+                        ? appId + '", "' + indexId + '", "' + itemId + '", "' + userId
+                        : appId + '", "' + indexId + '", "' + itemId;
 
-                    let mainFields = {};
+                    const mainFields = {};
                     Object.assign(
                         mainFields,
                         item.getMetadata(),
                         item.getIndexedMetadata(),
-                        item.getHighlights()
+                        item.getHighlights(),
                     );
 
                     const fieldsConciliation = {};
-                    Object.keys(props.fieldsConciliation).map(function(field, index) {
+                    Object.keys(props.fieldsConciliation).map((field, index) => {
                         fieldsConciliation[field] = mainFields[props.fieldsConciliation[field]] ?? undefined;
-                    })
+                    });
 
                     Object.assign(
                         mainFields,
-                        fieldsConciliation
+                        fieldsConciliation,
                     );
 
                     item.fields = mainFields;
@@ -268,11 +273,14 @@ class ResultComponent extends Component<ResultProps, ResultState> {
                     return {
                         ...formatData(item),
                         ...{
-                            'key': 'item_' + itemId,
-                            'uuid_composed': itemId,
-                            'click': apisearchReference + '.click("'+clickParameters+'");'
-                        }
-                    }
+                            key: "item_" + itemId,
+                            uuid_composed: itemId,
+                            click: apisearchReference + '.click("' + clickParameters + '");',
+                            striptags: () => {
+                                return (val, render) => render(val).replace(/(<([^>]+)>)/ig, "");
+                            },
+                        },
+                    };
                 })
                 : [],
         };
@@ -310,19 +318,19 @@ ResultComponent.defaultProps = {
     highlightsEnabled: false,
     promote: [],
     exclude: [],
-    filter: function (query) {},
+    filter: (query) => null,
     classNames: {
-        container: '',
-        itemsList: '',
-        placeholder: ''
+        container: "",
+        itemsList: "",
+        placeholder: "",
     },
     template: {
         itemsList: defaultItemsListTemplate,
-        placeholder: null
+        placeholder: null,
     },
-    formatData: data => data,
-    fadeInSelector: '',
-    fieldsConciliation: {}
+    formatData: (data) => data,
+    fadeInSelector: "",
+    fieldsConciliation: {},
 };
 
 export default ResultComponent;

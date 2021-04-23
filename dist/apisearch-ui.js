@@ -11682,7 +11682,6 @@ var Store = /** @class */ (function (_super) {
          */
         var queryAsArray = this.currentQuery.toArray();
         queryAsArray.user = null;
-        console.log(queryAsArray);
         repository
             .query(apisearch_2.Query.createFromArray(queryAsArray))
             .then(function (result) {
@@ -13597,10 +13596,10 @@ var ReloadComponent = /** @class */ (function (_super) {
 }(preact_1.Component));
 ReloadComponent.defaultProps = {
     classNames: {
-        container: ''
+        container: "",
     },
     template: {
-        container: 'Reload'
+        container: "Reload",
     },
 };
 exports["default"] = ReloadComponent;
@@ -13769,22 +13768,24 @@ var ResultComponent = /** @class */ (function (_super) {
         var _this = _super.call(this, props) || this;
         _this.observer = compat_1.useRef();
         _this.endResultsBoxRef = compat_1.useCallback(function (node) {
-            if (_this.observer.current instanceof IntersectionObserver)
+            if (_this.observer.current instanceof IntersectionObserver) {
                 _this.observer.current.disconnect();
+            }
             _this.observer.current = new IntersectionObserver(function (entries) {
                 if (entries[0].isIntersecting) {
                     var _a = _this.props, environmentId = _a.environmentId, store = _a.store, repository = _a.repository;
                     ResultActions_1.infiniteScrollNextPageAction(environmentId, store.getCurrentQuery(), repository, _this.state.page + 1);
                 }
             });
-            if ((_this.observer.current instanceof IntersectionObserver) && node)
+            if ((_this.observer.current instanceof IntersectionObserver) && node) {
                 _this.observer.current.observe(node);
+            }
         }, []);
         _this.state = {
             items: [],
             page: 0,
             hasNewPage: false,
-            focus: props.fadeInSelector == ''
+            focus: props.fadeInSelector === "",
         };
         return _this;
     }
@@ -13803,7 +13804,7 @@ var ResultComponent = /** @class */ (function (_super) {
                     return {
                         items: prevState.items,
                         page: prevState.page,
-                        focus: event.target.closest(fadeInSelector) != null
+                        focus: event.target.closest(fadeInSelector) != null,
                     };
                 });
             }
@@ -13826,7 +13827,7 @@ var ResultComponent = /** @class */ (function (_super) {
                 return {
                     items: [],
                     page: 0,
-                    hasNewPage: false
+                    hasNewPage: false,
                 };
             });
             return;
@@ -13846,7 +13847,7 @@ var ResultComponent = /** @class */ (function (_super) {
             return {
                 items: items,
                 page: props.store.getCurrentQuery().getPage(),
-                hasNewPage: hasNewPage
+                hasNewPage: hasNewPage,
             };
         });
     };
@@ -13885,7 +13886,7 @@ var ResultComponent = /** @class */ (function (_super) {
         var apisearchUI = Container_1["default"].get(Constants_1.APISEARCH_UI + "__" + environmentId);
         var apisearchReference = apisearchUI.reference;
         var itemsListTemplate = props.template.itemsList;
-        var placeholderTemplate = (_a = props.template.placeholder) !== null && _a !== void 0 ? _a : '';
+        var placeholderTemplate = (_a = props.template.placeholder) !== null && _a !== void 0 ? _a : "";
         var formatData = props.formatData;
         var currentResult = props.store.getCurrentResult();
         var currentQuery = props.store.getCurrentQuery();
@@ -13900,7 +13901,7 @@ var ResultComponent = /** @class */ (function (_super) {
                 ? 0
                 : props.infiniteScroll)
             : undefined;
-        if (props.fadeInSelector != '') {
+        if (props.fadeInSelector !== "") {
             this.addMouseDownListeners(wrapperRef, props.fadeInSelector);
         }
         if (!currentVisibleResults || !this.state.focus) {
@@ -13944,9 +13945,12 @@ var ResultComponent = /** @class */ (function (_super) {
                     Object.assign(mainFields, fieldsConciliation);
                     item.fields = mainFields;
                     return __assign(__assign({}, formatData(item)), {
-                        'key': 'item_' + itemId,
-                        'uuid_composed': itemId,
-                        'click': apisearchReference + '.click("' + clickParameters + '");'
+                        key: "item_" + itemId,
+                        uuid_composed: itemId,
+                        click: apisearchReference + '.click("' + clickParameters + '");',
+                        striptags: function () {
+                            return function (val, render) { return render(val).replace(/(<([^>]+)>)/ig, ""); };
+                        },
                     });
                 })
                 : [] });
@@ -13966,19 +13970,19 @@ ResultComponent.defaultProps = {
     highlightsEnabled: false,
     promote: [],
     exclude: [],
-    filter: function (query) { },
+    filter: function (query) { return null; },
     classNames: {
-        container: '',
-        itemsList: '',
-        placeholder: ''
+        container: "",
+        itemsList: "",
+        placeholder: "",
     },
     template: {
         itemsList: defaultTemplates_1.defaultItemsListTemplate,
-        placeholder: null
+        placeholder: null,
     },
     formatData: function (data) { return data; },
-    fadeInSelector: '',
-    fieldsConciliation: {}
+    fadeInSelector: "",
+    fieldsConciliation: {},
 };
 exports["default"] = ResultComponent;
 

@@ -1,4 +1,4 @@
-import { h, Component } from 'preact';
+import { h, Component } from "preact";
 import Template from "../Template";
 import {reloadAction} from "./ReloadActions";
 import {ReloadProps} from "./ReloadProps";
@@ -11,7 +11,7 @@ class ReloadComponent extends Component<ReloadProps> {
     /**
      * Handle click
      */
-    handleClick = () => {
+    public handleClick = () => {
 
         const props = this.props;
         const environmentId = props.environmentId;
@@ -24,16 +24,16 @@ class ReloadComponent extends Component<ReloadProps> {
         reloadAction(
             environmentId,
             currentQuery,
-            repository
-        )
-    };
+            repository,
+        );
+    }
 
     /**
      * Render
      *
      * @return {}
      */
-    render() {
+    public render() {
 
         const props = this.props;
         const containerClassName = props.classNames.container;
@@ -47,16 +47,16 @@ class ReloadComponent extends Component<ReloadProps> {
                     dictionary={this.props.dictionary}
                 />
             </div>
-        )
+        );
     }
 }
 
 ReloadComponent.defaultProps = {
     classNames: {
-        container: ''
+        container: "",
     },
     template: {
-        container: 'Reload'
+        container: "Reload",
     },
 };
 
