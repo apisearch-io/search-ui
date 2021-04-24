@@ -274,6 +274,13 @@ class ResultComponent extends Component<ResultProps, ResultState> {
                                         dictionary={this.props.dictionary}
                                     />;
                                 })}
+                                {hasInfiniteScrollNextPage
+                                    ? <div
+                                        id={`as-result__infinite_scroll_inspector`}
+                                        ref={this.endResultsBoxRef}
+                                        style={`bottom: ${infiniteScrollMargin}px; position: relative; width: 100%;`}
+                                    />
+                                    : ""}
                             </div>
                         )
                         : <Template
@@ -285,13 +292,6 @@ class ResultComponent extends Component<ResultProps, ResultState> {
                             dictionary={this.props.dictionary}
                         />
                     )
-                }
-                {hasInfiniteScrollNextPage
-                    ? <div
-                        ref={this.endResultsBoxRef}
-                        style={`bottom: ${infiniteScrollMargin}px; position: relative;`}
-                    />
-                    : ""
                 }
             </div>
         );

@@ -14053,19 +14053,19 @@ var ResultComponent = /** @class */ (function (_super) {
         /**
          * New version
          */
-        return (preact_1.h("div", { className: "as-result " + containerClassName, ref: wrapperRef },
-            (dirty)
-                ? preact_1.h(Template_1["default"], { template: placeholderTemplate, className: "as-result__placeholder " + placeholderClassName, dictionary: this.props.dictionary })
-                : ((items.length > 0)
-                    ? (preact_1.h("div", { className: "as-result__itemsList " + props.classNames.itemsList }, items.map(function (item) {
+        return (preact_1.h("div", { className: "as-result " + containerClassName, ref: wrapperRef }, (dirty)
+            ? preact_1.h(Template_1["default"], { template: placeholderTemplate, className: "as-result__placeholder " + placeholderClassName, dictionary: this.props.dictionary })
+            : ((items.length > 0)
+                ? (preact_1.h("div", { className: "as-result__itemsList " + props.classNames.itemsList },
+                    items.map(function (item) {
                         return preact_1.h(Item_1["default"], { data: __assign(__assign({}, reducedTemplateData), _this.hydrateItem(item)), template: props.template.item, className: "as-result__item " + props.classNames.item, dictionary: _this.props.dictionary });
-                    })))
-                    : preact_1.h(Template_1["default"], { template: props.template.noResults, data: {
-                            query: currentQuery.getQueryText(),
-                        }, className: "as-result__noresults " + props.classNames.noResults, dictionary: this.props.dictionary })),
-            hasInfiniteScrollNextPage
-                ? preact_1.h("div", { ref: this.endResultsBoxRef, style: "bottom: " + infiniteScrollMargin + "px; position: relative;" })
-                : ""));
+                    }),
+                    hasInfiniteScrollNextPage
+                        ? preact_1.h("div", { id: "as-result__infinite_scroll_inspector", ref: this.endResultsBoxRef, style: "bottom: " + infiniteScrollMargin + "px; position: relative; width: 100%;" })
+                        : ""))
+                : preact_1.h(Template_1["default"], { template: props.template.noResults, data: {
+                        query: currentQuery.getQueryText(),
+                    }, className: "as-result__noresults " + props.classNames.noResults, dictionary: this.props.dictionary }))));
     };
     /**
      * @param item
