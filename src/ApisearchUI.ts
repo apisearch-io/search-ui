@@ -84,6 +84,10 @@ export default class ApisearchUI {
                 this.repository,
             );
         }
+
+        window.dispatchEvent(new Event("apisearch_loaded", {
+            bubbles: true,
+        }));
     }
 
     /**

@@ -142,15 +142,21 @@
     {{/items}}
 </script>
 
+<script type="application/javascript">
+    window.addEventListener('apisearch_loaded', () => {
+        console.log('Apisearch loaded');
+    });
+</script>
+
 <script type="text/javascript">
     // UI Instance 1
     const apisearchUIFactory = apisearchUI.factory({
         app_id: 'as-29be77d7-2f64-4522',
-        index_id: 'eu1-2de60e18-5fae-4155',
-        token: 'eu1-8438694d-5839-4179-9f73-a55630f3cd4d',
+        index_id: 'loc-1-8f578f47-7610-491c',
+        token: 'loc-1-081e9578-fe57-41e4-8815-7520ca722baf',
         user_id: '123',
         options: {
-            endpoint: 'https://eu1.apisearch.io',
+            endpoint: 'http://localhost:8400',
             override_queries: true,
             use_cache: true,
         }

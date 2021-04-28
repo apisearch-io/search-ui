@@ -273,6 +273,14 @@ var Apisearch = /** @class */ (function () {
     Apisearch.createEmptySortBy = function () {
         return SortBy_1.SortBy.create();
     };
+    /**
+     * Create empty sortby
+     *
+     * @return {SortBy}
+     */
+    Apisearch.createEmptyScoreStrategy = function () {
+        return SortBy_1.SortBy.create();
+    };
     return Apisearch;
 }());
 exports["default"] = Apisearch;
@@ -11095,6 +11103,9 @@ var ApisearchUI = /** @class */ (function () {
             true === firstQuery) {
             this.store.fetchInitialQuery(this.environmentId, this.repository);
         }
+        window.dispatchEvent(new Event("apisearch_loaded", {
+            bubbles: true,
+        }));
     };
     /**
      * @param dictionary

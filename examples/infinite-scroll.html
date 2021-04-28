@@ -133,11 +133,6 @@
                 item: document.getElementById('result-item-search-tpl').text,
                 noResults: document.getElementById('no-results-search-tpl').text,
             },
-            formatData(item) {
-                item.metadata.lol = '<span style="color: red">LOLAMEN</span>';
-
-                return item;
-            },
             filter: (query) => {
                 ui.helper.boostByWeightAndFilter(
                     query,
