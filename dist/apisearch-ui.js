@@ -12709,7 +12709,7 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
                         n: item.getN(),
                         isActive: item.isUsed(),
                         values: values,
-                        uid: uid
+                        uid: uid,
                     };
                     var formattedTemplateData = formatData(reducedTemplateData);
                     return (preact_1.h("li", { className: "as-multipleFilter__item " +
@@ -13375,6 +13375,19 @@ var RangeFilterComponent = /** @class */ (function (_super) {
     };
     ;
     /**
+     * @param values
+     */
+    RangeFilterComponent.prototype.handleSliderMove = function (values) {
+        var props = this.props;
+        var state = this.state;
+        if (typeof this.props.onSliderMove == 'function' &&
+            this.state.valueFrom !== undefined &&
+            this.state.valueTo !== undefined) {
+            this.props.onSliderMove(Math.min(values[0], values[1]), Math.max(values[0], values[1]), this.rangeUid);
+        }
+    };
+    ;
+    /**
      * @param props
      */
     RangeFilterComponent.prototype.componentWillReceiveProps = function (props) {
@@ -13415,6 +13428,7 @@ var RangeFilterComponent = /** @class */ (function (_super) {
         var sliderTemplate = props.template.slider;
         var containerClassName = props.classNames.container;
         var topClassName = props.classNames.top;
+        var wrapperClassName = props.classNames.wrapper;
         var that = this;
         compat_1.useEffect(function () {
             var self = _this;
@@ -13498,27 +13512,33 @@ var RangeFilterComponent = /** @class */ (function (_super) {
         }
         return (preact_1.h("div", { id: this.rangeUid, className: "as-rangeFilter " + containerClassName },
             preact_1.h(Template_1["default"], { template: topTemplate, className: "as-rangeFilter__top " + topClassName, dictionary: this.props.dictionary }),
-            preact_1.h("div", { "class": "slider" },
-                preact_1.h(Template_1["default"], { template: sliderTemplate, dictionary: this.props.dictionary })),
-            preact_1.h("div", { "class": "as-rangeFilter__wrapper" },
+            preact_1.h("div", { className: "as-rangeFilter__wrapper " + wrapperClassName },
                 preact_1.h("input", __assign({ type: type, "class": "as-rangeFilter__from " + props.classNames.input + " as-rangeFilter__" + this.uid + " as-rangeFilter__from__" + this.uid }, props.attributes.from, { value: this.state.valueFrom, min: minValue, max: maxValue, step: props.step, onClick: function (e) {
                         if (isNotNative)
                             return false;
                         that.handleSliderChange([parseInt(e.target.value), that.state.valueTo]);
                     }, onChange: function (e) {
-                        if (isNative)
+                        var positions = [parseInt(e.target.value), that.state.valueTo];
+                        if (isNative) {
+                            that.handleSliderMove(positions);
                             return false;
-                        that.handleSliderChange([parseInt(e.target.value), that.state.valueTo]);
+                        }
+                        that.handleSliderChange(positions);
                     }, autocomplete: "off" })),
                 preact_1.h("input", __assign({ type: type, "class": "as-rangeFilter__to " + props.classNames.input + " as-rangeFilter__" + this.uid + " as-rangeFilter__to__" + this.uid }, props.attributes.to, { value: this.state.valueTo, min: minValue, max: maxValue, step: props.step, onClick: function (e) {
                         if (isNotNative)
                             return false;
                         that.handleSliderChange([that.state.valueFrom, parseInt(e.target.value)]);
                     }, onChange: function (e) {
-                        if (isNative)
+                        var positions = [that.state.valueFrom, parseInt(e.target.value)];
+                        if (isNative) {
+                            that.handleSliderMove(positions);
                             return false;
-                        that.handleSliderChange([that.state.valueFrom, parseInt(e.target.value)]);
-                    }, autocomplete: "off" })))));
+                        }
+                        that.handleSliderChange(positions);
+                    }, autocomplete: "off" })),
+                preact_1.h("div", { "class": "slider" },
+                    preact_1.h(Template_1["default"], { template: sliderTemplate, dictionary: this.props.dictionary })))));
     };
     /**
      * Apply filter
@@ -13539,6 +13559,7 @@ RangeFilterComponent.defaultProps = {
     classNames: {
         container: '',
         top: '',
+        wrapper: '',
         input: '',
         from: '',
         to: ''
@@ -15674,10 +15695,10 @@ var Widget_1 = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
 var RangeFilter = /** @class */ (function (_super) {
     __extends(RangeFilter, _super);
     function RangeFilter(_a) {
-        var target = _a.target, filterName = _a.filterName, filterField = _a.filterField, minValue = _a.minValue, maxValue = _a.maxValue, minMaxCallback = _a.minMaxCallback, step = _a.step, callback = _a.callback, template = _a.template, classNames = _a.classNames, attributes = _a.attributes, native = _a.native;
+        var target = _a.target, filterName = _a.filterName, filterField = _a.filterField, minValue = _a.minValue, maxValue = _a.maxValue, minMaxCallback = _a.minMaxCallback, step = _a.step, callback = _a.callback, onSliderMove = _a.onSliderMove, template = _a.template, classNames = _a.classNames, attributes = _a.attributes, native = _a.native;
         var _this = _super.call(this) || this;
         _this.target = target;
-        _this.component = preact_1.h(RangeFilterComponent_1["default"], { target: target, filterName: filterName, filterField: filterField, minValue: minValue, maxValue: maxValue, minMaxCallback: minMaxCallback, step: step, callback: callback, native: native, template: __assign(__assign({}, RangeFilterComponent_1["default"].defaultProps.template), template), classNames: __assign(__assign({}, RangeFilterComponent_1["default"].defaultProps.classNames), classNames), attributes: __assign(__assign({}, RangeFilterComponent_1["default"].defaultProps.attributes), attributes) });
+        _this.component = preact_1.h(RangeFilterComponent_1["default"], { target: target, filterName: filterName, filterField: filterField, minValue: minValue, maxValue: maxValue, minMaxCallback: minMaxCallback, step: step, callback: callback, onSliderMove: onSliderMove, native: native, template: __assign(__assign({}, RangeFilterComponent_1["default"].defaultProps.template), template), classNames: __assign(__assign({}, RangeFilterComponent_1["default"].defaultProps.classNames), classNames), attributes: __assign(__assign({}, RangeFilterComponent_1["default"].defaultProps.attributes), attributes) });
         return _this;
     }
     /**

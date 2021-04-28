@@ -268,7 +268,7 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
                                 n: item.getN(),
                                 isActive: item.isUsed(),
                                 values: values,
-                                uid: uid
+                                uid: uid,
                             };
                             const formattedTemplateData = formatData(reducedTemplateData);
                             return (

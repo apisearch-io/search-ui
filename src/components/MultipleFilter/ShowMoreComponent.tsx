@@ -16,7 +16,7 @@ const ShowMoreComponent = ({
     showMoreContainerClassName,
     showMoreTemplate,
     showLessTemplate,
-    dictionary
+    dictionary,
 }) => {
     return (allItemsLength > currentLimit)
         ? (
@@ -42,7 +42,7 @@ const ShowMoreComponent = ({
                     />
                 </div>
             )
-        : null
+        : null;
 };
 
 export default ShowMoreComponent;

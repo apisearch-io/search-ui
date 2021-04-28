@@ -18,6 +18,7 @@ class RangeFilter extends Widget {
         minMaxCallback,
         step,
         callback,
+        onSliderMove,
         template,
         classNames,
         attributes,
@@ -34,6 +35,7 @@ class RangeFilter extends Widget {
             minMaxCallback={minMaxCallback}
             step={step}
             callback={callback}
+            onSliderMove={onSliderMove}
             native={native}
             template={{
                 ...RangeFilterComponent.defaultProps.template,

@@ -150,6 +150,28 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
     };
 
     /**
+     * @param values
+     */
+    handleSliderMove(values) {
+
+        const props = this.props;
+        const state = this.state;
+
+        if (
+            typeof this.props.onSliderMove == 'function' &&
+            this.state.valueFrom !== undefined &&
+            this.state.valueTo !== undefined
+
+        ) {
+            this.props.onSliderMove(
+                Math.min(values[0], values[1]),
+                Math.max(values[0], values[1]),
+                this.rangeUid,
+            );
+        }
+    };
+
+    /**
      * @param props
      */
     componentWillReceiveProps(props) {
@@ -191,6 +213,7 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
         const sliderTemplate = props.template.slider;
         const containerClassName = props.classNames.container;
         const topClassName = props.classNames.top;
+        const wrapperClassName = props.classNames.wrapper;
         const that = this;
 
         useEffect(() => {
@@ -302,14 +325,7 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
                     dictionary={this.props.dictionary}
                 />
 
-                <div class="slider">
-                    <Template
-                        template={sliderTemplate}
-                        dictionary={this.props.dictionary}
-                    />
-                </div>
-
-                <div class="as-rangeFilter__wrapper">
+                <div className={`as-rangeFilter__wrapper ${wrapperClassName}`}>
                     <input
                         type={type}
                         class={`as-rangeFilter__from ${props.classNames.input} as-rangeFilter__${this.uid} as-rangeFilter__from__${this.uid}`}
@@ -323,8 +339,13 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
                             that.handleSliderChange([parseInt((e.target as HTMLInputElement).value), that.state.valueTo])
                         }}
                         onChange={function(e) {
-                            if (isNative) return false;
-                            that.handleSliderChange([parseInt((e.target as HTMLInputElement).value), that.state.valueTo])
+                            const positions = [parseInt((e.target as HTMLInputElement).value), that.state.valueTo];
+                            if (isNative) {
+                                that.handleSliderMove(positions);
+                                return false;
+                            }
+
+                            that.handleSliderChange(positions);
                         }}
                         autocomplete={`off`}
                     />
@@ -341,11 +362,23 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
                             that.handleSliderChange([that.state.valueFrom, parseInt((e.target as HTMLInputElement).value)])
                         }}
                         onChange={function(e) {
-                            if (isNative) return false;
-                            that.handleSliderChange([that.state.valueFrom, parseInt((e.target as HTMLInputElement).value)])
+                            const positions = [that.state.valueFrom, parseInt((e.target as HTMLInputElement).value)];
+                            if (isNative) {
+                                that.handleSliderMove(positions);
+                                return false;
+                            }
+
+                            that.handleSliderChange(positions)
                         }}
                         autocomplete={`off`}
                     />
+
+                    <div class="slider">
+                        <Template
+                            template={sliderTemplate}
+                            dictionary={this.props.dictionary}
+                        />
+                    </div>
                 </div>
             </div>
         );
@@ -380,6 +413,7 @@ RangeFilterComponent.defaultProps = {
     classNames: {
         container: '',
         top: '',
+        wrapper: '',
         input: '',
         from: '',
         to: ''
