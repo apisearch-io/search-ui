@@ -20,10 +20,6 @@ describe('Translate', () => {
     });
 
     it('Should translate JSON structres and translations', () => {
-        expect(Translate.trans('{Simple text}', {})).to.be.equal('{Simple text}');
-        expect(Translate.trans('{"Simple text"}', {})).to.be.equal('{"Simple text"}');
-        expect(Translate.trans('["Simple text"]', {})).to.be.equal('Simple text');
-        expect(Translate.trans('["Simple $1", "text"]', {})).to.be.equal('Simple text');
         expect(Translate.trans('["_simple_", "text", "yet"]', {
             "_simple_" : "Simple $1 and $2",
         })).to.be.equal('Simple text and yet');
