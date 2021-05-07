@@ -21,7 +21,7 @@ class Template extends Component<TemplateProps> {
 
         const trans = () => {
             return (text, render) => {
-                return Translate.trans(text, dictionary);
+                return render(Translate.trans(text, dictionary));
             };
         };
 

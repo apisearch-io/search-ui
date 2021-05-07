@@ -15106,7 +15106,7 @@ var Template = /** @class */ (function (_super) {
         _this.renderTemplate = function (template, result, dictionary) {
             var trans = function () {
                 return function (text, render) {
-                    return Translate_1["default"].trans(text, dictionary);
+                    return render(Translate_1["default"].trans(text, dictionary));
                 };
             };
             var output = Mustache.render(template, __assign(__assign({}, result), {

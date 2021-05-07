@@ -5,6 +5,9 @@
     "jsx": "react",
     "jsxFactory": "h"
   },
+  "jest": {
+    "testEnvironment": "jsdom"
+  },
   "include": [
     "src"
   ]

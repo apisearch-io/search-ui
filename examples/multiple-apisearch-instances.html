@@ -132,6 +132,7 @@
                 </div>
                 <div class="media-content">
                     <strong>{{fields.title}}</strong>
+                    <small>{{#trans}}["_title_", "{{fields.title}}"]{{/trans}}</small>
                 </div>
                 <div class="">
                     {{fields.collection.name}}
@@ -183,6 +184,10 @@
             target: '#suggestions-instance-one',
         })
     );
+
+    firstUI.setDictionary({
+        '_title_': "Big title #$1"
+    })
 
     firstUI.init();
 </script>
