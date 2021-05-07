@@ -10,7 +10,8 @@
     "build:min": "webpack --config ./webpack.min.js --mode production",
     "build:styles": "sass src/styles/apisearch-ui.sass dist/apisearch-ui.css",
     "fix": "tslint -c tslint.json --fix 'src/**/*.ts' 'src/*.ts'",
-    "dist": "rm -rf ./dist/*; npm run build:lib && npm run build:dev && npm run build:min && npm run build:styles"
+    "test:unit": "mocha --timeout 10000 --recursive --require ts-node/register test/**/*.ts",
+    "dist": "rm -rf ./dist/*; npm run test:unit; npm run build:lib && npm run build:dev && npm run build:min && npm run build:styles"
   },
   "license": "MIT",
   "author": "Puntmig Development <hello@puntmig.com>",
@@ -34,6 +35,8 @@
     "@types/chai": "^4.1.7",
     "@types/mocha": "^5.2.6",
     "@types/node": "^10.14.4",
+    "chai": "^4.2.0",
+    "mocha": "^7.1.1",
     "resize-observer-polyfill": "^1.5.1",
     "sass": "^1.26.3",
     "ts-loader": "^4.5.0",

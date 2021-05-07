@@ -1,6 +1,7 @@
 import { h, Component } from 'preact';
 import {TemplateProps} from "./TemplateProps";
 import * as Mustache from 'mustache';
+import Translate from "./Translate";
 
 /**
  * Template
@@ -18,18 +19,18 @@ class Template extends Component<TemplateProps> {
      */
     private renderTemplate = (template, result, dictionary) => {
 
-        let trans = function() {
-            return function(text, render) {
-                return dictionary[text] ?? text;
-            }
-        }
+        const trans = () => {
+            return (text, render) => {
+                return Translate.trans(text, dictionary);
+            };
+        };
 
-        let output = Mustache.render(template, {...result, ...{
-            'trans': trans
+        const output = Mustache.render(template, {...result, ...{
+            "trans": trans,
         }});
 
         return {
-            __html: output
+            __html: output,
         };
     };
 

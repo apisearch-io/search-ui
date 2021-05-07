@@ -15086,6 +15086,7 @@ var __assign = (this && this.__assign) || function () {
 exports.__esModule = true;
 var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
 var Mustache = __webpack_require__(/*! mustache */ "./node_modules/mustache/mustache.js");
+var Translate_1 = __webpack_require__(/*! ./Translate */ "./src/components/Translate.tsx");
 /**
  * Template
  */
@@ -15105,15 +15106,14 @@ var Template = /** @class */ (function (_super) {
         _this.renderTemplate = function (template, result, dictionary) {
             var trans = function () {
                 return function (text, render) {
-                    var _a;
-                    return (_a = dictionary[text]) !== null && _a !== void 0 ? _a : text;
+                    return Translate_1["default"].trans(text, dictionary);
                 };
             };
             var output = Mustache.render(template, __assign(__assign({}, result), {
-                'trans': trans
+                "trans": trans,
             }));
             return {
-                __html: output
+                __html: output,
             };
         };
         return _this;
@@ -15137,6 +15137,42 @@ var Template = /** @class */ (function (_super) {
     return Template;
 }(preact_1.Component));
 exports["default"] = Template;
+
+
+/***/ }),
+
+/***/ "./src/components/Translate.tsx":
+/*!**************************************!*\
+  !*** ./src/components/Translate.tsx ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var Translate = /** @class */ (function () {
+    function Translate() {
+    }
+    Translate.trans = function (text, dictionary) {
+        var _a, _b, _c;
+        var parsed = [];
+        try {
+            parsed = JSON.parse(text);
+        }
+        catch (_d) {
+            return (_a = dictionary[text]) !== null && _a !== void 0 ? _a : text;
+        }
+        var parsedText = (_b = parsed[0]) !== null && _b !== void 0 ? _b : text;
+        parsedText = (_c = dictionary[parsedText]) !== null && _c !== void 0 ? _c : parsedText;
+        for (var i = 1; i <= parsed.length; i++) {
+            parsedText = parsedText.replace("$" + i, parsed[i]);
+        }
+        return parsedText;
+    };
+    return Translate;
+}());
+exports["default"] = Translate;
 
 
 /***/ }),
