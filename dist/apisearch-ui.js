@@ -6487,7 +6487,7 @@ var ResultAggregation = /** @class */ (function () {
         for (var i in countersAsArray) {
             var counterAsArray = countersAsArray[i];
             var counter = Counter_1.Counter.createFromArray(counterAsArray);
-            aggregation.counters[counter.getId()] = counter;
+            aggregation.counters['_' + counter.getId()] = counter;
         }
         aggregation.highestActiveElement = typeof array.highest_active_level === "number"
             ? array.highest_active_level
