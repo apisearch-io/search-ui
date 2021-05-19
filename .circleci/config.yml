@@ -1,0 +1,17 @@
+version: 2
+jobs:
+    build:
+        docker:
+            - image: circleci/node:latest
+
+        steps:
+            - checkout
+            - run:
+                name: Install dependencies
+                command: |
+                    npm install
+
+            - run:
+                name: Run test scenarios
+                command: |
+                    npm run test:unit
