@@ -48,8 +48,6 @@ class AutocompleteComponent extends Component<AutocompleteProps, AutocompleteSta
     render() {
 
         const suggestion = this.state.suggestion;
-
-        console.log(typeof(this.state.suggestion));
         const queryText = this.props.queryText;
         const inputClassName = this.props.inputClassName;
         const queryTextLength = queryText.length;

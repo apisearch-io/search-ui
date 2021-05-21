@@ -14262,7 +14262,6 @@ var AutocompleteComponent = /** @class */ (function (_super) {
      */
     AutocompleteComponent.prototype.render = function () {
         var suggestion = this.state.suggestion;
-        console.log(typeof (this.state.suggestion));
         var queryText = this.props.queryText;
         var inputClassName = this.props.inputClassName;
         var queryTextLength = queryText.length;

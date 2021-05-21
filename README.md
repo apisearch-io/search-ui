@@ -2,11 +2,12 @@
 
 This library is part of the Apisearch project.
 
+[![CircleCI](https://circleci.com/gh/apisearch-io/search-ui.svg?style=svg)](https://circleci.com/gh/apisearch-io/search-ui)
 [![Join the Slack](https://img.shields.io/badge/join%20us-on%20slack-blue.svg)](https://apisearch.slack.com)
 
 Apisearch is an open source search engine fully based on open source third party
-technologies. The project provides an *in crescendo* set of language 
-integration libraries for her users, as well as some third party projects 
+technologies. The project provides an *in crescendo* set of language
+integration libraries for her users, as well as some third party projects
 integration bundles, plugins, or javascript widgets.
 
 Some first steps for you!
