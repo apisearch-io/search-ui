@@ -58,12 +58,16 @@ class InformationComponent extends Component<InformationProps, InformationState>
         const page = currentQuery.getPage();
         const from = (page-1)*size;
         const to = from + size;
+        let totalHits = this.state.hits.toLocaleString();
+        if (totalHits === "10,000") {
+            totalHits = '+10,000';
+        }
 
         /**
          * Data accessible to the template
          */
         let reducedTemplateData = {
-            total_hits: this.state.hits.toLocaleString(),
+            total_hits: totalHits,
             total_items: this.state.total.toLocaleString(),
             page: page,
             size: size,

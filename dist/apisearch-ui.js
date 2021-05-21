@@ -12321,11 +12321,15 @@ var InformationComponent = /** @class */ (function (_super) {
         var page = currentQuery.getPage();
         var from = (page - 1) * size;
         var to = from + size;
+        var totalHits = this.state.hits.toLocaleString();
+        if (totalHits === "10,000") {
+            totalHits = '+10,000';
+        }
         /**
          * Data accessible to the template
          */
         var reducedTemplateData = {
-            total_hits: this.state.hits.toLocaleString(),
+            total_hits: totalHits,
             total_items: this.state.total.toLocaleString(),
             page: page,
             size: size,
