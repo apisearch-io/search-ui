@@ -14237,8 +14237,9 @@ var AutocompleteComponent = /** @class */ (function (_super) {
     AutocompleteComponent.prototype.componentWillReceiveProps = function (props) {
         if (props.suggestions.length > 0) {
             this.setState(function (prevState) {
+                var _a;
                 return {
-                    suggestion: props.suggestions[0]
+                    suggestion: ((_a = (props.suggestions[0] + "")) !== null && _a !== void 0 ? _a : "")
                 };
             });
         }
@@ -14257,6 +14258,7 @@ var AutocompleteComponent = /** @class */ (function (_super) {
      */
     AutocompleteComponent.prototype.render = function () {
         var suggestion = this.state.suggestion;
+        console.log(typeof (this.state.suggestion));
         var queryText = this.props.queryText;
         var inputClassName = this.props.inputClassName;
         var queryTextLength = queryText.length;
