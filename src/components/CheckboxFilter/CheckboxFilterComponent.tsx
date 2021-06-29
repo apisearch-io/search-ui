@@ -87,15 +87,19 @@ class CheckboxFilterComponent extends Component<CheckboxFilterProps, CheckboxFil
 
         const topTemplate = props.template.top;
         const itemTemplate = props.template.item;
+        let filterValue = props.filterValue;
+        if (typeof filterValue === "boolean") {
+            filterValue = filterValue ? "true" : "false";
+        }
 
         let n = 0;
         let isActive = false;
         const aggregation = state.aggregation;
         if (aggregation != null) {
             const counters = aggregation.getCounters();
-            for (let i in counters) {
-                let counter = counters[i];
-                if (counter.values.name == props.filterValue) {
+            for (const i in counters) {
+                const counter = counters[i];
+                if (counter.values.name === filterValue) {
                     n = counter.getN();
                     isActive = counter.isUsed();
                     break;
