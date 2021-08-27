@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>AS UI - Iframe</title>
+</head>
+<body>
+
+<iframe
+    id="apisearch"
+    style="position: absolute; top:0; left: 0; height: calc(100% - 100px); width: calc(100% - 40px); padding: 20px; margin-top: 100px;"
+></iframe>
+
+<script>
+    document.getElementById('apisearch').src = "simple-search.html" + document.location.hash;
+    window.addEventListener("message", (event) => {
+        const data = event.data;
+        if (data.name === "apisearch_replace_hash") {
+            window.location.replace('#' + data.hash);
+            if (data.hash === "") {
+                history.replaceState("", "", location.pathname)
+            }
+        }
+    }, false);
+</script>
+
+</body>
+</html>

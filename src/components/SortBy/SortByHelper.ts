@@ -1,8 +1,7 @@
 /**
  * SortBy actions
  */
-import Apisearch from "apisearch";
-import {SORT_BY_SCORE, SORT_BY_TYPE_DISTANCE} from "apisearch";
+import Apisearch, {SORT_BY_SCORE, SORT_BY_TYPE_DISTANCE} from "apisearch";
 
 /**
  * Apply sort by to query

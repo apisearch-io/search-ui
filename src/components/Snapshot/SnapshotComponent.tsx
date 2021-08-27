@@ -1,4 +1,4 @@
-import { h, Component } from 'preact';
+import {Component, h} from 'preact';
 import {SnapshotProps} from "./SnapshotProps";
 import {SnapshotState} from "./SnapshotState";
 

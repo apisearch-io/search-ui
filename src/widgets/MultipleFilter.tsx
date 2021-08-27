@@ -1,8 +1,8 @@
-import { h, render } from 'preact';
-import MultipleFilterComponent from "../components/MultipleFilter/MultipleFilterComponent";
-import Widget from "./Widget";
 import {Repository} from "apisearch";
+import {h, render} from 'preact';
+import MultipleFilterComponent from "../components/MultipleFilter/MultipleFilterComponent";
 import Store from "../Store";
+import Widget from "./Widget";
 
 /**
  * Multiple Filter

@@ -1,8 +1,7 @@
 /**
  * Pagination actions
  */
-import {Repository} from "apisearch";
-import {Query} from "apisearch";
+import {Query, Repository} from "apisearch";
 import {APISEARCH_DISPATCHER} from "../../Constants";
 import container from "../../Container";
 import Clone from "../Clone";

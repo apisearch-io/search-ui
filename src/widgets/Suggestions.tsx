@@ -1,9 +1,8 @@
-import { h, render } from 'preact';
 import {Repository} from "apisearch";
-import Widget from "./Widget";
+import {h, render} from 'preact';
+import SuggestionsFilterComponent from "../components/Suggestions/SuggestionsFilterComponent";
 import Store from "../Store";
-import SuggestionsFilterComponent
-    from "../components/Suggestions/SuggestionsFilterComponent";
+import Widget from "./Widget";
 
 /**
  * SuggestionsFilter

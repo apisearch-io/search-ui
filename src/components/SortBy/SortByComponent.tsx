@@ -1,10 +1,7 @@
-import { h, Component } from 'preact';
+import {Component, h} from 'preact';
+import {initialSortBySetup, onChangeSearchAction} from "./SortByActions";
 import {SortByProps} from './SortByProps';
 import {SortByState} from './SortByState';
-import {
-    onChangeSearchAction,
-    initialSortBySetup
-} from "./SortByActions";
 
 /**
  * SortBy Filter Component

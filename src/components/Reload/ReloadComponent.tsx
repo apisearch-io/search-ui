@@ -1,4 +1,4 @@
-import { h, Component } from "preact";
+import {Component, h} from "preact";
 import Template from "../Template";
 import {reloadAction} from "./ReloadActions";
 import {ReloadProps} from "./ReloadProps";

@@ -1,8 +1,8 @@
-import { h, render } from 'preact';
-import ClearFiltersComponent from "../components/ClearFilters/ClearFiltersComponent";
-import Widget from "./Widget";
 import {Repository} from "apisearch";
+import {h, render} from 'preact';
+import ClearFiltersComponent from "../components/ClearFilters/ClearFiltersComponent";
 import Store from "../Store";
+import Widget from "./Widget";
 
 /**
  * Clear Filters

@@ -1,12 +1,9 @@
-import { h, Component } from 'preact';
-import { useRef, useEffect } from 'preact/compat';
+import {Component, h} from 'preact';
+import {useEffect, useRef} from 'preact/compat';
+import Template from "../Template";
+import {addMinMaxAggregation, deleteMinMaxAggregation, onChangeSearchAction} from "./RangeFilterActions";
 import {RangeFilterProps} from './RangeFilterProps';
 import {RangeFilterState} from './RangeFilterState';
-import {
-    addMinMaxAggregation, deleteMinMaxAggregation,
-    onChangeSearchAction
-} from "./RangeFilterActions";
-import Template from "../Template";
 
 /**
  * Range Filter Component

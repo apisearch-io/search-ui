@@ -15,12 +15,12 @@ import {
 /**
  * @param environmentId
  * @param config
- * @param history
+ * @param hash
  */
 export function bootstrap(
     environmentId: string,
     config: any,
-    history: boolean|string,
+    hash: string,
 ) {
     const configAsString = JSON.stringify(config);
     const repositoryId = `${APISEARCH_REPOSITORY}__${configAsString}`;
@@ -43,7 +43,7 @@ export function bootstrap(
         return new Store(
             config.coordinate,
             config.options.min_score,
-            history,
+            hash,
             config.user_id ?? "",
             config.options.generate_random_session_uuid ?? false,
         );
