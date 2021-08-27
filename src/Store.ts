@@ -1,15 +1,7 @@
-import apisearch, {Repository} from "apisearch";
-import {Query, Result} from "apisearch";
+import apisearch, {Query, Repository, Result} from "apisearch";
 import {EventEmitter} from "events";
-import {
-    createHashHistory,
-    createBrowserHistory,
-    History,
-    parsePath, createPath
-} from "history";
-import {isLocationState, LocationState} from "./LocationState";
-import container from "./Container";
 import {APISEARCH_DISPATCHER} from "./Constants";
+import container from "./Container";
 
 /**
  * Flux pattern store class
@@ -17,19 +9,18 @@ import {APISEARCH_DISPATCHER} from "./Constants";
 class Store extends EventEmitter {
 
     private dirty: boolean;
-    private userId: string;
-    private history: boolean|string;
+    private readonly withHash: boolean = false;
+    private readonly urlHash: string;
     private currentQuery: Query;
     private currentResult: Result;
     private currentVisibleResults: boolean;
-    private historyInstance: History;
-    private historyPrefix: string = '';
-    private fromBackHistoryState: boolean = false;
+    private readonly window: Window;
+    private readonly isUnderIframe: boolean;
 
     /**
      * @param coordinate
      * @param minScore
-     * @param history
+     * @param hash
      * @param userId
      * @param generateRandomSessionUUID
      */
@@ -39,7 +30,7 @@ class Store extends EventEmitter {
             lon: number,
         },
         minScore: number,
-        history: boolean|string,
+        hash: string,
         userId: string,
         generateRandomSessionUUID: boolean,
     ) {
@@ -47,6 +38,16 @@ class Store extends EventEmitter {
 
         this.dirty = true;
         const initialQuery = Store.loadInitialQuery(coordinate, userId);
+        this.window = window.top;
+        this.isUnderIframe = (window === window.top);
+
+        if ((typeof hash === "string")) {
+            this.withHash = true;
+            this.urlHash = (hash === "") ? "{}" : hash;
+            if (this.urlHash.charAt(0) === "#") {
+                this.urlHash = this.urlHash.substr(1);
+            }
+        }
 
         if (minScore) {
             initialQuery.setMinScore(minScore);
@@ -58,34 +59,9 @@ class Store extends EventEmitter {
         this.currentResult = apisearch.createEmptyResult();
         this.currentVisibleResults = false;
         if (generateRandomSessionUUID) {
-            initialQuery.setMetadataValue('session_uid', Store.createUID(16));
+            initialQuery.setMetadataValue("session_uid", Store.createUID(16));
         }
         this.currentQuery = initialQuery;
-        this.history = (history === true) ? 'hash' : history;
-        if (!history) {
-            return;
-        }
-
-        if (this.history === 'hash') {
-            this.historyInstance = createHashHistory()
-        } else {
-            this.historyInstance = createBrowserHistory();
-            this.historyPrefix = '?' + this.history + '=';
-        }
-
-        this.historyInstance.listen((event) => {
-            if (
-                event.action === 'POP' &&
-                isLocationState(event.location.state)
-            ) {
-                this.fromBackHistoryState = true;
-                this.renderFetchedData({
-                    query: Query.createFromArray(event.location.state.query),
-                    result: Result.createFromArray(event.location.state.result),
-                    visibleResults: event.location.state.visibleResults
-                })
-            }
-        })
     }
 
     /**
@@ -152,11 +128,12 @@ class Store extends EventEmitter {
         this.currentQuery = query;
         this.currentVisibleResults = query !== undefined;
 
-        this.pushQueryToHistory(
+        this.replaceUrl(
             query,
             result,
-            this.currentVisibleResults
-        )
+            this.currentVisibleResults,
+            false,
+        );
 
         this.emit("render");
     }
@@ -164,8 +141,7 @@ class Store extends EventEmitter {
     /**
      * @param payload
      */
-    public renderFetchedData(payload: any)
-    {
+    public renderFetchedData(payload: any) {
         const { result, query, visibleResults } = payload;
 
         this.dirty = false;
@@ -176,14 +152,11 @@ class Store extends EventEmitter {
             this.currentVisibleResults = visibleResults;
         }
 
-        if (!this.fromBackHistoryState) {
-            this.pushQueryToHistory(
-                query,
-                result,
-                visibleResults,
-            );
-        }
-        this.fromBackHistoryState = false;
+        this.replaceUrl(
+            query,
+            result,
+            visibleResults,
+        );
 
         this.emit("render");
     }
@@ -259,43 +232,22 @@ class Store extends EventEmitter {
      * @param query
      */
     private loadQuery(query: Query): Query {
-        if (typeof this.history !== "string") {
+        if (!this.withHash) {
             return query;
         }
 
+        const urlObject = (
+            this.urlHash !== undefined &&
+            this.urlHash !== null &&
+            this.urlHash !== "" &&
+            this.urlHash !== "/"
+        )
+            ? JSON.parse(decodeURI(this.urlHash))
+            : {};
         const queryAsObject = query.toArray();
-        const urlObject = this.loadUrlObjectFromHash();
         this.emit("fromUrlObject", urlObject, queryAsObject);
 
         return Query.createFromArray(queryAsObject);
-    }
-
-    /**
-     * @private
-     */
-    private loadUrlObjectFromHash() : any
-    {
-        if (typeof this.history !== "string") {
-            return {};
-        }
-
-        let urlHash = "";
-        if (this.history === "hash") {
-            urlHash = window.location.hash.substr(1);
-        } else {
-            const urlParams = new URLSearchParams(window.location.search);
-            urlHash = urlParams.get(this.history);
-        }
-
-        return (
-            urlHash !== '' &&
-            urlHash !== undefined &&
-            urlHash !== null &&
-            urlHash !== '' &&
-            urlHash !== '/'
-        )
-            ? JSON.parse(decodeURI(urlHash))
-            : {};
     }
 
     /**
@@ -303,44 +255,35 @@ class Store extends EventEmitter {
      * @param query
      * @param result
      * @param visibleResults
+     * @param isFirst
      */
-    private pushQueryToHistory(
+    private replaceUrl(
         query: Query,
         result: Result,
-        visibleResults: boolean|undefined
-    )
-    {
-        if (
-            this.historyInstance === undefined ||
-            (typeof this.history !== "string")
-        ) {
+        visibleResults: boolean|undefined,
+        isFirst: boolean|undefined = null,
+    ) {
+        if (!this.withHash) {
             return;
         }
 
-        let queryAsObject = query.toArray();
-        const urlObject:any = {};
+        const queryAsObject = query.toArray();
+        const urlObject: any = {};
         this.emit("toUrlObject", queryAsObject, urlObject);
+        let objectAsJson = decodeURI(JSON.stringify(urlObject));
+        objectAsJson = (objectAsJson === "{}") ? "" : objectAsJson;
 
-        const state: LocationState = {
-            query: query.toArray(),
-            result: result ? result.toArray() : null,
-            visibleResults: visibleResults
-        };
-
-        const objectAsJson = decodeURI(JSON.stringify(urlObject));
-        let path = '';
-
-        if (this.history === 'hash') {
-            path = objectAsJson;
+        if (this.isUnderIframe) {
+            this.window.location.replace("#" + objectAsJson);
+            if (objectAsJson === "") {
+                history.replaceState("", "", location.pathname);
+            }
         } else {
-            const pathPieces = parsePath(window.location.href);
-            const urlParams = new URLSearchParams(pathPieces.search);
-            urlParams.set(this.history, objectAsJson);
-            pathPieces.search = '?' + urlParams.toString();
-            path = createPath(pathPieces);
+            this.window.postMessage({
+                name: "apisearch_replace_hash",
+                hash: objectAsJson,
+            }, "*");
         }
-
-        this.historyInstance.push(path, state);
     }
 }
 

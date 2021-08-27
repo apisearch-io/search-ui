@@ -1,5 +1,4 @@
-import {Repository} from "apisearch";
-import {ItemUUID} from "apisearch";
+import {ItemUUID, Repository} from "apisearch";
 import Store from "../../Store";
 
 /**

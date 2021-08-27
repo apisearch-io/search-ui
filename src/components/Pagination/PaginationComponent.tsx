@@ -1,15 +1,10 @@
-import { h, Component } from 'preact';
+import {Component, h} from 'preact';
 import Template from "../Template";
-import {paginationChangeAction} from "./PaginationActions";
-import {PaginationState} from "./PaginationState";
+import {getEnd, getStart, getTotalPages, totalPagesToArray} from "./Helpers";
 import NavigationComponent from "./NavigationComponent";
-import {
-    getTotalPages,
-    totalPagesToArray,
-    getStart,
-    getEnd
-} from "./Helpers";
+import {paginationChangeAction} from "./PaginationActions";
 import {PaginationProps} from "./PaginationProps";
+import {PaginationState} from "./PaginationState";
 
 /**
  * Pagination Component

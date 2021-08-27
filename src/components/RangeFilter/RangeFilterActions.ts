@@ -1,13 +1,7 @@
 /**
  * SortBy actions
  */
-import {
-    Repository,
-    Query,
-    FILTER_AT_LEAST_ONE,
-    FILTER_TYPE_RANGE,
-    FILTER_MUST_ALL
-} from "apisearch";
+import {FILTER_AT_LEAST_ONE, FILTER_MUST_ALL, FILTER_TYPE_RANGE, Query, Repository} from "apisearch";
 import {APISEARCH_DISPATCHER} from "../../Constants";
 import container from "../../Container";
 import Clone from "../Clone";

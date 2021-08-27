@@ -1,4 +1,4 @@
-import { h, Component } from 'preact';
+import {Component, h} from 'preact';
 import Template from "../Template";
 import {InformationProps} from "./InformationProps";
 import {InformationState} from "./InformationState";

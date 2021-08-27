@@ -8,13 +8,13 @@ export default class ApisearchHelper {
 
     /**
      * @param query
-     * @param sort_by
+     * @param sortBy
      */
     public sortBy(
         query: Query,
-        sort_by: string,
+        sortBy: string,
     ) {
-        applySortByToQuery(query, sort_by);
+        applySortByToQuery(query, sortBy);
     }
 
     /**

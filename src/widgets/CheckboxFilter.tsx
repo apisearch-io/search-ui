@@ -1,8 +1,8 @@
-import { h, render } from 'preact';
-import CheckboxFilterComponent from "../components/CheckboxFilter/CheckboxFilterComponent";
 import {Repository} from "apisearch";
-import Widget from "./Widget";
+import {h, render} from 'preact';
+import CheckboxFilterComponent from "../components/CheckboxFilter/CheckboxFilterComponent";
 import Store from "../Store";
+import Widget from "./Widget";
 
 /**
  * CheckboxFilter

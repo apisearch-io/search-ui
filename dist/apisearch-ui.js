@@ -96,36 +96,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ({
 
-/***/ "./node_modules/@babel/runtime/helpers/esm/extends.js":
-/*!************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/extends.js ***!
-  \************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return _extends; });
-function _extends() {
-  _extends = Object.assign || function (target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i];
-
-      for (var key in source) {
-        if (Object.prototype.hasOwnProperty.call(source, key)) {
-          target[key] = source[key];
-        }
-      }
-    }
-
-    return target;
-  };
-
-  return _extends.apply(this, arguments);
-}
-
-/***/ }),
-
 /***/ "./node_modules/apisearch/lib/Apisearch.js":
 /*!*************************************************!*\
   !*** ./node_modules/apisearch/lib/Apisearch.js ***!
@@ -9237,43 +9207,6 @@ function once(emitter, name) {
 
 /***/ }),
 
-/***/ "./node_modules/history/index.js":
-/*!***************************************!*\
-  !*** ./node_modules/history/index.js ***!
-  \***************************************/
-/*! exports provided: Action, createBrowserHistory, createHashHistory, createMemoryHistory, createPath, parsePath */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Action", function() { return m; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createBrowserHistory", function() { return createBrowserHistory; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createHashHistory", function() { return createHashHistory; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createMemoryHistory", function() { return createMemoryHistory; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createPath", function() { return E; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "parsePath", function() { return F; });
-/* harmony import */ var _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/extends */ "./node_modules/@babel/runtime/helpers/esm/extends.js");
-var m,x=m||(m={});x.Pop="POP";x.Push="PUSH";x.Replace="REPLACE";var y= true?function(a){return Object.freeze(a)}:undefined;function z(a,b){if(!a){"undefined"!==typeof console&&console.warn(b);try{throw Error(b);}catch(g){}}}function A(a){a.preventDefault();a.returnValue=""}
-function B(){var a=[];return{get length(){return a.length},push:function(b){a.push(b);return function(){a=a.filter(function(a){return a!==b})}},call:function(b){a.forEach(function(a){return a&&a(b)})}}}function D(){return Math.random().toString(36).substr(2,8)}function E(a){var b=a.pathname,g=a.search;a=a.hash;return(void 0===b?"/":b)+(void 0===g?"":g)+(void 0===a?"":a)}
-function F(a){var b={};if(a){var g=a.indexOf("#");0<=g&&(b.hash=a.substr(g),a=a.substr(0,g));g=a.indexOf("?");0<=g&&(b.search=a.substr(g),a=a.substr(0,g));a&&(b.pathname=a)}return b}
-function createBrowserHistory(a){function b(){var a=h.location,d=f.state||{};return[d.idx,y({pathname:a.pathname,search:a.search,hash:a.hash,state:d.usr||null,key:d.key||"default"})]}function g(a){return"string"===typeof a?a:E(a)}function t(a,d){void 0===d&&(d=null);return y(Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({},l,{},"string"===typeof a?F(a):a,{state:d,key:D()}))}function v(a){n=a;a=b();q=a[0];l=a[1];c.call({action:n,location:l})}function w(a,d){function c(){w(a,d)}var k=m.Push,C=t(a,d);if(!e.length||(e.call({action:k,
-location:C,retry:c}),!1)){var b=[{usr:C.state,key:C.key,idx:q+1},g(C)];C=b[0];b=b[1];try{f.pushState(C,"",b)}catch(G){h.location.assign(b)}v(k)}}function u(a,d){function c(){u(a,d)}var b=m.Replace,k=t(a,d);e.length&&(e.call({action:b,location:k,retry:c}),1)||(k=[{usr:k.state,key:k.key,idx:q},g(k)],f.replaceState(k[0],"",k[1]),v(b))}function r(a){f.go(a)}void 0===a&&(a={});a=a.window;var h=void 0===a?document.defaultView:a,f=h.history,p=null;h.addEventListener("popstate",function(){if(p)e.call(p),
-p=null;else{var a=m.Pop,d=b(),c=d[0];d=d[1];if(e.length)if(null!=c){var f=q-c;f&&(p={action:a,location:d,retry:function(){r(-1*f)}},r(f))}else true?z(!1,"You are trying to block a POP navigation to a location that was not created by the history library. The block will fail silently in production, but in general you should do all navigation with the history library (instead of using window.history.pushState directly) to avoid this situation."):undefined;else v(a)}});var n=
-m.Pop;a=b();var q=a[0],l=a[1],c=B(),e=B();null==q&&(q=0,f.replaceState(Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({},f.state,{idx:q}),""));return{get action(){return n},get location(){return l},createHref:g,push:w,replace:u,go:r,back:function(){r(-1)},forward:function(){r(1)},listen:function(a){return c.push(a)},block:function(a){var d=e.push(a);1===e.length&&h.addEventListener("beforeunload",A);return function(){d();e.length||h.removeEventListener("beforeunload",A)}}}};
-function createHashHistory(a){function b(){var a=F(f.location.hash.substr(1)),c=a.pathname,b=a.search;a=a.hash;var e=p.state||{};return[e.idx,y({pathname:void 0===c?"/":c,search:void 0===b?"":b,hash:void 0===a?"":a,state:e.usr||null,key:e.key||"default"})]}function g(){if(n)k.call(n),n=null;else{var a=m.Pop,c=b(),e=c[0];c=c[1];if(k.length)if(null!=e){var f=l-e;f&&(n={action:a,location:c,retry:function(){h(-1*f)}},h(f))}else true?z(!1,"You are trying to block a POP navigation to a location that was not created by the history library. The block will fail silently in production, but in general you should do all navigation with the history library (instead of using window.history.pushState directly) to avoid this situation."):
-undefined;else w(a)}}function t(a){var d=document.querySelector("base"),c="";d&&d.getAttribute("href")&&(d=f.location.href,c=d.indexOf("#"),c=-1===c?d:d.slice(0,c));return c+"#"+("string"===typeof a?a:E(a))}function v(a,b){void 0===b&&(b=null);return y(Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({},c,{},"string"===typeof a?F(a):a,{state:b,key:D()}))}function w(a){q=a;a=b();l=a[0];c=a[1];e.call({action:q,location:c})}function u(a,c){function d(){u(a,c)}var b=m.Push,e=v(a,c); true?z("/"===e.pathname.charAt(0),
-"Relative pathnames are not supported in hash history.push("+JSON.stringify(a)+")"):undefined;if(!k.length||(k.call({action:b,location:e,retry:d}),!1)){var g=[{usr:e.state,key:e.key,idx:l+1},t(e)];e=g[0];g=g[1];try{p.pushState(e,"",g)}catch(H){f.location.assign(g)}w(b)}}function r(a,c){function d(){r(a,c)}var e=m.Replace,b=v(a,c); true?z("/"===b.pathname.charAt(0),"Relative pathnames are not supported in hash history.replace("+JSON.stringify(a)+")"):undefined;k.length&&(k.call({action:e,
-location:b,retry:d}),1)||(b=[{usr:b.state,key:b.key,idx:l},t(b)],p.replaceState(b[0],"",b[1]),w(e))}function h(a){p.go(a)}void 0===a&&(a={});a=a.window;var f=void 0===a?document.defaultView:a,p=f.history,n=null;f.addEventListener("popstate",g);f.addEventListener("hashchange",function(){var a=b()[1];E(a)!==E(c)&&g()});var q=m.Pop;a=b();var l=a[0],c=a[1],e=B(),k=B();null==l&&(l=0,p.replaceState(Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({},p.state,{idx:l}),""));return{get action(){return q},get location(){return c},createHref:t,push:u,
-replace:r,go:h,back:function(){h(-1)},forward:function(){h(1)},listen:function(a){return e.push(a)},block:function(a){var c=k.push(a);1===k.length&&f.addEventListener("beforeunload",A);return function(){c();k.length||f.removeEventListener("beforeunload",A)}}}};
-function createMemoryHistory(a){function b(a,b){void 0===b&&(b=null);return y(Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({},n,{},"string"===typeof a?F(a):a,{state:b,key:D()}))}function g(a,b,f){return!l.length||(l.call({action:a,location:b,retry:f}),!1)}function t(a,b){p=a;n=b;q.call({action:p,location:n})}function v(a,e){var c=m.Push,d=b(a,e); true?z("/"===n.pathname.charAt(0),"Relative pathnames are not supported in memory history.push("+JSON.stringify(a)+")"):undefined;g(c,d,function(){v(a,e)})&&
-(f+=1,h.splice(f,h.length,d),t(c,d))}function w(a,e){var c=m.Replace,d=b(a,e); true?z("/"===n.pathname.charAt(0),"Relative pathnames are not supported in memory history.replace("+JSON.stringify(a)+")"):undefined;g(c,d,function(){w(a,e)})&&(h[f]=d,t(c,d))}function u(a){var b=Math.min(Math.max(f+a,0),h.length-1),c=m.Pop,d=h[b];g(c,d,function(){u(a)})&&(f=b,t(c,d))}void 0===a&&(a={});var r=a;a=r.initialEntries;r=r.initialIndex;var h=(void 0===a?["/"]:a).map(function(a){var b=
-y(Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({pathname:"/",search:"",hash:"",state:null,key:D()},"string"===typeof a?F(a):a)); true?z("/"===b.pathname.charAt(0),"Relative pathnames are not supported in createMemoryHistory({ initialEntries }) (invalid entry: "+JSON.stringify(a)+")"):undefined;return b}),f=Math.min(Math.max(null==r?h.length-1:r,0),h.length-1),p=m.Pop,n=h[f],q=B(),l=B();return{get index(){return f},get action(){return p},get location(){return n},createHref:function(a){return"string"===typeof a?
-a:E(a)},push:v,replace:w,go:u,back:function(){u(-1)},forward:function(){u(1)},listen:function(a){return q.push(a)},block:function(a){return l.push(a)}}};
-//# sourceMappingURL=index.js.map
-
-
-/***/ }),
-
 /***/ "./node_modules/mustache/mustache.js":
 /*!*******************************************!*\
   !*** ./node_modules/mustache/mustache.js ***!
@@ -11062,10 +10995,10 @@ var ApisearchHelper = /** @class */ (function () {
     }
     /**
      * @param query
-     * @param sort_by
+     * @param sortBy
      */
-    ApisearchHelper.prototype.sortBy = function (query, sort_by) {
-        SortByHelper_1.applySortByToQuery(query, sort_by);
+    ApisearchHelper.prototype.sortBy = function (query, sortBy) {
+        SortByHelper_1.applySortByToQuery(query, sortBy);
     };
     /**
      * @param query
@@ -11255,11 +11188,11 @@ var ApisearchUI = /** @class */ (function () {
     };
     /**
      * @param config
-     * @param history
+     * @param hash
      *
      * @return {ApisearchUI}
      */
-    ApisearchUI.create = function (config, history) {
+    ApisearchUI.create = function (config, hash) {
         var _a;
         apisearch_1["default"].ensureRepositoryConfigIsValid(config);
         /**
@@ -11269,7 +11202,7 @@ var ApisearchUI = /** @class */ (function () {
         /**
          * Bootstrapping ApisearchUI application
          */
-        Bootstrap_1.bootstrap(environmentId, config, history);
+        Bootstrap_1.bootstrap(environmentId, config, hash);
         /**
          * Register handleActions method (store reducer)
          * into the event dispatcher
@@ -11353,13 +11286,13 @@ var ApisearchUIFactory = /** @class */ (function () {
         return instance;
     };
     /**
-     * @param history
+     * @param hash
      *
      * @return {ApisearchUI}
      */
-    ApisearchUIFactory.prototype.createUI = function (history) {
-        if (history === void 0) { history = false; }
-        return ApisearchUI_1["default"].create(this.config, history);
+    ApisearchUIFactory.prototype.createUI = function (hash) {
+        if (hash === void 0) { hash = null; }
+        return ApisearchUI_1["default"].create(this.config, hash);
     };
     return ApisearchUIFactory;
 }());
@@ -11388,9 +11321,9 @@ var Constants_1 = __webpack_require__(/*! ./Constants */ "./src/Constants.ts");
 /**
  * @param environmentId
  * @param config
- * @param history
+ * @param hash
  */
-function bootstrap(environmentId, config, history) {
+function bootstrap(environmentId, config, hash) {
     var configAsString = JSON.stringify(config);
     var repositoryId = Constants_1.APISEARCH_REPOSITORY + "__" + configAsString;
     var storeId = Constants_1.APISEARCH_STORE + "__" + environmentId;
@@ -11408,7 +11341,7 @@ function bootstrap(environmentId, config, history) {
      */
     Container_1["default"].register(storeId, function () {
         var _a, _b;
-        return new Store_1["default"](config.coordinate, config.options.min_score, history, (_a = config.user_id) !== null && _a !== void 0 ? _a : "", (_b = config.options.generate_random_session_uuid) !== null && _b !== void 0 ? _b : false);
+        return new Store_1["default"](config.coordinate, config.options.min_score, hash, (_a = config.user_id) !== null && _a !== void 0 ? _a : "", (_b = config.options.generate_random_session_uuid) !== null && _b !== void 0 ? _b : false);
     });
     /**
      * Register an event dispatcher
@@ -11556,30 +11489,6 @@ exports.createEnvironmentId = function () { return "env_" + Math.ceil(Math.rando
 
 /***/ }),
 
-/***/ "./src/LocationState.ts":
-/*!******************************!*\
-  !*** ./src/LocationState.ts ***!
-  \******************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-exports.isLocationState = void 0;
-function isLocationState(object) {
-    var myInterface = object;
-    if (myInterface === null) {
-        return false;
-    }
-    return ((myInterface.query !== undefined) &&
-        (myInterface.result !== undefined));
-}
-exports.isLocationState = isLocationState;
-
-
-/***/ }),
-
 /***/ "./src/Store.ts":
 /*!**********************!*\
   !*** ./src/Store.ts ***!
@@ -11604,12 +11513,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 exports.__esModule = true;
 var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
-var apisearch_2 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
 var events_1 = __webpack_require__(/*! events */ "./node_modules/events/events.js");
-var history_1 = __webpack_require__(/*! history */ "./node_modules/history/index.js");
-var LocationState_1 = __webpack_require__(/*! ./LocationState */ "./src/LocationState.ts");
-var Container_1 = __webpack_require__(/*! ./Container */ "./src/Container.ts");
 var Constants_1 = __webpack_require__(/*! ./Constants */ "./src/Constants.ts");
+var Container_1 = __webpack_require__(/*! ./Container */ "./src/Container.ts");
 /**
  * Flux pattern store class
  */
@@ -11618,16 +11524,24 @@ var Store = /** @class */ (function (_super) {
     /**
      * @param coordinate
      * @param minScore
-     * @param history
+     * @param hash
      * @param userId
      * @param generateRandomSessionUUID
      */
-    function Store(coordinate, minScore, history, userId, generateRandomSessionUUID) {
+    function Store(coordinate, minScore, hash, userId, generateRandomSessionUUID) {
         var _this = _super.call(this) || this;
-        _this.historyPrefix = '';
-        _this.fromBackHistoryState = false;
+        _this.withHash = false;
         _this.dirty = true;
         var initialQuery = Store.loadInitialQuery(coordinate, userId);
+        _this.window = window.top;
+        _this.isUnderIframe = (window === window.top);
+        if ((typeof hash === "string")) {
+            _this.withHash = true;
+            _this.urlHash = (hash === "") ? "{}" : hash;
+            if (_this.urlHash.charAt(0) === "#") {
+                _this.urlHash = _this.urlHash.substr(1);
+            }
+        }
         if (minScore) {
             initialQuery.setMinScore(minScore);
         }
@@ -11637,31 +11551,9 @@ var Store = /** @class */ (function (_super) {
         _this.currentResult = apisearch_1["default"].createEmptyResult();
         _this.currentVisibleResults = false;
         if (generateRandomSessionUUID) {
-            initialQuery.setMetadataValue('session_uid', Store.createUID(16));
+            initialQuery.setMetadataValue("session_uid", Store.createUID(16));
         }
         _this.currentQuery = initialQuery;
-        _this.history = (history === true) ? 'hash' : history;
-        if (!history) {
-            return _this;
-        }
-        if (_this.history === 'hash') {
-            _this.historyInstance = history_1.createHashHistory();
-        }
-        else {
-            _this.historyInstance = history_1.createBrowserHistory();
-            _this.historyPrefix = '?' + _this.history + '=';
-        }
-        _this.historyInstance.listen(function (event) {
-            if (event.action === 'POP' &&
-                LocationState_1.isLocationState(event.location.state)) {
-                _this.fromBackHistoryState = true;
-                _this.renderFetchedData({
-                    query: apisearch_2.Query.createFromArray(event.location.state.query),
-                    result: apisearch_2.Result.createFromArray(event.location.state.result),
-                    visibleResults: event.location.state.visibleResults
-                });
-            }
-        });
         return _this;
     }
     /**
@@ -11719,7 +11611,7 @@ var Store = /** @class */ (function (_super) {
         this.currentResult = result;
         this.currentQuery = query;
         this.currentVisibleResults = query !== undefined;
-        this.pushQueryToHistory(query, result, this.currentVisibleResults);
+        this.replaceUrl(query, result, this.currentVisibleResults, false);
         this.emit("render");
     };
     /**
@@ -11733,10 +11625,7 @@ var Store = /** @class */ (function (_super) {
         if (visibleResults !== undefined) {
             this.currentVisibleResults = visibleResults;
         }
-        if (!this.fromBackHistoryState) {
-            this.pushQueryToHistory(query, result, visibleResults);
-        }
-        this.fromBackHistoryState = false;
+        this.replaceUrl(query, result, visibleResults);
         this.emit("render");
     };
     /**
@@ -11765,7 +11654,7 @@ var Store = /** @class */ (function (_super) {
         var queryAsArray = this.currentQuery.toArray();
         queryAsArray.user = null;
         repository
-            .query(apisearch_2.Query.createFromArray(queryAsArray))
+            .query(apisearch_1.Query.createFromArray(queryAsArray))
             .then(function (result) {
             dispatcher.dispatch("RENDER_INITIAL_DATA", {
                 query: _this.currentQuery,
@@ -11788,75 +11677,54 @@ var Store = /** @class */ (function (_super) {
         if (userId !== "") {
             q.user = { id: userId };
         }
-        return apisearch_2.Query.createFromArray(q);
+        return apisearch_1.Query.createFromArray(q);
     };
     /**
      * @param query
      */
     Store.prototype.loadQuery = function (query) {
-        if (typeof this.history !== "string") {
+        if (!this.withHash) {
             return query;
         }
-        var queryAsObject = query.toArray();
-        var urlObject = this.loadUrlObjectFromHash();
-        this.emit("fromUrlObject", urlObject, queryAsObject);
-        return apisearch_2.Query.createFromArray(queryAsObject);
-    };
-    /**
-     * @private
-     */
-    Store.prototype.loadUrlObjectFromHash = function () {
-        if (typeof this.history !== "string") {
-            return {};
-        }
-        var urlHash = "";
-        if (this.history === "hash") {
-            urlHash = window.location.hash.substr(1);
-        }
-        else {
-            var urlParams = new URLSearchParams(window.location.search);
-            urlHash = urlParams.get(this.history);
-        }
-        return (urlHash !== '' &&
-            urlHash !== undefined &&
-            urlHash !== null &&
-            urlHash !== '' &&
-            urlHash !== '/')
-            ? JSON.parse(decodeURI(urlHash))
+        var urlObject = (this.urlHash !== undefined &&
+            this.urlHash !== null &&
+            this.urlHash !== "" &&
+            this.urlHash !== "/")
+            ? JSON.parse(decodeURI(this.urlHash))
             : {};
+        var queryAsObject = query.toArray();
+        this.emit("fromUrlObject", urlObject, queryAsObject);
+        return apisearch_1.Query.createFromArray(queryAsObject);
     };
     /**
      *
      * @param query
      * @param result
      * @param visibleResults
+     * @param isFirst
      */
-    Store.prototype.pushQueryToHistory = function (query, result, visibleResults) {
-        if (this.historyInstance === undefined ||
-            (typeof this.history !== "string")) {
+    Store.prototype.replaceUrl = function (query, result, visibleResults, isFirst) {
+        if (isFirst === void 0) { isFirst = null; }
+        if (!this.withHash) {
             return;
         }
         var queryAsObject = query.toArray();
         var urlObject = {};
         this.emit("toUrlObject", queryAsObject, urlObject);
-        var state = {
-            query: query.toArray(),
-            result: result ? result.toArray() : null,
-            visibleResults: visibleResults
-        };
         var objectAsJson = decodeURI(JSON.stringify(urlObject));
-        var path = '';
-        if (this.history === 'hash') {
-            path = objectAsJson;
+        objectAsJson = (objectAsJson === "{}") ? "" : objectAsJson;
+        if (this.isUnderIframe) {
+            this.window.location.replace("#" + objectAsJson);
+            if (objectAsJson === "") {
+                history.replaceState("", "", location.pathname);
+            }
         }
         else {
-            var pathPieces = history_1.parsePath(window.location.href);
-            var urlParams = new URLSearchParams(pathPieces.search);
-            urlParams.set(this.history, objectAsJson);
-            pathPieces.search = '?' + urlParams.toString();
-            path = history_1.createPath(pathPieces);
+            this.window.postMessage({
+                name: "apisearch_replace_hash",
+                hash: objectAsJson,
+            }, "*");
         }
-        this.historyInstance.push(path, state);
     };
     return Store;
 }(events_1.EventEmitter));
@@ -13080,9 +12948,9 @@ var __extends = (this && this.__extends) || (function () {
 exports.__esModule = true;
 var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
 var Template_1 = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
-var PaginationActions_1 = __webpack_require__(/*! ./PaginationActions */ "./src/components/Pagination/PaginationActions.ts");
-var NavigationComponent_1 = __webpack_require__(/*! ./NavigationComponent */ "./src/components/Pagination/NavigationComponent.tsx");
 var Helpers_1 = __webpack_require__(/*! ./Helpers */ "./src/components/Pagination/Helpers.ts");
+var NavigationComponent_1 = __webpack_require__(/*! ./NavigationComponent */ "./src/components/Pagination/NavigationComponent.tsx");
+var PaginationActions_1 = __webpack_require__(/*! ./PaginationActions */ "./src/components/Pagination/PaginationActions.ts");
 /**
  * Pagination Component
  */
@@ -13346,8 +13214,8 @@ var __assign = (this && this.__assign) || function () {
 exports.__esModule = true;
 var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
 var compat_1 = __webpack_require__(/*! preact/compat */ "./node_modules/preact/compat/dist/compat.module.js");
-var RangeFilterActions_1 = __webpack_require__(/*! ./RangeFilterActions */ "./src/components/RangeFilter/RangeFilterActions.ts");
 var Template_1 = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
+var RangeFilterActions_1 = __webpack_require__(/*! ./RangeFilterActions */ "./src/components/RangeFilter/RangeFilterActions.ts");
 /**
  * Range Filter Component
  */
@@ -13983,15 +13851,15 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 exports.__esModule = true;
+var ItemUUID_1 = __webpack_require__(/*! apisearch/lib/Model/ItemUUID */ "./node_modules/apisearch/lib/Model/ItemUUID.js");
 var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
 var compat_1 = __webpack_require__(/*! preact/compat */ "./node_modules/preact/compat/dist/compat.module.js");
+var Constants_1 = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
+var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
 var Template_1 = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
 var defaultTemplates_1 = __webpack_require__(/*! ./defaultTemplates */ "./src/components/Result/defaultTemplates.tsx");
 var Item_1 = __webpack_require__(/*! ./Item */ "./src/components/Result/Item.tsx");
 var ResultActions_1 = __webpack_require__(/*! ./ResultActions */ "./src/components/Result/ResultActions.ts");
-var ItemUUID_1 = __webpack_require__(/*! apisearch/lib/Model/ItemUUID */ "./node_modules/apisearch/lib/Model/ItemUUID.js");
-var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
-var Constants_1 = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
 /**
  * Result Component
  */
@@ -14703,8 +14571,8 @@ exports.__esModule = true;
 exports.onChangeSearchAction = exports.initialSortBySetup = void 0;
 var Constants_1 = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
 var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
-var SortByHelper_1 = __webpack_require__(/*! ./SortByHelper */ "./src/components/SortBy/SortByHelper.ts");
 var Clone_1 = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
+var SortByHelper_1 = __webpack_require__(/*! ./SortByHelper */ "./src/components/SortBy/SortByHelper.ts");
 /**
  * Initial sortBy
  *
@@ -14886,7 +14754,6 @@ exports.applySortByToQuery = void 0;
  * SortBy actions
  */
 var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
-var apisearch_2 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
 /**
  * Apply sort by to query
  *
@@ -14898,14 +14765,14 @@ function applySortByToQuery(query, selectedOption) {
     var sortBy = apisearch_1["default"].createEmptySortBy();
     if (sortByData.field == 'distance') {
         sortBy.byValue({
-            type: apisearch_2.SORT_BY_TYPE_DISTANCE,
+            type: apisearch_1.SORT_BY_TYPE_DISTANCE,
             unit: sortByData.sort
                 ? sortByData.sort
                 : 'km'
         });
     }
     else if (sortByData.field == 'score') {
-        sortBy.byValue(apisearch_2.SORT_BY_SCORE);
+        sortBy.byValue(apisearch_1.SORT_BY_SCORE);
     }
     else {
         sortBy.byFieldValue(sortByData.field, sortByData.sort);
@@ -16233,8 +16100,8 @@ var __assign = (this && this.__assign) || function () {
 };
 exports.__esModule = true;
 var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
-var Widget_1 = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
 var SnapshotComponent_1 = __webpack_require__(/*! ../components/Snapshot/SnapshotComponent */ "./src/components/Snapshot/SnapshotComponent.tsx");
+var Widget_1 = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
 /**
  * Snapshot
  */
@@ -16309,9 +16176,9 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 exports.__esModule = true;
+var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
 var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
 var SortByComponent_1 = __webpack_require__(/*! ../components/SortBy/SortByComponent */ "./src/components/SortBy/SortByComponent.tsx");
-var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
 var Widget_1 = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
 /**
  * SortBy
@@ -16432,8 +16299,8 @@ var __assign = (this && this.__assign) || function () {
 };
 exports.__esModule = true;
 var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
-var Widget_1 = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
 var SuggestionsFilterComponent_1 = __webpack_require__(/*! ../components/Suggestions/SuggestionsFilterComponent */ "./src/components/Suggestions/SuggestionsFilterComponent.tsx");
+var Widget_1 = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
 /**
  * SuggestionsFilter
  */
@@ -16526,17 +16393,17 @@ exports["default"] = Widget;
 "use strict";
 
 exports.__esModule = true;
+var CheckboxFilter_1 = __webpack_require__(/*! ./CheckboxFilter */ "./src/widgets/CheckboxFilter.tsx");
 var ClearFilters_1 = __webpack_require__(/*! ./ClearFilters */ "./src/widgets/ClearFilters.tsx");
 var Information_1 = __webpack_require__(/*! ./Information */ "./src/widgets/Information.tsx");
 var MultipleFilter_1 = __webpack_require__(/*! ./MultipleFilter */ "./src/widgets/MultipleFilter.tsx");
 var Pagination_1 = __webpack_require__(/*! ./Pagination */ "./src/widgets/Pagination.tsx");
-var Result_1 = __webpack_require__(/*! ./Result */ "./src/widgets/Result.tsx");
-var SearchInput_1 = __webpack_require__(/*! ./SearchInput */ "./src/widgets/SearchInput.tsx");
-var SortBy_1 = __webpack_require__(/*! ./SortBy */ "./src/widgets/SortBy.tsx");
-var CheckboxFilter_1 = __webpack_require__(/*! ./CheckboxFilter */ "./src/widgets/CheckboxFilter.tsx");
 var RangeFilter_1 = __webpack_require__(/*! ./RangeFilter */ "./src/widgets/RangeFilter.tsx");
 var Reload_1 = __webpack_require__(/*! ./Reload */ "./src/widgets/Reload.tsx");
+var Result_1 = __webpack_require__(/*! ./Result */ "./src/widgets/Result.tsx");
+var SearchInput_1 = __webpack_require__(/*! ./SearchInput */ "./src/widgets/SearchInput.tsx");
 var Snapshot_1 = __webpack_require__(/*! ./Snapshot */ "./src/widgets/Snapshot.tsx");
+var SortBy_1 = __webpack_require__(/*! ./SortBy */ "./src/widgets/SortBy.tsx");
 var Suggestions_1 = __webpack_require__(/*! ./Suggestions */ "./src/widgets/Suggestions.tsx");
 /**
  * Widget factories

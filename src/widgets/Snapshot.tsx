@@ -1,8 +1,8 @@
-import { h, render } from 'preact';
-import Widget from "./Widget";
 import {Repository} from "apisearch";
-import Store from "../Store";
+import {h, render} from 'preact';
 import SnapshotComponent from "../components/Snapshot/SnapshotComponent";
+import Store from "../Store";
+import Widget from "./Widget";
 
 /**
  * Snapshot

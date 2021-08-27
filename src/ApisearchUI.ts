@@ -188,13 +188,13 @@ export default class ApisearchUI {
 
     /**
      * @param config
-     * @param history
+     * @param hash
      *
      * @return {ApisearchUI}
      */
     public static create(
         config: any,
-        history: boolean|string,
+        hash: string,
     ): ApisearchUI {
 
         apisearch.ensureRepositoryConfigIsValid(config);
@@ -210,7 +210,7 @@ export default class ApisearchUI {
         bootstrap(
             environmentId,
             config,
-            history,
+            hash,
         );
 
         /**

@@ -23,14 +23,14 @@ export default class ApisearchUIFactory {
     }
 
     /**
-     * @param history
+     * @param hash
      *
      * @return {ApisearchUI}
      */
-    public createUI(history: boolean|string = false) {
+    public createUI(hash: string = null) {
         return ApisearchUI.create(
             this.config,
-            history,
+            hash,
         );
     }
 }

@@ -1,8 +1,8 @@
-import { h, render } from 'preact';
-import RangeFilterComponent from "../components/RangeFilter/RangeFilterComponent";
 import {Repository} from "apisearch";
-import Widget from "./Widget";
+import {h, render} from 'preact';
+import RangeFilterComponent from "../components/RangeFilter/RangeFilterComponent";
 import Store from "../Store";
+import Widget from "./Widget";
 
 /**
  * RangeFilter

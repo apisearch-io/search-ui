@@ -1,17 +1,14 @@
-import { h, Component } from 'preact';
-import { useRef, useEffect, useCallback } from 'preact/compat';
+import {ItemUUID} from "apisearch/lib/Model/ItemUUID";
+import {Component, h} from 'preact';
+import {useCallback, useEffect, useRef} from 'preact/compat';
+import {APISEARCH_CONFIG, APISEARCH_UI,} from "../../Constants";
+import container from "../../Container";
 import Template from "../Template";
 import {defaultItemsListTemplate, defaultItemTemplate, defaultNoResultsItemTemplate} from "./defaultTemplates";
 import Item from "./Item";
 import {configureQuery, infiniteScrollNextPageAction} from "./ResultActions";
-import {ResultState} from "./ResultState";
 import {ResultProps} from "./ResultProps";
-import {ItemUUID} from "apisearch/lib/Model/ItemUUID";
-import container from "../../Container";
-import {
-    APISEARCH_UI,
-    APISEARCH_CONFIG,
-} from "../../Constants";
+import {ResultState} from "./ResultState";
 
 /**
  * Result Component

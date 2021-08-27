@@ -1,8 +1,8 @@
-import { h, render } from 'preact';
-import SortByComponent from "../components/SortBy/SortByComponent";
 import {Repository, SortBy as ApisearchSortBy} from "apisearch";
-import Widget from "./Widget";
+import {h, render} from 'preact';
+import SortByComponent from "../components/SortBy/SortByComponent";
 import Store from "../Store";
+import Widget from "./Widget";
 
 /**
  * SortBy

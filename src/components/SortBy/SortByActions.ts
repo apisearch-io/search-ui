@@ -1,11 +1,11 @@
 /**
  * SortBy actions
  */
-import {Repository, Query} from "apisearch";
+import {Query, Repository} from "apisearch";
 import {APISEARCH_DISPATCHER} from "../../Constants";
 import container from "../../Container";
-import {applySortByToQuery} from "./SortByHelper"
 import Clone from "../Clone";
+import {applySortByToQuery} from "./SortByHelper";
 
 /**
  * Initial sortBy

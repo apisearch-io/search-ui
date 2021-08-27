@@ -1,7 +1,7 @@
 /**
  * Clear filters actions
  */
-import {HttpRepository, Repository, CacheClient, Query} from "apisearch";
+import {CacheClient, HttpRepository, Query, Repository} from "apisearch";
 import {APISEARCH_DISPATCHER} from "../../Constants";
 import container from "../../Container";
 import Clone from "../Clone";

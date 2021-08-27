@@ -1,8 +1,7 @@
 /**
  * Search actions
  */
-import {ItemUUID, Repository} from "apisearch";
-import {Query} from "apisearch";
+import {ItemUUID, Query, Repository} from "apisearch";
 import {APISEARCH_DISPATCHER} from "../../Constants";
 import container from "../../Container";
 import Clone from "../Clone";
