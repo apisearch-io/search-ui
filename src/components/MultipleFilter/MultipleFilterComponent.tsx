@@ -94,33 +94,33 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
         }
 
         const aggregation = props.store.getCurrentResult().getAggregation(filterName);
-        if (typeof aggregation.getCounters === "function") {
+        if (aggregation && typeof aggregation.getCounters === "function") {
 
             /**
              * Getting aggregation from aggregations
              */
-            let counters = aggregation.getCounters();
-            let countersAsArray:Counter[] = Object.values(counters);
+            const counters = aggregation.getCounters();
+            const countersAsArray: Counter[] = Object.values(counters);
 
             const aggregations = props.activeFirst
                 ? [
                     ...countersAsArray.filter(
-                        counter =>
-                            true === counter.isUsed()
+                        (counter) =>
+                            true === counter.isUsed(),
                     ),
                     ...countersAsArray.filter(
-                        counter =>
+                        (counter) =>
                             (
                                 false === counter.isUsed() ||
                                 null === counter.isUsed()
-                            )
-                    )
+                            ),
+                    ),
                 ]
                 : countersAsArray;
 
             this.setState(prevState => {
                 return {
-                    aggregations: aggregations
+                    aggregations: aggregations,
                 };
             });
         }
@@ -237,7 +237,7 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
         const items = allItems.slice(0, this.state.viewLimit);
         const that = this;
 
-        if (allItems.length == 0) {
+        if (allItems.length === 0) {
             return null;
         }
 

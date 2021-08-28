@@ -102,6 +102,13 @@ class Pagination extends Widget {
             query.page = page;
         }
     }
+
+    /**
+     * @param query
+     */
+    public reset(query: any) {
+        delete query.page;
+    }
 }
 
 /**

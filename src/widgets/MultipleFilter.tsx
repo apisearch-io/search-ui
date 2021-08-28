@@ -41,7 +41,7 @@ class MultipleFilter extends Widget {
         classNames,
         template,
         formatData,
-        activeFirst
+        activeFirst,
     }) {
         super();
         this.target = target;
@@ -58,15 +58,15 @@ class MultipleFilter extends Widget {
             labels={labels}
             classNames={{
                 ...MultipleFilterComponent.defaultProps.classNames,
-                ...classNames
+                ...classNames,
             }}
             template={{
                 ...MultipleFilterComponent.defaultProps.template,
-                ...template
+                ...template,
             }}
             formatData={formatData}
             activeFirst={activeFirst}
-        />
+        />;
     }
 
     /**
@@ -145,6 +145,16 @@ class MultipleFilter extends Widget {
                 application_type: this.component.props.application_type,
                 filter_type: filterType
             };
+        }
+    }
+
+    /**
+     * @param query
+     */
+    public reset(query: any) {
+        const filterName = this.component.props.filterName;
+        if (query.filters[filterName] !== undefined) {
+            delete query.filters[filterName];
         }
     }
 }

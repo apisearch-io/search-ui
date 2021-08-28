@@ -120,6 +120,13 @@ class SortBy extends Widget {
             query.sort[0].order = sortParts[1];
         }
     }
+
+    /**
+     * @param query
+     */
+    public reset(query: any) {
+        delete query.sort;
+    }
 }
 
 /**
