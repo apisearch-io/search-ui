@@ -156,6 +156,13 @@ class SearchInput extends Widget{
             query.q = q;
         }
     }
+
+    /**
+     * @param query
+     */
+    public reset(query: any) {
+        delete query.q;
+    }
 }
 
 /**

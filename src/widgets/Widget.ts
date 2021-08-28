@@ -19,7 +19,7 @@ export default abstract class Widget {
         environmentId: string,
         store: Store,
         repository: Repository,
-        dictionary: { [key: string]: string; }
+        dictionary: { [key: string]: string; },
     );
 
     /**
@@ -28,9 +28,8 @@ export default abstract class Widget {
      */
     public toUrlObject(
         query: any,
-        object: any
-    )
-    {
+        object: any,
+    ) {
 
     }
 
@@ -40,9 +39,15 @@ export default abstract class Widget {
      */
     public fromUrlObject(
         object: any,
-        query: any
-    )
-    {
+        query: any,
+    ) {
+
+    }
+
+    /**
+     * @param query
+     */
+    public reset(query: any) {
 
     }
 }

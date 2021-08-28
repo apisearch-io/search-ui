@@ -56,12 +56,12 @@ class Store extends EventEmitter {
         /**
          * Data received
          */
-        this.currentResult = apisearch.createEmptyResult();
+        this.setEmptyResult();
         this.currentVisibleResults = false;
         if (generateRandomSessionUUID) {
             initialQuery.setMetadataValue("session_uid", Store.createUID(16));
         }
-        this.currentQuery = initialQuery;
+        this.setCurrentQuery(initialQuery);
     }
 
     /**
@@ -83,12 +83,26 @@ class Store extends EventEmitter {
     }
 
     /**
+     * @param query
+     */
+    public setCurrentQuery(query: Query) {
+        this.currentQuery = query;
+    }
+
+    /**
      * Get current result
      *
      * @return {Result}
      */
     public getCurrentResult(): Result {
         return this.currentResult;
+    }
+
+    /**
+     *
+     */
+    public setEmptyResult() {
+        this.currentResult = apisearch.createEmptyResult();
     }
 
     /**
@@ -178,13 +192,17 @@ class Store extends EventEmitter {
     /**
      * @param environmentId
      * @param repository
+     * @param loadQuery
      */
     public fetchInitialQuery(
         environmentId: string,
         repository: Repository,
+        loadQuery: boolean,
     ) {
         const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
-        this.currentQuery = this.loadQuery(this.currentQuery);
+        this.currentQuery = loadQuery
+            ? this.loadQuery(this.currentQuery)
+            : this.currentQuery;
 
         /**
          * In initial query, we must delete user

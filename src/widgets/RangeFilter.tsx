@@ -121,6 +121,16 @@ class RangeFilter extends Widget {
             };
         }
     }
+
+    /**
+     * @param query
+     */
+    public reset(query: any) {
+        const filterName = this.component.props.filterName;
+        if (query.filters[filterName] !== undefined) {
+            delete query.filters[filterName];
+        }
+    }
 }
 
 /**

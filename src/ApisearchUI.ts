@@ -1,4 +1,4 @@
-import {HttpRepository} from "apisearch";
+import {HttpRepository, Query} from "apisearch";
 import apisearch from "apisearch";
 import ApisearchHelper from "./ApisearchHelper";
 import ApisearchUIFactory from "./ApisearchUIFactory";
@@ -23,6 +23,7 @@ export default class ApisearchUI {
     private activeWidgets: Widget[];
     private dictionary: { [key: string]: string; };
     private userId: string;
+    private firstQuery: boolean;
 
     /**
      * Constructor
@@ -75,19 +76,47 @@ export default class ApisearchUI {
          * 3.- Dispatch the initial data request
          *     With all widget previous initial configurations
          */
-        if (
-            typeof firstQuery === "undefined" ||
-            true === firstQuery
-        ) {
-            this.store.fetchInitialQuery(
-                this.environmentId,
-                this.repository,
-            );
-        }
+        this.firstQuery = firstQuery;
+        this.fetchQuery(true);
 
         window.dispatchEvent(new Event("apisearch_loaded", {
             bubbles: true,
         }));
+    }
+
+    /**
+     *
+     */
+    public reset() {
+        const initialQuery = this.store.getCurrentQuery().toArray();
+        this.activeWidgets.map((widget) => {
+            widget.reset(initialQuery);
+        });
+        this.store.setCurrentQuery(Query.createFromArray(initialQuery));
+        this.store.setEmptyResult();
+        this.fetchQuery(false);
+        this.render();
+    }
+
+    /**
+     * @param loadQuery
+     */
+    private fetchQuery(loadQuery: boolean)
+    {
+        /**
+         * 3.- Dispatch the initial data request
+         *     With all widget previous initial configurations
+         */
+        if (
+            typeof this.firstQuery === "undefined" ||
+            true === this.firstQuery
+        ) {
+            this.store.fetchInitialQuery(
+                this.environmentId,
+                this.repository,
+                loadQuery,
+            );
+        }
     }
 
     /**
@@ -169,21 +198,6 @@ export default class ApisearchUI {
                 query,
             );
         });
-    }
-
-    /**
-     * Attach a function into an event
-     *
-     * @param eventName
-     * @param action
-     */
-    public attach(
-        eventName: string,
-        action: any,
-    ) {
-        this
-            .store
-            .on(eventName, action);
     }
 
     /**

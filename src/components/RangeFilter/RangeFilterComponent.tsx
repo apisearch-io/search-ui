@@ -189,6 +189,14 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
                     }
                 });
             }
+        } else if(this.minMaxAssigned) {
+            this.setState(prevState => {
+                return {
+                    valueFrom: props.minValue,
+                    valueTo: props.maxValue,
+                    visible: true
+                }
+            });
         } else {
             this.setState(prevState => {
                 return {

@@ -11047,6 +11047,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 };
 exports.__esModule = true;
 var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
+var apisearch_2 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
 var ApisearchHelper_1 = __webpack_require__(/*! ./ApisearchHelper */ "./src/ApisearchHelper.ts");
 var ApisearchUIFactory_1 = __webpack_require__(/*! ./ApisearchUIFactory */ "./src/ApisearchUIFactory.ts");
 var Bootstrap_1 = __webpack_require__(/*! ./Bootstrap */ "./src/Bootstrap.ts");
@@ -11103,13 +11104,37 @@ var ApisearchUI = /** @class */ (function () {
          * 3.- Dispatch the initial data request
          *     With all widget previous initial configurations
          */
-        if (typeof firstQuery === "undefined" ||
-            true === firstQuery) {
-            this.store.fetchInitialQuery(this.environmentId, this.repository);
-        }
+        this.firstQuery = firstQuery;
+        this.fetchQuery(true);
         window.dispatchEvent(new Event("apisearch_loaded", {
             bubbles: true,
         }));
+    };
+    /**
+     *
+     */
+    ApisearchUI.prototype.reset = function () {
+        var initialQuery = this.store.getCurrentQuery().toArray();
+        this.activeWidgets.map(function (widget) {
+            widget.reset(initialQuery);
+        });
+        this.store.setCurrentQuery(apisearch_1.Query.createFromArray(initialQuery));
+        this.store.setEmptyResult();
+        this.fetchQuery(false);
+        this.render();
+    };
+    /**
+     * @param loadQuery
+     */
+    ApisearchUI.prototype.fetchQuery = function (loadQuery) {
+        /**
+         * 3.- Dispatch the initial data request
+         *     With all widget previous initial configurations
+         */
+        if (typeof this.firstQuery === "undefined" ||
+            true === this.firstQuery) {
+            this.store.fetchInitialQuery(this.environmentId, this.repository, loadQuery);
+        }
     };
     /**
      * @param dictionary
@@ -11176,17 +11201,6 @@ var ApisearchUI = /** @class */ (function () {
         });
     };
     /**
-     * Attach a function into an event
-     *
-     * @param eventName
-     * @param action
-     */
-    ApisearchUI.prototype.attach = function (eventName, action) {
-        this
-            .store
-            .on(eventName, action);
-    };
-    /**
      * @param config
      * @param hash
      *
@@ -11194,7 +11208,7 @@ var ApisearchUI = /** @class */ (function () {
      */
     ApisearchUI.create = function (config, hash) {
         var _a;
-        apisearch_1["default"].ensureRepositoryConfigIsValid(config);
+        apisearch_2["default"].ensureRepositoryConfigIsValid(config);
         /**
          * Build environment Id
          */
@@ -11548,12 +11562,12 @@ var Store = /** @class */ (function (_super) {
         /**
          * Data received
          */
-        _this.currentResult = apisearch_1["default"].createEmptyResult();
+        _this.setEmptyResult();
         _this.currentVisibleResults = false;
         if (generateRandomSessionUUID) {
             initialQuery.setMetadataValue("session_uid", Store.createUID(16));
         }
-        _this.currentQuery = initialQuery;
+        _this.setCurrentQuery(initialQuery);
         return _this;
     }
     /**
@@ -11573,12 +11587,24 @@ var Store = /** @class */ (function (_super) {
         return this.currentQuery;
     };
     /**
+     * @param query
+     */
+    Store.prototype.setCurrentQuery = function (query) {
+        this.currentQuery = query;
+    };
+    /**
      * Get current result
      *
      * @return {Result}
      */
     Store.prototype.getCurrentResult = function () {
         return this.currentResult;
+    };
+    /**
+     *
+     */
+    Store.prototype.setEmptyResult = function () {
+        this.currentResult = apisearch_1["default"].createEmptyResult();
     };
     /**
      * Get current result
@@ -11643,11 +11669,14 @@ var Store = /** @class */ (function (_super) {
     /**
      * @param environmentId
      * @param repository
+     * @param loadQuery
      */
-    Store.prototype.fetchInitialQuery = function (environmentId, repository) {
+    Store.prototype.fetchInitialQuery = function (environmentId, repository, loadQuery) {
         var _this = this;
         var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
-        this.currentQuery = this.loadQuery(this.currentQuery);
+        this.currentQuery = loadQuery
+            ? this.loadQuery(this.currentQuery)
+            : this.currentQuery;
         /**
          * In initial query, we must delete user
          */
@@ -12585,7 +12614,7 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
             return;
         }
         var aggregation = props.store.getCurrentResult().getAggregation(filterName);
-        if (typeof aggregation.getCounters === "function") {
+        if (aggregation && typeof aggregation.getCounters === "function") {
             /**
              * Getting aggregation from aggregations
              */
@@ -12600,7 +12629,7 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
                 })) : countersAsArray;
             this.setState(function (prevState) {
                 return {
-                    aggregations: aggregations_1
+                    aggregations: aggregations_1,
                 };
             });
         }
@@ -12636,7 +12665,7 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
         var allItemsLength = allItems.length;
         var items = allItems.slice(0, this.state.viewLimit);
         var that = this;
-        if (allItems.length == 0) {
+        if (allItems.length === 0) {
             return null;
         }
         /**
@@ -13353,6 +13382,15 @@ var RangeFilterComponent = /** @class */ (function (_super) {
                     };
                 });
             }
+        }
+        else if (this.minMaxAssigned) {
+            this.setState(function (prevState) {
+                return {
+                    valueFrom: props.minValue,
+                    valueTo: props.maxValue,
+                    visible: true
+                };
+            });
         }
         else {
             this.setState(function (prevState) {
@@ -15235,6 +15273,15 @@ var CheckboxFilter = /** @class */ (function (_super) {
             };
         }
     };
+    /**
+     * @param query
+     */
+    CheckboxFilter.prototype.reset = function (query) {
+        var filterName = this.component.props.filterName;
+        if (query.filters[filterName] !== undefined) {
+            delete query.filters[filterName];
+        }
+    };
     return CheckboxFilter;
 }(Widget_1["default"]));
 /**
@@ -15521,6 +15568,15 @@ var MultipleFilter = /** @class */ (function (_super) {
             };
         }
     };
+    /**
+     * @param query
+     */
+    MultipleFilter.prototype.reset = function (query) {
+        var filterName = this.component.props.filterName;
+        if (query.filters[filterName] !== undefined) {
+            delete query.filters[filterName];
+        }
+    };
     return MultipleFilter;
 }(Widget_1["default"]));
 /**
@@ -15623,6 +15679,12 @@ var Pagination = /** @class */ (function (_super) {
             query.page = page;
         }
     };
+    /**
+     * @param query
+     */
+    Pagination.prototype.reset = function (query) {
+        delete query.page;
+    };
     return Pagination;
 }(Widget_1["default"]));
 /**
@@ -15723,6 +15785,15 @@ var RangeFilter = /** @class */ (function (_super) {
                 values: fieldValues,
                 filter_type: 'range'
             };
+        }
+    };
+    /**
+     * @param query
+     */
+    RangeFilter.prototype.reset = function (query) {
+        var filterName = this.component.props.filterName;
+        if (query.filters[filterName] !== undefined) {
+            delete query.filters[filterName];
         }
     };
     return RangeFilter;
@@ -16025,6 +16096,12 @@ var SearchInput = /** @class */ (function (_super) {
             query.q = q;
         }
     };
+    /**
+     * @param query
+     */
+    SearchInput.prototype.reset = function (query) {
+        delete query.q;
+    };
     return SearchInput;
 }(Widget_1["default"]));
 /**
@@ -16252,6 +16329,12 @@ var SortBy = /** @class */ (function (_super) {
             query.sort[0].order = sortParts[1];
         }
     };
+    /**
+     * @param query
+     */
+    SortBy.prototype.reset = function (query) {
+        delete query.sort;
+    };
     return SortBy;
 }(Widget_1["default"]));
 /**
@@ -16375,6 +16458,11 @@ var Widget = /** @class */ (function () {
      * @param query
      */
     Widget.prototype.fromUrlObject = function (object, query) {
+    };
+    /**
+     * @param query
+     */
+    Widget.prototype.reset = function (query) {
     };
     return Widget;
 }());

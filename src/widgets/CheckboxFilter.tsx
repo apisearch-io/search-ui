@@ -1,4 +1,4 @@
-import {Repository} from "apisearch";
+import {Query, Repository} from "apisearch";
 import {h, render} from 'preact';
 import CheckboxFilterComponent from "../components/CheckboxFilter/CheckboxFilterComponent";
 import Store from "../Store";
@@ -112,6 +112,16 @@ class CheckboxFilter extends Widget {
                 application_type: this.component.props.application_type,
                 filter_type: this.component.props.filterType
             };
+        }
+    }
+
+    /**
+     * @param query
+     */
+    public reset(query: any) {
+        const filterName = this.component.props.filterName;
+        if (query.filters[filterName] !== undefined) {
+            delete query.filters[filterName];
         }
     }
 }
