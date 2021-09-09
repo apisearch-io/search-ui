@@ -11259,9 +11259,11 @@ var ApisearchUI = /** @class */ (function () {
      * @return {any}
      */
     ApisearchUI.prototype.click = function (appId, indexId, itemId) {
-        this
-            .repository
-            .click(appId, indexId, itemId, this.userId);
+        if (this.userId !== "") {
+            this
+                .repository
+                .click(appId, indexId, itemId, this.userId);
+        }
     };
     return ApisearchUI;
 }());
