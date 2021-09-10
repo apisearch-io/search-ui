@@ -39,7 +39,7 @@ class Store extends EventEmitter {
         this.dirty = true;
         const initialQuery = Store.loadInitialQuery(coordinate, userId);
         this.window = window.top;
-        this.isUnderIframe = (window === window.top);
+        this.isUnderIframe = (window !== window.top);
 
         if ((typeof hash === "string")) {
             this.withHash = true;
@@ -291,7 +291,7 @@ class Store extends EventEmitter {
         let objectAsJson = decodeURI(JSON.stringify(urlObject));
         objectAsJson = (objectAsJson === "{}") ? "" : objectAsJson;
 
-        if (this.isUnderIframe) {
+        if (!this.isUnderIframe) {
             this.window.location.replace("#" + objectAsJson);
             if (objectAsJson === "") {
                 history.replaceState("", "", location.pathname);

@@ -11550,7 +11550,7 @@ var Store = /** @class */ (function (_super) {
         _this.dirty = true;
         var initialQuery = Store.loadInitialQuery(coordinate, userId);
         _this.window = window.top;
-        _this.isUnderIframe = (window === window.top);
+        _this.isUnderIframe = (window !== window.top);
         if ((typeof hash === "string")) {
             _this.withHash = true;
             _this.urlHash = (hash === "") ? "{}" : hash;
@@ -11744,7 +11744,7 @@ var Store = /** @class */ (function (_super) {
         this.emit("toUrlObject", queryAsObject, urlObject);
         var objectAsJson = decodeURI(JSON.stringify(urlObject));
         objectAsJson = (objectAsJson === "{}") ? "" : objectAsJson;
-        if (this.isUnderIframe) {
+        if (!this.isUnderIframe) {
             this.window.location.replace("#" + objectAsJson);
             if (objectAsJson === "") {
                 history.replaceState("", "", location.pathname);
