@@ -18,7 +18,7 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
     constructor(props) {
         super(props);
         if (props.autocomplete) {
-            this.state = { queryText: '' };
+            this.state = { queryText: "" };
         }
     }
 
@@ -42,7 +42,7 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
             currentQuery,
             initialSearch,
             autocomplete,
-            searchableFields
+            searchableFields,
         );
     }
 
@@ -53,7 +53,7 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
      */
     componentWillReceiveProps(props) {
         this.setState({
-            queryText: props.store.getCurrentQuery().getQueryText()
+            queryText: props.store.getCurrentQuery().getQueryText(),
         });
     }
 
@@ -69,6 +69,10 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
         const currentQuery = props.store.getCurrentQuery();
         const repository = props.repository;
         const visibleResults = e.target.value.length >= startSearchOn;
+        const targetValue = e.target.value;
+        const finalSpace = targetValue.charAt(targetValue.length - 1) === " " ? " " : "";
+        const targetValueNoSpaces = targetValue.trim() + finalSpace;
+        const finalTargetValue = targetValueNoSpaces === " " ? "" : targetValueNoSpaces;
 
         /**
          * Dispatch input search action
@@ -77,10 +81,10 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
             environmentId,
             currentQuery,
             repository,
-            e.target.value,
-            visibleResults
+            finalTargetValue,
+            visibleResults,
         );
-    };
+    }
 
     /**
      * Clear search
@@ -92,44 +96,55 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
         const environmentId = props.environmentId;
         const currentQuery = props.store.getCurrentQuery();
         const repository = props.repository;
-        const visibleResults = 0 == startSearchOn;
+        const visibleResults = 0 === startSearchOn;
 
         simpleSearchAction(
             environmentId,
             currentQuery,
             repository,
-            '',
-            visibleResults
-        )
-    };
+            "",
+            visibleResults,
+        );
+    }
 
     /**
      * Key down
      */
     handleKeyDown(e) {
+        switch (e.key) {
+            case "ArrowRight":
+            case "Tab":
+            case "Enter":
+                this.replaceWithSuggestion(e);
+                return;
+        }
 
         switch (e.keyCode) {
             case 39:
             case 9:
-                const props = this.props;
-                const environmentId = props.environmentId;
-                const currentQuery = props.store.getCurrentQuery();
-                const repository = props.repository;
+            case 13:
+                this.replaceWithSuggestion(e);
+                return;
+        }
+    }
 
-                if (this.props.store.getCurrentResult().getSuggestions().length > 0) {
-                    simpleSearchAction(
-                        environmentId,
-                        currentQuery,
-                        repository,
-                        this.props.store.getCurrentResult().getSuggestions()[0],
-                        true,
-                    );
+    replaceWithSuggestion(e) {
+        const props = this.props;
+        const environmentId = props.environmentId;
+        const currentQuery = props.store.getCurrentQuery();
+        const repository = props.repository;
 
-                    e.preventDefault();
-                    return;
-                }
+        if (this.props.store.getCurrentResult().getSuggestions().length > 0) {
+            simpleSearchAction(
+                environmentId,
+                currentQuery,
+                repository,
+                this.props.store.getCurrentResult().getSuggestions()[0],
+                true,
+            );
 
-                break;
+            e.preventDefault();
+            return;
         }
     }
 
@@ -158,18 +173,25 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
             : [];
 
         const showAutocomplete = props.autocomplete;
-
         const keyDownCallback = showAutocomplete
             ? (e) => this.handleKeyDown(e)
             : (e) => this.doNothing(e);
 
+        const keyDownAction = showAutocomplete
+            ? (e) => this.replaceWithSuggestion(e)
+            : (e) => this.doNothing(e);
+
         const style = showAutocomplete
-            ? 'position: relative; top: 0px; left: 0px; background-color: transparent; border-color: transparent;'
-            : '';
+            ? "position: relative; top: 0px; left: 0px; background-color: transparent; border-color: transparent;"
+            : "";
+
+        const autocompletableClass = showAutocomplete
+            ? "autocompletable"
+            : "";
 
         let searchInput = (<input
-            type='text'
-            className={`as-searchInput__input ${inputClassName}`}
+            type="text"
+            className={`as-searchInput__input ${inputClassName} ${autocompletableClass}`}
             placeholder={placeholder}
             autofocus={autofocus}
             {...htmlNodeInheritProps}
@@ -177,8 +199,9 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
             value={currentQueryText}
             style={style}
             onKeyDown={keyDownCallback}
+            onTouchStart={keyDownAction}
             ref={this.inputRef}
-        />)
+        />);
 
         if (showAutocomplete) {
             searchInput = (
@@ -188,9 +211,10 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
                       queryText={currentQueryText}
                       inputClassName={inputClassName}
                     />
+
                     {searchInput}
                 </div>
-            )
+            );
         }
 
         if (withContainer) {
@@ -212,7 +236,7 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
                         ) : null
                     }
                 </div>
-            )
+            );
         }
 
         return searchInput;

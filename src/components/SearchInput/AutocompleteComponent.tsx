@@ -51,11 +51,14 @@ class AutocompleteComponent extends Component<AutocompleteProps, AutocompleteSta
         const queryText = this.props.queryText;
         const inputClassName = this.props.inputClassName;
         const queryTextLength = queryText.length;
-        const formattedSuggestion = queryText + suggestion.substring(queryTextLength);
+        const suggestedText = suggestion.substring(queryTextLength);
+        const formattedSuggestion = suggestedText === ""
+            ? ""
+            : queryText + suggestedText + ' ⤷';
 
         return (
             <input
-                type='text'
+                type="text"
                 className={`as-searchInput__input as-searchInput__autocomplete ${inputClassName}`}
                 placeholder={formattedSuggestion}
                 style="position: absolute; top: 0px; left: 0px; background-color: white;"

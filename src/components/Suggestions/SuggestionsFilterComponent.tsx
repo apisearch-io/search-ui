@@ -82,6 +82,9 @@ class SuggestionsFilterComponent extends Component<SuggestionsFilterProps, Sugge
         const topClassName = props.classNames.top;
         const itemsListClassName = props.classNames.itemsList;
         const itemClassName = props.classNames.item;
+        const noSuggestionsClassName = state.words.length > 0
+            ? ""
+            : "suggestions-empty";
 
         const topTemplate = props.template.top;
         const itemTemplate = props.template.item;
@@ -89,7 +92,7 @@ class SuggestionsFilterComponent extends Component<SuggestionsFilterProps, Sugge
 
 
         return (
-            <div className={`as-suggestions ${containerClassName}`}>
+            <div className={`as-suggestions ${containerClassName} ${noSuggestionsClassName}`}>
                 <Template
                     template={topTemplate}
                     className={`as-suggestions__top ${topClassName}`}
