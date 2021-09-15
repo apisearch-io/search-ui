@@ -11,6 +11,7 @@ import {useRef} from "preact/compat";
  */
 class SearchInputComponent extends Component<SearchInputProps, SearchInputState> {
     private inputRef = useRef(null);
+    private speechRecognition;
 
     /**
      * Constructor
@@ -19,6 +20,21 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
         super(props);
         if (props.autocomplete) {
             this.state = { queryText: "" };
+        }
+
+        const that = this;
+
+        const speechRecognition = window["webkitSpeechRecognition"];
+        if (props.speechRecognition && typeof speechRecognition === "function") {
+            that.speechRecognition = new speechRecognition();
+            that.speechRecognition.onresult = (event) => {
+                const text = event.results[0][0].transcript;
+                that.handleSearch(text);
+            };
+
+            that.speechRecognition.onerror = (event) => {
+                console.log("Speech Recognition Error - " + event.error);
+            };
         }
     }
 
@@ -58,25 +74,19 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
     }
 
     /**
-     * Handle search
-     *
-     * @param e
+     * @param search
      */
-    handleSearch = (e) => {
+    handleSearch = (search) => {
         const props = this.props;
         const startSearchOn = props.startSearchOn;
         const environmentId = props.environmentId;
         const currentQuery = props.store.getCurrentQuery();
         const repository = props.repository;
-        const visibleResults = e.target.value.length >= startSearchOn;
-        const targetValue = e.target.value;
-        const finalSpace = targetValue.charAt(targetValue.length - 1) === " " ? " " : "";
-        const targetValueNoSpaces = targetValue.trim() + finalSpace;
+        const visibleResults = search.length >= startSearchOn;
+        const finalSpace = search.charAt(search.length - 1) === " " ? " " : "";
+        const targetValueNoSpaces = search.trim() + finalSpace;
         const finalTargetValue = targetValueNoSpaces === " " ? "" : targetValueNoSpaces;
 
-        /**
-         * Dispatch input search action
-         */
         simpleSearchAction(
             environmentId,
             currentQuery,
@@ -148,7 +158,35 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
         }
     }
 
+    /**
+     * @param e
+     * @param speechRecognition
+     */
+    onSpeechMouseDown(e, speechRecognition) {
+        speechRecognition.start();
+    }
+
+    /**
+     * @param e
+     * @param speechRecognition
+     */
+    onSpeechMouseUp(e, speechRecognition) {
+        speechRecognition.stop();
+    }
+
+    /**
+     * @param e
+     */
     doNothing(e) {}
+
+    /**
+     * @param config
+     */
+    withConfig(config: any) {
+        if (this.speechRecognition) {
+            this.speechRecognition.lang = this.props.config.options.locale ?? "";
+        }
+    }
 
     /**
      * Search
@@ -195,7 +233,7 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
             placeholder={placeholder}
             autofocus={autofocus}
             {...htmlNodeInheritProps}
-            onInput={this.handleSearch}
+            onInput={(event) => this.handleSearch((event.target as HTMLInputElement).value)}
             value={currentQueryText}
             style={style}
             onKeyDown={keyDownCallback}
@@ -217,6 +255,24 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
             );
         }
 
+        if (this.speechRecognition) {
+            searchInput = (
+                <div style="position: relative">
+                    {searchInput}
+                    <div
+                        class={`as-searchInput-speechRecognition`}
+                        onMouseDown={(e) => this.onSpeechMouseDown(e, this.speechRecognition)}
+                        onMouseUp={(e) => this.onSpeechMouseUp(e, this.speechRecognition)}
+                    >
+                        <Template
+                            template={props.template.speechRecognition}
+                            dictionary={props.dictionary}
+                        />
+                    </div>
+                </div>
+            );
+        }
+
         if (withContainer) {
             searchInput = (
                 <div className={`as-searchInput ${containerClassName}`}>
@@ -230,7 +286,7 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
                             >
                                 <Template
                                     template={clearSearchTemplate}
-                                    dictionary={this.props.dictionary}
+                                    dictionary={props.dictionary}
                                 />
                             </div>
                         ) : null
@@ -244,22 +300,24 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
 }
 
 SearchInputComponent.defaultProps = {
-    placeholder: '',
+    placeholder: "",
     autofocus: false,
     autocomplete: false,
     startSearchOn: 0,
     clearSearch: true,
-    initialSearch: '',
+    initialSearch: "",
     withContainer: true,
     searchableFields: [],
+    speechRecognition: false,
     classNames: {
-        container: '',
-        input: '',
-        clearSearch: ''
+        container: "",
+        input: "",
+        clearSearch: "",
     },
     template: {
-        clearSearch: 'x'
-    }
+        clearSearch: "x",
+        speechRecognition: "{S}",
+    },
 };
 
 export default SearchInputComponent;

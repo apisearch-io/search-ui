@@ -60,7 +60,7 @@ export function simpleSearchAction(
     currentQuery: Query,
     repository: Repository,
     queryText: string,
-    visibleResults: boolean
+    visibleResults: boolean,
 ) {
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
     const clonedQuery = Clone.object(currentQuery);

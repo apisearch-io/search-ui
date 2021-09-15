@@ -24,6 +24,7 @@ export default class ApisearchUI {
     private dictionary: { [key: string]: string; };
     private userId: string;
     private firstQuery: boolean;
+    private config: any;
 
     /**
      * Constructor
@@ -59,6 +60,9 @@ export default class ApisearchUI {
      * @param firstQuery
      */
     public init({firstQuery = true} = {}) {
+
+        this.activeWidgets.map((widget) => widget.withConfig(this.config));
+
         /**
          * 1.- Register all events on the store
          */
@@ -134,6 +138,7 @@ export default class ApisearchUI {
      * @return {ApisearchUI}
      */
     public addWidget(widget: Widget): ApisearchUI {
+        widget.withConfig(this.config);
         this.activeWidgets = [...this.activeWidgets, widget];
         return this;
     }
@@ -246,6 +251,7 @@ export default class ApisearchUI {
          * Add widgets
          */
         apisearchUI.widgets = widgets;
+        apisearchUI.config = config;
 
         const uiId = `ui_${Math.ceil(Math.random() * (9999999 - 1) + 1)}`;
         apisearchUI.reference = uiId;

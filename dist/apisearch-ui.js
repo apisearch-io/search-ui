@@ -11089,6 +11089,7 @@ var ApisearchUI = /** @class */ (function () {
     ApisearchUI.prototype.init = function (_a) {
         var _this = this;
         var _b = (_a === void 0 ? {} : _a).firstQuery, firstQuery = _b === void 0 ? true : _b;
+        this.activeWidgets.map(function (widget) { return widget.withConfig(_this.config); });
         /**
          * 1.- Register all events on the store
          */
@@ -11150,6 +11151,7 @@ var ApisearchUI = /** @class */ (function () {
      * @return {ApisearchUI}
      */
     ApisearchUI.prototype.addWidget = function (widget) {
+        widget.withConfig(this.config);
         this.activeWidgets = __spreadArrays(this.activeWidgets, [widget]);
         return this;
     };
@@ -11233,6 +11235,7 @@ var ApisearchUI = /** @class */ (function () {
          * Add widgets
          */
         apisearchUI.widgets = Widgets_1["default"];
+        apisearchUI.config = config;
         var uiId = "ui_" + Math.ceil(Math.random() * (9999999 - 1) + 1);
         apisearchUI.reference = uiId;
         apisearchUI.userId = (_a = config.user_id) !== null && _a !== void 0 ? _a : "";
@@ -14397,24 +14400,18 @@ var SearchInputComponent = /** @class */ (function (_super) {
         var _this = _super.call(this, props) || this;
         _this.inputRef = compat_1.useRef(null);
         /**
-         * Handle search
-         *
-         * @param e
+         * @param search
          */
-        _this.handleSearch = function (e) {
+        _this.handleSearch = function (search) {
             var props = _this.props;
             var startSearchOn = props.startSearchOn;
             var environmentId = props.environmentId;
             var currentQuery = props.store.getCurrentQuery();
             var repository = props.repository;
-            var visibleResults = e.target.value.length >= startSearchOn;
-            var targetValue = e.target.value;
-            var finalSpace = targetValue.charAt(targetValue.length - 1) === " " ? " " : "";
-            var targetValueNoSpaces = targetValue.trim() + finalSpace;
+            var visibleResults = search.length >= startSearchOn;
+            var finalSpace = search.charAt(search.length - 1) === " " ? " " : "";
+            var targetValueNoSpaces = search.trim() + finalSpace;
             var finalTargetValue = targetValueNoSpaces === " " ? "" : targetValueNoSpaces;
-            /**
-             * Dispatch input search action
-             */
             SearchInputActions_1.simpleSearchAction(environmentId, currentQuery, repository, finalTargetValue, visibleResults);
         };
         /**
@@ -14431,6 +14428,18 @@ var SearchInputComponent = /** @class */ (function (_super) {
         };
         if (props.autocomplete) {
             _this.state = { queryText: "" };
+        }
+        var that = _this;
+        var speechRecognition = window["webkitSpeechRecognition"];
+        if (props.speechRecognition && typeof speechRecognition === "function") {
+            that.speechRecognition = new speechRecognition();
+            that.speechRecognition.onresult = function (event) {
+                var text = event.results[0][0].transcript;
+                that.handleSearch(text);
+            };
+            that.speechRecognition.onerror = function (event) {
+                console.log("Speech Recognition Error - " + event.error);
+            };
         }
         return _this;
     }
@@ -14489,7 +14498,33 @@ var SearchInputComponent = /** @class */ (function (_super) {
             return;
         }
     };
+    /**
+     * @param e
+     * @param speechRecognition
+     */
+    SearchInputComponent.prototype.onSpeechMouseDown = function (e, speechRecognition) {
+        speechRecognition.start();
+    };
+    /**
+     * @param e
+     * @param speechRecognition
+     */
+    SearchInputComponent.prototype.onSpeechMouseUp = function (e, speechRecognition) {
+        speechRecognition.stop();
+    };
+    /**
+     * @param e
+     */
     SearchInputComponent.prototype.doNothing = function (e) { };
+    /**
+     * @param config
+     */
+    SearchInputComponent.prototype.withConfig = function (config) {
+        var _a;
+        if (this.speechRecognition) {
+            this.speechRecognition.lang = (_a = this.props.config.options.locale) !== null && _a !== void 0 ? _a : "";
+        }
+    };
     /**
      * Search
      *
@@ -14524,40 +14559,48 @@ var SearchInputComponent = /** @class */ (function (_super) {
         var autocompletableClass = showAutocomplete
             ? "autocompletable"
             : "";
-        var searchInput = (preact_1.h("input", __assign({ type: "text", className: "as-searchInput__input " + inputClassName + " " + autocompletableClass, placeholder: placeholder, autofocus: autofocus }, htmlNodeInheritProps, { onInput: this.handleSearch, value: currentQueryText, style: style, onKeyDown: keyDownCallback, onTouchStart: keyDownAction, ref: this.inputRef })));
+        var searchInput = (preact_1.h("input", __assign({ type: "text", className: "as-searchInput__input " + inputClassName + " " + autocompletableClass, placeholder: placeholder, autofocus: autofocus }, htmlNodeInheritProps, { onInput: function (event) { return _this.handleSearch(event.target.value); }, value: currentQueryText, style: style, onKeyDown: keyDownCallback, onTouchStart: keyDownAction, ref: this.inputRef })));
         if (showAutocomplete) {
             searchInput = (preact_1.h("div", { style: "position: relative" },
                 preact_1.h(AutocompleteComponent_1["default"], { suggestions: suggestions, queryText: currentQueryText, inputClassName: inputClassName }),
                 searchInput));
+        }
+        if (this.speechRecognition) {
+            searchInput = (preact_1.h("div", { style: "position: relative" },
+                searchInput,
+                preact_1.h("div", { "class": "as-searchInput-speechRecognition", onMouseDown: function (e) { return _this.onSpeechMouseDown(e, _this.speechRecognition); }, onMouseUp: function (e) { return _this.onSpeechMouseUp(e, _this.speechRecognition); } },
+                    preact_1.h(Template_1["default"], { template: props.template.speechRecognition, dictionary: props.dictionary }))));
         }
         if (withContainer) {
             searchInput = (preact_1.h("div", { className: "as-searchInput " + containerClassName },
                 searchInput,
                 (clearSearch && currentQueryText && currentQueryText.length !== 0)
                     ? (preact_1.h("div", { className: "as-searchInput__clearSearch " + clearSearchClassName, onClick: this.clearSearch },
-                        preact_1.h(Template_1["default"], { template: clearSearchTemplate, dictionary: this.props.dictionary }))) : null));
+                        preact_1.h(Template_1["default"], { template: clearSearchTemplate, dictionary: props.dictionary }))) : null));
         }
         return searchInput;
     };
     return SearchInputComponent;
 }(preact_1.Component));
 SearchInputComponent.defaultProps = {
-    placeholder: '',
+    placeholder: "",
     autofocus: false,
     autocomplete: false,
     startSearchOn: 0,
     clearSearch: true,
-    initialSearch: '',
+    initialSearch: "",
     withContainer: true,
     searchableFields: [],
+    speechRecognition: false,
     classNames: {
-        container: '',
-        input: '',
-        clearSearch: ''
+        container: "",
+        input: "",
+        clearSearch: "",
     },
     template: {
-        clearSearch: 'x'
-    }
+        clearSearch: "x",
+        speechRecognition: "{S}",
+    },
 };
 exports["default"] = SearchInputComponent;
 
@@ -16066,12 +16109,13 @@ var SearchInput = /** @class */ (function (_super) {
      * @param template
      * @param initialSearch
      * @param searchableFields
+     * @param speechRecognition
      */
     function SearchInput(_a) {
-        var target = _a.target, placeholder = _a.placeholder, startSearchOn = _a.startSearchOn, clearSearch = _a.clearSearch, withContainer = _a.withContainer, autofocus = _a.autofocus, autocomplete = _a.autocomplete, classNames = _a.classNames, template = _a.template, initialSearch = _a.initialSearch, searchableFields = _a.searchableFields;
+        var target = _a.target, placeholder = _a.placeholder, startSearchOn = _a.startSearchOn, clearSearch = _a.clearSearch, withContainer = _a.withContainer, autofocus = _a.autofocus, autocomplete = _a.autocomplete, classNames = _a.classNames, template = _a.template, initialSearch = _a.initialSearch, searchableFields = _a.searchableFields, speechRecognition = _a.speechRecognition;
         var _this = _super.call(this) || this;
         _this.target = target;
-        _this.component = preact_1.h(SearchInputComponent_1["default"], { target: target, placeholder: placeholder, autofocus: autofocus, autocomplete: autocomplete, startSearchOn: startSearchOn, clearSearch: clearSearch, withContainer: withContainer, searchableFields: searchableFields, classNames: __assign(__assign({}, SearchInputComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, SearchInputComponent_1["default"].defaultProps.template), template), initialSearch: initialSearch });
+        _this.component = preact_1.h(SearchInputComponent_1["default"], { target: target, placeholder: placeholder, autofocus: autofocus, autocomplete: autocomplete, startSearchOn: startSearchOn, clearSearch: clearSearch, withContainer: withContainer, searchableFields: searchableFields, speechRecognition: speechRecognition, classNames: __assign(__assign({}, SearchInputComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, SearchInputComponent_1["default"].defaultProps.template), template), initialSearch: initialSearch, config: _this.config });
         return _this;
     }
     /**
@@ -16479,6 +16523,11 @@ exports.__esModule = true;
 var Widget = /** @class */ (function () {
     function Widget() {
     }
+    Widget.prototype.withConfig = function (config) {
+        if ("withConfig" in this.component) {
+            this.component.withConfig(config);
+        }
+    };
     /**
      * @param query
      * @param object
