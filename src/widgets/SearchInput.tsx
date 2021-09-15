@@ -26,6 +26,7 @@ class SearchInput extends Widget{
      * @param template
      * @param initialSearch
      * @param searchableFields
+     * @param speechRecognition
      */
     constructor({
         target,
@@ -38,7 +39,8 @@ class SearchInput extends Widget{
         classNames,
         template,
         initialSearch,
-        searchableFields
+        searchableFields,
+        speechRecognition,
     }) {
         super();
         this.target = target;
@@ -51,16 +53,18 @@ class SearchInput extends Widget{
             clearSearch={clearSearch}
             withContainer={withContainer}
             searchableFields={searchableFields}
+            speechRecognition={speechRecognition}
             classNames={{
                 ...SearchInputComponent.defaultProps.classNames,
-                ...classNames
+                ...classNames,
             }}
             template={{
                 ...SearchInputComponent.defaultProps.template,
-                ...template
+                ...template,
             }}
             initialSearch={initialSearch}
-        />
+            config={this.config}
+        />;
     }
 
     /**
