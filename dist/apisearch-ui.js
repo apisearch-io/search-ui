@@ -14502,15 +14502,8 @@ var SearchInputComponent = /** @class */ (function (_super) {
      * @param e
      * @param speechRecognition
      */
-    SearchInputComponent.prototype.onSpeechMouseDown = function (e, speechRecognition) {
+    SearchInputComponent.prototype.onSpeechStart = function (e, speechRecognition) {
         speechRecognition.start();
-    };
-    /**
-     * @param e
-     * @param speechRecognition
-     */
-    SearchInputComponent.prototype.onSpeechMouseUp = function (e, speechRecognition) {
-        speechRecognition.stop();
     };
     /**
      * @param e
@@ -14568,7 +14561,7 @@ var SearchInputComponent = /** @class */ (function (_super) {
         if (this.speechRecognition) {
             searchInput = (preact_1.h("div", { style: "position: relative" },
                 searchInput,
-                preact_1.h("div", { "class": "as-searchInput-speechRecognition", onMouseDown: function (e) { return _this.onSpeechMouseDown(e, _this.speechRecognition); }, onMouseUp: function (e) { return _this.onSpeechMouseUp(e, _this.speechRecognition); } },
+                preact_1.h("div", { "class": "as-searchInput-speechRecognition", onClick: function (e) { return _this.onSpeechStart(e, _this.speechRecognition); } },
                     preact_1.h(Template_1["default"], { template: props.template.speechRecognition, dictionary: props.dictionary }))));
         }
         if (withContainer) {

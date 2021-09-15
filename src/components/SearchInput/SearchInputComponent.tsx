@@ -162,16 +162,8 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
      * @param e
      * @param speechRecognition
      */
-    onSpeechMouseDown(e, speechRecognition) {
+    onSpeechStart(e, speechRecognition) {
         speechRecognition.start();
-    }
-
-    /**
-     * @param e
-     * @param speechRecognition
-     */
-    onSpeechMouseUp(e, speechRecognition) {
-        speechRecognition.stop();
     }
 
     /**
@@ -261,8 +253,7 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
                     {searchInput}
                     <div
                         class={`as-searchInput-speechRecognition`}
-                        onMouseDown={(e) => this.onSpeechMouseDown(e, this.speechRecognition)}
-                        onMouseUp={(e) => this.onSpeechMouseUp(e, this.speechRecognition)}
+                        onClick={(e) => this.onSpeechStart(e, this.speechRecognition)}
                     >
                         <Template
                             template={props.template.speechRecognition}
