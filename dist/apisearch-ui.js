@@ -11181,6 +11181,9 @@ var ApisearchUI = /** @class */ (function () {
         this.activeWidgets.map(function (widget) {
             widget.render(_this.environmentId, _this.store, _this.repository, _this.dictionary);
         });
+        window.dispatchEvent(new Event("apisearch_rendered", {
+            bubbles: true,
+        }));
     };
     /**
      * @param query
@@ -14248,8 +14251,11 @@ var AutocompleteComponent = /** @class */ (function (_super) {
         var queryText = this.props.queryText;
         var inputClassName = this.props.inputClassName;
         var queryTextLength = queryText.length;
-        var formattedSuggestion = queryText + suggestion.substring(queryTextLength);
-        return (preact_1.h("input", { type: 'text', className: "as-searchInput__input as-searchInput__autocomplete " + inputClassName, placeholder: formattedSuggestion, style: "position: absolute; top: 0px; left: 0px; background-color: white;" }));
+        var suggestedText = suggestion.substring(queryTextLength);
+        var formattedSuggestion = suggestedText === ""
+            ? ""
+            : queryText + suggestedText + ' ⤷';
+        return (preact_1.h("input", { type: "text", className: "as-searchInput__input as-searchInput__autocomplete " + inputClassName, placeholder: formattedSuggestion, style: "position: absolute; top: 0px; left: 0px; background-color: white;" }));
     };
     return AutocompleteComponent;
 }(preact_1.Component));
@@ -14402,10 +14408,14 @@ var SearchInputComponent = /** @class */ (function (_super) {
             var currentQuery = props.store.getCurrentQuery();
             var repository = props.repository;
             var visibleResults = e.target.value.length >= startSearchOn;
+            var targetValue = e.target.value;
+            var finalSpace = targetValue.charAt(targetValue.length - 1) === " " ? " " : "";
+            var targetValueNoSpaces = targetValue.trim() + finalSpace;
+            var finalTargetValue = targetValueNoSpaces === " " ? "" : targetValueNoSpaces;
             /**
              * Dispatch input search action
              */
-            SearchInputActions_1.simpleSearchAction(environmentId, currentQuery, repository, e.target.value, visibleResults);
+            SearchInputActions_1.simpleSearchAction(environmentId, currentQuery, repository, finalTargetValue, visibleResults);
         };
         /**
          * Clear search
@@ -14416,11 +14426,11 @@ var SearchInputComponent = /** @class */ (function (_super) {
             var environmentId = props.environmentId;
             var currentQuery = props.store.getCurrentQuery();
             var repository = props.repository;
-            var visibleResults = 0 == startSearchOn;
-            SearchInputActions_1.simpleSearchAction(environmentId, currentQuery, repository, '', visibleResults);
+            var visibleResults = 0 === startSearchOn;
+            SearchInputActions_1.simpleSearchAction(environmentId, currentQuery, repository, "", visibleResults);
         };
         if (props.autocomplete) {
-            _this.state = { queryText: '' };
+            _this.state = { queryText: "" };
         }
         return _this;
     }
@@ -14446,26 +14456,37 @@ var SearchInputComponent = /** @class */ (function (_super) {
      */
     SearchInputComponent.prototype.componentWillReceiveProps = function (props) {
         this.setState({
-            queryText: props.store.getCurrentQuery().getQueryText()
+            queryText: props.store.getCurrentQuery().getQueryText(),
         });
     };
     /**
      * Key down
      */
     SearchInputComponent.prototype.handleKeyDown = function (e) {
+        switch (e.key) {
+            case "ArrowRight":
+            case "Tab":
+            case "Enter":
+                this.replaceWithSuggestion(e);
+                return;
+        }
         switch (e.keyCode) {
             case 39:
             case 9:
-                var props = this.props;
-                var environmentId = props.environmentId;
-                var currentQuery = props.store.getCurrentQuery();
-                var repository = props.repository;
-                if (this.props.store.getCurrentResult().getSuggestions().length > 0) {
-                    SearchInputActions_1.simpleSearchAction(environmentId, currentQuery, repository, this.props.store.getCurrentResult().getSuggestions()[0], true);
-                    e.preventDefault();
-                    return;
-                }
-                break;
+            case 13:
+                this.replaceWithSuggestion(e);
+                return;
+        }
+    };
+    SearchInputComponent.prototype.replaceWithSuggestion = function (e) {
+        var props = this.props;
+        var environmentId = props.environmentId;
+        var currentQuery = props.store.getCurrentQuery();
+        var repository = props.repository;
+        if (this.props.store.getCurrentResult().getSuggestions().length > 0) {
+            SearchInputActions_1.simpleSearchAction(environmentId, currentQuery, repository, this.props.store.getCurrentResult().getSuggestions()[0], true);
+            e.preventDefault();
+            return;
         }
     };
     SearchInputComponent.prototype.doNothing = function (e) { };
@@ -14494,10 +14515,16 @@ var SearchInputComponent = /** @class */ (function (_super) {
         var keyDownCallback = showAutocomplete
             ? function (e) { return _this.handleKeyDown(e); }
             : function (e) { return _this.doNothing(e); };
+        var keyDownAction = showAutocomplete
+            ? function (e) { return _this.replaceWithSuggestion(e); }
+            : function (e) { return _this.doNothing(e); };
         var style = showAutocomplete
-            ? 'position: relative; top: 0px; left: 0px; background-color: transparent; border-color: transparent;'
-            : '';
-        var searchInput = (preact_1.h("input", __assign({ type: 'text', className: "as-searchInput__input " + inputClassName, placeholder: placeholder, autofocus: autofocus }, htmlNodeInheritProps, { onInput: this.handleSearch, value: currentQueryText, style: style, onKeyDown: keyDownCallback, ref: this.inputRef })));
+            ? "position: relative; top: 0px; left: 0px; background-color: transparent; border-color: transparent;"
+            : "";
+        var autocompletableClass = showAutocomplete
+            ? "autocompletable"
+            : "";
+        var searchInput = (preact_1.h("input", __assign({ type: "text", className: "as-searchInput__input " + inputClassName + " " + autocompletableClass, placeholder: placeholder, autofocus: autofocus }, htmlNodeInheritProps, { onInput: this.handleSearch, value: currentQueryText, style: style, onKeyDown: keyDownCallback, onTouchStart: keyDownAction, ref: this.inputRef })));
         if (showAutocomplete) {
             searchInput = (preact_1.h("div", { style: "position: relative" },
                 preact_1.h(AutocompleteComponent_1["default"], { suggestions: suggestions, queryText: currentQueryText, inputClassName: inputClassName }),
@@ -14984,10 +15011,13 @@ var SuggestionsFilterComponent = /** @class */ (function (_super) {
         var topClassName = props.classNames.top;
         var itemsListClassName = props.classNames.itemsList;
         var itemClassName = props.classNames.item;
+        var noSuggestionsClassName = state.words.length > 0
+            ? ""
+            : "suggestions-empty";
         var topTemplate = props.template.top;
         var itemTemplate = props.template.item;
         var that = this;
-        return (preact_1.h("div", { className: "as-suggestions " + containerClassName },
+        return (preact_1.h("div", { className: "as-suggestions " + containerClassName + " " + noSuggestionsClassName },
             preact_1.h(Template_1["default"], { template: topTemplate, className: "as-suggestions__top " + topClassName, dictionary: this.props.dictionary }),
             preact_1.h("div", { className: "as-suggestions__itemsList " + itemsListClassName }, state.words.map(function (word) {
                 var templateData = {

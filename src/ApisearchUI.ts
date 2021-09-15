@@ -166,6 +166,11 @@ export default class ApisearchUI {
                 this.dictionary,
             );
         });
+
+
+        window.dispatchEvent(new Event("apisearch_rendered", {
+            bubbles: true,
+        }));
     }
 
     /**
