@@ -15,30 +15,29 @@ import Clone from "../Clone";
  * @param initialSearch
  * @param autocomplete
  * @param searchableFields
+ * @param queryOperator
  */
 export function initialSearchSetup(
     environmentId: string,
     currentQuery: Query,
     initialSearch: string,
     autocomplete: boolean,
-    searchableFields: string[]
+    searchableFields: string[],
+    queryOperator: string,
 ) {
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
     const clonedQuery = Clone.object(currentQuery);
 
     clonedQuery.filters._query.values = [initialSearch];
     clonedQuery.page = 1;
+    clonedQuery.queryOperator = queryOperator;
 
     if (searchableFields.length > 0) {
         clonedQuery.searchableFields = searchableFields;
     }
 
     if (autocomplete) {
-        clonedQuery.enableSuggestions();
-        const metadata = clonedQuery.getMetadata();
-        if (metadata.number_of_suggestions === undefined) {
-            clonedQuery.setMetadataValue('number_of_suggestions', 1);
-        }
+        clonedQuery.enableAutocomplete();
     }
 
     dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
@@ -72,7 +71,7 @@ export function simpleSearchAction(
         dispatcher.dispatch("RENDER_FETCHED_DATA", {
             query: clonedQuery,
             result: null,
-            visibleResults: visibleResults
+            visibleResults: visibleResults,
         });
 
         return;
@@ -84,7 +83,7 @@ export function simpleSearchAction(
             dispatcher.dispatch("RENDER_FETCHED_DATA", {
                 query: clonedQuery,
                 result: result,
-                visibleResults: visibleResults
+                visibleResults: visibleResults,
             });
         })
         .catch((error) => {

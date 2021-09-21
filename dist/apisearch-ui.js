@@ -3192,6 +3192,7 @@ var Query = /** @class */ (function () {
      * @param queryText
      */
     function Query(queryText) {
+        this.UUID = null;
         this.fields = [];
         this.universeFilters = {};
         this.filters = {};
@@ -3199,12 +3200,15 @@ var Query = /** @class */ (function () {
         this.aggregations = {};
         this.resultsEnabled = true;
         this.aggregationsEnabled = true;
-        this.suggestionsEnabled = false;
+        this.numberOfSuggestions = 0;
         this.highlightsEnabled = false;
+        this.autocompleteEnabled = false;
         this.searchableFields = [];
+        this.fuzziness = null;
         this.minScore = exports.NO_MIN_SCORE;
         this.metadata = {};
         this.subqueries = {};
+        this.queryOperator = null;
         this.sortByInstance = SortBy_1.SortBy.create();
         this.filters._query = Filter_1.Filter.create("", [queryText], 0, Filter_3.FILTER_TYPE_QUERY);
     }
@@ -3810,12 +3814,14 @@ var Query = /** @class */ (function () {
         return this.aggregationsEnabled;
     };
     /**
-     * Enable suggestions
+     * Set number of suggestions
+     *
+     * @param numberOfSuggestions
      *
      * @return {Query}
      */
-    Query.prototype.enableSuggestions = function () {
-        this.suggestionsEnabled = true;
+    Query.prototype.setNumberOfSuggestions = function (numberOfSuggestions) {
+        this.numberOfSuggestions = numberOfSuggestions;
         return this;
     };
     /**
@@ -3824,16 +3830,42 @@ var Query = /** @class */ (function () {
      * @return {Query}
      */
     Query.prototype.disableSuggestions = function () {
-        this.suggestionsEnabled = false;
+        this.numberOfSuggestions = 0;
         return this;
     };
     /**
-     * Are suggestions enabled
+     * Get number of suggestions
+     *
+     * @return {number}
+     */
+    Query.prototype.getNumberOfSuggestions = function () {
+        return this.numberOfSuggestions;
+    };
+    /**
+     * Enable autocomplete
+     *
+     * @return {Query}
+     */
+    Query.prototype.enableAutocomplete = function () {
+        this.autocompleteEnabled = true;
+        return this;
+    };
+    /**
+     * Disable autocomplete
+     *
+     * @return {Query}
+     */
+    Query.prototype.disableAutocomplete = function () {
+        this.autocompleteEnabled = false;
+        return this;
+    };
+    /**
+     * Are autocomplete enabled
      *
      * @return {boolean}
      */
-    Query.prototype.areSuggestionsEnabled = function () {
-        return this.suggestionsEnabled;
+    Query.prototype.areAutocompleteEnabled = function () {
+        return this.autocompleteEnabled;
     };
     /**
      * Enable highlights
@@ -4094,6 +4126,13 @@ var Query = /** @class */ (function () {
     Query.prototype.getIndexUUID = function () {
         return this.indexUUID;
     };
+    Query.prototype.setQueryOperator = function (queryOperator) {
+        this.queryOperator = queryOperator;
+        return this;
+    };
+    Query.prototype.getQueryOperator = function () {
+        return this.queryOperator;
+    };
     /**
      * To array
      *
@@ -4101,7 +4140,9 @@ var Query = /** @class */ (function () {
      */
     Query.prototype.toArray = function () {
         var array = {};
-        array.UUID = this.UUID;
+        if (this.UUID !== null) {
+            array.UUID = this.UUID;
+        }
         if (this.getQueryText() !== "") {
             array.q = this.getQueryText();
         }
@@ -4130,12 +4171,15 @@ var Query = /** @class */ (function () {
          */
         if (this.filters instanceof Object &&
             Object.keys(this.filters).length) {
-            array.filters = {};
+            var filters = {};
             for (var i in this.filters) {
                 var filter = this.filters[i];
                 if (filter.getFilterType() !== Filter_3.FILTER_TYPE_QUERY) {
-                    array.filters[i] = filter.toArray();
+                    filters[i] = filter.toArray();
                 }
+            }
+            if (Object.keys(filters).length > 0) {
+                array.filters = filters;
             }
         }
         /**
@@ -4176,8 +4220,11 @@ var Query = /** @class */ (function () {
         if (this.resultsEnabled === false) {
             array.results_enabled = false;
         }
-        if (this.suggestionsEnabled === true) {
-            array.suggestions_enabled = true;
+        if (this.autocompleteEnabled === true) {
+            array.autocomplete_enabled = true;
+        }
+        if (this.numberOfSuggestions !== 0) {
+            array.number_of_suggestions = this.numberOfSuggestions;
         }
         if (this.highlightsEnabled === true) {
             array.highlight_enabled = true;
@@ -4217,7 +4264,9 @@ var Query = /** @class */ (function () {
         if (this.user instanceof User_1.User) {
             array.user = this.user.toArray();
         }
-        array.metadata = this.metadata;
+        if (Object.keys(this.metadata).length > 0) {
+            array.metadata = this.metadata;
+        }
         if (this.subqueries instanceof Object &&
             Object.keys(this.subqueries).length) {
             array.subqueries = {};
@@ -4240,6 +4289,9 @@ var Query = /** @class */ (function () {
                     .push(this.itemsPromoted[i].toArray());
             }
         }
+        if (this.queryOperator !== "or" && this.queryOperator !== null) {
+            array.query_operator = this.queryOperator;
+        }
         return array;
     };
     /**
@@ -4253,7 +4305,7 @@ var Query = /** @class */ (function () {
         var query = array.coordinate instanceof Object
             ? Query.createLocated(Coordinate_1.Coordinate.createFromArray(array.coordinate), array.q ? array.q : "", array.page ? array.page : exports.QUERY_DEFAULT_PAGE, array.size ? array.size : exports.QUERY_DEFAULT_SIZE)
             : Query.create(array.q ? array.q : "", array.page ? array.page : exports.QUERY_DEFAULT_PAGE, array.size ? array.size : exports.QUERY_DEFAULT_SIZE);
-        query.UUID = typeof array.UUID === typeof ''
+        query.UUID = typeof array.UUID === typeof ""
             ? array.UUID
             : undefined;
         /**
@@ -4304,8 +4356,11 @@ var Query = /** @class */ (function () {
         query.resultsEnabled = typeof array.results_enabled === "boolean"
             ? array.results_enabled
             : true;
-        query.suggestionsEnabled = typeof array.suggestions_enabled === "boolean"
-            ? array.suggestions_enabled
+        query.numberOfSuggestions = typeof array.number_of_suggestions === "number"
+            ? array.number_of_suggestions
+            : 0;
+        query.autocompleteEnabled = typeof array.autocomplete_enabled === "boolean"
+            ? array.autocomplete_enabled
             : false;
         query.aggregationsEnabled = typeof array.aggregations_enabled === "boolean"
             ? array.aggregations_enabled
@@ -4313,7 +4368,7 @@ var Query = /** @class */ (function () {
         query.highlightsEnabled = typeof array.highlight_enabled === "boolean"
             ? array.highlight_enabled
             : false;
-        query.fuzziness = array.fuzziness;
+        query.fuzziness = array.fuzziness ? array.fuzziness : null;
         query.minScore = array.min_score ? array.min_score : exports.NO_MIN_SCORE;
         /**
          * Items promoted
@@ -4353,6 +4408,9 @@ var Query = /** @class */ (function () {
         query.indexUUID = array.index_uuid instanceof Object
             ? IndexUUID_1.IndexUUID.createFromArray(array.index_uuid)
             : undefined;
+        query.queryOperator = typeof array.query_operator === "string"
+            ? array.query_operator
+            : "or";
         return query;
     };
     return Query;
@@ -5644,6 +5702,9 @@ var HttpRepository = /** @class */ (function (_super) {
      * @return {Result}
      */
     HttpRepository.prototype.applyTransformersToResult = function (result) {
+        if (!this.transformer.hasReadTransformers()) {
+            return result;
+        }
         var subresults = result.getSubresults();
         if (Object.keys(subresults).length > 0) {
             Object.keys(subresults).map(function (key) {
@@ -5653,7 +5714,7 @@ var HttpRepository = /** @class */ (function (_super) {
         }
         return Result_1.Result.create(result.getQueryUUID(), result.getTotalItems(), result.getTotalHits(), result.getAggregations(), result.getSuggestions(), this
             .transformer
-            .fromItems(result.getItems()));
+            .fromItems(result.getItems()), result.getAutocomplete());
     };
     /**
      * @param response
@@ -6001,6 +6062,7 @@ var Result = /** @class */ (function () {
      */
     function Result(queryUUID, totalItems, totalHits) {
         this.items = [];
+        this.autocomplete = null;
         this.suggestions = [];
         this.subresults = {};
         this.queryUUID = queryUUID;
@@ -6016,14 +6078,17 @@ var Result = /** @class */ (function () {
      * @param aggregations
      * @param suggestions
      * @param items
+     * @param autocomplete
      *
      * @returns {Result}
      */
-    Result.create = function (queryUUID, totalItems, totalHits, aggregations, suggestions, items) {
+    Result.create = function (queryUUID, totalItems, totalHits, aggregations, suggestions, items, autocomplete) {
+        if (autocomplete === void 0) { autocomplete = null; }
         var result = new Result(queryUUID, totalItems, totalHits);
         result.aggregations = aggregations;
         result.suggestions = suggestions;
         result.items = items;
+        result.autocomplete = autocomplete;
         return result;
     };
     /**
@@ -6157,6 +6222,14 @@ var Result = /** @class */ (function () {
         return this.suggestions;
     };
     /**
+     * Get autocomplete
+     *
+     * @return {string|null}
+     */
+    Result.prototype.getAutocomplete = function () {
+        return this.autocomplete;
+    };
+    /**
      * Get query uuid
      *
      * @return {string}
@@ -6202,7 +6275,10 @@ var Result = /** @class */ (function () {
             aggregations: this.aggregations == null
                 ? null
                 : this.aggregations.toArray(),
-            suggests: this.suggestions
+            suggests: this.suggestions,
+            autocomplete: this.autocomplete === null
+                ? undefined
+                : this.autocomplete
         };
         if (this.subresults instanceof Object &&
             Object.keys(this.subresults).length) {
@@ -6234,7 +6310,9 @@ var Result = /** @class */ (function () {
             ? array.suggests
             : [], array.items instanceof Array
             ? array.items.map(function (itemAsArray) { return Item_1.Item.createFromArray(itemAsArray); })
-            : []);
+            : [], array.autocomplete === undefined
+            ? null
+            : array.autocomplete);
         /**
          * Subqueries
          */
@@ -6675,6 +6753,12 @@ var Transformer = /** @class */ (function () {
         this
             .readTransformers
             .push(readTransformer);
+    };
+    /**
+     * @return {boolean}
+     */
+    Transformer.prototype.hasReadTransformers = function () {
+        return this.readTransformers.length > 0;
     };
     /**
      * Add write transformer
@@ -13394,8 +13478,6 @@ var RangeFilterComponent = /** @class */ (function (_super) {
         else if (this.minMaxAssigned) {
             this.setState(function (prevState) {
                 return {
-                    valueFrom: props.minValue,
-                    valueTo: props.maxValue,
                     visible: true
                 };
             });
@@ -13403,6 +13485,8 @@ var RangeFilterComponent = /** @class */ (function (_super) {
         else {
             this.setState(function (prevState) {
                 return {
+                    valueFrom: props.minValue,
+                    valueTo: props.maxValue,
                     visible: true
                 };
             });
@@ -13785,7 +13869,7 @@ var Clone_1 = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
  * @param filter
  * @param minScore
  */
-function configureQuery(environmentId, currentQuery, itemsPerPage, highlightsEnabled, suggestionsEnabled, promotedUUIDs, excludedUUIDs, fields, filter, minScore) {
+function configureQuery(environmentId, currentQuery, itemsPerPage, highlightsEnabled, promotedUUIDs, excludedUUIDs, fields, filter, minScore) {
     var clonedQuery = Clone_1["default"].object(currentQuery);
     filter(clonedQuery);
     /**
@@ -13801,18 +13885,6 @@ function configureQuery(environmentId, currentQuery, itemsPerPage, highlightsEna
      */
     if (highlightsEnabled) {
         clonedQuery.enableHighlights();
-    }
-    /**
-     * Enabling highlights on query result
-     */
-    if (suggestionsEnabled) {
-        clonedQuery.enableSuggestions();
-        if (suggestionsEnabled == true) {
-            clonedQuery.setMetadataValue('number_of_suggestions', null);
-        }
-        else if (suggestionsEnabled > 0) {
-            clonedQuery.setMetadataValue('number_of_suggestions', suggestionsEnabled);
-        }
     }
     /**
      * Promoted uuids
@@ -14009,7 +14081,7 @@ var ResultComponent = /** @class */ (function (_super) {
         /**
          * Dispatch action
          */
-        ResultActions_1.configureQuery(props.environmentId, props.store.getCurrentQuery(), props.itemsPerPage, props.highlightsEnabled, props.suggestionsEnabled, props.promote.map(function (itemUUID) {
+        ResultActions_1.configureQuery(props.environmentId, props.store.getCurrentQuery(), props.itemsPerPage, props.highlightsEnabled, props.promote.map(function (itemUUID) {
             return itemUUID instanceof ItemUUID_1.ItemUUID
                 ? itemUUID
                 : ItemUUID_1.ItemUUID.createFromArray(itemUUID);
@@ -14218,7 +14290,7 @@ var AutocompleteComponent = /** @class */ (function (_super) {
     function AutocompleteComponent(props) {
         var _this = _super.call(this, props) || this;
         _this.state = {
-            suggestion: ''
+            autocomplete: "",
         };
         return _this;
     }
@@ -14228,18 +14300,17 @@ var AutocompleteComponent = /** @class */ (function (_super) {
      * @param props
      */
     AutocompleteComponent.prototype.componentWillReceiveProps = function (props) {
-        if (props.suggestions.length > 0) {
+        if (props.autocomplete !== null) {
             this.setState(function (prevState) {
-                var _a;
                 return {
-                    suggestion: ((_a = (props.suggestions[0] + "")) !== null && _a !== void 0 ? _a : "")
+                    autocomplete: props.autocomplete,
                 };
             });
         }
         else {
             this.setState(function (prevState) {
                 return {
-                    suggestion: ''
+                    autocomplete: "",
                 };
             });
         }
@@ -14250,15 +14321,15 @@ var AutocompleteComponent = /** @class */ (function (_super) {
      * @return {any}
      */
     AutocompleteComponent.prototype.render = function () {
-        var suggestion = this.state.suggestion;
+        var autocomplete = this.state.autocomplete;
         var queryText = this.props.queryText;
         var inputClassName = this.props.inputClassName;
         var queryTextLength = queryText.length;
-        var suggestedText = suggestion.substring(queryTextLength);
-        var formattedSuggestion = suggestedText === ""
+        var autocompleteText = autocomplete.substring(queryTextLength);
+        var formattedAutocompleteText = autocompleteText === ""
             ? ""
-            : queryText + suggestedText + ' ⤷';
-        return (preact_1.h("input", { type: "text", className: "as-searchInput__input as-searchInput__autocomplete " + inputClassName, placeholder: formattedSuggestion, style: "position: absolute; top: 0px; left: 0px; background-color: white;" }));
+            : queryText + autocompleteText + " ⤷";
+        return (preact_1.h("input", { type: "text", className: "as-searchInput__input as-searchInput__autocomplete " + inputClassName, placeholder: formattedAutocompleteText, style: "position: absolute; top: 0px; left: 0px; background-color: white;" }));
     };
     return AutocompleteComponent;
 }(preact_1.Component));
@@ -14289,21 +14360,19 @@ var Clone_1 = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
  * @param initialSearch
  * @param autocomplete
  * @param searchableFields
+ * @param queryOperator
  */
-function initialSearchSetup(environmentId, currentQuery, initialSearch, autocomplete, searchableFields) {
+function initialSearchSetup(environmentId, currentQuery, initialSearch, autocomplete, searchableFields, queryOperator) {
     var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
     var clonedQuery = Clone_1["default"].object(currentQuery);
     clonedQuery.filters._query.values = [initialSearch];
     clonedQuery.page = 1;
+    clonedQuery.queryOperator = queryOperator;
     if (searchableFields.length > 0) {
         clonedQuery.searchableFields = searchableFields;
     }
     if (autocomplete) {
-        clonedQuery.enableSuggestions();
-        var metadata = clonedQuery.getMetadata();
-        if (metadata.number_of_suggestions === undefined) {
-            clonedQuery.setMetadataValue('number_of_suggestions', 1);
-        }
+        clonedQuery.enableAutocomplete();
     }
     dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
         query: clonedQuery,
@@ -14328,7 +14397,7 @@ function simpleSearchAction(environmentId, currentQuery, repository, queryText, 
         dispatcher.dispatch("RENDER_FETCHED_DATA", {
             query: clonedQuery,
             result: null,
-            visibleResults: visibleResults
+            visibleResults: visibleResults,
         });
         return;
     }
@@ -14338,7 +14407,7 @@ function simpleSearchAction(environmentId, currentQuery, repository, queryText, 
         dispatcher.dispatch("RENDER_FETCHED_DATA", {
             query: clonedQuery,
             result: result,
-            visibleResults: visibleResults
+            visibleResults: visibleResults,
         });
     })["catch"](function (error) {
         // Do nothing
@@ -14405,14 +14474,9 @@ var SearchInputComponent = /** @class */ (function (_super) {
         _this.handleSearch = function (search) {
             var props = _this.props;
             var startSearchOn = props.startSearchOn;
-            var environmentId = props.environmentId;
-            var currentQuery = props.store.getCurrentQuery();
-            var repository = props.repository;
-            var visibleResults = search.length >= startSearchOn;
             var finalSpace = search.charAt(search.length - 1) === " " ? " " : "";
             var targetValueNoSpaces = search.trim() + finalSpace;
-            var finalTargetValue = targetValueNoSpaces === " " ? "" : targetValueNoSpaces;
-            SearchInputActions_1.simpleSearchAction(environmentId, currentQuery, repository, finalTargetValue, visibleResults);
+            SearchInputActions_1.simpleSearchAction(props.environmentId, props.store.getCurrentQuery(), props.repository, targetValueNoSpaces === " " ? "" : targetValueNoSpaces, search.length >= startSearchOn);
         };
         /**
          * Clear search
@@ -14448,15 +14512,10 @@ var SearchInputComponent = /** @class */ (function (_super) {
      */
     SearchInputComponent.prototype.componentWillMount = function () {
         var props = this.props;
-        var environmentId = props.environmentId;
-        var initialSearch = props.initialSearch;
-        var currentQuery = props.store.getCurrentQuery();
-        var autocomplete = props.autocomplete;
-        var searchableFields = props.searchableFields;
         /**
          * Dispatch action
          */
-        SearchInputActions_1.initialSearchSetup(environmentId, currentQuery, initialSearch, autocomplete, searchableFields);
+        SearchInputActions_1.initialSearchSetup(props.environmentId, props.store.getCurrentQuery(), props.initialSearch, props.autocomplete, props.searchableFields, props.queryOperator);
     };
     /**
      * Component will receive props
@@ -14476,24 +14535,22 @@ var SearchInputComponent = /** @class */ (function (_super) {
             case "ArrowRight":
             case "Tab":
             case "Enter":
-                this.replaceWithSuggestion(e);
+                this.replaceWithAutocomplete(e);
                 return;
         }
         switch (e.keyCode) {
             case 39:
             case 9:
             case 13:
-                this.replaceWithSuggestion(e);
+                this.replaceWithAutocomplete(e);
                 return;
         }
     };
-    SearchInputComponent.prototype.replaceWithSuggestion = function (e) {
+    SearchInputComponent.prototype.replaceWithAutocomplete = function (e) {
         var props = this.props;
-        var environmentId = props.environmentId;
-        var currentQuery = props.store.getCurrentQuery();
-        var repository = props.repository;
-        if (this.props.store.getCurrentResult().getSuggestions().length > 0) {
-            SearchInputActions_1.simpleSearchAction(environmentId, currentQuery, repository, this.props.store.getCurrentResult().getSuggestions()[0], true);
+        var autocomplete = this.props.store.getCurrentResult().getAutocomplete();
+        if (autocomplete !== null && autocomplete !== "") {
+            SearchInputActions_1.simpleSearchAction(props.environmentId, props.store.getCurrentQuery(), props.repository, this.props.store.getCurrentResult().getAutocomplete(), true);
             e.preventDefault();
             return;
         }
@@ -14534,17 +14591,16 @@ var SearchInputComponent = /** @class */ (function (_super) {
         var inputClassName = props.classNames.input;
         var clearSearchClassName = props.classNames.clearSearch;
         var clearSearchTemplate = props.template.clearSearch;
-        var currentQueryText = props.store.getCurrentQuery().getQueryText();
+        var currentQuery = props.store.getCurrentQuery();
+        var currentQueryText = currentQuery.getQueryText();
         var htmlNodeInheritProps = props.htmlNodeInheritProps;
-        var suggestions = props.store.getCurrentResult()
-            ? props.store.getCurrentResult().getSuggestions()
-            : [];
-        var showAutocomplete = props.autocomplete;
+        var showAutocomplete = currentQuery.areAutocompleteEnabled();
+        var autocomplete = props.store.getCurrentResult().getAutocomplete();
         var keyDownCallback = showAutocomplete
             ? function (e) { return _this.handleKeyDown(e); }
             : function (e) { return _this.doNothing(e); };
         var keyDownAction = showAutocomplete
-            ? function (e) { return _this.replaceWithSuggestion(e); }
+            ? function (e) { return _this.replaceWithAutocomplete(e); }
             : function (e) { return _this.doNothing(e); };
         var style = showAutocomplete
             ? "position: relative; top: 0px; left: 0px; background-color: transparent; border-color: transparent;"
@@ -14555,7 +14611,7 @@ var SearchInputComponent = /** @class */ (function (_super) {
         var searchInput = (preact_1.h("input", __assign({ type: "text", className: "as-searchInput__input " + inputClassName + " " + autocompletableClass, placeholder: placeholder, autofocus: autofocus }, htmlNodeInheritProps, { onInput: function (event) { return _this.handleSearch(event.target.value); }, value: currentQueryText, style: style, onKeyDown: keyDownCallback, onTouchStart: keyDownAction, ref: this.inputRef })));
         if (showAutocomplete) {
             searchInput = (preact_1.h("div", { style: "position: relative" },
-                preact_1.h(AutocompleteComponent_1["default"], { suggestions: suggestions, queryText: currentQueryText, inputClassName: inputClassName }),
+                preact_1.h(AutocompleteComponent_1["default"], { autocomplete: autocomplete, queryText: currentQueryText, inputClassName: inputClassName }),
                 searchInput));
         }
         if (this.speechRecognition) {
@@ -14919,10 +14975,13 @@ var Clone_1 = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
 /**
  * @param environmentId
  * @param currentQuery
+ * @param numberOfSuggestions
  */
-function enableSuggestions(environmentId, currentQuery) {
+function enableSuggestions(environmentId, currentQuery, numberOfSuggestions) {
     var clonedQuery = Clone_1["default"].object(currentQuery);
-    clonedQuery.enableSuggestions();
+    if (numberOfSuggestions > 0) {
+        clonedQuery.setNumberOfSuggestions(numberOfSuggestions);
+    }
     var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
     dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
         query: clonedQuery,
@@ -14995,6 +15054,7 @@ var SuggestionsFilterComponent = /** @class */ (function (_super) {
          */
         _this.handleClick = function (word) {
             var props = _this.props;
+            word = word.replaceAll("<em>", "").replaceAll("</em>", "");
             /**
              * Dispatch action
              */
@@ -15008,7 +15068,7 @@ var SuggestionsFilterComponent = /** @class */ (function (_super) {
     SuggestionsFilterComponent.prototype.componentWillMount = function () {
         this.setState(function (prevState) {
             return {
-                words: []
+                words: [],
             };
         });
         var props = this.props;
@@ -15017,7 +15077,7 @@ var SuggestionsFilterComponent = /** @class */ (function (_super) {
         /**
          * Dispatch action
          */
-        SuggestionsFilterActions_1.enableSuggestions(environmentId, currentQuery);
+        SuggestionsFilterActions_1.enableSuggestions(environmentId, currentQuery, props.numberOfSuggestions);
     };
     /**
      * Component will receive props
@@ -15030,7 +15090,7 @@ var SuggestionsFilterComponent = /** @class */ (function (_super) {
                 words: props
                     .store
                     .getCurrentResult()
-                    .getSuggestions()
+                    .getSuggestions(),
             };
         });
     };
@@ -15041,8 +15101,6 @@ var SuggestionsFilterComponent = /** @class */ (function (_super) {
      */
     SuggestionsFilterComponent.prototype.render = function (props, state) {
         var _this = this;
-        var currentSearch = props.store.getCurrentQuery().getQueryText();
-        var currentSearchLength = currentSearch.length;
         var containerClassName = props.classNames.container;
         var topClassName = props.classNames.top;
         var itemsListClassName = props.classNames.itemsList;
@@ -15058,7 +15116,6 @@ var SuggestionsFilterComponent = /** @class */ (function (_super) {
             preact_1.h("div", { className: "as-suggestions__itemsList " + itemsListClassName }, state.words.map(function (word) {
                 var templateData = {
                     word: word,
-                    highlightedWord: "<em>" + word.substr(0, currentSearchLength) + "</em>" + word.substr(currentSearchLength)
                 };
                 return (preact_1.h("div", { className: "as-suggestions__item " + itemClassName, onClick: function (e) {
                         e.stopPropagation();
@@ -16007,7 +16064,6 @@ var Result = /** @class */ (function (_super) {
      * @param exclude
      * @param filter
      * @param highlightsEnabled
-     * @param suggestionsEnabled
      * @param classNames
      * @param template
      * @param formatData
@@ -16017,11 +16073,11 @@ var Result = /** @class */ (function (_super) {
      * @param minScore
      */
     function Result(_a) {
-        var target = _a.target, fields = _a.fields, itemsPerPage = _a.itemsPerPage, promote = _a.promote, exclude = _a.exclude, filter = _a.filter, highlightsEnabled = _a.highlightsEnabled, suggestionsEnabled = _a.suggestionsEnabled, classNames = _a.classNames, template = _a.template, formatData = _a.formatData, fadeInSelector = _a.fadeInSelector, infiniteScroll = _a.infiniteScroll, fieldsConciliation = _a.fieldsConciliation, minScore = _a.minScore;
+        var target = _a.target, fields = _a.fields, itemsPerPage = _a.itemsPerPage, promote = _a.promote, exclude = _a.exclude, filter = _a.filter, highlightsEnabled = _a.highlightsEnabled, classNames = _a.classNames, template = _a.template, formatData = _a.formatData, fadeInSelector = _a.fadeInSelector, infiniteScroll = _a.infiniteScroll, fieldsConciliation = _a.fieldsConciliation, minScore = _a.minScore;
         var _this = _super.call(this) || this;
         _this.target = target;
         _this.targetNode = document.querySelector(_this.target);
-        _this.component = preact_1.h(ResultComponent_1["default"], { target: target, fields: fields, itemsPerPage: itemsPerPage, promote: promote, exclude: exclude, filter: filter, highlightsEnabled: highlightsEnabled, suggestionsEnabled: suggestionsEnabled, classNames: __assign(__assign({}, ResultComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, ResultComponent_1["default"].defaultProps.template), template), formatData: formatData, fadeInSelector: fadeInSelector, infiniteScroll: infiniteScroll, fieldsConciliation: fieldsConciliation, minScore: minScore });
+        _this.component = preact_1.h(ResultComponent_1["default"], { target: target, fields: fields, itemsPerPage: itemsPerPage, promote: promote, exclude: exclude, filter: filter, highlightsEnabled: highlightsEnabled, classNames: __assign(__assign({}, ResultComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, ResultComponent_1["default"].defaultProps.template), template), formatData: formatData, fadeInSelector: fadeInSelector, infiniteScroll: infiniteScroll, fieldsConciliation: fieldsConciliation, minScore: minScore });
         return _this;
     }
     /**
@@ -16103,12 +16159,13 @@ var SearchInput = /** @class */ (function (_super) {
      * @param initialSearch
      * @param searchableFields
      * @param speechRecognition
+     * @param queryOperator
      */
     function SearchInput(_a) {
-        var target = _a.target, placeholder = _a.placeholder, startSearchOn = _a.startSearchOn, clearSearch = _a.clearSearch, withContainer = _a.withContainer, autofocus = _a.autofocus, autocomplete = _a.autocomplete, classNames = _a.classNames, template = _a.template, initialSearch = _a.initialSearch, searchableFields = _a.searchableFields, speechRecognition = _a.speechRecognition;
+        var target = _a.target, placeholder = _a.placeholder, startSearchOn = _a.startSearchOn, clearSearch = _a.clearSearch, withContainer = _a.withContainer, autofocus = _a.autofocus, autocomplete = _a.autocomplete, classNames = _a.classNames, template = _a.template, initialSearch = _a.initialSearch, searchableFields = _a.searchableFields, speechRecognition = _a.speechRecognition, queryOperator = _a.queryOperator;
         var _this = _super.call(this) || this;
         _this.target = target;
-        _this.component = preact_1.h(SearchInputComponent_1["default"], { target: target, placeholder: placeholder, autofocus: autofocus, autocomplete: autocomplete, startSearchOn: startSearchOn, clearSearch: clearSearch, withContainer: withContainer, searchableFields: searchableFields, speechRecognition: speechRecognition, classNames: __assign(__assign({}, SearchInputComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, SearchInputComponent_1["default"].defaultProps.template), template), initialSearch: initialSearch, config: _this.config });
+        _this.component = preact_1.h(SearchInputComponent_1["default"], { target: target, placeholder: placeholder, autofocus: autofocus, autocomplete: autocomplete, startSearchOn: startSearchOn, clearSearch: clearSearch, withContainer: withContainer, searchableFields: searchableFields, speechRecognition: speechRecognition, classNames: __assign(__assign({}, SearchInputComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, SearchInputComponent_1["default"].defaultProps.template), template), initialSearch: initialSearch, queryOperator: queryOperator, config: _this.config });
         return _this;
     }
     /**
@@ -16459,10 +16516,10 @@ var Widget_1 = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
 var SuggestionsFilter = /** @class */ (function (_super) {
     __extends(SuggestionsFilter, _super);
     function SuggestionsFilter(_a) {
-        var target = _a.target, classNames = _a.classNames, template = _a.template;
+        var target = _a.target, numberOfSuggestions = _a.numberOfSuggestions, classNames = _a.classNames, template = _a.template;
         var _this = _super.call(this) || this;
         _this.target = target;
-        _this.component = preact_1.h(SuggestionsFilterComponent_1["default"], { target: target, classNames: __assign(__assign({}, SuggestionsFilterComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, SuggestionsFilterComponent_1["default"].defaultProps.template), template) });
+        _this.component = preact_1.h(SuggestionsFilterComponent_1["default"], { target: target, numberOfSuggestions: numberOfSuggestions, classNames: __assign(__assign({}, SuggestionsFilterComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, SuggestionsFilterComponent_1["default"].defaultProps.template), template) });
         return _this;
     }
     /**

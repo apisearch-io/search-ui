@@ -2,7 +2,7 @@
  * Autocomplete Props
  */
 export interface AutocompleteProps {
-    suggestions: string[];
+    autocomplete: string;
     queryText: string;
     inputClassName: string;
 }

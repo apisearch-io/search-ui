@@ -141,7 +141,6 @@ class ResultComponent extends Component<ResultProps, ResultState> {
             props.store.getCurrentQuery(),
             props.itemsPerPage,
             props.highlightsEnabled,
-            props.suggestionsEnabled,
             props.promote.map((itemUUID) => {
                 return itemUUID instanceof ItemUUID
                     ? itemUUID

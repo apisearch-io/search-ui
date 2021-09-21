@@ -6,6 +6,7 @@ import Store from "../../Store";
  */
 export interface SuggestionsFilterProps {
     target: string;
+    numberOfSuggestions: number;
     classNames: {
         container: string,
         top: string,

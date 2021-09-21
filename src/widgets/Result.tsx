@@ -21,7 +21,6 @@ class Result extends Widget {
      * @param exclude
      * @param filter
      * @param highlightsEnabled
-     * @param suggestionsEnabled
      * @param classNames
      * @param template
      * @param formatData
@@ -38,14 +37,13 @@ class Result extends Widget {
         exclude,
         filter,
         highlightsEnabled,
-        suggestionsEnabled,
         classNames,
         template,
         formatData,
         fadeInSelector,
         infiniteScroll,
         fieldsConciliation,
-        minScore
+        minScore,
     }) {
         super();
         this.target = target;
@@ -58,14 +56,13 @@ class Result extends Widget {
             exclude={exclude}
             filter={filter}
             highlightsEnabled={highlightsEnabled}
-            suggestionsEnabled={suggestionsEnabled}
             classNames={{
                 ...ResultComponent.defaultProps.classNames,
-                ...classNames
+                ...classNames,
             }}
             template={{
                 ...ResultComponent.defaultProps.template,
-                ...template
+                ...template,
             }}
             formatData={formatData}
             fadeInSelector={fadeInSelector}

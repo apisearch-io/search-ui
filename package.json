@@ -51,7 +51,7 @@
     "webpack-merge": "^4.2.1"
   },
   "dependencies": {
-    "apisearch": "^0.2.41",
+    "apisearch": "^0.3.3",
     "mustache": "^4.1.0",
     "preact": "^10"
   }

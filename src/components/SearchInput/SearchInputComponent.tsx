@@ -44,21 +44,17 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
     componentWillMount() {
 
         const props = this.props;
-        const environmentId = props.environmentId;
-        const initialSearch = props.initialSearch;
-        const currentQuery = props.store.getCurrentQuery();
-        const autocomplete = props.autocomplete;
-        const searchableFields = props.searchableFields;
 
         /**
          * Dispatch action
          */
         initialSearchSetup(
-            environmentId,
-            currentQuery,
-            initialSearch,
-            autocomplete,
-            searchableFields,
+            props.environmentId,
+            props.store.getCurrentQuery(),
+            props.initialSearch,
+            props.autocomplete,
+            props.searchableFields,
+            props.queryOperator,
         );
     }
 
@@ -79,20 +75,15 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
     handleSearch = (search) => {
         const props = this.props;
         const startSearchOn = props.startSearchOn;
-        const environmentId = props.environmentId;
-        const currentQuery = props.store.getCurrentQuery();
-        const repository = props.repository;
-        const visibleResults = search.length >= startSearchOn;
         const finalSpace = search.charAt(search.length - 1) === " " ? " " : "";
         const targetValueNoSpaces = search.trim() + finalSpace;
-        const finalTargetValue = targetValueNoSpaces === " " ? "" : targetValueNoSpaces;
 
         simpleSearchAction(
-            environmentId,
-            currentQuery,
-            repository,
-            finalTargetValue,
-            visibleResults,
+            props.environmentId,
+            props.store.getCurrentQuery(),
+            props.repository,
+            targetValueNoSpaces === " " ? "" : targetValueNoSpaces,
+            search.length >= startSearchOn,
         );
     }
 
@@ -125,7 +116,7 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
             case "ArrowRight":
             case "Tab":
             case "Enter":
-                this.replaceWithSuggestion(e);
+                this.replaceWithAutocomplete(e);
                 return;
         }
 
@@ -133,23 +124,21 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
             case 39:
             case 9:
             case 13:
-                this.replaceWithSuggestion(e);
+                this.replaceWithAutocomplete(e);
                 return;
         }
     }
 
-    replaceWithSuggestion(e) {
+    replaceWithAutocomplete(e) {
         const props = this.props;
-        const environmentId = props.environmentId;
-        const currentQuery = props.store.getCurrentQuery();
-        const repository = props.repository;
+        const autocomplete = this.props.store.getCurrentResult().getAutocomplete();
 
-        if (this.props.store.getCurrentResult().getSuggestions().length > 0) {
+        if (autocomplete !== null && autocomplete !== "") {
             simpleSearchAction(
-                environmentId,
-                currentQuery,
-                repository,
-                this.props.store.getCurrentResult().getSuggestions()[0],
+                props.environmentId,
+                props.store.getCurrentQuery(),
+                props.repository,
+                this.props.store.getCurrentResult().getAutocomplete(),
                 true,
             );
 
@@ -196,19 +185,17 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
         const inputClassName = props.classNames.input;
         const clearSearchClassName = props.classNames.clearSearch;
         const clearSearchTemplate = props.template.clearSearch;
-        const currentQueryText = props.store.getCurrentQuery().getQueryText();
+        const currentQuery = props.store.getCurrentQuery();
+        const currentQueryText = currentQuery.getQueryText();
         const htmlNodeInheritProps = props.htmlNodeInheritProps;
-        const suggestions = props.store.getCurrentResult()
-            ? props.store.getCurrentResult().getSuggestions()
-            : [];
-
-        const showAutocomplete = props.autocomplete;
+        const showAutocomplete = currentQuery.areAutocompleteEnabled();
+        const autocomplete = props.store.getCurrentResult().getAutocomplete();
         const keyDownCallback = showAutocomplete
             ? (e) => this.handleKeyDown(e)
             : (e) => this.doNothing(e);
 
         const keyDownAction = showAutocomplete
-            ? (e) => this.replaceWithSuggestion(e)
+            ? (e) => this.replaceWithAutocomplete(e)
             : (e) => this.doNothing(e);
 
         const style = showAutocomplete
@@ -237,9 +224,9 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
             searchInput = (
                 <div style="position: relative">
                     <AutocompleteComponent
-                      suggestions={suggestions}
-                      queryText={currentQueryText}
-                      inputClassName={inputClassName}
+                        autocomplete={autocomplete}
+                        queryText={currentQueryText}
+                        inputClassName={inputClassName}
                     />
 
                     {searchInput}
