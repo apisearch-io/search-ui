@@ -17,7 +17,7 @@ class SuggestionsFilterComponent extends Component<SuggestionsFilterProps, Sugge
 
         this.setState(prevState => {
             return {
-                words: []
+                words: [],
             };
         });
 
@@ -30,7 +30,8 @@ class SuggestionsFilterComponent extends Component<SuggestionsFilterProps, Sugge
          */
         enableSuggestions(
             environmentId,
-            currentQuery
+            currentQuery,
+            props.numberOfSuggestions,
         );
     }
 
@@ -46,7 +47,7 @@ class SuggestionsFilterComponent extends Component<SuggestionsFilterProps, Sugge
                 words: props
                     .store
                     .getCurrentResult()
-                    .getSuggestions()
+                    .getSuggestions(),
             };
         });
     }
@@ -57,6 +58,7 @@ class SuggestionsFilterComponent extends Component<SuggestionsFilterProps, Sugge
     handleClick = (word) => {
 
         const props = this.props;
+        word = word.replaceAll("<em>", "").replaceAll("</em>", "");
 
         /**
          * Dispatch action
@@ -65,9 +67,9 @@ class SuggestionsFilterComponent extends Component<SuggestionsFilterProps, Sugge
             props.environmentId,
             props.store.getCurrentQuery(),
             props.repository,
-            word
+            word,
         );
-    };
+    }
 
     /**
      * Render
@@ -76,8 +78,6 @@ class SuggestionsFilterComponent extends Component<SuggestionsFilterProps, Sugge
      */
     render(props, state) {
 
-        const currentSearch = props.store.getCurrentQuery().getQueryText();
-        const currentSearchLength = currentSearch.length;
         const containerClassName = props.classNames.container;
         const topClassName = props.classNames.top;
         const itemsListClassName = props.classNames.itemsList;
@@ -100,16 +100,15 @@ class SuggestionsFilterComponent extends Component<SuggestionsFilterProps, Sugge
                 />
 
                 <div className={`as-suggestions__itemsList ${itemsListClassName}`}>
-                    {state.words.map(word => {
+                    {state.words.map((word) => {
                         const templateData = {
                             word: word,
-                            highlightedWord: "<em>"+word.substr(0, currentSearchLength)+"</em>"+word.substr(currentSearchLength)
                         };
 
                         return (
                             <div
                                 className={`as-suggestions__item ${itemClassName}`}
-                                onClick={function(e) {
+                                onClick={(e) => {
                                     e.stopPropagation();
                                     e.preventDefault();
                                     that.handleClick(word);

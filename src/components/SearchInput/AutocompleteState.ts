@@ -2,5 +2,5 @@
  * AutocompleteState
  */
 export interface AutocompleteState {
-    suggestion: string
+    autocomplete: string,
 }

@@ -7,13 +7,17 @@ import Clone from "../Clone";
 /**
  * @param environmentId
  * @param currentQuery
+ * @param numberOfSuggestions
  */
 export function enableSuggestions(
     environmentId: string,
-    currentQuery: Query
+    currentQuery: Query,
+    numberOfSuggestions: number,
 ) {
     const clonedQuery = Clone.object(currentQuery);
-    clonedQuery.enableSuggestions();
+    if (numberOfSuggestions > 0) {
+        clonedQuery.setNumberOfSuggestions(numberOfSuggestions);
+    }
 
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
 
@@ -32,7 +36,7 @@ export function onWordClickAction(
     environmentId: string,
     currentQuery: Query,
     repository: Repository,
-    word: string
+    word: string,
 ) {
     const clonedQuery = Clone.object(currentQuery);
 

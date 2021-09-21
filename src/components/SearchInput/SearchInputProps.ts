@@ -15,6 +15,7 @@ export interface SearchInputProps {
     withContainer: boolean;
     searchableFields: string[];
     speechRecognition: boolean;
+    queryOperator: string;
     classNames: {
         container: string,
         input: string,

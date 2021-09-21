@@ -127,7 +127,6 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
     };
 
     handleSliderChange(values) {
-
         if (
             values[0] === this.state.valueFrom &&
             values[1] === this.state.valueTo
@@ -179,6 +178,7 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
 
         if (filterIsFound) {
             const values = filter.getValues();
+
             if (values.length > 0) {
                 const parts = values[0].split('..');
                 this.setState(prevState => {
@@ -192,14 +192,14 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
         } else if(this.minMaxAssigned) {
             this.setState(prevState => {
                 return {
-                    valueFrom: props.minValue,
-                    valueTo: props.maxValue,
                     visible: true
                 }
             });
         } else {
             this.setState(prevState => {
                 return {
+                    valueFrom: props.minValue,
+                    valueTo: props.maxValue,
                     visible: true
                 }
             });

@@ -1,7 +1,6 @@
 import { h, Component } from 'preact';
-import Template from "../Template";
-import {AutocompleteState} from "./AutocompleteState";
 import {AutocompleteProps} from "./AutocompleteProps";
+import {AutocompleteState} from "./AutocompleteState";
 
 /**
  * Autocomplete Component
@@ -15,8 +14,8 @@ class AutocompleteComponent extends Component<AutocompleteProps, AutocompleteSta
         super(props);
 
         this.state = {
-            suggestion: ''
-        }
+            autocomplete: "",
+        };
     }
 
     /**
@@ -25,17 +24,17 @@ class AutocompleteComponent extends Component<AutocompleteProps, AutocompleteSta
      * @param props
      */
     componentWillReceiveProps(props) {
-        if (props.suggestions.length > 0) {
-            this.setState(prevState => {
+        if (props.autocomplete !== null) {
+            this.setState((prevState) => {
                 return {
-                   suggestion: ((props.suggestions[0] + "") ?? "")
-               };
+                    autocomplete: props.autocomplete,
+                };
             });
         } else {
-            this.setState(prevState => {
+            this.setState((prevState) => {
                 return {
-                   suggestion: ''
-               };
+                    autocomplete: "",
+                };
             });
         }
     }
@@ -47,20 +46,20 @@ class AutocompleteComponent extends Component<AutocompleteProps, AutocompleteSta
      */
     render() {
 
-        const suggestion = this.state.suggestion;
+        const autocomplete = this.state.autocomplete;
         const queryText = this.props.queryText;
         const inputClassName = this.props.inputClassName;
         const queryTextLength = queryText.length;
-        const suggestedText = suggestion.substring(queryTextLength);
-        const formattedSuggestion = suggestedText === ""
+        const autocompleteText = autocomplete.substring(queryTextLength);
+        const formattedAutocompleteText = autocompleteText === ""
             ? ""
-            : queryText + suggestedText + ' ⤷';
+            : queryText + autocompleteText + " ⤷";
 
         return (
             <input
                 type="text"
                 className={`as-searchInput__input as-searchInput__autocomplete ${inputClassName}`}
-                placeholder={formattedSuggestion}
+                placeholder={formattedAutocompleteText}
                 style="position: absolute; top: 0px; left: 0px; background-color: white;"
             />
         );
