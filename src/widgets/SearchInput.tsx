@@ -134,13 +134,12 @@ class SearchInput extends Widget{
      */
     public toUrlObject(
         query: any,
-        object: any
-    )
-    {
+        object: any,
+    ) {
         const q = query.q;
         if (
             q !== undefined &&
-            q !== ''
+            q !== ""
         ) {
             object.q = q;
         }

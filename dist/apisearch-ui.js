@@ -15371,6 +15371,7 @@ var CheckboxFilter = /** @class */ (function (_super) {
         var filterName = this.component.props.filterName;
         var aggregation = query.aggregations[filterName];
         if (aggregation !== undefined &&
+            query.filters !== undefined &&
             query.filters[filterName] !== undefined) {
             var filterValues = query.filters[filterName].values;
             if (filterValues.length > 0) {
@@ -15664,6 +15665,7 @@ var MultipleFilter = /** @class */ (function (_super) {
         var filterName = this.component.props.filterName;
         var aggregation = query.aggregations[filterName];
         if (aggregation !== undefined &&
+            query.filters !== undefined &&
             query.filters[filterName] !== undefined) {
             var filterValues = query.filters[filterName].values;
             if (filterValues.length > 0) {
@@ -15888,7 +15890,7 @@ var RangeFilter = /** @class */ (function (_super) {
      */
     RangeFilter.prototype.toUrlObject = function (query, object) {
         var filterName = this.component.props.filterName;
-        if (query.filters[filterName] !== undefined) {
+        if (query.filters !== undefined && query.filters[filterName] !== undefined) {
             var filterValues = query.filters[filterName].values;
             if (filterValues.length > 0) {
                 object[filterName] = filterValues;
@@ -16207,7 +16209,7 @@ var SearchInput = /** @class */ (function (_super) {
     SearchInput.prototype.toUrlObject = function (query, object) {
         var q = query.q;
         if (q !== undefined &&
-            q !== '') {
+            q !== "") {
             object.q = q;
         }
     };
@@ -16417,11 +16419,11 @@ var SortBy = /** @class */ (function (_super) {
             var sortAsString = sortInstance.getFirstSortAsString();
             var firstSortAsString = this.component.props.options[0].value;
             if (sortAsString !== firstSortAsString) {
-                if (sort.type == 'distance') {
-                    object.sort = 'distance:' + sort.unit + ':' + sort.coordinate.lat + ':' + sort.coordinate.lon;
+                if (sort.type === "distance") {
+                    object.sort = "distance:" + sort.unit + ":" + sort.coordinate.lat + ":" + sort.coordinate.lon;
                 }
                 else {
-                    object.sort = sort.field.substr(17) + ':' + sort.order;
+                    object.sort = sort.field.substr(17) + ":" + sort.order;
                 }
             }
         }
@@ -16530,20 +16532,7 @@ var SuggestionsFilter = /** @class */ (function (_super) {
      */
     SuggestionsFilter.prototype.render = function (environmentId, store, repository, dictionary) {
         this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store, dictionary: dictionary });
-        var targetNode = document.querySelector(this.target);
-        preact_1.render(this.component, targetNode);
-    };
-    /**
-     * @param query
-     * @param object
-     */
-    SuggestionsFilter.prototype.toUrlObject = function (query, object) {
-    };
-    /**
-     * @param object
-     * @param query
-     */
-    SuggestionsFilter.prototype.fromUrlObject = function (object, query) {
+        preact_1.render(this.component, document.querySelector(this.target));
     };
     return SuggestionsFilter;
 }(Widget_1["default"]));
