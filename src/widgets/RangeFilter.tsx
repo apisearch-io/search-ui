@@ -89,7 +89,7 @@ class RangeFilter extends Widget {
     )
     {
         const filterName = this.component.props.filterName;
-        if (query.filters[filterName] !== undefined) {
+        if (query.filters !== undefined && query.filters[filterName] !== undefined) {
             const filterValues = query.filters[filterName].values;
             if (filterValues.length > 0) {
                 object[filterName] = filterValues;

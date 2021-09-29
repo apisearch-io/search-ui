@@ -48,39 +48,13 @@ class SuggestionsFilter extends Widget {
             environmentId: environmentId,
             repository: repository,
             store: store,
-            dictionary: dictionary
+            dictionary: dictionary,
         };
-
-        let targetNode = document.querySelector(this.target);
 
         render(
             this.component,
-            targetNode
-        )
-    }
-
-    /**
-     * @param query
-     * @param object
-     */
-    public toUrlObject(
-        query: any,
-        object: any
-    )
-    {
-
-    }
-
-    /**
-     * @param object
-     * @param query
-     */
-    public fromUrlObject(
-        object: any,
-        query: any
-    )
-    {
-
+            document.querySelector(this.target),
+        );
     }
 }
 

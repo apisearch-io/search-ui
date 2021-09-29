@@ -60,9 +60,8 @@ class SortBy extends Widget {
      */
     public toUrlObject(
         query: any,
-        object: any
-    )
-    {
+        object: any,
+    ) {
         if (
             query.sort !== undefined
         ) {
@@ -72,10 +71,10 @@ class SortBy extends Widget {
             const firstSortAsString = this.component.props.options[0].value
 
             if (sortAsString !== firstSortAsString) {
-               if (sort.type == 'distance') {
-                    object.sort = 'distance:' + sort.unit + ':' + sort.coordinate.lat + ':' + sort.coordinate.lon;
+               if (sort.type === "distance") {
+                    object.sort = "distance:" + sort.unit + ":" + sort.coordinate.lat + ":" + sort.coordinate.lon;
                 } else {
-                    object.sort = sort.field.substr(17) + ':' + sort.order;
+                    object.sort = sort.field.substr(17) + ":" + sort.order;
                 }
             }
         }

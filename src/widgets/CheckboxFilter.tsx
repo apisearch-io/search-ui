@@ -78,6 +78,7 @@ class CheckboxFilter extends Widget {
         const aggregation = query.aggregations[filterName];
         if (
             aggregation !== undefined &&
+            query.filters !== undefined &&
             query.filters[filterName] !== undefined
         ) {
             const filterValues = query.filters[filterName].values;
