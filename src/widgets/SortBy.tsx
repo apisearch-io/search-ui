@@ -92,7 +92,7 @@ class SortBy extends Widget {
     )
     {
         if (object.sort !== undefined) {
-            if (query.sort == undefined) {
+            if (query.sort === undefined) {
                 query.sort = [{}];
             }
 
