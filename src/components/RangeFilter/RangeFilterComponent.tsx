@@ -1,18 +1,16 @@
+import {Aggregation, Filter} from "apisearch";
 import {Component, h} from 'preact';
 import {useEffect, useRef} from 'preact/compat';
 import Template from "../Template";
-import {addMinMaxAggregation, deleteMinMaxAggregation, onChangeSearchAction} from "./RangeFilterActions";
 import {RangeFilterProps} from './RangeFilterProps';
 import {RangeFilterState} from './RangeFilterState';
+import {aggregationSetup, filterAction} from './RangeFilterActions';
 
 /**
  * Range Filter Component
  */
 class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState> {
 
-    private minValue;
-    private maxValue;
-    private minMaxAssigned = false;
     private observerFrom;
     private observerTo;
     private uid = Math.random().toString(16).substr(2, 12);
@@ -25,21 +23,12 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
         this.rangeUid = 'range-' + this.uid;
         this.setState(prevState => {
             return {
-                valueFrom: undefined,
-                valueTo: undefined,
-                visible: false
+                from: null,
+                to: null,
+                min: null,
+                max: null,
             }
         });
-    }
-
-    /**
-     *
-     */
-    shouldCheckMinMax() {
-        return (
-            this.props.minValue === undefined ||
-            this.props.maxValue === undefined
-        );
     }
 
     /**
@@ -48,18 +37,20 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
     componentWillMount() {
 
         const props = this.props;
+        const environmentId = props.environmentId;
+        const filterName = props.filterName;
+        const filterField = props.filterField;
+        const currentQuery = props.store.getCurrentQuery();
 
         /**
-         * Check min and max ONLY when both are defined
+         * Dispatch action
          */
-        if (this.shouldCheckMinMax()) {
-            addMinMaxAggregation(
-                props.environmentId,
-                props.store.getCurrentQuery(),
-                props.filterName,
-                props.filterField
-            );
-        }
+        aggregationSetup(
+            environmentId,
+            currentQuery,
+            filterName,
+            filterField
+        );
     }
 
     configureFromObserver() {
@@ -70,10 +61,10 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
             for(const mutation of mutationsList) {
                 if (mutation.attributeName === 'value') {
                     const value = parseInt(mutation.target["defaultValue"]);
-                    if (value == that.state.valueFrom) {
+                    if (value == that.state.from) {
                         return;
                     }
-                    that.handleSliderChange([value, that.state.valueTo]);
+                    that.handleSliderChange([value, that.state.to]);
                 }
             }
         });
@@ -87,10 +78,10 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
             for(const mutation of mutationsList) {
                 if (mutation.attributeName === 'value') {
                     const value = parseInt(mutation.target["defaultValue"]);
-                    if (value == that.state.valueTo) {
+                    if (value == that.state.to) {
                         return;
                     }
-                    that.handleSliderChange([that.state.valueFrom, value]);
+                    that.handleSliderChange([that.state.from, value]);
                 }
             }
         });
@@ -128,19 +119,11 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
 
     handleSliderChange(values) {
         if (
-            values[0] === this.state.valueFrom &&
-            values[1] === this.state.valueTo
+            values[0] === this.state.from &&
+            values[1] === this.state.to
         ) {
             return false;
         }
-
-        this.setState(prevState => {
-            return {
-                valueFrom: values[0],
-                valueTo: values[1],
-                visible: true
-            };
-        });
 
         this.applyFilter(values[0], values[1]);
     };
@@ -155,8 +138,8 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
 
         if (
             typeof this.props.onSliderMove == 'function' &&
-            this.state.valueFrom !== undefined &&
-            this.state.valueTo !== undefined
+            this.state.from !== undefined &&
+            this.state.to !== undefined
 
         ) {
             this.props.onSliderMove(
@@ -168,42 +151,71 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
     };
 
     /**
+     * Component will receive props
+     *
      * @param props
      */
     componentWillReceiveProps(props) {
+        const aggregation = props
+            .store
+            .getCurrentResult()
+            .getAggregation(props.filterName);
 
-        const filterName = props.filterName;
-        const filter = props.store.getCurrentQuery().getFilter(filterName);
-        const filterIsFound = filter !== null;
-
-        if (filterIsFound) {
-            const values = filter.getValues();
-
-            if (values.length > 0) {
-                const parts = values[0].split('..');
-                this.setState(prevState => {
-                    return {
-                        valueFrom: parseInt(parts[0]),
-                        valueTo: parseInt(parts[1]),
-                        visible: true
-                    }
-                });
-            }
-        } else if(this.minMaxAssigned) {
-            this.setState(prevState => {
-                return {
-                    visible: true
-                }
-            });
-        } else {
-            this.setState(prevState => {
-                return {
-                    valueFrom: props.minValue,
-                    valueTo: props.maxValue,
-                    visible: true
-                }
-            });
+        if (aggregation instanceof Aggregation) {
+            return;
         }
+
+        const metadata = aggregation.getMetadata();
+        const filter = props
+            .store
+            .getCurrentQuery()
+            .getFilter(props.filterName);
+
+        const min = metadata['min']
+            ? Math.floor(metadata['min'])
+            : undefined;
+
+        const max = metadata['max']
+            ? Math.ceil(metadata['max'])
+            : undefined;
+
+        const fromTo = this.getFromToFromFilter(filter, min, max);
+
+        this.setState(prevState => {
+            return {
+                from: fromTo[0],
+                to: fromTo[1],
+                min: min,
+                max: max,
+            };
+        });
+    }
+
+    /**
+     * @param filter
+     * @param min
+     * @param max
+     */
+    getFromToFromFilter(filter: Filter, min: number, max: number) {
+
+        const realMin = Math.min(min, max);
+        const realMax = Math.max(min, max);
+
+        if (filter instanceof Filter) {
+            const filterValue = filter.getValues()[0];
+            if (typeof filterValue === "string") {
+                const parts = filterValue.split('..');
+                const from = parts[0];
+                const to = parts[1].slice(0, -1);
+
+                return [
+                    Math.max(realMin, parseInt(from)),
+                    Math.min(realMax, parseInt(to)),
+                ];
+            }
+        }
+
+        return [realMin, realMax];
     }
 
     /**
@@ -247,77 +259,19 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
 
         }, [ref]);
 
-        const aggregations = this.props.store.getCurrentResult().getAggregations();
-
-        if (props.store.hasProperResult() && this.minMaxAssigned === false) {
-            if (this.shouldCheckMinMax()) {
-                let currentAggregation = aggregations.getAggregation(filterName);
-                if (currentAggregation !== null) {
-                    const currentAggregationMetadata = currentAggregation.getMetadata();
-                    const currentAggregationMetadataMin = currentAggregationMetadata['min']
-                        ? Math.floor(currentAggregationMetadata)
-                        : undefined;
-
-                    const currentAggregationMetadataMax = currentAggregationMetadata['max']
-                        ? Math.ceil(currentAggregationMetadata['max'])
-                        : undefined;
-
-                    this.minValue = props.minValue ?? currentAggregationMetadataMin;
-                    this.maxValue = props.maxValue ?? currentAggregationMetadataMax;
-                    this.minMaxAssigned = true;
-                    this.setState(prevState => {
-                        return {
-                            valueFrom: this.state.valueFrom ?? this.minValue,
-                            valueTo: this.state.valueTo ?? this.maxValue,
-                            visible: true
-                        }
-                    });
-
-                    if (typeof props.minMaxCallback == 'function') {
-                        props.minMaxCallback(this.minValue, this.maxValue, props.step, this.rangeUid);
-                    }
-
-                    /**
-                     * Dispatch action
-                     */
-                    deleteMinMaxAggregation(
-                        props.environmentId,
-                        props.store.getCurrentQuery(),
-                        filterName
-                    );
-                }
-            } else {
-                this.minMaxAssigned = true;
-                this.setState(prevState => {
-                    return {
-                        valueFrom: this.state.valueFrom ?? props.minValue,
-                        valueTo: this.state.valueTo ?? props.maxValue,
-                        visible: true
-                    }
-                });
-
-                if (typeof props.minMaxCallback == 'function') {
-                    props.minMaxCallback(props.minValue, props.maxValue, props.step, this.rangeUid);
-                }
-            }
-        }
-
-        const minValue = this.minValue ?? props.minValue;
-        const maxValue = this.maxValue ?? props.maxValue;
         const isNative = props.native;
         const isNotNative = !isNative;
         const type = isNative ? 'range' : 'number';
         const eventName = 'onClick';
+        const from = this.state.from;
+        const to = this.state.to;
+        const min = this.state.min;
+        const max = this.state.max;
 
-        if (
-            this.minMaxAssigned &&
-            typeof props.callback == 'function' &&
-            this.state.valueFrom !== undefined &&
-            this.state.valueTo !== undefined
-        ) {
+        if (from && to) {
             props.callback(
-                Math.min(state.valueFrom, state.valueTo),
-                Math.max(state.valueFrom, state.valueTo),
+                from,
+                to,
                 this.rangeUid
             );
         }
@@ -335,16 +289,16 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
                         type={type}
                         class={`as-rangeFilter__from ${props.classNames.input} as-rangeFilter__${this.uid} as-rangeFilter__from__${this.uid}`}
                         {...props.attributes.from}
-                        value={this.state.valueFrom}
-                        min={minValue}
-                        max={maxValue}
+                        value={from}
+                        min={min}
+                        max={max}
                         step={props.step}
                         onClick={function(e) {
                             if (isNotNative) return false;
-                            that.handleSliderChange([parseInt((e.target as HTMLInputElement).value), that.state.valueTo])
+                            that.handleSliderChange([parseInt((e.target as HTMLInputElement).value), to])
                         }}
                         onChange={function(e) {
-                            const positions = [parseInt((e.target as HTMLInputElement).value), that.state.valueTo];
+                            const positions = [parseInt((e.target as HTMLInputElement).value), to];
                             if (isNative) {
                                 that.handleSliderMove(positions);
                                 return false;
@@ -358,16 +312,16 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
                         type={type}
                         class={`as-rangeFilter__to ${props.classNames.input} as-rangeFilter__${this.uid} as-rangeFilter__to__${this.uid}`}
                         {...props.attributes.to}
-                        value={this.state.valueTo}
-                        min={minValue}
-                        max={maxValue}
+                        value={to}
+                        min={min}
+                        max={max}
                         step={props.step}
                         onClick={function(e) {
                             if (isNotNative) return false;
-                            that.handleSliderChange([that.state.valueFrom, parseInt((e.target as HTMLInputElement).value)])
+                            that.handleSliderChange([from, parseInt((e.target as HTMLInputElement).value)])
                         }}
                         onChange={function(e) {
-                            const positions = [that.state.valueFrom, parseInt((e.target as HTMLInputElement).value)];
+                            const positions = [from, parseInt((e.target as HTMLInputElement).value)];
                             if (isNative) {
                                 that.handleSliderMove(positions);
                                 return false;
@@ -398,15 +352,14 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
         /**
          * Dispatch action
          */
-        onChangeSearchAction(
+        filterAction(
             props.environmentId,
             props.store.getCurrentQuery(),
             props.repository,
             props.filterName,
             props.filterField,
             valueFrom,
-            valueTo,
-            this.minMaxAssigned
+            valueTo
         );
     }
 }
