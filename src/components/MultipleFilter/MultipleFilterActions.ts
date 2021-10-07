@@ -4,7 +4,7 @@
 import {Repository} from "apisearch";
 import {Query} from "apisearch";
 import {APISEARCH_DISPATCHER} from "../../Constants";
-import {FILTER_TYPE_RANGE} from "apisearch"
+import {FILTER_TYPE_RANGE} from "apisearch";
 import container from "../../Container";
 import Clone from "../Clone";
 

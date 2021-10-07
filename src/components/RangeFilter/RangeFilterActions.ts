@@ -12,41 +12,17 @@ import Clone from "../Clone";
  * @param filterName
  * @param filterField
  */
-export function addMinMaxAggregation(
+export function aggregationSetup(
     environmentId: string,
     currentQuery: Query,
     filterName: string,
-    filterField: string
+    filterField: string,
 ) {
+
     const clonedQuery = Clone.object(currentQuery);
-    clonedQuery.aggregateByRange(
-        filterName,
-        filterField,
-        ['..'],
-        FILTER_MUST_ALL,
-        'range_min_max'
-    )
-
+    clonedQuery.aggregateByRange(filterName, filterField, ['..'], FILTER_AT_LEAST_ONE, 'range_min_max');
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
-    dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
-        query: clonedQuery,
-    });
-}
 
-/**
- * @param environmentId
- * @param currentQuery
- * @param filterName
- */
-export function deleteMinMaxAggregation(
-    environmentId: string,
-    currentQuery: Query,
-    filterName: string,
-) {
-    const clonedQuery = Clone.object(currentQuery);
-    delete clonedQuery.aggregations[filterName];
-
-    const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
     dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
         query: clonedQuery,
     });
@@ -62,24 +38,18 @@ export function deleteMinMaxAggregation(
  * @param to
  * @param deleteMinMaxAggregation
  */
-export function onChangeSearchAction(
+export function filterAction(
     environmentId: string,
     currentQuery: Query,
     repository: Repository,
     filterName: string,
     filterField: string,
     from: number,
-    to: number,
-    deleteMinMaxAggregation: boolean
+    to: number
 ) {
     const clonedQuery = Clone.object(currentQuery);
-    const realFrom = Math.min(from, to);
-    const realTto = Math.max(from, to);
-    const toWithIncluded = realTto + ']';;
-    clonedQuery.filterByRange(filterName, filterField, [], [realFrom+".."+toWithIncluded], FILTER_AT_LEAST_ONE, FILTER_TYPE_RANGE, false);
-    if (deleteMinMaxAggregation) {
-        delete clonedQuery.aggregations[filterName];
-    }
+    const toWithIncluded = to + ']';;
+    clonedQuery.filterByRange(filterName, filterField, [], [from+".."+toWithIncluded], FILTER_AT_LEAST_ONE, 'range_min_max', false);
 
     clonedQuery.page = 1;
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
