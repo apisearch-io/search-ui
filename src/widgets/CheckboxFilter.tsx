@@ -107,6 +107,10 @@ class CheckboxFilter extends Widget {
             Array.isArray(fieldValues) &&
             fieldValues.length > 0
         ) {
+            if (query.filters === undefined) {
+                query.filters = {};
+            }
+
             query.filters[filterName] = {
                 field: 'indexed_metadata.' + this.component.props.filterField,
                 values: fieldValues,

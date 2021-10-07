@@ -15391,6 +15391,9 @@ var CheckboxFilter = /** @class */ (function (_super) {
             fieldValues !== undefined &&
             Array.isArray(fieldValues) &&
             fieldValues.length > 0) {
+            if (query.filters === undefined) {
+                query.filters = {};
+            }
             query.filters[filterName] = {
                 field: 'indexed_metadata.' + this.component.props.filterField,
                 values: fieldValues,
@@ -15687,6 +15690,9 @@ var MultipleFilter = /** @class */ (function (_super) {
             fieldValues !== undefined &&
             Array.isArray(fieldValues) &&
             fieldValues.length > 0) {
+            if (query.filters === undefined) {
+                query.filters = {};
+            }
             query.filters[filterName] = {
                 field: 'indexed_metadata.' + this.component.props.filterField,
                 values: fieldValues,
@@ -15907,6 +15913,9 @@ var RangeFilter = /** @class */ (function (_super) {
         if (fieldValues !== undefined &&
             Array.isArray(fieldValues) &&
             fieldValues.length > 0) {
+            if (query.filters === undefined) {
+                query.filters = {};
+            }
             query.filters[filterName] = {
                 field: 'indexed_metadata.' + this.component.props.filterField,
                 values: fieldValues,
@@ -16220,7 +16229,7 @@ var SearchInput = /** @class */ (function (_super) {
     SearchInput.prototype.fromUrlObject = function (object, query) {
         var q = object.q;
         if (q !== undefined &&
-            q !== '') {
+            q !== "") {
             query.q = q;
         }
     };
@@ -16434,7 +16443,7 @@ var SortBy = /** @class */ (function (_super) {
      */
     SortBy.prototype.fromUrlObject = function (object, query) {
         if (object.sort !== undefined) {
-            if (query.sort == undefined) {
+            if (query.sort === undefined) {
                 query.sort = [{}];
             }
             if (object.sort === 'score') {

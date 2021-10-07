@@ -157,7 +157,7 @@ class SearchInput extends Widget{
         const q = object.q;
         if (
             q !== undefined &&
-            q !== ''
+            q !== ""
         ) {
             query.q = q;
         }
