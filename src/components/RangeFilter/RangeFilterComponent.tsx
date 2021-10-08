@@ -1,4 +1,4 @@
-import {Aggregation, Filter} from "apisearch";
+import {Filter, ResultAggregation} from "apisearch";
 import {Component, h} from 'preact';
 import {useEffect, useRef} from 'preact/compat';
 import Template from "../Template";
@@ -161,7 +161,7 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
             .getCurrentResult()
             .getAggregation(props.filterName);
 
-        if (aggregation instanceof Aggregation) {
+        if (!(aggregation instanceof ResultAggregation)) {
             return;
         }
 
