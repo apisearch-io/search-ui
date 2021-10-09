@@ -118,11 +118,7 @@
         options: {
             endpoint: 'https://eu1.apisearch.cloud'
         }
-    }, (
-        (parent !== window)
-            ? window.location.hash
-            : document.location.hash)
-    );
+    }, window.location.hash);
 
     // Widgets setup
     ui.addWidgets(

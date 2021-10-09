@@ -27,6 +27,7 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
                 to: null,
                 min: null,
                 max: null,
+                visible: true,
             }
         });
     }
@@ -145,6 +146,8 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
             this.props.onSliderMove(
                 Math.min(values[0], values[1]),
                 Math.max(values[0], values[1]),
+                this.state.min,
+                this.state.max,
                 this.rangeUid,
             );
         }
@@ -180,13 +183,13 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
             : undefined;
 
         const fromTo = this.getFromToFromFilter(filter, min, max);
-
         this.setState(prevState => {
             return {
                 from: fromTo[0],
                 to: fromTo[1],
                 min: min,
                 max: max,
+                visible: ((typeof min === "number") && (typeof max === "number"))
             };
         });
     }
@@ -263,21 +266,25 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
         const isNotNative = !isNative;
         const type = isNative ? 'range' : 'number';
         const eventName = 'onClick';
-        const from = this.state.from;
-        const to = this.state.to;
-        const min = this.state.min;
-        const max = this.state.max;
+        const from = state.from;
+        const to = state.to;
+        const min = state.min;
+        const max = state.max;
 
         if (from && to) {
             props.callback(
                 from,
                 to,
+                min,
+                max,
                 this.rangeUid
             );
         }
 
+        const visibleStyle = state.visible ? '' : 'display:none!important;';
+
         return (
-            <div id={this.rangeUid} className={`as-rangeFilter ${containerClassName}`}>
+            <div id={this.rangeUid} className={`as-rangeFilter ${containerClassName}`} style={visibleStyle}>
                 <Template
                     template={topTemplate}
                     className={`as-rangeFilter__top ${topClassName}`}

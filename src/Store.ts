@@ -292,9 +292,12 @@ class Store extends EventEmitter {
         objectAsJson = (objectAsJson === "{}") ? "" : objectAsJson;
 
         if (!this.isUnderIframe) {
-            this.window.location.replace("#" + objectAsJson);
+
+            const path = window.location.href;
+            const pathWithoutHash = path.split("#", 2)[0];
+            history.replaceState("", "", pathWithoutHash + "#" + objectAsJson);
             if (objectAsJson === "") {
-                history.replaceState("", "", location.pathname);
+                history.replaceState("", "", pathWithoutHash);
             }
         } else {
             this.window.postMessage({
