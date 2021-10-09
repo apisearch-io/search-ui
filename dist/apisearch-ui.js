@@ -11835,9 +11835,11 @@ var Store = /** @class */ (function (_super) {
         var objectAsJson = decodeURI(JSON.stringify(urlObject));
         objectAsJson = (objectAsJson === "{}") ? "" : objectAsJson;
         if (!this.isUnderIframe) {
-            this.window.location.replace("#" + objectAsJson);
+            var path = window.location.href;
+            var pathWithoutHash = path.split("#", 2)[0];
+            history.replaceState("", "", pathWithoutHash + "#" + objectAsJson);
             if (objectAsJson === "") {
-                history.replaceState("", "", location.pathname);
+                history.replaceState("", "", pathWithoutHash);
             }
         }
         else {
@@ -13336,6 +13338,7 @@ var RangeFilterComponent = /** @class */ (function (_super) {
                 to: null,
                 min: null,
                 max: null,
+                visible: true,
             };
         });
         return _this;
@@ -13421,7 +13424,7 @@ var RangeFilterComponent = /** @class */ (function (_super) {
         if (typeof this.props.onSliderMove == 'function' &&
             this.state.from !== undefined &&
             this.state.to !== undefined) {
-            this.props.onSliderMove(Math.min(values[0], values[1]), Math.max(values[0], values[1]), this.rangeUid);
+            this.props.onSliderMove(Math.min(values[0], values[1]), Math.max(values[0], values[1]), this.state.min, this.state.max, this.rangeUid);
         }
     };
     ;
@@ -13456,6 +13459,7 @@ var RangeFilterComponent = /** @class */ (function (_super) {
                 to: fromTo[1],
                 min: min,
                 max: max,
+                visible: ((typeof min === "number") && (typeof max === "number"))
             };
         });
     };
@@ -13520,14 +13524,15 @@ var RangeFilterComponent = /** @class */ (function (_super) {
         var isNotNative = !isNative;
         var type = isNative ? 'range' : 'number';
         var eventName = 'onClick';
-        var from = this.state.from;
-        var to = this.state.to;
-        var min = this.state.min;
-        var max = this.state.max;
+        var from = state.from;
+        var to = state.to;
+        var min = state.min;
+        var max = state.max;
         if (from && to) {
-            props.callback(from, to, this.rangeUid);
+            props.callback(from, to, min, max, this.rangeUid);
         }
-        return (preact_1.h("div", { id: this.rangeUid, className: "as-rangeFilter " + containerClassName },
+        var visibleStyle = state.visible ? '' : 'display:none!important;';
+        return (preact_1.h("div", { id: this.rangeUid, className: "as-rangeFilter " + containerClassName, style: visibleStyle },
             preact_1.h(Template_1["default"], { template: topTemplate, className: "as-rangeFilter__top " + topClassName, dictionary: this.props.dictionary }),
             preact_1.h("div", { className: "as-rangeFilter__wrapper " + wrapperClassName },
                 preact_1.h("input", __assign({ type: type, "class": "as-rangeFilter__from " + props.classNames.input + " as-rangeFilter__" + this.uid + " as-rangeFilter__from__" + this.uid }, props.attributes.from, { value: from, min: min, max: max, step: props.step, onClick: function (e) {
