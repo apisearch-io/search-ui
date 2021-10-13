@@ -13486,6 +13486,19 @@ var RangeFilterComponent = /** @class */ (function (_super) {
         return [realMin, realMax];
     };
     /**
+     * @param previousProps
+     * @param previousState
+     */
+    RangeFilterComponent.prototype.componentDidUpdate = function (previousProps, previousState) {
+        var from = previousState.from;
+        var to = previousState.to;
+        var min = previousState.min;
+        var max = previousState.max;
+        if (from && to) {
+            previousProps.callback(from, to, min, max, this.rangeUid);
+        }
+    };
+    /**
      * @param props
      * @param state
      */
@@ -13528,9 +13541,6 @@ var RangeFilterComponent = /** @class */ (function (_super) {
         var to = state.to;
         var min = state.min;
         var max = state.max;
-        if (from && to) {
-            props.callback(from, to, min, max, this.rangeUid);
-        }
         var visibleStyle = state.visible ? '' : 'display:none!important;';
         return (preact_1.h("div", { id: this.rangeUid, className: "as-rangeFilter " + containerClassName, style: visibleStyle },
             preact_1.h(Template_1["default"], { template: topTemplate, className: "as-rangeFilter__top " + topClassName, dictionary: this.props.dictionary }),

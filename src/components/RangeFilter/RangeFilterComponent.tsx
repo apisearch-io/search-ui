@@ -222,6 +222,28 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
     }
 
     /**
+     * @param previousProps
+     * @param previousState
+     */
+    componentDidUpdate(previousProps: Readonly<RangeFilterProps>, previousState: Readonly<RangeFilterState>) {
+
+        const from = previousState.from;
+        const to = previousState.to;
+        const min = previousState.min;
+        const max = previousState.max;
+
+        if (from && to) {
+            previousProps.callback(
+                from,
+                to,
+                min,
+                max,
+                this.rangeUid
+            );
+        }
+    }
+
+    /**
      * @param props
      * @param state
      */
@@ -270,16 +292,6 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
         const to = state.to;
         const min = state.min;
         const max = state.max;
-
-        if (from && to) {
-            props.callback(
-                from,
-                to,
-                min,
-                max,
-                this.rangeUid
-            );
-        }
 
         const visibleStyle = state.visible ? '' : 'display:none!important;';
 
