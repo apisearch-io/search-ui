@@ -48,8 +48,10 @@ export function filterAction(
     to: number
 ) {
     const clonedQuery = Clone.object(currentQuery);
-    const toWithIncluded = to + ']';;
-    clonedQuery.filterByRange(filterName, filterField, [], [from+".."+toWithIncluded], FILTER_AT_LEAST_ONE, 'range_min_max', false);
+    const realValueFrom = Math.min(from, to);
+    const realValueTo = Math.max(from, to);
+    const toWithIncluded = realValueTo + ']';
+    clonedQuery.filterByRange(filterName, filterField, [], [realValueFrom+".."+toWithIncluded], FILTER_AT_LEAST_ONE, 'range_min_max', false);
 
     clonedQuery.page = 1;
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
