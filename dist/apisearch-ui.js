@@ -13261,9 +13261,10 @@ exports.aggregationSetup = aggregationSetup;
  */
 function filterAction(environmentId, currentQuery, repository, filterName, filterField, from, to) {
     var clonedQuery = Clone_1["default"].object(currentQuery);
-    var toWithIncluded = to + ']';
-    ;
-    clonedQuery.filterByRange(filterName, filterField, [], [from + ".." + toWithIncluded], apisearch_1.FILTER_AT_LEAST_ONE, 'range_min_max', false);
+    var realValueFrom = Math.min(from, to);
+    var realValueTo = Math.max(from, to);
+    var toWithIncluded = realValueTo + ']';
+    clonedQuery.filterByRange(filterName, filterField, [], [realValueFrom + ".." + toWithIncluded], apisearch_1.FILTER_AT_LEAST_ONE, 'range_min_max', false);
     clonedQuery.page = 1;
     var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
     repository
@@ -13419,13 +13420,7 @@ var RangeFilterComponent = /** @class */ (function (_super) {
      * @param values
      */
     RangeFilterComponent.prototype.handleSliderMove = function (values) {
-        var props = this.props;
-        var state = this.state;
-        if (typeof this.props.onSliderMove == 'function' &&
-            this.state.from !== undefined &&
-            this.state.to !== undefined) {
-            this.props.onSliderMove(Math.min(values[0], values[1]), Math.max(values[0], values[1]), this.state.min, this.state.max, this.rangeUid);
-        }
+        this.updateRangeLayer(this.props, this.state, values[0], values[1]);
     };
     ;
     /**
@@ -13490,13 +13485,20 @@ var RangeFilterComponent = /** @class */ (function (_super) {
      * @param previousState
      */
     RangeFilterComponent.prototype.componentDidUpdate = function (previousProps, previousState) {
-        var from = previousState.from;
-        var to = previousState.to;
-        var min = previousState.min;
-        var max = previousState.max;
+        this.updateRangeLayer(previousProps, previousState, previousState.from, previousState.to);
+    };
+    /**
+     * @param props
+     * @param state
+     * @param from
+     * @param to
+     */
+    RangeFilterComponent.prototype.updateRangeLayer = function (props, state, from, to) {
+        var min = state.min;
+        var max = state.max;
         if (typeof from === "number" &&
             typeof to === "number") {
-            previousProps.callback(from, to, min, max, this.rangeUid);
+            props.callback(Math.min(from, to), Math.max(from, to), min, max, this.rangeUid);
         }
     };
     /**

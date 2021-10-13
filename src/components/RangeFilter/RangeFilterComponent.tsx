@@ -134,23 +134,7 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
      */
     handleSliderMove(values) {
 
-        const props = this.props;
-        const state = this.state;
-
-        if (
-            typeof this.props.onSliderMove == 'function' &&
-            this.state.from !== undefined &&
-            this.state.to !== undefined
-
-        ) {
-            this.props.onSliderMove(
-                Math.min(values[0], values[1]),
-                Math.max(values[0], values[1]),
-                this.state.min,
-                this.state.max,
-                this.rangeUid,
-            );
-        }
+        this.updateRangeLayer(this.props, this.state, values[0], values[1]);
     };
 
     /**
@@ -225,20 +209,29 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
      * @param previousProps
      * @param previousState
      */
-    componentDidUpdate(previousProps: Readonly<RangeFilterProps>, previousState: Readonly<RangeFilterState>) {
+    componentDidUpdate(previousProps: Readonly<RangeFilterProps>, previousState: Readonly<RangeFilterState>)
+    {
+        this.updateRangeLayer(previousProps, previousState, previousState.from, previousState.to);
+    }
 
-        const from = previousState.from;
-        const to = previousState.to;
-        const min = previousState.min;
-        const max = previousState.max;
+    /**
+     * @param props
+     * @param state
+     * @param from
+     * @param to
+     */
+    updateRangeLayer(props: Readonly<RangeFilterProps>, state: Readonly<RangeFilterState>, from, to)
+    {
+        const min = state.min;
+        const max = state.max;
 
         if (
             typeof from === "number" &&
             typeof to === "number"
         ) {
-            previousProps.callback(
-                from,
-                to,
+            props.callback(
+                Math.min(from, to),
+                Math.max(from, to),
                 min,
                 max,
                 this.rangeUid
