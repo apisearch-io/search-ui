@@ -232,7 +232,10 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
         const min = previousState.min;
         const max = previousState.max;
 
-        if (from && to) {
+        if (
+            typeof from === "number" &&
+            typeof to === "number"
+        ) {
             previousProps.callback(
                 from,
                 to,
