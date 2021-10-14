@@ -158,11 +158,11 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
             .getCurrentQuery()
             .getFilter(props.filterName);
 
-        const min = metadata['min']
+        const min = typeof metadata['min'] === "number"
             ? Math.floor(metadata['min'])
             : undefined;
 
-        const max = metadata['max']
+        const max = typeof metadata['max'] === "number"
             ? Math.ceil(metadata['max'])
             : undefined;
 

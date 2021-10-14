@@ -22,9 +22,10 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
     constructor() {
         super();
         this.state = {
+            aggregations: [],
+            filters: [],
             viewLimit: 0,
-            aggregations: []
-        }
+        };
     }
 
     /**
@@ -48,11 +49,11 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
          * Set view items limit
          */
         const isViewLimitProperlySet = (viewLimit && viewLimit < fetchLimit);
-        this.setState(prevState => {
+        this.setState((prevState) => {
             return {
                viewLimit: (isViewLimitProperlySet)
                    ? viewLimit
-                   : fetchLimit
+                   : fetchLimit,
            };
         });
 
@@ -84,16 +85,21 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
 
         const filterName = props.filterName;
         if (props.store.getCurrentResult() == null) {
-            this.setState(prevState => {
+            this.setState((prevState) => {
                 return {
-                    aggregations: []
+                    aggregations: [],
+                    filters: [],
                 };
             });
 
             return;
         }
 
-        const aggregation = props.store.getCurrentResult().getAggregation(filterName);
+        const result = props.store.getCurrentResult();
+        const aggregation = result.getAggregation(filterName);
+        const query = props.store.getCurrentQuery();
+        const filter = query.getFilter(filterName);
+
         if (aggregation && typeof aggregation.getCounters === "function") {
 
             /**
@@ -118,9 +124,10 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
                 ]
                 : countersAsArray;
 
-            this.setState(prevState => {
+            this.setState((prevState) => {
                 return {
                     aggregations: aggregations,
+                    filters: filter ? filter.getValues() : [],
                 };
             });
         }
@@ -150,7 +157,7 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
             ? Object.values(aggregation.getActiveElements())
             : [];
 
-        const valuesAsString = currentActiveFilterValues.map(element => {
+        const valuesAsString = currentActiveFilterValues.map((element) => {
             return String(element);
         });
 
@@ -170,13 +177,13 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
             ),
             manageCurrentFilterItems(
                 selectedFilterAsString,
-                valuesAsString
+                valuesAsString,
             ),
             applicationType,
             sortBy,
             fetchLimit,
             ranges,
-            labels
+            labels,
         );
     };
 
@@ -187,7 +194,7 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
 
         const viewLimit = this.state.aggregations.length;
 
-        this.setState(prevState => {
+        this.setState((prevState) => {
             return {viewLimit};
         });
     };
@@ -197,7 +204,7 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
      */
     handleShowLess = () => {
         const viewLimit = this.props.viewLimit;
-        this.setState(prevState => {
+        this.setState((prevState) => {
             return {viewLimit};
         });
     };
@@ -209,6 +216,7 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
      */
     render() {
         const props = this.props;
+        const state = this.state;
         const viewLimit = props.viewLimit;
         const fetchLimit = props.fetchLimit;
 
@@ -232,14 +240,51 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
         /**
          * Get aggregation items
          */
-        const allItems = this.state.aggregations;
-        const allItemsLength = allItems.length;
-        const items = allItems.slice(0, this.state.viewLimit);
         const that = this;
+        const itemsIds = {};
+        const allItems = this.state.aggregations.map((item: Counter) => {
+            const uid = Math.floor(Math.random() * 10000000000);
+            const values = item.getValues();
+            values.name = labels[values.name] ? labels[values.name] : values.name;
+            itemsIds[values.id] = true;
+            return {
+                isActive: item.isUsed(),
+                n: item.getN(),
+                uid,
+                values,
+            };
+        });
 
+        /**
+         * Shadow filters. These filters are not part of the aggregation list but are applied. Should always be listed
+         * first
+         */
+        if (state.filters.length > 0) {
+            state.filters.forEach((filter) => {
+                if (itemsIds[filter] === undefined) {
+                    const uid = Math.floor(Math.random() * 10000000000);
+                    allItems.unshift({
+                        isActive: true,
+                        n: 0,
+                        uid,
+                        values: {
+                            id: filter,
+                            name: filter,
+                        },
+                    });
+                }
+            });
+        }
+
+        /**
+         * Get existing applied filters if they exist
+         */
         if (allItems.length === 0) {
             return null;
         }
+
+        const items = allItems.slice(0, this.state.viewLimit);
+        const allItemsLength = allItems.length;
 
         /**
          * Check available view limit
@@ -261,24 +306,15 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
                 <div className={`as-multipleFilter__itemsList ${itemsListClassName}`}>
                     <ul>
                         {items.map((item) => {
-                            const values = item.getValues();
-                            values.name = labels[values.name] ? labels[values.name] : values.name;
-                            const uid = Math.floor(Math.random() * 10000000000);
-                            const reducedTemplateData = {
-                                n: item.getN(),
-                                isActive: item.isUsed(),
-                                values: values,
-                                uid: uid,
-                            };
-                            const formattedTemplateData = formatData(reducedTemplateData);
+                            const formattedTemplateData = formatData(item);
                             return (
                                 <li
                                     className={
                                         `as-multipleFilter__item ` +
                                         `${itemClassName} ` +
-                                        `${(item.used) ? activeClassName : ''}`
+                                        `${(item.isActive) ? activeClassName : ""}`
                                     }
-                                    onClick={function(e) {
+                                    onClick={(e) => {
                                         e.stopPropagation();
                                         e.preventDefault();
                                         that.handleClick(item.values.id);
@@ -290,7 +326,7 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
                                         dictionary={this.props.dictionary}
                                     />
                                 </li>
-                            )
+                            );
                         })}
                     </ul>
                 </div>
@@ -308,7 +344,7 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
                     /> : null
                 }
             </div>
-        )
+        );
     }
 }
 
