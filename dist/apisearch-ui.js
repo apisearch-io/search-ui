@@ -12654,8 +12654,9 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
             });
         };
         _this.state = {
+            aggregations: [],
+            filters: [],
             viewLimit: 0,
-            aggregations: []
         };
         return _this;
     }
@@ -12682,7 +12683,7 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
             return {
                 viewLimit: (isViewLimitProperlySet)
                     ? viewLimit
-                    : fetchLimit
+                    : fetchLimit,
             };
         });
         /**
@@ -12702,12 +12703,16 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
         if (props.store.getCurrentResult() == null) {
             this.setState(function (prevState) {
                 return {
-                    aggregations: []
+                    aggregations: [],
+                    filters: [],
                 };
             });
             return;
         }
-        var aggregation = props.store.getCurrentResult().getAggregation(filterName);
+        var result = props.store.getCurrentResult();
+        var aggregation = result.getAggregation(filterName);
+        var query = props.store.getCurrentQuery();
+        var filter = query.getFilter(filterName);
         if (aggregation && typeof aggregation.getCounters === "function") {
             /**
              * Getting aggregation from aggregations
@@ -12724,6 +12729,7 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
             this.setState(function (prevState) {
                 return {
                     aggregations: aggregations_1,
+                    filters: filter ? filter.getValues() : [],
                 };
             });
         }
@@ -12736,6 +12742,7 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
     MultipleFilterComponent.prototype.render = function () {
         var _this = this;
         var props = this.props;
+        var state = this.state;
         var viewLimit = props.viewLimit;
         var fetchLimit = props.fetchLimit;
         var containerClassName = props.classNames.container;
@@ -12755,13 +12762,48 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
         /**
          * Get aggregation items
          */
-        var allItems = this.state.aggregations;
-        var allItemsLength = allItems.length;
-        var items = allItems.slice(0, this.state.viewLimit);
         var that = this;
+        var itemsIds = {};
+        var allItems = this.state.aggregations.map(function (item) {
+            var uid = Math.floor(Math.random() * 10000000000);
+            var values = item.getValues();
+            values.name = labels[values.name] ? labels[values.name] : values.name;
+            itemsIds[values.id] = true;
+            return {
+                isActive: item.isUsed(),
+                n: item.getN(),
+                uid: uid,
+                values: values,
+            };
+        });
+        /**
+         * Shadow filters. These filters are not part of the aggregation list but are applied. Should always be listed
+         * first
+         */
+        if (state.filters.length > 0) {
+            state.filters.forEach(function (filter) {
+                if (itemsIds[filter] === undefined) {
+                    var uid = Math.floor(Math.random() * 10000000000);
+                    allItems.unshift({
+                        isActive: true,
+                        n: 0,
+                        uid: uid,
+                        values: {
+                            id: filter,
+                            name: filter,
+                        },
+                    });
+                }
+            });
+        }
+        /**
+         * Get existing applied filters if they exist
+         */
         if (allItems.length === 0) {
             return null;
         }
+        var items = allItems.slice(0, this.state.viewLimit);
+        var allItemsLength = allItems.length;
         /**
          * Check available view limit
          */
@@ -12772,19 +12814,10 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
             preact_1.h(Template_1["default"], { template: topTemplate, className: "as-multipleFilter__top " + topClassName, dictionary: this.props.dictionary }),
             preact_1.h("div", { className: "as-multipleFilter__itemsList " + itemsListClassName },
                 preact_1.h("ul", null, items.map(function (item) {
-                    var values = item.getValues();
-                    values.name = labels[values.name] ? labels[values.name] : values.name;
-                    var uid = Math.floor(Math.random() * 10000000000);
-                    var reducedTemplateData = {
-                        n: item.getN(),
-                        isActive: item.isUsed(),
-                        values: values,
-                        uid: uid,
-                    };
-                    var formattedTemplateData = formatData(reducedTemplateData);
+                    var formattedTemplateData = formatData(item);
                     return (preact_1.h("li", { className: "as-multipleFilter__item " +
                             (itemClassName + " ") +
-                            ("" + ((item.used) ? activeClassName : '')), onClick: function (e) {
+                            ("" + ((item.isActive) ? activeClassName : "")), onClick: function (e) {
                             e.stopPropagation();
                             e.preventDefault();
                             that.handleClick(item.values.id);
@@ -13441,10 +13474,10 @@ var RangeFilterComponent = /** @class */ (function (_super) {
             .store
             .getCurrentQuery()
             .getFilter(props.filterName);
-        var min = metadata['min']
+        var min = typeof metadata['min'] === "number"
             ? Math.floor(metadata['min'])
             : undefined;
-        var max = metadata['max']
+        var max = typeof metadata['max'] === "number"
             ? Math.ceil(metadata['max'])
             : undefined;
         var fromTo = this.getFromToFromFilter(filter, min, max);
