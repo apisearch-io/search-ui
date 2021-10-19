@@ -16,6 +16,7 @@ class Store extends EventEmitter {
     private currentVisibleResults: boolean;
     private readonly window: Window;
     private readonly isUnderIframe: boolean;
+    private doNotCleanUrlHashAtFirst: boolean = false;
 
     /**
      * @param coordinate
@@ -254,16 +255,22 @@ class Store extends EventEmitter {
             return query;
         }
 
-        const urlObject = (
-            this.urlHash !== undefined &&
-            this.urlHash !== null &&
-            this.urlHash !== "" &&
-            this.urlHash !== "/"
-        )
-            ? JSON.parse(decodeURI(this.urlHash))
-            : {};
         const queryAsObject = query.toArray();
-        this.emit("fromUrlObject", urlObject, queryAsObject);
+        try {
+            const urlObject = (
+                this.urlHash !== undefined &&
+                this.urlHash !== null &&
+                this.urlHash !== "" &&
+                this.urlHash !== "/"
+            )
+                ? JSON.parse(decodeURI(this.urlHash))
+                : {};
+
+            this.emit("fromUrlObject", urlObject, queryAsObject);
+        } catch (e) {
+            // Silent pass
+            this.doNotCleanUrlHashAtFirst = true;
+        }
 
         return Query.createFromArray(queryAsObject);
     }
@@ -300,10 +307,14 @@ class Store extends EventEmitter {
                 history.replaceState("", "", pathWithoutHash);
             }
         } else {
-            this.window.postMessage({
-                name: "apisearch_replace_hash",
-                hash: objectAsJson,
-            }, "*");
+            if (!this.doNotCleanUrlHashAtFirst) {
+                this.window.postMessage({
+                    name: "apisearch_replace_hash",
+                    hash: objectAsJson,
+                }, "*");
+            }
+
+            this.doNotCleanUrlHashAtFirst = false;
         }
     }
 }
