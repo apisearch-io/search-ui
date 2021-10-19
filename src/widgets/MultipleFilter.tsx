@@ -158,7 +158,11 @@ class MultipleFilter extends Widget {
      */
     public reset(query: any) {
         const filterName = this.component.props.filterName;
-        if (query.filters[filterName] !== undefined) {
+        if (
+            query.filters !== undefined &&
+            typeof query.filters === "object" &&
+            query.filters[filterName] !== undefined
+        ) {
             delete query.filters[filterName];
         }
     }

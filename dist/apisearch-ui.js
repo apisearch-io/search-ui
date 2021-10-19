@@ -11637,6 +11637,7 @@ var Store = /** @class */ (function (_super) {
     function Store(coordinate, minScore, hash, userId, generateRandomSessionUUID) {
         var _this = _super.call(this) || this;
         _this.withHash = false;
+        _this.doNotCleanUrlHashAtFirst = false;
         _this.dirty = true;
         var initialQuery = Store.loadInitialQuery(coordinate, userId);
         _this.window = window.top;
@@ -11807,14 +11808,20 @@ var Store = /** @class */ (function (_super) {
         if (!this.withHash) {
             return query;
         }
-        var urlObject = (this.urlHash !== undefined &&
-            this.urlHash !== null &&
-            this.urlHash !== "" &&
-            this.urlHash !== "/")
-            ? JSON.parse(decodeURI(this.urlHash))
-            : {};
         var queryAsObject = query.toArray();
-        this.emit("fromUrlObject", urlObject, queryAsObject);
+        try {
+            var urlObject = (this.urlHash !== undefined &&
+                this.urlHash !== null &&
+                this.urlHash !== "" &&
+                this.urlHash !== "/")
+                ? JSON.parse(decodeURI(this.urlHash))
+                : {};
+            this.emit("fromUrlObject", urlObject, queryAsObject);
+        }
+        catch (e) {
+            // Silent pass
+            this.doNotCleanUrlHashAtFirst = true;
+        }
         return apisearch_1.Query.createFromArray(queryAsObject);
     };
     /**
@@ -11843,10 +11850,13 @@ var Store = /** @class */ (function (_super) {
             }
         }
         else {
-            this.window.postMessage({
-                name: "apisearch_replace_hash",
-                hash: objectAsJson,
-            }, "*");
+            if (!this.doNotCleanUrlHashAtFirst) {
+                this.window.postMessage({
+                    name: "apisearch_replace_hash",
+                    hash: objectAsJson,
+                }, "*");
+            }
+            this.doNotCleanUrlHashAtFirst = false;
         }
     };
     return Store;
@@ -15398,7 +15408,9 @@ var CheckboxFilter = /** @class */ (function (_super) {
      */
     CheckboxFilter.prototype.reset = function (query) {
         var filterName = this.component.props.filterName;
-        if (query.filters[filterName] !== undefined) {
+        if (query.filters !== undefined &&
+            typeof query.filters === "object" &&
+            query.filters[filterName] !== undefined) {
             delete query.filters[filterName];
         }
     };
@@ -15697,7 +15709,9 @@ var MultipleFilter = /** @class */ (function (_super) {
      */
     MultipleFilter.prototype.reset = function (query) {
         var filterName = this.component.props.filterName;
-        if (query.filters[filterName] !== undefined) {
+        if (query.filters !== undefined &&
+            typeof query.filters === "object" &&
+            query.filters[filterName] !== undefined) {
             delete query.filters[filterName];
         }
     };
@@ -15919,7 +15933,9 @@ var RangeFilter = /** @class */ (function (_super) {
      */
     RangeFilter.prototype.reset = function (query) {
         var filterName = this.component.props.filterName;
-        if (query.filters[filterName] !== undefined) {
+        if (query.filters !== undefined &&
+            typeof query.filters === "object" &&
+            query.filters[filterName] !== undefined) {
             delete query.filters[filterName];
         }
     };
