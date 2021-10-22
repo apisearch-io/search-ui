@@ -179,6 +179,17 @@ export default class ApisearchUI {
     }
 
     /**
+     *
+     */
+    public normalizeQuery() {
+        this.activeWidgets.map((widget) => {
+            widget.normalizeQuery(
+                this.environmentId,
+                this.store.getCurrentQuery());
+        });
+    }
+
+    /**
      * @param query
      * @param object
      */
@@ -246,6 +257,7 @@ export default class ApisearchUI {
         dispatcher.registerListener("RENDER_INITIAL_DATA", (payload) => apisearchUI.store.renderInitialData(payload));
         dispatcher.registerListener("RENDER_FETCHED_DATA", (payload) => apisearchUI.store.renderFetchedData(payload));
         dispatcher.registerListener("UPDATE_APISEARCH_SETUP", (payload) => apisearchUI.store.updateApisearchSetup(payload));
+        dispatcher.registerListener("NORMALIZE_QUERY", (payload) => apisearchUI.normalizeQuery());
 
         /**
          * Add widgets

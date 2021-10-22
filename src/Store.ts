@@ -134,8 +134,7 @@ class Store extends EventEmitter {
     /**
      * @param payload
      */
-    public renderInitialData(payload: any)
-    {
+    public renderInitialData(payload: any) {
         const { result, query, _ } = payload;
 
         this.dirty = false;
@@ -143,14 +142,13 @@ class Store extends EventEmitter {
         this.currentQuery = query;
         this.currentVisibleResults = query !== undefined;
 
+        this.emit("render");
+
         this.replaceUrl(
             query,
             result,
             this.currentVisibleResults,
-            false,
         );
-
-        this.emit("render");
     }
 
     /**
@@ -167,13 +165,13 @@ class Store extends EventEmitter {
             this.currentVisibleResults = visibleResults;
         }
 
+        this.emit("render");
+
         this.replaceUrl(
             query,
             result,
             visibleResults,
         );
-
-        this.emit("render");
     }
 
     /**
@@ -205,6 +203,10 @@ class Store extends EventEmitter {
             ? this.loadQuery(this.currentQuery)
             : this.currentQuery;
 
+
+        dispatcher.dispatch("NORMALIZE_QUERY", {
+            query: this.currentQuery,
+        });
         /**
          * In initial query, we must delete user
          */
@@ -216,7 +218,7 @@ class Store extends EventEmitter {
             .then((result) => {
                 dispatcher.dispatch("RENDER_INITIAL_DATA", {
                     query: this.currentQuery,
-                    result: result,
+                    result,
                 });
             });
     }
@@ -280,13 +282,11 @@ class Store extends EventEmitter {
      * @param query
      * @param result
      * @param visibleResults
-     * @param isFirst
      */
     private replaceUrl(
         query: Query,
         result: Result,
         visibleResults: boolean|undefined,
-        isFirst: boolean|undefined = null,
     ) {
         if (!this.withHash) {
             return;
@@ -297,6 +297,7 @@ class Store extends EventEmitter {
         this.emit("toUrlObject", queryAsObject, urlObject);
         let objectAsJson = decodeURI(JSON.stringify(urlObject));
         objectAsJson = (objectAsJson === "{}") ? "" : objectAsJson;
+        objectAsJson = encodeURI(objectAsJson);
 
         if (!this.isUnderIframe) {
 

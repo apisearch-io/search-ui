@@ -227,7 +227,8 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
 
         if (
             typeof from === "number" &&
-            typeof to === "number"
+            typeof to === "number" &&
+            typeof props.callback === "function"
         ) {
             props.callback(
                 Math.min(from, to),

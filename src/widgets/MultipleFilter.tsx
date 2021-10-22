@@ -1,5 +1,7 @@
-import {Repository} from "apisearch";
-import {h, render} from 'preact';
+import {FILTER_MUST_ALL, FILTER_TYPE_FIELD, Repository} from "apisearch";
+import {h, render} from "preact";
+import {getShadowFilterValuesFromQuery, isFilterAvailable} from "../components/MultipleFilter/Helpers";
+import {modifyQueryAggregationWithProperLevelValue} from "../components/MultipleFilter/MultipleFilterActions";
 import MultipleFilterComponent from "../components/MultipleFilter/MultipleFilterComponent";
 import Store from "../Store";
 import Widget from "./Widget";
@@ -8,6 +10,9 @@ import Widget from "./Widget";
  * Multiple Filter
  */
 class MultipleFilter extends Widget {
+
+    private filterField: string;
+    private aggregationField: string;
 
     /**
      * Filtername
@@ -45,11 +50,13 @@ class MultipleFilter extends Widget {
     }) {
         super();
         this.target = target;
+        this.filterField = filterField;
+        this.aggregationField = aggregationField ?? filterField;
         this.component = <MultipleFilterComponent
             target={target}
             filterName={filterName}
-            filterField={filterField}
-            aggregationField={aggregationField}
+            filterField={this.filterField}
+            aggregationField={this.aggregationField}
             applicationType={applicationType}
             fetchLimit={fetchLimit}
             viewLimit={viewLimit}
@@ -79,21 +86,20 @@ class MultipleFilter extends Widget {
         environmentId: string,
         store: Store,
         repository: Repository,
-        dictionary: { [key: string]: string; }
+        dictionary: { [key: string]: string; },
     ) {
         this.component.props = {
             ...this.component.props,
-            environmentId: environmentId,
-            repository: repository,
-            store: store,
-            dictionary: dictionary
+            dictionary,
+            environmentId,
+            repository,
+            store,
         };
 
-        let targetNode = document.querySelector(this.target);
         render(
             this.component,
-            targetNode
-        )
+            document.querySelector(this.target),
+        );
     }
 
     /**
@@ -102,9 +108,8 @@ class MultipleFilter extends Widget {
      */
     public toUrlObject(
         query: any,
-        object: any
-    )
-    {
+        object: any,
+    ) {
         const filterName = this.component.props.filterName;
         const aggregation = query.aggregations[filterName];
         if (
@@ -112,9 +117,20 @@ class MultipleFilter extends Widget {
             query.filters !== undefined &&
             query.filters[filterName] !== undefined
         ) {
-            const filterValues = query.filters[filterName].values;
+            const filter = query.filters[filterName];
+            const filterValues = filter.values;
             if (filterValues.length > 0) {
-                object[filterName] = filterValues;
+                if (filter.application_type === 6) {
+
+                    const levelsValues = getShadowFilterValuesFromQuery(query, filterName, false);
+                    object[filterName] = {
+                        l: levelsValues,
+                        v: filter.values,
+                    };
+
+                } else {
+                    object[filterName] = filterValues;
+                }
             }
         }
     }
@@ -125,30 +141,55 @@ class MultipleFilter extends Widget {
      */
     public fromUrlObject(
         object: any,
-        query: any
-    )
-    {
+        query: any,
+    ) {
         const filterName = this.component.props.filterName;
         const aggregation = query.aggregations[filterName];
-        const fieldValues = object[filterName];
+        let fieldValues = object[filterName];
         const rangesValues = Object.keys(this.component.props.ranges);
-        const filterType = (rangesValues.length > 0) ? 'range' : 'field';
+        const filterType = (rangesValues.length > 0) ? "range" : "field";
 
         if (
             aggregation !== undefined &&
             fieldValues !== undefined &&
-            Array.isArray(fieldValues) &&
-            fieldValues.length > 0
+            (
+                Array.isArray(fieldValues) && (fieldValues.length > 0) ||
+                (typeof fieldValues === "object") && (Object.keys(fieldValues).length > 0)
+            )
         ) {
             if (query.filters === undefined) {
                 query.filters = {};
             }
 
+            const applicationType = this.component.props.applicationType;
+            let fieldName = "indexed_metadata." + this.component.props.filterField;
+            if (applicationType === 6) {
+                const originalFieldValues = fieldValues;
+                fieldValues = originalFieldValues["v"];
+                const leveledValues = originalFieldValues["l"];
+
+                for (let it = 0; it < leveledValues.length; it++) {
+                    const level = it + 1;
+                    const fieldNameWithoutPrefix = fieldName.substr(17);
+                    const leveledFilterName = fieldNameWithoutPrefix + "_level_" + level;
+                    const leveledFieldName = "indexed_metadata." + leveledFilterName;
+
+                    query.filters[leveledFilterName] = {
+                        application_type: applicationType,
+                        field: leveledFieldName,
+                        filter_type: FILTER_TYPE_FIELD,
+                        values: [leveledValues[it]],
+                    };
+                }
+
+                fieldName = fieldName + "_level_" + (leveledValues.length + 1);
+            }
+
             query.filters[filterName] = {
-                field: 'indexed_metadata.' + this.component.props.filterField,
+                application_type: applicationType,
+                field: fieldName,
+                filter_type: filterType,
                 values: fieldValues,
-                application_type: this.component.props.application_type,
-                filter_type: filterType
             };
         }
     }
@@ -166,6 +207,26 @@ class MultipleFilter extends Widget {
             delete query.filters[filterName];
         }
     }
+
+    /**
+     * @param environmentId
+     * @param query
+     */
+    public normalizeQuery(
+        environmentId: string,
+        query: any,
+    ) {
+        const filterName = this.component.props.filterName;
+        if (isFilterAvailable(query, filterName, 6)) {
+            modifyQueryAggregationWithProperLevelValue(
+                environmentId,
+                query,
+                filterName,
+                this.filterField,
+                this.aggregationField,
+            );
+        }
+    }
 }
 
 /**
@@ -173,4 +234,4 @@ class MultipleFilter extends Widget {
  *
  * @param settings
  */
-export default settings => new MultipleFilter(settings);
+export default (settings) => new MultipleFilter(settings);

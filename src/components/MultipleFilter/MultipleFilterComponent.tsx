@@ -1,7 +1,12 @@
 import { h, Component } from 'preact';
 
-import { aggregationSetup, filterAction } from "./MultipleFilterActions";
-import { manageCurrentFilterItems } from "./Helpers";
+import {aggregationSetup, filterAction, modifyQueryAggregationWithProperLevelValue} from "./MultipleFilterActions";
+import {
+    getFilterValuesFromQuery,
+    getShadowFilterValuesFromQuery,
+    manageCurrentFilterItems,
+    wasElementRecentlySelected,
+} from "./Helpers";
 
 import Template from "../Template";
 import ShowMoreComponent from "./ShowMoreComponent";
@@ -9,12 +14,14 @@ import {defaultItemTemplate} from "./defaultTemplates";
 import {MultipleFilterProps} from "./MultipleFilterProps";
 import {MultipleFilterState} from "./MultipleFilterState";
 import {Counter} from 'apisearch';
-import {ResultAggregation} from 'apisearch';
 
 /**
  * Filter Component
  */
 class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFilterState> {
+
+    private currentLevel: number = 0;
+    private propsReceived: boolean = false;
 
     /**
      * Constructor
@@ -23,7 +30,6 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
         super();
         this.state = {
             aggregations: [],
-            filters: [],
             viewLimit: 0,
         };
     }
@@ -31,25 +37,19 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
     /**
      * Components will mount
      */
-    componentWillMount() {
+    public componentWillMount() {
 
         const props = this.props;
-        const environmentId = props.environmentId;
-        const filterName = props.filterName;
-        const filterField = props.filterField;
-        const aggregationField = props.aggregationField;
+        let aggregationField = props.aggregationField ?? props.filterField;
         const applicationType = props.applicationType;
-        const sortBy = props.sortBy;
-        const ranges = props.ranges;
         const fetchLimit = props.fetchLimit;
         const viewLimit = props.viewLimit;
-        const currentQuery = props.store.getCurrentQuery();
 
         /**
          * Set view items limit
          */
         const isViewLimitProperlySet = (viewLimit && viewLimit < fetchLimit);
-        this.setState((prevState) => {
+        this.setState((_) => {
             return {
                viewLimit: (isViewLimitProperlySet)
                    ? viewLimit
@@ -57,22 +57,23 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
            };
         });
 
+        if (applicationType === 6) {
+            aggregationField = aggregationField + "_level_1";
+        }
+
         /**
          * Dispatch action
          */
         aggregationSetup(
-            environmentId,
-            currentQuery,
-            filterName,
-            (
-                aggregationField
-                    ? aggregationField
-                    : filterField
-            ),
+            props.environmentId,
+            props.store.getCurrentQuery(),
+            props.filterName,
+            props.filterField,
+            aggregationField,
             applicationType,
-            sortBy,
+            props.sortBy,
             fetchLimit,
-            ranges
+            props.ranges,
         );
     }
 
@@ -81,7 +82,7 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
      *
      * @param props
      */
-    componentWillReceiveProps(props) {
+    public componentWillReceiveProps(props) {
 
         const filterName = props.filterName;
         if (props.store.getCurrentResult() == null) {
@@ -97,8 +98,6 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
 
         const result = props.store.getCurrentResult();
         const aggregation = result.getAggregation(filterName);
-        const query = props.store.getCurrentQuery();
-        const filter = query.getFilter(filterName);
 
         if (aggregation && typeof aggregation.getCounters === "function") {
 
@@ -126,24 +125,36 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
 
             this.setState((prevState) => {
                 return {
-                    aggregations: aggregations,
-                    filters: filter ? filter.getValues() : [],
+                    aggregations,
                 };
             });
+        }
+
+        if (
+            props.applicationType === 6 &&
+            this.propsReceived === false
+        ) {
+            const filter = props.store.getCurrentQuery().getFilter(filterName);
+            this.currentLevel = (filter === undefined || filter === null)
+                ? this.currentLevel
+                : filter.values
+                    ? (filter.values.length + 1)
+                    : this.currentLevel;
+
+            this.propsReceived = true;
         }
     }
 
     /**
-     * Handle click
-     *
      * @param selectedFilter
+     * @param level
      */
-    handleClick = (selectedFilter) => {
+    public handleClick = (selectedFilter, level) => {
         const props = this.props;
         const environmentId = props.environmentId;
         const filterName = props.filterName;
-        const filterField = props.filterField;
-        const aggregationField = props.aggregationField;
+        let filterField = props.filterField;
+        let aggregationField = props.aggregationField ?? filterField;
         const applicationType = props.applicationType;
         const sortBy = props.sortBy;
         const ranges = props.ranges;
@@ -151,15 +162,46 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
         const fetchLimit = props.fetchLimit;
         const repository = props.repository;
         const currentQuery = props.store.getCurrentQuery();
-        const aggregation = props.store.getCurrentResult().getAggregation(filterName);
+        // const aggregation = props.store.getCurrentResult().getAggregation(filterName);
         const selectedFilterAsString = String(selectedFilter);
-        const currentActiveFilterValues = aggregation instanceof ResultAggregation
-            ? Object.values(aggregation.getActiveElements())
-            : [];
 
-        const valuesAsString = currentActiveFilterValues.map((element) => {
-            return String(element);
-        });
+        /*
+        const currentActiveFilterValues =
+            aggregation instanceof ResultAggregation &&
+            (aggregation.getActiveElements() !== null)
+                ? Object.values(aggregation.getActiveElements())
+                : [];
+
+         */
+
+        const valuesAsString = (applicationType === 6)
+            ? getShadowFilterValuesFromQuery(currentQuery, filterName, true)
+            : getFilterValuesFromQuery(currentQuery, filterName);
+
+        const wasSelected = wasElementRecentlySelected(selectedFilterAsString, valuesAsString);
+        let filterItems = manageCurrentFilterItems(
+            selectedFilterAsString,
+            valuesAsString,
+            wasSelected,
+            (applicationType !== 6),
+        );
+
+        let currentLevel = level;
+        if (applicationType === 6) {
+            currentLevel = wasSelected ? currentLevel : (currentLevel - 1);
+        }
+
+        let shadowLeveledFilters = [];
+        const originalFilterField = filterField;
+        if (applicationType === 6) {
+            filterField = filterField + "_level_" + (currentLevel);
+            aggregationField = aggregationField + "_level_" + (currentLevel + 1);
+            filterItems = filterItems.slice(0, currentLevel);
+            shadowLeveledFilters = filterItems.slice(0, -1);
+            filterItems = filterItems.slice(-1);
+        }
+
+        this.currentLevel = currentLevel;
 
         /**
          * Dispatch filter action
@@ -170,53 +212,47 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
             repository,
             filterName,
             filterField,
-            (
-                aggregationField
-                    ? aggregationField
-                    : filterField
-            ),
-            manageCurrentFilterItems(
-                selectedFilterAsString,
-                valuesAsString,
-            ),
+            aggregationField,
+            filterItems,
             applicationType,
             sortBy,
             fetchLimit,
             ranges,
             labels,
+            shadowLeveledFilters,
+            originalFilterField,
         );
-    };
+    }
 
     /**
      * Handle show more
      */
-    handleShowMore = () => {
+    public handleShowMore = () => {
 
         const viewLimit = this.state.aggregations.length;
 
         this.setState((prevState) => {
             return {viewLimit};
         });
-    };
+    }
 
     /**
      * Handle show less
      */
-    handleShowLess = () => {
+    public handleShowLess = () => {
         const viewLimit = this.props.viewLimit;
         this.setState((prevState) => {
             return {viewLimit};
         });
-    };
+    }
 
     /**
      * Render
      *
      * @return {any}
      */
-    render() {
+    public render() {
         const props = this.props;
-        const state = this.state;
         const viewLimit = props.viewLimit;
         const fetchLimit = props.fetchLimit;
 
@@ -231,6 +267,7 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
         const itemTemplate = props.template.item;
         const showMoreTemplate = props.template.showMore;
         const showLessTemplate = props.template.showLess;
+        const currentQuery = props.store.getCurrentQuery();
 
         const formatData = props.formatData;
         const labels = Object.keys(props.ranges).length > 0
@@ -242,7 +279,7 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
          */
         const that = this;
         const itemsIds = {};
-        const allItems = this.state.aggregations.map((item: Counter) => {
+        let allItems = this.state.aggregations.map((item: Counter) => {
             const uid = Math.floor(Math.random() * 10000000000);
             const values = item.getValues();
             values.name = labels[values.name] ? labels[values.name] : values.name;
@@ -259,11 +296,16 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
          * Shadow filters. These filters are not part of the aggregation list but are applied. Should always be listed
          * first
          */
-        if (state.filters.length > 0) {
-            state.filters.forEach((filter) => {
+        const appliedFilters = (props.applicationType === 6)
+            ? getShadowFilterValuesFromQuery(currentQuery, props.filterName, true)
+            : getFilterValuesFromQuery(currentQuery, props.filterName);
+
+        if (appliedFilters.length > 0) {
+            const zeroItemsFilters = [];
+            appliedFilters.forEach((filter) => {
                 if (itemsIds[filter] === undefined) {
                     const uid = Math.floor(Math.random() * 10000000000);
-                    allItems.unshift({
+                    zeroItemsFilters.push({
                         isActive: true,
                         n: 0,
                         uid,
@@ -274,6 +316,8 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
                     });
                 }
             });
+
+            allItems = [...zeroItemsFilters, ...allItems];
         }
 
         /**
@@ -285,6 +329,7 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
 
         const items = allItems.slice(0, this.state.viewLimit);
         const allItemsLength = allItems.length;
+        let levelCounter = 1;
 
         /**
          * Check available view limit
@@ -307,6 +352,8 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
                     <ul>
                         {items.map((item) => {
                             const formattedTemplateData = formatData(item);
+                            const level = Math.min(levelCounter, this.currentLevel + 1);
+                            levelCounter++;
                             return (
                                 <li
                                     className={
@@ -317,7 +364,10 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         e.preventDefault();
-                                        that.handleClick(item.values.id);
+                                        that.handleClick(
+                                            item.values.id,
+                                            level,
+                                        );
                                     }}
                                 >
                                     <Template

@@ -1,7 +1,7 @@
 /**
  * Multiple filter actions
  */
-import {Repository} from "apisearch";
+import {FILTER_AT_LEAST_ONE, Repository} from "apisearch";
 import {Query} from "apisearch";
 import {APISEARCH_DISPATCHER} from "../../Constants";
 import {FILTER_TYPE_RANGE} from "apisearch";
@@ -14,6 +14,7 @@ import Clone from "../Clone";
  * @param environmentId
  * @param currentQuery
  * @param filterName
+ * @param filterField
  * @param aggregationField
  * @param applicationType
  * @param sortBy
@@ -24,11 +25,12 @@ export function aggregationSetup(
     environmentId: string,
     currentQuery: Query,
     filterName: string,
+    filterField: string,
     aggregationField: string,
     applicationType: number,
     sortBy: string[],
     fetchLimit: number,
-    ranges: any
+    ranges: any,
 ) {
     const clonedQuery = Clone.object(currentQuery);
     const rangesValues = Object.keys(ranges);
@@ -75,6 +77,8 @@ export function aggregationSetup(
  * @param fetchLimit
  * @param ranges
  * @param labels
+ * @param shadowLeveledFilters
+ * @param originalFilterField
  */
 export function filterAction(
     environmentId: string,
@@ -88,7 +92,9 @@ export function filterAction(
     sortBy: string[],
     fetchLimit: number,
     ranges: object,
-    labels: object
+    labels: object,
+    shadowLeveledFilters: any[],
+    originalFilterField: string,
 ) {
     const clonedQuery = Clone.object(currentQuery);
     const rangesValues = Object.keys(ranges);
@@ -135,6 +141,14 @@ export function filterAction(
         );
     }
 
+    if (applicationType === 6) {
+        configureQueryWithShadowLeveledFilters(
+            clonedQuery,
+            shadowLeveledFilters,
+            originalFilterField,
+        );
+    }
+
     clonedQuery.page = 1;
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
 
@@ -143,10 +157,74 @@ export function filterAction(
         .then((result) => {
             dispatcher.dispatch("RENDER_FETCHED_DATA", {
                 query: clonedQuery,
-                result: result,
+                result,
             });
         })
         .catch((error) => {
             // Do nothing
         });
+}
+
+/**
+ * @param environmentId
+ * @param currentQuery
+ * @param filterName
+ * @param filterField
+ * @param aggregationField
+ */
+export function modifyQueryAggregationWithProperLevelValue(
+    environmentId: string,
+    currentQuery: any,
+    filterName: string,
+    filterField: string,
+    aggregationField: string,
+) {
+    if (
+        currentQuery.filters !== undefined &&
+        currentQuery.filters[filterName] !== undefined
+    ) {
+        const clonedQuery = Clone.object(currentQuery);
+        const fieldName = currentQuery.filters[filterName].field;
+        const fieldNameParts = fieldName.split("_");
+        const currentLevel = parseInt(fieldNameParts[fieldNameParts.length - 1], 10);
+        const fieldNameWithoutLevel = fieldNameParts.slice(0, fieldNameParts.length - 1).join("_");
+        clonedQuery.aggregations[filterName].field = fieldNameWithoutLevel + "_" + (currentLevel + 1);
+
+        const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
+        dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
+            query: clonedQuery,
+        });
+    }
+}
+
+/**
+ * @param query
+ * @param shadowLeveledFilters
+ * @param originalFilterField
+ */
+export function configureQueryWithShadowLeveledFilters(
+    query: any,
+    shadowLeveledFilters: any[],
+    originalFilterField: string,
+) {
+    for (let it = 1; it < 10; it++) {
+        const iterationFieldName = originalFilterField + "_level_" + it;
+        delete(query.filters[iterationFieldName]);
+        delete(query.aggregations[iterationFieldName]);
+    }
+
+    if (shadowLeveledFilters.length > 0) {
+
+        let levelCounter = 1;
+        shadowLeveledFilters.forEach((filterValue) => {
+            const leveledFieldName = originalFilterField + "_level_" + (levelCounter++);
+
+            query.filterBy(
+                leveledFieldName,
+                leveledFieldName,
+                [filterValue],
+                FILTER_AT_LEAST_ONE,
+            );
+        });
+    }
 }
