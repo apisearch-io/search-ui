@@ -11272,6 +11272,15 @@ var ApisearchUI = /** @class */ (function () {
         }));
     };
     /**
+     *
+     */
+    ApisearchUI.prototype.normalizeQuery = function () {
+        var _this = this;
+        this.activeWidgets.map(function (widget) {
+            widget.normalizeQuery(_this.environmentId, _this.store.getCurrentQuery());
+        });
+    };
+    /**
      * @param query
      * @param object
      */
@@ -11315,6 +11324,7 @@ var ApisearchUI = /** @class */ (function () {
         dispatcher.registerListener("RENDER_INITIAL_DATA", function (payload) { return apisearchUI.store.renderInitialData(payload); });
         dispatcher.registerListener("RENDER_FETCHED_DATA", function (payload) { return apisearchUI.store.renderFetchedData(payload); });
         dispatcher.registerListener("UPDATE_APISEARCH_SETUP", function (payload) { return apisearchUI.store.updateApisearchSetup(payload); });
+        dispatcher.registerListener("NORMALIZE_QUERY", function (payload) { return apisearchUI.normalizeQuery(); });
         /**
          * Add widgets
          */
@@ -11730,8 +11740,8 @@ var Store = /** @class */ (function (_super) {
         this.currentResult = result;
         this.currentQuery = query;
         this.currentVisibleResults = query !== undefined;
-        this.replaceUrl(query, result, this.currentVisibleResults, false);
         this.emit("render");
+        this.replaceUrl(query, result, this.currentVisibleResults);
     };
     /**
      * @param payload
@@ -11744,8 +11754,8 @@ var Store = /** @class */ (function (_super) {
         if (visibleResults !== undefined) {
             this.currentVisibleResults = visibleResults;
         }
-        this.replaceUrl(query, result, visibleResults);
         this.emit("render");
+        this.replaceUrl(query, result, visibleResults);
     };
     /**
      * Create an uid
@@ -11770,6 +11780,9 @@ var Store = /** @class */ (function (_super) {
         this.currentQuery = loadQuery
             ? this.loadQuery(this.currentQuery)
             : this.currentQuery;
+        dispatcher.dispatch("NORMALIZE_QUERY", {
+            query: this.currentQuery,
+        });
         /**
          * In initial query, we must delete user
          */
@@ -11829,10 +11842,8 @@ var Store = /** @class */ (function (_super) {
      * @param query
      * @param result
      * @param visibleResults
-     * @param isFirst
      */
-    Store.prototype.replaceUrl = function (query, result, visibleResults, isFirst) {
-        if (isFirst === void 0) { isFirst = null; }
+    Store.prototype.replaceUrl = function (query, result, visibleResults) {
         if (!this.withHash) {
             return;
         }
@@ -11841,6 +11852,7 @@ var Store = /** @class */ (function (_super) {
         this.emit("toUrlObject", queryAsObject, urlObject);
         var objectAsJson = decodeURI(JSON.stringify(urlObject));
         objectAsJson = (objectAsJson === "{}") ? "" : objectAsJson;
+        objectAsJson = encodeURI(objectAsJson);
         if (!this.isUnderIframe) {
             var path = window.location.href;
             var pathWithoutHash = path.split("#", 2)[0];
@@ -12448,7 +12460,15 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
     return r;
 };
 exports.__esModule = true;
-exports.manageCurrentFilterItems = void 0;
+exports.isLeveledFilter = exports.getFilterValuesFromQuery = exports.isFilterAvailable = exports.getShadowFilterValuesFromQuery = exports.manageCurrentFilterItems = exports.wasElementRecentlySelected = void 0;
+/**
+ * @param selectedItem
+ * @param currentItems
+ */
+function wasElementRecentlySelected(selectedItem, currentItems) {
+    return !currentItems.some(function (item) { return item === selectedItem; });
+}
+exports.wasElementRecentlySelected = wasElementRecentlySelected;
 /**
  * Manage filter items
  *
@@ -12457,15 +12477,16 @@ exports.manageCurrentFilterItems = void 0;
  *
  * @param selectedItem
  * @param currentItems
+ * @param wasElementRecentlySelected
+ * @param deleteIfWasRemoved
  *
- * @returns {[null,null]}
+ * @returns {any}
  */
-function manageCurrentFilterItems(selectedItem, currentItems) {
-    var isElementActive = currentItems
-        .some(function (item) { return item === selectedItem; });
-    if (isElementActive) {
-        return currentItems
-            .filter(function (item) { return item !== selectedItem; });
+function manageCurrentFilterItems(selectedItem, currentItems, wasElementRecentlySelected, deleteIfWasRemoved) {
+    if (!wasElementRecentlySelected) {
+        return deleteIfWasRemoved
+            ? currentItems.filter(function (item) { return item !== selectedItem; })
+            : currentItems;
     }
     else {
         return __spreadArrays(currentItems, [
@@ -12474,6 +12495,68 @@ function manageCurrentFilterItems(selectedItem, currentItems) {
     }
 }
 exports.manageCurrentFilterItems = manageCurrentFilterItems;
+/**
+ * @param query
+ * @param filterName
+ * @param withCurrent
+ */
+function getShadowFilterValuesFromQuery(query, filterName, withCurrent) {
+    var fields = [];
+    if (isFilterAvailable(query, filterName, 6)) {
+        var fieldName = query.filters[filterName].field.substr(17);
+        var fieldNameParts = fieldName.split("_");
+        var currentLevel = parseInt(fieldNameParts[fieldNameParts.length - 1], 10);
+        var fieldNameWithoutLevel = fieldNameParts.slice(0, fieldNameParts.length - 1).join("_");
+        for (var it_1 = 1; it_1 < currentLevel; it_1++) {
+            var iterationFieldName = fieldNameWithoutLevel + "_" + it_1;
+            if (query.filters[iterationFieldName] !== undefined) {
+                fields.push(query.filters[iterationFieldName].values[0]);
+            }
+        }
+        if (withCurrent) {
+            fields.push(query.filters[filterName].values[0]);
+        }
+    }
+    return fields;
+}
+exports.getShadowFilterValuesFromQuery = getShadowFilterValuesFromQuery;
+/**
+ * @param query
+ * @param filterName
+ * @param applicationType
+ */
+function isFilterAvailable(query, filterName, applicationType) {
+    if (applicationType === void 0) { applicationType = null; }
+    return (query.filters !== undefined &&
+        query.filters !== null &&
+        typeof query.filters === "object" &&
+        query.filters[filterName] !== undefined &&
+        query.filters[filterName] !== null &&
+        (applicationType === null ||
+            query.filters[filterName].applicationType === applicationType ||
+            query.filters[filterName].application_type === applicationType));
+}
+exports.isFilterAvailable = isFilterAvailable;
+/**
+ * @param query
+ * @param filterName
+ * @param applicationType
+ */
+function getFilterValuesFromQuery(query, filterName, applicationType) {
+    if (applicationType === void 0) { applicationType = null; }
+    return isFilterAvailable(query, filterName, applicationType)
+        ? query.filters[filterName].values
+        : [];
+}
+exports.getFilterValuesFromQuery = getFilterValuesFromQuery;
+/**
+ * @param filter
+ */
+function isLeveledFilter(filter) {
+    return filter.application_type === 6 ||
+        filter.applicationType === 6;
+}
+exports.isLeveledFilter = isLeveledFilter;
 
 
 /***/ }),
@@ -12488,9 +12571,13 @@ exports.manageCurrentFilterItems = manageCurrentFilterItems;
 "use strict";
 
 exports.__esModule = true;
-exports.filterAction = exports.aggregationSetup = void 0;
-var Constants_1 = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
+exports.configureQueryWithShadowLeveledFilters = exports.modifyQueryAggregationWithProperLevelValue = exports.filterAction = exports.aggregationSetup = void 0;
+/**
+ * Multiple filter actions
+ */
 var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
+var Constants_1 = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
+var apisearch_2 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
 var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
 var Clone_1 = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
 /**
@@ -12499,17 +12586,18 @@ var Clone_1 = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
  * @param environmentId
  * @param currentQuery
  * @param filterName
+ * @param filterField
  * @param aggregationField
  * @param applicationType
  * @param sortBy
  * @param fetchLimit
  * @param ranges
  */
-function aggregationSetup(environmentId, currentQuery, filterName, aggregationField, applicationType, sortBy, fetchLimit, ranges) {
+function aggregationSetup(environmentId, currentQuery, filterName, filterField, aggregationField, applicationType, sortBy, fetchLimit, ranges) {
     var clonedQuery = Clone_1["default"].object(currentQuery);
     var rangesValues = Object.keys(ranges);
     if (rangesValues.length > 0) {
-        clonedQuery.aggregateByRange(filterName, aggregationField, rangesValues, applicationType, apisearch_1.FILTER_TYPE_RANGE, sortBy, fetchLimit);
+        clonedQuery.aggregateByRange(filterName, aggregationField, rangesValues, applicationType, apisearch_2.FILTER_TYPE_RANGE, sortBy, fetchLimit);
     }
     else {
         clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy, fetchLimit);
@@ -12535,17 +12623,22 @@ exports.aggregationSetup = aggregationSetup;
  * @param fetchLimit
  * @param ranges
  * @param labels
+ * @param shadowLeveledFilters
+ * @param originalFilterField
  */
-function filterAction(environmentId, currentQuery, repository, filterName, filterField, aggregationField, filterValues, applicationType, sortBy, fetchLimit, ranges, labels) {
+function filterAction(environmentId, currentQuery, repository, filterName, filterField, aggregationField, filterValues, applicationType, sortBy, fetchLimit, ranges, labels, shadowLeveledFilters, originalFilterField) {
     var clonedQuery = Clone_1["default"].object(currentQuery);
     var rangesValues = Object.keys(ranges);
     if (rangesValues.length > 0) {
-        clonedQuery.filterByRange(filterName, filterField, rangesValues, filterValues, applicationType, apisearch_1.FILTER_TYPE_RANGE, false, sortBy);
-        clonedQuery.aggregateByRange(filterName, aggregationField, rangesValues, applicationType, apisearch_1.FILTER_TYPE_RANGE, sortBy, fetchLimit);
+        clonedQuery.filterByRange(filterName, filterField, rangesValues, filterValues, applicationType, apisearch_2.FILTER_TYPE_RANGE, false, sortBy);
+        clonedQuery.aggregateByRange(filterName, aggregationField, rangesValues, applicationType, apisearch_2.FILTER_TYPE_RANGE, sortBy, fetchLimit);
     }
     else {
         clonedQuery.filterBy(filterName, filterField, filterValues, applicationType, false, sortBy);
         clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy, fetchLimit);
+    }
+    if (applicationType === 6) {
+        configureQueryWithShadowLeveledFilters(clonedQuery, shadowLeveledFilters, originalFilterField);
     }
     clonedQuery.page = 1;
     var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
@@ -12561,6 +12654,49 @@ function filterAction(environmentId, currentQuery, repository, filterName, filte
     });
 }
 exports.filterAction = filterAction;
+/**
+ * @param environmentId
+ * @param currentQuery
+ * @param filterName
+ * @param filterField
+ * @param aggregationField
+ */
+function modifyQueryAggregationWithProperLevelValue(environmentId, currentQuery, filterName, filterField, aggregationField) {
+    if (currentQuery.filters !== undefined &&
+        currentQuery.filters[filterName] !== undefined) {
+        var clonedQuery = Clone_1["default"].object(currentQuery);
+        var fieldName = currentQuery.filters[filterName].field;
+        var fieldNameParts = fieldName.split("_");
+        var currentLevel = parseInt(fieldNameParts[fieldNameParts.length - 1], 10);
+        var fieldNameWithoutLevel = fieldNameParts.slice(0, fieldNameParts.length - 1).join("_");
+        clonedQuery.aggregations[filterName].field = fieldNameWithoutLevel + "_" + (currentLevel + 1);
+        var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
+        dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
+            query: clonedQuery,
+        });
+    }
+}
+exports.modifyQueryAggregationWithProperLevelValue = modifyQueryAggregationWithProperLevelValue;
+/**
+ * @param query
+ * @param shadowLeveledFilters
+ * @param originalFilterField
+ */
+function configureQueryWithShadowLeveledFilters(query, shadowLeveledFilters, originalFilterField) {
+    for (var it_1 = 1; it_1 < 10; it_1++) {
+        var iterationFieldName = originalFilterField + "_level_" + it_1;
+        delete (query.filters[iterationFieldName]);
+        delete (query.aggregations[iterationFieldName]);
+    }
+    if (shadowLeveledFilters.length > 0) {
+        var levelCounter_1 = 1;
+        shadowLeveledFilters.forEach(function (filterValue) {
+            var leveledFieldName = originalFilterField + "_level_" + (levelCounter_1++);
+            query.filterBy(leveledFieldName, leveledFieldName, [filterValue], apisearch_1.FILTER_AT_LEAST_ONE);
+        });
+    }
+}
+exports.configureQueryWithShadowLeveledFilters = configureQueryWithShadowLeveledFilters;
 
 
 /***/ }),
@@ -12601,7 +12737,6 @@ var Helpers_1 = __webpack_require__(/*! ./Helpers */ "./src/components/MultipleF
 var Template_1 = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
 var ShowMoreComponent_1 = __webpack_require__(/*! ./ShowMoreComponent */ "./src/components/MultipleFilter/ShowMoreComponent.tsx");
 var defaultTemplates_1 = __webpack_require__(/*! ./defaultTemplates */ "./src/components/MultipleFilter/defaultTemplates.tsx");
-var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
 /**
  * Filter Component
  */
@@ -12612,17 +12747,19 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
      */
     function MultipleFilterComponent() {
         var _this = _super.call(this) || this;
+        _this.currentLevel = 0;
+        _this.propsReceived = false;
         /**
-         * Handle click
-         *
          * @param selectedFilter
+         * @param level
          */
-        _this.handleClick = function (selectedFilter) {
+        _this.handleClick = function (selectedFilter, level) {
+            var _a;
             var props = _this.props;
             var environmentId = props.environmentId;
             var filterName = props.filterName;
             var filterField = props.filterField;
-            var aggregationField = props.aggregationField;
+            var aggregationField = (_a = props.aggregationField) !== null && _a !== void 0 ? _a : filterField;
             var applicationType = props.applicationType;
             var sortBy = props.sortBy;
             var ranges = props.ranges;
@@ -12630,20 +12767,39 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
             var fetchLimit = props.fetchLimit;
             var repository = props.repository;
             var currentQuery = props.store.getCurrentQuery();
-            var aggregation = props.store.getCurrentResult().getAggregation(filterName);
+            // const aggregation = props.store.getCurrentResult().getAggregation(filterName);
             var selectedFilterAsString = String(selectedFilter);
-            var currentActiveFilterValues = aggregation instanceof apisearch_1.ResultAggregation
-                ? Object.values(aggregation.getActiveElements())
-                : [];
-            var valuesAsString = currentActiveFilterValues.map(function (element) {
-                return String(element);
-            });
+            /*
+            const currentActiveFilterValues =
+                aggregation instanceof ResultAggregation &&
+                (aggregation.getActiveElements() !== null)
+                    ? Object.values(aggregation.getActiveElements())
+                    : [];
+    
+             */
+            var valuesAsString = (applicationType === 6)
+                ? Helpers_1.getShadowFilterValuesFromQuery(currentQuery, filterName, true)
+                : Helpers_1.getFilterValuesFromQuery(currentQuery, filterName);
+            var wasSelected = Helpers_1.wasElementRecentlySelected(selectedFilterAsString, valuesAsString);
+            var filterItems = Helpers_1.manageCurrentFilterItems(selectedFilterAsString, valuesAsString, wasSelected, (applicationType !== 6));
+            var currentLevel = level;
+            if (applicationType === 6) {
+                currentLevel = wasSelected ? currentLevel : (currentLevel - 1);
+            }
+            var shadowLeveledFilters = [];
+            var originalFilterField = filterField;
+            if (applicationType === 6) {
+                filterField = filterField + "_level_" + (currentLevel);
+                aggregationField = aggregationField + "_level_" + (currentLevel + 1);
+                filterItems = filterItems.slice(0, currentLevel);
+                shadowLeveledFilters = filterItems.slice(0, -1);
+                filterItems = filterItems.slice(-1);
+            }
+            _this.currentLevel = currentLevel;
             /**
              * Dispatch filter action
              */
-            MultipleFilterActions_1.filterAction(environmentId, currentQuery, repository, filterName, filterField, (aggregationField
-                ? aggregationField
-                : filterField), Helpers_1.manageCurrentFilterItems(selectedFilterAsString, valuesAsString), applicationType, sortBy, fetchLimit, ranges, labels);
+            MultipleFilterActions_1.filterAction(environmentId, currentQuery, repository, filterName, filterField, aggregationField, filterItems, applicationType, sortBy, fetchLimit, ranges, labels, shadowLeveledFilters, originalFilterField);
         };
         /**
          * Handle show more
@@ -12665,7 +12821,6 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
         };
         _this.state = {
             aggregations: [],
-            filters: [],
             viewLimit: 0,
         };
         return _this;
@@ -12674,34 +12829,30 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
      * Components will mount
      */
     MultipleFilterComponent.prototype.componentWillMount = function () {
+        var _a;
         var props = this.props;
-        var environmentId = props.environmentId;
-        var filterName = props.filterName;
-        var filterField = props.filterField;
-        var aggregationField = props.aggregationField;
+        var aggregationField = (_a = props.aggregationField) !== null && _a !== void 0 ? _a : props.filterField;
         var applicationType = props.applicationType;
-        var sortBy = props.sortBy;
-        var ranges = props.ranges;
         var fetchLimit = props.fetchLimit;
         var viewLimit = props.viewLimit;
-        var currentQuery = props.store.getCurrentQuery();
         /**
          * Set view items limit
          */
         var isViewLimitProperlySet = (viewLimit && viewLimit < fetchLimit);
-        this.setState(function (prevState) {
+        this.setState(function (_) {
             return {
                 viewLimit: (isViewLimitProperlySet)
                     ? viewLimit
                     : fetchLimit,
             };
         });
+        if (applicationType === 6) {
+            aggregationField = aggregationField + "_level_1";
+        }
         /**
          * Dispatch action
          */
-        MultipleFilterActions_1.aggregationSetup(environmentId, currentQuery, filterName, (aggregationField
-            ? aggregationField
-            : filterField), applicationType, sortBy, fetchLimit, ranges);
+        MultipleFilterActions_1.aggregationSetup(props.environmentId, props.store.getCurrentQuery(), props.filterName, props.filterField, aggregationField, applicationType, props.sortBy, fetchLimit, props.ranges);
     };
     /**
      * Component will receive props
@@ -12721,8 +12872,6 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
         }
         var result = props.store.getCurrentResult();
         var aggregation = result.getAggregation(filterName);
-        var query = props.store.getCurrentQuery();
-        var filter = query.getFilter(filterName);
         if (aggregation && typeof aggregation.getCounters === "function") {
             /**
              * Getting aggregation from aggregations
@@ -12739,9 +12888,18 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
             this.setState(function (prevState) {
                 return {
                     aggregations: aggregations_1,
-                    filters: filter ? filter.getValues() : [],
                 };
             });
+        }
+        if (props.applicationType === 6 &&
+            this.propsReceived === false) {
+            var filter = props.store.getCurrentQuery().getFilter(filterName);
+            this.currentLevel = (filter === undefined || filter === null)
+                ? this.currentLevel
+                : filter.values
+                    ? (filter.values.length + 1)
+                    : this.currentLevel;
+            this.propsReceived = true;
         }
     };
     /**
@@ -12752,7 +12910,6 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
     MultipleFilterComponent.prototype.render = function () {
         var _this = this;
         var props = this.props;
-        var state = this.state;
         var viewLimit = props.viewLimit;
         var fetchLimit = props.fetchLimit;
         var containerClassName = props.classNames.container;
@@ -12765,6 +12922,7 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
         var itemTemplate = props.template.item;
         var showMoreTemplate = props.template.showMore;
         var showLessTemplate = props.template.showLess;
+        var currentQuery = props.store.getCurrentQuery();
         var formatData = props.formatData;
         var labels = Object.keys(props.ranges).length > 0
             ? props.ranges
@@ -12790,11 +12948,15 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
          * Shadow filters. These filters are not part of the aggregation list but are applied. Should always be listed
          * first
          */
-        if (state.filters.length > 0) {
-            state.filters.forEach(function (filter) {
+        var appliedFilters = (props.applicationType === 6)
+            ? Helpers_1.getShadowFilterValuesFromQuery(currentQuery, props.filterName, true)
+            : Helpers_1.getFilterValuesFromQuery(currentQuery, props.filterName);
+        if (appliedFilters.length > 0) {
+            var zeroItemsFilters_1 = [];
+            appliedFilters.forEach(function (filter) {
                 if (itemsIds[filter] === undefined) {
                     var uid = Math.floor(Math.random() * 10000000000);
-                    allItems.unshift({
+                    zeroItemsFilters_1.push({
                         isActive: true,
                         n: 0,
                         uid: uid,
@@ -12805,6 +12967,7 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
                     });
                 }
             });
+            allItems = __spreadArrays(zeroItemsFilters_1, allItems);
         }
         /**
          * Get existing applied filters if they exist
@@ -12814,6 +12977,7 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
         }
         var items = allItems.slice(0, this.state.viewLimit);
         var allItemsLength = allItems.length;
+        var levelCounter = 1;
         /**
          * Check available view limit
          */
@@ -12825,12 +12989,14 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
             preact_1.h("div", { className: "as-multipleFilter__itemsList " + itemsListClassName },
                 preact_1.h("ul", null, items.map(function (item) {
                     var formattedTemplateData = formatData(item);
+                    var level = Math.min(levelCounter, _this.currentLevel + 1);
+                    levelCounter++;
                     return (preact_1.h("li", { className: "as-multipleFilter__item " +
                             (itemClassName + " ") +
                             ("" + ((item.isActive) ? activeClassName : "")), onClick: function (e) {
                             e.stopPropagation();
                             e.preventDefault();
-                            that.handleClick(item.values.id);
+                            that.handleClick(item.values.id, level);
                         } },
                         preact_1.h(Template_1["default"], { template: itemTemplate, data: formattedTemplateData, dictionary: _this.props.dictionary })));
                 }))),
@@ -13540,7 +13706,8 @@ var RangeFilterComponent = /** @class */ (function (_super) {
         var min = state.min;
         var max = state.max;
         if (typeof from === "number" &&
-            typeof to === "number") {
+            typeof to === "number" &&
+            typeof props.callback === "function") {
             props.callback(Math.min(from, to), Math.max(from, to), min, max, this.rangeUid);
         }
     };
@@ -15619,7 +15786,10 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 exports.__esModule = true;
+var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
 var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+var Helpers_1 = __webpack_require__(/*! ../components/MultipleFilter/Helpers */ "./src/components/MultipleFilter/Helpers.ts");
+var MultipleFilterActions_1 = __webpack_require__(/*! ../components/MultipleFilter/MultipleFilterActions */ "./src/components/MultipleFilter/MultipleFilterActions.ts");
 var MultipleFilterComponent_1 = __webpack_require__(/*! ../components/MultipleFilter/MultipleFilterComponent */ "./src/components/MultipleFilter/MultipleFilterComponent.tsx");
 var Widget_1 = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
 /**
@@ -15649,7 +15819,9 @@ var MultipleFilter = /** @class */ (function (_super) {
         var target = _a.target, filterName = _a.filterName, filterField = _a.filterField, aggregationField = _a.aggregationField, applicationType = _a.applicationType, fetchLimit = _a.fetchLimit, viewLimit = _a.viewLimit, sortBy = _a.sortBy, ranges = _a.ranges, labels = _a.labels, classNames = _a.classNames, template = _a.template, formatData = _a.formatData, activeFirst = _a.activeFirst;
         var _this = _super.call(this) || this;
         _this.target = target;
-        _this.component = preact_1.h(MultipleFilterComponent_1["default"], { target: target, filterName: filterName, filterField: filterField, aggregationField: aggregationField, applicationType: applicationType, fetchLimit: fetchLimit, viewLimit: viewLimit, sortBy: sortBy, ranges: ranges, labels: labels, classNames: __assign(__assign({}, MultipleFilterComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, MultipleFilterComponent_1["default"].defaultProps.template), template), formatData: formatData, activeFirst: activeFirst });
+        _this.filterField = filterField;
+        _this.aggregationField = aggregationField !== null && aggregationField !== void 0 ? aggregationField : filterField;
+        _this.component = preact_1.h(MultipleFilterComponent_1["default"], { target: target, filterName: filterName, filterField: _this.filterField, aggregationField: _this.aggregationField, applicationType: applicationType, fetchLimit: fetchLimit, viewLimit: viewLimit, sortBy: sortBy, ranges: ranges, labels: labels, classNames: __assign(__assign({}, MultipleFilterComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, MultipleFilterComponent_1["default"].defaultProps.template), template), formatData: formatData, activeFirst: activeFirst });
         return _this;
     }
     /**
@@ -15659,9 +15831,11 @@ var MultipleFilter = /** @class */ (function (_super) {
      * @param dictionary
      */
     MultipleFilter.prototype.render = function (environmentId, store, repository, dictionary) {
-        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store, dictionary: dictionary });
-        var targetNode = document.querySelector(this.target);
-        preact_1.render(this.component, targetNode);
+        this.component.props = __assign(__assign({}, this.component.props), { dictionary: dictionary,
+            environmentId: environmentId,
+            repository: repository,
+            store: store });
+        preact_1.render(this.component, document.querySelector(this.target));
     };
     /**
      * @param query
@@ -15673,9 +15847,19 @@ var MultipleFilter = /** @class */ (function (_super) {
         if (aggregation !== undefined &&
             query.filters !== undefined &&
             query.filters[filterName] !== undefined) {
-            var filterValues = query.filters[filterName].values;
+            var filter = query.filters[filterName];
+            var filterValues = filter.values;
             if (filterValues.length > 0) {
-                object[filterName] = filterValues;
+                if (filter.application_type === 6) {
+                    var levelsValues = Helpers_1.getShadowFilterValuesFromQuery(query, filterName, false);
+                    object[filterName] = {
+                        l: levelsValues,
+                        v: filter.values,
+                    };
+                }
+                else {
+                    object[filterName] = filterValues;
+                }
             }
         }
     };
@@ -15688,19 +15872,39 @@ var MultipleFilter = /** @class */ (function (_super) {
         var aggregation = query.aggregations[filterName];
         var fieldValues = object[filterName];
         var rangesValues = Object.keys(this.component.props.ranges);
-        var filterType = (rangesValues.length > 0) ? 'range' : 'field';
+        var filterType = (rangesValues.length > 0) ? "range" : "field";
         if (aggregation !== undefined &&
             fieldValues !== undefined &&
-            Array.isArray(fieldValues) &&
-            fieldValues.length > 0) {
+            (Array.isArray(fieldValues) && (fieldValues.length > 0) ||
+                (typeof fieldValues === "object") && (Object.keys(fieldValues).length > 0))) {
             if (query.filters === undefined) {
                 query.filters = {};
             }
+            var applicationType = this.component.props.applicationType;
+            var fieldName = "indexed_metadata." + this.component.props.filterField;
+            if (applicationType === 6) {
+                var originalFieldValues = fieldValues;
+                fieldValues = originalFieldValues["v"];
+                var leveledValues = originalFieldValues["l"];
+                for (var it_1 = 0; it_1 < leveledValues.length; it_1++) {
+                    var level = it_1 + 1;
+                    var fieldNameWithoutPrefix = fieldName.substr(17);
+                    var leveledFilterName = fieldNameWithoutPrefix + "_level_" + level;
+                    var leveledFieldName = "indexed_metadata." + leveledFilterName;
+                    query.filters[leveledFilterName] = {
+                        application_type: applicationType,
+                        field: leveledFieldName,
+                        filter_type: apisearch_1.FILTER_TYPE_FIELD,
+                        values: [leveledValues[it_1]],
+                    };
+                }
+                fieldName = fieldName + "_level_" + (leveledValues.length + 1);
+            }
             query.filters[filterName] = {
-                field: 'indexed_metadata.' + this.component.props.filterField,
+                application_type: applicationType,
+                field: fieldName,
+                filter_type: filterType,
                 values: fieldValues,
-                application_type: this.component.props.application_type,
-                filter_type: filterType
             };
         }
     };
@@ -15713,6 +15917,16 @@ var MultipleFilter = /** @class */ (function (_super) {
             typeof query.filters === "object" &&
             query.filters[filterName] !== undefined) {
             delete query.filters[filterName];
+        }
+    };
+    /**
+     * @param environmentId
+     * @param query
+     */
+    MultipleFilter.prototype.normalizeQuery = function (environmentId, query) {
+        var filterName = this.component.props.filterName;
+        if (Helpers_1.isFilterAvailable(query, filterName, 6)) {
+            MultipleFilterActions_1.modifyQueryAggregationWithProperLevelValue(environmentId, query, filterName, this.filterField, this.aggregationField);
         }
     };
     return MultipleFilter;
@@ -16599,6 +16813,12 @@ var Widget = /** @class */ (function () {
      * @param query
      */
     Widget.prototype.reset = function (query) {
+    };
+    /**
+     * @param environmentId
+     * @param query
+     */
+    Widget.prototype.normalizeQuery = function (environmentId, query) {
     };
     return Widget;
 }());

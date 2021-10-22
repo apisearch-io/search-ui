@@ -10,7 +10,7 @@ export default abstract class Widget {
     protected component: any;
     protected config: any;
 
-    withConfig(config: any) {
+    public withConfig(config: any) {
         if ("withConfig" in this.component) {
             this.component.withConfig(config);
         }
@@ -55,6 +55,17 @@ export default abstract class Widget {
      * @param query
      */
     public reset(query: any) {
+
+    }
+
+    /**
+     * @param environmentId
+     * @param query
+     */
+    public normalizeQuery(
+        environmentId: string,
+        query: any
+    ) {
 
     }
 }
