@@ -311,7 +311,11 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
                         step={props.step}
                         onClick={function(e) {
                             if (isNotNative) return false;
-                            that.handleSliderChange([parseInt((e.target as HTMLInputElement).value), to])
+                            that.handleSliderChange([parseInt((e.target as HTMLInputElement).value), to]);
+                        }}
+                        onTouchEnd={function(e) {
+                            if (isNotNative) return false;
+                            that.handleSliderChange([parseInt((e.target as HTMLInputElement).value), to]);
                         }}
                         onChange={function(e) {
                             const positions = [parseInt((e.target as HTMLInputElement).value), to];
@@ -319,7 +323,6 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
                                 that.handleSliderMove(positions);
                                 return false;
                             }
-
                             that.handleSliderChange(positions);
                         }}
                         autocomplete={`off`}
@@ -333,6 +336,10 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
                         max={max}
                         step={props.step}
                         onClick={function(e) {
+                            if (isNotNative) return false;
+                            that.handleSliderChange([from, parseInt((e.target as HTMLInputElement).value)])
+                        }}
+                        onTouchEnd={function(e) {
                             if (isNotNative) return false;
                             that.handleSliderChange([from, parseInt((e.target as HTMLInputElement).value)])
                         }}
