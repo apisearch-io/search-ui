@@ -301,10 +301,8 @@ export default class ApisearchUI {
         indexId: string,
         itemId: string,
     ) {
-        if (this.userId !== "") {
-            this
-                .repository
-                .click(appId, indexId, itemId, this.userId);
-        }
+        this
+            .repository
+            .click(appId, indexId, itemId, this.userId);
     }
 }
