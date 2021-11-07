@@ -58,7 +58,11 @@ class SuggestionsFilterComponent extends Component<SuggestionsFilterProps, Sugge
     handleClick = (word) => {
 
         const props = this.props;
-        word = word.replaceAll("<em>", "").replaceAll("</em>", "");
+        if (typeof word ===  "string") {
+            word = word
+                .replace(/<em>/g, "")
+                .replace(/<\/em>/g, "");
+        }
 
         /**
          * Dispatch action
