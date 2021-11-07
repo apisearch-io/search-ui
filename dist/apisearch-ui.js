@@ -15457,11 +15457,9 @@ var SuggestionsFilterComponent = /** @class */ (function (_super) {
         _this.handleClick = function (word) {
             var props = _this.props;
             if (typeof word === "string") {
-                console.log(word);
                 word = word
                     .replace(/<em>/g, "")
                     .replace(/<\/em>/g, "");
-                console.log(word);
             }
             /**
              * Dispatch action
