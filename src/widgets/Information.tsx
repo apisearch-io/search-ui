@@ -1,5 +1,5 @@
 import {Repository} from "apisearch";
-import {h, render} from 'preact';
+import {h, render} from "preact";
 import InformationComponent from "../components/Information/InformationComponent";
 import Store from "../Store";
 import Widget from "./Widget";

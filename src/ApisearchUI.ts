@@ -83,9 +83,7 @@ export default class ApisearchUI {
         this.firstQuery = firstQuery;
         this.fetchQuery(true);
 
-        window.dispatchEvent(new Event("apisearch_loaded", {
-            bubbles: true,
-        }));
+        window.postMessage("apisearch_loaded", "*");
     }
 
     /**
@@ -172,10 +170,7 @@ export default class ApisearchUI {
             );
         });
 
-
-        window.dispatchEvent(new Event("apisearch_rendered", {
-            bubbles: true,
-        }));
+        window.postMessage("apisearch_rendered", "*");
     }
 
     /**

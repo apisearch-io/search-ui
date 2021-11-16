@@ -1,153 +1,12 @@
-(function webpackUniversalModuleDefinition(root, factory) {
-	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory();
-	else if(typeof define === 'function' && define.amd)
-		define([], factory);
-	else if(typeof exports === 'object')
-		exports["apisearchUI"] = factory();
-	else
-		root["apisearchUI"] = factory();
-})(self, function() {
-return /******/ (() => { // webpackBootstrap
+var apisearchUI;
+/******/ (function() { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
-
-/***/ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js":
-/*!*****************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/asyncToGenerator.js ***!
-  \*****************************************************************/
-/***/ ((module) => {
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
-  try {
-    var info = gen[key](arg);
-    var value = info.value;
-  } catch (error) {
-    reject(error);
-    return;
-  }
-
-  if (info.done) {
-    resolve(value);
-  } else {
-    Promise.resolve(value).then(_next, _throw);
-  }
-}
-
-function _asyncToGenerator(fn) {
-  return function () {
-    var self = this,
-        args = arguments;
-    return new Promise(function (resolve, reject) {
-      var gen = fn.apply(self, args);
-
-      function _next(value) {
-        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);
-      }
-
-      function _throw(err) {
-        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);
-      }
-
-      _next(undefined);
-    });
-  };
-}
-
-module.exports = _asyncToGenerator;
-module.exports["default"] = module.exports, module.exports.__esModule = true;
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/defineProperty.js":
-/*!***************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/defineProperty.js ***!
-  \***************************************************************/
-/***/ ((module) => {
-
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-
-  return obj;
-}
-
-module.exports = _defineProperty;
-module.exports["default"] = module.exports, module.exports.__esModule = true;
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/interopRequireDefault.js":
-/*!**********************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/interopRequireDefault.js ***!
-  \**********************************************************************/
-/***/ ((module) => {
-
-function _interopRequireDefault(obj) {
-  return obj && obj.__esModule ? obj : {
-    "default": obj
-  };
-}
-
-module.exports = _interopRequireDefault;
-module.exports["default"] = module.exports, module.exports.__esModule = true;
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/typeof.js":
-/*!*******************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/typeof.js ***!
-  \*******************************************************/
-/***/ ((module) => {
-
-function _typeof(obj) {
-  "@babel/helpers - typeof";
-
-  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-    module.exports = _typeof = function _typeof(obj) {
-      return typeof obj;
-    };
-
-    module.exports["default"] = module.exports, module.exports.__esModule = true;
-  } else {
-    module.exports = _typeof = function _typeof(obj) {
-      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-    };
-
-    module.exports["default"] = module.exports, module.exports.__esModule = true;
-  }
-
-  return _typeof(obj);
-}
-
-module.exports = _typeof;
-module.exports["default"] = module.exports, module.exports.__esModule = true;
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/regenerator/index.js":
-/*!**********************************************************!*\
-  !*** ./node_modules/@babel/runtime/regenerator/index.js ***!
-  \**********************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-module.exports = __webpack_require__(/*! regenerator-runtime */ "./node_modules/regenerator-runtime/runtime.js");
-
-
-/***/ }),
 
 /***/ "./node_modules/apisearch/lib/Apisearch.js":
 /*!*************************************************!*\
   !*** ./node_modules/apisearch/lib/Apisearch.js ***!
   \*************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
@@ -178,7 +37,7 @@ var Apisearch = /** @class */ (function () {
      */
     Apisearch.createRepository = function (config) {
         Apisearch.ensureRepositoryConfigIsValid(config);
-        config.options = tslib_1.__assign({ api_version: "v1", override_queries: true, timeout: 5000 }, config.options);
+        config.options = tslib_1.__assign({ api_version: "v1", override_queries: true, timeout: 3000 }, config.options);
         /**
          * Client
          */
@@ -308,7 +167,7 @@ exports["default"] = Apisearch;
 /*!*****************************************************!*\
   !*** ./node_modules/apisearch/lib/Config/Config.js ***!
   \*****************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
@@ -430,7 +289,7 @@ exports.Config = Config;
 /*!******************************************************!*\
   !*** ./node_modules/apisearch/lib/Config/Synonym.js ***!
   \******************************************************/
-/***/ ((__unused_webpack_module, exports) => {
+/***/ (function(__unused_webpack_module, exports) {
 
 "use strict";
 
@@ -507,7 +366,7 @@ exports.Synonym = Synonym;
 /*!*************************************************************!*\
   !*** ./node_modules/apisearch/lib/Error/ConnectionError.js ***!
   \*************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
@@ -542,7 +401,7 @@ exports.ConnectionError = ConnectionError;
 /*!**************************************************************!*\
   !*** ./node_modules/apisearch/lib/Error/ErrorWithMessage.js ***!
   \**************************************************************/
-/***/ ((__unused_webpack_module, exports) => {
+/***/ (function(__unused_webpack_module, exports) {
 
 "use strict";
 
@@ -571,7 +430,7 @@ exports.ErrorWithMessage = ErrorWithMessage;
 /*!********************************************************!*\
   !*** ./node_modules/apisearch/lib/Error/EventError.js ***!
   \********************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
@@ -606,7 +465,7 @@ exports.EventError = EventError;
 /*!************************************************************!*\
   !*** ./node_modules/apisearch/lib/Error/ForbiddenError.js ***!
   \************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
@@ -665,7 +524,7 @@ exports.ForbiddenError = ForbiddenError;
 /*!****************************************************************!*\
   !*** ./node_modules/apisearch/lib/Error/InvalidFormatError.js ***!
   \****************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
@@ -828,7 +687,7 @@ exports.InvalidFormatError = InvalidFormatError;
 /*!***************************************************************!*\
   !*** ./node_modules/apisearch/lib/Error/InvalidTokenError.js ***!
   \***************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
@@ -884,7 +743,7 @@ exports.InvalidTokenError = InvalidTokenError;
 /*!*****************************************************************!*\
   !*** ./node_modules/apisearch/lib/Error/ResourceExistsError.js ***!
   \*****************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
@@ -943,7 +802,7 @@ exports.ResourceExistsError = ResourceExistsError;
 /*!***********************************************************************!*\
   !*** ./node_modules/apisearch/lib/Error/ResourceNotAvailableError.js ***!
   \***********************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
@@ -1018,7 +877,7 @@ exports.ResourceNotAvailableError = ResourceNotAvailableError;
 /*!**********************************************************!*\
   !*** ./node_modules/apisearch/lib/Error/UnknownError.js ***!
   \**********************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
@@ -1053,7 +912,7 @@ exports.UnknownError = UnknownError;
 /*!*************************************************************************!*\
   !*** ./node_modules/apisearch/lib/Error/UnsupportedContentTypeError.js ***!
   \*************************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
@@ -1096,7 +955,7 @@ exports.UnsupportedContentTypeError = UnsupportedContentTypeError;
 /*!*********************************************************!*\
   !*** ./node_modules/apisearch/lib/Geo/LocationRange.js ***!
   \*********************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
@@ -1311,7 +1170,7 @@ exports.Square = Square;
 /*!********************************************************!*\
   !*** ./node_modules/apisearch/lib/Http/AxiosClient.js ***!
   \********************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
@@ -1319,7 +1178,6 @@ exports.__esModule = true;
 exports.AxiosClient = void 0;
 var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var axios_1 = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-var axios_retry_1 = __webpack_require__(/*! axios-retry */ "./node_modules/axios-retry/index.js");
 var __1 = __webpack_require__(/*! .. */ "./node_modules/apisearch/lib/index.js");
 var Client_1 = __webpack_require__(/*! ./Client */ "./node_modules/apisearch/lib/Http/Client.js");
 var Response_1 = __webpack_require__(/*! ./Response */ "./node_modules/apisearch/lib/Http/Response.js");
@@ -1359,8 +1217,7 @@ var AxiosClient = /** @class */ (function (_super) {
         if (parameters === void 0) { parameters = {}; }
         if (data === void 0) { data = {}; }
         return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var headers, axiosRequestConfig, sendRequest, axiosResponse, error_1, response;
-            var _this = this;
+            var headers, axiosRequestConfig, axiosResponse, error_1, response;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -1386,7 +1243,7 @@ var AxiosClient = /** @class */ (function (_super) {
                             transformRequest: [function (rawData) { return JSON.stringify(rawData); }],
                             url: url + "?" + Client_1.Client.objectToUrlParameters(tslib_1.__assign(tslib_1.__assign({}, parameters), {
                                 token: credentials.token
-                            })).replace(/#/g, '%23')
+                            })).replace(/#/g, "%23")
                         };
                         if (typeof this.cancelToken[url] !== "undefined") {
                             axiosRequestConfig.cancelToken = this.cancelToken[url].token;
@@ -1394,22 +1251,7 @@ var AxiosClient = /** @class */ (function (_super) {
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
-                        axios_retry_1["default"](axios_1["default"], {
-                            retries: 3,
-                            shouldResetTimeout: true,
-                            retryCondition: function (error) {
-                                return axios_retry_1["default"].isNetworkOrIdempotentRequestError(error)
-                                    || error.code === "ECONNABORTED"
-                                    || error.message === "Network Error";
-                            }
-                        });
-                        sendRequest = function () { return tslib_1.__awaiter(_this, void 0, void 0, function () { return tslib_1.__generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0: return [4 /*yield*/, axios_1["default"].request(axiosRequestConfig)];
-                                case 1: return [2 /*return*/, _a.sent()];
-                            }
-                        }); }); };
-                        return [4 /*yield*/, sendRequest()];
+                        return [4 /*yield*/, this.fetch(url, axiosRequestConfig, 3)];
                     case 2:
                         axiosResponse = _a.sent();
                         return [2 /*return*/, new Response_1.Response(axiosResponse.status, axiosResponse.data)];
@@ -1450,6 +1292,45 @@ var AxiosClient = /** @class */ (function (_super) {
     AxiosClient.prototype.generateCancelToken = function (url) {
         this.cancelToken[url] = axios_1["default"].CancelToken.source();
     };
+    /**
+     * @param url
+     * @param options
+     * @param retries
+     */
+    AxiosClient.prototype.fetch = function (url, options, retries) {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return tslib_1.__generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, axios_1["default"]
+                            .request(options)
+                            .then(function (response) {
+                            return {
+                                data: response.data,
+                                status: response.status
+                            };
+                        })["catch"](function (error) {
+                            var response = error.response;
+                            if (error.code !== undefined &&
+                                error.code !== "ECONNREFUSED" &&
+                                error.code !== "ECONNABORTED" &&
+                                error.message !== "Network Error") {
+                                return {
+                                    data: response.data,
+                                    status: response.status
+                                };
+                            }
+                            if (retries <= 0) {
+                                throw error;
+                            }
+                            retries = retries - 1;
+                            return _this.fetch(url, options, retries);
+                        })];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
     return AxiosClient;
 }(Client_1.Client));
 exports.AxiosClient = AxiosClient;
@@ -1461,7 +1342,7 @@ exports.AxiosClient = AxiosClient;
 /*!********************************************************!*\
   !*** ./node_modules/apisearch/lib/Http/CacheClient.js ***!
   \********************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
@@ -1556,7 +1437,7 @@ exports.CacheClient = CacheClient;
 /*!***************************************************!*\
   !*** ./node_modules/apisearch/lib/Http/Client.js ***!
   \***************************************************/
-/***/ ((__unused_webpack_module, exports) => {
+/***/ (function(__unused_webpack_module, exports) {
 
 "use strict";
 
@@ -1599,7 +1480,7 @@ exports.Client = Client;
 /*!*******************************************************!*\
   !*** ./node_modules/apisearch/lib/Http/HttpClient.js ***!
   \*******************************************************/
-/***/ ((__unused_webpack_module, exports) => {
+/***/ (function(__unused_webpack_module, exports) {
 
 "use strict";
 
@@ -1622,7 +1503,7 @@ exports.HttpClient = HttpClient;
 /*!*****************************************************!*\
   !*** ./node_modules/apisearch/lib/Http/Response.js ***!
   \*****************************************************/
-/***/ ((__unused_webpack_module, exports) => {
+/***/ (function(__unused_webpack_module, exports) {
 
 "use strict";
 
@@ -1669,7 +1550,7 @@ exports.Response = Response;
 /*!*****************************************************!*\
   !*** ./node_modules/apisearch/lib/Model/AppUUID.js ***!
   \*****************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
@@ -1749,7 +1630,7 @@ exports.AppUUID = AppUUID;
 /*!*****************************************************!*\
   !*** ./node_modules/apisearch/lib/Model/Changes.js ***!
   \*****************************************************/
-/***/ ((__unused_webpack_module, exports) => {
+/***/ (function(__unused_webpack_module, exports) {
 
 "use strict";
 
@@ -1884,7 +1765,7 @@ exports.Changes = Changes;
 /*!********************************************************!*\
   !*** ./node_modules/apisearch/lib/Model/Coordinate.js ***!
   \********************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
@@ -1960,7 +1841,7 @@ exports.Coordinate = Coordinate;
 /*!***************************************************!*\
   !*** ./node_modules/apisearch/lib/Model/Index.js ***!
   \***************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
@@ -2071,7 +1952,7 @@ exports.Index = Index;
 /*!*******************************************************!*\
   !*** ./node_modules/apisearch/lib/Model/IndexUUID.js ***!
   \*******************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
@@ -2151,7 +2032,7 @@ exports.IndexUUID = IndexUUID;
 /*!**************************************************!*\
   !*** ./node_modules/apisearch/lib/Model/Item.js ***!
   \**************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
@@ -2584,7 +2465,7 @@ exports.Item = Item;
 /*!******************************************************!*\
   !*** ./node_modules/apisearch/lib/Model/ItemUUID.js ***!
   \******************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
@@ -2676,7 +2557,7 @@ exports.ItemUUID = ItemUUID;
 /*!******************************************************!*\
   !*** ./node_modules/apisearch/lib/Model/Metadata.js ***!
   \******************************************************/
-/***/ ((__unused_webpack_module, exports) => {
+/***/ (function(__unused_webpack_module, exports) {
 
 "use strict";
 
@@ -2751,7 +2632,7 @@ exports.Metadata = Metadata;
 /*!**************************************************!*\
   !*** ./node_modules/apisearch/lib/Model/User.js ***!
   \**************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
@@ -2832,7 +2713,7 @@ exports.User = User;
 /*!*********************************************************!*\
   !*** ./node_modules/apisearch/lib/Query/Aggregation.js ***!
   \*********************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
@@ -3016,7 +2897,7 @@ exports.Aggregation = Aggregation;
 /*!****************************************************!*\
   !*** ./node_modules/apisearch/lib/Query/Filter.js ***!
   \****************************************************/
-/***/ ((__unused_webpack_module, exports) => {
+/***/ (function(__unused_webpack_module, exports) {
 
 "use strict";
 
@@ -3182,7 +3063,7 @@ exports.Filter = Filter;
 /*!***************************************************!*\
   !*** ./node_modules/apisearch/lib/Query/Query.js ***!
   \***************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
@@ -4450,7 +4331,7 @@ exports.Query = Query;
 /*!***************************************************!*\
   !*** ./node_modules/apisearch/lib/Query/Range.js ***!
   \***************************************************/
-/***/ ((__unused_webpack_module, exports) => {
+/***/ (function(__unused_webpack_module, exports) {
 
 "use strict";
 
@@ -4534,7 +4415,7 @@ exports.Range = Range;
 /*!*************************************************************!*\
   !*** ./node_modules/apisearch/lib/Query/ScoreStrategies.js ***!
   \*************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
@@ -4645,7 +4526,7 @@ exports.ScoreStrategies = ScoreStrategies;
 /*!***********************************************************!*\
   !*** ./node_modules/apisearch/lib/Query/ScoreStrategy.js ***!
   \***********************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
@@ -4898,7 +4779,7 @@ exports.ScoreStrategy = ScoreStrategy;
 /*!****************************************************!*\
   !*** ./node_modules/apisearch/lib/Query/SortBy.js ***!
   \****************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
@@ -5232,7 +5113,7 @@ exports.SortBy = SortBy;
 /*!*****************************************************************!*\
   !*** ./node_modules/apisearch/lib/Repository/HttpRepository.js ***!
   \*****************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
@@ -5777,7 +5658,7 @@ exports.HttpRepository = HttpRepository;
 /*!*************************************************************!*\
   !*** ./node_modules/apisearch/lib/Repository/Repository.js ***!
   \*************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
@@ -5912,7 +5793,7 @@ exports.Repository = Repository;
 /*!******************************************************!*\
   !*** ./node_modules/apisearch/lib/Result/Counter.js ***!
   \******************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
@@ -6059,7 +5940,7 @@ exports.Counter = Counter;
 /*!*****************************************************!*\
   !*** ./node_modules/apisearch/lib/Result/Result.js ***!
   \*****************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
@@ -6353,7 +6234,7 @@ exports.Result = Result;
 /*!****************************************************************!*\
   !*** ./node_modules/apisearch/lib/Result/ResultAggregation.js ***!
   \****************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
@@ -6612,7 +6493,7 @@ exports.ResultAggregation = ResultAggregation;
 /*!*****************************************************************!*\
   !*** ./node_modules/apisearch/lib/Result/ResultAggregations.js ***!
   \*****************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
@@ -6729,7 +6610,7 @@ exports.ResultAggregations = ResultAggregations;
 /*!*******************************************************************!*\
   !*** ./node_modules/apisearch/lib/Transformer/ReadTransformer.js ***!
   \*******************************************************************/
-/***/ ((__unused_webpack_module, exports) => {
+/***/ (function(__unused_webpack_module, exports) {
 
 "use strict";
 
@@ -6742,7 +6623,7 @@ exports.__esModule = true;
 /*!***************************************************************!*\
   !*** ./node_modules/apisearch/lib/Transformer/Transformer.js ***!
   \***************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
@@ -6891,7 +6772,7 @@ exports.Transformer = Transformer;
 /*!********************************************************************!*\
   !*** ./node_modules/apisearch/lib/Transformer/WriteTransformer.js ***!
   \********************************************************************/
-/***/ ((__unused_webpack_module, exports) => {
+/***/ (function(__unused_webpack_module, exports) {
 
 "use strict";
 
@@ -6904,7 +6785,7 @@ exports.__esModule = true;
 /*!*********************************************!*\
   !*** ./node_modules/apisearch/lib/index.js ***!
   \*********************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
@@ -6955,25 +6836,11 @@ tslib_1.__exportStar(__webpack_require__(/*! ./Transformer/WriteTransformer */ "
 
 /***/ }),
 
-/***/ "./node_modules/axios-retry/index.js":
-/*!*******************************************!*\
-  !*** ./node_modules/axios-retry/index.js ***!
-  \*******************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-const axiosRetry = __webpack_require__(/*! ./lib/cjs/index */ "./node_modules/axios-retry/lib/cjs/index.js")["default"];
-
-module.exports = axiosRetry;
-module.exports["default"] = axiosRetry;
-
-
-/***/ }),
-
 /***/ "./node_modules/axios/index.js":
 /*!*************************************!*\
   !*** ./node_modules/axios/index.js ***!
   \*************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 module.exports = __webpack_require__(/*! ./lib/axios */ "./node_modules/axios/lib/axios.js");
 
@@ -6983,7 +6850,7 @@ module.exports = __webpack_require__(/*! ./lib/axios */ "./node_modules/axios/li
 /*!************************************************!*\
   !*** ./node_modules/axios/lib/adapters/xhr.js ***!
   \************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
 
@@ -6996,24 +6863,12 @@ var buildFullPath = __webpack_require__(/*! ../core/buildFullPath */ "./node_mod
 var parseHeaders = __webpack_require__(/*! ./../helpers/parseHeaders */ "./node_modules/axios/lib/helpers/parseHeaders.js");
 var isURLSameOrigin = __webpack_require__(/*! ./../helpers/isURLSameOrigin */ "./node_modules/axios/lib/helpers/isURLSameOrigin.js");
 var createError = __webpack_require__(/*! ../core/createError */ "./node_modules/axios/lib/core/createError.js");
-var defaults = __webpack_require__(/*! ../defaults */ "./node_modules/axios/lib/defaults.js");
-var Cancel = __webpack_require__(/*! ../cancel/Cancel */ "./node_modules/axios/lib/cancel/Cancel.js");
 
 module.exports = function xhrAdapter(config) {
   return new Promise(function dispatchXhrRequest(resolve, reject) {
     var requestData = config.data;
     var requestHeaders = config.headers;
     var responseType = config.responseType;
-    var onCanceled;
-    function done() {
-      if (config.cancelToken) {
-        config.cancelToken.unsubscribe(onCanceled);
-      }
-
-      if (config.signal) {
-        config.signal.removeEventListener('abort', onCanceled);
-      }
-    }
 
     if (utils.isFormData(requestData)) {
       delete requestHeaders['Content-Type']; // Let the browser set it
@@ -7051,13 +6906,7 @@ module.exports = function xhrAdapter(config) {
         request: request
       };
 
-      settle(function _resolve(value) {
-        resolve(value);
-        done();
-      }, function _reject(err) {
-        reject(err);
-        done();
-      }, response);
+      settle(resolve, reject, response);
 
       // Clean up request
       request = null;
@@ -7110,15 +6959,14 @@ module.exports = function xhrAdapter(config) {
 
     // Handle timeout
     request.ontimeout = function handleTimeout() {
-      var timeoutErrorMessage = config.timeout ? 'timeout of ' + config.timeout + 'ms exceeded' : 'timeout exceeded';
-      var transitional = config.transitional || defaults.transitional;
+      var timeoutErrorMessage = 'timeout of ' + config.timeout + 'ms exceeded';
       if (config.timeoutErrorMessage) {
         timeoutErrorMessage = config.timeoutErrorMessage;
       }
       reject(createError(
         timeoutErrorMessage,
         config,
-        transitional.clarifyTimeoutError ? 'ETIMEDOUT' : 'ECONNABORTED',
+        config.transitional && config.transitional.clarifyTimeoutError ? 'ETIMEDOUT' : 'ECONNABORTED',
         request));
 
       // Clean up request
@@ -7172,22 +7020,18 @@ module.exports = function xhrAdapter(config) {
       request.upload.addEventListener('progress', config.onUploadProgress);
     }
 
-    if (config.cancelToken || config.signal) {
+    if (config.cancelToken) {
       // Handle cancellation
-      // eslint-disable-next-line func-names
-      onCanceled = function(cancel) {
+      config.cancelToken.promise.then(function onCanceled(cancel) {
         if (!request) {
           return;
         }
-        reject(!cancel || (cancel && cancel.type) ? new Cancel('canceled') : cancel);
-        request.abort();
-        request = null;
-      };
 
-      config.cancelToken && config.cancelToken.subscribe(onCanceled);
-      if (config.signal) {
-        config.signal.aborted ? onCanceled() : config.signal.addEventListener('abort', onCanceled);
-      }
+        request.abort();
+        reject(cancel);
+        // Clean up request
+        request = null;
+      });
     }
 
     if (!requestData) {
@@ -7206,7 +7050,7 @@ module.exports = function xhrAdapter(config) {
 /*!*****************************************!*\
   !*** ./node_modules/axios/lib/axios.js ***!
   \*****************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
 
@@ -7233,11 +7077,6 @@ function createInstance(defaultConfig) {
   // Copy context to instance
   utils.extend(instance, context);
 
-  // Factory for creating new instances
-  instance.create = function create(instanceConfig) {
-    return createInstance(mergeConfig(defaultConfig, instanceConfig));
-  };
-
   return instance;
 }
 
@@ -7247,11 +7086,15 @@ var axios = createInstance(defaults);
 // Expose Axios class to allow class inheritance
 axios.Axios = Axios;
 
+// Factory for creating new instances
+axios.create = function create(instanceConfig) {
+  return createInstance(mergeConfig(axios.defaults, instanceConfig));
+};
+
 // Expose Cancel & CancelToken
 axios.Cancel = __webpack_require__(/*! ./cancel/Cancel */ "./node_modules/axios/lib/cancel/Cancel.js");
 axios.CancelToken = __webpack_require__(/*! ./cancel/CancelToken */ "./node_modules/axios/lib/cancel/CancelToken.js");
 axios.isCancel = __webpack_require__(/*! ./cancel/isCancel */ "./node_modules/axios/lib/cancel/isCancel.js");
-axios.VERSION = __webpack_require__(/*! ./env/data */ "./node_modules/axios/lib/env/data.js").version;
 
 // Expose all/spread
 axios.all = function all(promises) {
@@ -7274,7 +7117,7 @@ module.exports["default"] = axios;
 /*!*************************************************!*\
   !*** ./node_modules/axios/lib/cancel/Cancel.js ***!
   \*************************************************/
-/***/ ((module) => {
+/***/ (function(module) {
 
 "use strict";
 
@@ -7304,7 +7147,7 @@ module.exports = Cancel;
 /*!******************************************************!*\
   !*** ./node_modules/axios/lib/cancel/CancelToken.js ***!
   \******************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
 
@@ -7323,42 +7166,11 @@ function CancelToken(executor) {
   }
 
   var resolvePromise;
-
   this.promise = new Promise(function promiseExecutor(resolve) {
     resolvePromise = resolve;
   });
 
   var token = this;
-
-  // eslint-disable-next-line func-names
-  this.promise.then(function(cancel) {
-    if (!token._listeners) return;
-
-    var i;
-    var l = token._listeners.length;
-
-    for (i = 0; i < l; i++) {
-      token._listeners[i](cancel);
-    }
-    token._listeners = null;
-  });
-
-  // eslint-disable-next-line func-names
-  this.promise.then = function(onfulfilled) {
-    var _resolve;
-    // eslint-disable-next-line func-names
-    var promise = new Promise(function(resolve) {
-      token.subscribe(resolve);
-      _resolve = resolve;
-    }).then(onfulfilled);
-
-    promise.cancel = function reject() {
-      token.unsubscribe(_resolve);
-    };
-
-    return promise;
-  };
-
   executor(function cancel(message) {
     if (token.reason) {
       // Cancellation has already been requested
@@ -7376,37 +7188,6 @@ function CancelToken(executor) {
 CancelToken.prototype.throwIfRequested = function throwIfRequested() {
   if (this.reason) {
     throw this.reason;
-  }
-};
-
-/**
- * Subscribe to the cancel signal
- */
-
-CancelToken.prototype.subscribe = function subscribe(listener) {
-  if (this.reason) {
-    listener(this.reason);
-    return;
-  }
-
-  if (this._listeners) {
-    this._listeners.push(listener);
-  } else {
-    this._listeners = [listener];
-  }
-};
-
-/**
- * Unsubscribe from the cancel signal
- */
-
-CancelToken.prototype.unsubscribe = function unsubscribe(listener) {
-  if (!this._listeners) {
-    return;
-  }
-  var index = this._listeners.indexOf(listener);
-  if (index !== -1) {
-    this._listeners.splice(index, 1);
   }
 };
 
@@ -7434,7 +7215,7 @@ module.exports = CancelToken;
 /*!***************************************************!*\
   !*** ./node_modules/axios/lib/cancel/isCancel.js ***!
   \***************************************************/
-/***/ ((module) => {
+/***/ (function(module) {
 
 "use strict";
 
@@ -7450,7 +7231,7 @@ module.exports = function isCancel(value) {
 /*!**********************************************!*\
   !*** ./node_modules/axios/lib/core/Axios.js ***!
   \**********************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
 
@@ -7506,9 +7287,9 @@ Axios.prototype.request = function request(config) {
 
   if (transitional !== undefined) {
     validator.assertOptions(transitional, {
-      silentJSONParsing: validators.transitional(validators.boolean),
-      forcedJSONParsing: validators.transitional(validators.boolean),
-      clarifyTimeoutError: validators.transitional(validators.boolean)
+      silentJSONParsing: validators.transitional(validators.boolean, '1.0.0'),
+      forcedJSONParsing: validators.transitional(validators.boolean, '1.0.0'),
+      clarifyTimeoutError: validators.transitional(validators.boolean, '1.0.0')
     }, false);
   }
 
@@ -7609,7 +7390,7 @@ module.exports = Axios;
 /*!***********************************************************!*\
   !*** ./node_modules/axios/lib/core/InterceptorManager.js ***!
   \***********************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
 
@@ -7674,7 +7455,7 @@ module.exports = InterceptorManager;
 /*!******************************************************!*\
   !*** ./node_modules/axios/lib/core/buildFullPath.js ***!
   \******************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
 
@@ -7705,7 +7486,7 @@ module.exports = function buildFullPath(baseURL, requestedURL) {
 /*!****************************************************!*\
   !*** ./node_modules/axios/lib/core/createError.js ***!
   \****************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
 
@@ -7734,7 +7515,7 @@ module.exports = function createError(message, config, code, request, response) 
 /*!********************************************************!*\
   !*** ./node_modules/axios/lib/core/dispatchRequest.js ***!
   \********************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
 
@@ -7743,7 +7524,6 @@ var utils = __webpack_require__(/*! ./../utils */ "./node_modules/axios/lib/util
 var transformData = __webpack_require__(/*! ./transformData */ "./node_modules/axios/lib/core/transformData.js");
 var isCancel = __webpack_require__(/*! ../cancel/isCancel */ "./node_modules/axios/lib/cancel/isCancel.js");
 var defaults = __webpack_require__(/*! ../defaults */ "./node_modules/axios/lib/defaults.js");
-var Cancel = __webpack_require__(/*! ../cancel/Cancel */ "./node_modules/axios/lib/cancel/Cancel.js");
 
 /**
  * Throws a `Cancel` if cancellation has been requested.
@@ -7751,10 +7531,6 @@ var Cancel = __webpack_require__(/*! ../cancel/Cancel */ "./node_modules/axios/l
 function throwIfCancellationRequested(config) {
   if (config.cancelToken) {
     config.cancelToken.throwIfRequested();
-  }
-
-  if (config.signal && config.signal.aborted) {
-    throw new Cancel('canceled');
   }
 }
 
@@ -7832,7 +7608,7 @@ module.exports = function dispatchRequest(config) {
 /*!*****************************************************!*\
   !*** ./node_modules/axios/lib/core/enhanceError.js ***!
   \*****************************************************/
-/***/ ((module) => {
+/***/ (function(module) {
 
 "use strict";
 
@@ -7872,8 +7648,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
       stack: this.stack,
       // Axios
       config: this.config,
-      code: this.code,
-      status: this.response && this.response.status ? this.response.status : null
+      code: this.code
     };
   };
   return error;
@@ -7886,7 +7661,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
 /*!****************************************************!*\
   !*** ./node_modules/axios/lib/core/mergeConfig.js ***!
   \****************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
 
@@ -7906,6 +7681,17 @@ module.exports = function mergeConfig(config1, config2) {
   config2 = config2 || {};
   var config = {};
 
+  var valueFromConfig2Keys = ['url', 'method', 'data'];
+  var mergeDeepPropertiesKeys = ['headers', 'auth', 'proxy', 'params'];
+  var defaultToConfig2Keys = [
+    'baseURL', 'transformRequest', 'transformResponse', 'paramsSerializer',
+    'timeout', 'timeoutMessage', 'withCredentials', 'adapter', 'responseType', 'xsrfCookieName',
+    'xsrfHeaderName', 'onUploadProgress', 'onDownloadProgress', 'decompress',
+    'maxContentLength', 'maxBodyLength', 'maxRedirects', 'transport', 'httpAgent',
+    'httpsAgent', 'cancelToken', 'socketPath', 'responseEncoding'
+  ];
+  var directMergeKeys = ['validateStatus'];
+
   function getMergedValue(target, source) {
     if (utils.isPlainObject(target) && utils.isPlainObject(source)) {
       return utils.merge(target, source);
@@ -7917,74 +7703,51 @@ module.exports = function mergeConfig(config1, config2) {
     return source;
   }
 
-  // eslint-disable-next-line consistent-return
   function mergeDeepProperties(prop) {
     if (!utils.isUndefined(config2[prop])) {
-      return getMergedValue(config1[prop], config2[prop]);
+      config[prop] = getMergedValue(config1[prop], config2[prop]);
     } else if (!utils.isUndefined(config1[prop])) {
-      return getMergedValue(undefined, config1[prop]);
+      config[prop] = getMergedValue(undefined, config1[prop]);
     }
   }
 
-  // eslint-disable-next-line consistent-return
-  function valueFromConfig2(prop) {
+  utils.forEach(valueFromConfig2Keys, function valueFromConfig2(prop) {
     if (!utils.isUndefined(config2[prop])) {
-      return getMergedValue(undefined, config2[prop]);
+      config[prop] = getMergedValue(undefined, config2[prop]);
     }
-  }
-
-  // eslint-disable-next-line consistent-return
-  function defaultToConfig2(prop) {
-    if (!utils.isUndefined(config2[prop])) {
-      return getMergedValue(undefined, config2[prop]);
-    } else if (!utils.isUndefined(config1[prop])) {
-      return getMergedValue(undefined, config1[prop]);
-    }
-  }
-
-  // eslint-disable-next-line consistent-return
-  function mergeDirectKeys(prop) {
-    if (prop in config2) {
-      return getMergedValue(config1[prop], config2[prop]);
-    } else if (prop in config1) {
-      return getMergedValue(undefined, config1[prop]);
-    }
-  }
-
-  var mergeMap = {
-    'url': valueFromConfig2,
-    'method': valueFromConfig2,
-    'data': valueFromConfig2,
-    'baseURL': defaultToConfig2,
-    'transformRequest': defaultToConfig2,
-    'transformResponse': defaultToConfig2,
-    'paramsSerializer': defaultToConfig2,
-    'timeout': defaultToConfig2,
-    'timeoutMessage': defaultToConfig2,
-    'withCredentials': defaultToConfig2,
-    'adapter': defaultToConfig2,
-    'responseType': defaultToConfig2,
-    'xsrfCookieName': defaultToConfig2,
-    'xsrfHeaderName': defaultToConfig2,
-    'onUploadProgress': defaultToConfig2,
-    'onDownloadProgress': defaultToConfig2,
-    'decompress': defaultToConfig2,
-    'maxContentLength': defaultToConfig2,
-    'maxBodyLength': defaultToConfig2,
-    'transport': defaultToConfig2,
-    'httpAgent': defaultToConfig2,
-    'httpsAgent': defaultToConfig2,
-    'cancelToken': defaultToConfig2,
-    'socketPath': defaultToConfig2,
-    'responseEncoding': defaultToConfig2,
-    'validateStatus': mergeDirectKeys
-  };
-
-  utils.forEach(Object.keys(config1).concat(Object.keys(config2)), function computeConfigValue(prop) {
-    var merge = mergeMap[prop] || mergeDeepProperties;
-    var configValue = merge(prop);
-    (utils.isUndefined(configValue) && merge !== mergeDirectKeys) || (config[prop] = configValue);
   });
+
+  utils.forEach(mergeDeepPropertiesKeys, mergeDeepProperties);
+
+  utils.forEach(defaultToConfig2Keys, function defaultToConfig2(prop) {
+    if (!utils.isUndefined(config2[prop])) {
+      config[prop] = getMergedValue(undefined, config2[prop]);
+    } else if (!utils.isUndefined(config1[prop])) {
+      config[prop] = getMergedValue(undefined, config1[prop]);
+    }
+  });
+
+  utils.forEach(directMergeKeys, function merge(prop) {
+    if (prop in config2) {
+      config[prop] = getMergedValue(config1[prop], config2[prop]);
+    } else if (prop in config1) {
+      config[prop] = getMergedValue(undefined, config1[prop]);
+    }
+  });
+
+  var axiosKeys = valueFromConfig2Keys
+    .concat(mergeDeepPropertiesKeys)
+    .concat(defaultToConfig2Keys)
+    .concat(directMergeKeys);
+
+  var otherKeys = Object
+    .keys(config1)
+    .concat(Object.keys(config2))
+    .filter(function filterAxiosKeys(key) {
+      return axiosKeys.indexOf(key) === -1;
+    });
+
+  utils.forEach(otherKeys, mergeDeepProperties);
 
   return config;
 };
@@ -7996,7 +7759,7 @@ module.exports = function mergeConfig(config1, config2) {
 /*!***********************************************!*\
   !*** ./node_modules/axios/lib/core/settle.js ***!
   \***********************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
 
@@ -8032,7 +7795,7 @@ module.exports = function settle(resolve, reject, response) {
 /*!******************************************************!*\
   !*** ./node_modules/axios/lib/core/transformData.js ***!
   \******************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
 
@@ -8065,7 +7828,7 @@ module.exports = function transformData(data, headers, fns) {
 /*!********************************************!*\
   !*** ./node_modules/axios/lib/defaults.js ***!
   \********************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
 
@@ -8149,7 +7912,7 @@ var defaults = {
   }],
 
   transformResponse: [function transformResponse(data) {
-    var transitional = this.transitional || defaults.transitional;
+    var transitional = this.transitional;
     var silentJSONParsing = transitional && transitional.silentJSONParsing;
     var forcedJSONParsing = transitional && transitional.forcedJSONParsing;
     var strictJSONParsing = !silentJSONParsing && this.responseType === 'json';
@@ -8184,12 +7947,12 @@ var defaults = {
 
   validateStatus: function validateStatus(status) {
     return status >= 200 && status < 300;
-  },
+  }
+};
 
-  headers: {
-    common: {
-      'Accept': 'application/json, text/plain, */*'
-    }
+defaults.headers = {
+  common: {
+    'Accept': 'application/json, text/plain, */*'
   }
 };
 
@@ -8206,23 +7969,11 @@ module.exports = defaults;
 
 /***/ }),
 
-/***/ "./node_modules/axios/lib/env/data.js":
-/*!********************************************!*\
-  !*** ./node_modules/axios/lib/env/data.js ***!
-  \********************************************/
-/***/ ((module) => {
-
-module.exports = {
-  "version": "0.24.0"
-};
-
-/***/ }),
-
 /***/ "./node_modules/axios/lib/helpers/bind.js":
 /*!************************************************!*\
   !*** ./node_modules/axios/lib/helpers/bind.js ***!
   \************************************************/
-/***/ ((module) => {
+/***/ (function(module) {
 
 "use strict";
 
@@ -8244,7 +7995,7 @@ module.exports = function bind(fn, thisArg) {
 /*!****************************************************!*\
   !*** ./node_modules/axios/lib/helpers/buildURL.js ***!
   \****************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
 
@@ -8325,7 +8076,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 /*!*******************************************************!*\
   !*** ./node_modules/axios/lib/helpers/combineURLs.js ***!
   \*******************************************************/
-/***/ ((module) => {
+/***/ (function(module) {
 
 "use strict";
 
@@ -8350,7 +8101,7 @@ module.exports = function combineURLs(baseURL, relativeURL) {
 /*!***************************************************!*\
   !*** ./node_modules/axios/lib/helpers/cookies.js ***!
   \***************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
 
@@ -8414,7 +8165,7 @@ module.exports = (
 /*!*********************************************************!*\
   !*** ./node_modules/axios/lib/helpers/isAbsoluteURL.js ***!
   \*********************************************************/
-/***/ ((module) => {
+/***/ (function(module) {
 
 "use strict";
 
@@ -8439,7 +8190,7 @@ module.exports = function isAbsoluteURL(url) {
 /*!********************************************************!*\
   !*** ./node_modules/axios/lib/helpers/isAxiosError.js ***!
   \********************************************************/
-/***/ ((module) => {
+/***/ (function(module) {
 
 "use strict";
 
@@ -8461,7 +8212,7 @@ module.exports = function isAxiosError(payload) {
 /*!***********************************************************!*\
   !*** ./node_modules/axios/lib/helpers/isURLSameOrigin.js ***!
   \***********************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
 
@@ -8540,7 +8291,7 @@ module.exports = (
 /*!***************************************************************!*\
   !*** ./node_modules/axios/lib/helpers/normalizeHeaderName.js ***!
   \***************************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
 
@@ -8563,7 +8314,7 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 /*!********************************************************!*\
   !*** ./node_modules/axios/lib/helpers/parseHeaders.js ***!
   \********************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
 
@@ -8627,7 +8378,7 @@ module.exports = function parseHeaders(headers) {
 /*!**************************************************!*\
   !*** ./node_modules/axios/lib/helpers/spread.js ***!
   \**************************************************/
-/***/ ((module) => {
+/***/ (function(module) {
 
 "use strict";
 
@@ -8665,12 +8416,12 @@ module.exports = function spread(callback) {
 /*!*****************************************************!*\
   !*** ./node_modules/axios/lib/helpers/validator.js ***!
   \*****************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
 
 
-var VERSION = __webpack_require__(/*! ../env/data */ "./node_modules/axios/lib/env/data.js").version;
+var pkg = __webpack_require__(/*! ./../../package.json */ "./node_modules/axios/package.json");
 
 var validators = {};
 
@@ -8682,26 +8433,48 @@ var validators = {};
 });
 
 var deprecatedWarnings = {};
+var currentVerArr = pkg.version.split('.');
+
+/**
+ * Compare package versions
+ * @param {string} version
+ * @param {string?} thanVersion
+ * @returns {boolean}
+ */
+function isOlderVersion(version, thanVersion) {
+  var pkgVersionArr = thanVersion ? thanVersion.split('.') : currentVerArr;
+  var destVer = version.split('.');
+  for (var i = 0; i < 3; i++) {
+    if (pkgVersionArr[i] > destVer[i]) {
+      return true;
+    } else if (pkgVersionArr[i] < destVer[i]) {
+      return false;
+    }
+  }
+  return false;
+}
 
 /**
  * Transitional option validator
- * @param {function|boolean?} validator - set to false if the transitional option has been removed
- * @param {string?} version - deprecated version / removed since version
- * @param {string?} message - some message with additional info
+ * @param {function|boolean?} validator
+ * @param {string?} version
+ * @param {string} message
  * @returns {function}
  */
 validators.transitional = function transitional(validator, version, message) {
+  var isDeprecated = version && isOlderVersion(version);
+
   function formatMessage(opt, desc) {
-    return '[Axios v' + VERSION + '] Transitional option \'' + opt + '\'' + desc + (message ? '. ' + message : '');
+    return '[Axios v' + pkg.version + '] Transitional option \'' + opt + '\'' + desc + (message ? '. ' + message : '');
   }
 
   // eslint-disable-next-line func-names
   return function(value, opt, opts) {
     if (validator === false) {
-      throw new Error(formatMessage(opt, ' has been removed' + (version ? ' in ' + version : '')));
+      throw new Error(formatMessage(opt, ' has been removed in ' + version));
     }
 
-    if (version && !deprecatedWarnings[opt]) {
+    if (isDeprecated && !deprecatedWarnings[opt]) {
       deprecatedWarnings[opt] = true;
       // eslint-disable-next-line no-console
       console.warn(
@@ -8747,6 +8520,7 @@ function assertOptions(options, schema, allowUnknown) {
 }
 
 module.exports = {
+  isOlderVersion: isOlderVersion,
   assertOptions: assertOptions,
   validators: validators
 };
@@ -8758,7 +8532,7 @@ module.exports = {
 /*!*****************************************!*\
   !*** ./node_modules/axios/lib/utils.js ***!
   \*****************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
 
@@ -9114,11 +8888,6236 @@ module.exports = {
 
 /***/ }),
 
+/***/ "./src/ApisearchHelper.ts":
+/*!********************************!*\
+  !*** ./src/ApisearchHelper.ts ***!
+  \********************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return /* binding */ ApisearchHelper; }
+/* harmony export */ });
+/* harmony import */ var _components_SortBy_SortByHelper__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/SortBy/SortByHelper */ "./src/components/SortBy/SortByHelper.ts");
+/* harmony import */ var apisearch__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
+/* harmony import */ var apisearch__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(apisearch__WEBPACK_IMPORTED_MODULE_1__);
+
+
+/**
+ * ApisearchUI class
+ */
+
+class ApisearchHelper {
+  /**
+   * @param query
+   * @param sortBy
+   */
+  sortBy(query, sortBy) {
+    (0,_components_SortBy_SortByHelper__WEBPACK_IMPORTED_MODULE_0__.applySortByToQuery)(query, sortBy);
+  }
+  /**
+   * @param query
+   * @param field
+   * @param value
+   * @param weight
+   */
+
+
+  boostByWeightAndFilter(query, field, value, weight) {
+    const scoreStrategies = query.getScoreStrategies() ?? apisearch__WEBPACK_IMPORTED_MODULE_1__.ScoreStrategies.createEmpty(apisearch__WEBPACK_IMPORTED_MODULE_1__.MULTIPLY);
+    scoreStrategies.addScoreStrategy(apisearch__WEBPACK_IMPORTED_MODULE_1__.ScoreStrategy.createFromArray({
+      "type": "weight",
+      "weight": weight,
+      "filter": {
+        "field": field,
+        "values": [value],
+        "application_type": apisearch__WEBPACK_IMPORTED_MODULE_1__.FILTER_MUST_ALL,
+        "filter_type": apisearch__WEBPACK_IMPORTED_MODULE_1__.FILTER_TYPE_FIELD
+      },
+      "match_main_query": true
+    }));
+    query.setScoreStrategies(scoreStrategies);
+  }
+
+}
+
+/***/ }),
+
+/***/ "./src/ApisearchUI.ts":
+/*!****************************!*\
+  !*** ./src/ApisearchUI.ts ***!
+  \****************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return /* binding */ ApisearchUI; }
+/* harmony export */ });
+/* harmony import */ var apisearch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
+/* harmony import */ var apisearch__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(apisearch__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _ApisearchHelper__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ApisearchHelper */ "./src/ApisearchHelper.ts");
+/* harmony import */ var _ApisearchUIFactory__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ApisearchUIFactory */ "./src/ApisearchUIFactory.ts");
+/* harmony import */ var _Bootstrap__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Bootstrap */ "./src/Bootstrap.ts");
+/* harmony import */ var _Constants__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Constants */ "./src/Constants.ts");
+/* harmony import */ var _Container__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Container */ "./src/Container.ts");
+/* harmony import */ var _Environment__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Environment */ "./src/Environment.ts");
+/* harmony import */ var _widgets_Widgets__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./widgets/Widgets */ "./src/widgets/Widgets.ts");
+
+
+
+
+
+
+
+
+
+/**
+ * ApisearchUI class
+ */
+
+class ApisearchUI {
+  /**
+   * Constructor
+   *
+   * @param environmentId
+   * @param repository
+   * @param store
+   */
+  constructor(environmentId, repository, store) {
+    /**
+     * Environment Id
+     */
+    this.environmentId = environmentId;
+    this.repository = repository;
+    this.activeWidgets = [];
+    this.widgets = _widgets_Widgets__WEBPACK_IMPORTED_MODULE_7__["default"];
+    this.helper = new _ApisearchHelper__WEBPACK_IMPORTED_MODULE_1__["default"]();
+    this.dictionary = {};
+    /**
+     * Store related properties
+     */
+
+    this.store = store;
+  }
+  /**
+   * Initialize components
+   *
+   * @param firstQuery
+   */
+
+
+  init() {
+    let {
+      firstQuery = true
+    } = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    this.activeWidgets.map(widget => widget.withConfig(this.config));
+    /**
+     * 1.- Register all events on the store
+     */
+
+    this.store.on("render", () => this.render());
+    this.store.on("toUrlObject", (query, object) => this.toUrlObject(query, object));
+    this.store.on("fromUrlObject", (object, query) => this.fromUrlObject(object, query));
+    /**
+     * 2.- Trigger the initial render: (Mount the components)
+     *     To let components setup its configuration on componentWillMount()
+     */
+
+    this.render();
+    /**
+     * 3.- Dispatch the initial data request
+     *     With all widget previous initial configurations
+     */
+
+    this.firstQuery = firstQuery;
+    this.fetchQuery(true);
+    window.postMessage("apisearch_loaded", "*");
+  }
+  /**
+   *
+   */
+
+
+  reset() {
+    const initialQuery = this.store.getCurrentQuery().toArray();
+    this.activeWidgets.map(widget => {
+      widget.reset(initialQuery);
+    });
+    this.store.setCurrentQuery(apisearch__WEBPACK_IMPORTED_MODULE_0__.Query.createFromArray(initialQuery));
+    this.store.setEmptyResult();
+    this.fetchQuery(false);
+    this.render();
+  }
+  /**
+   * @param loadQuery
+   */
+
+
+  fetchQuery(loadQuery) {
+    /**
+     * 3.- Dispatch the initial data request
+     *     With all widget previous initial configurations
+     */
+    if (typeof this.firstQuery === "undefined" || true === this.firstQuery) {
+      this.store.fetchInitialQuery(this.environmentId, this.repository, loadQuery);
+    }
+  }
+  /**
+   * @param dictionary
+   */
+
+
+  setDictionary(dictionary) {
+    this.dictionary = dictionary;
+  }
+  /**
+   * Add new widget
+   *
+   * @param widget
+   *
+   * @return {ApisearchUI}
+   */
+
+
+  addWidget(widget) {
+    widget.withConfig(this.config);
+    this.activeWidgets = [...this.activeWidgets, widget];
+    return this;
+  }
+  /**
+   * Add components in bulk mode
+   *
+   * @param widgets
+   *
+   * @return {ApisearchUI}
+   */
+
+
+  addWidgets() {
+    for (var _len = arguments.length, widgets = new Array(_len), _key = 0; _key < _len; _key++) {
+      widgets[_key] = arguments[_key];
+    }
+
+    widgets.map(widget => this.addWidget(widget));
+    return this;
+  }
+  /**
+   * Render.
+   *
+   * Loop all active components
+   * Hydrate them with new props
+   * And render them.
+   */
+
+
+  render() {
+    this.activeWidgets.map(widget => {
+      widget.render(this.environmentId, this.store, this.repository, this.dictionary);
+    });
+    window.postMessage("apisearch_rendered", "*");
+  }
+  /**
+   *
+   */
+
+
+  normalizeQuery() {
+    this.activeWidgets.map(widget => {
+      widget.normalizeQuery(this.environmentId, this.store.getCurrentQuery());
+    });
+  }
+  /**
+   * @param query
+   * @param object
+   */
+
+
+  toUrlObject(query, object) {
+    this.activeWidgets.map(widget => {
+      widget.toUrlObject(query, object);
+    });
+  }
+  /**
+   * @param object
+   * @param query
+   */
+
+
+  fromUrlObject(object, query) {
+    this.activeWidgets.map(widget => {
+      widget.fromUrlObject(object, query);
+    });
+  }
+  /**
+   * @param config
+   * @param hash
+   *
+   * @return {ApisearchUI}
+   */
+
+
+  static create(config, hash) {
+    apisearch__WEBPACK_IMPORTED_MODULE_0___default().ensureRepositoryConfigIsValid(config);
+    /**
+     * Build environment Id
+     */
+
+    const environmentId = (0,_Environment__WEBPACK_IMPORTED_MODULE_6__.createEnvironmentId)();
+    /**
+     * Bootstrapping ApisearchUI application
+     */
+
+    (0,_Bootstrap__WEBPACK_IMPORTED_MODULE_3__.bootstrap)(environmentId, config, hash);
+    /**
+     * Register handleActions method (store reducer)
+     * into the event dispatcher
+     */
+
+    const apisearchUI = _Container__WEBPACK_IMPORTED_MODULE_5__["default"].get(`${_Constants__WEBPACK_IMPORTED_MODULE_4__.APISEARCH_UI}__${environmentId}`);
+    const dispatcher = _Container__WEBPACK_IMPORTED_MODULE_5__["default"].get(`${_Constants__WEBPACK_IMPORTED_MODULE_4__.APISEARCH_DISPATCHER}__${environmentId}`);
+    dispatcher.registerListener("RENDER_INITIAL_DATA", payload => apisearchUI.store.renderInitialData(payload));
+    dispatcher.registerListener("RENDER_FETCHED_DATA", payload => apisearchUI.store.renderFetchedData(payload));
+    dispatcher.registerListener("UPDATE_APISEARCH_SETUP", payload => apisearchUI.store.updateApisearchSetup(payload));
+    dispatcher.registerListener("NORMALIZE_QUERY", payload => apisearchUI.normalizeQuery());
+    /**
+     * Add widgets
+     */
+
+    apisearchUI.widgets = _widgets_Widgets__WEBPACK_IMPORTED_MODULE_7__["default"];
+    apisearchUI.config = config;
+    const uiId = `ui_${Math.ceil(Math.random() * (9999999 - 1) + 1)}`;
+    apisearchUI.reference = uiId;
+    apisearchUI.userId = config.user_id ?? "";
+    window[uiId] = apisearchUI;
+    /**
+     * Return ApisearchUI instance
+     */
+
+    return apisearchUI;
+  }
+  /**
+   * Create instance
+   *
+   * @param config
+   *
+   * @return {ApisearchUIFactory}
+   */
+
+
+  static factory(config) {
+    return _ApisearchUIFactory__WEBPACK_IMPORTED_MODULE_2__["default"].fromConfig(config);
+  }
+  /**
+   * Click
+   *
+   * @param appId
+   * @param indexId
+   * @param itemId
+   *
+   * @return {any}
+   */
+
+
+  click(appId, indexId, itemId) {
+    this.repository.click(appId, indexId, itemId, this.userId);
+  }
+
+}
+
+/***/ }),
+
+/***/ "./src/ApisearchUIFactory.ts":
+/*!***********************************!*\
+  !*** ./src/ApisearchUIFactory.ts ***!
+  \***********************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return /* binding */ ApisearchUIFactory; }
+/* harmony export */ });
+/* harmony import */ var _ApisearchUI__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ApisearchUI */ "./src/ApisearchUI.ts");
+
+/**
+ * ApisearchUIFactory class
+ */
+
+class ApisearchUIFactory {
+  /**
+   * Create instance
+   *
+   * @param config
+   *
+   * @return {ApisearchUIFactory}
+   */
+  static fromConfig(config) {
+    const instance = new ApisearchUIFactory();
+    instance.config = config;
+    return instance;
+  }
+  /**
+   * @param hash
+   *
+   * @return {ApisearchUI}
+   */
+
+
+  createUI() {
+    let hash = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+    return _ApisearchUI__WEBPACK_IMPORTED_MODULE_0__["default"].create(this.config, hash);
+  }
+
+}
+
+/***/ }),
+
+/***/ "./src/Bootstrap.ts":
+/*!**************************!*\
+  !*** ./src/Bootstrap.ts ***!
+  \**************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "bootstrap": function() { return /* binding */ bootstrap; }
+/* harmony export */ });
+/* harmony import */ var _Dispatcher__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Dispatcher */ "./src/Dispatcher.ts");
+/* harmony import */ var apisearch__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
+/* harmony import */ var apisearch__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(apisearch__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _ApisearchUI__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ApisearchUI */ "./src/ApisearchUI.ts");
+/* harmony import */ var _Container__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Container */ "./src/Container.ts");
+/* harmony import */ var _Store__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Store */ "./src/Store.ts");
+/* harmony import */ var _Constants__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Constants */ "./src/Constants.ts");
+
+
+
+
+
+
+/**
+ * @param environmentId
+ * @param config
+ * @param hash
+ */
+
+function bootstrap(environmentId, config, hash) {
+  const configAsString = JSON.stringify(config);
+  const repositoryId = `${_Constants__WEBPACK_IMPORTED_MODULE_5__.APISEARCH_REPOSITORY}__${configAsString}`;
+  const storeId = `${_Constants__WEBPACK_IMPORTED_MODULE_5__.APISEARCH_STORE}__${environmentId}`;
+  const dispatcherId = `${_Constants__WEBPACK_IMPORTED_MODULE_5__.APISEARCH_DISPATCHER}__${environmentId}`;
+  const configId = `${_Constants__WEBPACK_IMPORTED_MODULE_5__.APISEARCH_CONFIG}__${environmentId}`;
+  const asuiId = `${_Constants__WEBPACK_IMPORTED_MODULE_5__.APISEARCH_UI}__${environmentId}`;
+  /**
+   * Register Apisearch repository
+   */
+
+  _Container__WEBPACK_IMPORTED_MODULE_3__["default"].register(repositoryId, () => {
+    return apisearch__WEBPACK_IMPORTED_MODULE_1___default().createRepository(config);
+  });
+  /**
+   * Register apisearch store
+   */
+
+  _Container__WEBPACK_IMPORTED_MODULE_3__["default"].register(storeId, () => {
+    return new _Store__WEBPACK_IMPORTED_MODULE_4__["default"](config.coordinate, config.options.min_score, hash, config.user_id ?? "", config.options.generate_random_session_uuid ?? false);
+  });
+  /**
+   * Register an event dispatcher
+   */
+
+  _Container__WEBPACK_IMPORTED_MODULE_3__["default"].register(dispatcherId, () => {
+    return new _Dispatcher__WEBPACK_IMPORTED_MODULE_0__.Dispatcher();
+  });
+  /**
+   * Register Apisearch config
+   */
+
+  _Container__WEBPACK_IMPORTED_MODULE_3__["default"].register(configId, () => {
+    return config;
+  });
+  /**
+   * Apisearch UI Instance
+   */
+
+  _Container__WEBPACK_IMPORTED_MODULE_3__["default"].register(asuiId, () => {
+    return new _ApisearchUI__WEBPACK_IMPORTED_MODULE_2__["default"](environmentId, _Container__WEBPACK_IMPORTED_MODULE_3__["default"].get(repositoryId), _Container__WEBPACK_IMPORTED_MODULE_3__["default"].get(storeId));
+  });
+}
+
+/***/ }),
+
+/***/ "./src/Constants.ts":
+/*!**************************!*\
+  !*** ./src/Constants.ts ***!
+  \**************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "APISEARCH_REPOSITORY": function() { return /* binding */ APISEARCH_REPOSITORY; },
+/* harmony export */   "APISEARCH_STORE": function() { return /* binding */ APISEARCH_STORE; },
+/* harmony export */   "APISEARCH_DISPATCHER": function() { return /* binding */ APISEARCH_DISPATCHER; },
+/* harmony export */   "APISEARCH_UI": function() { return /* binding */ APISEARCH_UI; },
+/* harmony export */   "APISEARCH_CONFIG": function() { return /* binding */ APISEARCH_CONFIG; }
+/* harmony export */ });
+/**
+ * Service constants
+ */
+const APISEARCH_REPOSITORY = "apisearch_repository";
+const APISEARCH_STORE = "apisearch_store";
+const APISEARCH_DISPATCHER = "apisearch_dispatcher";
+const APISEARCH_UI = "apisearch_ui";
+const APISEARCH_CONFIG = "apisearch_config";
+
+/***/ }),
+
+/***/ "./src/Container.ts":
+/*!**************************!*\
+  !*** ./src/Container.ts ***!
+  \**************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+/**
+ * Apisearch Dependency Injection Container
+ */
+class Container {
+  constructor() {
+    _defineProperty(this, "services", {});
+  }
+
+  /**
+   * Get service
+   *
+   * @param id
+   */
+  get(id) {
+    if (this.services[id]) {
+      return this.services[id];
+    }
+
+    throw new Error(`Service with id (${id}) is not registered.`);
+  }
+  /**
+   * Register service
+   *
+   * @param id
+   * @param serviceCallback
+   */
+
+
+  register(id, serviceCallback) {
+    this.services[id] = serviceCallback();
+  }
+
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (new Container());
+
+/***/ }),
+
+/***/ "./src/Dispatcher.ts":
+/*!***************************!*\
+  !*** ./src/Dispatcher.ts ***!
+  \***************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Dispatcher": function() { return /* binding */ Dispatcher; }
+/* harmony export */ });
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+class Dispatcher {
+  constructor() {
+    _defineProperty(this, "events", {});
+  }
+
+  registerListener(event, callback) {
+    // Create the event if not exists
+    if (this.events[event] === undefined) {
+      this.events[event] = {
+        listeners: []
+      };
+    }
+
+    this.events[event].listeners.push(callback);
+  }
+
+  dispatch(event, payload) {
+    this.events[event].listeners.forEach(listener => {
+      listener(payload);
+    });
+  }
+
+}
+
+/***/ }),
+
+/***/ "./src/Environment.ts":
+/*!****************************!*\
+  !*** ./src/Environment.ts ***!
+  \****************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "createEnvironmentId": function() { return /* binding */ createEnvironmentId; }
+/* harmony export */ });
+/**
+ * Create an envID
+ */
+const createEnvironmentId = () => `env_${Math.ceil(Math.random() * (9999999 - 1) + 1)}`;
+
+/***/ }),
+
+/***/ "./src/Store.ts":
+/*!**********************!*\
+  !*** ./src/Store.ts ***!
+  \**********************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var apisearch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
+/* harmony import */ var apisearch__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(apisearch__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var events__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! events */ "./node_modules/events/events.js");
+/* harmony import */ var events__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(events__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _Constants__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Constants */ "./src/Constants.ts");
+/* harmony import */ var _Container__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Container */ "./src/Container.ts");
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+
+
+/**
+ * Flux pattern store class
+ */
+
+class Store extends events__WEBPACK_IMPORTED_MODULE_1__.EventEmitter {
+  /**
+   * @param coordinate
+   * @param minScore
+   * @param hash
+   * @param userId
+   * @param generateRandomSessionUUID
+   */
+  constructor(coordinate, minScore, hash, userId, generateRandomSessionUUID) {
+    super();
+
+    _defineProperty(this, "withHash", false);
+
+    _defineProperty(this, "doNotCleanUrlHashAtFirst", false);
+
+    this.dirty = true;
+    const initialQuery = Store.loadInitialQuery(coordinate, userId);
+    this.window = window.top;
+    this.isUnderIframe = window !== window.top;
+
+    if (typeof hash === "string") {
+      this.withHash = true;
+      this.urlHash = hash === "" ? "{}" : hash;
+
+      if (this.urlHash.charAt(0) === "#") {
+        this.urlHash = this.urlHash.substr(1);
+      }
+    }
+
+    if (minScore) {
+      initialQuery.setMinScore(minScore);
+    }
+    /**
+     * Data received
+     */
+
+
+    this.setEmptyResult();
+    this.currentVisibleResults = false;
+
+    if (generateRandomSessionUUID) {
+      initialQuery.setMetadataValue("session_uid", Store.createUID(16));
+    }
+
+    this.setCurrentQuery(initialQuery);
+  }
+  /**
+   * Is dirty
+   *
+   * @return {any}
+   */
+
+
+  isDirty() {
+    return this.dirty;
+  }
+  /**
+   * Get current query
+   *
+   * @return {Query}
+   */
+
+
+  getCurrentQuery() {
+    return this.currentQuery;
+  }
+  /**
+   * @param query
+   */
+
+
+  setCurrentQuery(query) {
+    this.currentQuery = query;
+  }
+  /**
+   * Get current result
+   *
+   * @return {Result}
+   */
+
+
+  getCurrentResult() {
+    return this.currentResult;
+  }
+  /**
+   *
+   */
+
+
+  setEmptyResult() {
+    this.currentResult = apisearch__WEBPACK_IMPORTED_MODULE_0___default().createEmptyResult();
+  }
+  /**
+   * Get current result
+   *
+   * @return {boolean}
+   */
+
+
+  hasProperResult() {
+    return this.currentResult.getTotalItems() > 0;
+  }
+  /**
+   * Results are visible
+   *
+   * @return {boolean}
+   */
+
+
+  resultsAreVisible() {
+    return this.currentVisibleResults;
+  }
+  /**
+   * @param payload
+   */
+
+
+  updateApisearchSetup(payload) {
+    this.currentQuery = payload.query;
+  }
+  /**
+   * @param payload
+   */
+
+
+  renderInitialData(payload) {
+    const {
+      result,
+      query,
+      _
+    } = payload;
+    this.dirty = false;
+    this.currentResult = result;
+    this.currentQuery = query;
+    this.currentVisibleResults = query !== undefined;
+    this.emit("render");
+    this.replaceUrl(query, result, this.currentVisibleResults);
+  }
+  /**
+   * @param payload
+   */
+
+
+  renderFetchedData(payload) {
+    const {
+      result,
+      query,
+      visibleResults
+    } = payload;
+    this.dirty = false;
+    this.currentResult = result;
+    this.currentQuery = query;
+
+    if (visibleResults !== undefined) {
+      this.currentVisibleResults = visibleResults;
+    }
+
+    this.emit("render");
+    this.replaceUrl(query, result, visibleResults);
+  }
+  /**
+   * Create an uid
+   */
+
+
+  static createUID(length) {
+    let result = "";
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    const charactersLength = characters.length;
+
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+
+    return result;
+  }
+  /**
+   * @param environmentId
+   * @param repository
+   * @param loadQuery
+   */
+
+
+  fetchInitialQuery(environmentId, repository, loadQuery) {
+    const dispatcher = _Container__WEBPACK_IMPORTED_MODULE_3__["default"].get(`${_Constants__WEBPACK_IMPORTED_MODULE_2__.APISEARCH_DISPATCHER}__${environmentId}`);
+    this.currentQuery = loadQuery ? this.loadQuery(this.currentQuery) : this.currentQuery;
+    dispatcher.dispatch("NORMALIZE_QUERY", {
+      query: this.currentQuery
+    });
+    /**
+     * In initial query, we must delete user
+     */
+
+    const queryAsArray = this.currentQuery.toArray();
+    queryAsArray.user = null;
+    repository.query(apisearch__WEBPACK_IMPORTED_MODULE_0__.Query.createFromArray(queryAsArray)).then(result => {
+      dispatcher.dispatch("RENDER_INITIAL_DATA", {
+        query: this.currentQuery,
+        result
+      });
+    });
+  }
+  /**
+   * @param coordinate
+   * @param userId
+   */
+
+
+  static loadInitialQuery(coordinate, userId) {
+    const withCoordinate = coordinate && coordinate.lat !== undefined && coordinate.lon !== undefined;
+    const q = {};
+
+    if (withCoordinate) {
+      q.coordinate = coordinate;
+    }
+
+    if (userId !== "") {
+      q.user = {
+        id: userId
+      };
+    }
+
+    return apisearch__WEBPACK_IMPORTED_MODULE_0__.Query.createFromArray(q);
+  }
+  /**
+   * @param query
+   */
+
+
+  loadQuery(query) {
+    if (!this.withHash) {
+      return query;
+    }
+
+    const queryAsObject = query.toArray();
+
+    try {
+      const urlObject = this.urlHash !== undefined && this.urlHash !== null && this.urlHash !== "" && this.urlHash !== "/" ? JSON.parse(decodeURI(this.urlHash)) : {};
+      this.emit("fromUrlObject", urlObject, queryAsObject);
+    } catch (e) {
+      // Silent pass
+      this.doNotCleanUrlHashAtFirst = true;
+    }
+
+    return apisearch__WEBPACK_IMPORTED_MODULE_0__.Query.createFromArray(queryAsObject);
+  }
+  /**
+   *
+   * @param query
+   * @param result
+   * @param visibleResults
+   */
+
+
+  replaceUrl(query, result, visibleResults) {
+    if (!this.withHash) {
+      return;
+    }
+
+    const queryAsObject = query.toArray();
+    const urlObject = {};
+    this.emit("toUrlObject", queryAsObject, urlObject);
+    let objectAsJson = decodeURI(JSON.stringify(urlObject));
+    objectAsJson = objectAsJson === "{}" ? "" : objectAsJson;
+    objectAsJson = encodeURI(objectAsJson);
+
+    if (!this.isUnderIframe) {
+      const path = window.location.href;
+      const pathWithoutHash = path.split("#", 2)[0];
+      history.replaceState("", "", pathWithoutHash + "#" + objectAsJson);
+
+      if (objectAsJson === "") {
+        history.replaceState("", "", pathWithoutHash);
+      }
+    } else {
+      if (!this.doNotCleanUrlHashAtFirst) {
+        this.window.postMessage({
+          name: "apisearch_replace_hash",
+          hash: objectAsJson
+        }, "*");
+      }
+
+      this.doNotCleanUrlHashAtFirst = false;
+    }
+  }
+
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (Store);
+
+/***/ }),
+
+/***/ "./src/components/CheckboxFilter/CheckboxFilterActions.ts":
+/*!****************************************************************!*\
+  !*** ./src/components/CheckboxFilter/CheckboxFilterActions.ts ***!
+  \****************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "aggregationSetup": function() { return /* binding */ aggregationSetup; },
+/* harmony export */   "onChangeSearchAction": function() { return /* binding */ onChangeSearchAction; }
+/* harmony export */ });
+/* harmony import */ var apisearch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
+/* harmony import */ var apisearch__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(apisearch__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _Constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
+/* harmony import */ var _Container__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
+/* harmony import */ var _Clone__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
+/**
+ * Checkbox filter actions
+ */
+
+
+
+
+/**
+ * Define aggregations setup
+ *
+ * @param environmentId
+ * @param currentQuery
+ * @param filterName
+ * @param aggregationField
+ */
+
+function aggregationSetup(environmentId, currentQuery, filterName, aggregationField) {
+  const clonedQuery = _Clone__WEBPACK_IMPORTED_MODULE_3__["default"].object(currentQuery);
+  clonedQuery.aggregateBy(filterName, aggregationField, apisearch__WEBPACK_IMPORTED_MODULE_0__.FILTER_TYPE_FIELD);
+  const dispatcher = _Container__WEBPACK_IMPORTED_MODULE_2__["default"].get(`${_Constants__WEBPACK_IMPORTED_MODULE_1__.APISEARCH_DISPATCHER}__${environmentId}`);
+  dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
+    query: clonedQuery
+  });
+}
+/**
+ * @param environmentId
+ * @param currentQuery
+ * @param repository
+ * @param filterName
+ * @param filterField
+ * @param isChecked
+ * @param filterValue
+ */
+
+function onChangeSearchAction(environmentId, currentQuery, repository, filterName, filterField, isChecked, filterValue) {
+  const clonedQuery = _Clone__WEBPACK_IMPORTED_MODULE_3__["default"].object(currentQuery);
+  clonedQuery.filterBy(filterName, filterField, isChecked ? [filterValue] : [], apisearch__WEBPACK_IMPORTED_MODULE_0__.FILTER_MUST_ALL, false);
+  clonedQuery.page = 1;
+  const dispatcher = _Container__WEBPACK_IMPORTED_MODULE_2__["default"].get(`${_Constants__WEBPACK_IMPORTED_MODULE_1__.APISEARCH_DISPATCHER}__${environmentId}`);
+  repository.query(clonedQuery).then(result => {
+    dispatcher.dispatch("RENDER_FETCHED_DATA", {
+      query: clonedQuery,
+      result: result
+    });
+  }).catch(error => {// Do nothing
+  });
+}
+
+/***/ }),
+
+/***/ "./src/components/CheckboxFilter/CheckboxFilterComponent.tsx":
+/*!*******************************************************************!*\
+  !*** ./src/components/CheckboxFilter/CheckboxFilterComponent.tsx ***!
+  \*******************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+/* harmony import */ var _MultipleFilter_Helpers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../MultipleFilter/Helpers */ "./src/components/MultipleFilter/Helpers.ts");
+/* harmony import */ var _CheckboxFilterActions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CheckboxFilterActions */ "./src/components/CheckboxFilter/CheckboxFilterActions.ts");
+/* harmony import */ var _Template__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
+/* harmony import */ var _defaultTemplates__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./defaultTemplates */ "./src/components/CheckboxFilter/defaultTemplates.tsx");
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+
+
+
+/**
+ * Checkbox Filter Component
+ */
+
+class CheckboxFilterComponent extends preact__WEBPACK_IMPORTED_MODULE_0__.Component {
+  constructor() {
+    super(...arguments);
+
+    _defineProperty(this, "handleChange", activeElement => {
+      const props = this.props;
+      /**
+       * Dispatch action
+       */
+
+      (0,_CheckboxFilterActions__WEBPACK_IMPORTED_MODULE_2__.onChangeSearchAction)(props.environmentId, props.store.getCurrentQuery(), props.repository, props.filterName, props.filterField, activeElement, props.filterValue);
+    });
+  }
+
+  /**
+   * Component will mount
+   */
+  componentWillMount() {
+    const props = this.props;
+    const environmentId = props.environmentId;
+    const filterName = props.filterName;
+    const aggregationField = props.filterField;
+    const currentQuery = props.store.getCurrentQuery();
+    /**
+     * Dispatch action
+     */
+
+    (0,_CheckboxFilterActions__WEBPACK_IMPORTED_MODULE_2__.aggregationSetup)(environmentId, currentQuery, filterName, aggregationField);
+  }
+  /**
+   * Component will receive props
+   *
+   * @param props
+   */
+
+
+  componentWillReceiveProps(props) {
+    this.setState(prevState => {
+      return {
+        aggregation: props.store.getCurrentResult().getAggregation(props.filterName)
+      };
+    });
+  }
+  /**
+   * @param activeElement
+   */
+
+
+  /**
+   * Render
+   *
+   * @return {any}
+   */
+  render(props, state) {
+    const containerClassName = props.classNames.container;
+    const topClassName = props.classNames.top;
+    const itemClassName = props.classNames.item;
+    const activeClassName = props.classNames.active;
+    const topTemplate = props.template.top;
+    const itemTemplate = props.template.item;
+    let filterValue = props.filterValue;
+
+    if (typeof filterValue === "boolean") {
+      filterValue = filterValue ? "true" : "false";
+    }
+
+    let n = 0;
+    /**
+     * We find current status inside the filter value
+     */
+
+    const isActive = (0,_MultipleFilter_Helpers__WEBPACK_IMPORTED_MODULE_1__.getFilterValuesFromQuery)(props.store.getCurrentQuery(), props.filterName)[0];
+    const aggregation = state.aggregation;
+
+    if (aggregation != null) {
+      const counters = aggregation.getCounters();
+
+      for (const i in counters) {
+        const counter = counters[i];
+
+        if (counter.values.name === filterValue) {
+          n = counter.getN();
+          break;
+        }
+      }
+    }
+
+    const label = props.label ? props.label : props.filterName;
+    const that = this;
+    const uid = Math.floor(Math.random() * 10000000000);
+    const templateData = {
+      isActive,
+      label,
+      n,
+      uid
+    };
+    return (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)("div", {
+      className: `as-checkboxFilter ${containerClassName}`
+    }, (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)(_Template__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      template: topTemplate,
+      className: `as-checkboxFilter__top ${topClassName}`,
+      dictionary: this.props.dictionary
+    }), (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)("div", {
+      className: `as-checkboxFilter__item ` + `${itemClassName} ` + `${isActive ? activeClassName : ""}`,
+      onClick: e => {
+        e.stopPropagation();
+        e.preventDefault();
+        that.handleChange(!isActive);
+      }
+    }, (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)(_Template__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      template: itemTemplate,
+      data: templateData,
+      dictionary: this.props.dictionary
+    })));
+  }
+
+}
+
+CheckboxFilterComponent.defaultProps = {
+  filterValue: 'true',
+  classNames: {
+    container: '',
+    top: '',
+    item: '',
+    active: 'as-checkboxFilter__item--active'
+  },
+  template: {
+    top: null,
+    item: _defaultTemplates__WEBPACK_IMPORTED_MODULE_4__.defaultItemTemplate
+  }
+};
+/* harmony default export */ __webpack_exports__["default"] = (CheckboxFilterComponent);
+
+/***/ }),
+
+/***/ "./src/components/CheckboxFilter/defaultTemplates.tsx":
+/*!************************************************************!*\
+  !*** ./src/components/CheckboxFilter/defaultTemplates.tsx ***!
+  \************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "defaultItemTemplate": function() { return /* binding */ defaultItemTemplate; }
+/* harmony export */ });
+const defaultItemTemplate = `
+    <input
+        type="checkbox"
+        class="as-checkboxFilter__checkbox"
+        id="filter_{{uid}}"
+        {{#isActive}}checked="checked"{{/isActive}}
+    />
+    <label
+        class="as-checkboxFilter__label"
+        for="filter_{{uid}}"
+    >
+        {{{label}}}
+    </label>
+    <span class="as-checkboxFilter__itemNumber">
+        {{n}}
+    </span>
+`;
+
+/***/ }),
+
+/***/ "./src/components/ClearFilters/ClearFiltersActions.ts":
+/*!************************************************************!*\
+  !*** ./src/components/ClearFilters/ClearFiltersActions.ts ***!
+  \************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "clearFiltersAction": function() { return /* binding */ clearFiltersAction; }
+/* harmony export */ });
+/* harmony import */ var _Constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
+/* harmony import */ var _Container__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
+/* harmony import */ var _Clone__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
+/**
+ * Clear filters actions
+ */
+
+
+
+/**
+ * Clear filters action
+ *
+ * @param environmentId
+ * @param currentQuery
+ * @param repository
+ * @param filterToClear
+ */
+
+function clearFiltersAction(environmentId, currentQuery, repository) {
+  let filterToClear = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
+  const clonedQuery = _Clone__WEBPACK_IMPORTED_MODULE_2__["default"].object(currentQuery);
+
+  if (filterToClear === null) {
+    clonedQuery.filters = {
+      _query: currentQuery.getFilter("_query")
+    };
+  } else {
+    delete clonedQuery.filters[filterToClear];
+  }
+
+  clonedQuery.page = 1;
+  const dispatcher = _Container__WEBPACK_IMPORTED_MODULE_1__["default"].get(`${_Constants__WEBPACK_IMPORTED_MODULE_0__.APISEARCH_DISPATCHER}__${environmentId}`);
+  repository.query(clonedQuery).then(result => {
+    dispatcher.dispatch("RENDER_FETCHED_DATA", {
+      query: clonedQuery,
+      result: result
+    });
+  }).catch(error => {// Do nothing
+  });
+}
+
+/***/ }),
+
+/***/ "./src/components/ClearFilters/ClearFiltersComponent.tsx":
+/*!***************************************************************!*\
+  !*** ./src/components/ClearFilters/ClearFiltersComponent.tsx ***!
+  \***************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var apisearch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
+/* harmony import */ var apisearch__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(apisearch__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+/* harmony import */ var _Template__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
+/* harmony import */ var _ClearFiltersActions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ClearFiltersActions */ "./src/components/ClearFilters/ClearFiltersActions.ts");
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+
+
+
+/**
+ * Result Information Component
+ */
+class ClearFiltersComponent extends preact__WEBPACK_IMPORTED_MODULE_1__.Component {
+  /**
+   * Constructor
+   */
+  constructor() {
+    super();
+
+    _defineProperty(this, "handleClick", () => {
+      const props = this.props;
+      const environmentId = props.environmentId;
+      const currentQuery = props.store.getCurrentQuery();
+      const repository = props.repository;
+      this.setState(prevState => {
+        return {
+          appliedFilters: [],
+          showClearFilters: false
+        };
+      });
+      /**
+       * Dispatch a clear filter action
+       */
+
+      (0,_ClearFiltersActions__WEBPACK_IMPORTED_MODULE_3__.clearFiltersAction)(environmentId, currentQuery, repository);
+    });
+
+    _defineProperty(this, "handleIndividualClick", filterKey => {
+      const props = this.props;
+      const environmentId = props.environmentId;
+      const currentQuery = props.store.getCurrentQuery();
+      const repository = props.repository;
+      /**
+       * Dispatch a clear filter action
+       */
+
+      (0,_ClearFiltersActions__WEBPACK_IMPORTED_MODULE_3__.clearFiltersAction)(environmentId, currentQuery, repository, filterKey);
+    });
+
+    this.state = {
+      appliedFilters: [],
+      showClearFilters: false
+    };
+  }
+  /**
+   * Component receive props
+   *
+   * @param props
+   */
+
+
+  componentWillReceiveProps(props) {
+    const appliedFiltersFormatted = this.getFiltersToShow();
+    this.setState(prevState => {
+      return {
+        appliedFilters: appliedFiltersFormatted,
+        showClearFilters: appliedFiltersFormatted.length > 0
+      };
+    });
+  }
+  /**
+   * Handle click
+   */
+
+
+  /**
+   * @param filterToAvoid
+   */
+  getFiltersToShow() {
+    let filterToAvoid = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+    const appliedFilters = this.props.store.getCurrentQuery().getFilters();
+    const appliedFiltersFormatted = [];
+
+    for (const [key, filter] of Object.entries(appliedFilters)) {
+      if (filter instanceof apisearch__WEBPACK_IMPORTED_MODULE_0__.Filter && key !== "_query" && key !== filterToAvoid) {
+        appliedFiltersFormatted.push({
+          filter: key,
+          num: filter.getValues().length
+        });
+      }
+    }
+
+    return appliedFiltersFormatted;
+  }
+  /**
+   * Render
+   *
+   * @return {}
+   */
+
+
+  render() {
+    const props = this.props;
+    const containerClassName = props.classNames.container;
+    const filtersListClassName = props.classNames.filtersList;
+    const filterClassName = props.classNames.filter;
+    const containerTemplate = props.template.container;
+    const filterTemplate = props.template.filter;
+    const appliedFiltersFormatted = this.state.appliedFilters;
+    const individualFilterClear = props.showIndividualFilterClear ? (0,preact__WEBPACK_IMPORTED_MODULE_1__.h)("ul", {
+      className: `as-clearFilters__filtersList ${filtersListClassName}`
+    }, appliedFiltersFormatted.map(filter => {
+      return (0,preact__WEBPACK_IMPORTED_MODULE_1__.h)("li", {
+        className: `as-clearFilters__filter ${filterClassName}`,
+        onClick: () => this.handleIndividualClick(filter.filter)
+      }, (0,preact__WEBPACK_IMPORTED_MODULE_1__.h)(_Template__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        template: filterTemplate,
+        dictionary: this.props.dictionary,
+        data: filter
+      }));
+    })) : "";
+    return this.state.showClearFilters ? (0,preact__WEBPACK_IMPORTED_MODULE_1__.h)("div", {
+      className: `as-clearFilters ${containerClassName}`
+    }, (0,preact__WEBPACK_IMPORTED_MODULE_1__.h)("div", {
+      onClick: this.handleClick
+    }, (0,preact__WEBPACK_IMPORTED_MODULE_1__.h)(_Template__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      template: containerTemplate,
+      dictionary: this.props.dictionary
+    })), individualFilterClear) : null;
+  }
+
+}
+
+ClearFiltersComponent.defaultProps = {
+  classNames: {
+    container: "",
+    filter: "",
+    filtersList: ""
+  },
+  showIndividualFilterClear: false,
+  template: {
+    container: "Clear filters",
+    filter: "Clear {{filter}} ({{num}})"
+  }
+};
+/* harmony default export */ __webpack_exports__["default"] = (ClearFiltersComponent);
+
+/***/ }),
+
+/***/ "./src/components/Clone.ts":
+/*!*********************************!*\
+  !*** ./src/components/Clone.ts ***!
+  \*********************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+class Clone {
+  static object(object) {
+    return Object.assign(Object.create(Object.getPrototypeOf(object)), object);
+  }
+
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (Clone);
+
+/***/ }),
+
+/***/ "./src/components/Information/InformationComponent.tsx":
+/*!*************************************************************!*\
+  !*** ./src/components/Information/InformationComponent.tsx ***!
+  \*************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+/* harmony import */ var _Template__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
+
+
+
+/**
+ * Result Information Component
+ */
+class InformationComponent extends preact__WEBPACK_IMPORTED_MODULE_0__.Component {
+  /**
+   * Constructor
+   */
+  constructor(props) {
+    super(props);
+    this.state = {
+      hits: 0,
+      total: 0,
+      visible: false
+    };
+  }
+  /**
+   * Component will receive props
+   *
+   * @param props
+   */
+
+
+  componentWillReceiveProps(props) {
+    this.setState(prevState => {
+      return props.store.getCurrentResult() == null ? {
+        hits: 0,
+        total: 0,
+        visible: false
+      } : {
+        hits: props.store.getCurrentResult().getTotalHits(),
+        total: props.store.getCurrentResult().getTotalItems(),
+        visible: true
+      };
+    });
+  }
+
+  render() {
+    const props = this.props;
+    const containerClassName = props.classNames.container;
+    const containerTemplate = props.template.container;
+    const formatData = props.formatData;
+
+    if (!this.state.visible) {
+      return;
+    }
+
+    const currentQuery = this.props.store.getCurrentQuery();
+    const size = currentQuery.getSize();
+    const page = currentQuery.getPage();
+    const from = (page - 1) * size;
+    const to = from + size;
+    let totalHits = this.state.hits.toLocaleString();
+
+    if (totalHits === "10,000") {
+      totalHits = '+10,000';
+    }
+    /**
+     * Data accessible to the template
+     */
+
+
+    let reducedTemplateData = {
+      total_hits: totalHits,
+      total_items: this.state.total.toLocaleString(),
+      page: page,
+      size: size,
+      from: from + 1,
+      to: to
+    };
+    let formattedTemplateData = formatData(reducedTemplateData);
+    return (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)(_Template__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      template: containerTemplate,
+      data: formattedTemplateData,
+      className: `as-information ${containerClassName}`,
+      dictionary: this.props.dictionary
+    });
+  }
+
+}
+
+InformationComponent.defaultProps = {
+  classNames: {
+    container: ''
+  },
+  template: {
+    container: 'Found {{total_hits}}/{{total_items}}'
+  },
+  formatData: data => data
+};
+/* harmony default export */ __webpack_exports__["default"] = (InformationComponent);
+
+/***/ }),
+
+/***/ "./src/components/MultipleFilter/Helpers.ts":
+/*!**************************************************!*\
+  !*** ./src/components/MultipleFilter/Helpers.ts ***!
+  \**************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "wasElementRecentlySelected": function() { return /* binding */ wasElementRecentlySelected; },
+/* harmony export */   "manageCurrentFilterItems": function() { return /* binding */ manageCurrentFilterItems; },
+/* harmony export */   "getShadowFilterValuesFromQuery": function() { return /* binding */ getShadowFilterValuesFromQuery; },
+/* harmony export */   "isFilterAvailable": function() { return /* binding */ isFilterAvailable; },
+/* harmony export */   "getFilterValuesFromQuery": function() { return /* binding */ getFilterValuesFromQuery; },
+/* harmony export */   "isLeveledFilter": function() { return /* binding */ isLeveledFilter; }
+/* harmony export */ });
+/**
+ * @param selectedItem
+ * @param currentItems
+ */
+function wasElementRecentlySelected(selectedItem, currentItems) {
+  return !currentItems.some(item => item === selectedItem);
+}
+/**
+ * Manage filter items
+ *
+ * If an item is on the list, remove it
+ * else, add it!
+ *
+ * @param selectedItem
+ * @param currentItems
+ * @param wasElementRecentlySelected
+ * @param deleteIfWasRemoved
+ *
+ * @returns {any}
+ */
+
+function manageCurrentFilterItems(selectedItem, currentItems, wasElementRecentlySelected, deleteIfWasRemoved) {
+  if (!wasElementRecentlySelected) {
+    return deleteIfWasRemoved ? currentItems.filter(item => item !== selectedItem) : currentItems;
+  } else {
+    return [...currentItems, selectedItem];
+  }
+}
+/**
+ * @param query
+ * @param filterName
+ * @param withCurrent
+ */
+
+function getShadowFilterValuesFromQuery(query, filterName, withCurrent) {
+  const fields = [];
+
+  if (isFilterAvailable(query, filterName, 6)) {
+    const fieldName = query.filters[filterName].field.substr(17);
+    const fieldNameParts = fieldName.split("_");
+    const currentLevel = parseInt(fieldNameParts[fieldNameParts.length - 1], 10);
+    const fieldNameWithoutLevel = fieldNameParts.slice(0, fieldNameParts.length - 1).join("_");
+
+    for (let it = 1; it < currentLevel; it++) {
+      const iterationFieldName = fieldNameWithoutLevel + "_" + it;
+
+      if (query.filters[iterationFieldName] !== undefined) {
+        fields.push(query.filters[iterationFieldName].values[0]);
+      }
+    }
+
+    if (withCurrent) {
+      fields.push(query.filters[filterName].values[0]);
+    }
+  }
+
+  return fields;
+}
+/**
+ * @param query
+ * @param filterName
+ * @param applicationType
+ */
+
+function isFilterAvailable(query, filterName) {
+  let applicationType = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+  return query.filters !== undefined && query.filters !== null && typeof query.filters === "object" && query.filters[filterName] !== undefined && query.filters[filterName] !== null && (applicationType === null || query.filters[filterName].applicationType === applicationType || query.filters[filterName].application_type === applicationType);
+}
+/**
+ * @param query
+ * @param filterName
+ * @param applicationType
+ */
+
+function getFilterValuesFromQuery(query, filterName) {
+  let applicationType = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+  return isFilterAvailable(query, filterName, applicationType) ? query.filters[filterName].values : [];
+}
+/**
+ * @param filter
+ */
+
+function isLeveledFilter(filter) {
+  return filter.application_type === 6 || filter.applicationType === 6;
+}
+
+/***/ }),
+
+/***/ "./src/components/MultipleFilter/MultipleFilterActions.ts":
+/*!****************************************************************!*\
+  !*** ./src/components/MultipleFilter/MultipleFilterActions.ts ***!
+  \****************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "aggregationSetup": function() { return /* binding */ aggregationSetup; },
+/* harmony export */   "filterAction": function() { return /* binding */ filterAction; },
+/* harmony export */   "modifyQueryAggregationWithProperLevelValue": function() { return /* binding */ modifyQueryAggregationWithProperLevelValue; },
+/* harmony export */   "configureQueryWithShadowLeveledFilters": function() { return /* binding */ configureQueryWithShadowLeveledFilters; }
+/* harmony export */ });
+/* harmony import */ var apisearch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
+/* harmony import */ var apisearch__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(apisearch__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _Constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
+/* harmony import */ var _Container__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
+/* harmony import */ var _Clone__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
+/**
+ * Multiple filter actions
+ */
+
+
+
+
+
+/**
+ * Define aggregations setup
+ *
+ * @param environmentId
+ * @param currentQuery
+ * @param filterName
+ * @param filterField
+ * @param aggregationField
+ * @param applicationType
+ * @param sortBy
+ * @param fetchLimit
+ * @param ranges
+ */
+
+function aggregationSetup(environmentId, currentQuery, filterName, filterField, aggregationField, applicationType, sortBy, fetchLimit, ranges) {
+  const clonedQuery = _Clone__WEBPACK_IMPORTED_MODULE_3__["default"].object(currentQuery);
+  const rangesValues = Object.keys(ranges);
+
+  if (rangesValues.length > 0) {
+    clonedQuery.aggregateByRange(filterName, aggregationField, rangesValues, applicationType, apisearch__WEBPACK_IMPORTED_MODULE_0__.FILTER_TYPE_RANGE, sortBy, fetchLimit);
+  } else {
+    clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy, fetchLimit);
+  }
+
+  const dispatcher = _Container__WEBPACK_IMPORTED_MODULE_2__["default"].get(`${_Constants__WEBPACK_IMPORTED_MODULE_1__.APISEARCH_DISPATCHER}__${environmentId}`);
+  dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
+    query: clonedQuery
+  });
+}
+/**
+ * Filter action
+ *
+ * @param environmentId
+ * @param currentQuery
+ * @param repository
+ * @param filterName
+ * @param filterField
+ * @param aggregationField
+ * @param filterValues
+ * @param applicationType
+ * @param sortBy
+ * @param fetchLimit
+ * @param ranges
+ * @param labels
+ * @param shadowLeveledFilters
+ * @param originalFilterField
+ */
+
+function filterAction(environmentId, currentQuery, repository, filterName, filterField, aggregationField, filterValues, applicationType, sortBy, fetchLimit, ranges, labels, shadowLeveledFilters, originalFilterField) {
+  const clonedQuery = _Clone__WEBPACK_IMPORTED_MODULE_3__["default"].object(currentQuery);
+  const rangesValues = Object.keys(ranges);
+
+  if (rangesValues.length > 0) {
+    clonedQuery.filterByRange(filterName, filterField, rangesValues, filterValues, applicationType, apisearch__WEBPACK_IMPORTED_MODULE_0__.FILTER_TYPE_RANGE, false, sortBy);
+    clonedQuery.aggregateByRange(filterName, aggregationField, rangesValues, applicationType, apisearch__WEBPACK_IMPORTED_MODULE_0__.FILTER_TYPE_RANGE, sortBy, fetchLimit);
+  } else {
+    clonedQuery.filterBy(filterName, filterField, filterValues, applicationType, false, sortBy);
+    clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy, fetchLimit);
+  }
+
+  if (applicationType === 6) {
+    configureQueryWithShadowLeveledFilters(clonedQuery, shadowLeveledFilters, originalFilterField);
+  }
+
+  clonedQuery.page = 1;
+  const dispatcher = _Container__WEBPACK_IMPORTED_MODULE_2__["default"].get(`${_Constants__WEBPACK_IMPORTED_MODULE_1__.APISEARCH_DISPATCHER}__${environmentId}`);
+  repository.query(clonedQuery).then(result => {
+    dispatcher.dispatch("RENDER_FETCHED_DATA", {
+      query: clonedQuery,
+      result
+    });
+  }).catch(error => {// Do nothing
+  });
+}
+/**
+ * @param environmentId
+ * @param currentQuery
+ * @param filterName
+ * @param filterField
+ * @param aggregationField
+ */
+
+function modifyQueryAggregationWithProperLevelValue(environmentId, currentQuery, filterName, filterField, aggregationField) {
+  if (currentQuery.filters !== undefined && currentQuery.filters[filterName] !== undefined) {
+    const clonedQuery = _Clone__WEBPACK_IMPORTED_MODULE_3__["default"].object(currentQuery);
+    const fieldName = currentQuery.filters[filterName].field;
+    const fieldNameParts = fieldName.split("_");
+    const currentLevel = parseInt(fieldNameParts[fieldNameParts.length - 1], 10);
+    const fieldNameWithoutLevel = fieldNameParts.slice(0, fieldNameParts.length - 1).join("_");
+    clonedQuery.aggregations[filterName].field = fieldNameWithoutLevel + "_" + (currentLevel + 1);
+    const dispatcher = _Container__WEBPACK_IMPORTED_MODULE_2__["default"].get(`${_Constants__WEBPACK_IMPORTED_MODULE_1__.APISEARCH_DISPATCHER}__${environmentId}`);
+    dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
+      query: clonedQuery
+    });
+  }
+}
+/**
+ * @param query
+ * @param shadowLeveledFilters
+ * @param originalFilterField
+ */
+
+function configureQueryWithShadowLeveledFilters(query, shadowLeveledFilters, originalFilterField) {
+  for (let it = 1; it < 10; it++) {
+    const iterationFieldName = originalFilterField + "_level_" + it;
+    delete query.filters[iterationFieldName];
+    delete query.aggregations[iterationFieldName];
+  }
+
+  if (shadowLeveledFilters.length > 0) {
+    let levelCounter = 1;
+    shadowLeveledFilters.forEach(filterValue => {
+      const leveledFieldName = originalFilterField + "_level_" + levelCounter++;
+      query.filterBy(leveledFieldName, leveledFieldName, [filterValue], apisearch__WEBPACK_IMPORTED_MODULE_0__.FILTER_AT_LEAST_ONE);
+    });
+  }
+}
+
+/***/ }),
+
+/***/ "./src/components/MultipleFilter/MultipleFilterComponent.tsx":
+/*!*******************************************************************!*\
+  !*** ./src/components/MultipleFilter/MultipleFilterComponent.tsx ***!
+  \*******************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+/* harmony import */ var _MultipleFilterActions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./MultipleFilterActions */ "./src/components/MultipleFilter/MultipleFilterActions.ts");
+/* harmony import */ var _Helpers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Helpers */ "./src/components/MultipleFilter/Helpers.ts");
+/* harmony import */ var _Template__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
+/* harmony import */ var _ShowMoreComponent__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ShowMoreComponent */ "./src/components/MultipleFilter/ShowMoreComponent.tsx");
+/* harmony import */ var _defaultTemplates__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./defaultTemplates */ "./src/components/MultipleFilter/defaultTemplates.tsx");
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+
+
+
+
+
+/**
+ * Filter Component
+ */
+class MultipleFilterComponent extends preact__WEBPACK_IMPORTED_MODULE_0__.Component {
+  /**
+   * Constructor
+   */
+  constructor() {
+    super();
+
+    _defineProperty(this, "currentLevel", 0);
+
+    _defineProperty(this, "propsReceived", false);
+
+    _defineProperty(this, "handleClick", (selectedFilter, level) => {
+      const props = this.props;
+      const environmentId = props.environmentId;
+      const filterName = props.filterName;
+      let filterField = props.filterField;
+      let aggregationField = props.aggregationField ?? filterField;
+      const applicationType = props.applicationType;
+      const sortBy = props.sortBy;
+      const ranges = props.ranges;
+      const labels = props.labels;
+      const fetchLimit = props.fetchLimit;
+      const repository = props.repository;
+      const currentQuery = props.store.getCurrentQuery(); // const aggregation = props.store.getCurrentResult().getAggregation(filterName);
+
+      const selectedFilterAsString = String(selectedFilter);
+      /*
+      const currentActiveFilterValues =
+          aggregation instanceof ResultAggregation &&
+          (aggregation.getActiveElements() !== null)
+              ? Object.values(aggregation.getActiveElements())
+              : [];
+        */
+
+      const valuesAsString = applicationType === 6 ? (0,_Helpers__WEBPACK_IMPORTED_MODULE_2__.getShadowFilterValuesFromQuery)(currentQuery, filterName, true) : (0,_Helpers__WEBPACK_IMPORTED_MODULE_2__.getFilterValuesFromQuery)(currentQuery, filterName);
+      const wasSelected = (0,_Helpers__WEBPACK_IMPORTED_MODULE_2__.wasElementRecentlySelected)(selectedFilterAsString, valuesAsString);
+      let filterItems = (0,_Helpers__WEBPACK_IMPORTED_MODULE_2__.manageCurrentFilterItems)(selectedFilterAsString, valuesAsString, wasSelected, applicationType !== 6);
+      let currentLevel = level;
+
+      if (applicationType === 6) {
+        currentLevel = wasSelected ? currentLevel : currentLevel - 1;
+      }
+
+      let shadowLeveledFilters = [];
+      const originalFilterField = filterField;
+
+      if (applicationType === 6) {
+        filterField = filterField + "_level_" + currentLevel;
+        aggregationField = aggregationField + "_level_" + (currentLevel + 1);
+        filterItems = filterItems.slice(0, currentLevel);
+        shadowLeveledFilters = filterItems.slice(0, -1);
+        filterItems = filterItems.slice(-1);
+      }
+
+      this.currentLevel = currentLevel;
+      /**
+       * Dispatch filter action
+       */
+
+      (0,_MultipleFilterActions__WEBPACK_IMPORTED_MODULE_1__.filterAction)(environmentId, currentQuery, repository, filterName, filterField, aggregationField, filterItems, applicationType, sortBy, fetchLimit, ranges, labels, shadowLeveledFilters, originalFilterField);
+    });
+
+    _defineProperty(this, "handleShowMore", () => {
+      const viewLimit = this.state.aggregations.length;
+      this.setState(prevState => {
+        return {
+          viewLimit
+        };
+      });
+    });
+
+    _defineProperty(this, "handleShowLess", () => {
+      const viewLimit = this.props.viewLimit;
+      this.setState(prevState => {
+        return {
+          viewLimit
+        };
+      });
+    });
+
+    this.state = {
+      aggregations: [],
+      viewLimit: 0
+    };
+  }
+  /**
+   * Components will mount
+   */
+
+
+  componentWillMount() {
+    const props = this.props;
+    let aggregationField = props.aggregationField ?? props.filterField;
+    const applicationType = props.applicationType;
+    const fetchLimit = props.fetchLimit;
+    const viewLimit = props.viewLimit;
+    /**
+     * Set view items limit
+     */
+
+    const isViewLimitProperlySet = viewLimit && viewLimit < fetchLimit;
+    this.setState(_ => {
+      return {
+        viewLimit: isViewLimitProperlySet ? viewLimit : fetchLimit
+      };
+    });
+
+    if (applicationType === 6) {
+      aggregationField = aggregationField + "_level_1";
+    }
+    /**
+     * Dispatch action
+     */
+
+
+    (0,_MultipleFilterActions__WEBPACK_IMPORTED_MODULE_1__.aggregationSetup)(props.environmentId, props.store.getCurrentQuery(), props.filterName, props.filterField, aggregationField, applicationType, props.sortBy, fetchLimit, props.ranges);
+  }
+  /**
+   * Component will receive props
+   *
+   * @param props
+   */
+
+
+  componentWillReceiveProps(props) {
+    const filterName = props.filterName;
+
+    if (props.store.getCurrentResult() == null) {
+      this.setState(prevState => {
+        return {
+          aggregations: [],
+          filters: []
+        };
+      });
+      return;
+    }
+
+    const result = props.store.getCurrentResult();
+    const aggregation = result.getAggregation(filterName);
+
+    if (aggregation && typeof aggregation.getCounters === "function") {
+      /**
+       * Getting aggregation from aggregations
+       */
+      const counters = aggregation.getCounters();
+      const countersAsArray = Object.values(counters);
+      const aggregations = props.activeFirst ? [...countersAsArray.filter(counter => true === counter.isUsed()), ...countersAsArray.filter(counter => false === counter.isUsed() || null === counter.isUsed())] : countersAsArray;
+      this.setState(prevState => {
+        return {
+          aggregations
+        };
+      });
+    }
+
+    if (props.applicationType === 6 && this.propsReceived === false) {
+      const filter = props.store.getCurrentQuery().getFilter(filterName);
+      this.currentLevel = filter === undefined || filter === null ? this.currentLevel : filter.values ? filter.values.length + 1 : this.currentLevel;
+      this.propsReceived = true;
+    }
+  }
+  /**
+   * @param selectedFilter
+   * @param level
+   */
+
+
+  /**
+   * Render
+   *
+   * @return {any}
+   */
+  render() {
+    const props = this.props;
+    const viewLimit = props.viewLimit;
+    const fetchLimit = props.fetchLimit;
+    const containerClassName = props.classNames.container;
+    const topClassName = props.classNames.top;
+    const itemsListClassName = props.classNames.itemsList;
+    const itemClassName = props.classNames.item;
+    const activeClassName = props.classNames.active;
+    const showMoreContainerClassName = props.classNames.showMoreContainer;
+    const topTemplate = props.template.top;
+    const itemTemplate = props.template.item;
+    const showMoreTemplate = props.template.showMore;
+    const showLessTemplate = props.template.showLess;
+    const currentQuery = props.store.getCurrentQuery();
+    const formatData = props.formatData;
+    const labels = Object.keys(props.ranges).length > 0 ? props.ranges : props.labels;
+    /**
+     * Get aggregation items
+     */
+
+    const that = this;
+    const itemsIds = {};
+    let allItems = this.state.aggregations.map(item => {
+      const uid = Math.floor(Math.random() * 10000000000);
+      const values = item.getValues();
+      values.name = labels[values.name] ? labels[values.name] : values.name;
+      itemsIds[values.id] = true;
+      return {
+        isActive: item.isUsed(),
+        n: item.getN(),
+        uid,
+        values
+      };
+    });
+    /**
+     * Shadow filters. These filters are not part of the aggregation list but are applied. Should always be listed
+     * first
+     */
+
+    const appliedFilters = props.applicationType === 6 ? (0,_Helpers__WEBPACK_IMPORTED_MODULE_2__.getShadowFilterValuesFromQuery)(currentQuery, props.filterName, true) : (0,_Helpers__WEBPACK_IMPORTED_MODULE_2__.getFilterValuesFromQuery)(currentQuery, props.filterName);
+
+    if (appliedFilters.length > 0) {
+      const zeroItemsFilters = [];
+      appliedFilters.forEach(filter => {
+        if (itemsIds[filter] === undefined) {
+          const uid = Math.floor(Math.random() * 10000000000);
+          zeroItemsFilters.push({
+            isActive: true,
+            n: 0,
+            uid,
+            values: {
+              id: filter,
+              name: filter
+            }
+          });
+        }
+      });
+      allItems = [...zeroItemsFilters, ...allItems];
+    }
+    /**
+     * Get existing applied filters if they exist
+     */
+
+
+    if (allItems.length === 0) {
+      return null;
+    }
+
+    const items = allItems.slice(0, this.state.viewLimit);
+    const allItemsLength = allItems.length;
+    let levelCounter = 1;
+    /**
+     * Check available view limit
+     */
+
+    const isViewLimitProperlySet = viewLimit && viewLimit < fetchLimit && allItemsLength > viewLimit;
+    return (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)("div", {
+      className: `as-multipleFilter ${containerClassName}`
+    }, (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)(_Template__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      template: topTemplate,
+      className: `as-multipleFilter__top ${topClassName}`,
+      dictionary: this.props.dictionary
+    }), (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)("div", {
+      className: `as-multipleFilter__itemsList ${itemsListClassName}`
+    }, (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)("ul", null, items.map(item => {
+      const formattedTemplateData = formatData(item);
+      const level = Math.min(levelCounter, this.currentLevel + 1);
+      levelCounter++;
+      return (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)("li", {
+        className: `as-multipleFilter__item ` + `${itemClassName} ` + `${item.isActive ? activeClassName : ""}`,
+        onClick: e => {
+          e.stopPropagation();
+          e.preventDefault();
+          that.handleClick(item.values.id, level);
+        }
+      }, (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)(_Template__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        template: itemTemplate,
+        data: formattedTemplateData,
+        dictionary: this.props.dictionary
+      }));
+    }))), isViewLimitProperlySet ? (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)(_ShowMoreComponent__WEBPACK_IMPORTED_MODULE_4__["default"], {
+      allItemsLength: allItemsLength,
+      currentLimit: this.state.viewLimit,
+      handleShowMore: this.handleShowMore,
+      handleShowLess: this.handleShowLess,
+      showMoreContainerClassName: showMoreContainerClassName,
+      showMoreTemplate: showMoreTemplate,
+      showLessTemplate: showLessTemplate,
+      dictionary: this.props.dictionary
+    }) : null);
+  }
+
+}
+
+MultipleFilterComponent.defaultProps = {
+  aggregationField: null,
+  applicationType: 8,
+  // FILTER_MUST_ALL
+  fetchLimit: 10,
+  viewLimit: null,
+  sortBy: ['_term', 'desc'],
+  ranges: {},
+  labels: {},
+  classNames: {
+    container: '',
+    top: '',
+    itemsList: '',
+    item: '',
+    active: 'as-multipleFilter__item--active',
+    showMoreContainer: ''
+  },
+  template: {
+    top: null,
+    item: _defaultTemplates__WEBPACK_IMPORTED_MODULE_5__.defaultItemTemplate,
+    showMore: '+ Show more',
+    showLess: '- Show less'
+  },
+  formatData: data => data,
+  activeFirst: true
+};
+/* harmony default export */ __webpack_exports__["default"] = (MultipleFilterComponent);
+
+/***/ }),
+
+/***/ "./src/components/MultipleFilter/ShowMoreComponent.tsx":
+/*!*************************************************************!*\
+  !*** ./src/components/MultipleFilter/ShowMoreComponent.tsx ***!
+  \*************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+/* harmony import */ var _Template__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
+
+
+/**
+ * Show more component
+ *
+ * Provides two items
+ *   -> Show more element
+ *   -> Show less element
+ */
+
+const ShowMoreComponent = _ref => {
+  let {
+    allItemsLength,
+    currentLimit,
+    handleShowMore,
+    handleShowLess,
+    showMoreContainerClassName,
+    showMoreTemplate,
+    showLessTemplate,
+    dictionary
+  } = _ref;
+  return allItemsLength > currentLimit ? (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)("div", {
+    className: `as-showMore ${showMoreContainerClassName}`,
+    onClick: handleShowMore
+  }, (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)(_Template__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    template: showMoreTemplate,
+    className: `as-showMore--more`,
+    dictionary: dictionary
+  })) : allItemsLength === currentLimit ? (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)("div", {
+    className: `as-showMore ${showMoreContainerClassName}`,
+    onClick: handleShowLess
+  }, (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)(_Template__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    template: showLessTemplate,
+    className: `as-showMore--less`,
+    dictionary: dictionary
+  })) : null;
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (ShowMoreComponent);
+
+/***/ }),
+
+/***/ "./src/components/MultipleFilter/defaultTemplates.tsx":
+/*!************************************************************!*\
+  !*** ./src/components/MultipleFilter/defaultTemplates.tsx ***!
+  \************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "defaultItemTemplate": function() { return /* binding */ defaultItemTemplate; }
+/* harmony export */ });
+const defaultItemTemplate = `
+    <input
+        type="checkbox"
+        id="filter_{{uid}}"
+        class="as-multipleFilter__itemCheckbox"
+        {{#isActive}}checked="checked"{{/isActive}}
+    >
+    <label
+        class="as-multipleFilter__itemName"
+        for="filter_{{uid}}"
+    >
+        {{{values.name}}}
+    </label>
+    <span class="as-multipleFilter__itemNumber">
+        {{n}}
+    </span>
+`;
+
+/***/ }),
+
+/***/ "./src/components/Pagination/Helpers.ts":
+/*!**********************************************!*\
+  !*** ./src/components/Pagination/Helpers.ts ***!
+  \**********************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "getTotalPages": function() { return /* binding */ getTotalPages; },
+/* harmony export */   "totalPagesToArray": function() { return /* binding */ totalPagesToArray; },
+/* harmony export */   "getStart": function() { return /* binding */ getStart; },
+/* harmony export */   "getEnd": function() { return /* binding */ getEnd; }
+/* harmony export */ });
+/**
+ * Get total pages from the total reached hits
+ * divided by the hits per page configured
+ *
+ * If there are more than 10.000 items
+ * We reduce the max num of items to 9.999
+ * to take care of performance
+ *
+ * If total resulted pages are bigger than 999
+ * we set 999 as the max number of pages
+ *
+ * @param totalHits
+ * @param hitsPerPage
+ *
+ * @return {number}
+ */
+function getTotalPages(totalHits, hitsPerPage) {
+  totalHits = totalHits >= 10000 ? 9999 : totalHits;
+  const totalPages = Math.ceil(totalHits / hitsPerPage);
+  return totalPages > 999 ? 999 : totalPages;
+}
+/**
+ * Pass total pages number into an array of numbers
+ *
+ * @param totalPages
+ *
+ * @return {number[]}
+ */
+
+function totalPagesToArray(totalPages) {
+  const pages = [];
+
+  for (let index = 1; index <= totalPages; index++) {
+    pages.push(index);
+  }
+
+  return pages;
+}
+/**
+ * Get the starting point of the pages spectre
+ *
+ * @param totalPages
+ * @param padding
+ * @param currentPage
+ * @param spectreSize
+ * @param isTouchingLeft
+ * @param isTouchingRight
+ *
+ * @return {number}
+ */
+
+function getStart(totalPages, padding, currentPage, spectreSize, isTouchingLeft, isTouchingRight) {
+  if (isTouchingLeft) {
+    return currentPage - currentPage % spectreSize;
+  }
+
+  if (isTouchingRight) {
+    const start = currentPage - (spectreSize - totalPages % currentPage);
+    return start > 0 ? start : 0;
+  }
+
+  return currentPage - (padding + 1);
+}
+/**
+ * Get the ending point of the pages spectre
+ *
+ * @param totalPages
+ * @param padding
+ * @param currentPage
+ * @param spectreSize
+ * @param isTouchingLeft
+ * @param isTouchingRight
+ *
+ * @return {number}
+ */
+
+function getEnd(totalPages, padding, currentPage, spectreSize, isTouchingLeft, isTouchingRight) {
+  if (isTouchingLeft) {
+    return spectreSize;
+  }
+
+  if (isTouchingRight) {
+    return totalPages;
+  }
+
+  return currentPage + padding;
+}
+
+/***/ }),
+
+/***/ "./src/components/Pagination/NavigationComponent.tsx":
+/*!***********************************************************!*\
+  !*** ./src/components/Pagination/NavigationComponent.tsx ***!
+  \***********************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+/* harmony import */ var _Template__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
+
+
+/**
+ * Arrow navigation component
+ */
+
+function NavigationComponent(_ref) {
+  let {
+    isVisible,
+    classNames,
+    template,
+    handleClick
+  } = _ref;
+  return isVisible ? (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)("li", {
+    className: classNames,
+    onClick: handleClick
+  }, (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)(_Template__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    template: template,
+    dictionary: this.props.dictionary
+  })) : null;
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (NavigationComponent);
+
+/***/ }),
+
+/***/ "./src/components/Pagination/PaginationActions.ts":
+/*!********************************************************!*\
+  !*** ./src/components/Pagination/PaginationActions.ts ***!
+  \********************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "paginationChangeAction": function() { return /* binding */ paginationChangeAction; }
+/* harmony export */ });
+/* harmony import */ var _Constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
+/* harmony import */ var _Container__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
+/* harmony import */ var _Clone__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
+/**
+ * Pagination actions
+ */
+
+
+
+/**
+ * Pagination change
+ *
+ * @param environmentId
+ * @param currentQuery
+ * @param repository
+ * @param selectedPage
+ */
+
+function paginationChangeAction(environmentId, currentQuery, repository, selectedPage) {
+  const clonedQuery = _Clone__WEBPACK_IMPORTED_MODULE_2__["default"].object(currentQuery);
+  clonedQuery.page = selectedPage;
+  const dispatcher = _Container__WEBPACK_IMPORTED_MODULE_1__["default"].get(`${_Constants__WEBPACK_IMPORTED_MODULE_0__.APISEARCH_DISPATCHER}__${environmentId}`);
+  repository.query(clonedQuery).then(result => {
+    dispatcher.dispatch("RENDER_FETCHED_DATA", {
+      query: clonedQuery,
+      result: result
+    });
+  }).catch(error => {// Do nothing
+  });
+}
+
+/***/ }),
+
+/***/ "./src/components/Pagination/PaginationComponent.tsx":
+/*!***********************************************************!*\
+  !*** ./src/components/Pagination/PaginationComponent.tsx ***!
+  \***********************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+/* harmony import */ var _Template__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
+/* harmony import */ var _Helpers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Helpers */ "./src/components/Pagination/Helpers.ts");
+/* harmony import */ var _NavigationComponent__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./NavigationComponent */ "./src/components/Pagination/NavigationComponent.tsx");
+/* harmony import */ var _PaginationActions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./PaginationActions */ "./src/components/Pagination/PaginationActions.ts");
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+
+
+
+
+/**
+ * Pagination Component
+ */
+class PaginationComponent extends preact__WEBPACK_IMPORTED_MODULE_0__.Component {
+  /**
+   * Constructor
+   */
+  constructor() {
+    super();
+
+    _defineProperty(this, "handleClick", page => {
+      const {
+        store,
+        environmentId,
+        repository
+      } = this.props;
+      const currentResult = store.getCurrentResult();
+      const currentQuery = store.getCurrentQuery();
+      let totalPages = (0,_Helpers__WEBPACK_IMPORTED_MODULE_2__.getTotalPages)(currentResult.getTotalHits(), currentQuery.getSize());
+      /**
+       * Do not let go further
+       */
+
+      if (page <= 0) page = 1;
+      if (page >= totalPages) page = totalPages;
+
+      if (currentQuery.getPage() === page) {
+        return;
+      }
+      /**
+       * Dispatch change page action
+       */
+
+
+      (0,_PaginationActions__WEBPACK_IMPORTED_MODULE_4__.paginationChangeAction)(environmentId, currentQuery, repository, page);
+    });
+
+    this.state = {
+      page: 1
+    };
+  }
+  /**
+   * Component will receive props
+   *
+   * @param props
+   */
+
+
+  componentWillReceiveProps(props) {
+    const page = props.store.getCurrentQuery().getPage();
+    this.setState(prevState => {
+      return {
+        page: page
+      };
+    });
+  }
+  /**
+   * Handle click
+   *
+   * @param page
+   */
+
+
+  /**
+   * Render
+   *
+   * @return {any}
+   */
+  render() {
+    const props = this.props;
+    const currentResult = props.store.getCurrentResult();
+
+    if (props.store.getCurrentResult() == null) {
+      return;
+    }
+
+    const currentQuerySize = props.store.getCurrentQuery().getSize();
+    const totalPages = (0,_Helpers__WEBPACK_IMPORTED_MODULE_2__.getTotalPages)(currentResult.getTotalHits(), currentQuerySize);
+    /**
+     * Hide container if hits are empty
+     */
+
+    if (currentResult.getTotalHits() === 0 || totalPages === 1) {
+      return null;
+    }
+
+    const padding = props.padding;
+    const goFirstLast = props.goFirstLast;
+    const containerClassName = props.classNames.container;
+    const itemClassName = props.classNames.item;
+    const activeClassName = props.classNames.active;
+    const disabledClassName = props.classNames.disabled;
+    const nextClassName = props.classNames.next;
+    const previousClassName = props.classNames.previous;
+    const lastClassName = props.classNames.last;
+    const firstClassName = props.classNames.first;
+    const itemTemplate = props.template.item;
+    const nextTemplate = props.template.next;
+    const previousTemplate = props.template.previous;
+    const firstTemplate = props.template.first;
+    const lastTemplate = props.template.last;
+    const currentQueryPage = props.store.getCurrentQuery().getPage();
+    /**
+     * Get Total pages
+     */
+
+    const pages = (0,_Helpers__WEBPACK_IMPORTED_MODULE_2__.totalPagesToArray)(totalPages);
+    /**
+     *  Get pages spectre
+     */
+
+    const spectreSize = padding * 2 + 1;
+    const isTouchingLeft = currentQueryPage <= padding + 1;
+    const isTouchingRight = currentQueryPage + padding >= totalPages;
+    const spectre = pages.slice((0,_Helpers__WEBPACK_IMPORTED_MODULE_2__.getStart)(totalPages, padding, currentQueryPage, spectreSize, isTouchingLeft, isTouchingRight), (0,_Helpers__WEBPACK_IMPORTED_MODULE_2__.getEnd)(totalPages, padding, currentQueryPage, spectreSize, isTouchingLeft, isTouchingRight));
+    /**
+     * Dynamic disabled classes
+     */
+
+    const previousDisabledClass = currentQueryPage === 1 ? disabledClassName : '';
+    const nextDisabledClass = currentQueryPage === totalPages ? disabledClassName : '';
+    return (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)("ul", {
+      className: `as-pagination ${containerClassName}`
+    }, (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)(_NavigationComponent__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      isVisible: goFirstLast,
+      classNames: `as-pagination__item as-pagination__item--first ${firstClassName} ${previousDisabledClass}`,
+      template: firstTemplate,
+      handleClick: () => this.handleClick(1)
+    }), (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)(_NavigationComponent__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      isVisible: true,
+      classNames: `as-pagination__item as-pagination__item--previous ${previousClassName} ${previousDisabledClass}`,
+      template: previousTemplate,
+      handleClick: () => this.handleClick(currentQueryPage - 1)
+    }), spectre.map(page => (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)("li", {
+      className: `as-pagination__item as-pagination__item--link ${itemClassName} ${currentQueryPage === page ? activeClassName : ''}`,
+      onClick: () => this.handleClick(page)
+    }, (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)(_Template__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      template: itemTemplate,
+      data: {
+        page: page.toLocaleString('de-DE')
+      },
+      dictionary: this.props.dictionary
+    }))), (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)(_NavigationComponent__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      isVisible: true,
+      classNames: `as-pagination__item as-pagination__item--next ${nextClassName} ${nextDisabledClass}`,
+      template: nextTemplate,
+      handleClick: () => this.handleClick(currentQueryPage + 1)
+    }), (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)(_NavigationComponent__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      isVisible: goFirstLast,
+      classNames: `as-pagination__item as-pagination__item--last ${lastClassName} ${nextDisabledClass}`,
+      template: lastTemplate,
+      handleClick: () => this.handleClick(totalPages)
+    }));
+  }
+
+}
+
+PaginationComponent.defaultProps = {
+  padding: 3,
+  goFirstLast: false,
+  classNames: {
+    container: '',
+    item: '',
+    active: 'as-pagination__item--active',
+    disabled: 'as-pagination__item--disabled',
+    next: '',
+    first: '',
+    previous: '',
+    last: ''
+  },
+  template: {
+    item: '{{page}}',
+    next: '>',
+    previous: '<',
+    first: '<<',
+    last: '>>'
+  }
+};
+/* harmony default export */ __webpack_exports__["default"] = (PaginationComponent);
+
+/***/ }),
+
+/***/ "./src/components/RangeFilter/RangeFilterActions.ts":
+/*!**********************************************************!*\
+  !*** ./src/components/RangeFilter/RangeFilterActions.ts ***!
+  \**********************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "aggregationSetup": function() { return /* binding */ aggregationSetup; },
+/* harmony export */   "filterAction": function() { return /* binding */ filterAction; }
+/* harmony export */ });
+/* harmony import */ var apisearch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
+/* harmony import */ var apisearch__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(apisearch__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _Constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
+/* harmony import */ var _Container__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
+/* harmony import */ var _Clone__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
+/**
+ * SortBy actions
+ */
+
+
+
+
+/**
+ * @param environmentId
+ * @param currentQuery
+ * @param filterName
+ * @param filterField
+ */
+
+function aggregationSetup(environmentId, currentQuery, filterName, filterField) {
+  const clonedQuery = _Clone__WEBPACK_IMPORTED_MODULE_3__["default"].object(currentQuery);
+  clonedQuery.aggregateByRange(filterName, filterField, ['..'], apisearch__WEBPACK_IMPORTED_MODULE_0__.FILTER_AT_LEAST_ONE, 'range_min_max');
+  const dispatcher = _Container__WEBPACK_IMPORTED_MODULE_2__["default"].get(`${_Constants__WEBPACK_IMPORTED_MODULE_1__.APISEARCH_DISPATCHER}__${environmentId}`);
+  dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
+    query: clonedQuery
+  });
+}
+/**
+ * @param environmentId
+ * @param currentQuery
+ * @param repository
+ * @param filterName
+ * @param filterField
+ * @param from
+ * @param to
+ * @param deleteMinMaxAggregation
+ */
+
+function filterAction(environmentId, currentQuery, repository, filterName, filterField, from, to) {
+  const clonedQuery = _Clone__WEBPACK_IMPORTED_MODULE_3__["default"].object(currentQuery);
+  const realValueFrom = Math.min(from, to);
+  const realValueTo = Math.max(from, to);
+  const toWithIncluded = realValueTo + ']';
+  clonedQuery.filterByRange(filterName, filterField, [], [realValueFrom + ".." + toWithIncluded], apisearch__WEBPACK_IMPORTED_MODULE_0__.FILTER_AT_LEAST_ONE, 'range_min_max', false);
+  clonedQuery.page = 1;
+  const dispatcher = _Container__WEBPACK_IMPORTED_MODULE_2__["default"].get(`${_Constants__WEBPACK_IMPORTED_MODULE_1__.APISEARCH_DISPATCHER}__${environmentId}`);
+  repository.query(clonedQuery).then(result => {
+    dispatcher.dispatch("RENDER_FETCHED_DATA", {
+      query: clonedQuery,
+      result: result
+    });
+  }).catch(error => {// Do nothing
+  });
+}
+
+/***/ }),
+
+/***/ "./src/components/RangeFilter/RangeFilterComponent.tsx":
+/*!*************************************************************!*\
+  !*** ./src/components/RangeFilter/RangeFilterComponent.tsx ***!
+  \*************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var apisearch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
+/* harmony import */ var apisearch__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(apisearch__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+/* harmony import */ var preact_compat__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! preact/compat */ "./node_modules/preact/compat/dist/compat.module.js");
+/* harmony import */ var _Template__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
+/* harmony import */ var _RangeFilterActions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./RangeFilterActions */ "./src/components/RangeFilter/RangeFilterActions.ts");
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+
+
+
+/**
+ * Range Filter Component
+ */
+
+class RangeFilterComponent extends preact__WEBPACK_IMPORTED_MODULE_1__.Component {
+  constructor() {
+    super();
+
+    _defineProperty(this, "uid", Math.random().toString(16).substr(2, 12));
+
+    this.observerFrom = this.configureFromObserver();
+    this.observerTo = this.configureToObserver();
+    this.rangeUid = 'range-' + this.uid;
+    this.setState(prevState => {
+      return {
+        from: null,
+        to: null,
+        min: null,
+        max: null,
+        visible: true
+      };
+    });
+  }
+  /**
+   * Components will mount
+   */
+
+
+  componentWillMount() {
+    const props = this.props;
+    const environmentId = props.environmentId;
+    const filterName = props.filterName;
+    const filterField = props.filterField;
+    const currentQuery = props.store.getCurrentQuery();
+    /**
+     * Dispatch action
+     */
+
+    (0,_RangeFilterActions__WEBPACK_IMPORTED_MODULE_4__.aggregationSetup)(environmentId, currentQuery, filterName, filterField);
+  }
+
+  configureFromObserver() {
+    const that = this;
+    return new MutationObserver(function (mutationsList, observer) {
+      // Use traditional 'for loops' for IE 11
+      for (const mutation of mutationsList) {
+        if (mutation.attributeName === 'value') {
+          const value = parseInt(mutation.target["defaultValue"]);
+
+          if (value == that.state.from) {
+            return;
+          }
+
+          that.handleSliderChange([value, that.state.to]);
+        }
+      }
+    });
+  }
+
+  configureToObserver() {
+    const that = this;
+    return new MutationObserver(function (mutationsList, observer) {
+      // Use traditional 'for loops' for IE 11
+      for (const mutation of mutationsList) {
+        if (mutation.attributeName === 'value') {
+          const value = parseInt(mutation.target["defaultValue"]);
+
+          if (value == that.state.to) {
+            return;
+          }
+
+          that.handleSliderChange([that.state.from, value]);
+        }
+      }
+    });
+  }
+
+  componentDidMount() {
+    this.observerFrom.observe(document.getElementsByClassName('as-rangeFilter__from__' + this.uid)[0], {
+      attributes: true
+    });
+    this.observerTo.observe(document.getElementsByClassName('as-rangeFilter__to__' + this.uid)[0], {
+      attributes: true
+    });
+  }
+
+  componentWillUnmount() {
+    this.observerFrom.disconnect();
+    this.observerTo.disconnect();
+  }
+  /**
+   * Handle change
+   *
+   * @param e
+   */
+
+
+  handleChange(e) {
+    const uid = this.uid;
+    this.applyFilter(e.target.parentNode.getElementsByClassName('as-rangeFilter__from__' + uid)[0].value, e.target.parentNode.getElementsByClassName('as-rangeFilter__to__' + uid)[0].value);
+  }
+
+  handleSliderChange(values) {
+    if (values[0] === this.state.from && values[1] === this.state.to) {
+      return false;
+    }
+
+    this.applyFilter(values[0], values[1]);
+  }
+
+  /**
+   * @param values
+   */
+  handleSliderMove(values) {
+    this.updateRangeLayer(this.props, this.state, values[0], values[1]);
+  }
+
+  /**
+   * Component will receive props
+   *
+   * @param props
+   */
+  componentWillReceiveProps(props) {
+    const aggregation = props.store.getCurrentResult().getAggregation(props.filterName);
+
+    if (!(aggregation instanceof apisearch__WEBPACK_IMPORTED_MODULE_0__.ResultAggregation)) {
+      return;
+    }
+
+    const metadata = aggregation.getMetadata();
+    const filter = props.store.getCurrentQuery().getFilter(props.filterName);
+    const min = typeof metadata['min'] === "number" ? Math.floor(metadata['min']) : undefined;
+    const max = typeof metadata['max'] === "number" ? Math.ceil(metadata['max']) : undefined;
+    const fromTo = this.getFromToFromFilter(filter, min, max);
+    this.setState(prevState => {
+      return {
+        from: fromTo[0],
+        to: fromTo[1],
+        min: min,
+        max: max,
+        visible: typeof min === "number" && typeof max === "number"
+      };
+    });
+  }
+  /**
+   * @param filter
+   * @param min
+   * @param max
+   */
+
+
+  getFromToFromFilter(filter, min, max) {
+    const realMin = Math.min(min, max);
+    const realMax = Math.max(min, max);
+
+    if (filter instanceof apisearch__WEBPACK_IMPORTED_MODULE_0__.Filter) {
+      const filterValue = filter.getValues()[0];
+
+      if (typeof filterValue === "string") {
+        const parts = filterValue.split('..');
+        const from = parts[0];
+        const to = parts[1].slice(0, -1);
+        return [Math.max(realMin, parseInt(from)), Math.min(realMax, parseInt(to))];
+      }
+    }
+
+    return [realMin, realMax];
+  }
+  /**
+   * @param previousProps
+   * @param previousState
+   */
+
+
+  componentDidUpdate(previousProps, previousState) {
+    this.updateRangeLayer(previousProps, previousState, previousState.from, previousState.to);
+  }
+  /**
+   * @param props
+   * @param state
+   * @param from
+   * @param to
+   */
+
+
+  updateRangeLayer(props, state, from, to) {
+    const min = state.min;
+    const max = state.max;
+
+    if (typeof from === "number" && typeof to === "number" && typeof props.callback === "function") {
+      props.callback(Math.min(from, to), Math.max(from, to), min, max, this.rangeUid);
+    }
+  }
+  /**
+   * @param props
+   * @param state
+   */
+
+
+  render(props, state) {
+    const filterName = props.filterName;
+    const ref = (0,preact_compat__WEBPACK_IMPORTED_MODULE_2__.useRef)(null);
+    const topTemplate = props.template.top;
+    const sliderTemplate = props.template.slider;
+    const containerClassName = props.classNames.container;
+    const topClassName = props.classNames.top;
+    const wrapperClassName = props.classNames.wrapper;
+    const that = this;
+    (0,preact_compat__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+      const self = this;
+
+      if (!ref.current) {
+        return;
+      }
+
+      const uid = this.uid;
+      /**
+       * Alert if clicked on outside of element
+       */
+
+      function handleChange(event) {
+        const target = event.target;
+        const parentNode = target.parentNode;
+        self.applyFilter(parentNode.getElementsByClassName('as-rangeFilter__from__' + uid)[0].value, parentNode.getElementsByClassName('as-rangeFilter__to__' + uid)[0].value);
+      } // Bind the event listener
+
+
+      ref.current.addEventListener("change", handleChange);
+      return () => {
+        // Unbind the event listener on clean up
+        ref.current.removeEventListener("change", handleChange);
+      };
+    }, [ref]);
+    const isNative = props.native;
+    const isNotNative = !isNative;
+    const type = isNative ? 'range' : 'number';
+    const eventName = 'onClick';
+    const from = state.from;
+    const to = state.to;
+    const min = state.min;
+    const max = state.max;
+    const visibleStyle = state.visible ? '' : 'display:none!important;';
+    return (0,preact__WEBPACK_IMPORTED_MODULE_1__.h)("div", {
+      id: this.rangeUid,
+      className: `as-rangeFilter ${containerClassName}`,
+      style: visibleStyle
+    }, (0,preact__WEBPACK_IMPORTED_MODULE_1__.h)(_Template__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      template: topTemplate,
+      className: `as-rangeFilter__top ${topClassName}`,
+      dictionary: this.props.dictionary
+    }), (0,preact__WEBPACK_IMPORTED_MODULE_1__.h)("div", {
+      className: `as-rangeFilter__wrapper ${wrapperClassName}`
+    }, (0,preact__WEBPACK_IMPORTED_MODULE_1__.h)("input", _extends({
+      type: type,
+      class: `as-rangeFilter__from ${props.classNames.input} as-rangeFilter__${this.uid} as-rangeFilter__from__${this.uid}`
+    }, props.attributes.from, {
+      value: from,
+      min: min,
+      max: max,
+      step: props.step,
+      onClick: function (e) {
+        if (isNotNative) return false;
+        that.handleSliderChange([parseInt(e.target.value), to]);
+      },
+      onTouchEnd: function (e) {
+        if (isNotNative) return false;
+        that.handleSliderChange([parseInt(e.target.value), to]);
+      },
+      onChange: function (e) {
+        const positions = [parseInt(e.target.value), to];
+
+        if (isNative) {
+          that.handleSliderMove(positions);
+          return false;
+        }
+
+        that.handleSliderChange(positions);
+      },
+      autocomplete: `off`
+    })), (0,preact__WEBPACK_IMPORTED_MODULE_1__.h)("input", _extends({
+      type: type,
+      class: `as-rangeFilter__to ${props.classNames.input} as-rangeFilter__${this.uid} as-rangeFilter__to__${this.uid}`
+    }, props.attributes.to, {
+      value: to,
+      min: min,
+      max: max,
+      step: props.step,
+      onClick: function (e) {
+        if (isNotNative) return false;
+        that.handleSliderChange([from, parseInt(e.target.value)]);
+      },
+      onTouchEnd: function (e) {
+        if (isNotNative) return false;
+        that.handleSliderChange([from, parseInt(e.target.value)]);
+      },
+      onChange: function (e) {
+        const positions = [from, parseInt(e.target.value)];
+
+        if (isNative) {
+          that.handleSliderMove(positions);
+          return false;
+        }
+
+        that.handleSliderChange(positions);
+      },
+      autocomplete: `off`
+    })), (0,preact__WEBPACK_IMPORTED_MODULE_1__.h)("div", {
+      class: "slider"
+    }, (0,preact__WEBPACK_IMPORTED_MODULE_1__.h)(_Template__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      template: sliderTemplate,
+      dictionary: this.props.dictionary
+    }))));
+  }
+  /**
+   * Apply filter
+   */
+
+
+  applyFilter(valueFrom, valueTo) {
+    const props = this.props;
+    /**
+     * Dispatch action
+     */
+
+    (0,_RangeFilterActions__WEBPACK_IMPORTED_MODULE_4__.filterAction)(props.environmentId, props.store.getCurrentQuery(), props.repository, props.filterName, props.filterField, valueFrom, valueTo);
+  }
+
+}
+
+RangeFilterComponent.defaultProps = {
+  maxValueIncluded: true,
+  step: 1,
+  native: false,
+  classNames: {
+    container: '',
+    top: '',
+    wrapper: '',
+    input: '',
+    from: '',
+    to: ''
+  },
+  attributes: {
+    from: '',
+    to: ''
+  },
+  template: {
+    top: '',
+    slider: ''
+  }
+};
+/* harmony default export */ __webpack_exports__["default"] = (RangeFilterComponent);
+
+/***/ }),
+
+/***/ "./src/components/Reload/ReloadActions.ts":
+/*!************************************************!*\
+  !*** ./src/components/Reload/ReloadActions.ts ***!
+  \************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "reloadAction": function() { return /* binding */ reloadAction; }
+/* harmony export */ });
+/* harmony import */ var apisearch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
+/* harmony import */ var apisearch__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(apisearch__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _Constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
+/* harmony import */ var _Container__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
+/* harmony import */ var _Clone__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
+/**
+ * Clear filters actions
+ */
+
+
+
+
+/**
+ * Clear filters action
+ *
+ * @param environmentId
+ * @param currentQuery
+ * @param repository
+ */
+
+function reloadAction(environmentId, currentQuery, repository) {
+  const clonedQuery = _Clone__WEBPACK_IMPORTED_MODULE_3__["default"].object(currentQuery);
+  const dispatcher = _Container__WEBPACK_IMPORTED_MODULE_2__["default"].get(`${_Constants__WEBPACK_IMPORTED_MODULE_1__.APISEARCH_DISPATCHER}__${environmentId}`);
+
+  if (repository instanceof apisearch__WEBPACK_IMPORTED_MODULE_0__.HttpRepository) {
+    const httpClient = repository.getHttpClient();
+
+    if (httpClient instanceof apisearch__WEBPACK_IMPORTED_MODULE_0__.CacheClient) {
+      httpClient.flushCache();
+    }
+  }
+
+  repository.query(clonedQuery).then(result => {
+    dispatcher.dispatch("RENDER_FETCHED_DATA", {
+      query: clonedQuery,
+      result: result
+    });
+  }).catch(error => {// Do nothing
+  });
+}
+
+/***/ }),
+
+/***/ "./src/components/Reload/ReloadComponent.tsx":
+/*!***************************************************!*\
+  !*** ./src/components/Reload/ReloadComponent.tsx ***!
+  \***************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+/* harmony import */ var _Template__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
+/* harmony import */ var _ReloadActions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ReloadActions */ "./src/components/Reload/ReloadActions.ts");
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+
+
+/**
+ * ReloadComponent
+ */
+class ReloadComponent extends preact__WEBPACK_IMPORTED_MODULE_0__.Component {
+  constructor() {
+    super(...arguments);
+
+    _defineProperty(this, "handleClick", () => {
+      const props = this.props;
+      const environmentId = props.environmentId;
+      const currentQuery = props.store.getCurrentQuery();
+      const repository = props.repository;
+      /**
+       * Dispatch a clear filter action
+       */
+
+      (0,_ReloadActions__WEBPACK_IMPORTED_MODULE_2__.reloadAction)(environmentId, currentQuery, repository);
+    });
+  }
+
+  /**
+   * Render
+   *
+   * @return {}
+   */
+  render() {
+    const props = this.props;
+    const containerClassName = props.classNames.container;
+    const containerTemplate = props.template.container;
+    return (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)("div", {
+      className: `as-clearFilters ${containerClassName}`,
+      onClick: this.handleClick
+    }, (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)(_Template__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      template: containerTemplate,
+      dictionary: this.props.dictionary
+    }));
+  }
+
+}
+
+ReloadComponent.defaultProps = {
+  classNames: {
+    container: ""
+  },
+  template: {
+    container: "Reload"
+  }
+};
+/* harmony default export */ __webpack_exports__["default"] = (ReloadComponent);
+
+/***/ }),
+
+/***/ "./src/components/Result/Item.tsx":
+/*!****************************************!*\
+  !*** ./src/components/Result/Item.tsx ***!
+  \****************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+/* harmony import */ var _Template__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
+
+
+
+/**
+ * Item
+ */
+class Item extends preact__WEBPACK_IMPORTED_MODULE_0__.Component {
+  /**
+   * @param nextProps
+   * @param nextState
+   */
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.props.data.uuid_composed !== nextProps.data.uuid_composed;
+  }
+  /**
+   * Render
+   *
+   * @return {any}
+   */
+
+
+  render() {
+    const props = this.props;
+    const template = props.template;
+    const data = props.data;
+    const dictionary = props.dictionary ?? {};
+    return (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)(_Template__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      template: template,
+      data: data,
+      className: `as-result__itemsList ${props.className}`,
+      dictionary: dictionary
+    });
+  }
+
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (Item);
+
+/***/ }),
+
+/***/ "./src/components/Result/ResultActions.ts":
+/*!************************************************!*\
+  !*** ./src/components/Result/ResultActions.ts ***!
+  \************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "configureQuery": function() { return /* binding */ configureQuery; },
+/* harmony export */   "infiniteScrollNextPageAction": function() { return /* binding */ infiniteScrollNextPageAction; }
+/* harmony export */ });
+/* harmony import */ var _Constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
+/* harmony import */ var _Container__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
+/* harmony import */ var _Clone__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
+/**
+ * Search actions
+ */
+
+
+
+/**
+ *
+ * Configure query
+ *
+ * @param environmentId
+ * @param currentQuery
+ * @param itemsPerPage
+ * @param highlightsEnabled
+ * @param suggestionsEnabled
+ * @param promotedUUIDs
+ * @param excludedUUIDs
+ * @param fields
+ * @param filter
+ * @param minScore
+ */
+
+function configureQuery(environmentId, currentQuery, itemsPerPage, highlightsEnabled, promotedUUIDs, excludedUUIDs, fields, filter, minScore) {
+  const clonedQuery = _Clone__WEBPACK_IMPORTED_MODULE_2__["default"].object(currentQuery);
+  filter(clonedQuery);
+  /**
+   * Set result size
+   */
+
+  clonedQuery.size = itemsPerPage;
+  /**
+   * Set specific fields
+   */
+
+  clonedQuery.setFields(fields);
+  /**
+   * Enabling highlights on query result
+   */
+
+  if (highlightsEnabled) {
+    clonedQuery.enableHighlights();
+  }
+  /**
+   * Promoted uuids
+   */
+
+
+  for (const i in promotedUUIDs) {
+    clonedQuery.promoteUUID(promotedUUIDs[i]);
+  }
+  /**
+   * excluded uuids
+   */
+
+
+  for (const i in excludedUUIDs) {
+    clonedQuery.excludeUUID(excludedUUIDs[i]);
+  }
+
+  if (minScore > 0) {
+    clonedQuery.minScore = minScore;
+  }
+
+  const dispatcher = _Container__WEBPACK_IMPORTED_MODULE_1__["default"].get(`${_Constants__WEBPACK_IMPORTED_MODULE_0__.APISEARCH_DISPATCHER}__${environmentId}`);
+  dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
+    query: clonedQuery
+  });
+}
+/**
+ * Pagination change
+ *
+ * @param environmentId
+ * @param currentQuery
+ * @param repository
+ * @param nextPage
+ */
+
+function infiniteScrollNextPageAction(environmentId, currentQuery, repository, nextPage) {
+  const clonedQuery = _Clone__WEBPACK_IMPORTED_MODULE_2__["default"].object(currentQuery);
+  clonedQuery.page = nextPage;
+  const dispatcher = _Container__WEBPACK_IMPORTED_MODULE_1__["default"].get(`${_Constants__WEBPACK_IMPORTED_MODULE_0__.APISEARCH_DISPATCHER}__${environmentId}`);
+  repository.query(clonedQuery).then(result => {
+    dispatcher.dispatch("RENDER_FETCHED_DATA", {
+      query: clonedQuery,
+      result: result
+    });
+  }).catch(error => {// Do nothing
+  });
+}
+
+/***/ }),
+
+/***/ "./src/components/Result/ResultComponent.tsx":
+/*!***************************************************!*\
+  !*** ./src/components/Result/ResultComponent.tsx ***!
+  \***************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var apisearch_lib_Model_ItemUUID__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! apisearch/lib/Model/ItemUUID */ "./node_modules/apisearch/lib/Model/ItemUUID.js");
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+/* harmony import */ var preact_compat__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! preact/compat */ "./node_modules/preact/compat/dist/compat.module.js");
+/* harmony import */ var _Constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
+/* harmony import */ var _Container__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
+/* harmony import */ var _Template__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
+/* harmony import */ var _defaultTemplates__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./defaultTemplates */ "./src/components/Result/defaultTemplates.tsx");
+/* harmony import */ var _Item__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Item */ "./src/components/Result/Item.tsx");
+/* harmony import */ var _ResultActions__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./ResultActions */ "./src/components/Result/ResultActions.ts");
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * Result Component
+ */
+class ResultComponent extends preact__WEBPACK_IMPORTED_MODULE_1__.Component {
+  /**
+   * Constructor
+   */
+  constructor(props) {
+    super(props);
+
+    _defineProperty(this, "fromLoadingNextPage", false);
+
+    _defineProperty(this, "observer", (0,preact_compat__WEBPACK_IMPORTED_MODULE_2__.useRef)());
+
+    _defineProperty(this, "endResultsBoxRef", (0,preact_compat__WEBPACK_IMPORTED_MODULE_2__.useCallback)(node => {
+      if (this.observer.current instanceof IntersectionObserver) {
+        this.observer.current.disconnect();
+      }
+
+      this.observer.current = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) {
+          const {
+            environmentId,
+            store,
+            repository
+          } = this.props;
+          this.fromLoadingNextPage = true;
+          (0,_ResultActions__WEBPACK_IMPORTED_MODULE_8__.infiniteScrollNextPageAction)(environmentId, store.getCurrentQuery(), repository, this.state.page + 1);
+        }
+      });
+
+      if (this.observer.current instanceof IntersectionObserver && node) {
+        this.observer.current.observe(node);
+      }
+    }, []));
+
+    this.state = {
+      items: [],
+      page: 0,
+      hasNewPage: false,
+      focus: props.fadeInSelector === ""
+    };
+  }
+  /**
+   * Hook that change state once mouse clicks inside or outside the container
+   */
+
+
+  addMouseDownListeners(ref, fadeInSelector) {
+    (0,preact_compat__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+      const self = this;
+      /**
+       * Alert if clicked on outside of element
+       */
+
+      function handleClickOutside(event) {
+        self.setState(prevState => {
+          return {
+            items: prevState.items,
+            page: prevState.page,
+            focus: event.target.closest(fadeInSelector) != null
+          };
+        });
+      } // Bind the event listener
+
+
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        // Unbind the event listener on clean up
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, [ref]);
+  }
+  /**
+   * Component will receive props
+   *
+   * @param props
+   */
+
+
+  componentWillReceiveProps(props) {
+    if (props.store.getCurrentResult() == null) {
+      this.setState(prevState => {
+        return {
+          items: [],
+          page: 0,
+          hasNewPage: false
+        };
+      });
+      return;
+    }
+
+    const currentResult = props.store.getCurrentResult();
+    const currentQuery = props.store.getCurrentQuery();
+    const items = currentResult.getItems();
+    const currentPage = currentQuery.getPage();
+    const hasNewPage = currentResult.getTotalHits() > currentPage * currentQuery.getSize();
+    const currentItems = this.fromLoadingNextPage ? this.state.items.concat(items) : items;
+    this.fromLoadingNextPage = false;
+    this.setState(prevState => {
+      return {
+        items: currentItems,
+        page: props.store.getCurrentQuery().getPage(),
+        hasNewPage: hasNewPage
+      };
+    });
+  }
+  /**
+   * Component will mount
+   */
+
+
+  componentWillMount() {
+    const props = this.props;
+    /**
+     * Dispatch action
+     */
+
+    (0,_ResultActions__WEBPACK_IMPORTED_MODULE_8__.configureQuery)(props.environmentId, props.store.getCurrentQuery(), props.itemsPerPage, props.highlightsEnabled, props.promote.map(itemUUID => {
+      return itemUUID instanceof apisearch_lib_Model_ItemUUID__WEBPACK_IMPORTED_MODULE_0__.ItemUUID ? itemUUID : apisearch_lib_Model_ItemUUID__WEBPACK_IMPORTED_MODULE_0__.ItemUUID.createFromArray(itemUUID);
+    }), props.exclude.map(itemUUID => {
+      return itemUUID instanceof apisearch_lib_Model_ItemUUID__WEBPACK_IMPORTED_MODULE_0__.ItemUUID ? itemUUID : apisearch_lib_Model_ItemUUID__WEBPACK_IMPORTED_MODULE_0__.ItemUUID.createFromArray(itemUUID);
+    }), props.fields, props.filter, props.minScore);
+  }
+  /**
+   * Render
+   *
+   * @return {any}
+   */
+
+
+  render() {
+    const props = this.props;
+    const dirty = props.store.isDirty();
+    const containerClassName = props.classNames.container;
+    const itemsListClassName = props.classNames.itemsList;
+    const placeholderClassName = props.classNames.placeholder;
+    const itemsListTemplate = props.template.itemsList;
+    const placeholderTemplate = props.template.placeholder ?? "";
+    const currentResult = props.store.getCurrentResult();
+    const currentQuery = props.store.getCurrentQuery();
+    const currentVisibleResults = props.currentVisibleResults;
+    const wrapperRef = (0,preact_compat__WEBPACK_IMPORTED_MODULE_2__.useRef)(null);
+    const hasInfiniteScrollNextPage = props.infiniteScroll !== false && (props.infiniteScroll === true || props.infiniteScroll >= 0) && this.state.hasNewPage;
+    const infiniteScrollMargin = hasInfiniteScrollNextPage ? props.infiniteScroll === true ? 0 : props.infiniteScroll : undefined;
+
+    if (props.fadeInSelector !== "") {
+      this.addMouseDownListeners(wrapperRef, props.fadeInSelector);
+    }
+
+    if (!currentVisibleResults || !this.state.focus) {
+      return (0,preact__WEBPACK_IMPORTED_MODULE_1__.h)("div", {
+        className: `as-result ${containerClassName}`
+      });
+    }
+    /**
+     * Data accessible to the template
+     */
+
+
+    const items = this.state.items;
+    const reducedTemplateData = {
+      query: currentQuery.getQueryText(),
+      suggestions: currentResult.getSuggestions()
+    };
+    /**
+     * Uses defined a custom items list. Old version
+     */
+
+    if (props.template.itemsList !== _defaultTemplates__WEBPACK_IMPORTED_MODULE_6__.defaultItemsListTemplate) {
+      return (0,preact__WEBPACK_IMPORTED_MODULE_1__.h)("div", {
+        className: `as-result ${containerClassName}`,
+        ref: wrapperRef,
+        style: "position: relative"
+      }, dirty ? (0,preact__WEBPACK_IMPORTED_MODULE_1__.h)(_Template__WEBPACK_IMPORTED_MODULE_5__["default"], {
+        template: placeholderTemplate,
+        className: `as-result__placeholder ${placeholderClassName}`,
+        dictionary: this.props.dictionary
+      }) : (0,preact__WEBPACK_IMPORTED_MODULE_1__.h)(_Template__WEBPACK_IMPORTED_MODULE_5__["default"], {
+        template: itemsListTemplate,
+        data: { ...reducedTemplateData,
+          items: items ? items.map(item => this.hydrateItem(item)) : []
+        },
+        className: `as-result__itemsList ${itemsListClassName}`,
+        dictionary: this.props.dictionary
+      }), hasInfiniteScrollNextPage ? (0,preact__WEBPACK_IMPORTED_MODULE_1__.h)("div", {
+        ref: this.endResultsBoxRef,
+        style: `bottom: ${infiniteScrollMargin}px; position: relative;`
+      }) : "");
+    }
+    /**
+     * New version
+     */
+
+
+    return (0,preact__WEBPACK_IMPORTED_MODULE_1__.h)("div", {
+      className: `as-result ${containerClassName}`,
+      ref: wrapperRef
+    }, dirty ? (0,preact__WEBPACK_IMPORTED_MODULE_1__.h)(_Template__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      template: placeholderTemplate,
+      className: `as-result__placeholder ${placeholderClassName}`,
+      dictionary: this.props.dictionary
+    }) : items.length > 0 ? (0,preact__WEBPACK_IMPORTED_MODULE_1__.h)("div", {
+      className: `as-result__itemsList ${props.classNames.itemsList}`
+    }, items.map(item => {
+      return (0,preact__WEBPACK_IMPORTED_MODULE_1__.h)(_Item__WEBPACK_IMPORTED_MODULE_7__["default"], {
+        data: { ...reducedTemplateData,
+          ...this.hydrateItem(item)
+        },
+        template: props.template.item,
+        className: `as-result__item ${props.classNames.item}`,
+        dictionary: this.props.dictionary
+      });
+    }), hasInfiniteScrollNextPage ? (0,preact__WEBPACK_IMPORTED_MODULE_1__.h)("div", {
+      id: `as-result__infinite_scroll_inspector`,
+      ref: this.endResultsBoxRef,
+      style: `bottom: ${infiniteScrollMargin}px; position: relative; width: 100%;`
+    }) : "") : (0,preact__WEBPACK_IMPORTED_MODULE_1__.h)(_Template__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      template: props.template.noResults,
+      data: {
+        query: currentQuery.getQueryText()
+      },
+      className: `as-result__noresults ${props.classNames.noResults}`,
+      dictionary: this.props.dictionary
+    }));
+  }
+  /**
+   * @param item
+   */
+
+
+  hydrateItem(item) {
+    const props = this.props;
+    const environmentId = props.environmentId;
+    const config = _Container__WEBPACK_IMPORTED_MODULE_4__["default"].get(`${_Constants__WEBPACK_IMPORTED_MODULE_3__.APISEARCH_CONFIG}__${environmentId}`);
+    const apisearchUI = _Container__WEBPACK_IMPORTED_MODULE_4__["default"].get(`${_Constants__WEBPACK_IMPORTED_MODULE_3__.APISEARCH_UI}__${environmentId}`);
+    const apisearchReference = apisearchUI.reference;
+    let appId = config.app_id;
+    const appUUID = item.getAppUUID();
+
+    if (typeof appUUID === "object") {
+      appId = appUUID.composedUUID();
+    }
+
+    let indexId = config.index_id;
+    const indexUUID = item.getIndexUUID();
+
+    if (typeof indexUUID === "object") {
+      indexId = indexUUID.composedUUID();
+    }
+
+    const itemId = item.getUUID().composedUUID();
+    const userId = config.user_id;
+    const clickParameters = typeof userId === "string" ? appId + '", "' + indexId + '", "' + itemId + '", "' + userId : appId + '", "' + indexId + '", "' + itemId;
+    const mainFields = {};
+    Object.assign(mainFields, item.getMetadata(), item.getIndexedMetadata(), item.getHighlights());
+    const fieldsConciliation = {};
+    Object.keys(props.fieldsConciliation).map((field, index) => {
+      fieldsConciliation[field] = mainFields[props.fieldsConciliation[field]] ?? undefined;
+    });
+    Object.assign(mainFields, fieldsConciliation);
+    item.fields = mainFields;
+    return { ...props.formatData(item),
+      ...{
+        key: "item_" + itemId,
+        uuid_composed: itemId,
+        click: apisearchReference + '.click("' + clickParameters + '");',
+        striptags: () => {
+          return (val, render) => render(val).replace(/(<([^>]+)>)/ig, "");
+        }
+      }
+    };
+  }
+
+}
+
+ResultComponent.defaultProps = {
+  fields: [],
+  itemsPerPage: 10,
+  highlightsEnabled: false,
+  promote: [],
+  exclude: [],
+  filter: query => null,
+  classNames: {
+    container: "",
+    itemsList: "",
+    item: "",
+    noResults: "",
+    placeholder: ""
+  },
+  template: {
+    itemsList: _defaultTemplates__WEBPACK_IMPORTED_MODULE_6__.defaultItemsListTemplate,
+    item: _defaultTemplates__WEBPACK_IMPORTED_MODULE_6__.defaultItemTemplate,
+    noResults: _defaultTemplates__WEBPACK_IMPORTED_MODULE_6__.defaultNoResultsItemTemplate,
+    placeholder: null
+  },
+  formatData: data => data,
+  fadeInSelector: "",
+  fieldsConciliation: {}
+};
+/* harmony default export */ __webpack_exports__["default"] = (ResultComponent);
+
+/***/ }),
+
+/***/ "./src/components/Result/defaultTemplates.tsx":
+/*!****************************************************!*\
+  !*** ./src/components/Result/defaultTemplates.tsx ***!
+  \****************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "defaultItemsListTemplate": function() { return /* binding */ defaultItemsListTemplate; },
+/* harmony export */   "defaultItemTemplate": function() { return /* binding */ defaultItemTemplate; },
+/* harmony export */   "defaultNoResultsItemTemplate": function() { return /* binding */ defaultNoResultsItemTemplate; }
+/* harmony export */ });
+const defaultItemsListTemplate = `
+    <div>
+    {{#items}}
+        <div class="as-result__item" data-id="{{uuid_composed}}">
+            <strong>Score:</strong> {{score}}<br />
+            <strong>Uuid:</strong> {{uuid.type}} - {{uuid.id}}<br />
+            <strong>Title:</strong> {{{fields.title}}}<br />
+            <strong>Description:</strong> {{fields.description}}<br />
+            <strong>Link:</strong> <a href="{{metadata.link}}" onclick="{{click}}" target="_blank">{{metadata.link}}</a>
+        </div>
+    {{/items}}
+    </div>
+    {{^items}}No results{{/items}}
+`;
+const defaultItemTemplate = `
+    <strong>Score:</strong> {{score}}<br />
+    <strong>Uuid:</strong> {{uuid.type}} - {{uuid.id}}<br />
+    <strong>Title:</strong> {{{fields.title}}}<br />
+    <strong>Description:</strong> {{fields.description}}<br />
+    <strong>Link:</strong> <a href="{{metadata.link}}" onclick="{{click}}" target="_blank">{{metadata.link}}</a>
+`;
+const defaultNoResultsItemTemplate = `
+    No results
+`;
+
+/***/ }),
+
+/***/ "./src/components/SearchInput/AutocompleteComponent.tsx":
+/*!**************************************************************!*\
+  !*** ./src/components/SearchInput/AutocompleteComponent.tsx ***!
+  \**************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+
+
+/**
+ * Autocomplete Component
+ */
+class AutocompleteComponent extends preact__WEBPACK_IMPORTED_MODULE_0__.Component {
+  /**
+   * Constructor
+   */
+  constructor(props) {
+    super(props);
+    this.state = {
+      autocomplete: ""
+    };
+  }
+  /**
+   * Component will receive props
+   *
+   * @param props
+   */
+
+
+  componentWillReceiveProps(props) {
+    if (props.autocomplete !== null) {
+      this.setState(prevState => {
+        return {
+          autocomplete: props.autocomplete
+        };
+      });
+    } else {
+      this.setState(prevState => {
+        return {
+          autocomplete: ""
+        };
+      });
+    }
+  }
+  /**
+   * Render
+   *
+   * @return {any}
+   */
+
+
+  render() {
+    const autocomplete = this.state.autocomplete;
+    const queryText = this.props.queryText;
+    const inputClassName = this.props.inputClassName;
+    const queryTextLength = queryText.length;
+    const autocompleteText = autocomplete.substring(queryTextLength);
+    const formattedAutocompleteText = autocompleteText === "" ? "" : queryText + autocompleteText + " ⤷";
+    return (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)("input", {
+      type: "text",
+      className: `as-searchInput__input as-searchInput__autocomplete ${inputClassName}`,
+      placeholder: formattedAutocompleteText,
+      style: "position: absolute; top: 0px; left: 0px; background-color: white;"
+    });
+  }
+
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (AutocompleteComponent);
+
+/***/ }),
+
+/***/ "./src/components/SearchInput/SearchInputActions.ts":
+/*!**********************************************************!*\
+  !*** ./src/components/SearchInput/SearchInputActions.ts ***!
+  \**********************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "initialSearchSetup": function() { return /* binding */ initialSearchSetup; },
+/* harmony export */   "simpleSearchAction": function() { return /* binding */ simpleSearchAction; }
+/* harmony export */ });
+/* harmony import */ var _Constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
+/* harmony import */ var _Container__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
+/* harmony import */ var _Clone__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
+/**
+ * Search actions
+ */
+
+
+
+/**
+ * Initial Search
+ *
+ * @param environmentId
+ * @param currentQuery
+ * @param initialSearch
+ * @param autocomplete
+ * @param searchableFields
+ * @param queryOperator
+ */
+
+function initialSearchSetup(environmentId, currentQuery, initialSearch, autocomplete, searchableFields, queryOperator) {
+  const dispatcher = _Container__WEBPACK_IMPORTED_MODULE_1__["default"].get(`${_Constants__WEBPACK_IMPORTED_MODULE_0__.APISEARCH_DISPATCHER}__${environmentId}`);
+  const clonedQuery = _Clone__WEBPACK_IMPORTED_MODULE_2__["default"].object(currentQuery);
+  clonedQuery.filters._query.values = [initialSearch];
+  clonedQuery.page = 1;
+  clonedQuery.queryOperator = queryOperator;
+
+  if (searchableFields.length > 0) {
+    clonedQuery.searchableFields = searchableFields;
+  }
+
+  if (autocomplete) {
+    clonedQuery.enableAutocomplete();
+  }
+
+  dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
+    query: clonedQuery
+  });
+}
+/**
+ * Search action
+ *
+ * @param environmentId
+ * @param currentQuery
+ * @param repository
+ * @param queryText
+ * @param visibleResults
+ */
+
+function simpleSearchAction(environmentId, currentQuery, repository, queryText, visibleResults) {
+  const dispatcher = _Container__WEBPACK_IMPORTED_MODULE_1__["default"].get(`${_Constants__WEBPACK_IMPORTED_MODULE_0__.APISEARCH_DISPATCHER}__${environmentId}`);
+  const clonedQuery = _Clone__WEBPACK_IMPORTED_MODULE_2__["default"].object(currentQuery);
+  clonedQuery.filters._query.values = [queryText];
+  clonedQuery.page = 1;
+
+  if (!visibleResults) {
+    dispatcher.dispatch("RENDER_FETCHED_DATA", {
+      query: clonedQuery,
+      result: null,
+      visibleResults: visibleResults
+    });
+    return;
+  }
+
+  repository.query(clonedQuery).then(result => {
+    dispatcher.dispatch("RENDER_FETCHED_DATA", {
+      query: clonedQuery,
+      result: result,
+      visibleResults: visibleResults
+    });
+  }).catch(error => {// Do nothing
+  });
+}
+
+/***/ }),
+
+/***/ "./src/components/SearchInput/SearchInputComponent.tsx":
+/*!*************************************************************!*\
+  !*** ./src/components/SearchInput/SearchInputComponent.tsx ***!
+  \*************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+/* harmony import */ var _SearchInputActions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SearchInputActions */ "./src/components/SearchInput/SearchInputActions.ts");
+/* harmony import */ var _Template__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
+/* harmony import */ var _AutocompleteComponent__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./AutocompleteComponent */ "./src/components/SearchInput/AutocompleteComponent.tsx");
+/* harmony import */ var preact_compat__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! preact/compat */ "./node_modules/preact/compat/dist/compat.module.js");
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+
+
+
+/**
+ * SearchInput Component
+ */
+
+class SearchInputComponent extends preact__WEBPACK_IMPORTED_MODULE_0__.Component {
+  /**
+   * Constructor
+   */
+  constructor(_props) {
+    super(_props);
+
+    _defineProperty(this, "inputRef", (0,preact_compat__WEBPACK_IMPORTED_MODULE_4__.useRef)(null));
+
+    _defineProperty(this, "handleSearch", search => {
+      const props = this.props;
+      const startSearchOn = props.startSearchOn;
+      const finalSpace = search.charAt(search.length - 1) === " " ? " " : "";
+      const targetValueNoSpaces = search.trim() + finalSpace;
+      (0,_SearchInputActions__WEBPACK_IMPORTED_MODULE_1__.simpleSearchAction)(props.environmentId, props.store.getCurrentQuery(), props.repository, targetValueNoSpaces === " " ? "" : targetValueNoSpaces, search.length >= startSearchOn);
+    });
+
+    _defineProperty(this, "clearSearch", () => {
+      const props = this.props;
+      const startSearchOn = props.startSearchOn;
+      const environmentId = props.environmentId;
+      const currentQuery = props.store.getCurrentQuery();
+      const repository = props.repository;
+      const visibleResults = 0 === startSearchOn;
+      (0,_SearchInputActions__WEBPACK_IMPORTED_MODULE_1__.simpleSearchAction)(environmentId, currentQuery, repository, "", visibleResults);
+    });
+
+    if (_props.autocomplete) {
+      this.state = {
+        queryText: ""
+      };
+    }
+
+    const that = this;
+    const speechRecognition = window["webkitSpeechRecognition"];
+
+    if (_props.speechRecognition && typeof speechRecognition === "function") {
+      that.speechRecognition = new speechRecognition();
+
+      that.speechRecognition.onresult = event => {
+        const text = event.results[0][0].transcript;
+        that.handleSearch(text);
+      };
+
+      that.speechRecognition.onerror = event => {
+        console.log("Speech Recognition Error - " + event.error);
+      };
+    }
+  }
+  /**
+   * Components will mount
+   */
+
+
+  componentWillMount() {
+    const props = this.props;
+    /**
+     * Dispatch action
+     */
+
+    (0,_SearchInputActions__WEBPACK_IMPORTED_MODULE_1__.initialSearchSetup)(props.environmentId, props.store.getCurrentQuery(), props.initialSearch, props.autocomplete, props.searchableFields, props.queryOperator);
+  }
+  /**
+   * Component will receive props
+   *
+   * @param props
+   */
+
+
+  componentWillReceiveProps(props) {
+    this.setState({
+      queryText: props.store.getCurrentQuery().getQueryText()
+    });
+  }
+  /**
+   * @param search
+   */
+
+
+  /**
+   * Key down
+   */
+  handleKeyDown(e) {
+    switch (e.key) {
+      case "ArrowRight":
+      case "Tab":
+      case "Enter":
+        this.replaceWithAutocomplete(e);
+        return;
+    }
+
+    switch (e.keyCode) {
+      case 39:
+      case 9:
+      case 13:
+        this.replaceWithAutocomplete(e);
+        return;
+    }
+  }
+
+  replaceWithAutocomplete(e) {
+    const props = this.props;
+    const autocomplete = this.props.store.getCurrentResult().getAutocomplete();
+
+    if (autocomplete !== null && autocomplete !== "") {
+      (0,_SearchInputActions__WEBPACK_IMPORTED_MODULE_1__.simpleSearchAction)(props.environmentId, props.store.getCurrentQuery(), props.repository, this.props.store.getCurrentResult().getAutocomplete(), true);
+      e.preventDefault();
+      return;
+    }
+  }
+  /**
+   * @param e
+   * @param speechRecognition
+   */
+
+
+  onSpeechStart(e, speechRecognition) {
+    speechRecognition.start();
+  }
+  /**
+   * @param e
+   */
+
+
+  doNothing(e) {}
+  /**
+   * @param config
+   */
+
+
+  withConfig(config) {
+    if (this.speechRecognition) {
+      this.speechRecognition.lang = this.props.config.options.locale ?? "";
+    }
+  }
+  /**
+   * Search
+   *
+   * @return {any}
+   */
+
+
+  render() {
+    const props = this.props;
+    const placeholder = props.placeholder;
+    const autofocus = props.autofocus;
+    const clearSearch = props.clearSearch;
+    const withContainer = props.withContainer;
+    const containerClassName = props.classNames.container;
+    const inputClassName = props.classNames.input;
+    const clearSearchClassName = props.classNames.clearSearch;
+    const clearSearchTemplate = props.template.clearSearch;
+    const currentQuery = props.store.getCurrentQuery();
+    const currentQueryText = currentQuery.getQueryText();
+    const htmlNodeInheritProps = props.htmlNodeInheritProps;
+    const showAutocomplete = currentQuery.areAutocompleteEnabled();
+    const autocomplete = props.store.getCurrentResult().getAutocomplete();
+    const keyDownCallback = showAutocomplete ? e => this.handleKeyDown(e) : e => this.doNothing(e);
+    const keyDownAction = showAutocomplete ? e => this.replaceWithAutocomplete(e) : e => this.doNothing(e);
+    const style = showAutocomplete ? "position: relative; top: 0px; left: 0px; background-color: transparent; border-color: transparent;" : "";
+    const autocompletableClass = showAutocomplete ? "autocompletable" : "";
+    let searchInput = (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)("input", _extends({
+      type: "text",
+      className: `as-searchInput__input ${inputClassName} ${autocompletableClass}`,
+      placeholder: placeholder,
+      autofocus: autofocus
+    }, htmlNodeInheritProps, {
+      onInput: event => this.handleSearch(event.target.value),
+      value: currentQueryText,
+      style: style,
+      onKeyDown: keyDownCallback,
+      onTouchStart: keyDownAction,
+      ref: this.inputRef
+    }));
+
+    if (showAutocomplete) {
+      searchInput = (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)("div", {
+        style: "position: relative"
+      }, (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)(_AutocompleteComponent__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        autocomplete: autocomplete,
+        queryText: currentQueryText,
+        inputClassName: inputClassName
+      }), searchInput);
+    }
+
+    if (this.speechRecognition) {
+      searchInput = (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)("div", {
+        style: "position: relative"
+      }, searchInput, (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)("div", {
+        class: `as-searchInput-speechRecognition`,
+        onClick: e => this.onSpeechStart(e, this.speechRecognition)
+      }, (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)(_Template__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        template: props.template.speechRecognition,
+        dictionary: props.dictionary
+      })));
+    }
+
+    if (withContainer) {
+      searchInput = (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)("div", {
+        className: `as-searchInput ${containerClassName}`
+      }, searchInput, clearSearch && currentQueryText && currentQueryText.length !== 0 ? (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)("div", {
+        className: `as-searchInput__clearSearch ${clearSearchClassName}`,
+        onClick: this.clearSearch
+      }, (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)(_Template__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        template: clearSearchTemplate,
+        dictionary: props.dictionary
+      })) : null);
+    }
+
+    return searchInput;
+  }
+
+}
+
+SearchInputComponent.defaultProps = {
+  placeholder: "",
+  autofocus: false,
+  autocomplete: false,
+  startSearchOn: 0,
+  clearSearch: true,
+  initialSearch: "",
+  withContainer: true,
+  searchableFields: [],
+  speechRecognition: false,
+  classNames: {
+    container: "",
+    input: "",
+    clearSearch: ""
+  },
+  template: {
+    clearSearch: "x",
+    speechRecognition: "{S}"
+  }
+};
+/* harmony default export */ __webpack_exports__["default"] = (SearchInputComponent);
+
+/***/ }),
+
+/***/ "./src/components/Snapshot/SnapshotComponent.tsx":
+/*!*******************************************************!*\
+  !*** ./src/components/Snapshot/SnapshotComponent.tsx ***!
+  \*******************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+
+
+/**
+ * SnapshotComponent
+ */
+class SnapshotComponent extends preact__WEBPACK_IMPORTED_MODULE_0__.Component {
+  /**
+   * Component receive props
+   *
+   * @param props
+   */
+  componentWillReceiveProps(props) {
+    let query = props.store.getCurrentQuery();
+    this.setState(prevState => {
+      return {
+        query: query
+      };
+    });
+  }
+  /**
+   * Render
+   *
+   * @return {}
+   */
+
+
+  render() {
+    const queryAsJson = this.state.query == undefined ? '' : JSON.stringify(this.state.query.toArray());
+    return (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)("div", null, queryAsJson);
+  }
+
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (SnapshotComponent);
+
+/***/ }),
+
+/***/ "./src/components/SortBy/SortByActions.ts":
+/*!************************************************!*\
+  !*** ./src/components/SortBy/SortByActions.ts ***!
+  \************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "initialSortBySetup": function() { return /* binding */ initialSortBySetup; },
+/* harmony export */   "onChangeSearchAction": function() { return /* binding */ onChangeSearchAction; }
+/* harmony export */ });
+/* harmony import */ var _Constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
+/* harmony import */ var _Container__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
+/* harmony import */ var _Clone__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
+/* harmony import */ var _SortByHelper__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./SortByHelper */ "./src/components/SortBy/SortByHelper.ts");
+/**
+ * SortBy actions
+ */
+
+
+
+
+/**
+ * Initial sortBy
+ *
+ * @param environmentId
+ * @param currentQuery
+ * @param initialOption
+ */
+
+function initialSortBySetup(environmentId, currentQuery, initialOption) {
+  const dispatcher = _Container__WEBPACK_IMPORTED_MODULE_1__["default"].get(`${_Constants__WEBPACK_IMPORTED_MODULE_0__.APISEARCH_DISPATCHER}__${environmentId}`);
+  const clonedQuery = _Clone__WEBPACK_IMPORTED_MODULE_2__["default"].object(currentQuery);
+  (0,_SortByHelper__WEBPACK_IMPORTED_MODULE_3__.applySortByToQuery)(clonedQuery, initialOption);
+  clonedQuery.page = 1;
+  dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
+    query: clonedQuery
+  });
+}
+/**
+ * ON change search action
+ *
+ * @param environmentId
+ * @param currentQuery
+ * @param repository
+ * @param selectedOption
+ */
+
+function onChangeSearchAction(environmentId, currentQuery, repository, selectedOption) {
+  const clonedQuery = _Clone__WEBPACK_IMPORTED_MODULE_2__["default"].object(currentQuery);
+  (0,_SortByHelper__WEBPACK_IMPORTED_MODULE_3__.applySortByToQuery)(clonedQuery, selectedOption);
+  clonedQuery.page = 1;
+  const dispatcher = _Container__WEBPACK_IMPORTED_MODULE_1__["default"].get(`${_Constants__WEBPACK_IMPORTED_MODULE_0__.APISEARCH_DISPATCHER}__${environmentId}`);
+  repository.query(clonedQuery).then(result => {
+    dispatcher.dispatch("RENDER_FETCHED_DATA", {
+      query: clonedQuery,
+      result: result
+    });
+  }).catch(error => {// Do nothing
+  });
+}
+
+/***/ }),
+
+/***/ "./src/components/SortBy/SortByComponent.tsx":
+/*!***************************************************!*\
+  !*** ./src/components/SortBy/SortByComponent.tsx ***!
+  \***************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+/* harmony import */ var _SortByActions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SortByActions */ "./src/components/SortBy/SortByActions.ts");
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+
+/**
+ * SortBy Filter Component
+ */
+class SortByComponent extends preact__WEBPACK_IMPORTED_MODULE_0__.Component {
+  constructor() {
+    super(...arguments);
+
+    _defineProperty(this, "handleChange", e => {
+      const props = this.props;
+      const environmentId = props.environmentId;
+      const currentQuery = props.store.getCurrentQuery();
+      const repository = props.repository;
+      const currentOption = e.target.value;
+      this.setState({
+        value: currentOption
+      });
+      /**
+       * Dispatch action
+       */
+
+      (0,_SortByActions__WEBPACK_IMPORTED_MODULE_1__.onChangeSearchAction)(environmentId, currentQuery, repository, currentOption);
+    });
+  }
+
+  /**
+   * Components will mount
+   */
+  componentWillMount() {
+    const props = this.props;
+    const environmentId = props.environmentId;
+    const options = props.options;
+    const currentQuery = props.store.getCurrentQuery();
+    const currentOption = options[0].value;
+    this.setState({
+      value: currentOption,
+      visible: false
+    });
+    /**
+     * Dispatch action
+     */
+
+    (0,_SortByActions__WEBPACK_IMPORTED_MODULE_1__.initialSortBySetup)(environmentId, currentQuery, currentOption);
+  }
+  /**
+   * Component will receive props
+   *
+   * @param props
+   */
+
+
+  componentWillReceiveProps(props) {
+    this.setState(prevState => {
+      return {
+        value: props.store.getCurrentQuery().getSortBy().getFirstSortAsString(),
+        visible: props.store.getCurrentResult() != null ? props.store.getCurrentResult().getTotalHits() > 0 : false
+      };
+    });
+  }
+  /**
+   * Handle change
+   *
+   * @param e
+   */
+
+
+  /**
+   * Render
+   *
+   * @return {any}
+   */
+  render(props, state) {
+    const containerClassName = props.classNames.container;
+    const selectClassName = props.classNames.select;
+
+    if (!state.visible) {
+      return;
+    }
+
+    let options = props.options;
+    const coordinate = props.store.getCurrentQuery().toArray().coordinate;
+
+    if (!coordinate) {
+      options = options.filter(function (o) {
+        return o.value != 'distance';
+      });
+    }
+
+    return (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)("div", {
+      className: `as-sortBy ${containerClassName}`
+    }, (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)("select", {
+      className: `as-sortBy__selector ${selectClassName}`,
+      onChange: this.handleChange,
+      value: state.value
+    }, options.map(option => (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)("option", {
+      value: option.value
+    }, option.name))));
+  }
+
+}
+
+SortByComponent.defaultProps = {
+  classNames: {
+    container: '',
+    select: ''
+  }
+};
+/* harmony default export */ __webpack_exports__["default"] = (SortByComponent);
+
+/***/ }),
+
+/***/ "./src/components/SortBy/SortByHelper.ts":
+/*!***********************************************!*\
+  !*** ./src/components/SortBy/SortByHelper.ts ***!
+  \***********************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "applySortByToQuery": function() { return /* binding */ applySortByToQuery; }
+/* harmony export */ });
+/* harmony import */ var apisearch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
+/* harmony import */ var apisearch__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(apisearch__WEBPACK_IMPORTED_MODULE_0__);
+/**
+ * SortBy actions
+ */
+
+/**
+ * Apply sort by to query
+ *
+ * @param query Query
+ * @param selectedOption string
+ */
+
+function applySortByToQuery(query, selectedOption) {
+  const sortByData = splitQueryValue(selectedOption);
+  const sortBy = apisearch__WEBPACK_IMPORTED_MODULE_0___default().createEmptySortBy();
+
+  if (sortByData.field == 'distance') {
+    sortBy.byValue({
+      type: apisearch__WEBPACK_IMPORTED_MODULE_0__.SORT_BY_TYPE_DISTANCE,
+      unit: sortByData.sort ? sortByData.sort : 'km'
+    });
+  } else if (sortByData.field == 'score') {
+    sortBy.byValue(apisearch__WEBPACK_IMPORTED_MODULE_0__.SORT_BY_SCORE);
+  } else {
+    sortBy.byFieldValue(sortByData.field, sortByData.sort);
+  }
+
+  query.sortBy(sortBy);
+  return query;
+}
+/**
+ * Split sort by string representation
+ *
+ * @param string
+ *
+ * @return {{field: string, sort: string}}
+ */
+
+function splitQueryValue(string) {
+  const queryValue = string.split(":");
+  return {
+    field: queryValue[0],
+    sort: queryValue[1]
+  };
+}
+
+/***/ }),
+
+/***/ "./src/components/Suggestions/SuggestionsFilterActions.ts":
+/*!****************************************************************!*\
+  !*** ./src/components/Suggestions/SuggestionsFilterActions.ts ***!
+  \****************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "enableSuggestions": function() { return /* binding */ enableSuggestions; },
+/* harmony export */   "onWordClickAction": function() { return /* binding */ onWordClickAction; }
+/* harmony export */ });
+/* harmony import */ var _Constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
+/* harmony import */ var _Container__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
+/* harmony import */ var _Clone__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
+
+
+
+/**
+ * @param environmentId
+ * @param currentQuery
+ * @param numberOfSuggestions
+ */
+
+function enableSuggestions(environmentId, currentQuery, numberOfSuggestions) {
+  const clonedQuery = _Clone__WEBPACK_IMPORTED_MODULE_2__["default"].object(currentQuery);
+
+  if (numberOfSuggestions > 0) {
+    clonedQuery.setNumberOfSuggestions(numberOfSuggestions);
+  }
+
+  const dispatcher = _Container__WEBPACK_IMPORTED_MODULE_1__["default"].get(`${_Constants__WEBPACK_IMPORTED_MODULE_0__.APISEARCH_DISPATCHER}__${environmentId}`);
+  dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
+    query: clonedQuery
+  });
+}
+/**
+ * @param environmentId
+ * @param currentQuery
+ * @param repository
+ * @param word
+ */
+
+function onWordClickAction(environmentId, currentQuery, repository, word) {
+  const clonedQuery = _Clone__WEBPACK_IMPORTED_MODULE_2__["default"].object(currentQuery);
+  clonedQuery.filters._query.values = [word];
+  clonedQuery.page = 1;
+  const dispatcher = _Container__WEBPACK_IMPORTED_MODULE_1__["default"].get(`${_Constants__WEBPACK_IMPORTED_MODULE_0__.APISEARCH_DISPATCHER}__${environmentId}`);
+  repository.query(clonedQuery).then(result => {
+    dispatcher.dispatch("RENDER_FETCHED_DATA", {
+      query: clonedQuery,
+      result: result
+    });
+  }).catch(error => {// Do nothing
+  });
+}
+
+/***/ }),
+
+/***/ "./src/components/Suggestions/SuggestionsFilterComponent.tsx":
+/*!*******************************************************************!*\
+  !*** ./src/components/Suggestions/SuggestionsFilterComponent.tsx ***!
+  \*******************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+/* harmony import */ var _defaultTemplates__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./defaultTemplates */ "./src/components/Suggestions/defaultTemplates.tsx");
+/* harmony import */ var _SuggestionsFilterActions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./SuggestionsFilterActions */ "./src/components/Suggestions/SuggestionsFilterActions.ts");
+/* harmony import */ var _Template__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+
+
+/**
+ * Suggestion Filter Component
+ */
+
+class SuggestionsFilterComponent extends preact__WEBPACK_IMPORTED_MODULE_0__.Component {
+  constructor() {
+    super(...arguments);
+
+    _defineProperty(this, "handleClick", word => {
+      const props = this.props;
+
+      if (typeof word === "string") {
+        word = word.replace(/<em>/g, "").replace(/<\/em>/g, "");
+      }
+      /**
+       * Dispatch action
+       */
+
+
+      (0,_SuggestionsFilterActions__WEBPACK_IMPORTED_MODULE_2__.onWordClickAction)(props.environmentId, props.store.getCurrentQuery(), props.repository, word);
+    });
+  }
+
+  /**
+   * Component will mount
+   */
+  componentWillMount() {
+    this.setState(prevState => {
+      return {
+        words: []
+      };
+    });
+    const props = this.props;
+    const environmentId = props.environmentId;
+    const currentQuery = props.store.getCurrentQuery();
+    /**
+     * Dispatch action
+     */
+
+    (0,_SuggestionsFilterActions__WEBPACK_IMPORTED_MODULE_2__.enableSuggestions)(environmentId, currentQuery, props.numberOfSuggestions);
+  }
+  /**
+   * Component will receive props
+   *
+   * @param props
+   */
+
+
+  componentWillReceiveProps(props) {
+    this.setState(prevState => {
+      return {
+        words: props.store.getCurrentResult().getSuggestions()
+      };
+    });
+  }
+  /**
+   * @param word
+   */
+
+
+  /**
+   * Render
+   *
+   * @return {any}
+   */
+  render(props, state) {
+    const containerClassName = props.classNames.container;
+    const topClassName = props.classNames.top;
+    const itemsListClassName = props.classNames.itemsList;
+    const itemClassName = props.classNames.item;
+    const noSuggestionsClassName = state.words.length > 0 ? "" : "suggestions-empty";
+    const topTemplate = props.template.top;
+    const itemTemplate = props.template.item;
+    const that = this;
+    return (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)("div", {
+      className: `as-suggestions ${containerClassName} ${noSuggestionsClassName}`
+    }, (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)(_Template__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      template: topTemplate,
+      className: `as-suggestions__top ${topClassName}`,
+      dictionary: this.props.dictionary
+    }), (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)("div", {
+      className: `as-suggestions__itemsList ${itemsListClassName}`
+    }, state.words.map(word => {
+      const templateData = {
+        word: word
+      };
+      return (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)("div", {
+        className: `as-suggestions__item ${itemClassName}`,
+        onClick: e => {
+          e.stopPropagation();
+          e.preventDefault();
+          that.handleClick(word);
+        }
+      }, (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)(_Template__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        template: itemTemplate,
+        data: templateData,
+        dictionary: this.props.dictionary
+      }));
+    })));
+  }
+
+}
+
+SuggestionsFilterComponent.defaultProps = {
+  classNames: {
+    container: '',
+    top: '',
+    itemsList: '',
+    item: ''
+  },
+  template: {
+    top: null,
+    item: _defaultTemplates__WEBPACK_IMPORTED_MODULE_1__.defaultItemTemplate
+  }
+};
+/* harmony default export */ __webpack_exports__["default"] = (SuggestionsFilterComponent);
+
+/***/ }),
+
+/***/ "./src/components/Suggestions/defaultTemplates.tsx":
+/*!*********************************************************!*\
+  !*** ./src/components/Suggestions/defaultTemplates.tsx ***!
+  \*********************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "defaultItemTemplate": function() { return /* binding */ defaultItemTemplate; }
+/* harmony export */ });
+const defaultItemTemplate = `
+    <span>{{{highlightedWord}}}</span>
+`;
+
+/***/ }),
+
+/***/ "./src/components/Template.tsx":
+/*!*************************************!*\
+  !*** ./src/components/Template.tsx ***!
+  \*************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+/* harmony import */ var mustache__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! mustache */ "./node_modules/mustache/mustache.js");
+/* harmony import */ var mustache__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(mustache__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _Translate__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Translate */ "./src/components/Translate.tsx");
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+
+/**
+ * Template
+ */
+
+class Template extends preact__WEBPACK_IMPORTED_MODULE_0__.Component {
+  constructor() {
+    super(...arguments);
+
+    _defineProperty(this, "renderTemplate", (template, result, dictionary) => {
+      const trans = () => {
+        return (text, render) => {
+          return render(_Translate__WEBPACK_IMPORTED_MODULE_2__["default"].trans(text, dictionary));
+        };
+      };
+
+      const output = mustache__WEBPACK_IMPORTED_MODULE_1__.render(template, { ...result,
+        ...{
+          "trans": trans
+        }
+      });
+      return {
+        __html: output
+      };
+    });
+  }
+
+  /**
+   * Render
+   *
+   * @return {any}
+   */
+  render() {
+    const props = this.props;
+    const template = props.template;
+    const data = props.data;
+    const className = props.className;
+    const dictionary = props.dictionary ?? {};
+    return template ? (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)("div", {
+      className: className,
+      dangerouslySetInnerHTML: this.renderTemplate(template, data, dictionary)
+    }) : null;
+  }
+
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (Template);
+
+/***/ }),
+
+/***/ "./src/components/Translate.tsx":
+/*!**************************************!*\
+  !*** ./src/components/Translate.tsx ***!
+  \**************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+class Translate {
+  static trans(text, dictionary) {
+    let parsed = [];
+
+    try {
+      parsed = JSON.parse(text);
+    } catch {
+      return dictionary[text] ?? text;
+    }
+
+    let parsedText = parsed[0] ?? text;
+    parsedText = dictionary[parsedText] ?? parsedText;
+
+    for (let i = 1; i <= parsed.length; i++) {
+      parsedText = parsedText.replace("$" + i, parsed[i]);
+    }
+
+    return parsedText;
+  }
+
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (Translate);
+
+/***/ }),
+
+/***/ "./src/widgets/CheckboxFilter.tsx":
+/*!****************************************!*\
+  !*** ./src/widgets/CheckboxFilter.tsx ***!
+  \****************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+/* harmony import */ var _components_CheckboxFilter_CheckboxFilterComponent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/CheckboxFilter/CheckboxFilterComponent */ "./src/components/CheckboxFilter/CheckboxFilterComponent.tsx");
+/* harmony import */ var _Widget__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
+
+
+
+/**
+ * CheckboxFilter
+ */
+
+class CheckboxFilter extends _Widget__WEBPACK_IMPORTED_MODULE_2__["default"] {
+  constructor(_ref) {
+    let {
+      target,
+      filterName,
+      filterField,
+      label,
+      filterValue,
+      classNames,
+      template
+    } = _ref;
+    super();
+    this.target = target;
+    this.component = (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)(_components_CheckboxFilter_CheckboxFilterComponent__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      target: target,
+      filterName: filterName,
+      filterField: filterField,
+      label: label,
+      filterValue: filterValue,
+      classNames: { ..._components_CheckboxFilter_CheckboxFilterComponent__WEBPACK_IMPORTED_MODULE_1__["default"].defaultProps.classNames,
+        ...classNames
+      },
+      template: { ..._components_CheckboxFilter_CheckboxFilterComponent__WEBPACK_IMPORTED_MODULE_1__["default"].defaultProps.template,
+        ...template
+      }
+    });
+  }
+  /**
+   * @param environmentId
+   * @param store
+   * @param repository
+   * @param dictionary
+   */
+
+
+  render(environmentId, store, repository, dictionary) {
+    this.component.props = { ...this.component.props,
+      environmentId: environmentId,
+      repository: repository,
+      store: store,
+      dictionary: dictionary
+    };
+    let targetNode = document.querySelector(this.target);
+    (0,preact__WEBPACK_IMPORTED_MODULE_0__.render)(this.component, targetNode);
+  }
+  /**
+   * @param query
+   * @param object
+   */
+
+
+  toUrlObject(query, object) {
+    const filterName = this.component.props.filterName;
+    const aggregation = query.aggregations[filterName];
+
+    if (aggregation !== undefined && query.filters !== undefined && query.filters[filterName] !== undefined) {
+      const filterValues = query.filters[filterName].values;
+
+      if (filterValues.length > 0) {
+        object[filterName] = filterValues;
+      }
+    }
+  }
+  /**
+   * @param object
+   * @param query
+   */
+
+
+  fromUrlObject(object, query) {
+    const filterName = this.component.props.filterName;
+    const aggregation = query.aggregations[filterName];
+    const fieldValues = object[filterName];
+
+    if (aggregation !== undefined && fieldValues !== undefined && Array.isArray(fieldValues) && fieldValues.length > 0) {
+      if (query.filters === undefined) {
+        query.filters = {};
+      }
+
+      query.filters[filterName] = {
+        field: 'indexed_metadata.' + this.component.props.filterField,
+        values: fieldValues,
+        application_type: this.component.props.application_type,
+        filter_type: this.component.props.filterType
+      };
+    }
+  }
+  /**
+   * @param query
+   */
+
+
+  reset(query) {
+    const filterName = this.component.props.filterName;
+
+    if (query.filters !== undefined && typeof query.filters === "object" && query.filters[filterName] !== undefined) {
+      delete query.filters[filterName];
+    }
+  }
+
+}
+/**
+ * CheckboxFilter widget
+ *
+ * @param settings
+ */
+
+
+/* harmony default export */ __webpack_exports__["default"] = (settings => new CheckboxFilter(settings));
+
+/***/ }),
+
+/***/ "./src/widgets/ClearFilters.tsx":
+/*!**************************************!*\
+  !*** ./src/widgets/ClearFilters.tsx ***!
+  \**************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+/* harmony import */ var _components_ClearFilters_ClearFiltersComponent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/ClearFilters/ClearFiltersComponent */ "./src/components/ClearFilters/ClearFiltersComponent.tsx");
+/* harmony import */ var _Widget__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
+
+
+
+/**
+ * Clear Filters
+ */
+
+class ClearFilters extends _Widget__WEBPACK_IMPORTED_MODULE_2__["default"] {
+  /**
+   * Constructor
+   *
+   * @param target
+   * @param classNames
+   * @param showIndividualFilterClear
+   * @param template
+   */
+  constructor(_ref) {
+    let {
+      target,
+      classNames,
+      template,
+      showIndividualFilterClear
+    } = _ref;
+    super();
+    this.target = target;
+    this.component = (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)(_components_ClearFilters_ClearFiltersComponent__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      target: target,
+      classNames: { ..._components_ClearFilters_ClearFiltersComponent__WEBPACK_IMPORTED_MODULE_1__["default"].defaultProps.classNames,
+        ...classNames
+      },
+      showIndividualFilterClear: showIndividualFilterClear,
+      template: { ..._components_ClearFilters_ClearFiltersComponent__WEBPACK_IMPORTED_MODULE_1__["default"].defaultProps.template,
+        ...template
+      }
+    });
+  }
+  /**
+   * @param environmentId
+   * @param store
+   * @param repository
+   * @param dictionary
+   */
+
+
+  render(environmentId, store, repository, dictionary) {
+    this.component.props = { ...this.component.props,
+      environmentId: environmentId,
+      repository: repository,
+      store: store,
+      dictionary: dictionary
+    };
+    (0,preact__WEBPACK_IMPORTED_MODULE_0__.render)(this.component, document.querySelector(this.target));
+  }
+
+}
+/**
+ * Clear filters widget
+ *
+ * @param settings
+ */
+
+
+/* harmony default export */ __webpack_exports__["default"] = (settings => new ClearFilters(settings));
+
+/***/ }),
+
+/***/ "./src/widgets/Information.tsx":
+/*!*************************************!*\
+  !*** ./src/widgets/Information.tsx ***!
+  \*************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+/* harmony import */ var _components_Information_InformationComponent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/Information/InformationComponent */ "./src/components/Information/InformationComponent.tsx");
+/* harmony import */ var _Widget__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
+
+
+
+/**
+ * Information
+ */
+
+class Information extends _Widget__WEBPACK_IMPORTED_MODULE_2__["default"] {
+  /**
+   * Constructor
+   *
+   * @param target
+   * @param classNames
+   * @param template
+   * @param formatData
+   */
+  constructor(_ref) {
+    let {
+      target,
+      classNames,
+      template,
+      formatData
+    } = _ref;
+    super();
+    this.target = target;
+    this.component = (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)(_components_Information_InformationComponent__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      target: target,
+      classNames: { ..._components_Information_InformationComponent__WEBPACK_IMPORTED_MODULE_1__["default"].defaultProps.classNames,
+        ...classNames
+      },
+      template: { ..._components_Information_InformationComponent__WEBPACK_IMPORTED_MODULE_1__["default"].defaultProps.template,
+        ...template
+      },
+      formatData: formatData
+    });
+  }
+  /**
+   * @param environmentId
+   * @param store
+   * @param repository
+   * @param dictionary
+   */
+
+
+  render(environmentId, store, repository, dictionary) {
+    this.component.props = { ...this.component.props,
+      environmentId: environmentId,
+      repository: repository,
+      store: store,
+      dictionary: dictionary
+    };
+    let targetNode = document.querySelector(this.target);
+    (0,preact__WEBPACK_IMPORTED_MODULE_0__.render)(this.component, targetNode);
+  }
+
+}
+/**
+ * Information widget
+ *
+ * @param settings
+ */
+
+
+/* harmony default export */ __webpack_exports__["default"] = (settings => new Information(settings));
+
+/***/ }),
+
+/***/ "./src/widgets/MultipleFilter.tsx":
+/*!****************************************!*\
+  !*** ./src/widgets/MultipleFilter.tsx ***!
+  \****************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var apisearch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
+/* harmony import */ var apisearch__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(apisearch__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+/* harmony import */ var _components_MultipleFilter_Helpers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/MultipleFilter/Helpers */ "./src/components/MultipleFilter/Helpers.ts");
+/* harmony import */ var _components_MultipleFilter_MultipleFilterActions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/MultipleFilter/MultipleFilterActions */ "./src/components/MultipleFilter/MultipleFilterActions.ts");
+/* harmony import */ var _components_MultipleFilter_MultipleFilterComponent__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/MultipleFilter/MultipleFilterComponent */ "./src/components/MultipleFilter/MultipleFilterComponent.tsx");
+/* harmony import */ var _Widget__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
+
+
+
+
+
+
+/**
+ * Multiple Filter
+ */
+
+class MultipleFilter extends _Widget__WEBPACK_IMPORTED_MODULE_5__["default"] {
+  /**
+   * Filtername
+   *
+   * @param target
+   * @param filterName
+   * @param filterField
+   * @param aggregationField
+   * @param applicationType
+   * @param fetchLimit
+   * @param viewLimit
+   * @param sortBy
+   * @param ranges
+   * @param labels
+   * @param classNames
+   * @param template
+   * @param formatData
+   * @param activeFirst
+   */
+  constructor(_ref) {
+    let {
+      target,
+      filterName,
+      filterField,
+      aggregationField,
+      applicationType,
+      fetchLimit,
+      viewLimit,
+      sortBy,
+      ranges,
+      labels,
+      classNames,
+      template,
+      formatData,
+      activeFirst
+    } = _ref;
+    super();
+    this.target = target;
+    this.filterField = filterField;
+    this.aggregationField = aggregationField ?? filterField;
+    this.component = (0,preact__WEBPACK_IMPORTED_MODULE_1__.h)(_components_MultipleFilter_MultipleFilterComponent__WEBPACK_IMPORTED_MODULE_4__["default"], {
+      target: target,
+      filterName: filterName,
+      filterField: this.filterField,
+      aggregationField: this.aggregationField,
+      applicationType: applicationType,
+      fetchLimit: fetchLimit,
+      viewLimit: viewLimit,
+      sortBy: sortBy,
+      ranges: ranges,
+      labels: labels,
+      classNames: { ..._components_MultipleFilter_MultipleFilterComponent__WEBPACK_IMPORTED_MODULE_4__["default"].defaultProps.classNames,
+        ...classNames
+      },
+      template: { ..._components_MultipleFilter_MultipleFilterComponent__WEBPACK_IMPORTED_MODULE_4__["default"].defaultProps.template,
+        ...template
+      },
+      formatData: formatData,
+      activeFirst: activeFirst
+    });
+  }
+  /**
+   * @param environmentId
+   * @param store
+   * @param repository
+   * @param dictionary
+   */
+
+
+  render(environmentId, store, repository, dictionary) {
+    this.component.props = { ...this.component.props,
+      dictionary,
+      environmentId,
+      repository,
+      store
+    };
+    (0,preact__WEBPACK_IMPORTED_MODULE_1__.render)(this.component, document.querySelector(this.target));
+  }
+  /**
+   * @param query
+   * @param object
+   */
+
+
+  toUrlObject(query, object) {
+    const filterName = this.component.props.filterName;
+    const aggregation = query.aggregations[filterName];
+
+    if (aggregation !== undefined && query.filters !== undefined && query.filters[filterName] !== undefined) {
+      const filter = query.filters[filterName];
+      const filterValues = filter.values;
+
+      if (filterValues.length > 0) {
+        if (filter.application_type === 6) {
+          const levelsValues = (0,_components_MultipleFilter_Helpers__WEBPACK_IMPORTED_MODULE_2__.getShadowFilterValuesFromQuery)(query, filterName, false);
+          object[filterName] = {
+            l: levelsValues,
+            v: filter.values
+          };
+        } else {
+          object[filterName] = filterValues;
+        }
+      }
+    }
+  }
+  /**
+   * @param object
+   * @param query
+   */
+
+
+  fromUrlObject(object, query) {
+    const filterName = this.component.props.filterName;
+    const aggregation = query.aggregations[filterName];
+    let fieldValues = object[filterName];
+    const rangesValues = Object.keys(this.component.props.ranges);
+    const filterType = rangesValues.length > 0 ? "range" : "field";
+
+    if (aggregation !== undefined && fieldValues !== undefined && (Array.isArray(fieldValues) && fieldValues.length > 0 || typeof fieldValues === "object" && Object.keys(fieldValues).length > 0)) {
+      if (query.filters === undefined) {
+        query.filters = {};
+      }
+
+      const applicationType = this.component.props.applicationType;
+      let fieldName = "indexed_metadata." + this.component.props.filterField;
+
+      if (applicationType === 6) {
+        const originalFieldValues = fieldValues;
+        fieldValues = originalFieldValues["v"];
+        const leveledValues = originalFieldValues["l"];
+
+        for (let it = 0; it < leveledValues.length; it++) {
+          const level = it + 1;
+          const fieldNameWithoutPrefix = fieldName.substr(17);
+          const leveledFilterName = fieldNameWithoutPrefix + "_level_" + level;
+          const leveledFieldName = "indexed_metadata." + leveledFilterName;
+          query.filters[leveledFilterName] = {
+            application_type: applicationType,
+            field: leveledFieldName,
+            filter_type: apisearch__WEBPACK_IMPORTED_MODULE_0__.FILTER_TYPE_FIELD,
+            values: [leveledValues[it]]
+          };
+        }
+
+        fieldName = fieldName + "_level_" + (leveledValues.length + 1);
+      }
+
+      query.filters[filterName] = {
+        application_type: applicationType,
+        field: fieldName,
+        filter_type: filterType,
+        values: fieldValues
+      };
+    }
+  }
+  /**
+   * @param query
+   */
+
+
+  reset(query) {
+    const filterName = this.component.props.filterName;
+
+    if (query.filters !== undefined && typeof query.filters === "object" && query.filters[filterName] !== undefined) {
+      delete query.filters[filterName];
+    }
+  }
+  /**
+   * @param environmentId
+   * @param query
+   */
+
+
+  normalizeQuery(environmentId, query) {
+    const filterName = this.component.props.filterName;
+
+    if ((0,_components_MultipleFilter_Helpers__WEBPACK_IMPORTED_MODULE_2__.isFilterAvailable)(query, filterName, 6)) {
+      (0,_components_MultipleFilter_MultipleFilterActions__WEBPACK_IMPORTED_MODULE_3__.modifyQueryAggregationWithProperLevelValue)(environmentId, query, filterName, this.filterField, this.aggregationField);
+    }
+  }
+
+}
+/**
+ * Multiple filter widget
+ *
+ * @param settings
+ */
+
+
+/* harmony default export */ __webpack_exports__["default"] = (settings => new MultipleFilter(settings));
+
+/***/ }),
+
+/***/ "./src/widgets/Pagination.tsx":
+/*!************************************!*\
+  !*** ./src/widgets/Pagination.tsx ***!
+  \************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+/* harmony import */ var _components_Pagination_PaginationComponent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/Pagination/PaginationComponent */ "./src/components/Pagination/PaginationComponent.tsx");
+/* harmony import */ var _Widget__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
+
+
+
+/**
+ * Pagination
+ */
+
+class Pagination extends _Widget__WEBPACK_IMPORTED_MODULE_2__["default"] {
+  /**
+   * Constructor
+   *
+   * @param target
+   * @param padding
+   * @param goFirstLast
+   * @param classNames
+   * @param template
+   */
+  constructor(_ref) {
+    let {
+      target,
+      padding,
+      goFirstLast,
+      classNames,
+      template
+    } = _ref;
+    super();
+    this.target = target;
+    this.component = (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)(_components_Pagination_PaginationComponent__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      target: target,
+      padding: padding,
+      goFirstLast: goFirstLast,
+      classNames: { ..._components_Pagination_PaginationComponent__WEBPACK_IMPORTED_MODULE_1__["default"].defaultProps.classNames,
+        ...classNames
+      },
+      template: { ..._components_Pagination_PaginationComponent__WEBPACK_IMPORTED_MODULE_1__["default"].defaultProps.template,
+        ...template
+      }
+    });
+  }
+  /**
+   * @param environmentId
+   * @param store
+   * @param repository
+   * @param dictionary
+   */
+
+
+  render(environmentId, store, repository, dictionary) {
+    this.component.props = { ...this.component.props,
+      environmentId: environmentId,
+      repository: repository,
+      store: store,
+      dictionary: dictionary
+    };
+    let targetNode = document.querySelector(this.target);
+    (0,preact__WEBPACK_IMPORTED_MODULE_0__.render)(this.component, targetNode);
+  }
+  /**
+   * @param query
+   * @param object
+   */
+
+
+  toUrlObject(query, object) {
+    const page = query.page;
+
+    if (page > 1) {
+      object.page = page;
+    }
+  }
+  /**
+   * @param object
+   * @param query
+   */
+
+
+  fromUrlObject(object, query) {
+    const page = object.page;
+
+    if (page !== undefined && page > 1) {
+      query.page = page;
+    }
+  }
+  /**
+   * @param query
+   */
+
+
+  reset(query) {
+    delete query.page;
+  }
+
+}
+/**
+ * Pagination widget
+ *
+ * @param settings
+ */
+
+
+/* harmony default export */ __webpack_exports__["default"] = (settings => new Pagination(settings));
+
+/***/ }),
+
+/***/ "./src/widgets/RangeFilter.tsx":
+/*!*************************************!*\
+  !*** ./src/widgets/RangeFilter.tsx ***!
+  \*************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+/* harmony import */ var _components_RangeFilter_RangeFilterComponent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/RangeFilter/RangeFilterComponent */ "./src/components/RangeFilter/RangeFilterComponent.tsx");
+/* harmony import */ var _Widget__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
+
+
+
+/**
+ * RangeFilter
+ */
+
+class RangeFilter extends _Widget__WEBPACK_IMPORTED_MODULE_2__["default"] {
+  constructor(_ref) {
+    let {
+      target,
+      filterName,
+      filterField,
+      minValue,
+      maxValue,
+      minMaxCallback,
+      step,
+      callback,
+      onSliderMove,
+      template,
+      classNames,
+      attributes,
+      native
+    } = _ref;
+    super();
+    this.target = target;
+    this.component = (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)(_components_RangeFilter_RangeFilterComponent__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      target: target,
+      filterName: filterName,
+      filterField: filterField,
+      minValue: minValue,
+      maxValue: maxValue,
+      minMaxCallback: minMaxCallback,
+      step: step,
+      callback: callback,
+      onSliderMove: onSliderMove,
+      native: native,
+      template: { ..._components_RangeFilter_RangeFilterComponent__WEBPACK_IMPORTED_MODULE_1__["default"].defaultProps.template,
+        ...template
+      },
+      classNames: { ..._components_RangeFilter_RangeFilterComponent__WEBPACK_IMPORTED_MODULE_1__["default"].defaultProps.classNames,
+        ...classNames
+      },
+      attributes: { ..._components_RangeFilter_RangeFilterComponent__WEBPACK_IMPORTED_MODULE_1__["default"].defaultProps.attributes,
+        ...attributes
+      }
+    });
+  }
+  /**
+   * @param environmentId
+   * @param store
+   * @param repository
+   * @param dictionary
+   */
+
+
+  render(environmentId, store, repository, dictionary) {
+    this.component.props = { ...this.component.props,
+      environmentId: environmentId,
+      repository: repository,
+      store: store
+    };
+    let targetNode = document.querySelector(this.target);
+    (0,preact__WEBPACK_IMPORTED_MODULE_0__.render)(this.component, targetNode);
+  }
+  /**
+   * @param query
+   * @param object
+   */
+
+
+  toUrlObject(query, object) {
+    const filterName = this.component.props.filterName;
+
+    if (query.filters !== undefined && query.filters[filterName] !== undefined) {
+      const filterValues = query.filters[filterName].values;
+
+      if (filterValues.length > 0) {
+        object[filterName] = filterValues;
+      }
+    }
+  }
+  /**
+   * @param object
+   * @param query
+   */
+
+
+  fromUrlObject(object, query) {
+    const filterName = this.component.props.filterName;
+    const fieldValues = object[filterName];
+
+    if (fieldValues !== undefined && Array.isArray(fieldValues) && fieldValues.length > 0) {
+      if (query.filters === undefined) {
+        query.filters = {};
+      }
+
+      query.filters[filterName] = {
+        field: 'indexed_metadata.' + this.component.props.filterField,
+        values: fieldValues,
+        filter_type: 'range'
+      };
+    }
+  }
+  /**
+   * @param query
+   */
+
+
+  reset(query) {
+    const filterName = this.component.props.filterName;
+
+    if (query.filters !== undefined && typeof query.filters === "object" && query.filters[filterName] !== undefined) {
+      delete query.filters[filterName];
+    }
+  }
+
+}
+/**
+ * CheckboxFilter widget
+ *
+ * @param settings
+ */
+
+
+/* harmony default export */ __webpack_exports__["default"] = (settings => new RangeFilter(settings));
+
+/***/ }),
+
+/***/ "./src/widgets/Reload.tsx":
+/*!********************************!*\
+  !*** ./src/widgets/Reload.tsx ***!
+  \********************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+/* harmony import */ var _components_Reload_ReloadComponent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/Reload/ReloadComponent */ "./src/components/Reload/ReloadComponent.tsx");
+/* harmony import */ var _Widget__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
+
+
+
+/**
+ * Reload
+ */
+
+class Reload extends _Widget__WEBPACK_IMPORTED_MODULE_2__["default"] {
+  /**
+   * Constructor
+   *
+   * @param target
+   * @param classNames
+   * @param template
+   */
+  constructor(_ref) {
+    let {
+      target,
+      classNames,
+      template
+    } = _ref;
+    super();
+    this.target = target;
+    this.component = (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)(_components_Reload_ReloadComponent__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      target: target,
+      classNames: { ..._components_Reload_ReloadComponent__WEBPACK_IMPORTED_MODULE_1__["default"].defaultProps.classNames,
+        ...classNames
+      },
+      template: template
+    });
+  }
+  /**
+   * @param environmentId
+   * @param store
+   * @param repository
+   * @param dictionary
+   */
+
+
+  render(environmentId, store, repository, dictionary) {
+    this.component.props = { ...this.component.props,
+      environmentId: environmentId,
+      repository: repository,
+      store: store,
+      dictionary: dictionary
+    };
+    let targetNode = document.querySelector(this.target);
+    (0,preact__WEBPACK_IMPORTED_MODULE_0__.render)(this.component, targetNode);
+  }
+
+}
+/**
+ * Reload filter
+ *
+ * @param settings
+ */
+
+
+/* harmony default export */ __webpack_exports__["default"] = (settings => new Reload(settings));
+
+/***/ }),
+
+/***/ "./src/widgets/Result.tsx":
+/*!********************************!*\
+  !*** ./src/widgets/Result.tsx ***!
+  \********************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+/* harmony import */ var _components_Result_ResultComponent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/Result/ResultComponent */ "./src/components/Result/ResultComponent.tsx");
+/* harmony import */ var _Widget__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
+
+
+
+/**
+ * Result
+ */
+
+class Result extends _Widget__WEBPACK_IMPORTED_MODULE_2__["default"] {
+  /**
+   * Constructor
+   *
+   * @param target
+   * @param fields
+   * @param itemsPerPage
+   * @param promote
+   * @param exclude
+   * @param filter
+   * @param highlightsEnabled
+   * @param classNames
+   * @param template
+   * @param formatData
+   * @param fadeInSelector
+   * @param infiniteScroll
+   * @param fieldsConciliation
+   * @param minScore
+   */
+  constructor(_ref) {
+    let {
+      target,
+      fields,
+      itemsPerPage,
+      promote,
+      exclude,
+      filter,
+      highlightsEnabled,
+      classNames,
+      template,
+      formatData,
+      fadeInSelector,
+      infiniteScroll,
+      fieldsConciliation,
+      minScore
+    } = _ref;
+    super();
+    this.target = target;
+    this.targetNode = document.querySelector(this.target);
+    this.component = (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)(_components_Result_ResultComponent__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      target: target,
+      fields: fields,
+      itemsPerPage: itemsPerPage,
+      promote: promote,
+      exclude: exclude,
+      filter: filter,
+      highlightsEnabled: highlightsEnabled,
+      classNames: { ..._components_Result_ResultComponent__WEBPACK_IMPORTED_MODULE_1__["default"].defaultProps.classNames,
+        ...classNames
+      },
+      template: { ..._components_Result_ResultComponent__WEBPACK_IMPORTED_MODULE_1__["default"].defaultProps.template,
+        ...template
+      },
+      formatData: formatData,
+      fadeInSelector: fadeInSelector,
+      infiniteScroll: infiniteScroll,
+      fieldsConciliation: fieldsConciliation,
+      minScore: minScore
+    });
+  }
+  /**
+   * @param environmentId
+   * @param store
+   * @param repository
+   * @param dictionary
+   */
+
+
+  render(environmentId, store, repository, dictionary) {
+    this.component.props = { ...this.component.props,
+      environmentId: environmentId,
+      repository: repository,
+      store: store,
+      currentVisibleResults: store.resultsAreVisible(),
+      dictionary: dictionary
+    };
+    (0,preact__WEBPACK_IMPORTED_MODULE_0__.render)(this.component, this.targetNode);
+  }
+
+}
+/**
+ * Result widget
+ *
+ * @param settings
+ */
+
+
+/* harmony default export */ __webpack_exports__["default"] = (settings => new Result(settings));
+
+/***/ }),
+
+/***/ "./src/widgets/SearchInput.tsx":
+/*!*************************************!*\
+  !*** ./src/widgets/SearchInput.tsx ***!
+  \*************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+/* harmony import */ var _components_SearchInput_SearchInputComponent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/SearchInput/SearchInputComponent */ "./src/components/SearchInput/SearchInputComponent.tsx");
+/* harmony import */ var _Widget__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
+
+
+
+/**
+ * SearchInput
+ */
+
+class SearchInput extends _Widget__WEBPACK_IMPORTED_MODULE_2__["default"] {
+  /**
+   * Constructor
+   *
+   * @param target
+   * @param placeholder
+   * @param startSearchOn
+   * @param clearSearch
+   * @param withContainer
+   * @param autofocus
+   * @param autocomplete
+   * @param classNames
+   * @param template
+   * @param initialSearch
+   * @param searchableFields
+   * @param speechRecognition
+   * @param queryOperator
+   */
+  constructor(_ref) {
+    let {
+      target,
+      placeholder,
+      startSearchOn,
+      clearSearch,
+      withContainer,
+      autofocus,
+      autocomplete,
+      classNames,
+      template,
+      initialSearch,
+      searchableFields,
+      speechRecognition,
+      queryOperator
+    } = _ref;
+    super();
+    this.target = target;
+    this.component = (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)(_components_SearchInput_SearchInputComponent__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      target: target,
+      placeholder: placeholder,
+      autofocus: autofocus,
+      autocomplete: autocomplete,
+      startSearchOn: startSearchOn,
+      clearSearch: clearSearch,
+      withContainer: withContainer,
+      searchableFields: searchableFields,
+      speechRecognition: speechRecognition,
+      classNames: { ..._components_SearchInput_SearchInputComponent__WEBPACK_IMPORTED_MODULE_1__["default"].defaultProps.classNames,
+        ...classNames
+      },
+      template: { ..._components_SearchInput_SearchInputComponent__WEBPACK_IMPORTED_MODULE_1__["default"].defaultProps.template,
+        ...template
+      },
+      initialSearch: initialSearch,
+      queryOperator: queryOperator,
+      config: this.config
+    });
+  }
+  /**
+   * @param environmentId
+   * @param store
+   * @param repository
+   * @param dictionary
+   */
+
+
+  render(environmentId, store, repository, dictionary) {
+    this.component.props = { ...this.component.props,
+      environmentId: environmentId,
+      repository: repository,
+      store: store,
+      htmlNodeInheritProps: {
+        autocomplete: 'off',
+        spellcheck: false
+      },
+      dictionary: dictionary
+    };
+
+    if (!this.targetNode) {
+      const targetNode = document.querySelector(this.target);
+      const isInput = isInputElement(targetNode);
+
+      if (isInput) {
+        this.component.props = { ...this.component.props,
+          withContainer: false,
+          htmlNodeInheritProps: { ...this.component.props.htmlNodeInheritedProps,
+            ...getNodeAttributes(targetNode)
+          }
+        };
+        const parentNode = targetNode.parentNode;
+        targetNode.remove();
+        this.targetNode = parentNode;
+      } else {
+        this.targetNode = targetNode;
+      }
+    }
+
+    if (this.isSecondRender == undefined) {
+      this.isSecondRender = true;
+    } else if (this.isSecondRender == true) {
+      this.isSecondRender = false;
+    }
+
+    (0,preact__WEBPACK_IMPORTED_MODULE_0__.render)(this.component, this.targetNode);
+  }
+  /**
+   * @param query
+   * @param object
+   */
+
+
+  toUrlObject(query, object) {
+    const q = query.q;
+
+    if (q !== undefined && q !== "") {
+      object.q = q;
+    }
+  }
+  /**
+   * @param object
+   * @param query
+   */
+
+
+  fromUrlObject(object, query) {
+    const q = object.q;
+
+    if (q !== undefined && q !== "") {
+      query.q = q;
+    }
+  }
+  /**
+   * @param query
+   */
+
+
+  reset(query) {
+    delete query.q;
+  }
+
+}
+/**
+ * Returns an object of an
+ * html node attributes.
+ *
+ * @param htmlNode
+ * @returns {{}}
+ */
+
+
+const getNodeAttributes = htmlNode => {
+  let nodeAttributes = {};
+
+  for (let i = 0; i < htmlNode.attributes.length; i++) {
+    let attr = htmlNode.attributes[i];
+
+    if (attr.specified) {
+      nodeAttributes = { ...nodeAttributes,
+        [attr.name]: attr.value
+      };
+    }
+  }
+
+  return nodeAttributes;
+};
+/**
+ * Checks if an html node
+ * is an input.
+ *
+ * @param targetNode
+ * @returns {boolean}
+ */
+
+
+const isInputElement = targetNode => {
+  return targetNode instanceof HTMLInputElement;
+};
+/**
+ * Search Input widget
+ *
+ * @param settings
+ */
+
+
+/* harmony default export */ __webpack_exports__["default"] = (settings => new SearchInput(settings));
+
+/***/ }),
+
+/***/ "./src/widgets/Snapshot.tsx":
+/*!**********************************!*\
+  !*** ./src/widgets/Snapshot.tsx ***!
+  \**********************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+/* harmony import */ var _components_Snapshot_SnapshotComponent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/Snapshot/SnapshotComponent */ "./src/components/Snapshot/SnapshotComponent.tsx");
+/* harmony import */ var _Widget__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
+
+
+
+/**
+ * Snapshot
+ */
+
+class Snapshot extends _Widget__WEBPACK_IMPORTED_MODULE_2__["default"] {
+  /**
+   * Constructor
+   *
+   * @param target
+   * @param classNames
+   * @param template
+   */
+  constructor(_ref) {
+    let {
+      target,
+      classNames,
+      template
+    } = _ref;
+    super();
+    this.target = target;
+    this.component = (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)(_components_Snapshot_SnapshotComponent__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      target: target
+    });
+  }
+  /**
+   * @param environmentId
+   * @param store
+   * @param repository
+   * @param dictionary
+   */
+
+
+  render(environmentId, store, repository, dictionary) {
+    this.component.props = { ...this.component.props,
+      environmentId: environmentId,
+      repository: repository,
+      store: store
+    };
+    let targetNode = document.querySelector(this.target);
+    (0,preact__WEBPACK_IMPORTED_MODULE_0__.render)(this.component, targetNode);
+  }
+
+}
+/**
+ * @param settings
+ */
+
+
+/* harmony default export */ __webpack_exports__["default"] = (settings => new Snapshot(settings));
+
+/***/ }),
+
+/***/ "./src/widgets/SortBy.tsx":
+/*!********************************!*\
+  !*** ./src/widgets/SortBy.tsx ***!
+  \********************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var apisearch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
+/* harmony import */ var apisearch__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(apisearch__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+/* harmony import */ var _components_SortBy_SortByComponent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/SortBy/SortByComponent */ "./src/components/SortBy/SortByComponent.tsx");
+/* harmony import */ var _Widget__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
+
+
+
+
+/**
+ * SortBy
+ */
+
+class SortBy extends _Widget__WEBPACK_IMPORTED_MODULE_3__["default"] {
+  constructor(_ref) {
+    let {
+      target,
+      classNames,
+      options
+    } = _ref;
+    super();
+    this.target = target;
+    this.targetNode = document.querySelector(this.target);
+    this.component = (0,preact__WEBPACK_IMPORTED_MODULE_1__.h)(_components_SortBy_SortByComponent__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      target: target,
+      classNames: { ..._components_SortBy_SortByComponent__WEBPACK_IMPORTED_MODULE_2__["default"].defaultProps.classNames,
+        ...classNames
+      },
+      options: options
+    });
+  }
+  /**
+   * @param environmentId
+   * @param store
+   * @param repository
+   * @param dictionary
+   */
+
+
+  render(environmentId, store, repository, dictionary) {
+    this.component.props = { ...this.component.props,
+      environmentId: environmentId,
+      repository: repository,
+      store: store
+    };
+    (0,preact__WEBPACK_IMPORTED_MODULE_1__.render)(this.component, this.targetNode);
+  }
+  /**
+   * @param query
+   * @param object
+   */
+
+
+  toUrlObject(query, object) {
+    if (query.sort !== undefined) {
+      const sort = query.sort[0];
+      const sortInstance = apisearch__WEBPACK_IMPORTED_MODULE_0__.SortBy.createFromArray(query.sort);
+      const sortAsString = sortInstance.getFirstSortAsString();
+      const firstSortAsString = this.component.props.options[0].value;
+
+      if (sortAsString !== firstSortAsString) {
+        if (sort.type === "distance") {
+          object.sort = "distance:" + sort.unit + ":" + sort.coordinate.lat + ":" + sort.coordinate.lon;
+        } else {
+          object.sort = sort.field.substr(17) + ":" + sort.order;
+        }
+      }
+    }
+  }
+  /**
+   * @param object
+   * @param query
+   */
+
+
+  fromUrlObject(object, query) {
+    if (object.sort !== undefined) {
+      if (query.sort === undefined) {
+        query.sort = [{}];
+      }
+
+      if (object.sort === 'score') {
+        query.sort[0].field = '_score';
+        query.sort[0].order = 'desc';
+        return;
+      }
+
+      if (object.sort.indexOf('distance:') === 0) {
+        const distanceSortParts = object.sort.split(':');
+        query.sort[0].type = distanceSortParts[0];
+        query.sort[0].unit = distanceSortParts[1];
+        query.sort[0].coordinate = {
+          'lat': distanceSortParts[2],
+          'lon': distanceSortParts[3]
+        };
+        return;
+      }
+
+      const sortParts = object.sort.split(':');
+      query.sort[0].field = 'indexed_metadata.' + sortParts[0];
+      query.sort[0].order = sortParts[1];
+    }
+  }
+  /**
+   * @param query
+   */
+
+
+  reset(query) {
+    delete query.sort;
+  }
+
+}
+/**
+ * SortBy widget
+ *
+ * @param settings
+ */
+
+
+/* harmony default export */ __webpack_exports__["default"] = (settings => new SortBy(settings));
+
+/***/ }),
+
+/***/ "./src/widgets/Suggestions.tsx":
+/*!*************************************!*\
+  !*** ./src/widgets/Suggestions.tsx ***!
+  \*************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+/* harmony import */ var _components_Suggestions_SuggestionsFilterComponent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/Suggestions/SuggestionsFilterComponent */ "./src/components/Suggestions/SuggestionsFilterComponent.tsx");
+/* harmony import */ var _Widget__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
+
+
+
+/**
+ * SuggestionsFilter
+ */
+
+class SuggestionsFilter extends _Widget__WEBPACK_IMPORTED_MODULE_2__["default"] {
+  constructor(_ref) {
+    let {
+      target,
+      numberOfSuggestions,
+      classNames,
+      template
+    } = _ref;
+    super();
+    this.target = target;
+    this.component = (0,preact__WEBPACK_IMPORTED_MODULE_0__.h)(_components_Suggestions_SuggestionsFilterComponent__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      target: target,
+      numberOfSuggestions: numberOfSuggestions,
+      classNames: { ..._components_Suggestions_SuggestionsFilterComponent__WEBPACK_IMPORTED_MODULE_1__["default"].defaultProps.classNames,
+        ...classNames
+      },
+      template: { ..._components_Suggestions_SuggestionsFilterComponent__WEBPACK_IMPORTED_MODULE_1__["default"].defaultProps.template,
+        ...template
+      }
+    });
+  }
+  /**
+   * @param environmentId
+   * @param store
+   * @param repository
+   * @param dictionary
+   */
+
+
+  render(environmentId, store, repository, dictionary) {
+    this.component.props = { ...this.component.props,
+      environmentId: environmentId,
+      repository: repository,
+      store: store,
+      dictionary: dictionary
+    };
+    (0,preact__WEBPACK_IMPORTED_MODULE_0__.render)(this.component, document.querySelector(this.target));
+  }
+
+}
+/**
+ * CheckboxFilter widget
+ *
+ * @param settings
+ */
+
+
+/* harmony default export */ __webpack_exports__["default"] = (settings => new SuggestionsFilter(settings));
+
+/***/ }),
+
+/***/ "./src/widgets/Widget.ts":
+/*!*******************************!*\
+  !*** ./src/widgets/Widget.ts ***!
+  \*******************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return /* binding */ Widget; }
+/* harmony export */ });
+/**
+ * Widget
+ */
+class Widget {
+  withConfig(config) {
+    if ("withConfig" in this.component) {
+      this.component.withConfig(config);
+    }
+  }
+  /**
+   * @param environmentId
+   * @param store
+   * @param repository
+   * @param dictionary
+   */
+
+
+  /**
+   * @param query
+   * @param object
+   */
+  toUrlObject(query, object) {}
+  /**
+   * @param object
+   * @param query
+   */
+
+
+  fromUrlObject(object, query) {}
+  /**
+   * @param query
+   */
+
+
+  reset(query) {}
+  /**
+   * @param environmentId
+   * @param query
+   */
+
+
+  normalizeQuery(environmentId, query) {}
+
+}
+
+/***/ }),
+
+/***/ "./src/widgets/Widgets.ts":
+/*!********************************!*\
+  !*** ./src/widgets/Widgets.ts ***!
+  \********************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _CheckboxFilter__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CheckboxFilter */ "./src/widgets/CheckboxFilter.tsx");
+/* harmony import */ var _ClearFilters__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ClearFilters */ "./src/widgets/ClearFilters.tsx");
+/* harmony import */ var _Information__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Information */ "./src/widgets/Information.tsx");
+/* harmony import */ var _MultipleFilter__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./MultipleFilter */ "./src/widgets/MultipleFilter.tsx");
+/* harmony import */ var _Pagination__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Pagination */ "./src/widgets/Pagination.tsx");
+/* harmony import */ var _RangeFilter__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./RangeFilter */ "./src/widgets/RangeFilter.tsx");
+/* harmony import */ var _Reload__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Reload */ "./src/widgets/Reload.tsx");
+/* harmony import */ var _Result__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Result */ "./src/widgets/Result.tsx");
+/* harmony import */ var _SearchInput__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./SearchInput */ "./src/widgets/SearchInput.tsx");
+/* harmony import */ var _Snapshot__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Snapshot */ "./src/widgets/Snapshot.tsx");
+/* harmony import */ var _SortBy__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./SortBy */ "./src/widgets/SortBy.tsx");
+/* harmony import */ var _Suggestions__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Suggestions */ "./src/widgets/Suggestions.tsx");
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * Widget factories
+ */
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  searchInput: _SearchInput__WEBPACK_IMPORTED_MODULE_8__["default"],
+  clearFilters: _ClearFilters__WEBPACK_IMPORTED_MODULE_1__["default"],
+  multipleFilter: _MultipleFilter__WEBPACK_IMPORTED_MODULE_3__["default"],
+  sortBy: _SortBy__WEBPACK_IMPORTED_MODULE_10__["default"],
+  information: _Information__WEBPACK_IMPORTED_MODULE_2__["default"],
+  result: _Result__WEBPACK_IMPORTED_MODULE_7__["default"],
+  pagination: _Pagination__WEBPACK_IMPORTED_MODULE_4__["default"],
+  checkboxFilter: _CheckboxFilter__WEBPACK_IMPORTED_MODULE_0__["default"],
+  rangeFilter: _RangeFilter__WEBPACK_IMPORTED_MODULE_5__["default"],
+  reload: _Reload__WEBPACK_IMPORTED_MODULE_6__["default"],
+  snapshot: _Snapshot__WEBPACK_IMPORTED_MODULE_9__["default"],
+  suggestions: _Suggestions__WEBPACK_IMPORTED_MODULE_11__["default"]
+});
+
+/***/ }),
+
 /***/ "./node_modules/events/events.js":
 /*!***************************************!*\
   !*** ./node_modules/events/events.js ***!
   \***************************************/
-/***/ ((module) => {
+/***/ (function(module) {
 
 "use strict";
 // Copyright Joyent, Inc. and other Node contributors.
@@ -9618,56 +15617,6 @@ function eventTargetAgnosticAddListener(emitter, name, listener, flags) {
     throw new TypeError('The "emitter" argument must be of type EventEmitter. Received type ' + typeof emitter);
   }
 }
-
-
-/***/ }),
-
-/***/ "./node_modules/is-retry-allowed/index.js":
-/*!************************************************!*\
-  !*** ./node_modules/is-retry-allowed/index.js ***!
-  \************************************************/
-/***/ ((module) => {
-
-"use strict";
-
-
-const denyList = new Set([
-	'ENOTFOUND',
-	'ENETUNREACH',
-
-	// SSL errors from https://github.com/nodejs/node/blob/fc8e3e2cdc521978351de257030db0076d79e0ab/src/crypto/crypto_common.cc#L301-L328
-	'UNABLE_TO_GET_ISSUER_CERT',
-	'UNABLE_TO_GET_CRL',
-	'UNABLE_TO_DECRYPT_CERT_SIGNATURE',
-	'UNABLE_TO_DECRYPT_CRL_SIGNATURE',
-	'UNABLE_TO_DECODE_ISSUER_PUBLIC_KEY',
-	'CERT_SIGNATURE_FAILURE',
-	'CRL_SIGNATURE_FAILURE',
-	'CERT_NOT_YET_VALID',
-	'CERT_HAS_EXPIRED',
-	'CRL_NOT_YET_VALID',
-	'CRL_HAS_EXPIRED',
-	'ERROR_IN_CERT_NOT_BEFORE_FIELD',
-	'ERROR_IN_CERT_NOT_AFTER_FIELD',
-	'ERROR_IN_CRL_LAST_UPDATE_FIELD',
-	'ERROR_IN_CRL_NEXT_UPDATE_FIELD',
-	'OUT_OF_MEM',
-	'DEPTH_ZERO_SELF_SIGNED_CERT',
-	'SELF_SIGNED_CERT_IN_CHAIN',
-	'UNABLE_TO_GET_ISSUER_CERT_LOCALLY',
-	'UNABLE_TO_VERIFY_LEAF_SIGNATURE',
-	'CERT_CHAIN_TOO_LONG',
-	'CERT_REVOKED',
-	'INVALID_CA',
-	'PATH_LENGTH_EXCEEDED',
-	'INVALID_PURPOSE',
-	'CERT_UNTRUSTED',
-	'CERT_REJECTED',
-	'HOSTNAME_MISMATCH'
-]);
-
-// TODO: Use `error?.code` when targeting Node.js 14
-module.exports = error => !denyList.has(error && error.code);
 
 
 /***/ }),
@@ -10458,51 +16407,50 @@ module.exports = error => !denyList.has(error && error.code);
 /*!**********************************************************!*\
   !*** ./node_modules/preact/compat/dist/compat.module.js ***!
   \**********************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "useCallback": () => (/* reexport safe */ preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useCallback),
-/* harmony export */   "useContext": () => (/* reexport safe */ preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useContext),
-/* harmony export */   "useDebugValue": () => (/* reexport safe */ preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useDebugValue),
-/* harmony export */   "useEffect": () => (/* reexport safe */ preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useEffect),
-/* harmony export */   "useErrorBoundary": () => (/* reexport safe */ preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useErrorBoundary),
-/* harmony export */   "useImperativeHandle": () => (/* reexport safe */ preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useImperativeHandle),
-/* harmony export */   "useLayoutEffect": () => (/* reexport safe */ preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useLayoutEffect),
-/* harmony export */   "useMemo": () => (/* reexport safe */ preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useMemo),
-/* harmony export */   "useReducer": () => (/* reexport safe */ preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useReducer),
-/* harmony export */   "useRef": () => (/* reexport safe */ preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useRef),
-/* harmony export */   "useState": () => (/* reexport safe */ preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useState),
-/* harmony export */   "createElement": () => (/* reexport safe */ preact__WEBPACK_IMPORTED_MODULE_1__.createElement),
-/* harmony export */   "createContext": () => (/* reexport safe */ preact__WEBPACK_IMPORTED_MODULE_1__.createContext),
-/* harmony export */   "createRef": () => (/* reexport safe */ preact__WEBPACK_IMPORTED_MODULE_1__.createRef),
-/* harmony export */   "Fragment": () => (/* reexport safe */ preact__WEBPACK_IMPORTED_MODULE_1__.Fragment),
-/* harmony export */   "Component": () => (/* reexport safe */ preact__WEBPACK_IMPORTED_MODULE_1__.Component),
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
-/* harmony export */   "version": () => (/* binding */ en),
-/* harmony export */   "Children": () => (/* binding */ A),
-/* harmony export */   "render": () => (/* binding */ H),
-/* harmony export */   "hydrate": () => (/* binding */ Z),
-/* harmony export */   "unmountComponentAtNode": () => (/* binding */ cn),
-/* harmony export */   "createPortal": () => (/* binding */ P),
-/* harmony export */   "createFactory": () => (/* binding */ rn),
-/* harmony export */   "cloneElement": () => (/* binding */ on),
-/* harmony export */   "isValidElement": () => (/* binding */ un),
-/* harmony export */   "findDOMNode": () => (/* binding */ ln),
-/* harmony export */   "PureComponent": () => (/* binding */ w),
-/* harmony export */   "memo": () => (/* binding */ C),
-/* harmony export */   "forwardRef": () => (/* binding */ k),
-/* harmony export */   "unstable_batchedUpdates": () => (/* binding */ fn),
-/* harmony export */   "StrictMode": () => (/* binding */ an),
-/* harmony export */   "Suspense": () => (/* binding */ F),
-/* harmony export */   "SuspenseList": () => (/* binding */ D),
-/* harmony export */   "lazy": () => (/* binding */ j),
-/* harmony export */   "__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED": () => (/* binding */ tn)
+/* harmony export */   "useCallback": function() { return /* reexport safe */ preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useCallback; },
+/* harmony export */   "useContext": function() { return /* reexport safe */ preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useContext; },
+/* harmony export */   "useDebugValue": function() { return /* reexport safe */ preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useDebugValue; },
+/* harmony export */   "useEffect": function() { return /* reexport safe */ preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useEffect; },
+/* harmony export */   "useErrorBoundary": function() { return /* reexport safe */ preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useErrorBoundary; },
+/* harmony export */   "useImperativeHandle": function() { return /* reexport safe */ preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useImperativeHandle; },
+/* harmony export */   "useLayoutEffect": function() { return /* reexport safe */ preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useLayoutEffect; },
+/* harmony export */   "useMemo": function() { return /* reexport safe */ preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useMemo; },
+/* harmony export */   "useReducer": function() { return /* reexport safe */ preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useReducer; },
+/* harmony export */   "useRef": function() { return /* reexport safe */ preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useRef; },
+/* harmony export */   "useState": function() { return /* reexport safe */ preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useState; },
+/* harmony export */   "createElement": function() { return /* reexport safe */ preact__WEBPACK_IMPORTED_MODULE_1__.createElement; },
+/* harmony export */   "createContext": function() { return /* reexport safe */ preact__WEBPACK_IMPORTED_MODULE_1__.createContext; },
+/* harmony export */   "createRef": function() { return /* reexport safe */ preact__WEBPACK_IMPORTED_MODULE_1__.createRef; },
+/* harmony export */   "Fragment": function() { return /* reexport safe */ preact__WEBPACK_IMPORTED_MODULE_1__.Fragment; },
+/* harmony export */   "Component": function() { return /* reexport safe */ preact__WEBPACK_IMPORTED_MODULE_1__.Component; },
+/* harmony export */   "version": function() { return /* binding */ en; },
+/* harmony export */   "Children": function() { return /* binding */ A; },
+/* harmony export */   "render": function() { return /* binding */ H; },
+/* harmony export */   "hydrate": function() { return /* binding */ Z; },
+/* harmony export */   "unmountComponentAtNode": function() { return /* binding */ cn; },
+/* harmony export */   "createPortal": function() { return /* binding */ P; },
+/* harmony export */   "createFactory": function() { return /* binding */ rn; },
+/* harmony export */   "cloneElement": function() { return /* binding */ on; },
+/* harmony export */   "isValidElement": function() { return /* binding */ un; },
+/* harmony export */   "findDOMNode": function() { return /* binding */ ln; },
+/* harmony export */   "PureComponent": function() { return /* binding */ w; },
+/* harmony export */   "memo": function() { return /* binding */ C; },
+/* harmony export */   "forwardRef": function() { return /* binding */ k; },
+/* harmony export */   "unstable_batchedUpdates": function() { return /* binding */ fn; },
+/* harmony export */   "StrictMode": function() { return /* binding */ an; },
+/* harmony export */   "Suspense": function() { return /* binding */ F; },
+/* harmony export */   "SuspenseList": function() { return /* binding */ D; },
+/* harmony export */   "lazy": function() { return /* binding */ j; },
+/* harmony export */   "__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED": function() { return /* binding */ tn; }
 /* harmony export */ });
 /* harmony import */ var preact_hooks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact/hooks */ "./node_modules/preact/hooks/dist/hooks.module.js");
 /* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
-function E(n,t){for(var e in t)n[e]=t[e];return n}function S(n,t){for(var e in n)if("__source"!==e&&!(e in t))return!0;for(var r in t)if("__source"!==r&&n[r]!==t[r])return!0;return!1}function w(n){this.props=n}function C(n,t){function e(n){var e=this.props.ref,r=e==n.ref;return!r&&e&&(e.call?e(null):e.current=null),t?!t(this.props,n)||!r:S(this.props,n)}function r(t){return this.shouldComponentUpdate=e,(0,preact__WEBPACK_IMPORTED_MODULE_1__.createElement)(n,t)}return r.displayName="Memo("+(n.displayName||n.name)+")",r.prototype.isReactComponent=!0,r.__f=!0,r}(w.prototype=new preact__WEBPACK_IMPORTED_MODULE_1__.Component).isPureReactComponent=!0,w.prototype.shouldComponentUpdate=function(n,t){return S(this.props,n)||S(this.state,t)};var R=preact__WEBPACK_IMPORTED_MODULE_1__.options.__b;preact__WEBPACK_IMPORTED_MODULE_1__.options.__b=function(n){n.type&&n.type.__f&&n.ref&&(n.props.ref=n.ref,n.ref=null),R&&R(n)};var x="undefined"!=typeof Symbol&&Symbol.for&&Symbol.for("react.forward_ref")||3911;function k(n){function t(t,e){var r=E({},t);return delete r.ref,n(r,(e=t.ref||e)&&("object"!=typeof e||"current"in e)?e:null)}return t.$$typeof=x,t.render=t,t.prototype.isReactComponent=t.__f=!0,t.displayName="ForwardRef("+(n.displayName||n.name)+")",t}var O=function(n,t){return null==n?null:(0,preact__WEBPACK_IMPORTED_MODULE_1__.toChildArray)((0,preact__WEBPACK_IMPORTED_MODULE_1__.toChildArray)(n).map(t))},A={map:O,forEach:O,count:function(n){return n?(0,preact__WEBPACK_IMPORTED_MODULE_1__.toChildArray)(n).length:0},only:function(n){var t=(0,preact__WEBPACK_IMPORTED_MODULE_1__.toChildArray)(n);if(1!==t.length)throw"Children.only";return t[0]},toArray:preact__WEBPACK_IMPORTED_MODULE_1__.toChildArray},N=preact__WEBPACK_IMPORTED_MODULE_1__.options.__e;function L(n){return n&&((n=E({},n)).__c=null,n.__k=n.__k&&n.__k.map(L)),n}function U(n){return n&&(n.__v=null,n.__k=n.__k&&n.__k.map(U)),n}function F(){this.__u=0,this.t=null,this.__b=null}function M(n){var t=n.__.__c;return t&&t.__e&&t.__e(n)}function j(n){var t,e,r;function u(u){if(t||(t=n()).then(function(n){e=n.default||n},function(n){r=n}),r)throw r;if(!e)throw t;return (0,preact__WEBPACK_IMPORTED_MODULE_1__.createElement)(e,u)}return u.displayName="Lazy",u.__f=!0,u}function D(){this.u=null,this.o=null}preact__WEBPACK_IMPORTED_MODULE_1__.options.__e=function(n,t,e){if(n.then)for(var r,u=t;u=u.__;)if((r=u.__c)&&r.__c)return null==t.__e&&(t.__e=e.__e,t.__k=e.__k),r.__c(n,t.__c);N(n,t,e)},(F.prototype=new preact__WEBPACK_IMPORTED_MODULE_1__.Component).__c=function(n,t){var e=this;null==e.t&&(e.t=[]),e.t.push(t);var r=M(e.__v),u=!1,o=function(){u||(u=!0,t.componentWillUnmount=t.__c,r?r(i):i())};t.__c=t.componentWillUnmount,t.componentWillUnmount=function(){o(),t.__c&&t.__c()};var i=function(){var n;if(!--e.__u)for(e.__v.__k[0]=U(e.state.__e),e.setState({__e:e.__b=null});n=e.t.pop();)n.forceUpdate()},c=e.__v;c&&!0===c.__h||e.__u++||e.setState({__e:e.__b=e.__v.__k[0]}),n.then(o,o)},F.prototype.componentWillUnmount=function(){this.t=[]},F.prototype.render=function(n,t){this.__b&&(this.__v.__k&&(this.__v.__k[0]=L(this.__b)),this.__b=null);var e=t.__e&&(0,preact__WEBPACK_IMPORTED_MODULE_1__.createElement)(preact__WEBPACK_IMPORTED_MODULE_1__.Fragment,null,n.fallback);return e&&(e.__h=null),[(0,preact__WEBPACK_IMPORTED_MODULE_1__.createElement)(preact__WEBPACK_IMPORTED_MODULE_1__.Fragment,null,t.__e?null:n.children),e]};var I=function(n,t,e){if(++e[1]===e[0]&&n.o.delete(t),n.props.revealOrder&&("t"!==n.props.revealOrder[0]||!n.o.size))for(e=n.u;e;){for(;e.length>3;)e.pop()();if(e[1]<e[0])break;n.u=e=e[2]}};function T(n){return this.getChildContext=function(){return n.context},n.children}function W(n){var t=this,e=n.i,r=(0,preact__WEBPACK_IMPORTED_MODULE_1__.createElement)(T,{context:t.context},n.__v);t.componentWillUnmount=function(){var n=t.l.parentNode;n&&n.removeChild(t.l),(0,preact__WEBPACK_IMPORTED_MODULE_1__.__u)(t.s)},t.i&&t.i!==e&&(t.componentWillUnmount(),t.h=!1),n.__v?t.h?(e.__k=t.__k,(0,preact__WEBPACK_IMPORTED_MODULE_1__.render)(r,e),t.__k=e.__k):(t.l=document.createTextNode(""),t.__k=e.__k,(0,preact__WEBPACK_IMPORTED_MODULE_1__.hydrate)("",e),e.appendChild(t.l),t.h=!0,t.i=e,(0,preact__WEBPACK_IMPORTED_MODULE_1__.render)(r,e,t.l),e.__k=t.__k,t.__k=t.l.__k):t.h&&t.componentWillUnmount(),t.s=r}function P(n,t){return (0,preact__WEBPACK_IMPORTED_MODULE_1__.createElement)(W,{__v:n,i:t})}(D.prototype=new preact__WEBPACK_IMPORTED_MODULE_1__.Component).__e=function(n){var t=this,e=M(t.__v),r=t.o.get(n);return r[0]++,function(u){var o=function(){t.props.revealOrder?(r.push(u),I(t,n,r)):u()};e?e(o):o()}},D.prototype.render=function(n){this.u=null,this.o=new Map;var t=(0,preact__WEBPACK_IMPORTED_MODULE_1__.toChildArray)(n.children);n.revealOrder&&"b"===n.revealOrder[0]&&t.reverse();for(var e=t.length;e--;)this.o.set(t[e],this.u=[1,0,this.u]);return n.children},D.prototype.componentDidUpdate=D.prototype.componentDidMount=function(){var n=this;this.o.forEach(function(t,e){I(n,e,t)})};var z="undefined"!=typeof Symbol&&Symbol.for&&Symbol.for("react.element")||60103,V=/^(?:accent|alignment|arabic|baseline|cap|clip(?!PathU)|color|fill|flood|font|glyph(?!R)|horiz|marker(?!H|W|U)|overline|paint|stop|strikethrough|stroke|text(?!L)|underline|unicode|units|v|vector|vert|word|writing|x(?!C))[A-Z]/,B="undefined"!=typeof Symbol?/fil|che|rad/i:/fil|che|ra/i;function H(n,t,e){return null==t.__k&&(t.textContent=""),(0,preact__WEBPACK_IMPORTED_MODULE_1__.render)(n,t),"function"==typeof e&&e(),n?n.__c:null}function Z(n,t,e){return (0,preact__WEBPACK_IMPORTED_MODULE_1__.hydrate)(n,t),"function"==typeof e&&e(),n?n.__c:null}preact__WEBPACK_IMPORTED_MODULE_1__.Component.prototype.isReactComponent={},["componentWillMount","componentWillReceiveProps","componentWillUpdate"].forEach(function(n){Object.defineProperty(preact__WEBPACK_IMPORTED_MODULE_1__.Component.prototype,n,{configurable:!0,get:function(){return this["UNSAFE_"+n]},set:function(t){Object.defineProperty(this,n,{configurable:!0,writable:!0,value:t})}})});var Y=preact__WEBPACK_IMPORTED_MODULE_1__.options.event;function $(){}function q(){return this.cancelBubble}function G(){return this.defaultPrevented}preact__WEBPACK_IMPORTED_MODULE_1__.options.event=function(n){return Y&&(n=Y(n)),n.persist=$,n.isPropagationStopped=q,n.isDefaultPrevented=G,n.nativeEvent=n};var J,K={configurable:!0,get:function(){return this.class}},Q={configurable:!0,get:function(){return this.className}},X=preact__WEBPACK_IMPORTED_MODULE_1__.options.vnode;preact__WEBPACK_IMPORTED_MODULE_1__.options.vnode=function(n){var t=n.type,e=n.props,r=e;if("string"==typeof t){for(var u in r={},e){var o=e[u];"defaultValue"===u&&"value"in e&&null==e.value?u="value":"download"===u&&!0===o?o="":/ondoubleclick/i.test(u)?u="ondblclick":/^onchange(textarea|input)/i.test(u+t)&&!B.test(e.type)?u="oninput":/^on(Ani|Tra|Tou|BeforeInp)/.test(u)?u=u.toLowerCase():V.test(u)?u=u.replace(/[A-Z0-9]/,"-$&").toLowerCase():null===o&&(o=void 0),r[u]=o}"select"==t&&r.multiple&&Array.isArray(r.value)&&(r.value=(0,preact__WEBPACK_IMPORTED_MODULE_1__.toChildArray)(e.children).forEach(function(n){n.props.selected=-1!=r.value.indexOf(n.props.value)})),n.props=r}t&&r&&("className"in r?Object.defineProperty(r,"class",Q):Object.defineProperty(r,"className",K)),n.$$typeof=z,X&&X(n)};var nn=preact__WEBPACK_IMPORTED_MODULE_1__.options.__r;preact__WEBPACK_IMPORTED_MODULE_1__.options.__r=function(n){nn&&nn(n),J=n.__c};var tn={ReactCurrentDispatcher:{current:{readContext:function(n){return J.__n[n.__c].props.value}}}},en="16.8.0";function rn(n){return preact__WEBPACK_IMPORTED_MODULE_1__.createElement.bind(null,n)}function un(n){return!!n&&n.$$typeof===z}function on(n){return un(n)?preact__WEBPACK_IMPORTED_MODULE_1__.cloneElement.apply(null,arguments):n}function cn(n){return!!n.__k&&((0,preact__WEBPACK_IMPORTED_MODULE_1__.render)(null,n),!0)}function ln(n){return n&&(n.base||1===n.nodeType&&n)||null}var fn=function(n,t){return n(t)},an=preact__WEBPACK_IMPORTED_MODULE_1__.Fragment;/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({useState:preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useState,useReducer:preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useReducer,useEffect:preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useEffect,useLayoutEffect:preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useLayoutEffect,useRef:preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useRef,useImperativeHandle:preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useImperativeHandle,useMemo:preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useMemo,useCallback:preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useCallback,useContext:preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useContext,useDebugValue:preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useDebugValue,version:"16.8.0",Children:A,render:H,hydrate:Z,unmountComponentAtNode:cn,createPortal:P,createElement:preact__WEBPACK_IMPORTED_MODULE_1__.createElement,createContext:preact__WEBPACK_IMPORTED_MODULE_1__.createContext,createFactory:rn,cloneElement:on,createRef:preact__WEBPACK_IMPORTED_MODULE_1__.createRef,Fragment:preact__WEBPACK_IMPORTED_MODULE_1__.Fragment,isValidElement:un,findDOMNode:ln,Component:preact__WEBPACK_IMPORTED_MODULE_1__.Component,PureComponent:w,memo:C,forwardRef:k,unstable_batchedUpdates:fn,StrictMode:preact__WEBPACK_IMPORTED_MODULE_1__.Fragment,Suspense:F,SuspenseList:D,lazy:j,__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED:tn});
+function E(n,t){for(var e in t)n[e]=t[e];return n}function S(n,t){for(var e in n)if("__source"!==e&&!(e in t))return!0;for(var r in t)if("__source"!==r&&n[r]!==t[r])return!0;return!1}function w(n){this.props=n}function C(n,t){function e(n){var e=this.props.ref,r=e==n.ref;return!r&&e&&(e.call?e(null):e.current=null),t?!t(this.props,n)||!r:S(this.props,n)}function r(t){return this.shouldComponentUpdate=e,(0,preact__WEBPACK_IMPORTED_MODULE_1__.createElement)(n,t)}return r.displayName="Memo("+(n.displayName||n.name)+")",r.prototype.isReactComponent=!0,r.__f=!0,r}(w.prototype=new preact__WEBPACK_IMPORTED_MODULE_1__.Component).isPureReactComponent=!0,w.prototype.shouldComponentUpdate=function(n,t){return S(this.props,n)||S(this.state,t)};var R=preact__WEBPACK_IMPORTED_MODULE_1__.options.__b;preact__WEBPACK_IMPORTED_MODULE_1__.options.__b=function(n){n.type&&n.type.__f&&n.ref&&(n.props.ref=n.ref,n.ref=null),R&&R(n)};var x="undefined"!=typeof Symbol&&Symbol.for&&Symbol.for("react.forward_ref")||3911;function k(n){function t(t,e){var r=E({},t);return delete r.ref,n(r,(e=t.ref||e)&&("object"!=typeof e||"current"in e)?e:null)}return t.$$typeof=x,t.render=t,t.prototype.isReactComponent=t.__f=!0,t.displayName="ForwardRef("+(n.displayName||n.name)+")",t}var O=function(n,t){return null==n?null:(0,preact__WEBPACK_IMPORTED_MODULE_1__.toChildArray)((0,preact__WEBPACK_IMPORTED_MODULE_1__.toChildArray)(n).map(t))},A={map:O,forEach:O,count:function(n){return n?(0,preact__WEBPACK_IMPORTED_MODULE_1__.toChildArray)(n).length:0},only:function(n){var t=(0,preact__WEBPACK_IMPORTED_MODULE_1__.toChildArray)(n);if(1!==t.length)throw"Children.only";return t[0]},toArray:preact__WEBPACK_IMPORTED_MODULE_1__.toChildArray},N=preact__WEBPACK_IMPORTED_MODULE_1__.options.__e;function L(n){return n&&((n=E({},n)).__c=null,n.__k=n.__k&&n.__k.map(L)),n}function U(n){return n&&(n.__v=null,n.__k=n.__k&&n.__k.map(U)),n}function F(){this.__u=0,this.t=null,this.__b=null}function M(n){var t=n.__.__c;return t&&t.__e&&t.__e(n)}function j(n){var t,e,r;function u(u){if(t||(t=n()).then(function(n){e=n.default||n},function(n){r=n}),r)throw r;if(!e)throw t;return (0,preact__WEBPACK_IMPORTED_MODULE_1__.createElement)(e,u)}return u.displayName="Lazy",u.__f=!0,u}function D(){this.u=null,this.o=null}preact__WEBPACK_IMPORTED_MODULE_1__.options.__e=function(n,t,e){if(n.then)for(var r,u=t;u=u.__;)if((r=u.__c)&&r.__c)return null==t.__e&&(t.__e=e.__e,t.__k=e.__k),r.__c(n,t.__c);N(n,t,e)},(F.prototype=new preact__WEBPACK_IMPORTED_MODULE_1__.Component).__c=function(n,t){var e=this;null==e.t&&(e.t=[]),e.t.push(t);var r=M(e.__v),u=!1,o=function(){u||(u=!0,t.componentWillUnmount=t.__c,r?r(i):i())};t.__c=t.componentWillUnmount,t.componentWillUnmount=function(){o(),t.__c&&t.__c()};var i=function(){var n;if(!--e.__u)for(e.__v.__k[0]=U(e.state.__e),e.setState({__e:e.__b=null});n=e.t.pop();)n.forceUpdate()},c=e.__v;c&&!0===c.__h||e.__u++||e.setState({__e:e.__b=e.__v.__k[0]}),n.then(o,o)},F.prototype.componentWillUnmount=function(){this.t=[]},F.prototype.render=function(n,t){this.__b&&(this.__v.__k&&(this.__v.__k[0]=L(this.__b)),this.__b=null);var e=t.__e&&(0,preact__WEBPACK_IMPORTED_MODULE_1__.createElement)(preact__WEBPACK_IMPORTED_MODULE_1__.Fragment,null,n.fallback);return e&&(e.__h=null),[(0,preact__WEBPACK_IMPORTED_MODULE_1__.createElement)(preact__WEBPACK_IMPORTED_MODULE_1__.Fragment,null,t.__e?null:n.children),e]};var I=function(n,t,e){if(++e[1]===e[0]&&n.o.delete(t),n.props.revealOrder&&("t"!==n.props.revealOrder[0]||!n.o.size))for(e=n.u;e;){for(;e.length>3;)e.pop()();if(e[1]<e[0])break;n.u=e=e[2]}};function T(n){return this.getChildContext=function(){return n.context},n.children}function W(n){var t=this,e=n.i,r=(0,preact__WEBPACK_IMPORTED_MODULE_1__.createElement)(T,{context:t.context},n.__v);t.componentWillUnmount=function(){var n=t.l.parentNode;n&&n.removeChild(t.l),(0,preact__WEBPACK_IMPORTED_MODULE_1__.__u)(t.s)},t.i&&t.i!==e&&(t.componentWillUnmount(),t.h=!1),n.__v?t.h?(e.__k=t.__k,(0,preact__WEBPACK_IMPORTED_MODULE_1__.render)(r,e),t.__k=e.__k):(t.l=document.createTextNode(""),t.__k=e.__k,(0,preact__WEBPACK_IMPORTED_MODULE_1__.hydrate)("",e),e.appendChild(t.l),t.h=!0,t.i=e,(0,preact__WEBPACK_IMPORTED_MODULE_1__.render)(r,e,t.l),e.__k=t.__k,t.__k=t.l.__k):t.h&&t.componentWillUnmount(),t.s=r}function P(n,t){return (0,preact__WEBPACK_IMPORTED_MODULE_1__.createElement)(W,{__v:n,i:t})}(D.prototype=new preact__WEBPACK_IMPORTED_MODULE_1__.Component).__e=function(n){var t=this,e=M(t.__v),r=t.o.get(n);return r[0]++,function(u){var o=function(){t.props.revealOrder?(r.push(u),I(t,n,r)):u()};e?e(o):o()}},D.prototype.render=function(n){this.u=null,this.o=new Map;var t=(0,preact__WEBPACK_IMPORTED_MODULE_1__.toChildArray)(n.children);n.revealOrder&&"b"===n.revealOrder[0]&&t.reverse();for(var e=t.length;e--;)this.o.set(t[e],this.u=[1,0,this.u]);return n.children},D.prototype.componentDidUpdate=D.prototype.componentDidMount=function(){var n=this;this.o.forEach(function(t,e){I(n,e,t)})};var z="undefined"!=typeof Symbol&&Symbol.for&&Symbol.for("react.element")||60103,V=/^(?:accent|alignment|arabic|baseline|cap|clip(?!PathU)|color|fill|flood|font|glyph(?!R)|horiz|marker(?!H|W|U)|overline|paint|stop|strikethrough|stroke|text(?!L)|underline|unicode|units|v|vector|vert|word|writing|x(?!C))[A-Z]/,B="undefined"!=typeof Symbol?/fil|che|rad/i:/fil|che|ra/i;function H(n,t,e){return null==t.__k&&(t.textContent=""),(0,preact__WEBPACK_IMPORTED_MODULE_1__.render)(n,t),"function"==typeof e&&e(),n?n.__c:null}function Z(n,t,e){return (0,preact__WEBPACK_IMPORTED_MODULE_1__.hydrate)(n,t),"function"==typeof e&&e(),n?n.__c:null}preact__WEBPACK_IMPORTED_MODULE_1__.Component.prototype.isReactComponent={},["componentWillMount","componentWillReceiveProps","componentWillUpdate"].forEach(function(n){Object.defineProperty(preact__WEBPACK_IMPORTED_MODULE_1__.Component.prototype,n,{configurable:!0,get:function(){return this["UNSAFE_"+n]},set:function(t){Object.defineProperty(this,n,{configurable:!0,writable:!0,value:t})}})});var Y=preact__WEBPACK_IMPORTED_MODULE_1__.options.event;function $(){}function q(){return this.cancelBubble}function G(){return this.defaultPrevented}preact__WEBPACK_IMPORTED_MODULE_1__.options.event=function(n){return Y&&(n=Y(n)),n.persist=$,n.isPropagationStopped=q,n.isDefaultPrevented=G,n.nativeEvent=n};var J,K={configurable:!0,get:function(){return this.class}},Q={configurable:!0,get:function(){return this.className}},X=preact__WEBPACK_IMPORTED_MODULE_1__.options.vnode;preact__WEBPACK_IMPORTED_MODULE_1__.options.vnode=function(n){var t=n.type,e=n.props,r=e;if("string"==typeof t){for(var u in r={},e){var o=e[u];"defaultValue"===u&&"value"in e&&null==e.value?u="value":"download"===u&&!0===o?o="":/ondoubleclick/i.test(u)?u="ondblclick":/^onchange(textarea|input)/i.test(u+t)&&!B.test(e.type)?u="oninput":/^on(Ani|Tra|Tou|BeforeInp)/.test(u)?u=u.toLowerCase():V.test(u)?u=u.replace(/[A-Z0-9]/,"-$&").toLowerCase():null===o&&(o=void 0),r[u]=o}"select"==t&&r.multiple&&Array.isArray(r.value)&&(r.value=(0,preact__WEBPACK_IMPORTED_MODULE_1__.toChildArray)(e.children).forEach(function(n){n.props.selected=-1!=r.value.indexOf(n.props.value)})),n.props=r}t&&r&&("className"in r?Object.defineProperty(r,"class",Q):Object.defineProperty(r,"className",K)),n.$$typeof=z,X&&X(n)};var nn=preact__WEBPACK_IMPORTED_MODULE_1__.options.__r;preact__WEBPACK_IMPORTED_MODULE_1__.options.__r=function(n){nn&&nn(n),J=n.__c};var tn={ReactCurrentDispatcher:{current:{readContext:function(n){return J.__n[n.__c].props.value}}}},en="16.8.0";function rn(n){return preact__WEBPACK_IMPORTED_MODULE_1__.createElement.bind(null,n)}function un(n){return!!n&&n.$$typeof===z}function on(n){return un(n)?preact__WEBPACK_IMPORTED_MODULE_1__.cloneElement.apply(null,arguments):n}function cn(n){return!!n.__k&&((0,preact__WEBPACK_IMPORTED_MODULE_1__.render)(null,n),!0)}function ln(n){return n&&(n.base||1===n.nodeType&&n)||null}var fn=function(n,t){return n(t)},an=preact__WEBPACK_IMPORTED_MODULE_1__.Fragment;/* harmony default export */ __webpack_exports__["default"] = ({useState:preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useState,useReducer:preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useReducer,useEffect:preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useEffect,useLayoutEffect:preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useLayoutEffect,useRef:preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useRef,useImperativeHandle:preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useImperativeHandle,useMemo:preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useMemo,useCallback:preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useCallback,useContext:preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useContext,useDebugValue:preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useDebugValue,version:"16.8.0",Children:A,render:H,hydrate:Z,unmountComponentAtNode:cn,createPortal:P,createElement:preact__WEBPACK_IMPORTED_MODULE_1__.createElement,createContext:preact__WEBPACK_IMPORTED_MODULE_1__.createContext,createFactory:rn,cloneElement:on,createRef:preact__WEBPACK_IMPORTED_MODULE_1__.createRef,Fragment:preact__WEBPACK_IMPORTED_MODULE_1__.Fragment,isValidElement:un,findDOMNode:ln,Component:preact__WEBPACK_IMPORTED_MODULE_1__.Component,PureComponent:w,memo:C,forwardRef:k,unstable_batchedUpdates:fn,StrictMode:preact__WEBPACK_IMPORTED_MODULE_1__.Fragment,Suspense:F,SuspenseList:D,lazy:j,__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED:tn});
 //# sourceMappingURL=compat.module.js.map
 
 
@@ -10512,24 +16460,24 @@ function E(n,t){for(var e in t)n[e]=t[e];return n}function S(n,t){for(var e in n
 /*!***************************************************!*\
   !*** ./node_modules/preact/dist/preact.module.js ***!
   \***************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* binding */ O),
-/* harmony export */   "hydrate": () => (/* binding */ S),
-/* harmony export */   "createElement": () => (/* binding */ h),
-/* harmony export */   "h": () => (/* binding */ h),
-/* harmony export */   "Fragment": () => (/* binding */ p),
-/* harmony export */   "createRef": () => (/* binding */ y),
-/* harmony export */   "isValidElement": () => (/* binding */ l),
-/* harmony export */   "Component": () => (/* binding */ d),
-/* harmony export */   "cloneElement": () => (/* binding */ q),
-/* harmony export */   "createContext": () => (/* binding */ B),
-/* harmony export */   "toChildArray": () => (/* binding */ b),
-/* harmony export */   "__u": () => (/* binding */ L),
-/* harmony export */   "options": () => (/* binding */ n)
+/* harmony export */   "render": function() { return /* binding */ O; },
+/* harmony export */   "hydrate": function() { return /* binding */ S; },
+/* harmony export */   "createElement": function() { return /* binding */ h; },
+/* harmony export */   "h": function() { return /* binding */ h; },
+/* harmony export */   "Fragment": function() { return /* binding */ p; },
+/* harmony export */   "createRef": function() { return /* binding */ y; },
+/* harmony export */   "isValidElement": function() { return /* binding */ l; },
+/* harmony export */   "Component": function() { return /* binding */ d; },
+/* harmony export */   "cloneElement": function() { return /* binding */ q; },
+/* harmony export */   "createContext": function() { return /* binding */ B; },
+/* harmony export */   "toChildArray": function() { return /* binding */ b; },
+/* harmony export */   "__u": function() { return /* binding */ L; },
+/* harmony export */   "options": function() { return /* binding */ n; }
 /* harmony export */ });
 var n,l,u,i,t,o,r,f={},e=[],c=/acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i;function s(n,l){for(var u in l)n[u]=l[u];return n}function a(n){var l=n.parentNode;l&&l.removeChild(n)}function h(n,l,u){var i,t,o,r=arguments,f={};for(o in l)"key"==o?i=l[o]:"ref"==o?t=l[o]:f[o]=l[o];if(arguments.length>3)for(u=[u],o=3;o<arguments.length;o++)u.push(r[o]);if(null!=u&&(f.children=u),"function"==typeof n&&null!=n.defaultProps)for(o in n.defaultProps)void 0===f[o]&&(f[o]=n.defaultProps[o]);return v(n,f,i,t,null)}function v(l,u,i,t,o){var r={type:l,props:u,key:i,ref:t,__k:null,__:null,__b:0,__e:null,__d:void 0,__c:null,__h:null,constructor:void 0,__v:o};return null==o&&(r.__v=r),null!=n.vnode&&n.vnode(r),r}function y(){return{current:null}}function p(n){return n.children}function d(n,l){this.props=n,this.context=l}function _(n,l){if(null==l)return n.__?_(n.__,n.__.__k.indexOf(n)+1):null;for(var u;l<n.__k.length;l++)if(null!=(u=n.__k[l])&&null!=u.__e)return u.__e;return"function"==typeof n.type?_(n):null}function w(n){var l,u;if(null!=(n=n.__)&&null!=n.__c){for(n.__e=n.__c.base=null,l=0;l<n.__k.length;l++)if(null!=(u=n.__k[l])&&null!=u.__e){n.__e=n.__c.base=u.__e;break}return w(n)}}function k(l){(!l.__d&&(l.__d=!0)&&u.push(l)&&!g.__r++||t!==n.debounceRendering)&&((t=n.debounceRendering)||i)(g)}function g(){for(var n;g.__r=u.length;)n=u.sort(function(n,l){return n.__v.__b-l.__v.__b}),u=[],n.some(function(n){var l,u,i,t,o,r,f;n.__d&&(r=(o=(l=n).__v).__e,(f=l.__P)&&(u=[],(i=s({},o)).__v=i,t=$(f,o,i,l.__n,void 0!==f.ownerSVGElement,null!=o.__h?[r]:null,u,null==r?_(o):r,o.__h),j(u,o),t!=r&&w(o)))})}function m(n,l,u,i,t,o,r,c,s,h){var y,d,w,k,g,m,b,A=i&&i.__k||e,P=A.length;for(s==f&&(s=null!=r?r[0]:P?_(i,0):null),u.__k=[],y=0;y<l.length;y++)if(null!=(k=u.__k[y]=null==(k=l[y])||"boolean"==typeof k?null:"string"==typeof k||"number"==typeof k?v(null,k,null,null,k):Array.isArray(k)?v(p,{children:k},null,null,null):null!=k.__e||null!=k.__c?v(k.type,k.props,k.key,null,k.__v):k)){if(k.__=u,k.__b=u.__b+1,null===(w=A[y])||w&&k.key==w.key&&k.type===w.type)A[y]=void 0;else for(d=0;d<P;d++){if((w=A[d])&&k.key==w.key&&k.type===w.type){A[d]=void 0;break}w=null}g=$(n,k,w=w||f,t,o,r,c,s,h),(d=k.ref)&&w.ref!=d&&(b||(b=[]),w.ref&&b.push(w.ref,null,k),b.push(d,k.__c||g,k)),null!=g?(null==m&&(m=g),s=x(n,k,w,A,r,g,s),h||"option"!=u.type?"function"==typeof u.type&&(u.__d=s):n.value=""):s&&w.__e==s&&s.parentNode!=n&&(s=_(w))}if(u.__e=m,null!=r&&"function"!=typeof u.type)for(y=r.length;y--;)null!=r[y]&&a(r[y]);for(y=P;y--;)null!=A[y]&&L(A[y],A[y]);if(b)for(y=0;y<b.length;y++)I(b[y],b[++y],b[++y])}function b(n,l){return l=l||[],null==n||"boolean"==typeof n||(Array.isArray(n)?n.some(function(n){b(n,l)}):l.push(n)),l}function x(n,l,u,i,t,o,r){var f,e,c;if(void 0!==l.__d)f=l.__d,l.__d=void 0;else if(t==u||o!=r||null==o.parentNode)n:if(null==r||r.parentNode!==n)n.appendChild(o),f=null;else{for(e=r,c=0;(e=e.nextSibling)&&c<i.length;c+=2)if(e==o)break n;n.insertBefore(o,r),f=r}return void 0!==f?f:o.nextSibling}function A(n,l,u,i,t){var o;for(o in u)"children"===o||"key"===o||o in l||C(n,o,null,u[o],i);for(o in l)t&&"function"!=typeof l[o]||"children"===o||"key"===o||"value"===o||"checked"===o||u[o]===l[o]||C(n,o,l[o],u[o],i)}function P(n,l,u){"-"===l[0]?n.setProperty(l,u):n[l]=null==u?"":"number"!=typeof u||c.test(l)?u:u+"px"}function C(n,l,u,i,t){var o,r,f;if(t&&"className"==l&&(l="class"),"style"===l)if("string"==typeof u)n.style.cssText=u;else{if("string"==typeof i&&(n.style.cssText=i=""),i)for(l in i)u&&l in u||P(n.style,l,"");if(u)for(l in u)i&&u[l]===i[l]||P(n.style,l,u[l])}else"o"===l[0]&&"n"===l[1]?(o=l!==(l=l.replace(/Capture$/,"")),(r=l.toLowerCase())in n&&(l=r),l=l.slice(2),n.l||(n.l={}),n.l[l+o]=u,f=o?N:z,u?i||n.addEventListener(l,f,o):n.removeEventListener(l,f,o)):"list"!==l&&"tagName"!==l&&"form"!==l&&"type"!==l&&"size"!==l&&"download"!==l&&"href"!==l&&!t&&l in n?n[l]=null==u?"":u:"function"!=typeof u&&"dangerouslySetInnerHTML"!==l&&(l!==(l=l.replace(/xlink:?/,""))?null==u||!1===u?n.removeAttributeNS("http://www.w3.org/1999/xlink",l.toLowerCase()):n.setAttributeNS("http://www.w3.org/1999/xlink",l.toLowerCase(),u):null==u||!1===u&&!/^ar/.test(l)?n.removeAttribute(l):n.setAttribute(l,u))}function z(l){this.l[l.type+!1](n.event?n.event(l):l)}function N(l){this.l[l.type+!0](n.event?n.event(l):l)}function T(n,l,u){var i,t;for(i=0;i<n.__k.length;i++)(t=n.__k[i])&&(t.__=n,t.__e&&("function"==typeof t.type&&t.__k.length>1&&T(t,l,u),l=x(u,t,t,n.__k,null,t.__e,l),"function"==typeof n.type&&(n.__d=l)))}function $(l,u,i,t,o,r,f,e,c){var a,h,v,y,_,w,k,g,b,x,A,P=u.type;if(void 0!==u.constructor)return null;null!=i.__h&&(c=i.__h,e=u.__e=i.__e,u.__h=null,r=[e]),(a=n.__b)&&a(u);try{n:if("function"==typeof P){if(g=u.props,b=(a=P.contextType)&&t[a.__c],x=a?b?b.props.value:a.__:t,i.__c?k=(h=u.__c=i.__c).__=h.__E:("prototype"in P&&P.prototype.render?u.__c=h=new P(g,x):(u.__c=h=new d(g,x),h.constructor=P,h.render=M),b&&b.sub(h),h.props=g,h.state||(h.state={}),h.context=x,h.__n=t,v=h.__d=!0,h.__h=[]),null==h.__s&&(h.__s=h.state),null!=P.getDerivedStateFromProps&&(h.__s==h.state&&(h.__s=s({},h.__s)),s(h.__s,P.getDerivedStateFromProps(g,h.__s))),y=h.props,_=h.state,v)null==P.getDerivedStateFromProps&&null!=h.componentWillMount&&h.componentWillMount(),null!=h.componentDidMount&&h.__h.push(h.componentDidMount);else{if(null==P.getDerivedStateFromProps&&g!==y&&null!=h.componentWillReceiveProps&&h.componentWillReceiveProps(g,x),!h.__e&&null!=h.shouldComponentUpdate&&!1===h.shouldComponentUpdate(g,h.__s,x)||u.__v===i.__v){h.props=g,h.state=h.__s,u.__v!==i.__v&&(h.__d=!1),h.__v=u,u.__e=i.__e,u.__k=i.__k,h.__h.length&&f.push(h),T(u,e,l);break n}null!=h.componentWillUpdate&&h.componentWillUpdate(g,h.__s,x),null!=h.componentDidUpdate&&h.__h.push(function(){h.componentDidUpdate(y,_,w)})}h.context=x,h.props=g,h.state=h.__s,(a=n.__r)&&a(u),h.__d=!1,h.__v=u,h.__P=l,a=h.render(h.props,h.state,h.context),h.state=h.__s,null!=h.getChildContext&&(t=s(s({},t),h.getChildContext())),v||null==h.getSnapshotBeforeUpdate||(w=h.getSnapshotBeforeUpdate(y,_)),A=null!=a&&a.type==p&&null==a.key?a.props.children:a,m(l,Array.isArray(A)?A:[A],u,i,t,o,r,f,e,c),h.base=u.__e,u.__h=null,h.__h.length&&f.push(h),k&&(h.__E=h.__=null),h.__e=!1}else null==r&&u.__v===i.__v?(u.__k=i.__k,u.__e=i.__e):u.__e=H(i.__e,u,i,t,o,r,f,c);(a=n.diffed)&&a(u)}catch(l){u.__v=null,(c||null!=r)&&(u.__e=e,u.__h=!!c,r[r.indexOf(e)]=null),n.__e(l,u,i)}return u.__e}function j(l,u){n.__c&&n.__c(u,l),l.some(function(u){try{l=u.__h,u.__h=[],l.some(function(n){n.call(u)})}catch(l){n.__e(l,u.__v)}})}function H(n,l,u,i,t,o,r,c){var s,a,h,v,y,p=u.props,d=l.props;if(t="svg"===l.type||t,null!=o)for(s=0;s<o.length;s++)if(null!=(a=o[s])&&((null===l.type?3===a.nodeType:a.localName===l.type)||n==a)){n=a,o[s]=null;break}if(null==n){if(null===l.type)return document.createTextNode(d);n=t?document.createElementNS("http://www.w3.org/2000/svg",l.type):document.createElement(l.type,d.is&&{is:d.is}),o=null,c=!1}if(null===l.type)p===d||c&&n.data===d||(n.data=d);else{if(null!=o&&(o=e.slice.call(n.childNodes)),h=(p=u.props||f).dangerouslySetInnerHTML,v=d.dangerouslySetInnerHTML,!c){if(null!=o)for(p={},y=0;y<n.attributes.length;y++)p[n.attributes[y].name]=n.attributes[y].value;(v||h)&&(v&&(h&&v.__html==h.__html||v.__html===n.innerHTML)||(n.innerHTML=v&&v.__html||""))}A(n,d,p,t,c),v?l.__k=[]:(s=l.props.children,m(n,Array.isArray(s)?s:[s],l,u,i,"foreignObject"!==l.type&&t,o,r,f,c)),c||("value"in d&&void 0!==(s=d.value)&&(s!==n.value||"progress"===l.type&&!s)&&C(n,"value",s,p.value,!1),"checked"in d&&void 0!==(s=d.checked)&&s!==n.checked&&C(n,"checked",s,p.checked,!1))}return n}function I(l,u,i){try{"function"==typeof l?l(u):l.current=u}catch(l){n.__e(l,i)}}function L(l,u,i){var t,o,r;if(n.unmount&&n.unmount(l),(t=l.ref)&&(t.current&&t.current!==l.__e||I(t,null,u)),i||"function"==typeof l.type||(i=null!=(o=l.__e)),l.__e=l.__d=void 0,null!=(t=l.__c)){if(t.componentWillUnmount)try{t.componentWillUnmount()}catch(l){n.__e(l,u)}t.base=t.__P=null}if(t=l.__k)for(r=0;r<t.length;r++)t[r]&&L(t[r],u,i);null!=o&&a(o)}function M(n,l,u){return this.constructor(n,u)}function O(l,u,i){var t,r,c;n.__&&n.__(l,u),r=(t=i===o)?null:i&&i.__k||u.__k,l=h(p,null,[l]),c=[],$(u,(t?u:i||u).__k=l,r||f,f,void 0!==u.ownerSVGElement,i&&!t?[i]:r?null:u.childNodes.length?e.slice.call(u.childNodes):null,c,i||f,t),j(c,l)}function S(n,l){O(n,l,o)}function q(n,l,u){var i,t,o,r=arguments,f=s({},n.props);for(o in l)"key"==o?i=l[o]:"ref"==o?t=l[o]:f[o]=l[o];if(arguments.length>3)for(u=[u],o=3;o<arguments.length;o++)u.push(r[o]);return null!=u&&(f.children=u),v(n.type,f,i||n.key,t||n.ref,null)}function B(n,l){var u={__c:l="__cC"+r++,__:n,Consumer:function(n,l){return n.children(l)},Provider:function(n,u,i){return this.getChildContext||(u=[],(i={})[l]=this,this.getChildContext=function(){return i},this.shouldComponentUpdate=function(n){this.props.value!==n.value&&u.some(k)},this.sub=function(n){u.push(n);var l=n.componentWillUnmount;n.componentWillUnmount=function(){u.splice(u.indexOf(n),1),l&&l.call(n)}}),n.children}};return u.Provider.__=u.Consumer.contextType=u}n={__e:function(n,l){for(var u,i,t,o=l.__h;l=l.__;)if((u=l.__c)&&!u.__)try{if((i=u.constructor)&&null!=i.getDerivedStateFromError&&(u.setState(i.getDerivedStateFromError(n)),t=u.__d),null!=u.componentDidCatch&&(u.componentDidCatch(n),t=u.__d),t)return l.__h=o,u.__E=u}catch(l){n=l}throw n}},l=function(n){return null!=n&&void 0===n.constructor},d.prototype.setState=function(n,l){var u;u=null!=this.__s&&this.__s!==this.state?this.__s:this.__s=s({},this.state),"function"==typeof n&&(n=n(s({},u),this.props)),n&&s(u,n),null!=n&&this.__v&&(l&&this.__h.push(l),k(this))},d.prototype.forceUpdate=function(n){this.__v&&(this.__e=!0,n&&this.__h.push(n),k(this))},d.prototype.render=p,u=[],i="function"==typeof Promise?Promise.prototype.then.bind(Promise.resolve()):setTimeout,g.__r=0,o=f,r=0;
 //# sourceMappingURL=preact.module.js.map
@@ -10541,22 +16489,22 @@ var n,l,u,i,t,o,r,f={},e=[],c=/acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]
 /*!********************************************************!*\
   !*** ./node_modules/preact/hooks/dist/hooks.module.js ***!
   \********************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "useState": () => (/* binding */ m),
-/* harmony export */   "useReducer": () => (/* binding */ p),
-/* harmony export */   "useEffect": () => (/* binding */ y),
-/* harmony export */   "useLayoutEffect": () => (/* binding */ l),
-/* harmony export */   "useRef": () => (/* binding */ h),
-/* harmony export */   "useImperativeHandle": () => (/* binding */ s),
-/* harmony export */   "useMemo": () => (/* binding */ _),
-/* harmony export */   "useCallback": () => (/* binding */ A),
-/* harmony export */   "useContext": () => (/* binding */ F),
-/* harmony export */   "useDebugValue": () => (/* binding */ T),
-/* harmony export */   "useErrorBoundary": () => (/* binding */ d)
+/* harmony export */   "useState": function() { return /* binding */ m; },
+/* harmony export */   "useReducer": function() { return /* binding */ p; },
+/* harmony export */   "useEffect": function() { return /* binding */ y; },
+/* harmony export */   "useLayoutEffect": function() { return /* binding */ l; },
+/* harmony export */   "useRef": function() { return /* binding */ h; },
+/* harmony export */   "useImperativeHandle": function() { return /* binding */ s; },
+/* harmony export */   "useMemo": function() { return /* binding */ _; },
+/* harmony export */   "useCallback": function() { return /* binding */ A; },
+/* harmony export */   "useContext": function() { return /* binding */ F; },
+/* harmony export */   "useDebugValue": function() { return /* binding */ T; },
+/* harmony export */   "useErrorBoundary": function() { return /* binding */ d; }
 /* harmony export */ });
 /* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
 var t,u,r,o=0,i=[],c=preact__WEBPACK_IMPORTED_MODULE_0__.options.__r,f=preact__WEBPACK_IMPORTED_MODULE_0__.options.diffed,e=preact__WEBPACK_IMPORTED_MODULE_0__.options.__c,a=preact__WEBPACK_IMPORTED_MODULE_0__.options.unmount;function v(t,r){preact__WEBPACK_IMPORTED_MODULE_0__.options.__h&&preact__WEBPACK_IMPORTED_MODULE_0__.options.__h(u,t,o||r),o=0;var i=u.__H||(u.__H={__:[],__h:[]});return t>=i.__.length&&i.__.push({}),i.__[t]}function m(n){return o=1,p(k,n)}function p(n,r,o){var i=v(t++,2);return i.t=n,i.__c||(i.__=[o?o(r):k(void 0,r),function(n){var t=i.t(i.__[0],n);i.__[0]!==t&&(i.__=[t,i.__[1]],i.__c.setState({}))}],i.__c=u),i.__}function y(r,o){var i=v(t++,3);!preact__WEBPACK_IMPORTED_MODULE_0__.options.__s&&j(i.__H,o)&&(i.__=r,i.__H=o,u.__H.__h.push(i))}function l(r,o){var i=v(t++,4);!preact__WEBPACK_IMPORTED_MODULE_0__.options.__s&&j(i.__H,o)&&(i.__=r,i.__H=o,u.__h.push(i))}function h(n){return o=5,_(function(){return{current:n}},[])}function s(n,t,u){o=6,l(function(){"function"==typeof n?n(t()):n&&(n.current=t())},null==u?u:u.concat(n))}function _(n,u){var r=v(t++,7);return j(r.__H,u)&&(r.__=n(),r.__H=u,r.__h=n),r.__}function A(n,t){return o=8,_(function(){return n},t)}function F(n){var r=u.context[n.__c],o=v(t++,9);return o.__c=n,r?(null==o.__&&(o.__=!0,r.sub(u)),r.props.value):n.__}function T(t,u){preact__WEBPACK_IMPORTED_MODULE_0__.options.useDebugValue&&preact__WEBPACK_IMPORTED_MODULE_0__.options.useDebugValue(u?u(t):t)}function d(n){var r=v(t++,10),o=m();return r.__=n,u.componentDidCatch||(u.componentDidCatch=function(n){r.__&&r.__(n),o[1](n)}),[o[0],function(){o[1](void 0)}]}function q(){i.some(function(t){if(t.__P)try{t.__H.__h.forEach(b),t.__H.__h.forEach(g),t.__H.__h=[]}catch(u){return t.__H.__h=[],preact__WEBPACK_IMPORTED_MODULE_0__.options.__e(u,t.__v),!0}}),i=[]}preact__WEBPACK_IMPORTED_MODULE_0__.options.__r=function(n){c&&c(n),t=0;var r=(u=n.__c).__H;r&&(r.__h.forEach(b),r.__h.forEach(g),r.__h=[])},preact__WEBPACK_IMPORTED_MODULE_0__.options.diffed=function(t){f&&f(t);var u=t.__c;u&&u.__H&&u.__H.__h.length&&(1!==i.push(u)&&r===preact__WEBPACK_IMPORTED_MODULE_0__.options.requestAnimationFrame||((r=preact__WEBPACK_IMPORTED_MODULE_0__.options.requestAnimationFrame)||function(n){var t,u=function(){clearTimeout(r),x&&cancelAnimationFrame(t),setTimeout(n)},r=setTimeout(u,100);x&&(t=requestAnimationFrame(u))})(q))},preact__WEBPACK_IMPORTED_MODULE_0__.options.__c=function(t,u){u.some(function(t){try{t.__h.forEach(b),t.__h=t.__h.filter(function(n){return!n.__||g(n)})}catch(r){u.some(function(n){n.__h&&(n.__h=[])}),u=[],preact__WEBPACK_IMPORTED_MODULE_0__.options.__e(r,t.__v)}}),e&&e(t,u)},preact__WEBPACK_IMPORTED_MODULE_0__.options.unmount=function(t){a&&a(t);var u=t.__c;if(u&&u.__H)try{u.__H.__.forEach(b)}catch(t){preact__WEBPACK_IMPORTED_MODULE_0__.options.__e(t,u.__v)}};var x="function"==typeof requestAnimationFrame;function b(n){"function"==typeof n.u&&n.u()}function g(n){n.u=n.__()}function j(n,t){return!n||n.length!==t.length||t.some(function(t,u){return t!==n[u]})}function k(n,t){return"function"==typeof t?t(n):t}
@@ -10565,6521 +16513,11 @@ var t,u,r,o=0,i=[],c=preact__WEBPACK_IMPORTED_MODULE_0__.options.__r,f=preact__W
 
 /***/ }),
 
-/***/ "./node_modules/regenerator-runtime/runtime.js":
-/*!*****************************************************!*\
-  !*** ./node_modules/regenerator-runtime/runtime.js ***!
-  \*****************************************************/
-/***/ ((module) => {
-
-/**
- * Copyright (c) 2014-present, Facebook, Inc.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
-
-var runtime = (function (exports) {
-  "use strict";
-
-  var Op = Object.prototype;
-  var hasOwn = Op.hasOwnProperty;
-  var undefined; // More compressible than void 0.
-  var $Symbol = typeof Symbol === "function" ? Symbol : {};
-  var iteratorSymbol = $Symbol.iterator || "@@iterator";
-  var asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator";
-  var toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag";
-
-  function define(obj, key, value) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-    return obj[key];
-  }
-  try {
-    // IE 8 has a broken Object.defineProperty that only works on DOM objects.
-    define({}, "");
-  } catch (err) {
-    define = function(obj, key, value) {
-      return obj[key] = value;
-    };
-  }
-
-  function wrap(innerFn, outerFn, self, tryLocsList) {
-    // If outerFn provided and outerFn.prototype is a Generator, then outerFn.prototype instanceof Generator.
-    var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator;
-    var generator = Object.create(protoGenerator.prototype);
-    var context = new Context(tryLocsList || []);
-
-    // The ._invoke method unifies the implementations of the .next,
-    // .throw, and .return methods.
-    generator._invoke = makeInvokeMethod(innerFn, self, context);
-
-    return generator;
-  }
-  exports.wrap = wrap;
-
-  // Try/catch helper to minimize deoptimizations. Returns a completion
-  // record like context.tryEntries[i].completion. This interface could
-  // have been (and was previously) designed to take a closure to be
-  // invoked without arguments, but in all the cases we care about we
-  // already have an existing method we want to call, so there's no need
-  // to create a new function object. We can even get away with assuming
-  // the method takes exactly one argument, since that happens to be true
-  // in every case, so we don't have to touch the arguments object. The
-  // only additional allocation required is the completion record, which
-  // has a stable shape and so hopefully should be cheap to allocate.
-  function tryCatch(fn, obj, arg) {
-    try {
-      return { type: "normal", arg: fn.call(obj, arg) };
-    } catch (err) {
-      return { type: "throw", arg: err };
-    }
-  }
-
-  var GenStateSuspendedStart = "suspendedStart";
-  var GenStateSuspendedYield = "suspendedYield";
-  var GenStateExecuting = "executing";
-  var GenStateCompleted = "completed";
-
-  // Returning this object from the innerFn has the same effect as
-  // breaking out of the dispatch switch statement.
-  var ContinueSentinel = {};
-
-  // Dummy constructor functions that we use as the .constructor and
-  // .constructor.prototype properties for functions that return Generator
-  // objects. For full spec compliance, you may wish to configure your
-  // minifier not to mangle the names of these two functions.
-  function Generator() {}
-  function GeneratorFunction() {}
-  function GeneratorFunctionPrototype() {}
-
-  // This is a polyfill for %IteratorPrototype% for environments that
-  // don't natively support it.
-  var IteratorPrototype = {};
-  define(IteratorPrototype, iteratorSymbol, function () {
-    return this;
-  });
-
-  var getProto = Object.getPrototypeOf;
-  var NativeIteratorPrototype = getProto && getProto(getProto(values([])));
-  if (NativeIteratorPrototype &&
-      NativeIteratorPrototype !== Op &&
-      hasOwn.call(NativeIteratorPrototype, iteratorSymbol)) {
-    // This environment has a native %IteratorPrototype%; use it instead
-    // of the polyfill.
-    IteratorPrototype = NativeIteratorPrototype;
-  }
-
-  var Gp = GeneratorFunctionPrototype.prototype =
-    Generator.prototype = Object.create(IteratorPrototype);
-  GeneratorFunction.prototype = GeneratorFunctionPrototype;
-  define(Gp, "constructor", GeneratorFunctionPrototype);
-  define(GeneratorFunctionPrototype, "constructor", GeneratorFunction);
-  GeneratorFunction.displayName = define(
-    GeneratorFunctionPrototype,
-    toStringTagSymbol,
-    "GeneratorFunction"
-  );
-
-  // Helper for defining the .next, .throw, and .return methods of the
-  // Iterator interface in terms of a single ._invoke method.
-  function defineIteratorMethods(prototype) {
-    ["next", "throw", "return"].forEach(function(method) {
-      define(prototype, method, function(arg) {
-        return this._invoke(method, arg);
-      });
-    });
-  }
-
-  exports.isGeneratorFunction = function(genFun) {
-    var ctor = typeof genFun === "function" && genFun.constructor;
-    return ctor
-      ? ctor === GeneratorFunction ||
-        // For the native GeneratorFunction constructor, the best we can
-        // do is to check its .name property.
-        (ctor.displayName || ctor.name) === "GeneratorFunction"
-      : false;
-  };
-
-  exports.mark = function(genFun) {
-    if (Object.setPrototypeOf) {
-      Object.setPrototypeOf(genFun, GeneratorFunctionPrototype);
-    } else {
-      genFun.__proto__ = GeneratorFunctionPrototype;
-      define(genFun, toStringTagSymbol, "GeneratorFunction");
-    }
-    genFun.prototype = Object.create(Gp);
-    return genFun;
-  };
-
-  // Within the body of any async function, `await x` is transformed to
-  // `yield regeneratorRuntime.awrap(x)`, so that the runtime can test
-  // `hasOwn.call(value, "__await")` to determine if the yielded value is
-  // meant to be awaited.
-  exports.awrap = function(arg) {
-    return { __await: arg };
-  };
-
-  function AsyncIterator(generator, PromiseImpl) {
-    function invoke(method, arg, resolve, reject) {
-      var record = tryCatch(generator[method], generator, arg);
-      if (record.type === "throw") {
-        reject(record.arg);
-      } else {
-        var result = record.arg;
-        var value = result.value;
-        if (value &&
-            typeof value === "object" &&
-            hasOwn.call(value, "__await")) {
-          return PromiseImpl.resolve(value.__await).then(function(value) {
-            invoke("next", value, resolve, reject);
-          }, function(err) {
-            invoke("throw", err, resolve, reject);
-          });
-        }
-
-        return PromiseImpl.resolve(value).then(function(unwrapped) {
-          // When a yielded Promise is resolved, its final value becomes
-          // the .value of the Promise<{value,done}> result for the
-          // current iteration.
-          result.value = unwrapped;
-          resolve(result);
-        }, function(error) {
-          // If a rejected Promise was yielded, throw the rejection back
-          // into the async generator function so it can be handled there.
-          return invoke("throw", error, resolve, reject);
-        });
-      }
-    }
-
-    var previousPromise;
-
-    function enqueue(method, arg) {
-      function callInvokeWithMethodAndArg() {
-        return new PromiseImpl(function(resolve, reject) {
-          invoke(method, arg, resolve, reject);
-        });
-      }
-
-      return previousPromise =
-        // If enqueue has been called before, then we want to wait until
-        // all previous Promises have been resolved before calling invoke,
-        // so that results are always delivered in the correct order. If
-        // enqueue has not been called before, then it is important to
-        // call invoke immediately, without waiting on a callback to fire,
-        // so that the async generator function has the opportunity to do
-        // any necessary setup in a predictable way. This predictability
-        // is why the Promise constructor synchronously invokes its
-        // executor callback, and why async functions synchronously
-        // execute code before the first await. Since we implement simple
-        // async functions in terms of async generators, it is especially
-        // important to get this right, even though it requires care.
-        previousPromise ? previousPromise.then(
-          callInvokeWithMethodAndArg,
-          // Avoid propagating failures to Promises returned by later
-          // invocations of the iterator.
-          callInvokeWithMethodAndArg
-        ) : callInvokeWithMethodAndArg();
-    }
-
-    // Define the unified helper method that is used to implement .next,
-    // .throw, and .return (see defineIteratorMethods).
-    this._invoke = enqueue;
-  }
-
-  defineIteratorMethods(AsyncIterator.prototype);
-  define(AsyncIterator.prototype, asyncIteratorSymbol, function () {
-    return this;
-  });
-  exports.AsyncIterator = AsyncIterator;
-
-  // Note that simple async functions are implemented on top of
-  // AsyncIterator objects; they just return a Promise for the value of
-  // the final result produced by the iterator.
-  exports.async = function(innerFn, outerFn, self, tryLocsList, PromiseImpl) {
-    if (PromiseImpl === void 0) PromiseImpl = Promise;
-
-    var iter = new AsyncIterator(
-      wrap(innerFn, outerFn, self, tryLocsList),
-      PromiseImpl
-    );
-
-    return exports.isGeneratorFunction(outerFn)
-      ? iter // If outerFn is a generator, return the full iterator.
-      : iter.next().then(function(result) {
-          return result.done ? result.value : iter.next();
-        });
-  };
-
-  function makeInvokeMethod(innerFn, self, context) {
-    var state = GenStateSuspendedStart;
-
-    return function invoke(method, arg) {
-      if (state === GenStateExecuting) {
-        throw new Error("Generator is already running");
-      }
-
-      if (state === GenStateCompleted) {
-        if (method === "throw") {
-          throw arg;
-        }
-
-        // Be forgiving, per 25.3.3.3.3 of the spec:
-        // https://people.mozilla.org/~jorendorff/es6-draft.html#sec-generatorresume
-        return doneResult();
-      }
-
-      context.method = method;
-      context.arg = arg;
-
-      while (true) {
-        var delegate = context.delegate;
-        if (delegate) {
-          var delegateResult = maybeInvokeDelegate(delegate, context);
-          if (delegateResult) {
-            if (delegateResult === ContinueSentinel) continue;
-            return delegateResult;
-          }
-        }
-
-        if (context.method === "next") {
-          // Setting context._sent for legacy support of Babel's
-          // function.sent implementation.
-          context.sent = context._sent = context.arg;
-
-        } else if (context.method === "throw") {
-          if (state === GenStateSuspendedStart) {
-            state = GenStateCompleted;
-            throw context.arg;
-          }
-
-          context.dispatchException(context.arg);
-
-        } else if (context.method === "return") {
-          context.abrupt("return", context.arg);
-        }
-
-        state = GenStateExecuting;
-
-        var record = tryCatch(innerFn, self, context);
-        if (record.type === "normal") {
-          // If an exception is thrown from innerFn, we leave state ===
-          // GenStateExecuting and loop back for another invocation.
-          state = context.done
-            ? GenStateCompleted
-            : GenStateSuspendedYield;
-
-          if (record.arg === ContinueSentinel) {
-            continue;
-          }
-
-          return {
-            value: record.arg,
-            done: context.done
-          };
-
-        } else if (record.type === "throw") {
-          state = GenStateCompleted;
-          // Dispatch the exception by looping back around to the
-          // context.dispatchException(context.arg) call above.
-          context.method = "throw";
-          context.arg = record.arg;
-        }
-      }
-    };
-  }
-
-  // Call delegate.iterator[context.method](context.arg) and handle the
-  // result, either by returning a { value, done } result from the
-  // delegate iterator, or by modifying context.method and context.arg,
-  // setting context.delegate to null, and returning the ContinueSentinel.
-  function maybeInvokeDelegate(delegate, context) {
-    var method = delegate.iterator[context.method];
-    if (method === undefined) {
-      // A .throw or .return when the delegate iterator has no .throw
-      // method always terminates the yield* loop.
-      context.delegate = null;
-
-      if (context.method === "throw") {
-        // Note: ["return"] must be used for ES3 parsing compatibility.
-        if (delegate.iterator["return"]) {
-          // If the delegate iterator has a return method, give it a
-          // chance to clean up.
-          context.method = "return";
-          context.arg = undefined;
-          maybeInvokeDelegate(delegate, context);
-
-          if (context.method === "throw") {
-            // If maybeInvokeDelegate(context) changed context.method from
-            // "return" to "throw", let that override the TypeError below.
-            return ContinueSentinel;
-          }
-        }
-
-        context.method = "throw";
-        context.arg = new TypeError(
-          "The iterator does not provide a 'throw' method");
-      }
-
-      return ContinueSentinel;
-    }
-
-    var record = tryCatch(method, delegate.iterator, context.arg);
-
-    if (record.type === "throw") {
-      context.method = "throw";
-      context.arg = record.arg;
-      context.delegate = null;
-      return ContinueSentinel;
-    }
-
-    var info = record.arg;
-
-    if (! info) {
-      context.method = "throw";
-      context.arg = new TypeError("iterator result is not an object");
-      context.delegate = null;
-      return ContinueSentinel;
-    }
-
-    if (info.done) {
-      // Assign the result of the finished delegate to the temporary
-      // variable specified by delegate.resultName (see delegateYield).
-      context[delegate.resultName] = info.value;
-
-      // Resume execution at the desired location (see delegateYield).
-      context.next = delegate.nextLoc;
-
-      // If context.method was "throw" but the delegate handled the
-      // exception, let the outer generator proceed normally. If
-      // context.method was "next", forget context.arg since it has been
-      // "consumed" by the delegate iterator. If context.method was
-      // "return", allow the original .return call to continue in the
-      // outer generator.
-      if (context.method !== "return") {
-        context.method = "next";
-        context.arg = undefined;
-      }
-
-    } else {
-      // Re-yield the result returned by the delegate method.
-      return info;
-    }
-
-    // The delegate iterator is finished, so forget it and continue with
-    // the outer generator.
-    context.delegate = null;
-    return ContinueSentinel;
-  }
-
-  // Define Generator.prototype.{next,throw,return} in terms of the
-  // unified ._invoke helper method.
-  defineIteratorMethods(Gp);
-
-  define(Gp, toStringTagSymbol, "Generator");
-
-  // A Generator should always return itself as the iterator object when the
-  // @@iterator function is called on it. Some browsers' implementations of the
-  // iterator prototype chain incorrectly implement this, causing the Generator
-  // object to not be returned from this call. This ensures that doesn't happen.
-  // See https://github.com/facebook/regenerator/issues/274 for more details.
-  define(Gp, iteratorSymbol, function() {
-    return this;
-  });
-
-  define(Gp, "toString", function() {
-    return "[object Generator]";
-  });
-
-  function pushTryEntry(locs) {
-    var entry = { tryLoc: locs[0] };
-
-    if (1 in locs) {
-      entry.catchLoc = locs[1];
-    }
-
-    if (2 in locs) {
-      entry.finallyLoc = locs[2];
-      entry.afterLoc = locs[3];
-    }
-
-    this.tryEntries.push(entry);
-  }
-
-  function resetTryEntry(entry) {
-    var record = entry.completion || {};
-    record.type = "normal";
-    delete record.arg;
-    entry.completion = record;
-  }
-
-  function Context(tryLocsList) {
-    // The root entry object (effectively a try statement without a catch
-    // or a finally block) gives us a place to store values thrown from
-    // locations where there is no enclosing try statement.
-    this.tryEntries = [{ tryLoc: "root" }];
-    tryLocsList.forEach(pushTryEntry, this);
-    this.reset(true);
-  }
-
-  exports.keys = function(object) {
-    var keys = [];
-    for (var key in object) {
-      keys.push(key);
-    }
-    keys.reverse();
-
-    // Rather than returning an object with a next method, we keep
-    // things simple and return the next function itself.
-    return function next() {
-      while (keys.length) {
-        var key = keys.pop();
-        if (key in object) {
-          next.value = key;
-          next.done = false;
-          return next;
-        }
-      }
-
-      // To avoid creating an additional object, we just hang the .value
-      // and .done properties off the next function object itself. This
-      // also ensures that the minifier will not anonymize the function.
-      next.done = true;
-      return next;
-    };
-  };
-
-  function values(iterable) {
-    if (iterable) {
-      var iteratorMethod = iterable[iteratorSymbol];
-      if (iteratorMethod) {
-        return iteratorMethod.call(iterable);
-      }
-
-      if (typeof iterable.next === "function") {
-        return iterable;
-      }
-
-      if (!isNaN(iterable.length)) {
-        var i = -1, next = function next() {
-          while (++i < iterable.length) {
-            if (hasOwn.call(iterable, i)) {
-              next.value = iterable[i];
-              next.done = false;
-              return next;
-            }
-          }
-
-          next.value = undefined;
-          next.done = true;
-
-          return next;
-        };
-
-        return next.next = next;
-      }
-    }
-
-    // Return an iterator with no values.
-    return { next: doneResult };
-  }
-  exports.values = values;
-
-  function doneResult() {
-    return { value: undefined, done: true };
-  }
-
-  Context.prototype = {
-    constructor: Context,
-
-    reset: function(skipTempReset) {
-      this.prev = 0;
-      this.next = 0;
-      // Resetting context._sent for legacy support of Babel's
-      // function.sent implementation.
-      this.sent = this._sent = undefined;
-      this.done = false;
-      this.delegate = null;
-
-      this.method = "next";
-      this.arg = undefined;
-
-      this.tryEntries.forEach(resetTryEntry);
-
-      if (!skipTempReset) {
-        for (var name in this) {
-          // Not sure about the optimal order of these conditions:
-          if (name.charAt(0) === "t" &&
-              hasOwn.call(this, name) &&
-              !isNaN(+name.slice(1))) {
-            this[name] = undefined;
-          }
-        }
-      }
-    },
-
-    stop: function() {
-      this.done = true;
-
-      var rootEntry = this.tryEntries[0];
-      var rootRecord = rootEntry.completion;
-      if (rootRecord.type === "throw") {
-        throw rootRecord.arg;
-      }
-
-      return this.rval;
-    },
-
-    dispatchException: function(exception) {
-      if (this.done) {
-        throw exception;
-      }
-
-      var context = this;
-      function handle(loc, caught) {
-        record.type = "throw";
-        record.arg = exception;
-        context.next = loc;
-
-        if (caught) {
-          // If the dispatched exception was caught by a catch block,
-          // then let that catch block handle the exception normally.
-          context.method = "next";
-          context.arg = undefined;
-        }
-
-        return !! caught;
-      }
-
-      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
-        var entry = this.tryEntries[i];
-        var record = entry.completion;
-
-        if (entry.tryLoc === "root") {
-          // Exception thrown outside of any try block that could handle
-          // it, so set the completion value of the entire function to
-          // throw the exception.
-          return handle("end");
-        }
-
-        if (entry.tryLoc <= this.prev) {
-          var hasCatch = hasOwn.call(entry, "catchLoc");
-          var hasFinally = hasOwn.call(entry, "finallyLoc");
-
-          if (hasCatch && hasFinally) {
-            if (this.prev < entry.catchLoc) {
-              return handle(entry.catchLoc, true);
-            } else if (this.prev < entry.finallyLoc) {
-              return handle(entry.finallyLoc);
-            }
-
-          } else if (hasCatch) {
-            if (this.prev < entry.catchLoc) {
-              return handle(entry.catchLoc, true);
-            }
-
-          } else if (hasFinally) {
-            if (this.prev < entry.finallyLoc) {
-              return handle(entry.finallyLoc);
-            }
-
-          } else {
-            throw new Error("try statement without catch or finally");
-          }
-        }
-      }
-    },
-
-    abrupt: function(type, arg) {
-      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
-        var entry = this.tryEntries[i];
-        if (entry.tryLoc <= this.prev &&
-            hasOwn.call(entry, "finallyLoc") &&
-            this.prev < entry.finallyLoc) {
-          var finallyEntry = entry;
-          break;
-        }
-      }
-
-      if (finallyEntry &&
-          (type === "break" ||
-           type === "continue") &&
-          finallyEntry.tryLoc <= arg &&
-          arg <= finallyEntry.finallyLoc) {
-        // Ignore the finally entry if control is not jumping to a
-        // location outside the try/catch block.
-        finallyEntry = null;
-      }
-
-      var record = finallyEntry ? finallyEntry.completion : {};
-      record.type = type;
-      record.arg = arg;
-
-      if (finallyEntry) {
-        this.method = "next";
-        this.next = finallyEntry.finallyLoc;
-        return ContinueSentinel;
-      }
-
-      return this.complete(record);
-    },
-
-    complete: function(record, afterLoc) {
-      if (record.type === "throw") {
-        throw record.arg;
-      }
-
-      if (record.type === "break" ||
-          record.type === "continue") {
-        this.next = record.arg;
-      } else if (record.type === "return") {
-        this.rval = this.arg = record.arg;
-        this.method = "return";
-        this.next = "end";
-      } else if (record.type === "normal" && afterLoc) {
-        this.next = afterLoc;
-      }
-
-      return ContinueSentinel;
-    },
-
-    finish: function(finallyLoc) {
-      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
-        var entry = this.tryEntries[i];
-        if (entry.finallyLoc === finallyLoc) {
-          this.complete(entry.completion, entry.afterLoc);
-          resetTryEntry(entry);
-          return ContinueSentinel;
-        }
-      }
-    },
-
-    "catch": function(tryLoc) {
-      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
-        var entry = this.tryEntries[i];
-        if (entry.tryLoc === tryLoc) {
-          var record = entry.completion;
-          if (record.type === "throw") {
-            var thrown = record.arg;
-            resetTryEntry(entry);
-          }
-          return thrown;
-        }
-      }
-
-      // The context.catch method must only be called with a location
-      // argument that corresponds to a known catch block.
-      throw new Error("illegal catch attempt");
-    },
-
-    delegateYield: function(iterable, resultName, nextLoc) {
-      this.delegate = {
-        iterator: values(iterable),
-        resultName: resultName,
-        nextLoc: nextLoc
-      };
-
-      if (this.method === "next") {
-        // Deliberately forget the last sent value so that we don't
-        // accidentally pass it on to the delegate.
-        this.arg = undefined;
-      }
-
-      return ContinueSentinel;
-    }
-  };
-
-  // Regardless of whether this script is executing as a CommonJS module
-  // or not, return the runtime object so that we can declare the variable
-  // regeneratorRuntime in the outer scope, which allows this module to be
-  // injected easily by `bin/regenerator --include-runtime script.js`.
-  return exports;
-
-}(
-  // If this script is executing as a CommonJS module, use module.exports
-  // as the regeneratorRuntime namespace. Otherwise create a new empty
-  // object. Either way, the resulting object will be used to initialize
-  // the regeneratorRuntime variable at the top of this file.
-   true ? module.exports : 0
-));
-
-try {
-  regeneratorRuntime = runtime;
-} catch (accidentalStrictMode) {
-  // This module should not be running in strict mode, so the above
-  // assignment should always work unless something is misconfigured. Just
-  // in case runtime.js accidentally runs in strict mode, in modern engines
-  // we can explicitly access globalThis. In older engines we can escape
-  // strict mode using a global Function call. This could conceivably fail
-  // if a Content Security Policy forbids using Function, but in that case
-  // the proper solution is to fix the accidental strict mode problem. If
-  // you've misconfigured your bundler to force strict mode and applied a
-  // CSP to forbid Function, and you're not willing to fix either of those
-  // problems, please detail your unique predicament in a GitHub issue.
-  if (typeof globalThis === "object") {
-    globalThis.regeneratorRuntime = runtime;
-  } else {
-    Function("r", "regeneratorRuntime = r")(runtime);
-  }
-}
-
-
-/***/ }),
-
-/***/ "./src/ApisearchHelper.ts":
-/*!********************************!*\
-  !*** ./src/ApisearchHelper.ts ***!
-  \********************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-exports.__esModule = true;
-var SortByHelper_1 = __webpack_require__(/*! ./components/SortBy/SortByHelper */ "./src/components/SortBy/SortByHelper.ts");
-var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
-/**
- * ApisearchUI class
- */
-var ApisearchHelper = /** @class */ (function () {
-    function ApisearchHelper() {
-    }
-    /**
-     * @param query
-     * @param sortBy
-     */
-    ApisearchHelper.prototype.sortBy = function (query, sortBy) {
-        SortByHelper_1.applySortByToQuery(query, sortBy);
-    };
-    /**
-     * @param query
-     * @param field
-     * @param value
-     * @param weight
-     */
-    ApisearchHelper.prototype.boostByWeightAndFilter = function (query, field, value, weight) {
-        var _a;
-        var scoreStrategies = (_a = query.getScoreStrategies()) !== null && _a !== void 0 ? _a : apisearch_1.ScoreStrategies.createEmpty(apisearch_1.MULTIPLY);
-        scoreStrategies.addScoreStrategy(apisearch_1.ScoreStrategy.createFromArray({
-            "type": "weight",
-            "weight": weight,
-            "filter": {
-                "field": field,
-                "values": [value],
-                "application_type": apisearch_1.FILTER_MUST_ALL,
-                "filter_type": apisearch_1.FILTER_TYPE_FIELD,
-            },
-            "match_main_query": true,
-        }));
-        query.setScoreStrategies(scoreStrategies);
-    };
-    return ApisearchHelper;
-}());
-exports["default"] = ApisearchHelper;
-
-
-/***/ }),
-
-/***/ "./src/ApisearchUI.ts":
-/*!****************************!*\
-  !*** ./src/ApisearchUI.ts ***!
-  \****************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __spreadArrays = (this && this.__spreadArrays) || function () {
-    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
-    for (var r = Array(s), k = 0, i = 0; i < il; i++)
-        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
-            r[k] = a[j];
-    return r;
-};
-exports.__esModule = true;
-var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
-var apisearch_2 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
-var ApisearchHelper_1 = __webpack_require__(/*! ./ApisearchHelper */ "./src/ApisearchHelper.ts");
-var ApisearchUIFactory_1 = __webpack_require__(/*! ./ApisearchUIFactory */ "./src/ApisearchUIFactory.ts");
-var Bootstrap_1 = __webpack_require__(/*! ./Bootstrap */ "./src/Bootstrap.ts");
-var Constants_1 = __webpack_require__(/*! ./Constants */ "./src/Constants.ts");
-var Container_1 = __webpack_require__(/*! ./Container */ "./src/Container.ts");
-var Environment_1 = __webpack_require__(/*! ./Environment */ "./src/Environment.ts");
-var Widgets_1 = __webpack_require__(/*! ./widgets/Widgets */ "./src/widgets/Widgets.ts");
-/**
- * ApisearchUI class
- */
-var ApisearchUI = /** @class */ (function () {
-    /**
-     * Constructor
-     *
-     * @param environmentId
-     * @param repository
-     * @param store
-     */
-    function ApisearchUI(environmentId, repository, store) {
-        /**
-         * Environment Id
-         */
-        this.environmentId = environmentId;
-        this.repository = repository;
-        this.activeWidgets = [];
-        this.widgets = Widgets_1["default"];
-        this.helper = new ApisearchHelper_1["default"]();
-        this.dictionary = {};
-        /**
-         * Store related properties
-         */
-        this.store = store;
-    }
-    /**
-     * Initialize components
-     *
-     * @param firstQuery
-     */
-    ApisearchUI.prototype.init = function (_a) {
-        var _this = this;
-        var _b = (_a === void 0 ? {} : _a).firstQuery, firstQuery = _b === void 0 ? true : _b;
-        this.activeWidgets.map(function (widget) { return widget.withConfig(_this.config); });
-        /**
-         * 1.- Register all events on the store
-         */
-        this.store.on("render", function () { return _this.render(); });
-        this.store.on("toUrlObject", function (query, object) { return _this.toUrlObject(query, object); });
-        this.store.on("fromUrlObject", function (object, query) { return _this.fromUrlObject(object, query); });
-        /**
-         * 2.- Trigger the initial render: (Mount the components)
-         *     To let components setup its configuration on componentWillMount()
-         */
-        this.render();
-        /**
-         * 3.- Dispatch the initial data request
-         *     With all widget previous initial configurations
-         */
-        this.firstQuery = firstQuery;
-        this.fetchQuery(true);
-        window.dispatchEvent(new Event("apisearch_loaded", {
-            bubbles: true,
-        }));
-    };
-    /**
-     *
-     */
-    ApisearchUI.prototype.reset = function () {
-        var initialQuery = this.store.getCurrentQuery().toArray();
-        this.activeWidgets.map(function (widget) {
-            widget.reset(initialQuery);
-        });
-        this.store.setCurrentQuery(apisearch_1.Query.createFromArray(initialQuery));
-        this.store.setEmptyResult();
-        this.fetchQuery(false);
-        this.render();
-    };
-    /**
-     * @param loadQuery
-     */
-    ApisearchUI.prototype.fetchQuery = function (loadQuery) {
-        /**
-         * 3.- Dispatch the initial data request
-         *     With all widget previous initial configurations
-         */
-        if (typeof this.firstQuery === "undefined" ||
-            true === this.firstQuery) {
-            this.store.fetchInitialQuery(this.environmentId, this.repository, loadQuery);
-        }
-    };
-    /**
-     * @param dictionary
-     */
-    ApisearchUI.prototype.setDictionary = function (dictionary) {
-        this.dictionary = dictionary;
-    };
-    /**
-     * Add new widget
-     *
-     * @param widget
-     *
-     * @return {ApisearchUI}
-     */
-    ApisearchUI.prototype.addWidget = function (widget) {
-        widget.withConfig(this.config);
-        this.activeWidgets = __spreadArrays(this.activeWidgets, [widget]);
-        return this;
-    };
-    /**
-     * Add components in bulk mode
-     *
-     * @param widgets
-     *
-     * @return {ApisearchUI}
-     */
-    ApisearchUI.prototype.addWidgets = function () {
-        var _this = this;
-        var widgets = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            widgets[_i] = arguments[_i];
-        }
-        widgets.map(function (widget) { return _this.addWidget(widget); });
-        return this;
-    };
-    /**
-     * Render.
-     *
-     * Loop all active components
-     * Hydrate them with new props
-     * And render them.
-     */
-    ApisearchUI.prototype.render = function () {
-        var _this = this;
-        this.activeWidgets.map(function (widget) {
-            widget.render(_this.environmentId, _this.store, _this.repository, _this.dictionary);
-        });
-        window.dispatchEvent(new Event("apisearch_rendered", {
-            bubbles: true,
-        }));
-    };
-    /**
-     *
-     */
-    ApisearchUI.prototype.normalizeQuery = function () {
-        var _this = this;
-        this.activeWidgets.map(function (widget) {
-            widget.normalizeQuery(_this.environmentId, _this.store.getCurrentQuery());
-        });
-    };
-    /**
-     * @param query
-     * @param object
-     */
-    ApisearchUI.prototype.toUrlObject = function (query, object) {
-        this.activeWidgets.map(function (widget) {
-            widget.toUrlObject(query, object);
-        });
-    };
-    /**
-     * @param object
-     * @param query
-     */
-    ApisearchUI.prototype.fromUrlObject = function (object, query) {
-        this.activeWidgets.map(function (widget) {
-            widget.fromUrlObject(object, query);
-        });
-    };
-    /**
-     * @param config
-     * @param hash
-     *
-     * @return {ApisearchUI}
-     */
-    ApisearchUI.create = function (config, hash) {
-        var _a;
-        apisearch_2["default"].ensureRepositoryConfigIsValid(config);
-        /**
-         * Build environment Id
-         */
-        var environmentId = Environment_1.createEnvironmentId();
-        /**
-         * Bootstrapping ApisearchUI application
-         */
-        Bootstrap_1.bootstrap(environmentId, config, hash);
-        /**
-         * Register handleActions method (store reducer)
-         * into the event dispatcher
-         */
-        var apisearchUI = Container_1["default"].get(Constants_1.APISEARCH_UI + "__" + environmentId);
-        var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
-        dispatcher.registerListener("RENDER_INITIAL_DATA", function (payload) { return apisearchUI.store.renderInitialData(payload); });
-        dispatcher.registerListener("RENDER_FETCHED_DATA", function (payload) { return apisearchUI.store.renderFetchedData(payload); });
-        dispatcher.registerListener("UPDATE_APISEARCH_SETUP", function (payload) { return apisearchUI.store.updateApisearchSetup(payload); });
-        dispatcher.registerListener("NORMALIZE_QUERY", function (payload) { return apisearchUI.normalizeQuery(); });
-        /**
-         * Add widgets
-         */
-        apisearchUI.widgets = Widgets_1["default"];
-        apisearchUI.config = config;
-        var uiId = "ui_" + Math.ceil(Math.random() * (9999999 - 1) + 1);
-        apisearchUI.reference = uiId;
-        apisearchUI.userId = (_a = config.user_id) !== null && _a !== void 0 ? _a : "";
-        window[uiId] = apisearchUI;
-        /**
-         * Return ApisearchUI instance
-         */
-        return apisearchUI;
-    };
-    /**
-     * Create instance
-     *
-     * @param config
-     *
-     * @return {ApisearchUIFactory}
-     */
-    ApisearchUI.factory = function (config) {
-        return ApisearchUIFactory_1["default"].fromConfig(config);
-    };
-    /**
-     * Click
-     *
-     * @param appId
-     * @param indexId
-     * @param itemId
-     *
-     * @return {any}
-     */
-    ApisearchUI.prototype.click = function (appId, indexId, itemId) {
-        this
-            .repository
-            .click(appId, indexId, itemId, this.userId);
-    };
-    return ApisearchUI;
-}());
-exports["default"] = ApisearchUI;
-
-
-/***/ }),
-
-/***/ "./src/ApisearchUIFactory.ts":
-/*!***********************************!*\
-  !*** ./src/ApisearchUIFactory.ts ***!
-  \***********************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-exports.__esModule = true;
-var ApisearchUI_1 = __webpack_require__(/*! ./ApisearchUI */ "./src/ApisearchUI.ts");
-/**
- * ApisearchUIFactory class
- */
-var ApisearchUIFactory = /** @class */ (function () {
-    function ApisearchUIFactory() {
-    }
-    /**
-     * Create instance
-     *
-     * @param config
-     *
-     * @return {ApisearchUIFactory}
-     */
-    ApisearchUIFactory.fromConfig = function (config) {
-        var instance = new ApisearchUIFactory();
-        instance.config = config;
-        return instance;
-    };
-    /**
-     * @param hash
-     *
-     * @return {ApisearchUI}
-     */
-    ApisearchUIFactory.prototype.createUI = function (hash) {
-        if (hash === void 0) { hash = null; }
-        return ApisearchUI_1["default"].create(this.config, hash);
-    };
-    return ApisearchUIFactory;
-}());
-exports["default"] = ApisearchUIFactory;
-
-
-/***/ }),
-
-/***/ "./src/Bootstrap.ts":
-/*!**************************!*\
-  !*** ./src/Bootstrap.ts ***!
-  \**************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-exports.__esModule = true;
-exports.bootstrap = void 0;
-var Dispatcher_1 = __webpack_require__(/*! ./Dispatcher */ "./src/Dispatcher.ts");
-var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
-var ApisearchUI_1 = __webpack_require__(/*! ./ApisearchUI */ "./src/ApisearchUI.ts");
-var Container_1 = __webpack_require__(/*! ./Container */ "./src/Container.ts");
-var Store_1 = __webpack_require__(/*! ./Store */ "./src/Store.ts");
-var Constants_1 = __webpack_require__(/*! ./Constants */ "./src/Constants.ts");
-/**
- * @param environmentId
- * @param config
- * @param hash
- */
-function bootstrap(environmentId, config, hash) {
-    var configAsString = JSON.stringify(config);
-    var repositoryId = Constants_1.APISEARCH_REPOSITORY + "__" + configAsString;
-    var storeId = Constants_1.APISEARCH_STORE + "__" + environmentId;
-    var dispatcherId = Constants_1.APISEARCH_DISPATCHER + "__" + environmentId;
-    var configId = Constants_1.APISEARCH_CONFIG + "__" + environmentId;
-    var asuiId = Constants_1.APISEARCH_UI + "__" + environmentId;
-    /**
-     * Register Apisearch repository
-     */
-    Container_1["default"].register(repositoryId, function () {
-        return apisearch_1["default"].createRepository(config);
-    });
-    /**
-     * Register apisearch store
-     */
-    Container_1["default"].register(storeId, function () {
-        var _a, _b;
-        return new Store_1["default"](config.coordinate, config.options.min_score, hash, (_a = config.user_id) !== null && _a !== void 0 ? _a : "", (_b = config.options.generate_random_session_uuid) !== null && _b !== void 0 ? _b : false);
-    });
-    /**
-     * Register an event dispatcher
-     */
-    Container_1["default"].register(dispatcherId, function () {
-        return new Dispatcher_1.Dispatcher();
-    });
-    /**
-     * Register Apisearch config
-     */
-    Container_1["default"].register(configId, function () {
-        return config;
-    });
-    /**
-     * Apisearch UI Instance
-     */
-    Container_1["default"].register(asuiId, function () {
-        return new ApisearchUI_1["default"](environmentId, Container_1["default"].get(repositoryId), Container_1["default"].get(storeId));
-    });
-}
-exports.bootstrap = bootstrap;
-
-
-/***/ }),
-
-/***/ "./src/Constants.ts":
-/*!**************************!*\
-  !*** ./src/Constants.ts ***!
-  \**************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-exports.__esModule = true;
-exports.APISEARCH_CONFIG = exports.APISEARCH_UI = exports.APISEARCH_DISPATCHER = exports.APISEARCH_STORE = exports.APISEARCH_REPOSITORY = void 0;
-/**
- * Service constants
- */
-exports.APISEARCH_REPOSITORY = "apisearch_repository";
-exports.APISEARCH_STORE = "apisearch_store";
-exports.APISEARCH_DISPATCHER = "apisearch_dispatcher";
-exports.APISEARCH_UI = "apisearch_ui";
-exports.APISEARCH_CONFIG = "apisearch_config";
-
-
-/***/ }),
-
-/***/ "./src/Container.ts":
-/*!**************************!*\
-  !*** ./src/Container.ts ***!
-  \**************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-exports.__esModule = true;
-/**
- * Apisearch Dependency Injection Container
- */
-var Container = /** @class */ (function () {
-    function Container() {
-        this.services = {};
-    }
-    /**
-     * Get service
-     *
-     * @param id
-     */
-    Container.prototype.get = function (id) {
-        if (this.services[id]) {
-            return this.services[id];
-        }
-        throw new Error("Service with id (" + id + ") is not registered.");
-    };
-    /**
-     * Register service
-     *
-     * @param id
-     * @param serviceCallback
-     */
-    Container.prototype.register = function (id, serviceCallback) {
-        this.services[id] = serviceCallback();
-    };
-    return Container;
-}());
-exports["default"] = new Container;
-
-
-/***/ }),
-
-/***/ "./src/Dispatcher.ts":
-/*!***************************!*\
-  !*** ./src/Dispatcher.ts ***!
-  \***************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-exports.__esModule = true;
-exports.Dispatcher = void 0;
-var Dispatcher = /** @class */ (function () {
-    function Dispatcher() {
-        this.events = {};
-    }
-    Dispatcher.prototype.registerListener = function (event, callback) {
-        // Create the event if not exists
-        if (this.events[event] === undefined) {
-            this.events[event] = {
-                listeners: []
-            };
-        }
-        this.events[event].listeners.push(callback);
-    };
-    Dispatcher.prototype.dispatch = function (event, payload) {
-        this.events[event].listeners.forEach(function (listener) {
-            listener(payload);
-        });
-    };
-    return Dispatcher;
-}());
-exports.Dispatcher = Dispatcher;
-
-
-/***/ }),
-
-/***/ "./src/Environment.ts":
-/*!****************************!*\
-  !*** ./src/Environment.ts ***!
-  \****************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-exports.__esModule = true;
-exports.createEnvironmentId = void 0;
-/**
- * Create an envID
- */
-exports.createEnvironmentId = function () { return "env_" + Math.ceil(Math.random() * (9999999 - 1) + 1); };
-
-
-/***/ }),
-
-/***/ "./src/Store.ts":
-/*!**********************!*\
-  !*** ./src/Store.ts ***!
-  \**********************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-exports.__esModule = true;
-var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
-var events_1 = __webpack_require__(/*! events */ "./node_modules/events/events.js");
-var Constants_1 = __webpack_require__(/*! ./Constants */ "./src/Constants.ts");
-var Container_1 = __webpack_require__(/*! ./Container */ "./src/Container.ts");
-/**
- * Flux pattern store class
- */
-var Store = /** @class */ (function (_super) {
-    __extends(Store, _super);
-    /**
-     * @param coordinate
-     * @param minScore
-     * @param hash
-     * @param userId
-     * @param generateRandomSessionUUID
-     */
-    function Store(coordinate, minScore, hash, userId, generateRandomSessionUUID) {
-        var _this = _super.call(this) || this;
-        _this.withHash = false;
-        _this.doNotCleanUrlHashAtFirst = false;
-        _this.dirty = true;
-        var initialQuery = Store.loadInitialQuery(coordinate, userId);
-        _this.window = window.top;
-        _this.isUnderIframe = (window !== window.top);
-        if ((typeof hash === "string")) {
-            _this.withHash = true;
-            _this.urlHash = (hash === "") ? "{}" : hash;
-            if (_this.urlHash.charAt(0) === "#") {
-                _this.urlHash = _this.urlHash.substr(1);
-            }
-        }
-        if (minScore) {
-            initialQuery.setMinScore(minScore);
-        }
-        /**
-         * Data received
-         */
-        _this.setEmptyResult();
-        _this.currentVisibleResults = false;
-        if (generateRandomSessionUUID) {
-            initialQuery.setMetadataValue("session_uid", Store.createUID(16));
-        }
-        _this.setCurrentQuery(initialQuery);
-        return _this;
-    }
-    /**
-     * Is dirty
-     *
-     * @return {any}
-     */
-    Store.prototype.isDirty = function () {
-        return this.dirty;
-    };
-    /**
-     * Get current query
-     *
-     * @return {Query}
-     */
-    Store.prototype.getCurrentQuery = function () {
-        return this.currentQuery;
-    };
-    /**
-     * @param query
-     */
-    Store.prototype.setCurrentQuery = function (query) {
-        this.currentQuery = query;
-    };
-    /**
-     * Get current result
-     *
-     * @return {Result}
-     */
-    Store.prototype.getCurrentResult = function () {
-        return this.currentResult;
-    };
-    /**
-     *
-     */
-    Store.prototype.setEmptyResult = function () {
-        this.currentResult = apisearch_1["default"].createEmptyResult();
-    };
-    /**
-     * Get current result
-     *
-     * @return {boolean}
-     */
-    Store.prototype.hasProperResult = function () {
-        return this.currentResult.getTotalItems() > 0;
-    };
-    /**
-     * Results are visible
-     *
-     * @return {boolean}
-     */
-    Store.prototype.resultsAreVisible = function () {
-        return this.currentVisibleResults;
-    };
-    /**
-     * @param payload
-     */
-    Store.prototype.updateApisearchSetup = function (payload) {
-        this.currentQuery = payload.query;
-    };
-    /**
-     * @param payload
-     */
-    Store.prototype.renderInitialData = function (payload) {
-        var result = payload.result, query = payload.query, _ = payload._;
-        this.dirty = false;
-        this.currentResult = result;
-        this.currentQuery = query;
-        this.currentVisibleResults = query !== undefined;
-        this.emit("render");
-        this.replaceUrl(query, result, this.currentVisibleResults);
-    };
-    /**
-     * @param payload
-     */
-    Store.prototype.renderFetchedData = function (payload) {
-        var result = payload.result, query = payload.query, visibleResults = payload.visibleResults;
-        this.dirty = false;
-        this.currentResult = result;
-        this.currentQuery = query;
-        if (visibleResults !== undefined) {
-            this.currentVisibleResults = visibleResults;
-        }
-        this.emit("render");
-        this.replaceUrl(query, result, visibleResults);
-    };
-    /**
-     * Create an uid
-     */
-    Store.createUID = function (length) {
-        var result = "";
-        var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        var charactersLength = characters.length;
-        for (var i = 0; i < length; i++) {
-            result += characters.charAt(Math.floor(Math.random() * charactersLength));
-        }
-        return result;
-    };
-    /**
-     * @param environmentId
-     * @param repository
-     * @param loadQuery
-     */
-    Store.prototype.fetchInitialQuery = function (environmentId, repository, loadQuery) {
-        var _this = this;
-        var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
-        this.currentQuery = loadQuery
-            ? this.loadQuery(this.currentQuery)
-            : this.currentQuery;
-        dispatcher.dispatch("NORMALIZE_QUERY", {
-            query: this.currentQuery,
-        });
-        /**
-         * In initial query, we must delete user
-         */
-        var queryAsArray = this.currentQuery.toArray();
-        queryAsArray.user = null;
-        repository
-            .query(apisearch_1.Query.createFromArray(queryAsArray))
-            .then(function (result) {
-            dispatcher.dispatch("RENDER_INITIAL_DATA", {
-                query: _this.currentQuery,
-                result: result,
-            });
-        });
-    };
-    /**
-     * @param coordinate
-     * @param userId
-     */
-    Store.loadInitialQuery = function (coordinate, userId) {
-        var withCoordinate = (coordinate &&
-            coordinate.lat !== undefined &&
-            coordinate.lon !== undefined);
-        var q = {};
-        if (withCoordinate) {
-            q.coordinate = coordinate;
-        }
-        if (userId !== "") {
-            q.user = { id: userId };
-        }
-        return apisearch_1.Query.createFromArray(q);
-    };
-    /**
-     * @param query
-     */
-    Store.prototype.loadQuery = function (query) {
-        if (!this.withHash) {
-            return query;
-        }
-        var queryAsObject = query.toArray();
-        try {
-            var urlObject = (this.urlHash !== undefined &&
-                this.urlHash !== null &&
-                this.urlHash !== "" &&
-                this.urlHash !== "/")
-                ? JSON.parse(decodeURI(this.urlHash))
-                : {};
-            this.emit("fromUrlObject", urlObject, queryAsObject);
-        }
-        catch (e) {
-            // Silent pass
-            this.doNotCleanUrlHashAtFirst = true;
-        }
-        return apisearch_1.Query.createFromArray(queryAsObject);
-    };
-    /**
-     *
-     * @param query
-     * @param result
-     * @param visibleResults
-     */
-    Store.prototype.replaceUrl = function (query, result, visibleResults) {
-        if (!this.withHash) {
-            return;
-        }
-        var queryAsObject = query.toArray();
-        var urlObject = {};
-        this.emit("toUrlObject", queryAsObject, urlObject);
-        var objectAsJson = decodeURI(JSON.stringify(urlObject));
-        objectAsJson = (objectAsJson === "{}") ? "" : objectAsJson;
-        objectAsJson = encodeURI(objectAsJson);
-        if (!this.isUnderIframe) {
-            var path = window.location.href;
-            var pathWithoutHash = path.split("#", 2)[0];
-            history.replaceState("", "", pathWithoutHash + "#" + objectAsJson);
-            if (objectAsJson === "") {
-                history.replaceState("", "", pathWithoutHash);
-            }
-        }
-        else {
-            if (!this.doNotCleanUrlHashAtFirst) {
-                this.window.postMessage({
-                    name: "apisearch_replace_hash",
-                    hash: objectAsJson,
-                }, "*");
-            }
-            this.doNotCleanUrlHashAtFirst = false;
-        }
-    };
-    return Store;
-}(events_1.EventEmitter));
-exports["default"] = Store;
-
-
-/***/ }),
-
-/***/ "./src/components/CheckboxFilter/CheckboxFilterActions.ts":
-/*!****************************************************************!*\
-  !*** ./src/components/CheckboxFilter/CheckboxFilterActions.ts ***!
-  \****************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-exports.__esModule = true;
-exports.onChangeSearchAction = exports.aggregationSetup = void 0;
-/**
- * Checkbox filter actions
- */
-var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
-var Constants_1 = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
-var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
-var Clone_1 = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
-/**
- * Define aggregations setup
- *
- * @param environmentId
- * @param currentQuery
- * @param filterName
- * @param aggregationField
- */
-function aggregationSetup(environmentId, currentQuery, filterName, aggregationField) {
-    var clonedQuery = Clone_1["default"].object(currentQuery);
-    clonedQuery.aggregateBy(filterName, aggregationField, apisearch_1.FILTER_TYPE_FIELD);
-    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
-    dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
-        query: clonedQuery,
-    });
-}
-exports.aggregationSetup = aggregationSetup;
-/**
- * @param environmentId
- * @param currentQuery
- * @param repository
- * @param filterName
- * @param filterField
- * @param isChecked
- * @param filterValue
- */
-function onChangeSearchAction(environmentId, currentQuery, repository, filterName, filterField, isChecked, filterValue) {
-    var clonedQuery = Clone_1["default"].object(currentQuery);
-    clonedQuery.filterBy(filterName, filterField, isChecked
-        ? [filterValue]
-        : [], apisearch_1.FILTER_MUST_ALL, false);
-    clonedQuery.page = 1;
-    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
-    repository
-        .query(clonedQuery)
-        .then(function (result) {
-        dispatcher.dispatch("RENDER_FETCHED_DATA", {
-            query: clonedQuery,
-            result: result,
-        });
-    })["catch"](function (error) {
-        // Do nothing
-    });
-}
-exports.onChangeSearchAction = onChangeSearchAction;
-
-
-/***/ }),
-
-/***/ "./src/components/CheckboxFilter/CheckboxFilterComponent.tsx":
-/*!*******************************************************************!*\
-  !*** ./src/components/CheckboxFilter/CheckboxFilterComponent.tsx ***!
-  \*******************************************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
-var CheckboxFilterActions_1 = __webpack_require__(/*! ./CheckboxFilterActions */ "./src/components/CheckboxFilter/CheckboxFilterActions.ts");
-var Template_1 = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
-var defaultTemplates_1 = __webpack_require__(/*! ./defaultTemplates */ "./src/components/CheckboxFilter/defaultTemplates.tsx");
-/**
- * Checkbox Filter Component
- */
-var CheckboxFilterComponent = /** @class */ (function (_super) {
-    __extends(CheckboxFilterComponent, _super);
-    function CheckboxFilterComponent() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        /**
-         * @param activeElement
-         */
-        _this.handleChange = function (activeElement) {
-            var props = _this.props;
-            /**
-             * Dispatch action
-             */
-            CheckboxFilterActions_1.onChangeSearchAction(props.environmentId, props.store.getCurrentQuery(), props.repository, props.filterName, props.filterField, activeElement, props.filterValue);
-        };
-        return _this;
-    }
-    /**
-     * Component will mount
-     */
-    CheckboxFilterComponent.prototype.componentWillMount = function () {
-        var props = this.props;
-        var environmentId = props.environmentId;
-        var filterName = props.filterName;
-        var aggregationField = props.filterField;
-        var currentQuery = props.store.getCurrentQuery();
-        /**
-         * Dispatch action
-         */
-        CheckboxFilterActions_1.aggregationSetup(environmentId, currentQuery, filterName, aggregationField);
-    };
-    /**
-     * Component will receive props
-     *
-     * @param props
-     */
-    CheckboxFilterComponent.prototype.componentWillReceiveProps = function (props) {
-        this.setState(function (prevState) {
-            return {
-                aggregation: props
-                    .store
-                    .getCurrentResult()
-                    .getAggregation(props.filterName)
-            };
-        });
-    };
-    /**
-     * Render
-     *
-     * @return {any}
-     */
-    CheckboxFilterComponent.prototype.render = function (props, state) {
-        var containerClassName = props.classNames.container;
-        var topClassName = props.classNames.top;
-        var itemClassName = props.classNames.item;
-        var activeClassName = props.classNames.active;
-        var topTemplate = props.template.top;
-        var itemTemplate = props.template.item;
-        var filterValue = props.filterValue;
-        if (typeof filterValue === "boolean") {
-            filterValue = filterValue ? "true" : "false";
-        }
-        var n = 0;
-        var isActive = false;
-        var aggregation = state.aggregation;
-        if (aggregation != null) {
-            var counters = aggregation.getCounters();
-            for (var i in counters) {
-                var counter = counters[i];
-                if (counter.values.name === filterValue) {
-                    n = counter.getN();
-                    isActive = counter.isUsed();
-                    break;
-                }
-            }
-        }
-        var label = props.label
-            ? props.label
-            : props.filterName;
-        var that = this;
-        var uid = Math.floor(Math.random() * 10000000000);
-        var templateData = {
-            n: n,
-            isActive: isActive,
-            label: label,
-            uid: uid
-        };
-        return (preact_1.h("div", { className: "as-checkboxFilter " + containerClassName },
-            preact_1.h(Template_1["default"], { template: topTemplate, className: "as-checkboxFilter__top " + topClassName, dictionary: this.props.dictionary }),
-            preact_1.h("div", { className: "as-checkboxFilter__item " +
-                    (itemClassName + " ") +
-                    ("" + ((isActive) ? activeClassName : '')), onClick: function (e) {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    that.handleChange(!isActive);
-                } },
-                preact_1.h(Template_1["default"], { template: itemTemplate, data: templateData, dictionary: this.props.dictionary }))));
-    };
-    return CheckboxFilterComponent;
-}(preact_1.Component));
-CheckboxFilterComponent.defaultProps = {
-    filterValue: 'true',
-    classNames: {
-        container: '',
-        top: '',
-        item: '',
-        active: 'as-checkboxFilter__item--active',
-    },
-    template: {
-        top: null,
-        item: defaultTemplates_1.defaultItemTemplate,
-    },
-};
-exports["default"] = CheckboxFilterComponent;
-
-
-/***/ }),
-
-/***/ "./src/components/CheckboxFilter/defaultTemplates.tsx":
-/*!************************************************************!*\
-  !*** ./src/components/CheckboxFilter/defaultTemplates.tsx ***!
-  \************************************************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-exports.__esModule = true;
-exports.defaultItemTemplate = void 0;
-exports.defaultItemTemplate = "\n    <input\n        type=\"checkbox\"\n        class=\"as-checkboxFilter__checkbox\"\n        id=\"filter_{{uid}}\"\n        {{#isActive}}checked=\"checked\"{{/isActive}}\n    />\n    <label\n        class=\"as-checkboxFilter__label\"\n        for=\"filter_{{uid}}\"\n    >\n        {{{label}}}\n    </label>\n    <span class=\"as-checkboxFilter__itemNumber\">\n        {{n}}\n    </span>\n";
-
-
-/***/ }),
-
-/***/ "./src/components/ClearFilters/ClearFiltersActions.ts":
-/*!************************************************************!*\
-  !*** ./src/components/ClearFilters/ClearFiltersActions.ts ***!
-  \************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-exports.__esModule = true;
-exports.clearFiltersAction = void 0;
-var Constants_1 = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
-var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
-var Clone_1 = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
-/**
- * Clear filters action
- *
- * @param environmentId
- * @param currentQuery
- * @param repository
- * @param filterToClear
- */
-function clearFiltersAction(environmentId, currentQuery, repository, filterToClear) {
-    if (filterToClear === void 0) { filterToClear = null; }
-    var clonedQuery = Clone_1["default"].object(currentQuery);
-    if (filterToClear === null) {
-        clonedQuery.filters = {
-            _query: currentQuery.getFilter("_query"),
-        };
-    }
-    else {
-        delete clonedQuery.filters[filterToClear];
-    }
-    clonedQuery.page = 1;
-    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
-    repository
-        .query(clonedQuery)
-        .then(function (result) {
-        dispatcher.dispatch("RENDER_FETCHED_DATA", {
-            query: clonedQuery,
-            result: result,
-        });
-    })["catch"](function (error) {
-        // Do nothing
-    });
-}
-exports.clearFiltersAction = clearFiltersAction;
-
-
-/***/ }),
-
-/***/ "./src/components/ClearFilters/ClearFiltersComponent.tsx":
-/*!***************************************************************!*\
-  !*** ./src/components/ClearFilters/ClearFiltersComponent.tsx ***!
-  \***************************************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-exports.__esModule = true;
-var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
-var Template_1 = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
-var ClearFiltersActions_1 = __webpack_require__(/*! ./ClearFiltersActions */ "./src/components/ClearFilters/ClearFiltersActions.ts");
-/**
- * Result Information Component
- */
-var ClearFiltersComponent = /** @class */ (function (_super) {
-    __extends(ClearFiltersComponent, _super);
-    /**
-     * Constructor
-     */
-    function ClearFiltersComponent() {
-        var _this = _super.call(this) || this;
-        /**
-         * Handle click
-         */
-        _this.handleClick = function () {
-            var props = _this.props;
-            var environmentId = props.environmentId;
-            var currentQuery = props.store.getCurrentQuery();
-            var repository = props.repository;
-            _this.setState(function (prevState) {
-                return {
-                    appliedFilters: [],
-                    showClearFilters: false,
-                };
-            });
-            /**
-             * Dispatch a clear filter action
-             */
-            ClearFiltersActions_1.clearFiltersAction(environmentId, currentQuery, repository);
-        };
-        /**
-         * Handle individual click
-         */
-        _this.handleIndividualClick = function (filterKey) {
-            var props = _this.props;
-            var environmentId = props.environmentId;
-            var currentQuery = props.store.getCurrentQuery();
-            var repository = props.repository;
-            /**
-             * Dispatch a clear filter action
-             */
-            ClearFiltersActions_1.clearFiltersAction(environmentId, currentQuery, repository, filterKey);
-        };
-        _this.state = {
-            appliedFilters: [],
-            showClearFilters: false,
-        };
-        return _this;
-    }
-    /**
-     * Component receive props
-     *
-     * @param props
-     */
-    ClearFiltersComponent.prototype.componentWillReceiveProps = function (props) {
-        var appliedFiltersFormatted = this.getFiltersToShow();
-        this.setState(function (prevState) {
-            return {
-                appliedFilters: appliedFiltersFormatted,
-                showClearFilters: appliedFiltersFormatted.length > 0,
-            };
-        });
-    };
-    /**
-     * @param filterToAvoid
-     */
-    ClearFiltersComponent.prototype.getFiltersToShow = function (filterToAvoid) {
-        if (filterToAvoid === void 0) { filterToAvoid = null; }
-        var appliedFilters = this.props.store.getCurrentQuery().getFilters();
-        var appliedFiltersFormatted = [];
-        for (var _i = 0, _a = Object.entries(appliedFilters); _i < _a.length; _i++) {
-            var _b = _a[_i], key = _b[0], filter = _b[1];
-            if (filter instanceof apisearch_1.Filter && (key !== "_query") && (key !== filterToAvoid)) {
-                appliedFiltersFormatted.push({
-                    filter: key,
-                    num: filter.getValues().length,
-                });
-            }
-        }
-        return appliedFiltersFormatted;
-    };
-    /**
-     * Render
-     *
-     * @return {}
-     */
-    ClearFiltersComponent.prototype.render = function () {
-        var _this = this;
-        var props = this.props;
-        var containerClassName = props.classNames.container;
-        var filtersListClassName = props.classNames.filtersList;
-        var filterClassName = props.classNames.filter;
-        var containerTemplate = props.template.container;
-        var filterTemplate = props.template.filter;
-        var appliedFiltersFormatted = this.state.appliedFilters;
-        var individualFilterClear = props.showIndividualFilterClear
-            ? preact_1.h("ul", { className: "as-clearFilters__filtersList " + filtersListClassName }, appliedFiltersFormatted.map(function (filter) {
-                return preact_1.h("li", { className: "as-clearFilters__filter " + filterClassName, onClick: function () { return _this.handleIndividualClick(filter.filter); } },
-                    preact_1.h(Template_1["default"], { template: filterTemplate, dictionary: _this.props.dictionary, data: filter }));
-            }))
-            : "";
-        return (this.state.showClearFilters)
-            ? (preact_1.h("div", { className: "as-clearFilters " + containerClassName },
-                preact_1.h("div", { onClick: this.handleClick },
-                    preact_1.h(Template_1["default"], { template: containerTemplate, dictionary: this.props.dictionary })),
-                individualFilterClear)) : null;
-    };
-    return ClearFiltersComponent;
-}(preact_1.Component));
-ClearFiltersComponent.defaultProps = {
-    classNames: {
-        container: "",
-        filter: "",
-        filtersList: "",
-    },
-    showIndividualFilterClear: false,
-    template: {
-        container: "Clear filters",
-        filter: "Clear {{filter}} ({{num}})",
-    },
-};
-exports["default"] = ClearFiltersComponent;
-
-
-/***/ }),
-
-/***/ "./src/components/Clone.ts":
-/*!*********************************!*\
-  !*** ./src/components/Clone.ts ***!
-  \*********************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-exports.__esModule = true;
-var Clone = /** @class */ (function () {
-    function Clone() {
-    }
-    Clone.object = function (object) {
-        return Object.assign(Object.create(Object.getPrototypeOf(object)), object);
-    };
-    return Clone;
-}());
-exports["default"] = Clone;
-
-
-/***/ }),
-
-/***/ "./src/components/Information/InformationComponent.tsx":
-/*!*************************************************************!*\
-  !*** ./src/components/Information/InformationComponent.tsx ***!
-  \*************************************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
-var Template_1 = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
-/**
- * Result Information Component
- */
-var InformationComponent = /** @class */ (function (_super) {
-    __extends(InformationComponent, _super);
-    /**
-     * Constructor
-     */
-    function InformationComponent(props) {
-        var _this = _super.call(this, props) || this;
-        _this.state = {
-            hits: 0,
-            total: 0,
-            visible: false
-        };
-        return _this;
-    }
-    /**
-     * Component will receive props
-     *
-     * @param props
-     */
-    InformationComponent.prototype.componentWillReceiveProps = function (props) {
-        this.setState(function (prevState) {
-            return (props.store.getCurrentResult() == null)
-                ? {
-                    hits: 0,
-                    total: 0,
-                    visible: false
-                }
-                : {
-                    hits: props.store.getCurrentResult().getTotalHits(),
-                    total: props.store.getCurrentResult().getTotalItems(),
-                    visible: true
-                };
-        });
-    };
-    InformationComponent.prototype.render = function () {
-        var props = this.props;
-        var containerClassName = props.classNames.container;
-        var containerTemplate = props.template.container;
-        var formatData = props.formatData;
-        if (!this.state.visible) {
-            return;
-        }
-        var currentQuery = this.props.store.getCurrentQuery();
-        var size = currentQuery.getSize();
-        var page = currentQuery.getPage();
-        var from = (page - 1) * size;
-        var to = from + size;
-        var totalHits = this.state.hits.toLocaleString();
-        if (totalHits === "10,000") {
-            totalHits = '+10,000';
-        }
-        /**
-         * Data accessible to the template
-         */
-        var reducedTemplateData = {
-            total_hits: totalHits,
-            total_items: this.state.total.toLocaleString(),
-            page: page,
-            size: size,
-            from: from + 1,
-            to: to
-        };
-        var formattedTemplateData = formatData(reducedTemplateData);
-        return (preact_1.h(Template_1["default"], { template: containerTemplate, data: formattedTemplateData, className: "as-information " + containerClassName, dictionary: this.props.dictionary }));
-    };
-    return InformationComponent;
-}(preact_1.Component));
-InformationComponent.defaultProps = {
-    classNames: {
-        container: ''
-    },
-    template: {
-        container: 'Found {{total_hits}}/{{total_items}}'
-    },
-    formatData: function (data) { return data; }
-};
-exports["default"] = InformationComponent;
-
-
-/***/ }),
-
-/***/ "./src/components/MultipleFilter/Helpers.ts":
-/*!**************************************************!*\
-  !*** ./src/components/MultipleFilter/Helpers.ts ***!
-  \**************************************************/
-/***/ (function(__unused_webpack_module, exports) {
-
-"use strict";
-
-var __spreadArrays = (this && this.__spreadArrays) || function () {
-    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
-    for (var r = Array(s), k = 0, i = 0; i < il; i++)
-        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
-            r[k] = a[j];
-    return r;
-};
-exports.__esModule = true;
-exports.isLeveledFilter = exports.getFilterValuesFromQuery = exports.isFilterAvailable = exports.getShadowFilterValuesFromQuery = exports.manageCurrentFilterItems = exports.wasElementRecentlySelected = void 0;
-/**
- * @param selectedItem
- * @param currentItems
- */
-function wasElementRecentlySelected(selectedItem, currentItems) {
-    return !currentItems.some(function (item) { return item === selectedItem; });
-}
-exports.wasElementRecentlySelected = wasElementRecentlySelected;
-/**
- * Manage filter items
- *
- * If an item is on the list, remove it
- * else, add it!
- *
- * @param selectedItem
- * @param currentItems
- * @param wasElementRecentlySelected
- * @param deleteIfWasRemoved
- *
- * @returns {any}
- */
-function manageCurrentFilterItems(selectedItem, currentItems, wasElementRecentlySelected, deleteIfWasRemoved) {
-    if (!wasElementRecentlySelected) {
-        return deleteIfWasRemoved
-            ? currentItems.filter(function (item) { return item !== selectedItem; })
-            : currentItems;
-    }
-    else {
-        return __spreadArrays(currentItems, [
-            selectedItem,
-        ]);
-    }
-}
-exports.manageCurrentFilterItems = manageCurrentFilterItems;
-/**
- * @param query
- * @param filterName
- * @param withCurrent
- */
-function getShadowFilterValuesFromQuery(query, filterName, withCurrent) {
-    var fields = [];
-    if (isFilterAvailable(query, filterName, 6)) {
-        var fieldName = query.filters[filterName].field.substr(17);
-        var fieldNameParts = fieldName.split("_");
-        var currentLevel = parseInt(fieldNameParts[fieldNameParts.length - 1], 10);
-        var fieldNameWithoutLevel = fieldNameParts.slice(0, fieldNameParts.length - 1).join("_");
-        for (var it_1 = 1; it_1 < currentLevel; it_1++) {
-            var iterationFieldName = fieldNameWithoutLevel + "_" + it_1;
-            if (query.filters[iterationFieldName] !== undefined) {
-                fields.push(query.filters[iterationFieldName].values[0]);
-            }
-        }
-        if (withCurrent) {
-            fields.push(query.filters[filterName].values[0]);
-        }
-    }
-    return fields;
-}
-exports.getShadowFilterValuesFromQuery = getShadowFilterValuesFromQuery;
-/**
- * @param query
- * @param filterName
- * @param applicationType
- */
-function isFilterAvailable(query, filterName, applicationType) {
-    if (applicationType === void 0) { applicationType = null; }
-    return (query.filters !== undefined &&
-        query.filters !== null &&
-        typeof query.filters === "object" &&
-        query.filters[filterName] !== undefined &&
-        query.filters[filterName] !== null &&
-        (applicationType === null ||
-            query.filters[filterName].applicationType === applicationType ||
-            query.filters[filterName].application_type === applicationType));
-}
-exports.isFilterAvailable = isFilterAvailable;
-/**
- * @param query
- * @param filterName
- * @param applicationType
- */
-function getFilterValuesFromQuery(query, filterName, applicationType) {
-    if (applicationType === void 0) { applicationType = null; }
-    return isFilterAvailable(query, filterName, applicationType)
-        ? query.filters[filterName].values
-        : [];
-}
-exports.getFilterValuesFromQuery = getFilterValuesFromQuery;
-/**
- * @param filter
- */
-function isLeveledFilter(filter) {
-    return filter.application_type === 6 ||
-        filter.applicationType === 6;
-}
-exports.isLeveledFilter = isLeveledFilter;
-
-
-/***/ }),
-
-/***/ "./src/components/MultipleFilter/MultipleFilterActions.ts":
-/*!****************************************************************!*\
-  !*** ./src/components/MultipleFilter/MultipleFilterActions.ts ***!
-  \****************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-exports.__esModule = true;
-exports.configureQueryWithShadowLeveledFilters = exports.modifyQueryAggregationWithProperLevelValue = exports.filterAction = exports.aggregationSetup = void 0;
-/**
- * Multiple filter actions
- */
-var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
-var Constants_1 = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
-var apisearch_2 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
-var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
-var Clone_1 = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
-/**
- * Define aggregations setup
- *
- * @param environmentId
- * @param currentQuery
- * @param filterName
- * @param filterField
- * @param aggregationField
- * @param applicationType
- * @param sortBy
- * @param fetchLimit
- * @param ranges
- */
-function aggregationSetup(environmentId, currentQuery, filterName, filterField, aggregationField, applicationType, sortBy, fetchLimit, ranges) {
-    var clonedQuery = Clone_1["default"].object(currentQuery);
-    var rangesValues = Object.keys(ranges);
-    if (rangesValues.length > 0) {
-        clonedQuery.aggregateByRange(filterName, aggregationField, rangesValues, applicationType, apisearch_2.FILTER_TYPE_RANGE, sortBy, fetchLimit);
-    }
-    else {
-        clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy, fetchLimit);
-    }
-    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
-    dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
-        query: clonedQuery,
-    });
-}
-exports.aggregationSetup = aggregationSetup;
-/**
- * Filter action
- *
- * @param environmentId
- * @param currentQuery
- * @param repository
- * @param filterName
- * @param filterField
- * @param aggregationField
- * @param filterValues
- * @param applicationType
- * @param sortBy
- * @param fetchLimit
- * @param ranges
- * @param labels
- * @param shadowLeveledFilters
- * @param originalFilterField
- */
-function filterAction(environmentId, currentQuery, repository, filterName, filterField, aggregationField, filterValues, applicationType, sortBy, fetchLimit, ranges, labels, shadowLeveledFilters, originalFilterField) {
-    var clonedQuery = Clone_1["default"].object(currentQuery);
-    var rangesValues = Object.keys(ranges);
-    if (rangesValues.length > 0) {
-        clonedQuery.filterByRange(filterName, filterField, rangesValues, filterValues, applicationType, apisearch_2.FILTER_TYPE_RANGE, false, sortBy);
-        clonedQuery.aggregateByRange(filterName, aggregationField, rangesValues, applicationType, apisearch_2.FILTER_TYPE_RANGE, sortBy, fetchLimit);
-    }
-    else {
-        clonedQuery.filterBy(filterName, filterField, filterValues, applicationType, false, sortBy);
-        clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy, fetchLimit);
-    }
-    if (applicationType === 6) {
-        configureQueryWithShadowLeveledFilters(clonedQuery, shadowLeveledFilters, originalFilterField);
-    }
-    clonedQuery.page = 1;
-    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
-    repository
-        .query(clonedQuery)
-        .then(function (result) {
-        dispatcher.dispatch("RENDER_FETCHED_DATA", {
-            query: clonedQuery,
-            result: result,
-        });
-    })["catch"](function (error) {
-        // Do nothing
-    });
-}
-exports.filterAction = filterAction;
-/**
- * @param environmentId
- * @param currentQuery
- * @param filterName
- * @param filterField
- * @param aggregationField
- */
-function modifyQueryAggregationWithProperLevelValue(environmentId, currentQuery, filterName, filterField, aggregationField) {
-    if (currentQuery.filters !== undefined &&
-        currentQuery.filters[filterName] !== undefined) {
-        var clonedQuery = Clone_1["default"].object(currentQuery);
-        var fieldName = currentQuery.filters[filterName].field;
-        var fieldNameParts = fieldName.split("_");
-        var currentLevel = parseInt(fieldNameParts[fieldNameParts.length - 1], 10);
-        var fieldNameWithoutLevel = fieldNameParts.slice(0, fieldNameParts.length - 1).join("_");
-        clonedQuery.aggregations[filterName].field = fieldNameWithoutLevel + "_" + (currentLevel + 1);
-        var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
-        dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
-            query: clonedQuery,
-        });
-    }
-}
-exports.modifyQueryAggregationWithProperLevelValue = modifyQueryAggregationWithProperLevelValue;
-/**
- * @param query
- * @param shadowLeveledFilters
- * @param originalFilterField
- */
-function configureQueryWithShadowLeveledFilters(query, shadowLeveledFilters, originalFilterField) {
-    for (var it_1 = 1; it_1 < 10; it_1++) {
-        var iterationFieldName = originalFilterField + "_level_" + it_1;
-        delete (query.filters[iterationFieldName]);
-        delete (query.aggregations[iterationFieldName]);
-    }
-    if (shadowLeveledFilters.length > 0) {
-        var levelCounter_1 = 1;
-        shadowLeveledFilters.forEach(function (filterValue) {
-            var leveledFieldName = originalFilterField + "_level_" + (levelCounter_1++);
-            query.filterBy(leveledFieldName, leveledFieldName, [filterValue], apisearch_1.FILTER_AT_LEAST_ONE);
-        });
-    }
-}
-exports.configureQueryWithShadowLeveledFilters = configureQueryWithShadowLeveledFilters;
-
-
-/***/ }),
-
-/***/ "./src/components/MultipleFilter/MultipleFilterComponent.tsx":
-/*!*******************************************************************!*\
-  !*** ./src/components/MultipleFilter/MultipleFilterComponent.tsx ***!
-  \*******************************************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __spreadArrays = (this && this.__spreadArrays) || function () {
-    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
-    for (var r = Array(s), k = 0, i = 0; i < il; i++)
-        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
-            r[k] = a[j];
-    return r;
-};
-exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
-var MultipleFilterActions_1 = __webpack_require__(/*! ./MultipleFilterActions */ "./src/components/MultipleFilter/MultipleFilterActions.ts");
-var Helpers_1 = __webpack_require__(/*! ./Helpers */ "./src/components/MultipleFilter/Helpers.ts");
-var Template_1 = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
-var ShowMoreComponent_1 = __webpack_require__(/*! ./ShowMoreComponent */ "./src/components/MultipleFilter/ShowMoreComponent.tsx");
-var defaultTemplates_1 = __webpack_require__(/*! ./defaultTemplates */ "./src/components/MultipleFilter/defaultTemplates.tsx");
-/**
- * Filter Component
- */
-var MultipleFilterComponent = /** @class */ (function (_super) {
-    __extends(MultipleFilterComponent, _super);
-    /**
-     * Constructor
-     */
-    function MultipleFilterComponent() {
-        var _this = _super.call(this) || this;
-        _this.currentLevel = 0;
-        _this.propsReceived = false;
-        /**
-         * @param selectedFilter
-         * @param level
-         */
-        _this.handleClick = function (selectedFilter, level) {
-            var _a;
-            var props = _this.props;
-            var environmentId = props.environmentId;
-            var filterName = props.filterName;
-            var filterField = props.filterField;
-            var aggregationField = (_a = props.aggregationField) !== null && _a !== void 0 ? _a : filterField;
-            var applicationType = props.applicationType;
-            var sortBy = props.sortBy;
-            var ranges = props.ranges;
-            var labels = props.labels;
-            var fetchLimit = props.fetchLimit;
-            var repository = props.repository;
-            var currentQuery = props.store.getCurrentQuery();
-            // const aggregation = props.store.getCurrentResult().getAggregation(filterName);
-            var selectedFilterAsString = String(selectedFilter);
-            /*
-            const currentActiveFilterValues =
-                aggregation instanceof ResultAggregation &&
-                (aggregation.getActiveElements() !== null)
-                    ? Object.values(aggregation.getActiveElements())
-                    : [];
-    
-             */
-            var valuesAsString = (applicationType === 6)
-                ? Helpers_1.getShadowFilterValuesFromQuery(currentQuery, filterName, true)
-                : Helpers_1.getFilterValuesFromQuery(currentQuery, filterName);
-            var wasSelected = Helpers_1.wasElementRecentlySelected(selectedFilterAsString, valuesAsString);
-            var filterItems = Helpers_1.manageCurrentFilterItems(selectedFilterAsString, valuesAsString, wasSelected, (applicationType !== 6));
-            var currentLevel = level;
-            if (applicationType === 6) {
-                currentLevel = wasSelected ? currentLevel : (currentLevel - 1);
-            }
-            var shadowLeveledFilters = [];
-            var originalFilterField = filterField;
-            if (applicationType === 6) {
-                filterField = filterField + "_level_" + (currentLevel);
-                aggregationField = aggregationField + "_level_" + (currentLevel + 1);
-                filterItems = filterItems.slice(0, currentLevel);
-                shadowLeveledFilters = filterItems.slice(0, -1);
-                filterItems = filterItems.slice(-1);
-            }
-            _this.currentLevel = currentLevel;
-            /**
-             * Dispatch filter action
-             */
-            MultipleFilterActions_1.filterAction(environmentId, currentQuery, repository, filterName, filterField, aggregationField, filterItems, applicationType, sortBy, fetchLimit, ranges, labels, shadowLeveledFilters, originalFilterField);
-        };
-        /**
-         * Handle show more
-         */
-        _this.handleShowMore = function () {
-            var viewLimit = _this.state.aggregations.length;
-            _this.setState(function (prevState) {
-                return { viewLimit: viewLimit };
-            });
-        };
-        /**
-         * Handle show less
-         */
-        _this.handleShowLess = function () {
-            var viewLimit = _this.props.viewLimit;
-            _this.setState(function (prevState) {
-                return { viewLimit: viewLimit };
-            });
-        };
-        _this.state = {
-            aggregations: [],
-            viewLimit: 0,
-        };
-        return _this;
-    }
-    /**
-     * Components will mount
-     */
-    MultipleFilterComponent.prototype.componentWillMount = function () {
-        var _a;
-        var props = this.props;
-        var aggregationField = (_a = props.aggregationField) !== null && _a !== void 0 ? _a : props.filterField;
-        var applicationType = props.applicationType;
-        var fetchLimit = props.fetchLimit;
-        var viewLimit = props.viewLimit;
-        /**
-         * Set view items limit
-         */
-        var isViewLimitProperlySet = (viewLimit && viewLimit < fetchLimit);
-        this.setState(function (_) {
-            return {
-                viewLimit: (isViewLimitProperlySet)
-                    ? viewLimit
-                    : fetchLimit,
-            };
-        });
-        if (applicationType === 6) {
-            aggregationField = aggregationField + "_level_1";
-        }
-        /**
-         * Dispatch action
-         */
-        MultipleFilterActions_1.aggregationSetup(props.environmentId, props.store.getCurrentQuery(), props.filterName, props.filterField, aggregationField, applicationType, props.sortBy, fetchLimit, props.ranges);
-    };
-    /**
-     * Component will receive props
-     *
-     * @param props
-     */
-    MultipleFilterComponent.prototype.componentWillReceiveProps = function (props) {
-        var filterName = props.filterName;
-        if (props.store.getCurrentResult() == null) {
-            this.setState(function (prevState) {
-                return {
-                    aggregations: [],
-                    filters: [],
-                };
-            });
-            return;
-        }
-        var result = props.store.getCurrentResult();
-        var aggregation = result.getAggregation(filterName);
-        if (aggregation && typeof aggregation.getCounters === "function") {
-            /**
-             * Getting aggregation from aggregations
-             */
-            var counters = aggregation.getCounters();
-            var countersAsArray = Object.values(counters);
-            var aggregations_1 = props.activeFirst
-                ? __spreadArrays(countersAsArray.filter(function (counter) {
-                    return true === counter.isUsed();
-                }), countersAsArray.filter(function (counter) {
-                    return (false === counter.isUsed() ||
-                        null === counter.isUsed());
-                })) : countersAsArray;
-            this.setState(function (prevState) {
-                return {
-                    aggregations: aggregations_1,
-                };
-            });
-        }
-        if (props.applicationType === 6 &&
-            this.propsReceived === false) {
-            var filter = props.store.getCurrentQuery().getFilter(filterName);
-            this.currentLevel = (filter === undefined || filter === null)
-                ? this.currentLevel
-                : filter.values
-                    ? (filter.values.length + 1)
-                    : this.currentLevel;
-            this.propsReceived = true;
-        }
-    };
-    /**
-     * Render
-     *
-     * @return {any}
-     */
-    MultipleFilterComponent.prototype.render = function () {
-        var _this = this;
-        var props = this.props;
-        var viewLimit = props.viewLimit;
-        var fetchLimit = props.fetchLimit;
-        var containerClassName = props.classNames.container;
-        var topClassName = props.classNames.top;
-        var itemsListClassName = props.classNames.itemsList;
-        var itemClassName = props.classNames.item;
-        var activeClassName = props.classNames.active;
-        var showMoreContainerClassName = props.classNames.showMoreContainer;
-        var topTemplate = props.template.top;
-        var itemTemplate = props.template.item;
-        var showMoreTemplate = props.template.showMore;
-        var showLessTemplate = props.template.showLess;
-        var currentQuery = props.store.getCurrentQuery();
-        var formatData = props.formatData;
-        var labels = Object.keys(props.ranges).length > 0
-            ? props.ranges
-            : props.labels;
-        /**
-         * Get aggregation items
-         */
-        var that = this;
-        var itemsIds = {};
-        var allItems = this.state.aggregations.map(function (item) {
-            var uid = Math.floor(Math.random() * 10000000000);
-            var values = item.getValues();
-            values.name = labels[values.name] ? labels[values.name] : values.name;
-            itemsIds[values.id] = true;
-            return {
-                isActive: item.isUsed(),
-                n: item.getN(),
-                uid: uid,
-                values: values,
-            };
-        });
-        /**
-         * Shadow filters. These filters are not part of the aggregation list but are applied. Should always be listed
-         * first
-         */
-        var appliedFilters = (props.applicationType === 6)
-            ? Helpers_1.getShadowFilterValuesFromQuery(currentQuery, props.filterName, true)
-            : Helpers_1.getFilterValuesFromQuery(currentQuery, props.filterName);
-        if (appliedFilters.length > 0) {
-            var zeroItemsFilters_1 = [];
-            appliedFilters.forEach(function (filter) {
-                if (itemsIds[filter] === undefined) {
-                    var uid = Math.floor(Math.random() * 10000000000);
-                    zeroItemsFilters_1.push({
-                        isActive: true,
-                        n: 0,
-                        uid: uid,
-                        values: {
-                            id: filter,
-                            name: filter,
-                        },
-                    });
-                }
-            });
-            allItems = __spreadArrays(zeroItemsFilters_1, allItems);
-        }
-        /**
-         * Get existing applied filters if they exist
-         */
-        if (allItems.length === 0) {
-            return null;
-        }
-        var items = allItems.slice(0, this.state.viewLimit);
-        var allItemsLength = allItems.length;
-        var levelCounter = 1;
-        /**
-         * Check available view limit
-         */
-        var isViewLimitProperlySet = (viewLimit &&
-            viewLimit < fetchLimit &&
-            allItemsLength > viewLimit);
-        return (preact_1.h("div", { className: "as-multipleFilter " + containerClassName },
-            preact_1.h(Template_1["default"], { template: topTemplate, className: "as-multipleFilter__top " + topClassName, dictionary: this.props.dictionary }),
-            preact_1.h("div", { className: "as-multipleFilter__itemsList " + itemsListClassName },
-                preact_1.h("ul", null, items.map(function (item) {
-                    var formattedTemplateData = formatData(item);
-                    var level = Math.min(levelCounter, _this.currentLevel + 1);
-                    levelCounter++;
-                    return (preact_1.h("li", { className: "as-multipleFilter__item " +
-                            (itemClassName + " ") +
-                            ("" + ((item.isActive) ? activeClassName : "")), onClick: function (e) {
-                            e.stopPropagation();
-                            e.preventDefault();
-                            that.handleClick(item.values.id, level);
-                        } },
-                        preact_1.h(Template_1["default"], { template: itemTemplate, data: formattedTemplateData, dictionary: _this.props.dictionary })));
-                }))),
-            (isViewLimitProperlySet)
-                ? preact_1.h(ShowMoreComponent_1["default"], { allItemsLength: allItemsLength, currentLimit: this.state.viewLimit, handleShowMore: this.handleShowMore, handleShowLess: this.handleShowLess, showMoreContainerClassName: showMoreContainerClassName, showMoreTemplate: showMoreTemplate, showLessTemplate: showLessTemplate, dictionary: this.props.dictionary }) : null));
-    };
-    return MultipleFilterComponent;
-}(preact_1.Component));
-MultipleFilterComponent.defaultProps = {
-    aggregationField: null,
-    applicationType: 8,
-    fetchLimit: 10,
-    viewLimit: null,
-    sortBy: ['_term', 'desc'],
-    ranges: {},
-    labels: {},
-    classNames: {
-        container: '',
-        top: '',
-        itemsList: '',
-        item: '',
-        active: 'as-multipleFilter__item--active',
-        showMoreContainer: ''
-    },
-    template: {
-        top: null,
-        item: defaultTemplates_1.defaultItemTemplate,
-        showMore: '+ Show more',
-        showLess: '- Show less'
-    },
-    formatData: function (data) { return data; },
-    activeFirst: true
-};
-exports["default"] = MultipleFilterComponent;
-
-
-/***/ }),
-
-/***/ "./src/components/MultipleFilter/ShowMoreComponent.tsx":
-/*!*************************************************************!*\
-  !*** ./src/components/MultipleFilter/ShowMoreComponent.tsx ***!
-  \*************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
-var Template_1 = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
-/**
- * Show more component
- *
- * Provides two items
- *   -> Show more element
- *   -> Show less element
- */
-var ShowMoreComponent = function (_a) {
-    var allItemsLength = _a.allItemsLength, currentLimit = _a.currentLimit, handleShowMore = _a.handleShowMore, handleShowLess = _a.handleShowLess, showMoreContainerClassName = _a.showMoreContainerClassName, showMoreTemplate = _a.showMoreTemplate, showLessTemplate = _a.showLessTemplate, dictionary = _a.dictionary;
-    return (allItemsLength > currentLimit)
-        ? (preact_1.h("div", { className: "as-showMore " + showMoreContainerClassName, onClick: handleShowMore },
-            preact_1.h(Template_1["default"], { template: showMoreTemplate, className: "as-showMore--more", dictionary: dictionary })))
-        : (allItemsLength === currentLimit)
-            ? (preact_1.h("div", { className: "as-showMore " + showMoreContainerClassName, onClick: handleShowLess },
-                preact_1.h(Template_1["default"], { template: showLessTemplate, className: "as-showMore--less", dictionary: dictionary })))
-            : null;
-};
-exports["default"] = ShowMoreComponent;
-
-
-/***/ }),
-
-/***/ "./src/components/MultipleFilter/defaultTemplates.tsx":
-/*!************************************************************!*\
-  !*** ./src/components/MultipleFilter/defaultTemplates.tsx ***!
-  \************************************************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-exports.__esModule = true;
-exports.defaultItemTemplate = void 0;
-exports.defaultItemTemplate = "\n    <input\n        type=\"checkbox\"\n        id=\"filter_{{uid}}\"\n        class=\"as-multipleFilter__itemCheckbox\"\n        {{#isActive}}checked=\"checked\"{{/isActive}}\n    >\n    <label\n        class=\"as-multipleFilter__itemName\"\n        for=\"filter_{{uid}}\"\n    >\n        {{{values.name}}}\n    </label>\n    <span class=\"as-multipleFilter__itemNumber\">\n        {{n}}\n    </span>\n";
-
-
-/***/ }),
-
-/***/ "./src/components/Pagination/Helpers.ts":
-/*!**********************************************!*\
-  !*** ./src/components/Pagination/Helpers.ts ***!
-  \**********************************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-exports.__esModule = true;
-exports.getEnd = exports.getStart = exports.totalPagesToArray = exports.getTotalPages = void 0;
-/**
- * Get total pages from the total reached hits
- * divided by the hits per page configured
- *
- * If there are more than 10.000 items
- * We reduce the max num of items to 9.999
- * to take care of performance
- *
- * If total resulted pages are bigger than 999
- * we set 999 as the max number of pages
- *
- * @param totalHits
- * @param hitsPerPage
- *
- * @return {number}
- */
-function getTotalPages(totalHits, hitsPerPage) {
-    totalHits = (totalHits >= 10000)
-        ? 9999
-        : totalHits;
-    var totalPages = Math.ceil(totalHits / hitsPerPage);
-    return (totalPages > 999)
-        ? 999
-        : totalPages;
-}
-exports.getTotalPages = getTotalPages;
-/**
- * Pass total pages number into an array of numbers
- *
- * @param totalPages
- *
- * @return {number[]}
- */
-function totalPagesToArray(totalPages) {
-    var pages = [];
-    for (var index = 1; index <= totalPages; index++) {
-        pages.push(index);
-    }
-    return pages;
-}
-exports.totalPagesToArray = totalPagesToArray;
-/**
- * Get the starting point of the pages spectre
- *
- * @param totalPages
- * @param padding
- * @param currentPage
- * @param spectreSize
- * @param isTouchingLeft
- * @param isTouchingRight
- *
- * @return {number}
- */
-function getStart(totalPages, padding, currentPage, spectreSize, isTouchingLeft, isTouchingRight) {
-    if (isTouchingLeft) {
-        return currentPage - (currentPage % spectreSize);
-    }
-    if (isTouchingRight) {
-        var start = currentPage - (spectreSize - (totalPages % currentPage));
-        return (start > 0) ? start : 0;
-    }
-    return currentPage - (padding + 1);
-}
-exports.getStart = getStart;
-/**
- * Get the ending point of the pages spectre
- *
- * @param totalPages
- * @param padding
- * @param currentPage
- * @param spectreSize
- * @param isTouchingLeft
- * @param isTouchingRight
- *
- * @return {number}
- */
-function getEnd(totalPages, padding, currentPage, spectreSize, isTouchingLeft, isTouchingRight) {
-    if (isTouchingLeft) {
-        return spectreSize;
-    }
-    if (isTouchingRight) {
-        return totalPages;
-    }
-    return currentPage + padding;
-}
-exports.getEnd = getEnd;
-
-
-/***/ }),
-
-/***/ "./src/components/Pagination/NavigationComponent.tsx":
-/*!***********************************************************!*\
-  !*** ./src/components/Pagination/NavigationComponent.tsx ***!
-  \***********************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
-var Template_1 = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
-/**
- * Arrow navigation component
- */
-function NavigationComponent(_a) {
-    var isVisible = _a.isVisible, classNames = _a.classNames, template = _a.template, handleClick = _a.handleClick;
-    return (isVisible)
-        ? (preact_1.h("li", { className: classNames, onClick: handleClick },
-            preact_1.h(Template_1["default"], { template: template, dictionary: this.props.dictionary })))
-        : null;
-}
-exports["default"] = NavigationComponent;
-
-
-/***/ }),
-
-/***/ "./src/components/Pagination/PaginationActions.ts":
-/*!********************************************************!*\
-  !*** ./src/components/Pagination/PaginationActions.ts ***!
-  \********************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-exports.__esModule = true;
-exports.paginationChangeAction = void 0;
-var Constants_1 = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
-var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
-var Clone_1 = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
-/**
- * Pagination change
- *
- * @param environmentId
- * @param currentQuery
- * @param repository
- * @param selectedPage
- */
-function paginationChangeAction(environmentId, currentQuery, repository, selectedPage) {
-    var clonedQuery = Clone_1["default"].object(currentQuery);
-    clonedQuery.page = selectedPage;
-    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
-    repository
-        .query(clonedQuery)
-        .then(function (result) {
-        dispatcher.dispatch("RENDER_FETCHED_DATA", {
-            query: clonedQuery,
-            result: result,
-        });
-    })["catch"](function (error) {
-        // Do nothing
-    });
-}
-exports.paginationChangeAction = paginationChangeAction;
-
-
-/***/ }),
-
-/***/ "./src/components/Pagination/PaginationComponent.tsx":
-/*!***********************************************************!*\
-  !*** ./src/components/Pagination/PaginationComponent.tsx ***!
-  \***********************************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
-var Template_1 = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
-var Helpers_1 = __webpack_require__(/*! ./Helpers */ "./src/components/Pagination/Helpers.ts");
-var NavigationComponent_1 = __webpack_require__(/*! ./NavigationComponent */ "./src/components/Pagination/NavigationComponent.tsx");
-var PaginationActions_1 = __webpack_require__(/*! ./PaginationActions */ "./src/components/Pagination/PaginationActions.ts");
-/**
- * Pagination Component
- */
-var PaginationComponent = /** @class */ (function (_super) {
-    __extends(PaginationComponent, _super);
-    /**
-     * Constructor
-     */
-    function PaginationComponent() {
-        var _this = _super.call(this) || this;
-        /**
-         * Handle click
-         *
-         * @param page
-         */
-        _this.handleClick = function (page) {
-            var _a = _this.props, store = _a.store, environmentId = _a.environmentId, repository = _a.repository;
-            var currentResult = store.getCurrentResult();
-            var currentQuery = store.getCurrentQuery();
-            var totalPages = Helpers_1.getTotalPages(currentResult.getTotalHits(), currentQuery.getSize());
-            /**
-             * Do not let go further
-             */
-            if (page <= 0)
-                page = 1;
-            if (page >= totalPages)
-                page = totalPages;
-            if (currentQuery.getPage() === page) {
-                return;
-            }
-            /**
-             * Dispatch change page action
-             */
-            PaginationActions_1.paginationChangeAction(environmentId, currentQuery, repository, page);
-        };
-        _this.state = {
-            page: 1
-        };
-        return _this;
-    }
-    /**
-     * Component will receive props
-     *
-     * @param props
-     */
-    PaginationComponent.prototype.componentWillReceiveProps = function (props) {
-        var page = props.store.getCurrentQuery().getPage();
-        this.setState(function (prevState) {
-            return {
-                page: page
-            };
-        });
-    };
-    /**
-     * Render
-     *
-     * @return {any}
-     */
-    PaginationComponent.prototype.render = function () {
-        var _this = this;
-        var props = this.props;
-        var currentResult = props.store.getCurrentResult();
-        if (props.store.getCurrentResult() == null) {
-            return;
-        }
-        var currentQuerySize = props.store.getCurrentQuery().getSize();
-        var totalPages = Helpers_1.getTotalPages(currentResult.getTotalHits(), currentQuerySize);
-        /**
-         * Hide container if hits are empty
-         */
-        if (currentResult.getTotalHits() === 0 ||
-            totalPages === 1) {
-            return null;
-        }
-        var padding = props.padding;
-        var goFirstLast = props.goFirstLast;
-        var containerClassName = props.classNames.container;
-        var itemClassName = props.classNames.item;
-        var activeClassName = props.classNames.active;
-        var disabledClassName = props.classNames.disabled;
-        var nextClassName = props.classNames.next;
-        var previousClassName = props.classNames.previous;
-        var lastClassName = props.classNames.last;
-        var firstClassName = props.classNames.first;
-        var itemTemplate = props.template.item;
-        var nextTemplate = props.template.next;
-        var previousTemplate = props.template.previous;
-        var firstTemplate = props.template.first;
-        var lastTemplate = props.template.last;
-        var currentQueryPage = props.store.getCurrentQuery().getPage();
-        /**
-         * Get Total pages
-         */
-        var pages = Helpers_1.totalPagesToArray(totalPages);
-        /**
-         *  Get pages spectre
-         */
-        var spectreSize = (padding * 2) + 1;
-        var isTouchingLeft = currentQueryPage <= (padding + 1);
-        var isTouchingRight = (currentQueryPage + padding) >= totalPages;
-        var spectre = pages.slice(Helpers_1.getStart(totalPages, padding, currentQueryPage, spectreSize, isTouchingLeft, isTouchingRight), Helpers_1.getEnd(totalPages, padding, currentQueryPage, spectreSize, isTouchingLeft, isTouchingRight));
-        /**
-         * Dynamic disabled classes
-         */
-        var previousDisabledClass = (currentQueryPage === 1) ? disabledClassName : '';
-        var nextDisabledClass = (currentQueryPage === totalPages) ? disabledClassName : '';
-        return (preact_1.h("ul", { className: "as-pagination " + containerClassName },
-            preact_1.h(NavigationComponent_1["default"], { isVisible: goFirstLast, classNames: "as-pagination__item as-pagination__item--first " + firstClassName + " " + previousDisabledClass, template: firstTemplate, handleClick: function () { return _this.handleClick(1); } }),
-            preact_1.h(NavigationComponent_1["default"], { isVisible: true, classNames: "as-pagination__item as-pagination__item--previous " + previousClassName + " " + previousDisabledClass, template: previousTemplate, handleClick: function () { return _this.handleClick(currentQueryPage - 1); } }),
-            spectre.map(function (page) { return (preact_1.h("li", { className: "as-pagination__item as-pagination__item--link " + itemClassName + " " + ((currentQueryPage === page) ? activeClassName : ''), onClick: function () { return _this.handleClick(page); } },
-                preact_1.h(Template_1["default"], { template: itemTemplate, data: { page: page.toLocaleString('de-DE') }, dictionary: _this.props.dictionary }))); }),
-            preact_1.h(NavigationComponent_1["default"], { isVisible: true, classNames: "as-pagination__item as-pagination__item--next " + nextClassName + " " + nextDisabledClass, template: nextTemplate, handleClick: function () { return _this.handleClick(currentQueryPage + 1); } }),
-            preact_1.h(NavigationComponent_1["default"], { isVisible: goFirstLast, classNames: "as-pagination__item as-pagination__item--last " + lastClassName + " " + nextDisabledClass, template: lastTemplate, handleClick: function () { return _this.handleClick(totalPages); } })));
-    };
-    return PaginationComponent;
-}(preact_1.Component));
-PaginationComponent.defaultProps = {
-    padding: 3,
-    goFirstLast: false,
-    classNames: {
-        container: '',
-        item: '',
-        active: 'as-pagination__item--active',
-        disabled: 'as-pagination__item--disabled',
-        next: '',
-        first: '',
-        previous: '',
-        last: ''
-    },
-    template: {
-        item: '{{page}}',
-        next: '>',
-        previous: '<',
-        first: '<<',
-        last: '>>'
-    }
-};
-exports["default"] = PaginationComponent;
-
-
-/***/ }),
-
-/***/ "./src/components/RangeFilter/RangeFilterActions.ts":
-/*!**********************************************************!*\
-  !*** ./src/components/RangeFilter/RangeFilterActions.ts ***!
-  \**********************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-exports.__esModule = true;
-exports.filterAction = exports.aggregationSetup = void 0;
-/**
- * SortBy actions
- */
-var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
-var Constants_1 = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
-var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
-var Clone_1 = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
-/**
- * @param environmentId
- * @param currentQuery
- * @param filterName
- * @param filterField
- */
-function aggregationSetup(environmentId, currentQuery, filterName, filterField) {
-    var clonedQuery = Clone_1["default"].object(currentQuery);
-    clonedQuery.aggregateByRange(filterName, filterField, ['..'], apisearch_1.FILTER_AT_LEAST_ONE, 'range_min_max');
-    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
-    dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
-        query: clonedQuery,
-    });
-}
-exports.aggregationSetup = aggregationSetup;
-/**
- * @param environmentId
- * @param currentQuery
- * @param repository
- * @param filterName
- * @param filterField
- * @param from
- * @param to
- * @param deleteMinMaxAggregation
- */
-function filterAction(environmentId, currentQuery, repository, filterName, filterField, from, to) {
-    var clonedQuery = Clone_1["default"].object(currentQuery);
-    var realValueFrom = Math.min(from, to);
-    var realValueTo = Math.max(from, to);
-    var toWithIncluded = realValueTo + ']';
-    clonedQuery.filterByRange(filterName, filterField, [], [realValueFrom + ".." + toWithIncluded], apisearch_1.FILTER_AT_LEAST_ONE, 'range_min_max', false);
-    clonedQuery.page = 1;
-    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
-    repository
-        .query(clonedQuery)
-        .then(function (result) {
-        dispatcher.dispatch("RENDER_FETCHED_DATA", {
-            query: clonedQuery,
-            result: result,
-        });
-    })["catch"](function (error) {
-        // Do nothing
-    });
-}
-exports.filterAction = filterAction;
-
-
-/***/ }),
-
-/***/ "./src/components/RangeFilter/RangeFilterComponent.tsx":
-/*!*************************************************************!*\
-  !*** ./src/components/RangeFilter/RangeFilterComponent.tsx ***!
-  \*************************************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
-exports.__esModule = true;
-var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
-var compat_1 = __webpack_require__(/*! preact/compat */ "./node_modules/preact/compat/dist/compat.module.js");
-var Template_1 = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
-var RangeFilterActions_1 = __webpack_require__(/*! ./RangeFilterActions */ "./src/components/RangeFilter/RangeFilterActions.ts");
-/**
- * Range Filter Component
- */
-var RangeFilterComponent = /** @class */ (function (_super) {
-    __extends(RangeFilterComponent, _super);
-    function RangeFilterComponent() {
-        var _this = _super.call(this) || this;
-        _this.uid = Math.random().toString(16).substr(2, 12);
-        _this.observerFrom = _this.configureFromObserver();
-        _this.observerTo = _this.configureToObserver();
-        _this.rangeUid = 'range-' + _this.uid;
-        _this.setState(function (prevState) {
-            return {
-                from: null,
-                to: null,
-                min: null,
-                max: null,
-                visible: true,
-            };
-        });
-        return _this;
-    }
-    /**
-     * Components will mount
-     */
-    RangeFilterComponent.prototype.componentWillMount = function () {
-        var props = this.props;
-        var environmentId = props.environmentId;
-        var filterName = props.filterName;
-        var filterField = props.filterField;
-        var currentQuery = props.store.getCurrentQuery();
-        /**
-         * Dispatch action
-         */
-        RangeFilterActions_1.aggregationSetup(environmentId, currentQuery, filterName, filterField);
-    };
-    RangeFilterComponent.prototype.configureFromObserver = function () {
-        var that = this;
-        return new MutationObserver(function (mutationsList, observer) {
-            // Use traditional 'for loops' for IE 11
-            for (var _i = 0, mutationsList_1 = mutationsList; _i < mutationsList_1.length; _i++) {
-                var mutation = mutationsList_1[_i];
-                if (mutation.attributeName === 'value') {
-                    var value = parseInt(mutation.target["defaultValue"]);
-                    if (value == that.state.from) {
-                        return;
-                    }
-                    that.handleSliderChange([value, that.state.to]);
-                }
-            }
-        });
-    };
-    RangeFilterComponent.prototype.configureToObserver = function () {
-        var that = this;
-        return new MutationObserver(function (mutationsList, observer) {
-            // Use traditional 'for loops' for IE 11
-            for (var _i = 0, mutationsList_2 = mutationsList; _i < mutationsList_2.length; _i++) {
-                var mutation = mutationsList_2[_i];
-                if (mutation.attributeName === 'value') {
-                    var value = parseInt(mutation.target["defaultValue"]);
-                    if (value == that.state.to) {
-                        return;
-                    }
-                    that.handleSliderChange([that.state.from, value]);
-                }
-            }
-        });
-    };
-    RangeFilterComponent.prototype.componentDidMount = function () {
-        this.observerFrom.observe(document.getElementsByClassName('as-rangeFilter__from__' + this.uid)[0], { attributes: true });
-        this.observerTo.observe(document.getElementsByClassName('as-rangeFilter__to__' + this.uid)[0], { attributes: true });
-    };
-    RangeFilterComponent.prototype.componentWillUnmount = function () {
-        this.observerFrom.disconnect();
-        this.observerTo.disconnect();
-    };
-    /**
-     * Handle change
-     *
-     * @param e
-     */
-    RangeFilterComponent.prototype.handleChange = function (e) {
-        var uid = this.uid;
-        this.applyFilter(e.target.parentNode.getElementsByClassName('as-rangeFilter__from__' + uid)[0].value, e.target.parentNode.getElementsByClassName('as-rangeFilter__to__' + uid)[0].value);
-    };
-    ;
-    RangeFilterComponent.prototype.handleSliderChange = function (values) {
-        if (values[0] === this.state.from &&
-            values[1] === this.state.to) {
-            return false;
-        }
-        this.applyFilter(values[0], values[1]);
-    };
-    ;
-    /**
-     * @param values
-     */
-    RangeFilterComponent.prototype.handleSliderMove = function (values) {
-        this.updateRangeLayer(this.props, this.state, values[0], values[1]);
-    };
-    ;
-    /**
-     * Component will receive props
-     *
-     * @param props
-     */
-    RangeFilterComponent.prototype.componentWillReceiveProps = function (props) {
-        var aggregation = props
-            .store
-            .getCurrentResult()
-            .getAggregation(props.filterName);
-        if (!(aggregation instanceof apisearch_1.ResultAggregation)) {
-            return;
-        }
-        var metadata = aggregation.getMetadata();
-        var filter = props
-            .store
-            .getCurrentQuery()
-            .getFilter(props.filterName);
-        var min = typeof metadata['min'] === "number"
-            ? Math.floor(metadata['min'])
-            : undefined;
-        var max = typeof metadata['max'] === "number"
-            ? Math.ceil(metadata['max'])
-            : undefined;
-        var fromTo = this.getFromToFromFilter(filter, min, max);
-        this.setState(function (prevState) {
-            return {
-                from: fromTo[0],
-                to: fromTo[1],
-                min: min,
-                max: max,
-                visible: ((typeof min === "number") && (typeof max === "number"))
-            };
-        });
-    };
-    /**
-     * @param filter
-     * @param min
-     * @param max
-     */
-    RangeFilterComponent.prototype.getFromToFromFilter = function (filter, min, max) {
-        var realMin = Math.min(min, max);
-        var realMax = Math.max(min, max);
-        if (filter instanceof apisearch_1.Filter) {
-            var filterValue = filter.getValues()[0];
-            if (typeof filterValue === "string") {
-                var parts = filterValue.split('..');
-                var from = parts[0];
-                var to = parts[1].slice(0, -1);
-                return [
-                    Math.max(realMin, parseInt(from)),
-                    Math.min(realMax, parseInt(to)),
-                ];
-            }
-        }
-        return [realMin, realMax];
-    };
-    /**
-     * @param previousProps
-     * @param previousState
-     */
-    RangeFilterComponent.prototype.componentDidUpdate = function (previousProps, previousState) {
-        this.updateRangeLayer(previousProps, previousState, previousState.from, previousState.to);
-    };
-    /**
-     * @param props
-     * @param state
-     * @param from
-     * @param to
-     */
-    RangeFilterComponent.prototype.updateRangeLayer = function (props, state, from, to) {
-        var min = state.min;
-        var max = state.max;
-        if (typeof from === "number" &&
-            typeof to === "number" &&
-            typeof props.callback === "function") {
-            props.callback(Math.min(from, to), Math.max(from, to), min, max, this.rangeUid);
-        }
-    };
-    /**
-     * @param props
-     * @param state
-     */
-    RangeFilterComponent.prototype.render = function (props, state) {
-        var _this = this;
-        var filterName = props.filterName;
-        var ref = compat_1.useRef(null);
-        var topTemplate = props.template.top;
-        var sliderTemplate = props.template.slider;
-        var containerClassName = props.classNames.container;
-        var topClassName = props.classNames.top;
-        var wrapperClassName = props.classNames.wrapper;
-        var that = this;
-        compat_1.useEffect(function () {
-            var self = _this;
-            if (!ref.current) {
-                return;
-            }
-            var uid = _this.uid;
-            /**
-             * Alert if clicked on outside of element
-             */
-            function handleChange(event) {
-                var target = event.target;
-                var parentNode = target.parentNode;
-                self.applyFilter(parentNode.getElementsByClassName('as-rangeFilter__from__' + uid)[0].value, parentNode.getElementsByClassName('as-rangeFilter__to__' + uid)[0].value);
-            }
-            // Bind the event listener
-            ref.current.addEventListener("change", handleChange);
-            return function () {
-                // Unbind the event listener on clean up
-                ref.current.removeEventListener("change", handleChange);
-            };
-        }, [ref]);
-        var isNative = props.native;
-        var isNotNative = !isNative;
-        var type = isNative ? 'range' : 'number';
-        var eventName = 'onClick';
-        var from = state.from;
-        var to = state.to;
-        var min = state.min;
-        var max = state.max;
-        var visibleStyle = state.visible ? '' : 'display:none!important;';
-        return (preact_1.h("div", { id: this.rangeUid, className: "as-rangeFilter " + containerClassName, style: visibleStyle },
-            preact_1.h(Template_1["default"], { template: topTemplate, className: "as-rangeFilter__top " + topClassName, dictionary: this.props.dictionary }),
-            preact_1.h("div", { className: "as-rangeFilter__wrapper " + wrapperClassName },
-                preact_1.h("input", __assign({ type: type, "class": "as-rangeFilter__from " + props.classNames.input + " as-rangeFilter__" + this.uid + " as-rangeFilter__from__" + this.uid }, props.attributes.from, { value: from, min: min, max: max, step: props.step, onClick: function (e) {
-                        if (isNotNative)
-                            return false;
-                        that.handleSliderChange([parseInt(e.target.value), to]);
-                    }, onTouchEnd: function (e) {
-                        if (isNotNative)
-                            return false;
-                        that.handleSliderChange([parseInt(e.target.value), to]);
-                    }, onChange: function (e) {
-                        var positions = [parseInt(e.target.value), to];
-                        if (isNative) {
-                            that.handleSliderMove(positions);
-                            return false;
-                        }
-                        that.handleSliderChange(positions);
-                    }, autocomplete: "off" })),
-                preact_1.h("input", __assign({ type: type, "class": "as-rangeFilter__to " + props.classNames.input + " as-rangeFilter__" + this.uid + " as-rangeFilter__to__" + this.uid }, props.attributes.to, { value: to, min: min, max: max, step: props.step, onClick: function (e) {
-                        if (isNotNative)
-                            return false;
-                        that.handleSliderChange([from, parseInt(e.target.value)]);
-                    }, onTouchEnd: function (e) {
-                        if (isNotNative)
-                            return false;
-                        that.handleSliderChange([from, parseInt(e.target.value)]);
-                    }, onChange: function (e) {
-                        var positions = [from, parseInt(e.target.value)];
-                        if (isNative) {
-                            that.handleSliderMove(positions);
-                            return false;
-                        }
-                        that.handleSliderChange(positions);
-                    }, autocomplete: "off" })),
-                preact_1.h("div", { "class": "slider" },
-                    preact_1.h(Template_1["default"], { template: sliderTemplate, dictionary: this.props.dictionary })))));
-    };
-    /**
-     * Apply filter
-     */
-    RangeFilterComponent.prototype.applyFilter = function (valueFrom, valueTo) {
-        var props = this.props;
-        /**
-         * Dispatch action
-         */
-        RangeFilterActions_1.filterAction(props.environmentId, props.store.getCurrentQuery(), props.repository, props.filterName, props.filterField, valueFrom, valueTo);
-    };
-    return RangeFilterComponent;
-}(preact_1.Component));
-RangeFilterComponent.defaultProps = {
-    maxValueIncluded: true,
-    step: 1,
-    native: false,
-    classNames: {
-        container: '',
-        top: '',
-        wrapper: '',
-        input: '',
-        from: '',
-        to: ''
-    },
-    attributes: {
-        from: '',
-        to: ''
-    },
-    template: {
-        top: '',
-        slider: ''
-    },
-};
-exports["default"] = RangeFilterComponent;
-
-
-/***/ }),
-
-/***/ "./src/components/Reload/ReloadActions.ts":
-/*!************************************************!*\
-  !*** ./src/components/Reload/ReloadActions.ts ***!
-  \************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-exports.__esModule = true;
-exports.reloadAction = void 0;
-/**
- * Clear filters actions
- */
-var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
-var Constants_1 = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
-var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
-var Clone_1 = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
-/**
- * Clear filters action
- *
- * @param environmentId
- * @param currentQuery
- * @param repository
- */
-function reloadAction(environmentId, currentQuery, repository) {
-    var clonedQuery = Clone_1["default"].object(currentQuery);
-    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
-    if (repository instanceof apisearch_1.HttpRepository) {
-        var httpClient = repository.getHttpClient();
-        if (httpClient instanceof apisearch_1.CacheClient) {
-            httpClient.flushCache();
-        }
-    }
-    repository
-        .query(clonedQuery)
-        .then(function (result) {
-        dispatcher.dispatch("RENDER_FETCHED_DATA", {
-            query: clonedQuery,
-            result: result,
-        });
-    })["catch"](function (error) {
-        // Do nothing
-    });
-}
-exports.reloadAction = reloadAction;
-
-
-/***/ }),
-
-/***/ "./src/components/Reload/ReloadComponent.tsx":
-/*!***************************************************!*\
-  !*** ./src/components/Reload/ReloadComponent.tsx ***!
-  \***************************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
-var Template_1 = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
-var ReloadActions_1 = __webpack_require__(/*! ./ReloadActions */ "./src/components/Reload/ReloadActions.ts");
-/**
- * ReloadComponent
- */
-var ReloadComponent = /** @class */ (function (_super) {
-    __extends(ReloadComponent, _super);
-    function ReloadComponent() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        /**
-         * Handle click
-         */
-        _this.handleClick = function () {
-            var props = _this.props;
-            var environmentId = props.environmentId;
-            var currentQuery = props.store.getCurrentQuery();
-            var repository = props.repository;
-            /**
-             * Dispatch a clear filter action
-             */
-            ReloadActions_1.reloadAction(environmentId, currentQuery, repository);
-        };
-        return _this;
-    }
-    /**
-     * Render
-     *
-     * @return {}
-     */
-    ReloadComponent.prototype.render = function () {
-        var props = this.props;
-        var containerClassName = props.classNames.container;
-        var containerTemplate = props.template.container;
-        return (preact_1.h("div", { className: "as-clearFilters " + containerClassName, onClick: this.handleClick },
-            preact_1.h(Template_1["default"], { template: containerTemplate, dictionary: this.props.dictionary })));
-    };
-    return ReloadComponent;
-}(preact_1.Component));
-ReloadComponent.defaultProps = {
-    classNames: {
-        container: "",
-    },
-    template: {
-        container: "Reload",
-    },
-};
-exports["default"] = ReloadComponent;
-
-
-/***/ }),
-
-/***/ "./src/components/Result/Item.tsx":
-/*!****************************************!*\
-  !*** ./src/components/Result/Item.tsx ***!
-  \****************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
-var Template_1 = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
-/**
- * Item
- */
-var Item = /** @class */ (function (_super) {
-    __extends(Item, _super);
-    function Item() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    /**
-     * @param nextProps
-     * @param nextState
-     */
-    Item.prototype.shouldComponentUpdate = function (nextProps, nextState) {
-        return this.props.data.uuid_composed !== nextProps.data.uuid_composed;
-    };
-    /**
-     * Render
-     *
-     * @return {any}
-     */
-    Item.prototype.render = function () {
-        var _a;
-        var props = this.props;
-        var template = props.template;
-        var data = props.data;
-        var dictionary = (_a = props.dictionary) !== null && _a !== void 0 ? _a : {};
-        return preact_1.h(Template_1["default"], { template: template, data: data, className: "as-result__itemsList " + props.className, dictionary: dictionary });
-    };
-    return Item;
-}(preact_1.Component));
-exports["default"] = Item;
-
-
-/***/ }),
-
-/***/ "./src/components/Result/ResultActions.ts":
-/*!************************************************!*\
-  !*** ./src/components/Result/ResultActions.ts ***!
-  \************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-exports.__esModule = true;
-exports.infiniteScrollNextPageAction = exports.configureQuery = void 0;
-var Constants_1 = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
-var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
-var Clone_1 = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
-/**
- *
- * Configure query
- *
- * @param environmentId
- * @param currentQuery
- * @param itemsPerPage
- * @param highlightsEnabled
- * @param suggestionsEnabled
- * @param promotedUUIDs
- * @param excludedUUIDs
- * @param fields
- * @param filter
- * @param minScore
- */
-function configureQuery(environmentId, currentQuery, itemsPerPage, highlightsEnabled, promotedUUIDs, excludedUUIDs, fields, filter, minScore) {
-    var clonedQuery = Clone_1["default"].object(currentQuery);
-    filter(clonedQuery);
-    /**
-     * Set result size
-     */
-    clonedQuery.size = itemsPerPage;
-    /**
-     * Set specific fields
-     */
-    clonedQuery.setFields(fields);
-    /**
-     * Enabling highlights on query result
-     */
-    if (highlightsEnabled) {
-        clonedQuery.enableHighlights();
-    }
-    /**
-     * Promoted uuids
-     */
-    for (var i in promotedUUIDs) {
-        clonedQuery.promoteUUID(promotedUUIDs[i]);
-    }
-    /**
-     * excluded uuids
-     */
-    for (var i in excludedUUIDs) {
-        clonedQuery.excludeUUID(excludedUUIDs[i]);
-    }
-    if (minScore > 0) {
-        clonedQuery.minScore = minScore;
-    }
-    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
-    dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
-        query: clonedQuery,
-    });
-}
-exports.configureQuery = configureQuery;
-/**
- * Pagination change
- *
- * @param environmentId
- * @param currentQuery
- * @param repository
- * @param nextPage
- */
-function infiniteScrollNextPageAction(environmentId, currentQuery, repository, nextPage) {
-    var clonedQuery = Clone_1["default"].object(currentQuery);
-    clonedQuery.page = nextPage;
-    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
-    repository
-        .query(clonedQuery)
-        .then(function (result) {
-        dispatcher.dispatch("RENDER_FETCHED_DATA", {
-            query: clonedQuery,
-            result: result,
-        });
-    })["catch"](function (error) {
-        // Do nothing
-    });
-}
-exports.infiniteScrollNextPageAction = infiniteScrollNextPageAction;
-
-
-/***/ }),
-
-/***/ "./src/components/Result/ResultComponent.tsx":
-/*!***************************************************!*\
-  !*** ./src/components/Result/ResultComponent.tsx ***!
-  \***************************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
-exports.__esModule = true;
-var ItemUUID_1 = __webpack_require__(/*! apisearch/lib/Model/ItemUUID */ "./node_modules/apisearch/lib/Model/ItemUUID.js");
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
-var compat_1 = __webpack_require__(/*! preact/compat */ "./node_modules/preact/compat/dist/compat.module.js");
-var Constants_1 = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
-var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
-var Template_1 = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
-var defaultTemplates_1 = __webpack_require__(/*! ./defaultTemplates */ "./src/components/Result/defaultTemplates.tsx");
-var Item_1 = __webpack_require__(/*! ./Item */ "./src/components/Result/Item.tsx");
-var ResultActions_1 = __webpack_require__(/*! ./ResultActions */ "./src/components/Result/ResultActions.ts");
-/**
- * Result Component
- */
-var ResultComponent = /** @class */ (function (_super) {
-    __extends(ResultComponent, _super);
-    /**
-     * Constructor
-     */
-    function ResultComponent(props) {
-        var _this = _super.call(this, props) || this;
-        _this.fromLoadingNextPage = false;
-        _this.observer = compat_1.useRef();
-        _this.endResultsBoxRef = compat_1.useCallback(function (node) {
-            if (_this.observer.current instanceof IntersectionObserver) {
-                _this.observer.current.disconnect();
-            }
-            _this.observer.current = new IntersectionObserver(function (entries) {
-                if (entries[0].isIntersecting) {
-                    var _a = _this.props, environmentId = _a.environmentId, store = _a.store, repository = _a.repository;
-                    _this.fromLoadingNextPage = true;
-                    ResultActions_1.infiniteScrollNextPageAction(environmentId, store.getCurrentQuery(), repository, _this.state.page + 1);
-                }
-            });
-            if ((_this.observer.current instanceof IntersectionObserver) && node) {
-                _this.observer.current.observe(node);
-            }
-        }, []);
-        _this.state = {
-            items: [],
-            page: 0,
-            hasNewPage: false,
-            focus: props.fadeInSelector === "",
-        };
-        return _this;
-    }
-    /**
-     * Hook that change state once mouse clicks inside or outside the container
-     */
-    ResultComponent.prototype.addMouseDownListeners = function (ref, fadeInSelector) {
-        var _this = this;
-        compat_1.useEffect(function () {
-            var self = _this;
-            /**
-             * Alert if clicked on outside of element
-             */
-            function handleClickOutside(event) {
-                self.setState(function (prevState) {
-                    return {
-                        items: prevState.items,
-                        page: prevState.page,
-                        focus: event.target.closest(fadeInSelector) != null,
-                    };
-                });
-            }
-            // Bind the event listener
-            document.addEventListener("mousedown", handleClickOutside);
-            return function () {
-                // Unbind the event listener on clean up
-                document.removeEventListener("mousedown", handleClickOutside);
-            };
-        }, [ref]);
-    };
-    /**
-     * Component will receive props
-     *
-     * @param props
-     */
-    ResultComponent.prototype.componentWillReceiveProps = function (props) {
-        if (props.store.getCurrentResult() == null) {
-            this.setState(function (prevState) {
-                return {
-                    items: [],
-                    page: 0,
-                    hasNewPage: false,
-                };
-            });
-            return;
-        }
-        var currentResult = props.store.getCurrentResult();
-        var currentQuery = props.store.getCurrentQuery();
-        var items = currentResult.getItems();
-        var currentPage = currentQuery.getPage();
-        var hasNewPage = (currentResult.getTotalHits() > (currentPage * currentQuery.getSize()));
-        var currentItems = this.fromLoadingNextPage
-            ? this.state.items.concat(items)
-            : items;
-        this.fromLoadingNextPage = false;
-        this.setState(function (prevState) {
-            return {
-                items: currentItems,
-                page: props.store.getCurrentQuery().getPage(),
-                hasNewPage: hasNewPage,
-            };
-        });
-    };
-    /**
-     * Component will mount
-     */
-    ResultComponent.prototype.componentWillMount = function () {
-        var props = this.props;
-        /**
-         * Dispatch action
-         */
-        ResultActions_1.configureQuery(props.environmentId, props.store.getCurrentQuery(), props.itemsPerPage, props.highlightsEnabled, props.promote.map(function (itemUUID) {
-            return itemUUID instanceof ItemUUID_1.ItemUUID
-                ? itemUUID
-                : ItemUUID_1.ItemUUID.createFromArray(itemUUID);
-        }), props.exclude.map(function (itemUUID) {
-            return itemUUID instanceof ItemUUID_1.ItemUUID
-                ? itemUUID
-                : ItemUUID_1.ItemUUID.createFromArray(itemUUID);
-        }), props.fields, props.filter, props.minScore);
-    };
-    /**
-     * Render
-     *
-     * @return {any}
-     */
-    ResultComponent.prototype.render = function () {
-        var _this = this;
-        var _a;
-        var props = this.props;
-        var dirty = props.store.isDirty();
-        var containerClassName = props.classNames.container;
-        var itemsListClassName = props.classNames.itemsList;
-        var placeholderClassName = props.classNames.placeholder;
-        var itemsListTemplate = props.template.itemsList;
-        var placeholderTemplate = (_a = props.template.placeholder) !== null && _a !== void 0 ? _a : "";
-        var currentResult = props.store.getCurrentResult();
-        var currentQuery = props.store.getCurrentQuery();
-        var currentVisibleResults = props.currentVisibleResults;
-        var wrapperRef = compat_1.useRef(null);
-        var hasInfiniteScrollNextPage = (props.infiniteScroll !== false) &&
-            ((props.infiniteScroll === true) ||
-                (props.infiniteScroll >= 0)) &&
-            this.state.hasNewPage;
-        var infiniteScrollMargin = hasInfiniteScrollNextPage
-            ? (props.infiniteScroll === true
-                ? 0
-                : props.infiniteScroll)
-            : undefined;
-        if (props.fadeInSelector !== "") {
-            this.addMouseDownListeners(wrapperRef, props.fadeInSelector);
-        }
-        if (!currentVisibleResults || !this.state.focus) {
-            return (preact_1.h("div", { className: "as-result " + containerClassName }));
-        }
-        /**
-         * Data accessible to the template
-         */
-        var items = this.state.items;
-        var reducedTemplateData = {
-            query: currentQuery.getQueryText(),
-            suggestions: currentResult.getSuggestions(),
-        };
-        /**
-         * Uses defined a custom items list. Old version
-         */
-        if (props.template.itemsList !== defaultTemplates_1.defaultItemsListTemplate) {
-            return (preact_1.h("div", { className: "as-result " + containerClassName, ref: wrapperRef, style: "position: relative" },
-                (dirty)
-                    ? preact_1.h(Template_1["default"], { template: placeholderTemplate, className: "as-result__placeholder " + placeholderClassName, dictionary: this.props.dictionary })
-                    : preact_1.h(Template_1["default"], { template: itemsListTemplate, data: __assign(__assign({}, reducedTemplateData), { items: (items)
-                                ? items.map(function (item) { return _this.hydrateItem(item); })
-                                : [] }), className: "as-result__itemsList " + itemsListClassName, dictionary: this.props.dictionary }),
-                hasInfiniteScrollNextPage
-                    ? preact_1.h("div", { ref: this.endResultsBoxRef, style: "bottom: " + infiniteScrollMargin + "px; position: relative;" })
-                    : ""));
-        }
-        /**
-         * New version
-         */
-        return (preact_1.h("div", { className: "as-result " + containerClassName, ref: wrapperRef }, (dirty)
-            ? preact_1.h(Template_1["default"], { template: placeholderTemplate, className: "as-result__placeholder " + placeholderClassName, dictionary: this.props.dictionary })
-            : ((items.length > 0)
-                ? (preact_1.h("div", { className: "as-result__itemsList " + props.classNames.itemsList },
-                    items.map(function (item) {
-                        return preact_1.h(Item_1["default"], { data: __assign(__assign({}, reducedTemplateData), _this.hydrateItem(item)), template: props.template.item, className: "as-result__item " + props.classNames.item, dictionary: _this.props.dictionary });
-                    }),
-                    hasInfiniteScrollNextPage
-                        ? preact_1.h("div", { id: "as-result__infinite_scroll_inspector", ref: this.endResultsBoxRef, style: "bottom: " + infiniteScrollMargin + "px; position: relative; width: 100%;" })
-                        : ""))
-                : preact_1.h(Template_1["default"], { template: props.template.noResults, data: {
-                        query: currentQuery.getQueryText(),
-                    }, className: "as-result__noresults " + props.classNames.noResults, dictionary: this.props.dictionary }))));
-    };
-    /**
-     * @param item
-     */
-    ResultComponent.prototype.hydrateItem = function (item) {
-        var props = this.props;
-        var environmentId = props.environmentId;
-        var config = Container_1["default"].get(Constants_1.APISEARCH_CONFIG + "__" + environmentId);
-        var apisearchUI = Container_1["default"].get(Constants_1.APISEARCH_UI + "__" + environmentId);
-        var apisearchReference = apisearchUI.reference;
-        var appId = config.app_id;
-        var appUUID = item.getAppUUID();
-        if (typeof appUUID === "object") {
-            appId = appUUID.composedUUID();
-        }
-        var indexId = config.index_id;
-        var indexUUID = item.getIndexUUID();
-        if (typeof indexUUID === "object") {
-            indexId = indexUUID.composedUUID();
-        }
-        var itemId = item.getUUID().composedUUID();
-        var userId = config.user_id;
-        var clickParameters = typeof userId === "string"
-            ? appId + '", "' + indexId + '", "' + itemId + '", "' + userId
-            : appId + '", "' + indexId + '", "' + itemId;
-        var mainFields = {};
-        Object.assign(mainFields, item.getMetadata(), item.getIndexedMetadata(), item.getHighlights());
-        var fieldsConciliation = {};
-        Object.keys(props.fieldsConciliation).map(function (field, index) {
-            var _a;
-            fieldsConciliation[field] = (_a = mainFields[props.fieldsConciliation[field]]) !== null && _a !== void 0 ? _a : undefined;
-        });
-        Object.assign(mainFields, fieldsConciliation);
-        item.fields = mainFields;
-        return __assign(__assign({}, props.formatData(item)), {
-            key: "item_" + itemId,
-            uuid_composed: itemId,
-            click: apisearchReference + '.click("' + clickParameters + '");',
-            striptags: function () {
-                return function (val, render) { return render(val).replace(/(<([^>]+)>)/ig, ""); };
-            },
-        });
-    };
-    return ResultComponent;
-}(preact_1.Component));
-ResultComponent.defaultProps = {
-    fields: [],
-    itemsPerPage: 10,
-    highlightsEnabled: false,
-    promote: [],
-    exclude: [],
-    filter: function (query) { return null; },
-    classNames: {
-        container: "",
-        itemsList: "",
-        item: "",
-        noResults: "",
-        placeholder: "",
-    },
-    template: {
-        itemsList: defaultTemplates_1.defaultItemsListTemplate,
-        item: defaultTemplates_1.defaultItemTemplate,
-        noResults: defaultTemplates_1.defaultNoResultsItemTemplate,
-        placeholder: null,
-    },
-    formatData: function (data) { return data; },
-    fadeInSelector: "",
-    fieldsConciliation: {},
-};
-exports["default"] = ResultComponent;
-
-
-/***/ }),
-
-/***/ "./src/components/Result/defaultTemplates.tsx":
-/*!****************************************************!*\
-  !*** ./src/components/Result/defaultTemplates.tsx ***!
-  \****************************************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-exports.__esModule = true;
-exports.defaultNoResultsItemTemplate = exports.defaultItemTemplate = exports.defaultItemsListTemplate = void 0;
-exports.defaultItemsListTemplate = "\n    <div>\n    {{#items}}\n        <div class=\"as-result__item\" data-id=\"{{uuid_composed}}\">\n            <strong>Score:</strong> {{score}}<br />\n            <strong>Uuid:</strong> {{uuid.type}} - {{uuid.id}}<br />\n            <strong>Title:</strong> {{{fields.title}}}<br />\n            <strong>Description:</strong> {{fields.description}}<br />\n            <strong>Link:</strong> <a href=\"{{metadata.link}}\" onclick=\"{{click}}\" target=\"_blank\">{{metadata.link}}</a>\n        </div>\n    {{/items}}\n    </div>\n    {{^items}}No results{{/items}}\n";
-exports.defaultItemTemplate = "\n    <strong>Score:</strong> {{score}}<br />\n    <strong>Uuid:</strong> {{uuid.type}} - {{uuid.id}}<br />\n    <strong>Title:</strong> {{{fields.title}}}<br />\n    <strong>Description:</strong> {{fields.description}}<br />\n    <strong>Link:</strong> <a href=\"{{metadata.link}}\" onclick=\"{{click}}\" target=\"_blank\">{{metadata.link}}</a>\n";
-exports.defaultNoResultsItemTemplate = "\n    No results\n";
-
-
-/***/ }),
-
-/***/ "./src/components/SearchInput/AutocompleteComponent.tsx":
-/*!**************************************************************!*\
-  !*** ./src/components/SearchInput/AutocompleteComponent.tsx ***!
-  \**************************************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
-/**
- * Autocomplete Component
- */
-var AutocompleteComponent = /** @class */ (function (_super) {
-    __extends(AutocompleteComponent, _super);
-    /**
-     * Constructor
-     */
-    function AutocompleteComponent(props) {
-        var _this = _super.call(this, props) || this;
-        _this.state = {
-            autocomplete: "",
-        };
-        return _this;
-    }
-    /**
-     * Component will receive props
-     *
-     * @param props
-     */
-    AutocompleteComponent.prototype.componentWillReceiveProps = function (props) {
-        if (props.autocomplete !== null) {
-            this.setState(function (prevState) {
-                return {
-                    autocomplete: props.autocomplete,
-                };
-            });
-        }
-        else {
-            this.setState(function (prevState) {
-                return {
-                    autocomplete: "",
-                };
-            });
-        }
-    };
-    /**
-     * Render
-     *
-     * @return {any}
-     */
-    AutocompleteComponent.prototype.render = function () {
-        var autocomplete = this.state.autocomplete;
-        var queryText = this.props.queryText;
-        var inputClassName = this.props.inputClassName;
-        var queryTextLength = queryText.length;
-        var autocompleteText = autocomplete.substring(queryTextLength);
-        var formattedAutocompleteText = autocompleteText === ""
-            ? ""
-            : queryText + autocompleteText + " ⤷";
-        return (preact_1.h("input", { type: "text", className: "as-searchInput__input as-searchInput__autocomplete " + inputClassName, placeholder: formattedAutocompleteText, style: "position: absolute; top: 0px; left: 0px; background-color: white;" }));
-    };
-    return AutocompleteComponent;
-}(preact_1.Component));
-exports["default"] = AutocompleteComponent;
-
-
-/***/ }),
-
-/***/ "./src/components/SearchInput/SearchInputActions.ts":
-/*!**********************************************************!*\
-  !*** ./src/components/SearchInput/SearchInputActions.ts ***!
-  \**********************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-exports.__esModule = true;
-exports.simpleSearchAction = exports.initialSearchSetup = void 0;
-var Constants_1 = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
-var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
-var Clone_1 = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
-/**
- * Initial Search
- *
- * @param environmentId
- * @param currentQuery
- * @param initialSearch
- * @param autocomplete
- * @param searchableFields
- * @param queryOperator
- */
-function initialSearchSetup(environmentId, currentQuery, initialSearch, autocomplete, searchableFields, queryOperator) {
-    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
-    var clonedQuery = Clone_1["default"].object(currentQuery);
-    clonedQuery.filters._query.values = [initialSearch];
-    clonedQuery.page = 1;
-    clonedQuery.queryOperator = queryOperator;
-    if (searchableFields.length > 0) {
-        clonedQuery.searchableFields = searchableFields;
-    }
-    if (autocomplete) {
-        clonedQuery.enableAutocomplete();
-    }
-    dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
-        query: clonedQuery,
-    });
-}
-exports.initialSearchSetup = initialSearchSetup;
-/**
- * Search action
- *
- * @param environmentId
- * @param currentQuery
- * @param repository
- * @param queryText
- * @param visibleResults
- */
-function simpleSearchAction(environmentId, currentQuery, repository, queryText, visibleResults) {
-    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
-    var clonedQuery = Clone_1["default"].object(currentQuery);
-    clonedQuery.filters._query.values = [queryText];
-    clonedQuery.page = 1;
-    if (!visibleResults) {
-        dispatcher.dispatch("RENDER_FETCHED_DATA", {
-            query: clonedQuery,
-            result: null,
-            visibleResults: visibleResults,
-        });
-        return;
-    }
-    repository
-        .query(clonedQuery)
-        .then(function (result) {
-        dispatcher.dispatch("RENDER_FETCHED_DATA", {
-            query: clonedQuery,
-            result: result,
-            visibleResults: visibleResults,
-        });
-    })["catch"](function (error) {
-        // Do nothing
-    });
-}
-exports.simpleSearchAction = simpleSearchAction;
-
-
-/***/ }),
-
-/***/ "./src/components/SearchInput/SearchInputComponent.tsx":
-/*!*************************************************************!*\
-  !*** ./src/components/SearchInput/SearchInputComponent.tsx ***!
-  \*************************************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
-exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
-var SearchInputActions_1 = __webpack_require__(/*! ./SearchInputActions */ "./src/components/SearchInput/SearchInputActions.ts");
-var Template_1 = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
-var AutocompleteComponent_1 = __webpack_require__(/*! ./AutocompleteComponent */ "./src/components/SearchInput/AutocompleteComponent.tsx");
-var compat_1 = __webpack_require__(/*! preact/compat */ "./node_modules/preact/compat/dist/compat.module.js");
-/**
- * SearchInput Component
- */
-var SearchInputComponent = /** @class */ (function (_super) {
-    __extends(SearchInputComponent, _super);
-    /**
-     * Constructor
-     */
-    function SearchInputComponent(props) {
-        var _this = _super.call(this, props) || this;
-        _this.inputRef = compat_1.useRef(null);
-        /**
-         * @param search
-         */
-        _this.handleSearch = function (search) {
-            var props = _this.props;
-            var startSearchOn = props.startSearchOn;
-            var finalSpace = search.charAt(search.length - 1) === " " ? " " : "";
-            var targetValueNoSpaces = search.trim() + finalSpace;
-            SearchInputActions_1.simpleSearchAction(props.environmentId, props.store.getCurrentQuery(), props.repository, targetValueNoSpaces === " " ? "" : targetValueNoSpaces, search.length >= startSearchOn);
-        };
-        /**
-         * Clear search
-         */
-        _this.clearSearch = function () {
-            var props = _this.props;
-            var startSearchOn = props.startSearchOn;
-            var environmentId = props.environmentId;
-            var currentQuery = props.store.getCurrentQuery();
-            var repository = props.repository;
-            var visibleResults = 0 === startSearchOn;
-            SearchInputActions_1.simpleSearchAction(environmentId, currentQuery, repository, "", visibleResults);
-        };
-        if (props.autocomplete) {
-            _this.state = { queryText: "" };
-        }
-        var that = _this;
-        var speechRecognition = window["webkitSpeechRecognition"];
-        if (props.speechRecognition && typeof speechRecognition === "function") {
-            that.speechRecognition = new speechRecognition();
-            that.speechRecognition.onresult = function (event) {
-                var text = event.results[0][0].transcript;
-                that.handleSearch(text);
-            };
-            that.speechRecognition.onerror = function (event) {
-                console.log("Speech Recognition Error - " + event.error);
-            };
-        }
-        return _this;
-    }
-    /**
-     * Components will mount
-     */
-    SearchInputComponent.prototype.componentWillMount = function () {
-        var props = this.props;
-        /**
-         * Dispatch action
-         */
-        SearchInputActions_1.initialSearchSetup(props.environmentId, props.store.getCurrentQuery(), props.initialSearch, props.autocomplete, props.searchableFields, props.queryOperator);
-    };
-    /**
-     * Component will receive props
-     *
-     * @param props
-     */
-    SearchInputComponent.prototype.componentWillReceiveProps = function (props) {
-        this.setState({
-            queryText: props.store.getCurrentQuery().getQueryText(),
-        });
-    };
-    /**
-     * Key down
-     */
-    SearchInputComponent.prototype.handleKeyDown = function (e) {
-        switch (e.key) {
-            case "ArrowRight":
-            case "Tab":
-            case "Enter":
-                this.replaceWithAutocomplete(e);
-                return;
-        }
-        switch (e.keyCode) {
-            case 39:
-            case 9:
-            case 13:
-                this.replaceWithAutocomplete(e);
-                return;
-        }
-    };
-    SearchInputComponent.prototype.replaceWithAutocomplete = function (e) {
-        var props = this.props;
-        var autocomplete = this.props.store.getCurrentResult().getAutocomplete();
-        if (autocomplete !== null && autocomplete !== "") {
-            SearchInputActions_1.simpleSearchAction(props.environmentId, props.store.getCurrentQuery(), props.repository, this.props.store.getCurrentResult().getAutocomplete(), true);
-            e.preventDefault();
-            return;
-        }
-    };
-    /**
-     * @param e
-     * @param speechRecognition
-     */
-    SearchInputComponent.prototype.onSpeechStart = function (e, speechRecognition) {
-        speechRecognition.start();
-    };
-    /**
-     * @param e
-     */
-    SearchInputComponent.prototype.doNothing = function (e) { };
-    /**
-     * @param config
-     */
-    SearchInputComponent.prototype.withConfig = function (config) {
-        var _a;
-        if (this.speechRecognition) {
-            this.speechRecognition.lang = (_a = this.props.config.options.locale) !== null && _a !== void 0 ? _a : "";
-        }
-    };
-    /**
-     * Search
-     *
-     * @return {any}
-     */
-    SearchInputComponent.prototype.render = function () {
-        var _this = this;
-        var props = this.props;
-        var placeholder = props.placeholder;
-        var autofocus = props.autofocus;
-        var clearSearch = props.clearSearch;
-        var withContainer = props.withContainer;
-        var containerClassName = props.classNames.container;
-        var inputClassName = props.classNames.input;
-        var clearSearchClassName = props.classNames.clearSearch;
-        var clearSearchTemplate = props.template.clearSearch;
-        var currentQuery = props.store.getCurrentQuery();
-        var currentQueryText = currentQuery.getQueryText();
-        var htmlNodeInheritProps = props.htmlNodeInheritProps;
-        var showAutocomplete = currentQuery.areAutocompleteEnabled();
-        var autocomplete = props.store.getCurrentResult().getAutocomplete();
-        var keyDownCallback = showAutocomplete
-            ? function (e) { return _this.handleKeyDown(e); }
-            : function (e) { return _this.doNothing(e); };
-        var keyDownAction = showAutocomplete
-            ? function (e) { return _this.replaceWithAutocomplete(e); }
-            : function (e) { return _this.doNothing(e); };
-        var style = showAutocomplete
-            ? "position: relative; top: 0px; left: 0px; background-color: transparent; border-color: transparent;"
-            : "";
-        var autocompletableClass = showAutocomplete
-            ? "autocompletable"
-            : "";
-        var searchInput = (preact_1.h("input", __assign({ type: "text", className: "as-searchInput__input " + inputClassName + " " + autocompletableClass, placeholder: placeholder, autofocus: autofocus }, htmlNodeInheritProps, { onInput: function (event) { return _this.handleSearch(event.target.value); }, value: currentQueryText, style: style, onKeyDown: keyDownCallback, onTouchStart: keyDownAction, ref: this.inputRef })));
-        if (showAutocomplete) {
-            searchInput = (preact_1.h("div", { style: "position: relative" },
-                preact_1.h(AutocompleteComponent_1["default"], { autocomplete: autocomplete, queryText: currentQueryText, inputClassName: inputClassName }),
-                searchInput));
-        }
-        if (this.speechRecognition) {
-            searchInput = (preact_1.h("div", { style: "position: relative" },
-                searchInput,
-                preact_1.h("div", { "class": "as-searchInput-speechRecognition", onClick: function (e) { return _this.onSpeechStart(e, _this.speechRecognition); } },
-                    preact_1.h(Template_1["default"], { template: props.template.speechRecognition, dictionary: props.dictionary }))));
-        }
-        if (withContainer) {
-            searchInput = (preact_1.h("div", { className: "as-searchInput " + containerClassName },
-                searchInput,
-                (clearSearch && currentQueryText && currentQueryText.length !== 0)
-                    ? (preact_1.h("div", { className: "as-searchInput__clearSearch " + clearSearchClassName, onClick: this.clearSearch },
-                        preact_1.h(Template_1["default"], { template: clearSearchTemplate, dictionary: props.dictionary }))) : null));
-        }
-        return searchInput;
-    };
-    return SearchInputComponent;
-}(preact_1.Component));
-SearchInputComponent.defaultProps = {
-    placeholder: "",
-    autofocus: false,
-    autocomplete: false,
-    startSearchOn: 0,
-    clearSearch: true,
-    initialSearch: "",
-    withContainer: true,
-    searchableFields: [],
-    speechRecognition: false,
-    classNames: {
-        container: "",
-        input: "",
-        clearSearch: "",
-    },
-    template: {
-        clearSearch: "x",
-        speechRecognition: "{S}",
-    },
-};
-exports["default"] = SearchInputComponent;
-
-
-/***/ }),
-
-/***/ "./src/components/Snapshot/SnapshotComponent.tsx":
-/*!*******************************************************!*\
-  !*** ./src/components/Snapshot/SnapshotComponent.tsx ***!
-  \*******************************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
-/**
- * SnapshotComponent
- */
-var SnapshotComponent = /** @class */ (function (_super) {
-    __extends(SnapshotComponent, _super);
-    function SnapshotComponent() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    /**
-     * Component receive props
-     *
-     * @param props
-     */
-    SnapshotComponent.prototype.componentWillReceiveProps = function (props) {
-        var query = props.store.getCurrentQuery();
-        this.setState(function (prevState) {
-            return { query: query };
-        });
-    };
-    /**
-     * Render
-     *
-     * @return {}
-     */
-    SnapshotComponent.prototype.render = function () {
-        var queryAsJson = this.state.query == undefined
-            ? ''
-            : JSON.stringify(this.state.query.toArray());
-        return (preact_1.h("div", null, queryAsJson));
-    };
-    return SnapshotComponent;
-}(preact_1.Component));
-exports["default"] = SnapshotComponent;
-
-
-/***/ }),
-
-/***/ "./src/components/SortBy/SortByActions.ts":
-/*!************************************************!*\
-  !*** ./src/components/SortBy/SortByActions.ts ***!
-  \************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-exports.__esModule = true;
-exports.onChangeSearchAction = exports.initialSortBySetup = void 0;
-var Constants_1 = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
-var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
-var Clone_1 = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
-var SortByHelper_1 = __webpack_require__(/*! ./SortByHelper */ "./src/components/SortBy/SortByHelper.ts");
-/**
- * Initial sortBy
- *
- * @param environmentId
- * @param currentQuery
- * @param initialOption
- */
-function initialSortBySetup(environmentId, currentQuery, initialOption) {
-    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
-    var clonedQuery = Clone_1["default"].object(currentQuery);
-    SortByHelper_1.applySortByToQuery(clonedQuery, initialOption);
-    clonedQuery.page = 1;
-    dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
-        query: clonedQuery,
-    });
-}
-exports.initialSortBySetup = initialSortBySetup;
-/**
- * ON change search action
- *
- * @param environmentId
- * @param currentQuery
- * @param repository
- * @param selectedOption
- */
-function onChangeSearchAction(environmentId, currentQuery, repository, selectedOption) {
-    var clonedQuery = Clone_1["default"].object(currentQuery);
-    SortByHelper_1.applySortByToQuery(clonedQuery, selectedOption);
-    clonedQuery.page = 1;
-    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
-    repository
-        .query(clonedQuery)
-        .then(function (result) {
-        dispatcher.dispatch("RENDER_FETCHED_DATA", {
-            query: clonedQuery,
-            result: result,
-        });
-    })["catch"](function (error) {
-        // Do nothing
-    });
-}
-exports.onChangeSearchAction = onChangeSearchAction;
-
-
-/***/ }),
-
-/***/ "./src/components/SortBy/SortByComponent.tsx":
-/*!***************************************************!*\
-  !*** ./src/components/SortBy/SortByComponent.tsx ***!
-  \***************************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
-var SortByActions_1 = __webpack_require__(/*! ./SortByActions */ "./src/components/SortBy/SortByActions.ts");
-/**
- * SortBy Filter Component
- */
-var SortByComponent = /** @class */ (function (_super) {
-    __extends(SortByComponent, _super);
-    function SortByComponent() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        /**
-         * Handle change
-         *
-         * @param e
-         */
-        _this.handleChange = function (e) {
-            var props = _this.props;
-            var environmentId = props.environmentId;
-            var currentQuery = props.store.getCurrentQuery();
-            var repository = props.repository;
-            var currentOption = e.target.value;
-            _this.setState({
-                value: currentOption
-            });
-            /**
-             * Dispatch action
-             */
-            SortByActions_1.onChangeSearchAction(environmentId, currentQuery, repository, currentOption);
-        };
-        return _this;
-    }
-    /**
-     * Components will mount
-     */
-    SortByComponent.prototype.componentWillMount = function () {
-        var props = this.props;
-        var environmentId = props.environmentId;
-        var options = props.options;
-        var currentQuery = props.store.getCurrentQuery();
-        var currentOption = options[0].value;
-        this.setState({
-            value: currentOption,
-            visible: false
-        });
-        /**
-         * Dispatch action
-         */
-        SortByActions_1.initialSortBySetup(environmentId, currentQuery, currentOption);
-    };
-    /**
-     * Component will receive props
-     *
-     * @param props
-     */
-    SortByComponent.prototype.componentWillReceiveProps = function (props) {
-        this.setState(function (prevState) {
-            return {
-                value: props.store.getCurrentQuery().getSortBy().getFirstSortAsString(),
-                visible: (props.store.getCurrentResult() != null)
-                    ? (props.store.getCurrentResult().getTotalHits() > 0)
-                    : false
-            };
-        });
-    };
-    /**
-     * Render
-     *
-     * @return {any}
-     */
-    SortByComponent.prototype.render = function (props, state) {
-        var containerClassName = props.classNames.container;
-        var selectClassName = props.classNames.select;
-        if (!state.visible) {
-            return;
-        }
-        var options = props.options;
-        var coordinate = props.store.getCurrentQuery().toArray().coordinate;
-        if (!coordinate) {
-            options = options.filter(function (o) {
-                return o.value != 'distance';
-            });
-        }
-        return (preact_1.h("div", { className: "as-sortBy " + containerClassName },
-            preact_1.h("select", { className: "as-sortBy__selector " + selectClassName, onChange: this.handleChange, value: state.value }, options.map(function (option) { return (preact_1.h("option", { value: option.value }, option.name)); }))));
-    };
-    return SortByComponent;
-}(preact_1.Component));
-SortByComponent.defaultProps = {
-    classNames: {
-        container: '',
-        select: ''
-    }
-};
-exports["default"] = SortByComponent;
-
-
-/***/ }),
-
-/***/ "./src/components/SortBy/SortByHelper.ts":
-/*!***********************************************!*\
-  !*** ./src/components/SortBy/SortByHelper.ts ***!
-  \***********************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-exports.__esModule = true;
-exports.applySortByToQuery = void 0;
-/**
- * SortBy actions
- */
-var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
-/**
- * Apply sort by to query
- *
- * @param query Query
- * @param selectedOption string
- */
-function applySortByToQuery(query, selectedOption) {
-    var sortByData = splitQueryValue(selectedOption);
-    var sortBy = apisearch_1["default"].createEmptySortBy();
-    if (sortByData.field == 'distance') {
-        sortBy.byValue({
-            type: apisearch_1.SORT_BY_TYPE_DISTANCE,
-            unit: sortByData.sort
-                ? sortByData.sort
-                : 'km'
-        });
-    }
-    else if (sortByData.field == 'score') {
-        sortBy.byValue(apisearch_1.SORT_BY_SCORE);
-    }
-    else {
-        sortBy.byFieldValue(sortByData.field, sortByData.sort);
-    }
-    query.sortBy(sortBy);
-    return query;
-}
-exports.applySortByToQuery = applySortByToQuery;
-/**
- * Split sort by string representation
- *
- * @param string
- *
- * @return {{field: string, sort: string}}
- */
-function splitQueryValue(string) {
-    var queryValue = string.split(":");
-    return {
-        field: queryValue[0],
-        sort: queryValue[1],
-    };
-}
-
-
-/***/ }),
-
-/***/ "./src/components/Suggestions/SuggestionsFilterActions.ts":
-/*!****************************************************************!*\
-  !*** ./src/components/Suggestions/SuggestionsFilterActions.ts ***!
-  \****************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-exports.__esModule = true;
-exports.onWordClickAction = exports.enableSuggestions = void 0;
-var Constants_1 = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
-var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
-var Clone_1 = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
-/**
- * @param environmentId
- * @param currentQuery
- * @param numberOfSuggestions
- */
-function enableSuggestions(environmentId, currentQuery, numberOfSuggestions) {
-    var clonedQuery = Clone_1["default"].object(currentQuery);
-    if (numberOfSuggestions > 0) {
-        clonedQuery.setNumberOfSuggestions(numberOfSuggestions);
-    }
-    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
-    dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
-        query: clonedQuery,
-    });
-}
-exports.enableSuggestions = enableSuggestions;
-/**
- * @param environmentId
- * @param currentQuery
- * @param repository
- * @param word
- */
-function onWordClickAction(environmentId, currentQuery, repository, word) {
-    var clonedQuery = Clone_1["default"].object(currentQuery);
-    clonedQuery.filters._query.values = [word];
-    clonedQuery.page = 1;
-    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
-    repository
-        .query(clonedQuery)
-        .then(function (result) {
-        dispatcher.dispatch("RENDER_FETCHED_DATA", {
-            query: clonedQuery,
-            result: result,
-        });
-    })["catch"](function (error) {
-        // Do nothing
-    });
-}
-exports.onWordClickAction = onWordClickAction;
-
-
-/***/ }),
-
-/***/ "./src/components/Suggestions/SuggestionsFilterComponent.tsx":
-/*!*******************************************************************!*\
-  !*** ./src/components/Suggestions/SuggestionsFilterComponent.tsx ***!
-  \*******************************************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
-var defaultTemplates_1 = __webpack_require__(/*! ./defaultTemplates */ "./src/components/Suggestions/defaultTemplates.tsx");
-var SuggestionsFilterActions_1 = __webpack_require__(/*! ./SuggestionsFilterActions */ "./src/components/Suggestions/SuggestionsFilterActions.ts");
-var Template_1 = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
-/**
- * Suggestion Filter Component
- */
-var SuggestionsFilterComponent = /** @class */ (function (_super) {
-    __extends(SuggestionsFilterComponent, _super);
-    function SuggestionsFilterComponent() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        /**
-         * @param word
-         */
-        _this.handleClick = function (word) {
-            var props = _this.props;
-            if (typeof word === "string") {
-                word = word
-                    .replace(/<em>/g, "")
-                    .replace(/<\/em>/g, "");
-            }
-            /**
-             * Dispatch action
-             */
-            SuggestionsFilterActions_1.onWordClickAction(props.environmentId, props.store.getCurrentQuery(), props.repository, word);
-        };
-        return _this;
-    }
-    /**
-     * Component will mount
-     */
-    SuggestionsFilterComponent.prototype.componentWillMount = function () {
-        this.setState(function (prevState) {
-            return {
-                words: [],
-            };
-        });
-        var props = this.props;
-        var environmentId = props.environmentId;
-        var currentQuery = props.store.getCurrentQuery();
-        /**
-         * Dispatch action
-         */
-        SuggestionsFilterActions_1.enableSuggestions(environmentId, currentQuery, props.numberOfSuggestions);
-    };
-    /**
-     * Component will receive props
-     *
-     * @param props
-     */
-    SuggestionsFilterComponent.prototype.componentWillReceiveProps = function (props) {
-        this.setState(function (prevState) {
-            return {
-                words: props
-                    .store
-                    .getCurrentResult()
-                    .getSuggestions(),
-            };
-        });
-    };
-    /**
-     * Render
-     *
-     * @return {any}
-     */
-    SuggestionsFilterComponent.prototype.render = function (props, state) {
-        var _this = this;
-        var containerClassName = props.classNames.container;
-        var topClassName = props.classNames.top;
-        var itemsListClassName = props.classNames.itemsList;
-        var itemClassName = props.classNames.item;
-        var noSuggestionsClassName = state.words.length > 0
-            ? ""
-            : "suggestions-empty";
-        var topTemplate = props.template.top;
-        var itemTemplate = props.template.item;
-        var that = this;
-        return (preact_1.h("div", { className: "as-suggestions " + containerClassName + " " + noSuggestionsClassName },
-            preact_1.h(Template_1["default"], { template: topTemplate, className: "as-suggestions__top " + topClassName, dictionary: this.props.dictionary }),
-            preact_1.h("div", { className: "as-suggestions__itemsList " + itemsListClassName }, state.words.map(function (word) {
-                var templateData = {
-                    word: word,
-                };
-                return (preact_1.h("div", { className: "as-suggestions__item " + itemClassName, onClick: function (e) {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        that.handleClick(word);
-                    } },
-                    preact_1.h(Template_1["default"], { template: itemTemplate, data: templateData, dictionary: _this.props.dictionary })));
-            }))));
-    };
-    return SuggestionsFilterComponent;
-}(preact_1.Component));
-SuggestionsFilterComponent.defaultProps = {
-    classNames: {
-        container: '',
-        top: '',
-        itemsList: '',
-        item: '',
-    },
-    template: {
-        top: null,
-        item: defaultTemplates_1.defaultItemTemplate,
-    },
-};
-exports["default"] = SuggestionsFilterComponent;
-
-
-/***/ }),
-
-/***/ "./src/components/Suggestions/defaultTemplates.tsx":
-/*!*********************************************************!*\
-  !*** ./src/components/Suggestions/defaultTemplates.tsx ***!
-  \*********************************************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-exports.__esModule = true;
-exports.defaultItemTemplate = void 0;
-exports.defaultItemTemplate = "\n    <span>{{{highlightedWord}}}</span>\n";
-
-
-/***/ }),
-
-/***/ "./src/components/Template.tsx":
-/*!*************************************!*\
-  !*** ./src/components/Template.tsx ***!
-  \*************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
-exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
-var Mustache = __webpack_require__(/*! mustache */ "./node_modules/mustache/mustache.js");
-var Translate_1 = __webpack_require__(/*! ./Translate */ "./src/components/Translate.tsx");
-/**
- * Template
- */
-var Template = /** @class */ (function (_super) {
-    __extends(Template, _super);
-    function Template() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        /**
-         * Render template
-         *
-         * @param template
-         * @param result
-         * @param dictionary
-         *
-         * @return {any}
-         */
-        _this.renderTemplate = function (template, result, dictionary) {
-            var trans = function () {
-                return function (text, render) {
-                    return render(Translate_1["default"].trans(text, dictionary));
-                };
-            };
-            var output = Mustache.render(template, __assign(__assign({}, result), {
-                "trans": trans,
-            }));
-            return {
-                __html: output,
-            };
-        };
-        return _this;
-    }
-    /**
-     * Render
-     *
-     * @return {any}
-     */
-    Template.prototype.render = function () {
-        var _a;
-        var props = this.props;
-        var template = props.template;
-        var data = props.data;
-        var className = props.className;
-        var dictionary = (_a = props.dictionary) !== null && _a !== void 0 ? _a : {};
-        return (template)
-            ? preact_1.h("div", { className: className, dangerouslySetInnerHTML: this.renderTemplate(template, data, dictionary) })
-            : null;
-    };
-    return Template;
-}(preact_1.Component));
-exports["default"] = Template;
-
-
-/***/ }),
-
-/***/ "./src/components/Translate.tsx":
-/*!**************************************!*\
-  !*** ./src/components/Translate.tsx ***!
-  \**************************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-exports.__esModule = true;
-var Translate = /** @class */ (function () {
-    function Translate() {
-    }
-    Translate.trans = function (text, dictionary) {
-        var _a, _b, _c;
-        var parsed = [];
-        try {
-            parsed = JSON.parse(text);
-        }
-        catch (_d) {
-            return (_a = dictionary[text]) !== null && _a !== void 0 ? _a : text;
-        }
-        var parsedText = (_b = parsed[0]) !== null && _b !== void 0 ? _b : text;
-        parsedText = (_c = dictionary[parsedText]) !== null && _c !== void 0 ? _c : parsedText;
-        for (var i = 1; i <= parsed.length; i++) {
-            parsedText = parsedText.replace("$" + i, parsed[i]);
-        }
-        return parsedText;
-    };
-    return Translate;
-}());
-exports["default"] = Translate;
-
-
-/***/ }),
-
-/***/ "./src/widgets/CheckboxFilter.tsx":
-/*!****************************************!*\
-  !*** ./src/widgets/CheckboxFilter.tsx ***!
-  \****************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
-exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
-var CheckboxFilterComponent_1 = __webpack_require__(/*! ../components/CheckboxFilter/CheckboxFilterComponent */ "./src/components/CheckboxFilter/CheckboxFilterComponent.tsx");
-var Widget_1 = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
-/**
- * CheckboxFilter
- */
-var CheckboxFilter = /** @class */ (function (_super) {
-    __extends(CheckboxFilter, _super);
-    function CheckboxFilter(_a) {
-        var target = _a.target, filterName = _a.filterName, filterField = _a.filterField, label = _a.label, filterValue = _a.filterValue, classNames = _a.classNames, template = _a.template;
-        var _this = _super.call(this) || this;
-        _this.target = target;
-        _this.component = preact_1.h(CheckboxFilterComponent_1["default"], { target: target, filterName: filterName, filterField: filterField, label: label, filterValue: filterValue, classNames: __assign(__assign({}, CheckboxFilterComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, CheckboxFilterComponent_1["default"].defaultProps.template), template) });
-        return _this;
-    }
-    /**
-     * @param environmentId
-     * @param store
-     * @param repository
-     * @param dictionary
-     */
-    CheckboxFilter.prototype.render = function (environmentId, store, repository, dictionary) {
-        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store, dictionary: dictionary });
-        var targetNode = document.querySelector(this.target);
-        preact_1.render(this.component, targetNode);
-    };
-    /**
-     * @param query
-     * @param object
-     */
-    CheckboxFilter.prototype.toUrlObject = function (query, object) {
-        var filterName = this.component.props.filterName;
-        var aggregation = query.aggregations[filterName];
-        if (aggregation !== undefined &&
-            query.filters !== undefined &&
-            query.filters[filterName] !== undefined) {
-            var filterValues = query.filters[filterName].values;
-            if (filterValues.length > 0) {
-                object[filterName] = filterValues;
-            }
-        }
-    };
-    /**
-     * @param object
-     * @param query
-     */
-    CheckboxFilter.prototype.fromUrlObject = function (object, query) {
-        var filterName = this.component.props.filterName;
-        var aggregation = query.aggregations[filterName];
-        var fieldValues = object[filterName];
-        if (aggregation !== undefined &&
-            fieldValues !== undefined &&
-            Array.isArray(fieldValues) &&
-            fieldValues.length > 0) {
-            if (query.filters === undefined) {
-                query.filters = {};
-            }
-            query.filters[filterName] = {
-                field: 'indexed_metadata.' + this.component.props.filterField,
-                values: fieldValues,
-                application_type: this.component.props.application_type,
-                filter_type: this.component.props.filterType
-            };
-        }
-    };
-    /**
-     * @param query
-     */
-    CheckboxFilter.prototype.reset = function (query) {
-        var filterName = this.component.props.filterName;
-        if (query.filters !== undefined &&
-            typeof query.filters === "object" &&
-            query.filters[filterName] !== undefined) {
-            delete query.filters[filterName];
-        }
-    };
-    return CheckboxFilter;
-}(Widget_1["default"]));
-/**
- * CheckboxFilter widget
- *
- * @param settings
- */
-exports["default"] = (function (settings) { return new CheckboxFilter(settings); });
-
-
-/***/ }),
-
-/***/ "./src/widgets/ClearFilters.tsx":
-/*!**************************************!*\
-  !*** ./src/widgets/ClearFilters.tsx ***!
-  \**************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
-exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
-var ClearFiltersComponent_1 = __webpack_require__(/*! ../components/ClearFilters/ClearFiltersComponent */ "./src/components/ClearFilters/ClearFiltersComponent.tsx");
-var Widget_1 = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
-/**
- * Clear Filters
- */
-var ClearFilters = /** @class */ (function (_super) {
-    __extends(ClearFilters, _super);
-    /**
-     * Constructor
-     *
-     * @param target
-     * @param classNames
-     * @param showIndividualFilterClear
-     * @param template
-     */
-    function ClearFilters(_a) {
-        var target = _a.target, classNames = _a.classNames, template = _a.template, showIndividualFilterClear = _a.showIndividualFilterClear;
-        var _this = _super.call(this) || this;
-        _this.target = target;
-        _this.component = preact_1.h(ClearFiltersComponent_1["default"], { target: target, classNames: __assign(__assign({}, ClearFiltersComponent_1["default"].defaultProps.classNames), classNames), showIndividualFilterClear: showIndividualFilterClear, template: __assign(__assign({}, ClearFiltersComponent_1["default"].defaultProps.template), template) });
-        return _this;
-    }
-    /**
-     * @param environmentId
-     * @param store
-     * @param repository
-     * @param dictionary
-     */
-    ClearFilters.prototype.render = function (environmentId, store, repository, dictionary) {
-        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store, dictionary: dictionary });
-        preact_1.render(this.component, document.querySelector(this.target));
-    };
-    return ClearFilters;
-}(Widget_1["default"]));
-/**
- * Clear filters widget
- *
- * @param settings
- */
-exports["default"] = (function (settings) { return new ClearFilters(settings); });
-
-
-/***/ }),
-
-/***/ "./src/widgets/Information.tsx":
-/*!*************************************!*\
-  !*** ./src/widgets/Information.tsx ***!
-  \*************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
-exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
-var InformationComponent_1 = __webpack_require__(/*! ../components/Information/InformationComponent */ "./src/components/Information/InformationComponent.tsx");
-var Widget_1 = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
-/**
- * Information
- */
-var Information = /** @class */ (function (_super) {
-    __extends(Information, _super);
-    /**
-     * Constructor
-     *
-     * @param target
-     * @param classNames
-     * @param template
-     * @param formatData
-     */
-    function Information(_a) {
-        var target = _a.target, classNames = _a.classNames, template = _a.template, formatData = _a.formatData;
-        var _this = _super.call(this) || this;
-        _this.target = target;
-        _this.component = preact_1.h(InformationComponent_1["default"], { target: target, classNames: __assign(__assign({}, InformationComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, InformationComponent_1["default"].defaultProps.template), template), formatData: formatData });
-        return _this;
-    }
-    /**
-     * @param environmentId
-     * @param store
-     * @param repository
-     * @param dictionary
-     */
-    Information.prototype.render = function (environmentId, store, repository, dictionary) {
-        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store, dictionary: dictionary });
-        var targetNode = document.querySelector(this.target);
-        preact_1.render(this.component, targetNode);
-    };
-    return Information;
-}(Widget_1["default"]));
-/**
- * Information widget
- *
- * @param settings
- */
-exports["default"] = (function (settings) { return new Information(settings); });
-
-
-/***/ }),
-
-/***/ "./src/widgets/MultipleFilter.tsx":
-/*!****************************************!*\
-  !*** ./src/widgets/MultipleFilter.tsx ***!
-  \****************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
-exports.__esModule = true;
-var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
-var Helpers_1 = __webpack_require__(/*! ../components/MultipleFilter/Helpers */ "./src/components/MultipleFilter/Helpers.ts");
-var MultipleFilterActions_1 = __webpack_require__(/*! ../components/MultipleFilter/MultipleFilterActions */ "./src/components/MultipleFilter/MultipleFilterActions.ts");
-var MultipleFilterComponent_1 = __webpack_require__(/*! ../components/MultipleFilter/MultipleFilterComponent */ "./src/components/MultipleFilter/MultipleFilterComponent.tsx");
-var Widget_1 = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
-/**
- * Multiple Filter
- */
-var MultipleFilter = /** @class */ (function (_super) {
-    __extends(MultipleFilter, _super);
-    /**
-     * Filtername
-     *
-     * @param target
-     * @param filterName
-     * @param filterField
-     * @param aggregationField
-     * @param applicationType
-     * @param fetchLimit
-     * @param viewLimit
-     * @param sortBy
-     * @param ranges
-     * @param labels
-     * @param classNames
-     * @param template
-     * @param formatData
-     * @param activeFirst
-     */
-    function MultipleFilter(_a) {
-        var target = _a.target, filterName = _a.filterName, filterField = _a.filterField, aggregationField = _a.aggregationField, applicationType = _a.applicationType, fetchLimit = _a.fetchLimit, viewLimit = _a.viewLimit, sortBy = _a.sortBy, ranges = _a.ranges, labels = _a.labels, classNames = _a.classNames, template = _a.template, formatData = _a.formatData, activeFirst = _a.activeFirst;
-        var _this = _super.call(this) || this;
-        _this.target = target;
-        _this.filterField = filterField;
-        _this.aggregationField = aggregationField !== null && aggregationField !== void 0 ? aggregationField : filterField;
-        _this.component = preact_1.h(MultipleFilterComponent_1["default"], { target: target, filterName: filterName, filterField: _this.filterField, aggregationField: _this.aggregationField, applicationType: applicationType, fetchLimit: fetchLimit, viewLimit: viewLimit, sortBy: sortBy, ranges: ranges, labels: labels, classNames: __assign(__assign({}, MultipleFilterComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, MultipleFilterComponent_1["default"].defaultProps.template), template), formatData: formatData, activeFirst: activeFirst });
-        return _this;
-    }
-    /**
-     * @param environmentId
-     * @param store
-     * @param repository
-     * @param dictionary
-     */
-    MultipleFilter.prototype.render = function (environmentId, store, repository, dictionary) {
-        this.component.props = __assign(__assign({}, this.component.props), { dictionary: dictionary,
-            environmentId: environmentId,
-            repository: repository,
-            store: store });
-        preact_1.render(this.component, document.querySelector(this.target));
-    };
-    /**
-     * @param query
-     * @param object
-     */
-    MultipleFilter.prototype.toUrlObject = function (query, object) {
-        var filterName = this.component.props.filterName;
-        var aggregation = query.aggregations[filterName];
-        if (aggregation !== undefined &&
-            query.filters !== undefined &&
-            query.filters[filterName] !== undefined) {
-            var filter = query.filters[filterName];
-            var filterValues = filter.values;
-            if (filterValues.length > 0) {
-                if (filter.application_type === 6) {
-                    var levelsValues = Helpers_1.getShadowFilterValuesFromQuery(query, filterName, false);
-                    object[filterName] = {
-                        l: levelsValues,
-                        v: filter.values,
-                    };
-                }
-                else {
-                    object[filterName] = filterValues;
-                }
-            }
-        }
-    };
-    /**
-     * @param object
-     * @param query
-     */
-    MultipleFilter.prototype.fromUrlObject = function (object, query) {
-        var filterName = this.component.props.filterName;
-        var aggregation = query.aggregations[filterName];
-        var fieldValues = object[filterName];
-        var rangesValues = Object.keys(this.component.props.ranges);
-        var filterType = (rangesValues.length > 0) ? "range" : "field";
-        if (aggregation !== undefined &&
-            fieldValues !== undefined &&
-            (Array.isArray(fieldValues) && (fieldValues.length > 0) ||
-                (typeof fieldValues === "object") && (Object.keys(fieldValues).length > 0))) {
-            if (query.filters === undefined) {
-                query.filters = {};
-            }
-            var applicationType = this.component.props.applicationType;
-            var fieldName = "indexed_metadata." + this.component.props.filterField;
-            if (applicationType === 6) {
-                var originalFieldValues = fieldValues;
-                fieldValues = originalFieldValues["v"];
-                var leveledValues = originalFieldValues["l"];
-                for (var it_1 = 0; it_1 < leveledValues.length; it_1++) {
-                    var level = it_1 + 1;
-                    var fieldNameWithoutPrefix = fieldName.substr(17);
-                    var leveledFilterName = fieldNameWithoutPrefix + "_level_" + level;
-                    var leveledFieldName = "indexed_metadata." + leveledFilterName;
-                    query.filters[leveledFilterName] = {
-                        application_type: applicationType,
-                        field: leveledFieldName,
-                        filter_type: apisearch_1.FILTER_TYPE_FIELD,
-                        values: [leveledValues[it_1]],
-                    };
-                }
-                fieldName = fieldName + "_level_" + (leveledValues.length + 1);
-            }
-            query.filters[filterName] = {
-                application_type: applicationType,
-                field: fieldName,
-                filter_type: filterType,
-                values: fieldValues,
-            };
-        }
-    };
-    /**
-     * @param query
-     */
-    MultipleFilter.prototype.reset = function (query) {
-        var filterName = this.component.props.filterName;
-        if (query.filters !== undefined &&
-            typeof query.filters === "object" &&
-            query.filters[filterName] !== undefined) {
-            delete query.filters[filterName];
-        }
-    };
-    /**
-     * @param environmentId
-     * @param query
-     */
-    MultipleFilter.prototype.normalizeQuery = function (environmentId, query) {
-        var filterName = this.component.props.filterName;
-        if (Helpers_1.isFilterAvailable(query, filterName, 6)) {
-            MultipleFilterActions_1.modifyQueryAggregationWithProperLevelValue(environmentId, query, filterName, this.filterField, this.aggregationField);
-        }
-    };
-    return MultipleFilter;
-}(Widget_1["default"]));
-/**
- * Multiple filter widget
- *
- * @param settings
- */
-exports["default"] = (function (settings) { return new MultipleFilter(settings); });
-
-
-/***/ }),
-
-/***/ "./src/widgets/Pagination.tsx":
-/*!************************************!*\
-  !*** ./src/widgets/Pagination.tsx ***!
-  \************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
-exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
-var PaginationComponent_1 = __webpack_require__(/*! ../components/Pagination/PaginationComponent */ "./src/components/Pagination/PaginationComponent.tsx");
-var Widget_1 = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
-/**
- * Pagination
- */
-var Pagination = /** @class */ (function (_super) {
-    __extends(Pagination, _super);
-    /**
-     * Constructor
-     *
-     * @param target
-     * @param padding
-     * @param goFirstLast
-     * @param classNames
-     * @param template
-     */
-    function Pagination(_a) {
-        var target = _a.target, padding = _a.padding, goFirstLast = _a.goFirstLast, classNames = _a.classNames, template = _a.template;
-        var _this = _super.call(this) || this;
-        _this.target = target;
-        _this.component = preact_1.h(PaginationComponent_1["default"], { target: target, padding: padding, goFirstLast: goFirstLast, classNames: __assign(__assign({}, PaginationComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, PaginationComponent_1["default"].defaultProps.template), template) });
-        return _this;
-    }
-    /**
-     * @param environmentId
-     * @param store
-     * @param repository
-     * @param dictionary
-     */
-    Pagination.prototype.render = function (environmentId, store, repository, dictionary) {
-        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store, dictionary: dictionary });
-        var targetNode = document.querySelector(this.target);
-        preact_1.render(this.component, targetNode);
-    };
-    /**
-     * @param query
-     * @param object
-     */
-    Pagination.prototype.toUrlObject = function (query, object) {
-        var page = query.page;
-        if (page > 1) {
-            object.page = page;
-        }
-    };
-    /**
-     * @param object
-     * @param query
-     */
-    Pagination.prototype.fromUrlObject = function (object, query) {
-        var page = object.page;
-        if (page !== undefined &&
-            page > 1) {
-            query.page = page;
-        }
-    };
-    /**
-     * @param query
-     */
-    Pagination.prototype.reset = function (query) {
-        delete query.page;
-    };
-    return Pagination;
-}(Widget_1["default"]));
-/**
- * Pagination widget
- *
- * @param settings
- */
-exports["default"] = (function (settings) { return new Pagination(settings); });
-
-
-/***/ }),
-
-/***/ "./src/widgets/RangeFilter.tsx":
-/*!*************************************!*\
-  !*** ./src/widgets/RangeFilter.tsx ***!
-  \*************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
-exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
-var RangeFilterComponent_1 = __webpack_require__(/*! ../components/RangeFilter/RangeFilterComponent */ "./src/components/RangeFilter/RangeFilterComponent.tsx");
-var Widget_1 = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
-/**
- * RangeFilter
- */
-var RangeFilter = /** @class */ (function (_super) {
-    __extends(RangeFilter, _super);
-    function RangeFilter(_a) {
-        var target = _a.target, filterName = _a.filterName, filterField = _a.filterField, minValue = _a.minValue, maxValue = _a.maxValue, minMaxCallback = _a.minMaxCallback, step = _a.step, callback = _a.callback, onSliderMove = _a.onSliderMove, template = _a.template, classNames = _a.classNames, attributes = _a.attributes, native = _a.native;
-        var _this = _super.call(this) || this;
-        _this.target = target;
-        _this.component = preact_1.h(RangeFilterComponent_1["default"], { target: target, filterName: filterName, filterField: filterField, minValue: minValue, maxValue: maxValue, minMaxCallback: minMaxCallback, step: step, callback: callback, onSliderMove: onSliderMove, native: native, template: __assign(__assign({}, RangeFilterComponent_1["default"].defaultProps.template), template), classNames: __assign(__assign({}, RangeFilterComponent_1["default"].defaultProps.classNames), classNames), attributes: __assign(__assign({}, RangeFilterComponent_1["default"].defaultProps.attributes), attributes) });
-        return _this;
-    }
-    /**
-     * @param environmentId
-     * @param store
-     * @param repository
-     * @param dictionary
-     */
-    RangeFilter.prototype.render = function (environmentId, store, repository, dictionary) {
-        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store });
-        var targetNode = document.querySelector(this.target);
-        preact_1.render(this.component, targetNode);
-    };
-    /**
-     * @param query
-     * @param object
-     */
-    RangeFilter.prototype.toUrlObject = function (query, object) {
-        var filterName = this.component.props.filterName;
-        if (query.filters !== undefined && query.filters[filterName] !== undefined) {
-            var filterValues = query.filters[filterName].values;
-            if (filterValues.length > 0) {
-                object[filterName] = filterValues;
-            }
-        }
-    };
-    /**
-     * @param object
-     * @param query
-     */
-    RangeFilter.prototype.fromUrlObject = function (object, query) {
-        var filterName = this.component.props.filterName;
-        var fieldValues = object[filterName];
-        if (fieldValues !== undefined &&
-            Array.isArray(fieldValues) &&
-            fieldValues.length > 0) {
-            if (query.filters === undefined) {
-                query.filters = {};
-            }
-            query.filters[filterName] = {
-                field: 'indexed_metadata.' + this.component.props.filterField,
-                values: fieldValues,
-                filter_type: 'range'
-            };
-        }
-    };
-    /**
-     * @param query
-     */
-    RangeFilter.prototype.reset = function (query) {
-        var filterName = this.component.props.filterName;
-        if (query.filters !== undefined &&
-            typeof query.filters === "object" &&
-            query.filters[filterName] !== undefined) {
-            delete query.filters[filterName];
-        }
-    };
-    return RangeFilter;
-}(Widget_1["default"]));
-/**
- * CheckboxFilter widget
- *
- * @param settings
- */
-exports["default"] = (function (settings) { return new RangeFilter(settings); });
-
-
-/***/ }),
-
-/***/ "./src/widgets/Reload.tsx":
-/*!********************************!*\
-  !*** ./src/widgets/Reload.tsx ***!
-  \********************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
-exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
-var ReloadComponent_1 = __webpack_require__(/*! ../components/Reload/ReloadComponent */ "./src/components/Reload/ReloadComponent.tsx");
-var Widget_1 = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
-/**
- * Reload
- */
-var Reload = /** @class */ (function (_super) {
-    __extends(Reload, _super);
-    /**
-     * Constructor
-     *
-     * @param target
-     * @param classNames
-     * @param template
-     */
-    function Reload(_a) {
-        var target = _a.target, classNames = _a.classNames, template = _a.template;
-        var _this = _super.call(this) || this;
-        _this.target = target;
-        _this.component = preact_1.h(ReloadComponent_1["default"], { target: target, classNames: __assign(__assign({}, ReloadComponent_1["default"].defaultProps.classNames), classNames), template: template });
-        return _this;
-    }
-    /**
-     * @param environmentId
-     * @param store
-     * @param repository
-     * @param dictionary
-     */
-    Reload.prototype.render = function (environmentId, store, repository, dictionary) {
-        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store, dictionary: dictionary });
-        var targetNode = document.querySelector(this.target);
-        preact_1.render(this.component, targetNode);
-    };
-    return Reload;
-}(Widget_1["default"]));
-/**
- * Reload filter
- *
- * @param settings
- */
-exports["default"] = (function (settings) { return new Reload(settings); });
-
-
-/***/ }),
-
-/***/ "./src/widgets/Result.tsx":
-/*!********************************!*\
-  !*** ./src/widgets/Result.tsx ***!
-  \********************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
-exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
-var ResultComponent_1 = __webpack_require__(/*! ../components/Result/ResultComponent */ "./src/components/Result/ResultComponent.tsx");
-var Widget_1 = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
-/**
- * Result
- */
-var Result = /** @class */ (function (_super) {
-    __extends(Result, _super);
-    /**
-     * Constructor
-     *
-     * @param target
-     * @param fields
-     * @param itemsPerPage
-     * @param promote
-     * @param exclude
-     * @param filter
-     * @param highlightsEnabled
-     * @param classNames
-     * @param template
-     * @param formatData
-     * @param fadeInSelector
-     * @param infiniteScroll
-     * @param fieldsConciliation
-     * @param minScore
-     */
-    function Result(_a) {
-        var target = _a.target, fields = _a.fields, itemsPerPage = _a.itemsPerPage, promote = _a.promote, exclude = _a.exclude, filter = _a.filter, highlightsEnabled = _a.highlightsEnabled, classNames = _a.classNames, template = _a.template, formatData = _a.formatData, fadeInSelector = _a.fadeInSelector, infiniteScroll = _a.infiniteScroll, fieldsConciliation = _a.fieldsConciliation, minScore = _a.minScore;
-        var _this = _super.call(this) || this;
-        _this.target = target;
-        _this.targetNode = document.querySelector(_this.target);
-        _this.component = preact_1.h(ResultComponent_1["default"], { target: target, fields: fields, itemsPerPage: itemsPerPage, promote: promote, exclude: exclude, filter: filter, highlightsEnabled: highlightsEnabled, classNames: __assign(__assign({}, ResultComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, ResultComponent_1["default"].defaultProps.template), template), formatData: formatData, fadeInSelector: fadeInSelector, infiniteScroll: infiniteScroll, fieldsConciliation: fieldsConciliation, minScore: minScore });
-        return _this;
-    }
-    /**
-     * @param environmentId
-     * @param store
-     * @param repository
-     * @param dictionary
-     */
-    Result.prototype.render = function (environmentId, store, repository, dictionary) {
-        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store, currentVisibleResults: store.resultsAreVisible(), dictionary: dictionary });
-        preact_1.render(this.component, this.targetNode);
-    };
-    return Result;
-}(Widget_1["default"]));
-/**
- * Result widget
- *
- * @param settings
- */
-exports["default"] = (function (settings) { return new Result(settings); });
-
-
-/***/ }),
-
-/***/ "./src/widgets/SearchInput.tsx":
-/*!*************************************!*\
-  !*** ./src/widgets/SearchInput.tsx ***!
-  \*************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
-exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
-var SearchInputComponent_1 = __webpack_require__(/*! ../components/SearchInput/SearchInputComponent */ "./src/components/SearchInput/SearchInputComponent.tsx");
-var Widget_1 = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
-/**
- * SearchInput
- */
-var SearchInput = /** @class */ (function (_super) {
-    __extends(SearchInput, _super);
-    /**
-     * Constructor
-     *
-     * @param target
-     * @param placeholder
-     * @param startSearchOn
-     * @param clearSearch
-     * @param withContainer
-     * @param autofocus
-     * @param autocomplete
-     * @param classNames
-     * @param template
-     * @param initialSearch
-     * @param searchableFields
-     * @param speechRecognition
-     * @param queryOperator
-     */
-    function SearchInput(_a) {
-        var target = _a.target, placeholder = _a.placeholder, startSearchOn = _a.startSearchOn, clearSearch = _a.clearSearch, withContainer = _a.withContainer, autofocus = _a.autofocus, autocomplete = _a.autocomplete, classNames = _a.classNames, template = _a.template, initialSearch = _a.initialSearch, searchableFields = _a.searchableFields, speechRecognition = _a.speechRecognition, queryOperator = _a.queryOperator;
-        var _this = _super.call(this) || this;
-        _this.target = target;
-        _this.component = preact_1.h(SearchInputComponent_1["default"], { target: target, placeholder: placeholder, autofocus: autofocus, autocomplete: autocomplete, startSearchOn: startSearchOn, clearSearch: clearSearch, withContainer: withContainer, searchableFields: searchableFields, speechRecognition: speechRecognition, classNames: __assign(__assign({}, SearchInputComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, SearchInputComponent_1["default"].defaultProps.template), template), initialSearch: initialSearch, queryOperator: queryOperator, config: _this.config });
-        return _this;
-    }
-    /**
-     * @param environmentId
-     * @param store
-     * @param repository
-     * @param dictionary
-     */
-    SearchInput.prototype.render = function (environmentId, store, repository, dictionary) {
-        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store, htmlNodeInheritProps: {
-                autocomplete: 'off',
-                spellcheck: false
-            }, dictionary: dictionary });
-        if (!this.targetNode) {
-            var targetNode = document.querySelector(this.target);
-            var isInput = isInputElement(targetNode);
-            if (isInput) {
-                this.component.props = __assign(__assign({}, this.component.props), { withContainer: false, htmlNodeInheritProps: __assign(__assign({}, this.component.props.htmlNodeInheritedProps), getNodeAttributes(targetNode)) });
-                var parentNode = targetNode.parentNode;
-                targetNode.remove();
-                this.targetNode = parentNode;
-            }
-            else {
-                this.targetNode = targetNode;
-            }
-        }
-        if (this.isSecondRender == undefined) {
-            this.isSecondRender = true;
-        }
-        else if (this.isSecondRender == true) {
-            this.isSecondRender = false;
-        }
-        preact_1.render(this.component, this.targetNode);
-    };
-    /**
-     * @param query
-     * @param object
-     */
-    SearchInput.prototype.toUrlObject = function (query, object) {
-        var q = query.q;
-        if (q !== undefined &&
-            q !== "") {
-            object.q = q;
-        }
-    };
-    /**
-     * @param object
-     * @param query
-     */
-    SearchInput.prototype.fromUrlObject = function (object, query) {
-        var q = object.q;
-        if (q !== undefined &&
-            q !== "") {
-            query.q = q;
-        }
-    };
-    /**
-     * @param query
-     */
-    SearchInput.prototype.reset = function (query) {
-        delete query.q;
-    };
-    return SearchInput;
-}(Widget_1["default"]));
-/**
- * Returns an object of an
- * html node attributes.
- *
- * @param htmlNode
- * @returns {{}}
- */
-var getNodeAttributes = function (htmlNode) {
-    var _a;
-    var nodeAttributes = {};
-    for (var i = 0; i < htmlNode.attributes.length; i++) {
-        var attr = htmlNode.attributes[i];
-        if (attr.specified) {
-            nodeAttributes = __assign(__assign({}, nodeAttributes), (_a = {}, _a[attr.name] = attr.value, _a));
-        }
-    }
-    return nodeAttributes;
-};
-/**
- * Checks if an html node
- * is an input.
- *
- * @param targetNode
- * @returns {boolean}
- */
-var isInputElement = function (targetNode) {
-    return targetNode instanceof HTMLInputElement;
-};
-/**
- * Search Input widget
- *
- * @param settings
- */
-exports["default"] = (function (settings) { return new SearchInput(settings); });
-
-
-/***/ }),
-
-/***/ "./src/widgets/Snapshot.tsx":
-/*!**********************************!*\
-  !*** ./src/widgets/Snapshot.tsx ***!
-  \**********************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
-exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
-var SnapshotComponent_1 = __webpack_require__(/*! ../components/Snapshot/SnapshotComponent */ "./src/components/Snapshot/SnapshotComponent.tsx");
-var Widget_1 = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
-/**
- * Snapshot
- */
-var Snapshot = /** @class */ (function (_super) {
-    __extends(Snapshot, _super);
-    /**
-     * Constructor
-     *
-     * @param target
-     * @param classNames
-     * @param template
-     */
-    function Snapshot(_a) {
-        var target = _a.target, classNames = _a.classNames, template = _a.template;
-        var _this = _super.call(this) || this;
-        _this.target = target;
-        _this.component = preact_1.h(SnapshotComponent_1["default"], { target: target });
-        return _this;
-    }
-    /**
-     * @param environmentId
-     * @param store
-     * @param repository
-     * @param dictionary
-     */
-    Snapshot.prototype.render = function (environmentId, store, repository, dictionary) {
-        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store });
-        var targetNode = document.querySelector(this.target);
-        preact_1.render(this.component, targetNode);
-    };
-    return Snapshot;
-}(Widget_1["default"]));
-/**
- * @param settings
- */
-exports["default"] = (function (settings) { return new Snapshot(settings); });
-
-
-/***/ }),
-
-/***/ "./src/widgets/SortBy.tsx":
-/*!********************************!*\
-  !*** ./src/widgets/SortBy.tsx ***!
-  \********************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
-exports.__esModule = true;
-var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
-var SortByComponent_1 = __webpack_require__(/*! ../components/SortBy/SortByComponent */ "./src/components/SortBy/SortByComponent.tsx");
-var Widget_1 = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
-/**
- * SortBy
- */
-var SortBy = /** @class */ (function (_super) {
-    __extends(SortBy, _super);
-    function SortBy(_a) {
-        var target = _a.target, classNames = _a.classNames, options = _a.options;
-        var _this = _super.call(this) || this;
-        _this.target = target;
-        _this.targetNode = document.querySelector(_this.target);
-        _this.component = preact_1.h(SortByComponent_1["default"], { target: target, classNames: __assign(__assign({}, SortByComponent_1["default"].defaultProps.classNames), classNames), options: options });
-        return _this;
-    }
-    /**
-     * @param environmentId
-     * @param store
-     * @param repository
-     * @param dictionary
-     */
-    SortBy.prototype.render = function (environmentId, store, repository, dictionary) {
-        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store });
-        preact_1.render(this.component, this.targetNode);
-    };
-    /**
-     * @param query
-     * @param object
-     */
-    SortBy.prototype.toUrlObject = function (query, object) {
-        if (query.sort !== undefined) {
-            var sort = query.sort[0];
-            var sortInstance = apisearch_1.SortBy.createFromArray(query.sort);
-            var sortAsString = sortInstance.getFirstSortAsString();
-            var firstSortAsString = this.component.props.options[0].value;
-            if (sortAsString !== firstSortAsString) {
-                if (sort.type === "distance") {
-                    object.sort = "distance:" + sort.unit + ":" + sort.coordinate.lat + ":" + sort.coordinate.lon;
-                }
-                else {
-                    object.sort = sort.field.substr(17) + ":" + sort.order;
-                }
-            }
-        }
-    };
-    /**
-     * @param object
-     * @param query
-     */
-    SortBy.prototype.fromUrlObject = function (object, query) {
-        if (object.sort !== undefined) {
-            if (query.sort === undefined) {
-                query.sort = [{}];
-            }
-            if (object.sort === 'score') {
-                query.sort[0].field = '_score';
-                query.sort[0].order = 'desc';
-                return;
-            }
-            if (object.sort.indexOf('distance:') === 0) {
-                var distanceSortParts = object.sort.split(':');
-                query.sort[0].type = distanceSortParts[0];
-                query.sort[0].unit = distanceSortParts[1];
-                query.sort[0].coordinate = {
-                    'lat': distanceSortParts[2],
-                    'lon': distanceSortParts[3],
-                };
-                return;
-            }
-            var sortParts = object.sort.split(':');
-            query.sort[0].field = 'indexed_metadata.' + sortParts[0];
-            query.sort[0].order = sortParts[1];
-        }
-    };
-    /**
-     * @param query
-     */
-    SortBy.prototype.reset = function (query) {
-        delete query.sort;
-    };
-    return SortBy;
-}(Widget_1["default"]));
-/**
- * SortBy widget
- *
- * @param settings
- */
-exports["default"] = (function (settings) { return new SortBy(settings); });
-
-
-/***/ }),
-
-/***/ "./src/widgets/Suggestions.tsx":
-/*!*************************************!*\
-  !*** ./src/widgets/Suggestions.tsx ***!
-  \*************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
-exports.__esModule = true;
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
-var SuggestionsFilterComponent_1 = __webpack_require__(/*! ../components/Suggestions/SuggestionsFilterComponent */ "./src/components/Suggestions/SuggestionsFilterComponent.tsx");
-var Widget_1 = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
-/**
- * SuggestionsFilter
- */
-var SuggestionsFilter = /** @class */ (function (_super) {
-    __extends(SuggestionsFilter, _super);
-    function SuggestionsFilter(_a) {
-        var target = _a.target, numberOfSuggestions = _a.numberOfSuggestions, classNames = _a.classNames, template = _a.template;
-        var _this = _super.call(this) || this;
-        _this.target = target;
-        _this.component = preact_1.h(SuggestionsFilterComponent_1["default"], { target: target, numberOfSuggestions: numberOfSuggestions, classNames: __assign(__assign({}, SuggestionsFilterComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, SuggestionsFilterComponent_1["default"].defaultProps.template), template) });
-        return _this;
-    }
-    /**
-     * @param environmentId
-     * @param store
-     * @param repository
-     * @param dictionary
-     */
-    SuggestionsFilter.prototype.render = function (environmentId, store, repository, dictionary) {
-        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store, dictionary: dictionary });
-        preact_1.render(this.component, document.querySelector(this.target));
-    };
-    return SuggestionsFilter;
-}(Widget_1["default"]));
-/**
- * CheckboxFilter widget
- *
- * @param settings
- */
-exports["default"] = (function (settings) { return new SuggestionsFilter(settings); });
-
-
-/***/ }),
-
-/***/ "./src/widgets/Widget.ts":
-/*!*******************************!*\
-  !*** ./src/widgets/Widget.ts ***!
-  \*******************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-exports.__esModule = true;
-/**
- * Widget
- */
-var Widget = /** @class */ (function () {
-    function Widget() {
-    }
-    Widget.prototype.withConfig = function (config) {
-        if ("withConfig" in this.component) {
-            this.component.withConfig(config);
-        }
-    };
-    /**
-     * @param query
-     * @param object
-     */
-    Widget.prototype.toUrlObject = function (query, object) {
-    };
-    /**
-     * @param object
-     * @param query
-     */
-    Widget.prototype.fromUrlObject = function (object, query) {
-    };
-    /**
-     * @param query
-     */
-    Widget.prototype.reset = function (query) {
-    };
-    /**
-     * @param environmentId
-     * @param query
-     */
-    Widget.prototype.normalizeQuery = function (environmentId, query) {
-    };
-    return Widget;
-}());
-exports["default"] = Widget;
-
-
-/***/ }),
-
-/***/ "./src/widgets/Widgets.ts":
-/*!********************************!*\
-  !*** ./src/widgets/Widgets.ts ***!
-  \********************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-exports.__esModule = true;
-var CheckboxFilter_1 = __webpack_require__(/*! ./CheckboxFilter */ "./src/widgets/CheckboxFilter.tsx");
-var ClearFilters_1 = __webpack_require__(/*! ./ClearFilters */ "./src/widgets/ClearFilters.tsx");
-var Information_1 = __webpack_require__(/*! ./Information */ "./src/widgets/Information.tsx");
-var MultipleFilter_1 = __webpack_require__(/*! ./MultipleFilter */ "./src/widgets/MultipleFilter.tsx");
-var Pagination_1 = __webpack_require__(/*! ./Pagination */ "./src/widgets/Pagination.tsx");
-var RangeFilter_1 = __webpack_require__(/*! ./RangeFilter */ "./src/widgets/RangeFilter.tsx");
-var Reload_1 = __webpack_require__(/*! ./Reload */ "./src/widgets/Reload.tsx");
-var Result_1 = __webpack_require__(/*! ./Result */ "./src/widgets/Result.tsx");
-var SearchInput_1 = __webpack_require__(/*! ./SearchInput */ "./src/widgets/SearchInput.tsx");
-var Snapshot_1 = __webpack_require__(/*! ./Snapshot */ "./src/widgets/Snapshot.tsx");
-var SortBy_1 = __webpack_require__(/*! ./SortBy */ "./src/widgets/SortBy.tsx");
-var Suggestions_1 = __webpack_require__(/*! ./Suggestions */ "./src/widgets/Suggestions.tsx");
-/**
- * Widget factories
- */
-exports["default"] = {
-    searchInput: SearchInput_1["default"],
-    clearFilters: ClearFilters_1["default"],
-    multipleFilter: MultipleFilter_1["default"],
-    sortBy: SortBy_1["default"],
-    information: Information_1["default"],
-    result: Result_1["default"],
-    pagination: Pagination_1["default"],
-    checkboxFilter: CheckboxFilter_1["default"],
-    rangeFilter: RangeFilter_1["default"],
-    reload: Reload_1["default"],
-    snapshot: Snapshot_1["default"],
-    suggestions: Suggestions_1["default"]
-};
-
-
-/***/ }),
-
 /***/ "./node_modules/ts-md5/dist/md5.js":
 /*!*****************************************!*\
   !*** ./node_modules/ts-md5/dist/md5.js ***!
   \*****************************************/
-/***/ ((__unused_webpack_module, exports) => {
+/***/ (function(__unused_webpack_module, exports) {
 
 "use strict";
 
@@ -17490,34 +16928,34 @@ if (Md5.hashStr('hello') !== '5d41402abc4b2a76b9719d911017c592') {
 /*!*****************************************!*\
   !*** ./node_modules/tslib/tslib.es6.js ***!
   \*****************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "__extends": () => (/* binding */ __extends),
-/* harmony export */   "__assign": () => (/* binding */ __assign),
-/* harmony export */   "__rest": () => (/* binding */ __rest),
-/* harmony export */   "__decorate": () => (/* binding */ __decorate),
-/* harmony export */   "__param": () => (/* binding */ __param),
-/* harmony export */   "__metadata": () => (/* binding */ __metadata),
-/* harmony export */   "__awaiter": () => (/* binding */ __awaiter),
-/* harmony export */   "__generator": () => (/* binding */ __generator),
-/* harmony export */   "__createBinding": () => (/* binding */ __createBinding),
-/* harmony export */   "__exportStar": () => (/* binding */ __exportStar),
-/* harmony export */   "__values": () => (/* binding */ __values),
-/* harmony export */   "__read": () => (/* binding */ __read),
-/* harmony export */   "__spread": () => (/* binding */ __spread),
-/* harmony export */   "__spreadArrays": () => (/* binding */ __spreadArrays),
-/* harmony export */   "__await": () => (/* binding */ __await),
-/* harmony export */   "__asyncGenerator": () => (/* binding */ __asyncGenerator),
-/* harmony export */   "__asyncDelegator": () => (/* binding */ __asyncDelegator),
-/* harmony export */   "__asyncValues": () => (/* binding */ __asyncValues),
-/* harmony export */   "__makeTemplateObject": () => (/* binding */ __makeTemplateObject),
-/* harmony export */   "__importStar": () => (/* binding */ __importStar),
-/* harmony export */   "__importDefault": () => (/* binding */ __importDefault),
-/* harmony export */   "__classPrivateFieldGet": () => (/* binding */ __classPrivateFieldGet),
-/* harmony export */   "__classPrivateFieldSet": () => (/* binding */ __classPrivateFieldSet)
+/* harmony export */   "__extends": function() { return /* binding */ __extends; },
+/* harmony export */   "__assign": function() { return /* binding */ __assign; },
+/* harmony export */   "__rest": function() { return /* binding */ __rest; },
+/* harmony export */   "__decorate": function() { return /* binding */ __decorate; },
+/* harmony export */   "__param": function() { return /* binding */ __param; },
+/* harmony export */   "__metadata": function() { return /* binding */ __metadata; },
+/* harmony export */   "__awaiter": function() { return /* binding */ __awaiter; },
+/* harmony export */   "__generator": function() { return /* binding */ __generator; },
+/* harmony export */   "__createBinding": function() { return /* binding */ __createBinding; },
+/* harmony export */   "__exportStar": function() { return /* binding */ __exportStar; },
+/* harmony export */   "__values": function() { return /* binding */ __values; },
+/* harmony export */   "__read": function() { return /* binding */ __read; },
+/* harmony export */   "__spread": function() { return /* binding */ __spread; },
+/* harmony export */   "__spreadArrays": function() { return /* binding */ __spreadArrays; },
+/* harmony export */   "__await": function() { return /* binding */ __await; },
+/* harmony export */   "__asyncGenerator": function() { return /* binding */ __asyncGenerator; },
+/* harmony export */   "__asyncDelegator": function() { return /* binding */ __asyncDelegator; },
+/* harmony export */   "__asyncValues": function() { return /* binding */ __asyncValues; },
+/* harmony export */   "__makeTemplateObject": function() { return /* binding */ __makeTemplateObject; },
+/* harmony export */   "__importStar": function() { return /* binding */ __importStar; },
+/* harmony export */   "__importDefault": function() { return /* binding */ __importDefault; },
+/* harmony export */   "__classPrivateFieldGet": function() { return /* binding */ __classPrivateFieldGet; },
+/* harmony export */   "__classPrivateFieldSet": function() { return /* binding */ __classPrivateFieldSet; }
 /* harmony export */ });
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -17741,352 +17179,14 @@ function __classPrivateFieldSet(receiver, privateMap, value) {
 
 /***/ }),
 
-/***/ "./node_modules/axios-retry/lib/cjs/index.js":
-/*!***************************************************!*\
-  !*** ./node_modules/axios-retry/lib/cjs/index.js ***!
-  \***************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ "./node_modules/axios/package.json":
+/*!*****************************************!*\
+  !*** ./node_modules/axios/package.json ***!
+  \*****************************************/
+/***/ (function(module) {
 
 "use strict";
-
-
-var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "./node_modules/@babel/runtime/helpers/interopRequireDefault.js");
-
-Object.defineProperty(exports, "__esModule", ({
-  value: true
-}));
-exports.isNetworkError = isNetworkError;
-exports.isRetryableError = isRetryableError;
-exports.isSafeRequestError = isSafeRequestError;
-exports.isIdempotentRequestError = isIdempotentRequestError;
-exports.isNetworkOrIdempotentRequestError = isNetworkOrIdempotentRequestError;
-exports.exponentialDelay = exponentialDelay;
-exports["default"] = axiosRetry;
-
-var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js"));
-
-var _typeof2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/typeof */ "./node_modules/@babel/runtime/helpers/typeof.js"));
-
-var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js"));
-
-var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js"));
-
-var _isRetryAllowed = _interopRequireDefault(__webpack_require__(/*! is-retry-allowed */ "./node_modules/is-retry-allowed/index.js"));
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-var namespace = 'axios-retry';
-/**
- * @param  {Error}  error
- * @return {boolean}
- */
-
-function isNetworkError(error) {
-  return !error.response && Boolean(error.code) && // Prevents retrying cancelled requests
-  error.code !== 'ECONNABORTED' && // Prevents retrying timed out requests
-  (0, _isRetryAllowed.default)(error); // Prevents retrying unsafe errors
-}
-
-var SAFE_HTTP_METHODS = ['get', 'head', 'options'];
-var IDEMPOTENT_HTTP_METHODS = SAFE_HTTP_METHODS.concat(['put', 'delete']);
-/**
- * @param  {Error}  error
- * @return {boolean}
- */
-
-function isRetryableError(error) {
-  return error.code !== 'ECONNABORTED' && (!error.response || error.response.status >= 500 && error.response.status <= 599);
-}
-/**
- * @param  {Error}  error
- * @return {boolean}
- */
-
-
-function isSafeRequestError(error) {
-  if (!error.config) {
-    // Cannot determine if the request can be retried
-    return false;
-  }
-
-  return isRetryableError(error) && SAFE_HTTP_METHODS.indexOf(error.config.method) !== -1;
-}
-/**
- * @param  {Error}  error
- * @return {boolean}
- */
-
-
-function isIdempotentRequestError(error) {
-  if (!error.config) {
-    // Cannot determine if the request can be retried
-    return false;
-  }
-
-  return isRetryableError(error) && IDEMPOTENT_HTTP_METHODS.indexOf(error.config.method) !== -1;
-}
-/**
- * @param  {Error}  error
- * @return {boolean | Promise}
- */
-
-
-function isNetworkOrIdempotentRequestError(error) {
-  return isNetworkError(error) || isIdempotentRequestError(error);
-}
-/**
- * @return {number} - delay in milliseconds, always 0
- */
-
-
-function noDelay() {
-  return 0;
-}
-/**
- * @param  {number} [retryNumber=0]
- * @return {number} - delay in milliseconds
- */
-
-
-function exponentialDelay() {
-  var retryNumber = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-  var delay = Math.pow(2, retryNumber) * 100;
-  var randomSum = delay * 0.2 * Math.random(); // 0-20% of the delay
-
-  return delay + randomSum;
-}
-/**
- * Initializes and returns the retry state for the given request/config
- * @param  {AxiosRequestConfig} config
- * @return {Object}
- */
-
-
-function getCurrentState(config) {
-  var currentState = config[namespace] || {};
-  currentState.retryCount = currentState.retryCount || 0;
-  config[namespace] = currentState;
-  return currentState;
-}
-/**
- * Returns the axios-retry options for the current request
- * @param  {AxiosRequestConfig} config
- * @param  {AxiosRetryConfig} defaultOptions
- * @return {AxiosRetryConfig}
- */
-
-
-function getRequestOptions(config, defaultOptions) {
-  return _objectSpread(_objectSpread({}, defaultOptions), config[namespace]);
-}
-/**
- * @param  {Axios} axios
- * @param  {AxiosRequestConfig} config
- */
-
-
-function fixConfig(axios, config) {
-  if (axios.defaults.agent === config.agent) {
-    delete config.agent;
-  }
-
-  if (axios.defaults.httpAgent === config.httpAgent) {
-    delete config.httpAgent;
-  }
-
-  if (axios.defaults.httpsAgent === config.httpsAgent) {
-    delete config.httpsAgent;
-  }
-}
-/**
- * Checks retryCondition if request can be retried. Handles it's retruning value or Promise.
- * @param  {number} retries
- * @param  {Function} retryCondition
- * @param  {Object} currentState
- * @param  {Error} error
- * @return {boolean}
- */
-
-
-function shouldRetry(_x, _x2, _x3, _x4) {
-  return _shouldRetry.apply(this, arguments);
-}
-/**
- * Adds response interceptors to an axios instance to retry requests failed due to network issues
- *
- * @example
- *
- * import axios from 'axios';
- *
- * axiosRetry(axios, { retries: 3 });
- *
- * axios.get('http://example.com/test') // The first request fails and the second returns 'ok'
- *   .then(result => {
- *     result.data; // 'ok'
- *   });
- *
- * // Exponential back-off retry delay between requests
- * axiosRetry(axios, { retryDelay : axiosRetry.exponentialDelay});
- *
- * // Custom retry delay
- * axiosRetry(axios, { retryDelay : (retryCount) => {
- *   return retryCount * 1000;
- * }});
- *
- * // Also works with custom axios instances
- * const client = axios.create({ baseURL: 'http://example.com' });
- * axiosRetry(client, { retries: 3 });
- *
- * client.get('/test') // The first request fails and the second returns 'ok'
- *   .then(result => {
- *     result.data; // 'ok'
- *   });
- *
- * // Allows request-specific configuration
- * client
- *   .get('/test', {
- *     'axios-retry': {
- *       retries: 0
- *     }
- *   })
- *   .catch(error => { // The first request fails
- *     error !== undefined
- *   });
- *
- * @param {Axios} axios An axios instance (the axios object or one created from axios.create)
- * @param {Object} [defaultOptions]
- * @param {number} [defaultOptions.retries=3] Number of retries
- * @param {boolean} [defaultOptions.shouldResetTimeout=false]
- *        Defines if the timeout should be reset between retries
- * @param {Function} [defaultOptions.retryCondition=isNetworkOrIdempotentRequestError]
- *        A function to determine if the error can be retried
- * @param {Function} [defaultOptions.retryDelay=noDelay]
- *        A function to determine the delay between retry requests
- */
-
-
-function _shouldRetry() {
-  _shouldRetry = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee2(retries, retryCondition, currentState, error) {
-    var shouldRetryOrPromise;
-    return _regenerator.default.wrap(function _callee2$(_context2) {
-      while (1) {
-        switch (_context2.prev = _context2.next) {
-          case 0:
-            shouldRetryOrPromise = currentState.retryCount < retries && retryCondition(error); // This could be a promise
-
-            if (!((0, _typeof2.default)(shouldRetryOrPromise) === 'object')) {
-              _context2.next = 11;
-              break;
-            }
-
-            _context2.prev = 2;
-            _context2.next = 5;
-            return shouldRetryOrPromise;
-
-          case 5:
-            return _context2.abrupt("return", true);
-
-          case 8:
-            _context2.prev = 8;
-            _context2.t0 = _context2["catch"](2);
-            return _context2.abrupt("return", false);
-
-          case 11:
-            return _context2.abrupt("return", shouldRetryOrPromise);
-
-          case 12:
-          case "end":
-            return _context2.stop();
-        }
-      }
-    }, _callee2, null, [[2, 8]]);
-  }));
-  return _shouldRetry.apply(this, arguments);
-}
-
-function axiosRetry(axios, defaultOptions) {
-  axios.interceptors.request.use(function (config) {
-    var currentState = getCurrentState(config);
-    currentState.lastRequestTime = Date.now();
-    return config;
-  });
-  axios.interceptors.response.use(null, /*#__PURE__*/function () {
-    var _ref = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee(error) {
-      var config, _getRequestOptions, _getRequestOptions$re, retries, _getRequestOptions$re2, retryCondition, _getRequestOptions$re3, retryDelay, _getRequestOptions$sh, shouldResetTimeout, currentState, delay, lastRequestDuration;
-
-      return _regenerator.default.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              config = error.config; // If we have no information to retry the request
-
-              if (config) {
-                _context.next = 3;
-                break;
-              }
-
-              return _context.abrupt("return", Promise.reject(error));
-
-            case 3:
-              _getRequestOptions = getRequestOptions(config, defaultOptions), _getRequestOptions$re = _getRequestOptions.retries, retries = _getRequestOptions$re === void 0 ? 3 : _getRequestOptions$re, _getRequestOptions$re2 = _getRequestOptions.retryCondition, retryCondition = _getRequestOptions$re2 === void 0 ? isNetworkOrIdempotentRequestError : _getRequestOptions$re2, _getRequestOptions$re3 = _getRequestOptions.retryDelay, retryDelay = _getRequestOptions$re3 === void 0 ? noDelay : _getRequestOptions$re3, _getRequestOptions$sh = _getRequestOptions.shouldResetTimeout, shouldResetTimeout = _getRequestOptions$sh === void 0 ? false : _getRequestOptions$sh;
-              currentState = getCurrentState(config);
-              _context.next = 7;
-              return shouldRetry(retries, retryCondition, currentState, error);
-
-            case 7:
-              if (!_context.sent) {
-                _context.next = 14;
-                break;
-              }
-
-              currentState.retryCount += 1;
-              delay = retryDelay(currentState.retryCount, error); // Axios fails merging this configuration to the default configuration because it has an issue
-              // with circular structures: https://github.com/mzabriskie/axios/issues/370
-
-              fixConfig(axios, config);
-
-              if (!shouldResetTimeout && config.timeout && currentState.lastRequestTime) {
-                lastRequestDuration = Date.now() - currentState.lastRequestTime; // Minimum 1ms timeout (passing 0 or less to XHR means no timeout)
-
-                config.timeout = Math.max(config.timeout - lastRequestDuration - delay, 1);
-              }
-
-              config.transformRequest = [function (data) {
-                return data;
-              }];
-              return _context.abrupt("return", new Promise(function (resolve) {
-                return setTimeout(function () {
-                  return resolve(axios(config));
-                }, delay);
-              }));
-
-            case 14:
-              return _context.abrupt("return", Promise.reject(error));
-
-            case 15:
-            case "end":
-              return _context.stop();
-          }
-        }
-      }, _callee);
-    }));
-
-    return function (_x5) {
-      return _ref.apply(this, arguments);
-    };
-  }());
-} // Compatibility with CommonJS
-
-
-axiosRetry.isNetworkError = isNetworkError;
-axiosRetry.isSafeRequestError = isSafeRequestError;
-axiosRetry.isIdempotentRequestError = isIdempotentRequestError;
-axiosRetry.isNetworkOrIdempotentRequestError = isNetworkOrIdempotentRequestError;
-axiosRetry.exponentialDelay = exponentialDelay;
-axiosRetry.isRetryableError = isRetryableError;
-//# sourceMappingURL=index.js.map
+module.exports = JSON.parse('{"name":"axios","version":"0.21.4","description":"Promise based HTTP client for the browser and node.js","main":"index.js","scripts":{"test":"grunt test","start":"node ./sandbox/server.js","build":"NODE_ENV=production grunt build","preversion":"npm test","version":"npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json","postversion":"git push && git push --tags","examples":"node ./examples/server.js","coveralls":"cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js","fix":"eslint --fix lib/**/*.js"},"repository":{"type":"git","url":"https://github.com/axios/axios.git"},"keywords":["xhr","http","ajax","promise","node"],"author":"Matt Zabriskie","license":"MIT","bugs":{"url":"https://github.com/axios/axios/issues"},"homepage":"https://axios-http.com","devDependencies":{"coveralls":"^3.0.0","es6-promise":"^4.2.4","grunt":"^1.3.0","grunt-banner":"^0.6.0","grunt-cli":"^1.2.0","grunt-contrib-clean":"^1.1.0","grunt-contrib-watch":"^1.0.0","grunt-eslint":"^23.0.0","grunt-karma":"^4.0.0","grunt-mocha-test":"^0.13.3","grunt-ts":"^6.0.0-beta.19","grunt-webpack":"^4.0.2","istanbul-instrumenter-loader":"^1.0.0","jasmine-core":"^2.4.1","karma":"^6.3.2","karma-chrome-launcher":"^3.1.0","karma-firefox-launcher":"^2.1.0","karma-jasmine":"^1.1.1","karma-jasmine-ajax":"^0.1.13","karma-safari-launcher":"^1.0.0","karma-sauce-launcher":"^4.3.6","karma-sinon":"^1.0.5","karma-sourcemap-loader":"^0.3.8","karma-webpack":"^4.0.2","load-grunt-tasks":"^3.5.2","minimist":"^1.2.0","mocha":"^8.2.1","sinon":"^4.5.0","terser-webpack-plugin":"^4.2.3","typescript":"^4.0.5","url-search-params":"^0.10.0","webpack":"^4.44.2","webpack-dev-server":"^3.11.0"},"browser":{"./lib/adapters/http.js":"./lib/adapters/xhr.js"},"jsdelivr":"dist/axios.min.js","unpkg":"dist/axios.min.js","typings":"./index.d.ts","dependencies":{"follow-redirects":"^1.14.0"},"bundlesize":[{"path":"./dist/axios.min.js","threshold":"5kB"}]}');
 
 /***/ })
 
@@ -18117,53 +17217,60 @@ axiosRetry.isRetryableError = isRetryableError;
 /******/ 	}
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	!function() {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = function(module) {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				function() { return module['default']; } :
+/******/ 				function() { return module; };
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	}();
+/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
+/******/ 	!function() {
 /******/ 		// define getter functions for harmony exports
-/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 		__webpack_require__.d = function(exports, definition) {
 /******/ 			for(var key in definition) {
 /******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
 /******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 				}
 /******/ 			}
 /******/ 		};
-/******/ 	})();
+/******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
+/******/ 	!function() {
+/******/ 		__webpack_require__.o = function(obj, prop) { return Object.prototype.hasOwnProperty.call(obj, prop); }
+/******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
-/******/ 	(() => {
+/******/ 	!function() {
 /******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = (exports) => {
+/******/ 		__webpack_require__.r = function(exports) {
 /******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
-/******/ 	})();
+/******/ 	}();
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be in strict mode.
-(() => {
+!function() {
 "use strict";
-var exports = __webpack_exports__;
 /*!**********************!*\
   !*** ./src/index.ts ***!
   \**********************/
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ApisearchUI__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ApisearchUI */ "./src/ApisearchUI.ts");
 
-exports.__esModule = true;
-var ApisearchUI_1 = __webpack_require__(/*! ./ApisearchUI */ "./src/ApisearchUI.ts");
-exports["default"] = ApisearchUI_1["default"];
-
-})();
-
-__webpack_exports__ = __webpack_exports__["default"];
-/******/ 	return __webpack_exports__;
+/* harmony default export */ __webpack_exports__["default"] = (_ApisearchUI__WEBPACK_IMPORTED_MODULE_0__["default"]);
+}();
+apisearchUI = __webpack_exports__["default"];
 /******/ })()
 ;
-});
 //# sourceMappingURL=apisearch-ui.js.map

@@ -1,16 +1,21 @@
 {
   "name": "apisearch-ui",
-  "version": "0.3.7",
+  "version": "0.3.8",
   "description": "Javascript User Interface of Apisearch.",
   "main": "lib/index.js",
   "scripts": {
     "dev": "webpack --config ./webpack.dev.js --progress --colors --watch",
     "build:lib": "tsc --outDir lib -m commonjs",
-    "build:dev": "webpack --config ./webpack.dev.js --mode development",
-    "build:min": "webpack --config ./webpack.min.js --mode production",
+    "build:dev": "webpack",
+    "build:dev-ie": "BROWSERSLIST_ENV=ie webpack --env ie",
+    "build:min": "webpack --env production",
+    "build:min-ie": "BROWSERSLIST_ENV=ie webpack --env ie --env production",
+
+    "size": "bundlesize",
+    "webpack": "webpack",
     "fix": "tslint -c tslint.json --fix 'src/**/*.ts' 'src/*.ts'",
     "test:unit": "mocha --timeout 10000 --recursive --require ts-node/register test/**/*.tsx test/**/**/*.tsx",
-    "dist": "rm -rf ./dist/*; npm run test:unit; npm run build:lib && npm run build:dev && npm run build:min"
+    "dist": "rm -rf ./dist/*; npm run test:unit; npm run build:lib && npm run build:dev && npm run build:dev-ie && npm run build:min && npm run build:min-ie"
   },
   "license": "MIT",
   "author": "Apisearch Team <hello@apisearch.io>",
@@ -31,10 +36,19 @@
     "user-interface"
   ],
   "devDependencies": {
+    "@babel/cli": "^7.16.0",
+    "@babel/core": "^7.16.0",
+    "@babel/preset-env": "^7.16.0",
+    "@babel/preset-react": "^7.16.0",
+    "@babel/preset-typescript": "^7.16.0",
     "@types/chai": "^4.1.7",
     "@types/mocha": "^5.2.6",
     "@types/node": "^10.14.4",
+    "babel-loader": "^8.2.3",
+    "babel-preset-preact": "^2.0.0",
+    "bundlesize": "^0.18.1",
     "chai": "^4.2.0",
+    "core-js": "^3.19.1",
     "enzyme": "^3.11.0",
     "enzyme-adapter-preact-pure": "^3.1.0",
     "jsdom": "11.12.0",
@@ -45,14 +59,28 @@
     "ts-loader": "^9.2.6",
     "ts-node": "^7.0.1",
     "tslint": "^5.14.0",
-    "typescript": "^4.0.3",
+    "typescript": "^4.4.4",
     "webpack": "^5.53.0",
     "webpack-cli": "^4.9.1",
     "webpack-merge": "^4.2.1"
   },
   "dependencies": {
-    "apisearch": "^0.3.6",
+    "apisearch": "^0.3.7",
     "mustache": "^4.1.0",
     "preact": "^10"
-  }
+  },
+  "bundlesize": [
+    {
+      "path": "./dist/apisearch-ui.js"
+    },
+    {
+      "path": "./dist/apisearch-ui.min.js"
+    },
+    {
+      "path": "./dist/apisearch-ui.ie.js"
+    },
+    {
+      "path": "./dist/apisearch-ui.ie.min.js"
+    }
+  ]
 }

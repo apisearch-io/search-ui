@@ -1,5 +1,5 @@
 import {Repository, SortBy as ApisearchSortBy} from "apisearch";
-import {h, render} from 'preact';
+import {h, render} from "preact";
 import SortByComponent from "../components/SortBy/SortByComponent";
 import Store from "../Store";
 import Widget from "./Widget";

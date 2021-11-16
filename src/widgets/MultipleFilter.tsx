@@ -1,4 +1,4 @@
-import {FILTER_MUST_ALL, FILTER_TYPE_FIELD, Repository} from "apisearch";
+import {FILTER_TYPE_FIELD, Repository} from "apisearch";
 import {h, render} from "preact";
 import {getShadowFilterValuesFromQuery, isFilterAvailable} from "../components/MultipleFilter/Helpers";
 import {modifyQueryAggregationWithProperLevelValue} from "../components/MultipleFilter/MultipleFilterActions";
