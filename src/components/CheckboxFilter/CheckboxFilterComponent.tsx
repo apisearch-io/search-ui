@@ -1,4 +1,5 @@
 import { h, Component } from 'preact';
+import {getFilterValuesFromQuery} from "../MultipleFilter/Helpers";
 import {CheckboxFilterProps} from './CheckboxFilterProps';
 import {CheckboxFilterState} from './CheckboxFilterState';
 import {
@@ -93,7 +94,12 @@ class CheckboxFilterComponent extends Component<CheckboxFilterProps, CheckboxFil
         }
 
         let n = 0;
-        let isActive = false;
+
+        /**
+         * We find current status inside the filter value
+         */
+        const isActive = getFilterValuesFromQuery(props.store.getCurrentQuery(), props.filterName)[0];
+
         const aggregation = state.aggregation;
         if (aggregation != null) {
             const counters = aggregation.getCounters();
@@ -101,23 +107,22 @@ class CheckboxFilterComponent extends Component<CheckboxFilterProps, CheckboxFil
                 const counter = counters[i];
                 if (counter.values.name === filterValue) {
                     n = counter.getN();
-                    isActive = counter.isUsed();
                     break;
                 }
             }
         }
 
-        let label = props.label
+        const label = props.label
             ? props.label
             : props.filterName;
 
         const that = this;
         const uid = Math.floor(Math.random() * 10000000000);
         const templateData = {
-            n: n,
-            isActive: isActive,
-            label: label,
-            uid: uid
+            isActive,
+            label,
+            n,
+            uid,
         };
 
         return (
@@ -132,9 +137,9 @@ class CheckboxFilterComponent extends Component<CheckboxFilterProps, CheckboxFil
                     className={
                         `as-checkboxFilter__item ` +
                         `${itemClassName} ` +
-                        `${(isActive) ? activeClassName : ''}`
+                        `${(isActive) ? activeClassName : ""}`
                     }
-                    onClick={function(e) {
+                    onClick={(e) => {
                         e.stopPropagation();
                         e.preventDefault();
                         that.handleChange(!isActive);
@@ -147,7 +152,7 @@ class CheckboxFilterComponent extends Component<CheckboxFilterProps, CheckboxFil
                     />
                 </div>
             </div>
-        )
+        );
     }
 }
 
@@ -163,6 +168,6 @@ CheckboxFilterComponent.defaultProps = {
         top: null,
         item: defaultItemTemplate,
     },
-}
+};
 
 export default CheckboxFilterComponent;

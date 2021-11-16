@@ -1,5 +1,5 @@
 import {Repository} from "apisearch";
-import {h, render} from 'preact';
+import {h, render} from "preact";
 import SearchInputComponent from "../components/SearchInput/SearchInputComponent";
 import Store from "../Store";
 import Widget from "./Widget";

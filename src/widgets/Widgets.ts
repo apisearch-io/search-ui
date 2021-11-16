@@ -15,16 +15,16 @@ import suggestions from "./Suggestions";
  * Widget factories
  */
 export default {
-    searchInput: searchInput,
-    clearFilters: clearFilters,
-    multipleFilter: multipleFilter,
-    sortBy: sortBy,
-    information: information,
-    result: result,
-    pagination: pagination,
-    checkboxFilter: checkboxFilter,
-    rangeFilter: rangeFilter,
-    reload: reload,
-    snapshot: snapshot,
-    suggestions: suggestions
+    searchInput,
+    clearFilters,
+    multipleFilter,
+    sortBy,
+    information,
+    result,
+    pagination,
+    checkboxFilter,
+    rangeFilter,
+    reload,
+    snapshot,
+    suggestions,
 };

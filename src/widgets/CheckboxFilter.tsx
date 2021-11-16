@@ -1,5 +1,5 @@
-import {Query, Repository} from "apisearch";
-import {h, render} from 'preact';
+import {Repository} from "apisearch";
+import {h, render} from "preact";
 import CheckboxFilterComponent from "../components/CheckboxFilter/CheckboxFilterComponent";
 import Store from "../Store";
 import Widget from "./Widget";
