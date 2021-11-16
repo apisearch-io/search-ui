@@ -12226,6 +12226,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 exports.__esModule = true;
 var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+var Helpers_1 = __webpack_require__(/*! ../MultipleFilter/Helpers */ "./src/components/MultipleFilter/Helpers.ts");
 var CheckboxFilterActions_1 = __webpack_require__(/*! ./CheckboxFilterActions */ "./src/components/CheckboxFilter/CheckboxFilterActions.ts");
 var Template_1 = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
 var defaultTemplates_1 = __webpack_require__(/*! ./defaultTemplates */ "./src/components/CheckboxFilter/defaultTemplates.tsx");
@@ -12294,7 +12295,7 @@ var CheckboxFilterComponent = /** @class */ (function (_super) {
             filterValue = filterValue ? "true" : "false";
         }
         var n = 0;
-        var isActive = false;
+        var isActive = Helpers_1.getFilterValuesFromQuery(props.store.getCurrentQuery(), props.filterName)[0];
         var aggregation = state.aggregation;
         if (aggregation != null) {
             var counters = aggregation.getCounters();
@@ -12302,7 +12303,6 @@ var CheckboxFilterComponent = /** @class */ (function (_super) {
                 var counter = counters[i];
                 if (counter.values.name === filterValue) {
                     n = counter.getN();
-                    isActive = counter.isUsed();
                     break;
                 }
             }
@@ -14275,7 +14275,6 @@ var Clone_1 = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
  * @param currentQuery
  * @param itemsPerPage
  * @param highlightsEnabled
- * @param suggestionsEnabled
  * @param promotedUUIDs
  * @param excludedUUIDs
  * @param fields
@@ -15457,11 +15456,9 @@ var SuggestionsFilterComponent = /** @class */ (function (_super) {
         _this.handleClick = function (word) {
             var props = _this.props;
             if (typeof word === "string") {
-                console.log(word);
                 word = word
                     .replace(/<em>/g, "")
                     .replace(/<\/em>/g, "");
-                console.log(word);
             }
             /**
              * Dispatch action

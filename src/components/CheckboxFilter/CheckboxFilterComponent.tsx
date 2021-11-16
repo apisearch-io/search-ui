@@ -1,4 +1,5 @@
 import { h, Component } from 'preact';
+import {getFilterValuesFromQuery} from "../MultipleFilter/Helpers";
 import {CheckboxFilterProps} from './CheckboxFilterProps';
 import {CheckboxFilterState} from './CheckboxFilterState';
 import {
@@ -93,7 +94,7 @@ class CheckboxFilterComponent extends Component<CheckboxFilterProps, CheckboxFil
         }
 
         let n = 0;
-        let isActive = false;
+        const isActive = getFilterValuesFromQuery(props.store.getCurrentQuery(), props.filterName)[0];
         const aggregation = state.aggregation;
         if (aggregation != null) {
             const counters = aggregation.getCounters();
@@ -101,13 +102,12 @@ class CheckboxFilterComponent extends Component<CheckboxFilterProps, CheckboxFil
                 const counter = counters[i];
                 if (counter.values.name === filterValue) {
                     n = counter.getN();
-                    isActive = counter.isUsed();
                     break;
                 }
             }
         }
 
-        let label = props.label
+        const label = props.label
             ? props.label
             : props.filterName;
 

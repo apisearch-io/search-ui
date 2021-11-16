@@ -14,7 +14,6 @@ import Clone from "../Clone";
  * @param currentQuery
  * @param itemsPerPage
  * @param highlightsEnabled
- * @param suggestionsEnabled
  * @param promotedUUIDs
  * @param excludedUUIDs
  * @param fields
