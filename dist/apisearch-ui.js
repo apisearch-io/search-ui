@@ -15288,27 +15288,6 @@ var Pagination = /** @class */ (function (_super) {
     };
     /**
      * @param query
-     * @param object
-     */
-    Pagination.prototype.toUrlObject = function (query, object) {
-        var page = query.page;
-        if (page > 1) {
-            object.page = page;
-        }
-    };
-    /**
-     * @param object
-     * @param query
-     */
-    Pagination.prototype.fromUrlObject = function (object, query) {
-        var page = object.page;
-        if (page !== undefined &&
-            page > 1) {
-            query.page = page;
-        }
-    };
-    /**
-     * @param query
      */
     Pagination.prototype.reset = function (query) {
         delete query.page;

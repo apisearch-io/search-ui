@@ -4,3 +4,4 @@
 /coverage/
 src/styles/.sass-cache
 .sass-cache
+dist/*.LICENSE.txt
