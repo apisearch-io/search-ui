@@ -98,6 +98,13 @@ class Result extends Widget {
             this.targetNode
         )
     }
+
+    /**
+     * @param query
+     */
+    public reset(query: any) {
+        delete query.page;
+    }
 }
 
 /**
