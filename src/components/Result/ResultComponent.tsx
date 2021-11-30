@@ -1,7 +1,7 @@
 import {ItemUUID} from "apisearch/lib/Model/ItemUUID";
 import {Component, h} from 'preact';
 import {useCallback, useEffect, useRef} from 'preact/compat';
-import {APISEARCH_CONFIG, APISEARCH_UI,} from "../../Constants";
+import {APISEARCH_CONFIG, APISEARCH_UI} from "../../Constants";
 import container from "../../Container";
 import Template from "../Template";
 import {defaultItemsListTemplate, defaultItemTemplate, defaultNoResultsItemTemplate} from "./defaultTemplates";
@@ -71,10 +71,8 @@ class ResultComponent extends Component<ResultProps, ResultState> {
              */
             function handleClickOutside(event) {
 
-                self.setState((prevState) => {
+                self.setState(() => {
                     return {
-                        items: prevState.items,
-                        page: prevState.page,
                         focus: event.target.closest(fadeInSelector) != null,
                     };
                 });

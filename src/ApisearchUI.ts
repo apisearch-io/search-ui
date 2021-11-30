@@ -98,14 +98,18 @@ export default class ApisearchUI {
         });
         this.store.setCurrentQuery(Query.createFromArray(initialQuery));
         this.store.setEmptyResult();
-        this.fetchQuery(false);
-        this.render();
+        const rendered = this.fetchQuery(false);
+        if (!rendered) {
+            this.render();
+        }
     }
 
     /**
      * @param loadQuery
+     *
+     * @return boolean
      */
-    private fetchQuery(loadQuery: boolean)
+    private fetchQuery(loadQuery: boolean) : boolean
     {
         /**
          * 3.- Dispatch the initial data request
@@ -120,7 +124,11 @@ export default class ApisearchUI {
                 this.repository,
                 loadQuery,
             );
+
+            return true;
         }
+
+        return false;
     }
 
     /**

@@ -10536,11 +10536,15 @@ var ApisearchUI = /** @class */ (function () {
         });
         this.store.setCurrentQuery(apisearch_1.Query.createFromArray(initialQuery));
         this.store.setEmptyResult();
-        this.fetchQuery(false);
-        this.render();
+        var rendered = this.fetchQuery(false);
+        if (!rendered) {
+            this.render();
+        }
     };
     /**
      * @param loadQuery
+     *
+     * @return boolean
      */
     ApisearchUI.prototype.fetchQuery = function (loadQuery) {
         /**
@@ -10550,7 +10554,9 @@ var ApisearchUI = /** @class */ (function () {
         if (typeof this.firstQuery === "undefined" ||
             true === this.firstQuery) {
             this.store.fetchInitialQuery(this.environmentId, this.repository, loadQuery);
+            return true;
         }
+        return false;
     };
     /**
      * @param dictionary
@@ -13498,10 +13504,8 @@ var ResultComponent = /** @class */ (function (_super) {
              * Alert if clicked on outside of element
              */
             function handleClickOutside(event) {
-                self.setState(function (prevState) {
+                self.setState(function () {
                     return {
-                        items: prevState.items,
-                        page: prevState.page,
                         focus: event.target.closest(fadeInSelector) != null,
                     };
                 });
@@ -15573,6 +15577,12 @@ var Result = /** @class */ (function (_super) {
     Result.prototype.render = function (environmentId, store, repository, dictionary) {
         this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store, currentVisibleResults: store.resultsAreVisible(), dictionary: dictionary });
         preact_1.render(this.component, this.targetNode);
+    };
+    /**
+     * @param query
+     */
+    Result.prototype.reset = function (query) {
+        delete query.page;
     };
     return Result;
 }(Widget_1["default"]));
