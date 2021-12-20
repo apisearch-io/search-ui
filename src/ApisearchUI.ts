@@ -296,8 +296,6 @@ export default class ApisearchUI {
     }
 
     /**
-     * Click
-     *
      * @param appId
      * @param indexId
      * @param itemId
@@ -312,5 +310,33 @@ export default class ApisearchUI {
         this
             .repository
             .click(appId, indexId, itemId, this.userId);
+
+        window.postMessage({
+            name: "apisearch_item_was_clicked",
+            app_id: appId,
+            index_id: indexId,
+            item_id: itemId,
+        }, "*");
+    }
+
+    /**
+     * @param appId
+     * @param indexId
+     *
+     * @return {any}
+     */
+    public purchase(
+        appId: string,
+        indexId: string,
+    ) {
+        this
+            .repository
+            .purchase(appId, indexId, this.userId);
+
+        window.postMessage({
+            name: "apisearch_purchase_was_done",
+            app_id: appId,
+            index_id: indexId,
+        }, "*");
     }
 }
