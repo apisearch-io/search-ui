@@ -1,7 +1,7 @@
-import {Component, h} from 'preact';
+import {Component, h} from "preact";
 import {initialSortBySetup, onChangeSearchAction} from "./SortByActions";
-import {SortByProps} from './SortByProps';
-import {SortByState} from './SortByState';
+import {SortByProps} from "./SortByProps";
+import {SortByState} from "./SortByState";
 
 /**
  * SortBy Filter Component
@@ -11,7 +11,7 @@ class SortByComponent extends Component<SortByProps, SortByState> {
     /**
      * Components will mount
      */
-    componentWillMount() {
+    public componentWillMount() {
 
         const props = this.props;
         const environmentId = props.environmentId;
@@ -21,7 +21,7 @@ class SortByComponent extends Component<SortByProps, SortByState> {
 
         this.setState({
             value: currentOption,
-            visible: false
+            visible: false,
         });
 
         /**
@@ -39,15 +39,24 @@ class SortByComponent extends Component<SortByProps, SortByState> {
      *
      * @param props
      */
-    componentWillReceiveProps(props) {
-        this.setState(prevState => {
-            return {
-                value: props.store.getCurrentQuery().getSortBy().getFirstSortAsString(),
-                visible: (props.store.getCurrentResult() != null)
-                    ? (props.store.getCurrentResult().getTotalHits() > 0)
-                    : false
-            }
-        })
+    public componentWillReceiveProps(props) {
+
+        const nextFirstSortAsString = props.store.getCurrentQuery().getSortBy().getFirstSortAsString();
+        const nextVisible = (props.store.getCurrentResult() != null)
+            ? (props.store.getCurrentResult().getTotalHits() > 0)
+            : false;
+
+        if (
+            this.state.value !== nextFirstSortAsString ||
+            this.state.visible !== nextVisible
+        ) {
+            this.setState((prevState) => {
+                return {
+                    value: nextFirstSortAsString,
+                    visible: nextVisible,
+                };
+            });
+        }
     }
 
     /**
@@ -55,7 +64,7 @@ class SortByComponent extends Component<SortByProps, SortByState> {
      *
      * @param e
      */
-    handleChange = (e) => {
+    public handleChange = (e) => {
 
         const props = this.props;
         const environmentId = props.environmentId;
@@ -64,7 +73,7 @@ class SortByComponent extends Component<SortByProps, SortByState> {
         const currentOption = e.target.value;
 
         this.setState({
-            value: currentOption
+            value: currentOption,
         });
 
         /**
@@ -74,16 +83,16 @@ class SortByComponent extends Component<SortByProps, SortByState> {
             environmentId,
             currentQuery,
             repository,
-            currentOption
+            currentOption,
         );
-    };
+    }
 
     /**
      * Render
      *
      * @return {any}
      */
-    render(props, state) {
+    public render(props, state) {
 
         const containerClassName = props.classNames.container;
         const selectClassName = props.classNames.select;
@@ -96,8 +105,8 @@ class SortByComponent extends Component<SortByProps, SortByState> {
         const coordinate = props.store.getCurrentQuery().toArray().coordinate;
 
         if (!coordinate) {
-            options = options.filter(function(o) {
-                return o.value != 'distance';
+            options = options.filter((o) => {
+                return o.value !== "distance";
             });
         }
 
@@ -108,7 +117,7 @@ class SortByComponent extends Component<SortByProps, SortByState> {
                     onChange={this.handleChange}
                     value={state.value}
                 >
-                    {options.map(option => (
+                    {options.map((option) => (
                         <option value={option.value}>{option.name}</option>
                     ))}
                 </select>
@@ -119,9 +128,9 @@ class SortByComponent extends Component<SortByProps, SortByState> {
 
 SortByComponent.defaultProps = {
     classNames: {
-        container: '',
-        select: ''
-    }
+        container: "",
+        select: "",
+    },
 };
 
 export default SortByComponent;

@@ -1,5 +1,5 @@
 import {Repository, SortBy as ApisearchSortBy} from "apisearch";
-import {h, render} from 'preact';
+import {h, render} from "preact";
 import SortByComponent from "../components/SortBy/SortByComponent";
 import Store from "../Store";
 import Widget from "./Widget";
@@ -14,7 +14,7 @@ class SortBy extends Widget {
     constructor({
         target,
         classNames,
-        options
+        options,
     }) {
         super();
         this.target = target;
@@ -23,10 +23,10 @@ class SortBy extends Widget {
             target={target}
             classNames={{
                 ...SortByComponent.defaultProps.classNames,
-                ...classNames
+                ...classNames,
             }}
             options={options}
-        />
+        />;
     }
 
     /**
@@ -39,19 +39,26 @@ class SortBy extends Widget {
         environmentId: string,
         store: Store,
         repository: Repository,
-        dictionary: { [key: string]: string; }
+        dictionary: { [key: string]: string; },
     ) {
         this.component.props = {
             ...this.component.props,
-            environmentId: environmentId,
-            repository: repository,
-            store: store,
+            environmentId,
+            repository,
+            store,
         };
 
         render(
             this.component,
-            this.targetNode
-        )
+            this.targetNode,
+        );
+    }
+
+    /**
+     * @private
+     */
+    private firstOptionAsString() {
+        return this.component.props.options[0].value;
     }
 
     /**
@@ -68,7 +75,7 @@ class SortBy extends Widget {
             const sort = query.sort[0];
             const sortInstance = ApisearchSortBy.createFromArray(query.sort);
             const sortAsString = sortInstance.getFirstSortAsString();
-            const firstSortAsString = this.component.props.options[0].value
+            const firstSortAsString = this.firstOptionAsString();
 
             if (sortAsString !== firstSortAsString) {
                if (sort.type === "distance") {
@@ -78,8 +85,6 @@ class SortBy extends Widget {
                 }
             }
         }
-
-
     }
 
     /**
@@ -88,35 +93,10 @@ class SortBy extends Widget {
      */
     public fromUrlObject(
         object: any,
-        query: any
-    )
-    {
+        query: any,
+    ) {
         if (object.sort !== undefined) {
-            if (query.sort === undefined) {
-                query.sort = [{}];
-            }
-
-            if (object.sort === 'score') {
-                query.sort[0].field = '_score';
-                query.sort[0].order = 'desc';
-                return;
-            }
-
-            if (object.sort.indexOf('distance:') === 0) {
-                const distanceSortParts = object.sort.split(':');
-                query.sort[0].type = distanceSortParts[0];
-                query.sort[0].unit = distanceSortParts[1];
-                query.sort[0].coordinate = {
-                    'lat': distanceSortParts[2],
-                    'lon': distanceSortParts[3],
-                };
-
-                return;
-            }
-
-            const sortParts = object.sort.split(':');
-            query.sort[0].field = 'indexed_metadata.' + sortParts[0];
-            query.sort[0].order = sortParts[1];
+            SortBy.setSortToQuery(query, object.sort);
         }
     }
 
@@ -125,6 +105,40 @@ class SortBy extends Widget {
      */
     public reset(query: any) {
         delete query.sort;
+        const firstSortAsString = this.firstOptionAsString();
+        SortBy.setSortToQuery(query, firstSortAsString);
+    }
+
+    /**
+     * @param query
+     * @param option
+     * @private
+     */
+    private static setSortToQuery(query, option) {
+
+        query.sort = [{}];
+
+        if (option === "score") {
+            query.sort[0].type = "score";
+            return;
+        }
+
+        if (option.indexOf("distance:") === 0) {
+            const distanceSortParts = option.split(":");
+            query.sort[0].type = distanceSortParts[0];
+            query.sort[0].unit = distanceSortParts[1];
+            query.sort[0].coordinate = {
+                lat: distanceSortParts[2],
+                lon: distanceSortParts[3],
+            };
+
+            return;
+        }
+
+        const sortParts = option.split(":");
+        query.sort[0].type = "field";
+        query.sort[0].field = "indexed_metadata." + sortParts[0];
+        query.sort[0].order = sortParts[1];
     }
 }
 
@@ -133,4 +147,4 @@ class SortBy extends Widget {
  *
  * @param settings
  */
-export default settings => new SortBy(settings);
+export default (settings) => new SortBy(settings);
