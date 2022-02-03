@@ -74,6 +74,7 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
             props.sortBy,
             fetchLimit,
             props.ranges,
+            props.promoted,
         );
     }
 
@@ -420,8 +421,9 @@ MultipleFilterComponent.defaultProps = {
         showMore: '+ Show more',
         showLess: '- Show less'
     },
-    formatData: data => data,
-    activeFirst: true
+    formatData: (data) => data,
+    activeFirst: true,
+    promoted: [],
 };
 
 export default MultipleFilterComponent;

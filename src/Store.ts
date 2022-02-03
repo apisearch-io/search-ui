@@ -23,6 +23,7 @@ class Store extends EventEmitter {
      * @param minScore
      * @param hash
      * @param userId
+     * @param site
      * @param generateRandomSessionUUID
      */
     constructor(
@@ -33,12 +34,13 @@ class Store extends EventEmitter {
         minScore: number,
         hash: string,
         userId: string,
+        site: string,
         generateRandomSessionUUID: boolean,
     ) {
         super();
 
         this.dirty = true;
-        const initialQuery = Store.loadInitialQuery(coordinate, userId);
+        const initialQuery = Store.loadInitialQuery(coordinate, userId, site);
         this.window = window.top;
         this.isUnderIframe = (window !== window.top);
 
@@ -203,7 +205,6 @@ class Store extends EventEmitter {
             ? this.loadQuery(this.currentQuery)
             : this.currentQuery;
 
-
         dispatcher.dispatch("NORMALIZE_QUERY", {
             query: this.currentQuery,
         });
@@ -226,11 +227,12 @@ class Store extends EventEmitter {
     /**
      * @param coordinate
      * @param userId
+     * @param site
      */
     private static loadInitialQuery(coordinate: {
         lat: number,
         lon: number,
-    }, userId: string): Query {
+    }, userId: string, site: string): Query {
         const withCoordinate = (
             coordinate &&
             coordinate.lat !== undefined &&
@@ -244,6 +246,14 @@ class Store extends EventEmitter {
 
         if (userId !== "") {
             q.user = {id: userId};
+        }
+
+        if (site !== "") {
+            if (q.metadata === undefined) {
+                q.metadata = {};
+            }
+
+            q.metadata.site = site;
         }
 
         return Query.createFromArray(q);

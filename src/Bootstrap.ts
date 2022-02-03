@@ -45,6 +45,7 @@ export function bootstrap(
             config.options.min_score,
             hash,
             config.user_id ?? "",
+            config.options.site ?? "",
             config.options.generate_random_session_uuid ?? false,
         );
     });
