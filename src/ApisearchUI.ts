@@ -1,5 +1,6 @@
-import {HttpRepository, Query} from "apisearch";
+import {HttpRepository, ItemUUID, Query} from "apisearch";
 import apisearch from "apisearch";
+import {IndexUUID} from "apisearch/lib/Model/IndexUUID";
 import ApisearchHelper from "./ApisearchHelper";
 import ApisearchUIFactory from "./ApisearchUIFactory";
 import {bootstrap} from "./Bootstrap";
@@ -309,7 +310,11 @@ export default class ApisearchUI {
     ) {
         this
             .repository
-            .click(appId, indexId, itemId, this.userId);
+            .pushInteraction(
+                IndexUUID.createById(indexId),
+                ItemUUID.createByComposedUUID(itemId),
+                this.userId, "", "cli",
+            );
 
         window.postMessage({
             name: "apisearch_item_was_clicked",
@@ -331,7 +336,7 @@ export default class ApisearchUI {
     ) {
         this
             .repository
-            .purchase(appId, indexId, this.userId);
+            .purchase(IndexUUID.createById(indexId), this.userId, []);
 
         window.postMessage({
             name: "apisearch_purchase_was_done",

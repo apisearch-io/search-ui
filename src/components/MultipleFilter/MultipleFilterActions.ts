@@ -20,6 +20,7 @@ import Clone from "../Clone";
  * @param sortBy
  * @param fetchLimit
  * @param ranges
+ * @param promoted
  */
 export function aggregationSetup(
     environmentId: string,
@@ -31,6 +32,7 @@ export function aggregationSetup(
     sortBy: string[],
     fetchLimit: number,
     ranges: any,
+    promoted: string[],
 ) {
     const clonedQuery = Clone.object(currentQuery);
     const rangesValues = Object.keys(ranges);
@@ -44,6 +46,7 @@ export function aggregationSetup(
             FILTER_TYPE_RANGE,
             sortBy,
             fetchLimit,
+            promoted,
         );
     } else {
         clonedQuery.aggregateBy(
@@ -52,6 +55,7 @@ export function aggregationSetup(
             applicationType,
             sortBy,
             fetchLimit,
+            promoted,
         );
     }
 

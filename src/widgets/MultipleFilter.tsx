@@ -31,6 +31,7 @@ class MultipleFilter extends Widget {
      * @param template
      * @param formatData
      * @param activeFirst
+     * @param promoted
      */
     constructor({
         target,
@@ -47,6 +48,7 @@ class MultipleFilter extends Widget {
         template,
         formatData,
         activeFirst,
+        promoted,
     }) {
         super();
         this.target = target;
@@ -73,6 +75,7 @@ class MultipleFilter extends Widget {
             }}
             formatData={formatData}
             activeFirst={activeFirst}
+            promoted={promoted}
         />;
     }
 

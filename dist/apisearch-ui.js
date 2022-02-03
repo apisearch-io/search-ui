@@ -2751,8 +2751,9 @@ var Aggregation = /** @class */ (function () {
      * @param subgroup
      * @param sort
      * @param limit
+     * @param promoted
      */
-    function Aggregation(name, field, applicationType, filterType, subgroup, sort, limit) {
+    function Aggregation(name, field, applicationType, filterType, subgroup, sort, limit, promoted) {
         this.subgroup = [];
         this.name = name;
         this.field = field;
@@ -2761,6 +2762,7 @@ var Aggregation = /** @class */ (function () {
         this.subgroup = subgroup;
         this.sort = sort;
         this.limit = limit;
+        this.promoted = promoted;
     }
     /**
      * Get name
@@ -2819,6 +2821,14 @@ var Aggregation = /** @class */ (function () {
         return this.limit;
     };
     /**
+     * Get promoted
+     *
+     * @return {[]}
+     */
+    Aggregation.prototype.getPromoted = function () {
+        return this.promoted;
+    };
+    /**
      * Create
      *
      * @param name
@@ -2828,14 +2838,16 @@ var Aggregation = /** @class */ (function () {
      * @param subgroup
      * @param sort
      * @param limit
+     * @param promoted
      *
      * @returns {Aggregation}
      */
-    Aggregation.create = function (name, field, applicationType, filterType, subgroup, sort, limit) {
+    Aggregation.create = function (name, field, applicationType, filterType, subgroup, sort, limit, promoted) {
         if (subgroup === void 0) { subgroup = []; }
         if (sort === void 0) { sort = exports.AGGREGATION_SORT_BY_COUNT_DESC; }
         if (limit === void 0) { limit = exports.AGGREGATION_NO_LIMIT; }
-        return new Aggregation(name, field, applicationType, filterType, subgroup, sort, limit);
+        if (promoted === void 0) { promoted = []; }
+        return new Aggregation(name, field, applicationType, filterType, subgroup, sort, limit, promoted);
     };
     /**
      * To array
@@ -2846,13 +2858,13 @@ var Aggregation = /** @class */ (function () {
         var aggregationAsArray = {
             name: this.name
         };
-        if (this.field != "uuid.type") {
+        if (this.field !== "uuid.type") {
             aggregationAsArray.field = this.field;
         }
-        if (this.applicationType != Filter_1.FILTER_AT_LEAST_ONE) {
+        if (this.applicationType !== Filter_1.FILTER_AT_LEAST_ONE) {
             aggregationAsArray.application_type = this.applicationType;
         }
-        if (this.filterType != Filter_1.FILTER_TYPE_FIELD) {
+        if (this.filterType !== Filter_1.FILTER_TYPE_FIELD) {
             aggregationAsArray.filter_type = this.filterType;
         }
         if (this.subgroup.length > 0) {
@@ -2861,8 +2873,11 @@ var Aggregation = /** @class */ (function () {
         if (JSON.stringify(this.sort) !== JSON.stringify(exports.AGGREGATION_SORT_BY_COUNT_DESC)) {
             aggregationAsArray.sort = this.sort;
         }
-        if (this.limit != exports.AGGREGATION_NO_LIMIT) {
+        if (this.limit !== exports.AGGREGATION_NO_LIMIT) {
             aggregationAsArray.limit = this.limit;
+        }
+        if (this.promoted.length > 0) {
+            aggregationAsArray.promoted = this.promoted;
         }
         return aggregationAsArray;
     };
@@ -2875,25 +2890,28 @@ var Aggregation = /** @class */ (function () {
      */
     Aggregation.createFromArray = function (array) {
         array = JSON.parse(JSON.stringify(array));
-        if (typeof array.field == "undefined") {
+        if (typeof array.field === "undefined") {
             array.field = "uuid.type";
         }
-        if (typeof array.application_type == "undefined") {
+        if (typeof array.application_type === "undefined") {
             array.application_type = Filter_1.FILTER_AT_LEAST_ONE;
         }
-        if (typeof array.filter_type == "undefined") {
+        if (typeof array.filter_type === "undefined") {
             array.filter_type = Filter_1.FILTER_TYPE_FIELD;
         }
-        if (typeof array.subgroup == "undefined") {
+        if (typeof array.subgroup === "undefined") {
             array.subgroup = [];
         }
-        if (typeof array.sort == "undefined") {
+        if (typeof array.sort === "undefined") {
             array.sort = exports.AGGREGATION_SORT_BY_COUNT_DESC;
         }
-        if (typeof array.limit == "undefined") {
+        if (typeof array.limit === "undefined") {
             array.limit = exports.AGGREGATION_NO_LIMIT;
         }
-        return Aggregation.create(array.name, array.field, array.application_type, array.filter_type, array.subgroup, array.sort, array.limit);
+        if (typeof array.promoted === "undefined") {
+            array.promoted = [];
+        }
+        return Aggregation.create(array.name, array.field, array.application_type, array.filter_type, array.subgroup, array.sort, array.limit, array.promoted);
     };
     return Aggregation;
 }());
@@ -3507,14 +3525,16 @@ var Query = /** @class */ (function () {
      * @param applicationType
      * @param aggregationSort
      * @param limit
+     * @param promoted
      *
      * @return {Query}
      */
-    Query.prototype.aggregateBy = function (filterName, field, applicationType, aggregationSort, limit) {
+    Query.prototype.aggregateBy = function (filterName, field, applicationType, aggregationSort, limit, promoted) {
         var _a;
         if (aggregationSort === void 0) { aggregationSort = Aggregation_2.AGGREGATION_SORT_BY_COUNT_DESC; }
         if (limit === void 0) { limit = Aggregation_2.AGGREGATION_NO_LIMIT; }
-        this.aggregations = tslib_1.__assign(tslib_1.__assign({}, this.aggregations), (_a = {}, _a[filterName] = Aggregation_1.Aggregation.create(filterName, Item_1.Item.getPathByField(field), applicationType, Filter_2.FILTER_TYPE_FIELD, [], aggregationSort, limit), _a));
+        if (promoted === void 0) { promoted = []; }
+        this.aggregations = tslib_1.__assign(tslib_1.__assign({}, this.aggregations), (_a = {}, _a[filterName] = Aggregation_1.Aggregation.create(filterName, Item_1.Item.getPathByField(field), applicationType, Filter_2.FILTER_TYPE_FIELD, [], aggregationSort, limit, promoted), _a));
         return this;
     };
     /**
@@ -3527,18 +3547,20 @@ var Query = /** @class */ (function () {
      * @param rangeType
      * @param aggregationSort
      * @param limit
+     * @param promoted
      *
      * @return {Query}
      */
-    Query.prototype.aggregateByRange = function (filterName, field, ranges, applicationType, rangeType, aggregationSort, limit) {
+    Query.prototype.aggregateByRange = function (filterName, field, ranges, applicationType, rangeType, aggregationSort, limit, promoted) {
         var _a;
         if (rangeType === void 0) { rangeType = Filter_2.FILTER_TYPE_RANGE; }
         if (aggregationSort === void 0) { aggregationSort = Aggregation_2.AGGREGATION_SORT_BY_COUNT_DESC; }
         if (limit === void 0) { limit = Aggregation_2.AGGREGATION_NO_LIMIT; }
+        if (promoted === void 0) { promoted = []; }
         if (ranges.length === 0) {
             return this;
         }
-        this.aggregations = tslib_1.__assign(tslib_1.__assign({}, this.aggregations), (_a = {}, _a[filterName] = Aggregation_1.Aggregation.create(filterName, Item_1.Item.getPathByField(field), applicationType, rangeType, ranges, aggregationSort, limit), _a));
+        this.aggregations = tslib_1.__assign(tslib_1.__assign({}, this.aggregations), (_a = {}, _a[filterName] = Aggregation_1.Aggregation.create(filterName, Item_1.Item.getPathByField(field), applicationType, rangeType, ranges, aggregationSort, limit, promoted), _a));
         return this;
     };
     /**
@@ -3550,13 +3572,15 @@ var Query = /** @class */ (function () {
      * @param applicationType
      * @param aggregationSort
      * @param limit
+     * @param promoted
      *
      * @return {Query}
      */
-    Query.prototype.aggregateByDateRange = function (filterName, field, options, applicationType, aggregationSort, limit) {
+    Query.prototype.aggregateByDateRange = function (filterName, field, options, applicationType, aggregationSort, limit, promoted) {
         if (aggregationSort === void 0) { aggregationSort = Aggregation_2.AGGREGATION_SORT_BY_COUNT_DESC; }
         if (limit === void 0) { limit = Aggregation_2.AGGREGATION_NO_LIMIT; }
-        return this.aggregateByRange(filterName, field, options, applicationType, Filter_2.FILTER_TYPE_DATE_RANGE, aggregationSort, limit);
+        if (promoted === void 0) { promoted = []; }
+        return this.aggregateByRange(filterName, field, options, applicationType, Filter_2.FILTER_TYPE_DATE_RANGE, aggregationSort, limit, promoted);
     };
     /**
      * Get aggregations
@@ -5431,7 +5455,7 @@ var HttpRepository = /** @class */ (function (_super) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.httpClient.get("/" + this.appId + "/indices/" + this.indexId, "delete", this.getCredentials(), {}, {})];
+                        return [4 /*yield*/, this.httpClient.get("/" + this.appId + "/indices/" + indexUUID.composedUUID(), "delete", this.getCredentials(), {}, {})];
                     case 1:
                         _a.sent();
                         return [3 /*break*/, 3];
@@ -5457,7 +5481,7 @@ var HttpRepository = /** @class */ (function (_super) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.httpClient.get("/" + this.appId + "/indices/" + this.indexId + "/reset", "put", this.getCredentials(), {}, {})];
+                        return [4 /*yield*/, this.httpClient.get("/" + this.appId + "/indices/" + indexUUID.composedUUID() + "/reset", "put", this.getCredentials(), {}, {})];
                     case 1:
                         _a.sent();
                         return [3 /*break*/, 3];
@@ -5483,7 +5507,7 @@ var HttpRepository = /** @class */ (function (_super) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.httpClient.get("/" + this.appId + "/indices/" + this.indexId, "head", this.getCredentials(), {}, {})];
+                        return [4 /*yield*/, this.httpClient.get("/" + this.appId + "/indices/" + indexUUID.composedUUID(), "head", this.getCredentials(), {}, {})];
                     case 1:
                         response = _a.sent();
                         return [3 /*break*/, 3];
@@ -5540,7 +5564,7 @@ var HttpRepository = /** @class */ (function (_super) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.httpClient.get("/" + this.appId + "/indices/" + this.indexId + "/configure", "put", this.getCredentials(), {}, config.toArray())];
+                        return [4 /*yield*/, this.httpClient.get("/" + this.appId + "/indices/" + indexUUID.composedUUID() + "/configure", "put", this.getCredentials(), {}, config.toArray())];
                     case 1:
                         _a.sent();
                         return [3 /*break*/, 3];
@@ -5553,26 +5577,28 @@ var HttpRepository = /** @class */ (function (_super) {
         });
     };
     /**
-     * @param {string} appId
-     * @param {string} indexId
-     * @param {string} itemId
+     * @param {IndexUUID} indexUUID
+     * @param {ItemUUID} itemUUID
      * @param {string} userId
+     * @param {string} interaction
+     * @param {string} queryString
      *
      * @return {Promise<void>}
      */
-    HttpRepository.prototype.click = function (appId, indexId, itemId, userId) {
+    HttpRepository.prototype.pushInteraction = function (indexUUID, itemUUID, userId, queryString, interaction) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
             var parameters, response_13;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         parameters = {
+                            query_string: queryString,
                             user_id: userId
                         };
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, this.httpClient.get("/" + appId + "/indices/" + indexId + "/items/" + itemId + "/click", "post", {
+                        return [4 /*yield*/, this.httpClient.get("/" + this.appId + "/indices/" + indexUUID.composedUUID() + "/items/" + itemUUID.composedUUID() + "/interaction/" + interaction, "post", {
                                 token: this.token
                             }, parameters, {})];
                     case 2:
@@ -5587,13 +5613,13 @@ var HttpRepository = /** @class */ (function (_super) {
         });
     };
     /**
-     * @param {string} appId
-     * @param {string} indexId
+     * @param {IndexUUID} indexUUID
      * @param {string} userId
+     * @param {ItemUUID[]} itemUUIDs
      *
      * @return {Promise<void>}
      */
-    HttpRepository.prototype.purchase = function (appId, indexId, userId) {
+    HttpRepository.prototype.purchase = function (indexUUID, userId, itemUUIDs) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
             var parameters, response_14;
             return tslib_1.__generator(this, function (_a) {
@@ -5605,9 +5631,13 @@ var HttpRepository = /** @class */ (function (_super) {
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, this.httpClient.get("/" + appId + "/indices/" + indexId + "/purchase", "post", {
+                        return [4 /*yield*/, this.httpClient.get("/" + this.appId + "/indices/" + indexUUID.composedUUID() + "/purchase", "post", {
                                 token: this.token
-                            }, parameters, {})];
+                            }, parameters, {
+                                items_uuid: itemUUIDs.map(function (itemUUID) {
+                                    return itemUUID.toArray();
+                                })
+                            })];
                     case 2:
                         _a.sent();
                         return [3 /*break*/, 4];
@@ -10493,6 +10523,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 exports.__esModule = true;
 var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
 var apisearch_2 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
+var IndexUUID_1 = __webpack_require__(/*! apisearch/lib/Model/IndexUUID */ "./node_modules/apisearch/lib/Model/IndexUUID.js");
 var ApisearchHelper_1 = __webpack_require__(/*! ./ApisearchHelper */ "./src/ApisearchHelper.ts");
 var ApisearchUIFactory_1 = __webpack_require__(/*! ./ApisearchUIFactory */ "./src/ApisearchUIFactory.ts");
 var Bootstrap_1 = __webpack_require__(/*! ./Bootstrap */ "./src/Bootstrap.ts");
@@ -10726,7 +10757,7 @@ var ApisearchUI = /** @class */ (function () {
     ApisearchUI.prototype.click = function (appId, indexId, itemId) {
         this
             .repository
-            .click(appId, indexId, itemId, this.userId);
+            .pushInteraction(IndexUUID_1.IndexUUID.createById(indexId), apisearch_1.ItemUUID.createByComposedUUID(itemId), this.userId, "", "cli");
         window.postMessage({
             name: "apisearch_item_was_clicked",
             app_id: appId,
@@ -10743,7 +10774,7 @@ var ApisearchUI = /** @class */ (function () {
     ApisearchUI.prototype.purchase = function (appId, indexId) {
         this
             .repository
-            .purchase(appId, indexId, this.userId);
+            .purchase(IndexUUID_1.IndexUUID.createById(indexId), this.userId, []);
         window.postMessage({
             name: "apisearch_purchase_was_done",
             app_id: appId,
@@ -10839,8 +10870,8 @@ function bootstrap(environmentId, config, hash) {
      * Register apisearch store
      */
     Container_1["default"].register(storeId, function () {
-        var _a, _b;
-        return new Store_1["default"](config.coordinate, config.options.min_score, hash, (_a = config.user_id) !== null && _a !== void 0 ? _a : "", (_b = config.options.generate_random_session_uuid) !== null && _b !== void 0 ? _b : false);
+        var _a, _b, _c;
+        return new Store_1["default"](config.coordinate, config.options.min_score, hash, (_a = config.user_id) !== null && _a !== void 0 ? _a : "", (_b = config.options.site) !== null && _b !== void 0 ? _b : "", (_c = config.options.generate_random_session_uuid) !== null && _c !== void 0 ? _c : false);
     });
     /**
      * Register an event dispatcher
@@ -11020,14 +11051,15 @@ var Store = /** @class */ (function (_super) {
      * @param minScore
      * @param hash
      * @param userId
+     * @param site
      * @param generateRandomSessionUUID
      */
-    function Store(coordinate, minScore, hash, userId, generateRandomSessionUUID) {
+    function Store(coordinate, minScore, hash, userId, site, generateRandomSessionUUID) {
         var _this = _super.call(this) || this;
         _this.withHash = false;
         _this.doNotCleanUrlHashAtFirst = false;
         _this.dirty = true;
-        var initialQuery = Store.loadInitialQuery(coordinate, userId);
+        var initialQuery = Store.loadInitialQuery(coordinate, userId, site);
         _this.window = window.top;
         _this.isUnderIframe = (window !== window.top);
         if ((typeof hash === "string")) {
@@ -11178,8 +11210,9 @@ var Store = /** @class */ (function (_super) {
     /**
      * @param coordinate
      * @param userId
+     * @param site
      */
-    Store.loadInitialQuery = function (coordinate, userId) {
+    Store.loadInitialQuery = function (coordinate, userId, site) {
         var withCoordinate = (coordinate &&
             coordinate.lat !== undefined &&
             coordinate.lon !== undefined);
@@ -11189,6 +11222,12 @@ var Store = /** @class */ (function (_super) {
         }
         if (userId !== "") {
             q.user = { id: userId };
+        }
+        if (site !== "") {
+            if (q.metadata === undefined) {
+                q.metadata = {};
+            }
+            q.metadata.site = site;
         }
         return apisearch_1.Query.createFromArray(q);
     };
@@ -11961,15 +12000,16 @@ var Clone_1 = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
  * @param sortBy
  * @param fetchLimit
  * @param ranges
+ * @param promoted
  */
-function aggregationSetup(environmentId, currentQuery, filterName, filterField, aggregationField, applicationType, sortBy, fetchLimit, ranges) {
+function aggregationSetup(environmentId, currentQuery, filterName, filterField, aggregationField, applicationType, sortBy, fetchLimit, ranges, promoted) {
     var clonedQuery = Clone_1["default"].object(currentQuery);
     var rangesValues = Object.keys(ranges);
     if (rangesValues.length > 0) {
-        clonedQuery.aggregateByRange(filterName, aggregationField, rangesValues, applicationType, apisearch_2.FILTER_TYPE_RANGE, sortBy, fetchLimit);
+        clonedQuery.aggregateByRange(filterName, aggregationField, rangesValues, applicationType, apisearch_2.FILTER_TYPE_RANGE, sortBy, fetchLimit, promoted);
     }
     else {
-        clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy, fetchLimit);
+        clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy, fetchLimit, promoted);
     }
     var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
     dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
@@ -12220,7 +12260,7 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
         /**
          * Dispatch action
          */
-        MultipleFilterActions_1.aggregationSetup(props.environmentId, props.store.getCurrentQuery(), props.filterName, props.filterField, aggregationField, applicationType, props.sortBy, fetchLimit, props.ranges);
+        MultipleFilterActions_1.aggregationSetup(props.environmentId, props.store.getCurrentQuery(), props.filterName, props.filterField, aggregationField, applicationType, props.sortBy, fetchLimit, props.ranges, props.promoted);
     };
     /**
      * Component will receive props
@@ -12396,7 +12436,8 @@ MultipleFilterComponent.defaultProps = {
         showLess: '- Show less'
     },
     formatData: function (data) { return data; },
-    activeFirst: true
+    activeFirst: true,
+    promoted: [],
 };
 exports["default"] = MultipleFilterComponent;
 
@@ -15150,14 +15191,15 @@ var MultipleFilter = /** @class */ (function (_super) {
      * @param template
      * @param formatData
      * @param activeFirst
+     * @param promoted
      */
     function MultipleFilter(_a) {
-        var target = _a.target, filterName = _a.filterName, filterField = _a.filterField, aggregationField = _a.aggregationField, applicationType = _a.applicationType, fetchLimit = _a.fetchLimit, viewLimit = _a.viewLimit, sortBy = _a.sortBy, ranges = _a.ranges, labels = _a.labels, classNames = _a.classNames, template = _a.template, formatData = _a.formatData, activeFirst = _a.activeFirst;
+        var target = _a.target, filterName = _a.filterName, filterField = _a.filterField, aggregationField = _a.aggregationField, applicationType = _a.applicationType, fetchLimit = _a.fetchLimit, viewLimit = _a.viewLimit, sortBy = _a.sortBy, ranges = _a.ranges, labels = _a.labels, classNames = _a.classNames, template = _a.template, formatData = _a.formatData, activeFirst = _a.activeFirst, promoted = _a.promoted;
         var _this = _super.call(this) || this;
         _this.target = target;
         _this.filterField = filterField;
         _this.aggregationField = aggregationField !== null && aggregationField !== void 0 ? aggregationField : filterField;
-        _this.component = preact_1.h(MultipleFilterComponent_1["default"], { target: target, filterName: filterName, filterField: _this.filterField, aggregationField: _this.aggregationField, applicationType: applicationType, fetchLimit: fetchLimit, viewLimit: viewLimit, sortBy: sortBy, ranges: ranges, labels: labels, classNames: __assign(__assign({}, MultipleFilterComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, MultipleFilterComponent_1["default"].defaultProps.template), template), formatData: formatData, activeFirst: activeFirst });
+        _this.component = preact_1.h(MultipleFilterComponent_1["default"], { target: target, filterName: filterName, filterField: _this.filterField, aggregationField: _this.aggregationField, applicationType: applicationType, fetchLimit: fetchLimit, viewLimit: viewLimit, sortBy: sortBy, ranges: ranges, labels: labels, classNames: __assign(__assign({}, MultipleFilterComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, MultipleFilterComponent_1["default"].defaultProps.template), template), formatData: formatData, activeFirst: activeFirst, promoted: promoted });
         return _this;
     }
     /**

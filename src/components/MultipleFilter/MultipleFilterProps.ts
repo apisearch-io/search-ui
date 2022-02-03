@@ -31,6 +31,7 @@ export interface MultipleFilterProps {
     };
     formatData: Function;
     activeFirst: boolean;
+    promoted: string[],
     environmentId?: string;
     repository?: Repository;
     store?: Store;
