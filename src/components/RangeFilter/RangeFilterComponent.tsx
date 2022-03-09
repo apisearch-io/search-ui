@@ -143,10 +143,10 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
      * @param props
      */
     componentWillReceiveProps(props) {
-        const aggregation = props
+        const currentResult = props
             .store
-            .getCurrentResult()
-            .getAggregation(props.filterName);
+            .getCurrentResult();
+        const aggregation = currentResult.getAggregation(props.filterName);
 
         if (!(aggregation instanceof ResultAggregation)) {
             return;
@@ -166,6 +166,16 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
             ? Math.ceil(metadata['max'])
             : undefined;
 
+        let currencyPlaceholder = null;
+        const firstItem = currentResult.getFirstItem();
+        if (firstItem) {
+            const firstItemPrice = firstItem.get('price');
+            const firstItemPriceWithCurrency = firstItem.get('price_with_currency');
+            if (firstItemPrice && firstItemPriceWithCurrency) {
+                currencyPlaceholder = this.getCurrencyPlaceholderFromPriceAndPriceWithCurrency(firstItemPrice, firstItemPriceWithCurrency);
+            }
+        }
+
         const fromTo = this.getFromToFromFilter(filter, min, max);
         this.setState(prevState => {
             return {
@@ -173,6 +183,7 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
                 to: fromTo[1],
                 min: min,
                 max: max,
+                currency_placeholder: currencyPlaceholder,
                 visible: ((typeof min === "number") && (typeof max === "number"))
             };
         });
@@ -235,7 +246,8 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
                 Math.max(from, to),
                 min,
                 max,
-                this.rangeUid
+                this.rangeUid,
+                state.currency_placeholder
             );
         }
     }
@@ -384,6 +396,24 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
             valueFrom,
             valueTo
         );
+    }
+
+    /**
+     * @param price
+     * @param priceWithCurrency
+     * @private
+     */
+    private getCurrencyPlaceholderFromPriceAndPriceWithCurrency(
+        price: number|string,
+        priceWithCurrency: string
+    )
+    {
+        price = (price + '').replace('.', '').replace(',', '');
+        priceWithCurrency = (priceWithCurrency + '').replace('.', '').replace(',', '');
+        const regex = new RegExp(price + '0*');
+        const currencyPlaceholder = priceWithCurrency.replace(regex, "__price__");
+
+        return currencyPlaceholder;
     }
 }
 
