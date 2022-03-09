@@ -12,8 +12,8 @@ export interface RangeFilterProps {
     maxValue: number;
     minMaxCallback: (min: number, max: number) => void;
     step: number;
-    callback: (from: number, to: number, min: number, max: number, rangeUid: string) => void;
-    onSliderMove: (from: number, to: number, min: number, max: number, rangeUid: string) => void;
+    callback: (from: number, to: number, min: number, max: number, rangeUid: string, currencyPlaceholder: string) => void;
+    onSliderMove: (from: number, to: number, min: number, max: number, rangeUid: string, currencyPlaceholder: string) => void;
     classNames: {
         container: string,
         top: string,

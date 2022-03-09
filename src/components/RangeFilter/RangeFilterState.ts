@@ -8,5 +8,6 @@ export interface RangeFilterState {
     to: number|null;
     min: number|null;
     max: number|null;
+    currency_placeholder: string|null;
     visible: boolean;
 }

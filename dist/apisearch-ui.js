@@ -13039,10 +13039,10 @@ var RangeFilterComponent = /** @class */ (function (_super) {
      * @param props
      */
     RangeFilterComponent.prototype.componentWillReceiveProps = function (props) {
-        var aggregation = props
+        var currentResult = props
             .store
-            .getCurrentResult()
-            .getAggregation(props.filterName);
+            .getCurrentResult();
+        var aggregation = currentResult.getAggregation(props.filterName);
         if (!(aggregation instanceof apisearch_1.ResultAggregation)) {
             return;
         }
@@ -13057,6 +13057,15 @@ var RangeFilterComponent = /** @class */ (function (_super) {
         var max = typeof metadata['max'] === "number"
             ? Math.ceil(metadata['max'])
             : undefined;
+        var currencyPlaceholder = null;
+        var firstItem = currentResult.getFirstItem();
+        if (firstItem) {
+            var firstItemPrice = firstItem.get('price');
+            var firstItemPriceWithCurrency = firstItem.get('price_with_currency');
+            if (firstItemPrice && firstItemPriceWithCurrency) {
+                currencyPlaceholder = this.getCurrencyPlaceholderFromPriceAndPriceWithCurrency(firstItemPrice, firstItemPriceWithCurrency);
+            }
+        }
         var fromTo = this.getFromToFromFilter(filter, min, max);
         this.setState(function (prevState) {
             return {
@@ -13064,6 +13073,7 @@ var RangeFilterComponent = /** @class */ (function (_super) {
                 to: fromTo[1],
                 min: min,
                 max: max,
+                currency_placeholder: currencyPlaceholder,
                 visible: ((typeof min === "number") && (typeof max === "number"))
             };
         });
@@ -13109,7 +13119,7 @@ var RangeFilterComponent = /** @class */ (function (_super) {
         if (typeof from === "number" &&
             typeof to === "number" &&
             typeof props.callback === "function") {
-            props.callback(Math.min(from, to), Math.max(from, to), min, max, this.rangeUid);
+            props.callback(Math.min(from, to), Math.max(from, to), min, max, this.rangeUid, state.currency_placeholder);
         }
     };
     /**
@@ -13203,6 +13213,18 @@ var RangeFilterComponent = /** @class */ (function (_super) {
          * Dispatch action
          */
         RangeFilterActions_1.filterAction(props.environmentId, props.store.getCurrentQuery(), props.repository, props.filterName, props.filterField, valueFrom, valueTo);
+    };
+    /**
+     * @param price
+     * @param priceWithCurrency
+     * @private
+     */
+    RangeFilterComponent.prototype.getCurrencyPlaceholderFromPriceAndPriceWithCurrency = function (price, priceWithCurrency) {
+        price = (price + '').replace('.', '').replace(',', '');
+        priceWithCurrency = (priceWithCurrency + '').replace('.', '').replace(',', '');
+        var regex = new RegExp(price + '0*');
+        var currencyPlaceholder = priceWithCurrency.replace(regex, "__price__");
+        return currencyPlaceholder;
     };
     return RangeFilterComponent;
 }(preact_1.Component));
