@@ -11,16 +11,22 @@ import Clone from "../Clone";
  * @param currentQuery
  * @param filterName
  * @param filterField
+ * @param min
+ * @param max
  */
 export function aggregationSetup(
     environmentId: string,
     currentQuery: Query,
     filterName: string,
     filterField: string,
+    min: number,
+    max: number
 ) {
-
+    const withMinMax = min === null || max === null;
     const clonedQuery = Clone.object(currentQuery);
-    clonedQuery.aggregateByRange(filterName, filterField, ['..'], FILTER_AT_LEAST_ONE, 'range_min_max');
+    const filterType = withMinMax ? 'range_min_max' : 'range';
+    const filterValues = withMinMax ? ['..'] : [min + '..' + max];
+    clonedQuery.aggregateByRange(filterName, filterField, filterValues, FILTER_AT_LEAST_ONE, filterType);
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
 
     dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
