@@ -12850,10 +12850,15 @@ var Clone_1 = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
  * @param currentQuery
  * @param filterName
  * @param filterField
+ * @param min
+ * @param max
  */
-function aggregationSetup(environmentId, currentQuery, filterName, filterField) {
+function aggregationSetup(environmentId, currentQuery, filterName, filterField, min, max) {
+    var withMinMax = min === null || max === null;
     var clonedQuery = Clone_1["default"].object(currentQuery);
-    clonedQuery.aggregateByRange(filterName, filterField, ['..'], apisearch_1.FILTER_AT_LEAST_ONE, 'range_min_max');
+    var filterType = withMinMax ? 'range_min_max' : 'range';
+    var filterValues = withMinMax ? ['..'] : [min + '..' + max];
+    clonedQuery.aggregateByRange(filterName, filterField, filterValues, apisearch_1.FILTER_AT_LEAST_ONE, filterType);
     var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
     dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
         query: clonedQuery,
@@ -12963,10 +12968,7 @@ var RangeFilterComponent = /** @class */ (function (_super) {
         var filterName = props.filterName;
         var filterField = props.filterField;
         var currentQuery = props.store.getCurrentQuery();
-        /**
-         * Dispatch action
-         */
-        RangeFilterActions_1.aggregationSetup(environmentId, currentQuery, filterName, filterField);
+        RangeFilterActions_1.aggregationSetup(environmentId, currentQuery, filterName, filterField, props.minValue, props.maxValue);
     };
     RangeFilterComponent.prototype.configureFromObserver = function () {
         var that = this;
@@ -13051,12 +13053,16 @@ var RangeFilterComponent = /** @class */ (function (_super) {
             .store
             .getCurrentQuery()
             .getFilter(props.filterName);
-        var min = typeof metadata['min'] === "number"
-            ? Math.floor(metadata['min'])
-            : undefined;
-        var max = typeof metadata['max'] === "number"
-            ? Math.ceil(metadata['max'])
-            : undefined;
+        var min = typeof props.minValue === "number" && props.minValue > 0
+            ? props.minValue
+            : (typeof metadata['min'] === "number"
+                ? Math.floor(metadata['min'])
+                : undefined);
+        var max = typeof props.maxValue === "number" && props.maxValue > 0
+            ? props.maxValue
+            : (typeof metadata['max'] === "number"
+                ? Math.ceil(metadata['max'])
+                : undefined);
         var currencyPlaceholder = null;
         var firstItem = currentResult.getFirstItem();
         if (firstItem) {
@@ -13231,6 +13237,8 @@ var RangeFilterComponent = /** @class */ (function (_super) {
 RangeFilterComponent.defaultProps = {
     maxValueIncluded: true,
     step: 1,
+    minValue: null,
+    maxValue: null,
     native: false,
     classNames: {
         container: '',

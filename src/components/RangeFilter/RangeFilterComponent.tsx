@@ -43,14 +43,13 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
         const filterField = props.filterField;
         const currentQuery = props.store.getCurrentQuery();
 
-        /**
-         * Dispatch action
-         */
         aggregationSetup(
             environmentId,
             currentQuery,
             filterName,
-            filterField
+            filterField,
+            props.minValue,
+            props.maxValue
         );
     }
 
@@ -158,13 +157,20 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
             .getCurrentQuery()
             .getFilter(props.filterName);
 
-        const min = typeof metadata['min'] === "number"
-            ? Math.floor(metadata['min'])
-            : undefined;
+        const min = typeof props.minValue === "number" && props.minValue > 0
+            ? props.minValue
+            : (typeof metadata['min'] === "number"
+                ? Math.floor(metadata['min'])
+                : undefined
+            )
 
-        const max = typeof metadata['max'] === "number"
-            ? Math.ceil(metadata['max'])
-            : undefined;
+
+        const max = typeof props.maxValue === "number" && props.maxValue > 0
+            ? props.maxValue
+            : (typeof metadata['max'] === "number"
+                    ? Math.ceil(metadata['max'])
+                    : undefined
+            )
 
         let currencyPlaceholder = null;
         const firstItem = currentResult.getFirstItem();
@@ -420,6 +426,8 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
 RangeFilterComponent.defaultProps = {
     maxValueIncluded: true,
     step: 1,
+    minValue: null,
+    maxValue: null,
     native: false,
     classNames: {
         container: '',
