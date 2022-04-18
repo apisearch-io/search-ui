@@ -189,7 +189,10 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
         const currentQueryText = currentQuery.getQueryText();
         const htmlNodeInheritProps = props.htmlNodeInheritProps;
         const showAutocomplete = currentQuery.areAutocompleteEnabled();
-        const autocomplete = props.store.getCurrentResult().getAutocomplete();
+        const autocomplete = props.store.getCurrentResult()
+            ? props.store.getCurrentResult().getAutocomplete()
+            : null;
+
         const keyDownCallback = showAutocomplete
             ? (e) => this.handleKeyDown(e)
             : (e) => this.doNothing(e);
@@ -207,7 +210,7 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
             : "";
 
         let searchInput = (<input
-            type="text"
+            type="search"
             className={`as-searchInput__input ${inputClassName} ${autocompletableClass}`}
             placeholder={placeholder}
             autofocus={autofocus}
