@@ -13418,13 +13418,6 @@ var Item = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     /**
-     * @param nextProps
-     * @param nextState
-     */
-    Item.prototype.shouldComponentUpdate = function (nextProps, nextState) {
-        return this.props.data.uuid_composed !== nextProps.data.uuid_composed;
-    };
-    /**
      * Render
      *
      * @return {any}
@@ -13732,6 +13725,10 @@ var ResultComponent = /** @class */ (function (_super) {
             query: currentQuery.getQueryText(),
             suggestions: currentResult.getSuggestions(),
         };
+        window.top.postMessage({
+            name: "apisearch_result_items",
+            items: items,
+        }, "*");
         /**
          * Uses defined a custom items list. Old version
          */

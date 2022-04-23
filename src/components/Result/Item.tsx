@@ -9,14 +9,6 @@ import {ItemState} from "./ItemState";
 class Item extends Component<ItemProps, ItemState> {
 
     /**
-     * @param nextProps
-     * @param nextState
-     */
-    public shouldComponentUpdate(nextProps: Readonly<ItemProps>, nextState: Readonly<ItemState>): boolean {
-        return this.props.data.uuid_composed !== nextProps.data.uuid_composed;
-    }
-
-    /**
      * Render
      *
      * @return {any}

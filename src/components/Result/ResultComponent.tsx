@@ -208,6 +208,11 @@ class ResultComponent extends Component<ResultProps, ResultState> {
             suggestions: currentResult.getSuggestions(),
         };
 
+        window.top.postMessage({
+            name: "apisearch_result_items",
+            items,
+        }, "*");
+
         /**
          * Uses defined a custom items list. Old version
          */
