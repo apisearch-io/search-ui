@@ -57,7 +57,7 @@ class AutocompleteComponent extends Component<AutocompleteProps, AutocompleteSta
 
         return (
             <input
-                type="search"
+                type="text"
                 className={`as-searchInput__input as-searchInput__autocomplete ${inputClassName}`}
                 placeholder={formattedAutocompleteText}
                 style="position: absolute; top: 0px; left: 0px; background-color: white;"

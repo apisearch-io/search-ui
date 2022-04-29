@@ -10732,6 +10732,7 @@ var ApisearchUI = /** @class */ (function () {
         apisearchUI.reference = uiId;
         apisearchUI.userId = (_a = config.user_id) !== null && _a !== void 0 ? _a : "";
         window[uiId] = apisearchUI;
+        window["apisearch_ui"] = apisearchUI;
         /**
          * Return ApisearchUI instance
          */
@@ -10780,6 +10781,36 @@ var ApisearchUI = /** @class */ (function () {
             app_id: appId,
             index_id: indexId,
         }, "*");
+    };
+    /**
+     *
+     */
+    ApisearchUI.prototype.getQuery = function () {
+        return this.store.getCurrentQuery().toArray();
+    };
+    /**
+     * @param text
+     */
+    ApisearchUI.prototype.write = function (text) {
+        var query = this.getQuery();
+        query.q = text;
+        this.pushQuery(apisearch_1.Query.createFromArray(query));
+    };
+    /**
+     * @param query
+     */
+    ApisearchUI.prototype.pushQuery = function (query) {
+        var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + this.environmentId);
+        this.repository
+            .query(query)
+            .then(function (result) {
+            dispatcher.dispatch("RENDER_FETCHED_DATA", {
+                query: query,
+                result: result,
+            });
+        })["catch"](function (error) {
+            // Do nothing
+        });
     };
     return ApisearchUI;
 }());
@@ -13923,7 +13954,7 @@ var AutocompleteComponent = /** @class */ (function (_super) {
         var formattedAutocompleteText = autocompleteText === ""
             ? ""
             : queryText + autocompleteText + " ⤷";
-        return (preact_1.h("input", { type: "search", className: "as-searchInput__input as-searchInput__autocomplete " + inputClassName, placeholder: formattedAutocompleteText, style: "position: absolute; top: 0px; left: 0px; background-color: white;" }));
+        return (preact_1.h("input", { type: "text", className: "as-searchInput__input as-searchInput__autocomplete " + inputClassName, placeholder: formattedAutocompleteText, style: "position: absolute; top: 0px; left: 0px; background-color: white;" }));
     };
     return AutocompleteComponent;
 }(preact_1.Component));
@@ -14202,7 +14233,7 @@ var SearchInputComponent = /** @class */ (function (_super) {
         var autocompletableClass = showAutocomplete
             ? "autocompletable"
             : "";
-        var searchInput = (preact_1.h("input", __assign({ type: "search", className: "as-searchInput__input " + inputClassName + " " + autocompletableClass, placeholder: placeholder, autofocus: autofocus }, htmlNodeInheritProps, { onInput: function (event) { return _this.handleSearch(event.target.value); }, value: currentQueryText, style: style, onKeyDown: keyDownCallback, onTouchStart: keyDownAction, ref: this.inputRef })));
+        var searchInput = (preact_1.h("input", __assign({ type: "text", className: "as-searchInput__input " + inputClassName + " " + autocompletableClass, placeholder: placeholder, autofocus: autofocus }, htmlNodeInheritProps, { onInput: function (event) { return _this.handleSearch(event.target.value); }, value: currentQueryText, style: style, onKeyDown: keyDownCallback, onTouchStart: keyDownAction, ref: this.inputRef })));
         if (showAutocomplete) {
             searchInput = (preact_1.h("div", { style: "position: relative" },
                 preact_1.h(AutocompleteComponent_1["default"], { autocomplete: autocomplete, queryText: currentQueryText, inputClassName: inputClassName }),

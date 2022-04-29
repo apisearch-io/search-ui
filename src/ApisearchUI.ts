@@ -6,6 +6,7 @@ import ApisearchUIFactory from "./ApisearchUIFactory";
 import {bootstrap} from "./Bootstrap";
 import {APISEARCH_DISPATCHER, APISEARCH_UI} from "./Constants";
 import container from "./Container";
+import {Dispatcher} from "./Dispatcher";
 import {createEnvironmentId} from "./Environment";
 import Store from "./Store";
 import Widget from "./widgets/Widget";
@@ -181,7 +182,6 @@ export default class ApisearchUI {
             );
         });
 
-
         window.dispatchEvent(new Event("apisearch_rendered", {
             bubbles: true,
         }));
@@ -278,6 +278,7 @@ export default class ApisearchUI {
         apisearchUI.reference = uiId;
         apisearchUI.userId = config.user_id ?? "";
         window[uiId] = apisearchUI;
+        window["apisearch_ui"] = apisearchUI;
 
         /**
          * Return ApisearchUI instance
@@ -343,5 +344,40 @@ export default class ApisearchUI {
             app_id: appId,
             index_id: indexId,
         }, "*");
+    }
+
+    /**
+     *
+     */
+    public getQuery() {
+        return this.store.getCurrentQuery().toArray();
+    }
+
+    /**
+     * @param text
+     */
+    public write(text: string) {
+        const query = this.getQuery();
+        query.q = text;
+        this.pushQuery(Query.createFromArray(query));
+    }
+
+    /**
+     * @param query
+     */
+    public pushQuery(query: Query) {
+        const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${this.environmentId}`);
+
+        this.repository
+            .query(query)
+            .then((result) => {
+                dispatcher.dispatch("RENDER_FETCHED_DATA", {
+                    query,
+                    result,
+                });
+            })
+            .catch((error) => {
+                // Do nothing
+            });
     }
 }
