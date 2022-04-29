@@ -210,7 +210,7 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
             : "";
 
         let searchInput = (<input
-            type="search"
+            type="text"
             className={`as-searchInput__input ${inputClassName} ${autocompletableClass}`}
             placeholder={placeholder}
             autofocus={autofocus}
@@ -253,7 +253,6 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
                 </div>
             );
         }
-
         if (withContainer) {
             searchInput = (
                 <div className={`as-searchInput ${containerClassName}`}>
