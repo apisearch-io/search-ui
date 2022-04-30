@@ -365,18 +365,19 @@ export default class ApisearchUI {
     /**
      * @param query
      */
-    public pushQuery(query: Query) {
-        const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${this.environmentId}`);
+    public pushQuery(query) {
+
+        const queryObject = Query.createFromArray(query);
+        this.store.setCurrentQuery(queryObject);
 
         this.repository
-            .query(query)
+            .query(queryObject)
             .then((result) => {
-                dispatcher.dispatch("RENDER_FETCHED_DATA", {
-                    query,
-                    result,
-                });
+                this.store.setCurrentResult(result);
+                this.render();
             })
             .catch((error) => {
+                console.log("Apisearch UI error - " + error);
                 // Do nothing
             });
     }

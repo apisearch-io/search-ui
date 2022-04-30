@@ -102,6 +102,13 @@ class Store extends EventEmitter {
     }
 
     /**
+     * @param result
+     */
+    public setCurrentResult(result: Result) {
+        this.currentResult = result;
+    }
+
+    /**
      *
      */
     public setEmptyResult() {
