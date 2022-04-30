@@ -10800,15 +10800,16 @@ var ApisearchUI = /** @class */ (function () {
      * @param query
      */
     ApisearchUI.prototype.pushQuery = function (query) {
-        var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + this.environmentId);
+        var _this = this;
+        var queryObject = apisearch_1.Query.createFromArray(query);
+        this.store.setCurrentQuery(queryObject);
         this.repository
-            .query(query)
+            .query(queryObject)
             .then(function (result) {
-            dispatcher.dispatch("RENDER_FETCHED_DATA", {
-                query: query,
-                result: result,
-            });
+            _this.store.setCurrentResult(result);
+            _this.render();
         })["catch"](function (error) {
+            console.log("Apisearch UI error - " + error);
             // Do nothing
         });
     };
@@ -11143,6 +11144,12 @@ var Store = /** @class */ (function (_super) {
      */
     Store.prototype.getCurrentResult = function () {
         return this.currentResult;
+    };
+    /**
+     * @param result
+     */
+    Store.prototype.setCurrentResult = function (result) {
+        this.currentResult = result;
     };
     /**
      *
