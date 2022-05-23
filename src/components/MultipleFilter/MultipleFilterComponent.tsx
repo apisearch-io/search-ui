@@ -99,6 +99,7 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
 
         const result = props.store.getCurrentResult();
         const aggregation = result.getAggregation(filterName);
+        let aggregations = [];
 
         if (aggregation && typeof aggregation.getCounters === "function") {
 
@@ -108,7 +109,7 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
             const counters = aggregation.getCounters();
             const countersAsArray: Counter[] = Object.values(counters);
 
-            const aggregations = props.activeFirst
+            aggregations = props.activeFirst
                 ? [
                     ...countersAsArray.filter(
                         (counter) =>
@@ -124,12 +125,13 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
                 ]
                 : countersAsArray;
 
-            this.setState((prevState) => {
-                return {
-                    aggregations,
-                };
-            });
         }
+
+        this.setState((prevState) => {
+            return {
+                aggregations,
+            };
+        });
 
         if (
             props.applicationType === 6 &&
