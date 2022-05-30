@@ -45,10 +45,12 @@ class Template extends Component<TemplateProps> {
         const template = props.template;
         const data = props.data;
         const className = props.className;
+        const id = props.id ?? "";
         const dictionary = props.dictionary ?? {};
 
         return (template)
             ? <div
+                id={id}
                 className={className}
                 dangerouslySetInnerHTML={this.renderTemplate(template, data, dictionary)}
             />

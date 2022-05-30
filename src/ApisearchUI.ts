@@ -6,7 +6,6 @@ import ApisearchUIFactory from "./ApisearchUIFactory";
 import {bootstrap} from "./Bootstrap";
 import {APISEARCH_DISPATCHER, APISEARCH_UI} from "./Constants";
 import container from "./Container";
-import {Dispatcher} from "./Dispatcher";
 import {createEnvironmentId} from "./Environment";
 import Store from "./Store";
 import Widget from "./widgets/Widget";
@@ -359,7 +358,7 @@ export default class ApisearchUI {
     public write(text: string) {
         const query = this.getQuery();
         query.q = text;
-        this.pushQuery(Query.createFromArray(query));
+        this.pushQuery(query);
     }
 
     /**
@@ -369,7 +368,6 @@ export default class ApisearchUI {
 
         const queryObject = Query.createFromArray(query);
         this.store.setCurrentQuery(queryObject);
-
         this.repository
             .query(queryObject)
             .then((result) => {

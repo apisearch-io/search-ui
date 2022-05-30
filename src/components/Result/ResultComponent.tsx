@@ -329,7 +329,6 @@ class ResultComponent extends Component<ResultProps, ResultState> {
             mainFields,
             item.getMetadata(),
             item.getIndexedMetadata(),
-            item.getHighlights(),
         );
 
         const fieldsConciliation = {};
@@ -344,12 +343,19 @@ class ResultComponent extends Component<ResultProps, ResultState> {
 
         item.fields = mainFields;
 
+        let queryText = "";
+        if (this.props.store.getCurrentQuery()) {
+            queryText = this.props.store.getCurrentQuery().getQueryText();
+        }
+
         return {
             ...props.formatData(item),
             ...{
                 key: "item_" + itemId,
                 uuid_composed: itemId,
                 click: apisearchReference + '.click("' + clickParameters + '");',
+                query_text: queryText,
+                highlights_enabled: this.props.highlightsEnabled,
                 striptags: () => {
                     return (val, render) => render(val).replace(/(<([^>]+)>)/ig, "");
                 },

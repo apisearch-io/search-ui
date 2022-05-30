@@ -10794,7 +10794,7 @@ var ApisearchUI = /** @class */ (function () {
     ApisearchUI.prototype.write = function (text) {
         var query = this.getQuery();
         query.q = text;
-        this.pushQuery(apisearch_1.Query.createFromArray(query));
+        this.pushQuery(query);
     };
     /**
      * @param query
@@ -11043,6 +11043,84 @@ exports.createEnvironmentId = void 0;
  * Create an envID
  */
 exports.createEnvironmentId = function () { return "env_" + Math.ceil(Math.random() * (9999999 - 1) + 1); };
+
+
+/***/ }),
+
+/***/ "./src/Highlight.ts":
+/*!**************************!*\
+  !*** ./src/Highlight.ts ***!
+  \**************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+exports.__esModule = true;
+exports.levenshteinDistance = exports.highlightLine = exports.highlightElement = void 0;
+function highlightElement(element, inputText) {
+    var children = element.querySelectorAll(".highlight");
+    var inputTextParts = inputText.split(" ").filter(function (word) { return (word !== ""); });
+    for (var i = 0; i < children.length; i++) {
+        highlightLine(children[i], inputTextParts);
+    }
+}
+exports.highlightElement = highlightElement;
+function highlightLine(element, inputTextParts) {
+    var lineText = element.textContent;
+    var lineTextParts = lineText.split(" ").filter(function (word) { return (word !== ""); });
+    var replaces = {};
+    for (var i = 0; i < lineTextParts.length; i++) {
+        for (var j = 0; j < inputTextParts.length; j++) {
+            var lineWord = lineTextParts[i];
+            var inputWord = inputTextParts[j];
+            var minLength = Math.min(lineWord.length, inputWord.length);
+            minLength = Math.max(minLength, inputWord.length);
+            var lineWordSplit = lineWord.substring(0, minLength).toLowerCase();
+            var inputWordSplit = inputWord.substring(0, minLength).toLowerCase();
+            var distance = levenshteinDistance(lineWordSplit, inputWordSplit);
+            var allowedDistance = 0;
+            if (minLength >= 5 && minLength < 10) {
+                allowedDistance = 1;
+            }
+            else if (minLength >= 10) {
+                allowedDistance = 2;
+            }
+            if (distance <= allowedDistance) {
+                replaces[lineWord] = "<em>" + lineWord + "</em>";
+                break;
+            }
+        }
+    }
+    for (var _i = 0, _a = Object.entries(replaces); _i < _a.length; _i++) {
+        var _b = _a[_i], key = _b[0], value = _b[1];
+        lineText = lineText.replaceAll(key, value);
+    }
+    element.innerHTML = lineText;
+}
+exports.highlightLine = highlightLine;
+function levenshteinDistance(str1, str2) {
+    if (str1 === void 0) { str1 = ""; }
+    if (str2 === void 0) { str2 = ""; }
+    var track = Array(str2.length + 1).fill(null).map(function () {
+        return Array(str1.length + 1).fill(null);
+    });
+    for (var i = 0; i <= str1.length; i += 1) {
+        track[0][i] = i;
+    }
+    for (var j = 0; j <= str2.length; j += 1) {
+        track[j][0] = j;
+    }
+    for (var j = 1; j <= str2.length; j += 1) {
+        for (var i = 1; i <= str1.length; i += 1) {
+            var indicator = str1[i - 1] === str2[j - 1] ? 0 : 1;
+            track[j][i] = Math.min(track[j][i - 1] + 1, // deletion
+            track[j - 1][i] + 1, // insertion
+            track[j - 1][i - 1] + indicator);
+        }
+    }
+    return track[str2.length][str1.length];
+}
+exports.levenshteinDistance = levenshteinDistance;
 
 
 /***/ }),
@@ -13446,6 +13524,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 exports.__esModule = true;
 var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+var Highlight_1 = __webpack_require__(/*! ../../Highlight */ "./src/Highlight.ts");
 var Template_1 = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
 /**
  * Item
@@ -13455,6 +13534,19 @@ var Item = /** @class */ (function (_super) {
     function Item() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
+    Item.prototype.componentDidMount = function () {
+        this.highlight();
+    };
+    Item.prototype.componentDidUpdate = function () {
+        this.highlight();
+    };
+    Item.prototype.highlight = function () {
+        var queryText = this.props.data.query_text;
+        if (this.props.data.highlights_enabled && queryText !== "") {
+            var element = document.getElementById("as-result-" + this.props.data.uuid_composed);
+            Highlight_1.highlightElement(element, queryText);
+        }
+    };
     /**
      * Render
      *
@@ -13466,7 +13558,8 @@ var Item = /** @class */ (function (_super) {
         var template = props.template;
         var data = props.data;
         var dictionary = (_a = props.dictionary) !== null && _a !== void 0 ? _a : {};
-        return preact_1.h(Template_1["default"], { template: template, data: data, className: "as-result__itemsList " + props.className, dictionary: dictionary });
+        var id = "as-result-" + data.uuid_composed;
+        return preact_1.h(Template_1["default"], { template: template, data: data, id: id, className: "as-result__itemsList " + props.className, dictionary: dictionary });
     };
     return Item;
 }(preact_1.Component));
@@ -13513,12 +13606,6 @@ function configureQuery(environmentId, currentQuery, itemsPerPage, highlightsEna
      * Set specific fields
      */
     clonedQuery.setFields(fields);
-    /**
-     * Enabling highlights on query result
-     */
-    if (highlightsEnabled) {
-        clonedQuery.enableHighlights();
-    }
     /**
      * Promoted uuids
      */
@@ -13823,7 +13910,7 @@ var ResultComponent = /** @class */ (function (_super) {
             ? appId + '", "' + indexId + '", "' + itemId + '", "' + userId
             : appId + '", "' + indexId + '", "' + itemId;
         var mainFields = {};
-        Object.assign(mainFields, item.getMetadata(), item.getIndexedMetadata(), item.getHighlights());
+        Object.assign(mainFields, item.getMetadata(), item.getIndexedMetadata());
         var fieldsConciliation = {};
         Object.keys(props.fieldsConciliation).map(function (field, index) {
             var _a;
@@ -13831,10 +13918,16 @@ var ResultComponent = /** @class */ (function (_super) {
         });
         Object.assign(mainFields, fieldsConciliation);
         item.fields = mainFields;
+        var queryText = "";
+        if (this.props.store.getCurrentQuery()) {
+            queryText = this.props.store.getCurrentQuery().getQueryText();
+        }
         return __assign(__assign({}, props.formatData(item)), {
             key: "item_" + itemId,
             uuid_composed: itemId,
             click: apisearchReference + '.click("' + clickParameters + '");',
+            query_text: queryText,
+            highlights_enabled: this.props.highlightsEnabled,
             striptags: function () {
                 return function (val, render) { return render(val).replace(/(<([^>]+)>)/ig, ""); };
             },
@@ -14867,14 +14960,15 @@ var Template = /** @class */ (function (_super) {
      * @return {any}
      */
     Template.prototype.render = function () {
-        var _a;
+        var _a, _b;
         var props = this.props;
         var template = props.template;
         var data = props.data;
         var className = props.className;
-        var dictionary = (_a = props.dictionary) !== null && _a !== void 0 ? _a : {};
+        var id = (_a = props.id) !== null && _a !== void 0 ? _a : "";
+        var dictionary = (_b = props.dictionary) !== null && _b !== void 0 ? _b : {};
         return (template)
-            ? preact_1.h("div", { className: className, dangerouslySetInnerHTML: this.renderTemplate(template, data, dictionary) })
+            ? preact_1.h("div", { id: id, className: className, dangerouslySetInnerHTML: this.renderTemplate(template, data, dictionary) })
             : null;
     };
     return Template;
