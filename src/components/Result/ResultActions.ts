@@ -45,13 +45,6 @@ export function configureQuery(
     clonedQuery.setFields(fields);
 
     /**
-     * Enabling highlights on query result
-     */
-    if (highlightsEnabled) {
-        clonedQuery.enableHighlights();
-    }
-
-    /**
      * Promoted uuids
      */
     for (const i in promotedUUIDs) {
