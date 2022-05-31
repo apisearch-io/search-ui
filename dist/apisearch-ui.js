@@ -13534,6 +13534,17 @@ var Item = /** @class */ (function (_super) {
     function Item() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
+    /**
+     * @param nextProps
+     * @param nextState
+     */
+    Item.prototype.shouldComponentUpdate = function (nextProps, nextState) {
+        var shouldUpdate = this.props.data.uuid_composed !== nextProps.data.uuid_composed;
+        if (!shouldUpdate) {
+            this.highlight();
+        }
+        return shouldUpdate;
+    };
     Item.prototype.componentDidMount = function () {
         this.highlight();
     };

@@ -8,6 +8,20 @@ import {ItemState} from "./ItemState";
  * Item
  */
 class Item extends Component<ItemProps, ItemState> {
+
+    /**
+     * @param nextProps
+     * @param nextState
+     */
+    public shouldComponentUpdate(nextProps: Readonly<ItemProps>, nextState: Readonly<ItemState>): boolean {
+        const shouldUpdate = this.props.data.uuid_composed !== nextProps.data.uuid_composed;
+        if (!shouldUpdate) {
+            this.highlight();
+        }
+
+        return shouldUpdate;
+    }
+
     public componentDidMount() {
         this.highlight();
     }
