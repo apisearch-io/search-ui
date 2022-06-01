@@ -313,11 +313,54 @@ export default class ApisearchUI {
             .pushInteraction(
                 IndexUUID.createById(indexId),
                 ItemUUID.createByComposedUUID(itemId),
-                this.userId, "", "cli",
+                this.userId,
+                this.store.getCurrentQuery().getQueryText(),
+                "cli",
             );
 
         window.postMessage({
             name: "apisearch_item_was_clicked",
+            app_id: appId,
+            index_id: indexId,
+            item_id: itemId,
+        }, "*");
+
+        window.postMessage({
+            name: "apisearch_item_was_interacted",
+            interaction: 'cli',
+            app_id: appId,
+            index_id: indexId,
+            item_id: itemId,
+        }, "*");
+    }
+
+    /**
+     * @param interaction
+     * @param appId
+     * @param indexId
+     * @param itemId
+     *
+     * @return {any}
+     */
+    public interact(
+        interaction: string,
+        appId: string,
+        indexId: string,
+        itemId: string,
+    ) {
+        this
+            .repository
+            .pushInteraction(
+                IndexUUID.createById(indexId),
+                ItemUUID.createByComposedUUID(itemId),
+                this.userId,
+                this.store.getCurrentQuery().getQueryText(),
+                interaction,
+            );
+
+        window.postMessage({
+            name: "apisearch_item_was_interacted",
+            interaction: interaction,
             app_id: appId,
             index_id: indexId,
             item_id: itemId,
