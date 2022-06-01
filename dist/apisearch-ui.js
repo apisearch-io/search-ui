@@ -13888,10 +13888,26 @@ var ResultComponent = /** @class */ (function (_super) {
             query: currentQuery.getQueryText(),
             suggestions: currentResult.getSuggestions(),
         };
+        /**
+         * We should add positions to items
+         * When the number of items to render is higher than the page size, we are in front of infinite scroll
+         */
+        var isInfinite = (currentQuery.getPage() === 1) || items.length > currentQuery.getSize();
+        var firstItem = ((currentQuery.getPage() - 1) * currentQuery.getSize());
+        var itemsForEvent = items;
+        if (isInfinite) {
+            itemsForEvent = Array.prototype.slice.call(items, firstItem);
+        }
+        Array.prototype.forEach.call(itemsForEvent, function (item) {
+            item.position = ++firstItem;
+        });
         window.top.postMessage({
             name: "apisearch_result_items",
-            items: items,
+            with_results: items.length > 0,
+            page: currentQuery.getPage(),
+            itemsForEvent: itemsForEvent,
         }, "*");
+        console.log(itemsForEvent);
         /**
          * Uses defined a custom items list. Old version
          */
@@ -13943,10 +13959,6 @@ var ResultComponent = /** @class */ (function (_super) {
             indexId = indexUUID.composedUUID();
         }
         var itemId = item.getUUID().composedUUID();
-        var userId = config.user_id;
-        var clickParameters = typeof userId === "string"
-            ? appId + '", "' + indexId + '", "' + itemId + '", "' + userId
-            : appId + '", "' + indexId + '", "' + itemId;
         var mainFields = {};
         Object.assign(mainFields, item.getMetadata(), item.getIndexedMetadata());
         var fieldsConciliation = {};
@@ -13963,7 +13975,8 @@ var ResultComponent = /** @class */ (function (_super) {
         return __assign(__assign({}, props.formatData(item)), {
             key: "item_" + itemId,
             uuid_composed: itemId,
-            click: apisearchReference + '.click("' + clickParameters + '");',
+            click: apisearchReference + '.click("' + appId + '", "' + indexId + '", "' + itemId + '");',
+            add_to_cart: apisearchReference + '.interact("add_cart", "' + appId + '", "' + indexId + '", "' + itemId + '");',
             query_text: queryText,
             highlights_enabled: this.props.highlightsEnabled,
             striptags: function () {

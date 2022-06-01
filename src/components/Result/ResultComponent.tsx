@@ -208,10 +208,29 @@ class ResultComponent extends Component<ResultProps, ResultState> {
             suggestions: currentResult.getSuggestions(),
         };
 
+
+        /**
+         * We should add positions to items
+         * When the number of items to render is higher than the page size, we are in front of infinite scroll
+         */
+        const isInfinite = (currentQuery.getPage() === 1) || items.length > currentQuery.getSize();
+        let firstItem = ((currentQuery.getPage() - 1) * currentQuery.getSize());
+        let itemsForEvent = items;
+        if (isInfinite) {
+            itemsForEvent = Array.prototype.slice.call(items, firstItem);
+        }
+
+        Array.prototype.forEach.call(itemsForEvent, function(item) {
+            item.position = ++firstItem;
+        });
+
         window.top.postMessage({
             name: "apisearch_result_items",
-            items,
+            with_results: items.length > 0,
+            page: currentQuery.getPage(),
+            itemsForEvent,
         }, "*");
+        console.log(itemsForEvent);
 
         /**
          * Uses defined a custom items list. Old version
@@ -319,11 +338,6 @@ class ResultComponent extends Component<ResultProps, ResultState> {
         }
 
         const itemId = item.getUUID().composedUUID();
-        const userId = config.user_id;
-        const clickParameters = typeof userId === "string"
-            ? appId + '", "' + indexId + '", "' + itemId + '", "' + userId
-            : appId + '", "' + indexId + '", "' + itemId;
-
         const mainFields = {};
         Object.assign(
             mainFields,
@@ -353,7 +367,8 @@ class ResultComponent extends Component<ResultProps, ResultState> {
             ...{
                 key: "item_" + itemId,
                 uuid_composed: itemId,
-                click: apisearchReference + '.click("' + clickParameters + '");',
+                click: apisearchReference + '.click("' + appId + '", "' + indexId + '", "' + itemId + '");',
+                add_to_cart: apisearchReference + '.interact("add_cart", "' + appId + '", "' + indexId + '", "' + itemId + '");',
                 query_text: queryText,
                 highlights_enabled: this.props.highlightsEnabled,
                 striptags: () => {
