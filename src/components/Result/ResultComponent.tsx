@@ -228,9 +228,8 @@ class ResultComponent extends Component<ResultProps, ResultState> {
             name: "apisearch_result_items",
             with_results: items.length > 0,
             page: currentQuery.getPage(),
-            itemsForEvent,
+            items: itemsForEvent,
         }, "*");
-        console.log(itemsForEvent);
 
         /**
          * Uses defined a custom items list. Old version
