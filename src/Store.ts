@@ -17,6 +17,7 @@ class Store extends EventEmitter {
     private readonly window: Window;
     private readonly isUnderIframe: boolean;
     private doNotCleanUrlHashAtFirst: boolean = false;
+    private site: string;
 
     /**
      * @param coordinate
@@ -40,6 +41,7 @@ class Store extends EventEmitter {
         super();
 
         this.dirty = true;
+        this.site = site;
         const initialQuery = Store.loadInitialQuery(coordinate, userId, site);
         this.window = window.top;
         this.isUnderIframe = (window !== window.top);
@@ -74,6 +76,13 @@ class Store extends EventEmitter {
      */
     public isDirty(): boolean {
         return this.dirty;
+    }
+
+    /**
+     *
+     */
+    public getSite(): string {
+        return this.site;
     }
 
     /**

@@ -1323,6 +1323,7 @@ var AxiosClient = /** @class */ (function (_super) {
                             if (error.code !== undefined &&
                                 error.code !== "ECONNREFUSED" &&
                                 error.code !== "ECONNABORTED" &&
+                                error.code !== "ERR_BAD_REQUEST" &&
                                 error.message !== "Network Error") {
                                 return {
                                     data: response.data,
@@ -5582,10 +5583,12 @@ var HttpRepository = /** @class */ (function (_super) {
      * @param {string} userId
      * @param {string} interaction
      * @param {string} queryString
+     * @param {string} site
      *
      * @return {Promise<void>}
      */
-    HttpRepository.prototype.pushInteraction = function (indexUUID, itemUUID, userId, queryString, interaction) {
+    HttpRepository.prototype.pushInteraction = function (indexUUID, itemUUID, userId, queryString, interaction, site) {
+        if (site === void 0) { site = null; }
         return tslib_1.__awaiter(this, void 0, void 0, function () {
             var parameters, response_13;
             return tslib_1.__generator(this, function (_a) {
@@ -5593,6 +5596,7 @@ var HttpRepository = /** @class */ (function (_super) {
                     case 0:
                         parameters = {
                             query_string: queryString,
+                            site: site,
                             user_id: userId
                         };
                         _a.label = 1;
@@ -5616,16 +5620,19 @@ var HttpRepository = /** @class */ (function (_super) {
      * @param {IndexUUID} indexUUID
      * @param {string} userId
      * @param {ItemUUID[]} itemUUIDs
+     * @param {string} site
      *
      * @return {Promise<void>}
      */
-    HttpRepository.prototype.purchase = function (indexUUID, userId, itemUUIDs) {
+    HttpRepository.prototype.purchase = function (indexUUID, userId, itemUUIDs, site) {
+        if (site === void 0) { site = null; }
         return tslib_1.__awaiter(this, void 0, void 0, function () {
             var parameters, response_14;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         parameters = {
+                            site: site,
                             user_id: userId
                         };
                         _a.label = 1;
@@ -10758,12 +10765,13 @@ var ApisearchUI = /** @class */ (function () {
     ApisearchUI.prototype.click = function (appId, indexId, itemId) {
         this
             .repository
-            .pushInteraction(IndexUUID_1.IndexUUID.createById(indexId), apisearch_1.ItemUUID.createByComposedUUID(itemId), this.userId, this.store.getCurrentQuery().getQueryText(), "cli");
+            .pushInteraction(IndexUUID_1.IndexUUID.createById(indexId), apisearch_1.ItemUUID.createByComposedUUID(itemId), this.userId, this.store.getCurrentQuery().getQueryText(), "cli", this.store.getSite());
         window.postMessage({
             name: "apisearch_item_was_clicked",
             app_id: appId,
             index_id: indexId,
             item_id: itemId,
+            site: this.store.getSite(),
         }, "*");
         window.postMessage({
             name: "apisearch_item_was_interacted",
@@ -10771,6 +10779,7 @@ var ApisearchUI = /** @class */ (function () {
             app_id: appId,
             index_id: indexId,
             item_id: itemId,
+            site: this.store.getSite(),
         }, "*");
     };
     /**
@@ -10784,13 +10793,14 @@ var ApisearchUI = /** @class */ (function () {
     ApisearchUI.prototype.interact = function (interaction, appId, indexId, itemId) {
         this
             .repository
-            .pushInteraction(IndexUUID_1.IndexUUID.createById(indexId), apisearch_1.ItemUUID.createByComposedUUID(itemId), this.userId, this.store.getCurrentQuery().getQueryText(), interaction);
+            .pushInteraction(IndexUUID_1.IndexUUID.createById(indexId), apisearch_1.ItemUUID.createByComposedUUID(itemId), this.userId, this.store.getCurrentQuery().getQueryText(), interaction, this.store.getSite());
         window.postMessage({
             name: "apisearch_item_was_interacted",
             interaction: interaction,
             app_id: appId,
             index_id: indexId,
             item_id: itemId,
+            site: this.store.getSite(),
         }, "*");
     };
     /**
@@ -10802,11 +10812,12 @@ var ApisearchUI = /** @class */ (function () {
     ApisearchUI.prototype.purchase = function (appId, indexId) {
         this
             .repository
-            .purchase(IndexUUID_1.IndexUUID.createById(indexId), this.userId, []);
+            .purchase(IndexUUID_1.IndexUUID.createById(indexId), this.userId, [], this.store.getSite());
         window.postMessage({
             name: "apisearch_purchase_was_done",
             app_id: appId,
             index_id: indexId,
+            site: this.store.getSite(),
         }, "*");
     };
     /**
@@ -11196,6 +11207,7 @@ var Store = /** @class */ (function (_super) {
         _this.withHash = false;
         _this.doNotCleanUrlHashAtFirst = false;
         _this.dirty = true;
+        _this.site = site;
         var initialQuery = Store.loadInitialQuery(coordinate, userId, site);
         _this.window = window.top;
         _this.isUnderIframe = (window !== window.top);
@@ -11227,6 +11239,12 @@ var Store = /** @class */ (function (_super) {
      */
     Store.prototype.isDirty = function () {
         return this.dirty;
+    };
+    /**
+     *
+     */
+    Store.prototype.getSite = function () {
+        return this.site;
     };
     /**
      * Get current query

@@ -316,6 +316,7 @@ export default class ApisearchUI {
                 this.userId,
                 this.store.getCurrentQuery().getQueryText(),
                 "cli",
+                this.store.getSite(),
             );
 
         window.postMessage({
@@ -323,6 +324,7 @@ export default class ApisearchUI {
             app_id: appId,
             index_id: indexId,
             item_id: itemId,
+            site: this.store.getSite(),
         }, "*");
 
         window.postMessage({
@@ -331,6 +333,7 @@ export default class ApisearchUI {
             app_id: appId,
             index_id: indexId,
             item_id: itemId,
+            site: this.store.getSite(),
         }, "*");
     }
 
@@ -356,6 +359,7 @@ export default class ApisearchUI {
                 this.userId,
                 this.store.getCurrentQuery().getQueryText(),
                 interaction,
+                this.store.getSite(),
             );
 
         window.postMessage({
@@ -364,6 +368,7 @@ export default class ApisearchUI {
             app_id: appId,
             index_id: indexId,
             item_id: itemId,
+            site: this.store.getSite(),
         }, "*");
     }
 
@@ -379,12 +384,18 @@ export default class ApisearchUI {
     ) {
         this
             .repository
-            .purchase(IndexUUID.createById(indexId), this.userId, []);
+            .purchase(
+                IndexUUID.createById(indexId),
+                this.userId,
+                [],
+                this.store.getSite(),
+            );
 
         window.postMessage({
             name: "apisearch_purchase_was_done",
             app_id: appId,
             index_id: indexId,
+            site: this.store.getSite(),
         }, "*");
     }
 
