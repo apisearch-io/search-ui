@@ -317,6 +317,7 @@ export default class ApisearchUI {
                 this.store.getCurrentQuery().getQueryText(),
                 "cli",
                 this.store.getSite(),
+                this.store.getDevice(),
             );
 
         window.postMessage({
@@ -325,6 +326,7 @@ export default class ApisearchUI {
             index_id: indexId,
             item_id: itemId,
             site: this.store.getSite(),
+            device: this.store.getDevice(),
         }, "*");
 
         window.postMessage({
@@ -334,6 +336,7 @@ export default class ApisearchUI {
             index_id: indexId,
             item_id: itemId,
             site: this.store.getSite(),
+            device: this.store.getDevice(),
         }, "*");
     }
 
@@ -360,6 +363,7 @@ export default class ApisearchUI {
                 this.store.getCurrentQuery().getQueryText(),
                 interaction,
                 this.store.getSite(),
+                this.store.getDevice(),
             );
 
         window.postMessage({
@@ -369,6 +373,7 @@ export default class ApisearchUI {
             index_id: indexId,
             item_id: itemId,
             site: this.store.getSite(),
+            device: this.store.getDevice(),
         }, "*");
     }
 
@@ -389,6 +394,7 @@ export default class ApisearchUI {
                 this.userId,
                 [],
                 this.store.getSite(),
+                this.store.getDevice(),
             );
 
         window.postMessage({
@@ -396,6 +402,7 @@ export default class ApisearchUI {
             app_id: appId,
             index_id: indexId,
             site: this.store.getSite(),
+            device: this.store.getDevice(),
         }, "*");
     }
 
