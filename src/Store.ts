@@ -18,6 +18,7 @@ class Store extends EventEmitter {
     private readonly isUnderIframe: boolean;
     private doNotCleanUrlHashAtFirst: boolean = false;
     private site: string;
+    private device: string;
 
     /**
      * @param coordinate
@@ -25,6 +26,7 @@ class Store extends EventEmitter {
      * @param hash
      * @param userId
      * @param site
+     * @param device
      * @param generateRandomSessionUUID
      */
     constructor(
@@ -36,13 +38,15 @@ class Store extends EventEmitter {
         hash: string,
         userId: string,
         site: string,
+        device: string,
         generateRandomSessionUUID: boolean,
     ) {
         super();
 
         this.dirty = true;
         this.site = site;
-        const initialQuery = Store.loadInitialQuery(coordinate, userId, site);
+        this.device = device;
+        const initialQuery = Store.loadInitialQuery(coordinate, userId, site, device);
         this.window = window.top;
         this.isUnderIframe = (window !== window.top);
 
@@ -83,6 +87,13 @@ class Store extends EventEmitter {
      */
     public getSite(): string {
         return this.site;
+    }
+
+    /**
+     *
+     */
+    public getDevice(): string {
+        return this.device;
     }
 
     /**
@@ -248,7 +259,7 @@ class Store extends EventEmitter {
     private static loadInitialQuery(coordinate: {
         lat: number,
         lon: number,
-    }, userId: string, site: string): Query {
+    }, userId: string, site: string, device: string): Query {
         const withCoordinate = (
             coordinate &&
             coordinate.lat !== undefined &&
@@ -264,11 +275,13 @@ class Store extends EventEmitter {
             q.user = {id: userId};
         }
 
-        if (site !== "") {
-            if (q.metadata === undefined) {
-                q.metadata = {};
-            }
+        if (q.metadata === undefined) {
+            q.metadata = {
+                device: device
+            };
+        }
 
+        if (site !== "") {
             q.metadata.site = site;
         }
 

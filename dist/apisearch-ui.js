@@ -5584,11 +5584,13 @@ var HttpRepository = /** @class */ (function (_super) {
      * @param {string} interaction
      * @param {string} queryString
      * @param {string} site
+     * @param {string} device
      *
      * @return {Promise<void>}
      */
-    HttpRepository.prototype.pushInteraction = function (indexUUID, itemUUID, userId, queryString, interaction, site) {
+    HttpRepository.prototype.pushInteraction = function (indexUUID, itemUUID, userId, queryString, interaction, site, device) {
         if (site === void 0) { site = null; }
+        if (device === void 0) { device = null; }
         return tslib_1.__awaiter(this, void 0, void 0, function () {
             var parameters, response_13;
             return tslib_1.__generator(this, function (_a) {
@@ -5597,6 +5599,7 @@ var HttpRepository = /** @class */ (function (_super) {
                         parameters = {
                             query_string: queryString,
                             site: site,
+                            device: device,
                             user_id: userId
                         };
                         _a.label = 1;
@@ -5621,11 +5624,13 @@ var HttpRepository = /** @class */ (function (_super) {
      * @param {string} userId
      * @param {ItemUUID[]} itemUUIDs
      * @param {string} site
+     * @param {string} device
      *
      * @return {Promise<void>}
      */
-    HttpRepository.prototype.purchase = function (indexUUID, userId, itemUUIDs, site) {
+    HttpRepository.prototype.purchase = function (indexUUID, userId, itemUUIDs, site, device) {
         if (site === void 0) { site = null; }
+        if (device === void 0) { device = null; }
         return tslib_1.__awaiter(this, void 0, void 0, function () {
             var parameters, response_14;
             return tslib_1.__generator(this, function (_a) {
@@ -5633,6 +5638,7 @@ var HttpRepository = /** @class */ (function (_super) {
                     case 0:
                         parameters = {
                             site: site,
+                            device: device,
                             user_id: userId
                         };
                         _a.label = 1;
@@ -10765,13 +10771,14 @@ var ApisearchUI = /** @class */ (function () {
     ApisearchUI.prototype.click = function (appId, indexId, itemId) {
         this
             .repository
-            .pushInteraction(IndexUUID_1.IndexUUID.createById(indexId), apisearch_1.ItemUUID.createByComposedUUID(itemId), this.userId, this.store.getCurrentQuery().getQueryText(), "cli", this.store.getSite());
+            .pushInteraction(IndexUUID_1.IndexUUID.createById(indexId), apisearch_1.ItemUUID.createByComposedUUID(itemId), this.userId, this.store.getCurrentQuery().getQueryText(), "cli", this.store.getSite(), this.store.getDevice());
         window.postMessage({
             name: "apisearch_item_was_clicked",
             app_id: appId,
             index_id: indexId,
             item_id: itemId,
             site: this.store.getSite(),
+            device: this.store.getDevice(),
         }, "*");
         window.postMessage({
             name: "apisearch_item_was_interacted",
@@ -10780,6 +10787,7 @@ var ApisearchUI = /** @class */ (function () {
             index_id: indexId,
             item_id: itemId,
             site: this.store.getSite(),
+            device: this.store.getDevice(),
         }, "*");
     };
     /**
@@ -10793,7 +10801,7 @@ var ApisearchUI = /** @class */ (function () {
     ApisearchUI.prototype.interact = function (interaction, appId, indexId, itemId) {
         this
             .repository
-            .pushInteraction(IndexUUID_1.IndexUUID.createById(indexId), apisearch_1.ItemUUID.createByComposedUUID(itemId), this.userId, this.store.getCurrentQuery().getQueryText(), interaction, this.store.getSite());
+            .pushInteraction(IndexUUID_1.IndexUUID.createById(indexId), apisearch_1.ItemUUID.createByComposedUUID(itemId), this.userId, this.store.getCurrentQuery().getQueryText(), interaction, this.store.getSite(), this.store.getDevice());
         window.postMessage({
             name: "apisearch_item_was_interacted",
             interaction: interaction,
@@ -10801,6 +10809,7 @@ var ApisearchUI = /** @class */ (function () {
             index_id: indexId,
             item_id: itemId,
             site: this.store.getSite(),
+            device: this.store.getDevice(),
         }, "*");
     };
     /**
@@ -10812,12 +10821,13 @@ var ApisearchUI = /** @class */ (function () {
     ApisearchUI.prototype.purchase = function (appId, indexId) {
         this
             .repository
-            .purchase(IndexUUID_1.IndexUUID.createById(indexId), this.userId, [], this.store.getSite());
+            .purchase(IndexUUID_1.IndexUUID.createById(indexId), this.userId, [], this.store.getSite(), this.store.getDevice());
         window.postMessage({
             name: "apisearch_purchase_was_done",
             app_id: appId,
             index_id: indexId,
             site: this.store.getSite(),
+            device: this.store.getDevice(),
         }, "*");
     };
     /**
@@ -10940,8 +10950,8 @@ function bootstrap(environmentId, config, hash) {
      * Register apisearch store
      */
     Container_1["default"].register(storeId, function () {
-        var _a, _b, _c;
-        return new Store_1["default"](config.coordinate, config.options.min_score, hash, (_a = config.user_id) !== null && _a !== void 0 ? _a : "", (_b = config.options.site) !== null && _b !== void 0 ? _b : "", (_c = config.options.generate_random_session_uuid) !== null && _c !== void 0 ? _c : false);
+        var _a, _b, _c, _d;
+        return new Store_1["default"](config.coordinate, config.options.min_score, hash, (_a = config.user_id) !== null && _a !== void 0 ? _a : "", (_b = config.options.site) !== null && _b !== void 0 ? _b : "", (_c = config.options.device) !== null && _c !== void 0 ? _c : "", (_d = config.options.generate_random_session_uuid) !== null && _d !== void 0 ? _d : false);
     });
     /**
      * Register an event dispatcher
@@ -11200,15 +11210,17 @@ var Store = /** @class */ (function (_super) {
      * @param hash
      * @param userId
      * @param site
+     * @param device
      * @param generateRandomSessionUUID
      */
-    function Store(coordinate, minScore, hash, userId, site, generateRandomSessionUUID) {
+    function Store(coordinate, minScore, hash, userId, site, device, generateRandomSessionUUID) {
         var _this = _super.call(this) || this;
         _this.withHash = false;
         _this.doNotCleanUrlHashAtFirst = false;
         _this.dirty = true;
         _this.site = site;
-        var initialQuery = Store.loadInitialQuery(coordinate, userId, site);
+        _this.device = device;
+        var initialQuery = Store.loadInitialQuery(coordinate, userId, site, device);
         _this.window = window.top;
         _this.isUnderIframe = (window !== window.top);
         if ((typeof hash === "string")) {
@@ -11245,6 +11257,12 @@ var Store = /** @class */ (function (_super) {
      */
     Store.prototype.getSite = function () {
         return this.site;
+    };
+    /**
+     *
+     */
+    Store.prototype.getDevice = function () {
+        return this.device;
     };
     /**
      * Get current query
@@ -11373,7 +11391,7 @@ var Store = /** @class */ (function (_super) {
      * @param userId
      * @param site
      */
-    Store.loadInitialQuery = function (coordinate, userId, site) {
+    Store.loadInitialQuery = function (coordinate, userId, site, device) {
         var withCoordinate = (coordinate &&
             coordinate.lat !== undefined &&
             coordinate.lon !== undefined);
@@ -11384,10 +11402,12 @@ var Store = /** @class */ (function (_super) {
         if (userId !== "") {
             q.user = { id: userId };
         }
+        if (q.metadata === undefined) {
+            q.metadata = {
+                device: device
+            };
+        }
         if (site !== "") {
-            if (q.metadata === undefined) {
-                q.metadata = {};
-            }
             q.metadata.site = site;
         }
         return apisearch_1.Query.createFromArray(q);
