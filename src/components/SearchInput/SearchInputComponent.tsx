@@ -12,6 +12,7 @@ import {useRef} from "preact/compat";
 class SearchInputComponent extends Component<SearchInputProps, SearchInputState> {
     private inputRef = useRef(null);
     private speechRecognition;
+    private queryTextEvent;
 
     /**
      * Constructor
@@ -36,6 +37,10 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
                 console.log("Speech Recognition Error - " + event.error);
             };
         }
+
+        window.addEventListener('beforeunload', function() {
+            that.dispatchQueryStringEvent(props, 0);
+        });
     }
 
     /**
@@ -170,6 +175,32 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
     }
 
     /**
+     * @param props
+     * @param timeout
+     */
+    dispatchQueryStringEvent(props: SearchInputProps, timeout: number) {
+        const currentQuery = props.store.getCurrentQuery();
+        const currentQueryText = currentQuery.getQueryText();
+        if (this.queryTextEvent) {
+            clearTimeout(this.queryTextEvent);
+        }
+
+        if (currentQueryText !== "") {
+            const that = this;
+            this.queryTextEvent = setTimeout(function() {
+                that.queryTextEvent = null;
+                window.postMessage({
+                    name: "apisearch_search",
+                    query_text: currentQueryText,
+                    query: currentQuery.toArray(),
+                    site: props.store.getSite(),
+                    device: props.store.getDevice(),
+                }, "*");
+            }, timeout);
+        }
+    }
+
+    /**
      * Search
      *
      * @return {any}
@@ -208,6 +239,8 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
         const autocompletableClass = showAutocomplete
             ? "autocompletable"
             : "";
+
+        this.dispatchQueryStringEvent(props, 2000);
 
         let searchInput = (<input
             type="text"

@@ -224,8 +224,9 @@ class ResultComponent extends Component<ResultProps, ResultState> {
             item.position = ++firstItem;
         });
 
-        window.top.postMessage({
+        window.postMessage({
             name: "apisearch_result_items",
+            query: currentQuery.toArray(),
             with_results: items.length > 0,
             page: currentQuery.getPage(),
             items: itemsForEvent,

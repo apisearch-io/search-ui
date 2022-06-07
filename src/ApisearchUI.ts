@@ -320,6 +320,9 @@ export default class ApisearchUI {
                 this.store.getDevice(),
             );
 
+        const queryAsArray = this.store.getCurrentQuery().toArray();
+        const resultAsArray = this.store.getCurrentResult().toArray();
+
         window.postMessage({
             name: "apisearch_item_was_clicked",
             app_id: appId,
@@ -327,16 +330,20 @@ export default class ApisearchUI {
             item_id: itemId,
             site: this.store.getSite(),
             device: this.store.getDevice(),
+            query: queryAsArray,
+            result: resultAsArray,
         }, "*");
 
         window.postMessage({
             name: "apisearch_item_was_interacted",
-            interaction: 'cli',
+            interaction: "cli",
             app_id: appId,
             index_id: indexId,
             item_id: itemId,
             site: this.store.getSite(),
             device: this.store.getDevice(),
+            query: queryAsArray,
+            result: resultAsArray,
         }, "*");
     }
 
@@ -374,6 +381,8 @@ export default class ApisearchUI {
             item_id: itemId,
             site: this.store.getSite(),
             device: this.store.getDevice(),
+            query: this.store.getCurrentQuery().toArray(),
+            result: this.store.getCurrentResult().toArray(),
         }, "*");
     }
 

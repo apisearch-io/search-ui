@@ -1,6 +1,6 @@
 {
   "name": "apisearch-ui",
-  "version": "0.3.22",
+  "version": "0.3.23",
   "description": "Javascript User Interface of Apisearch.",
   "main": "lib/index.js",
   "scripts": {
@@ -51,7 +51,7 @@
     "webpack-merge": "^4.2.1"
   },
   "dependencies": {
-    "apisearch": "^0.3.12",
+    "apisearch": "^0.3.13",
     "mustache": "^4.1.0",
     "preact": "^10"
   }
