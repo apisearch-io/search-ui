@@ -10772,6 +10772,8 @@ var ApisearchUI = /** @class */ (function () {
         this
             .repository
             .pushInteraction(IndexUUID_1.IndexUUID.createById(indexId), apisearch_1.ItemUUID.createByComposedUUID(itemId), this.userId, this.store.getCurrentQuery().getQueryText(), "cli", this.store.getSite(), this.store.getDevice());
+        var queryAsArray = this.store.getCurrentQuery().toArray();
+        var resultAsArray = this.store.getCurrentResult().toArray();
         window.postMessage({
             name: "apisearch_item_was_clicked",
             app_id: appId,
@@ -10779,15 +10781,19 @@ var ApisearchUI = /** @class */ (function () {
             item_id: itemId,
             site: this.store.getSite(),
             device: this.store.getDevice(),
+            query: queryAsArray,
+            result: resultAsArray,
         }, "*");
         window.postMessage({
             name: "apisearch_item_was_interacted",
-            interaction: 'cli',
+            interaction: "cli",
             app_id: appId,
             index_id: indexId,
             item_id: itemId,
             site: this.store.getSite(),
             device: this.store.getDevice(),
+            query: queryAsArray,
+            result: resultAsArray,
         }, "*");
     };
     /**
@@ -10810,6 +10816,8 @@ var ApisearchUI = /** @class */ (function () {
             item_id: itemId,
             site: this.store.getSite(),
             device: this.store.getDevice(),
+            query: this.store.getCurrentQuery().toArray(),
+            result: this.store.getCurrentResult().toArray(),
         }, "*");
     };
     /**
@@ -13940,8 +13948,9 @@ var ResultComponent = /** @class */ (function (_super) {
         Array.prototype.forEach.call(itemsForEvent, function (item) {
             item.position = ++firstItem;
         });
-        window.top.postMessage({
+        window.postMessage({
             name: "apisearch_result_items",
+            query: currentQuery.toArray(),
             with_results: items.length > 0,
             page: currentQuery.getPage(),
             items: itemsForEvent,
@@ -14317,6 +14326,9 @@ var SearchInputComponent = /** @class */ (function (_super) {
                 console.log("Speech Recognition Error - " + event.error);
             };
         }
+        window.addEventListener('beforeunload', function () {
+            that.dispatchQueryStringEvent(props, 0);
+        });
         return _this;
     }
     /**
@@ -14388,6 +14400,30 @@ var SearchInputComponent = /** @class */ (function (_super) {
         }
     };
     /**
+     * @param props
+     * @param timeout
+     */
+    SearchInputComponent.prototype.dispatchQueryStringEvent = function (props, timeout) {
+        var currentQuery = props.store.getCurrentQuery();
+        var currentQueryText = currentQuery.getQueryText();
+        if (this.queryTextEvent) {
+            clearTimeout(this.queryTextEvent);
+        }
+        if (currentQueryText !== "") {
+            var that_1 = this;
+            this.queryTextEvent = setTimeout(function () {
+                that_1.queryTextEvent = null;
+                window.postMessage({
+                    name: "apisearch_search",
+                    query_text: currentQueryText,
+                    query: currentQuery.toArray(),
+                    site: props.store.getSite(),
+                    device: props.store.getDevice(),
+                }, "*");
+            }, timeout);
+        }
+    };
+    /**
      * Search
      *
      * @return {any}
@@ -14422,6 +14458,7 @@ var SearchInputComponent = /** @class */ (function (_super) {
         var autocompletableClass = showAutocomplete
             ? "autocompletable"
             : "";
+        this.dispatchQueryStringEvent(props, 2000);
         var searchInput = (preact_1.h("input", __assign({ type: "text", className: "as-searchInput__input " + inputClassName + " " + autocompletableClass, placeholder: placeholder, autofocus: autofocus }, htmlNodeInheritProps, { onInput: function (event) { return _this.handleSearch(event.target.value); }, value: currentQueryText, style: style, onKeyDown: keyDownCallback, onTouchStart: keyDownAction, ref: this.inputRef })));
         if (showAutocomplete) {
             searchInput = (preact_1.h("div", { style: "position: relative" },
