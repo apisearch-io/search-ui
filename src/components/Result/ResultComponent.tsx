@@ -222,13 +222,17 @@ class ResultComponent extends Component<ResultProps, ResultState> {
 
         Array.prototype.forEach.call(itemsForEvent, function(item) {
             item.position = ++firstItem;
+            item.id = item.getId();
         });
 
         window.postMessage({
             name: "apisearch_result_items",
             query: currentQuery.toArray(),
+            query_text: currentQuery.getQueryText(),
             with_results: items.length > 0,
             page: currentQuery.getPage(),
+            site: props.store.getSite(),
+            device: props.store.getDevice(),
             items: itemsForEvent,
         }, "*");
 

@@ -255,6 +255,8 @@ class Store extends EventEmitter {
      * @param coordinate
      * @param userId
      * @param site
+     * @param device
+     * @private
      */
     private static loadInitialQuery(coordinate: {
         lat: number,
@@ -297,20 +299,28 @@ class Store extends EventEmitter {
         }
 
         const queryAsObject = query.toArray();
-        try {
-            const urlObject = (
-                this.urlHash !== undefined &&
-                this.urlHash !== null &&
-                this.urlHash !== "" &&
-                this.urlHash !== "/"
-            )
-                ? JSON.parse(decodeURI(this.urlHash))
-                : {};
+        let urlObject = {};
 
+        if (this.urlHash.match("q=.*") !== null) {
+            const urlHashQuery = this.urlHash.slice(2);
+            urlObject = {q: urlHashQuery};
             this.emit("fromUrlObject", urlObject, queryAsObject);
-        } catch (e) {
-            // Silent pass
-            this.doNotCleanUrlHashAtFirst = true;
+        } else {
+            try {
+                urlObject = (
+                    this.urlHash !== undefined &&
+                    this.urlHash !== null &&
+                    this.urlHash !== "" &&
+                    this.urlHash !== "/"
+                )
+                    ? JSON.parse(decodeURI(this.urlHash))
+                    : {};
+
+                this.emit("fromUrlObject", urlObject, queryAsObject);
+            } catch (e) {
+                // Silent pass
+                this.doNotCleanUrlHashAtFirst = true;
+            }
         }
 
         return Query.createFromArray(queryAsObject);
