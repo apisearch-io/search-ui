@@ -11398,6 +11398,8 @@ var Store = /** @class */ (function (_super) {
      * @param coordinate
      * @param userId
      * @param site
+     * @param device
+     * @private
      */
     Store.loadInitialQuery = function (coordinate, userId, site, device) {
         var withCoordinate = (coordinate &&
@@ -11428,18 +11430,26 @@ var Store = /** @class */ (function (_super) {
             return query;
         }
         var queryAsObject = query.toArray();
-        try {
-            var urlObject = (this.urlHash !== undefined &&
-                this.urlHash !== null &&
-                this.urlHash !== "" &&
-                this.urlHash !== "/")
-                ? JSON.parse(decodeURI(this.urlHash))
-                : {};
+        var urlObject = {};
+        if (this.urlHash.match("q=.*") !== null) {
+            var urlHashQuery = this.urlHash.slice(2);
+            urlObject = { q: urlHashQuery };
             this.emit("fromUrlObject", urlObject, queryAsObject);
         }
-        catch (e) {
-            // Silent pass
-            this.doNotCleanUrlHashAtFirst = true;
+        else {
+            try {
+                urlObject = (this.urlHash !== undefined &&
+                    this.urlHash !== null &&
+                    this.urlHash !== "" &&
+                    this.urlHash !== "/")
+                    ? JSON.parse(decodeURI(this.urlHash))
+                    : {};
+                this.emit("fromUrlObject", urlObject, queryAsObject);
+            }
+            catch (e) {
+                // Silent pass
+                this.doNotCleanUrlHashAtFirst = true;
+            }
         }
         return apisearch_1.Query.createFromArray(queryAsObject);
     };
@@ -13947,12 +13957,16 @@ var ResultComponent = /** @class */ (function (_super) {
         }
         Array.prototype.forEach.call(itemsForEvent, function (item) {
             item.position = ++firstItem;
+            item.id = item.getId();
         });
         window.postMessage({
             name: "apisearch_result_items",
             query: currentQuery.toArray(),
+            query_text: currentQuery.getQueryText(),
             with_results: items.length > 0,
             page: currentQuery.getPage(),
+            site: props.store.getSite(),
+            device: props.store.getDevice(),
             items: itemsForEvent,
         }, "*");
         /**
@@ -14315,17 +14329,6 @@ var SearchInputComponent = /** @class */ (function (_super) {
             _this.state = { queryText: "" };
         }
         var that = _this;
-        var speechRecognition = window["webkitSpeechRecognition"];
-        if (props.speechRecognition && typeof speechRecognition === "function") {
-            that.speechRecognition = new speechRecognition();
-            that.speechRecognition.onresult = function (event) {
-                var text = event.results[0][0].transcript;
-                that.handleSearch(text);
-            };
-            that.speechRecognition.onerror = function (event) {
-                console.log("Speech Recognition Error - " + event.error);
-            };
-        }
         window.addEventListener('beforeunload', function () {
             that.dispatchQueryStringEvent(props, 0);
         });
@@ -14381,23 +14384,12 @@ var SearchInputComponent = /** @class */ (function (_super) {
     };
     /**
      * @param e
-     * @param speechRecognition
-     */
-    SearchInputComponent.prototype.onSpeechStart = function (e, speechRecognition) {
-        speechRecognition.start();
-    };
-    /**
-     * @param e
      */
     SearchInputComponent.prototype.doNothing = function (e) { };
     /**
      * @param config
      */
     SearchInputComponent.prototype.withConfig = function (config) {
-        var _a;
-        if (this.speechRecognition) {
-            this.speechRecognition.lang = (_a = this.props.config.options.locale) !== null && _a !== void 0 ? _a : "";
-        }
     };
     /**
      * @param props
@@ -14464,12 +14456,6 @@ var SearchInputComponent = /** @class */ (function (_super) {
             searchInput = (preact_1.h("div", { style: "position: relative" },
                 preact_1.h(AutocompleteComponent_1["default"], { autocomplete: autocomplete, queryText: currentQueryText, inputClassName: inputClassName }),
                 searchInput));
-        }
-        if (this.speechRecognition) {
-            searchInput = (preact_1.h("div", { style: "position: relative" },
-                searchInput,
-                preact_1.h("div", { "class": "as-searchInput-speechRecognition", onClick: function (e) { return _this.onSpeechStart(e, _this.speechRecognition); } },
-                    preact_1.h(Template_1["default"], { template: props.template.speechRecognition, dictionary: props.dictionary }))));
         }
         if (withContainer) {
             searchInput = (preact_1.h("div", { className: "as-searchInput " + containerClassName },

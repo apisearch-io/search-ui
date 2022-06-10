@@ -11,7 +11,6 @@ import {useRef} from "preact/compat";
  */
 class SearchInputComponent extends Component<SearchInputProps, SearchInputState> {
     private inputRef = useRef(null);
-    private speechRecognition;
     private queryTextEvent;
 
     /**
@@ -24,19 +23,6 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
         }
 
         const that = this;
-
-        const speechRecognition = window["webkitSpeechRecognition"];
-        if (props.speechRecognition && typeof speechRecognition === "function") {
-            that.speechRecognition = new speechRecognition();
-            that.speechRecognition.onresult = (event) => {
-                const text = event.results[0][0].transcript;
-                that.handleSearch(text);
-            };
-
-            that.speechRecognition.onerror = (event) => {
-                console.log("Speech Recognition Error - " + event.error);
-            };
-        }
 
         window.addEventListener('beforeunload', function() {
             that.dispatchQueryStringEvent(props, 0);
@@ -154,14 +140,6 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
 
     /**
      * @param e
-     * @param speechRecognition
-     */
-    onSpeechStart(e, speechRecognition) {
-        speechRecognition.start();
-    }
-
-    /**
-     * @param e
      */
     doNothing(e) {}
 
@@ -169,9 +147,7 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
      * @param config
      */
     withConfig(config: any) {
-        if (this.speechRecognition) {
-            this.speechRecognition.lang = this.props.config.options.locale ?? "";
-        }
+
     }
 
     /**
@@ -270,22 +246,6 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
             );
         }
 
-        if (this.speechRecognition) {
-            searchInput = (
-                <div style="position: relative">
-                    {searchInput}
-                    <div
-                        class={`as-searchInput-speechRecognition`}
-                        onClick={(e) => this.onSpeechStart(e, this.speechRecognition)}
-                    >
-                        <Template
-                            template={props.template.speechRecognition}
-                            dictionary={props.dictionary}
-                        />
-                    </div>
-                </div>
-            );
-        }
         if (withContainer) {
             searchInput = (
                 <div className={`as-searchInput ${containerClassName}`}>
