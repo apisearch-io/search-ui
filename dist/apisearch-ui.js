@@ -11468,7 +11468,7 @@ var Store = /** @class */ (function (_super) {
         this.emit("toUrlObject", queryAsObject, urlObject);
         var objectAsJson;
         if (Object.keys(urlObject).length === 1 &&
-            typeof urlObject.q !== undefined) {
+            typeof urlObject.q !== "undefined") {
             objectAsJson = "q=" + urlObject.q;
         }
         else {

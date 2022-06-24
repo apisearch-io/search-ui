@@ -348,7 +348,7 @@ class Store extends EventEmitter {
 
         if (
             Object.keys(urlObject).length === 1 &&
-            typeof urlObject.q !== undefined
+            typeof urlObject.q !== "undefined"
         ) {
             objectAsJson = "q=" + urlObject.q;
         } else {
