@@ -62,21 +62,19 @@ class RangeFilter extends Widget {
         environmentId: string,
         store: Store,
         repository: Repository,
-        dictionary: { [key: string]: string; }
+        dictionary: { [key: string]: string; },
     ) {
         this.component.props = {
             ...this.component.props,
-            environmentId: environmentId,
-            repository: repository,
-            store: store,
+            environmentId,
+            repository,
+            store,
         };
-
-        let targetNode = document.querySelector(this.target);
 
         render(
             this.component,
-            targetNode
-        )
+            document.querySelector(this.target),
+        );
     }
 
     /**
@@ -85,14 +83,14 @@ class RangeFilter extends Widget {
      */
     public toUrlObject(
         query: any,
-        object: any
-    )
-    {
+        object: any,
+    ) {
         const filterName = this.component.props.filterName;
+        const filterField = this.component.props.filterField;
         if (query.filters !== undefined && query.filters[filterName] !== undefined) {
             const filterValues = query.filters[filterName].values;
             if (filterValues.length > 0) {
-                object[filterName] = filterValues;
+                object[filterField] = filterValues;
             }
         }
     }
@@ -103,11 +101,11 @@ class RangeFilter extends Widget {
      */
     public fromUrlObject(
         object: any,
-        query: any
-    )
-    {
+        query: any,
+    ) {
         const filterName = this.component.props.filterName;
-        const fieldValues = object[filterName];
+        const filterField = this.component.props.filterField;
+        const fieldValues = object[filterField] ?? object[filterName];
 
         if (
             fieldValues !== undefined &&
@@ -120,9 +118,9 @@ class RangeFilter extends Widget {
             }
 
             query.filters[filterName] = {
-                field: 'indexed_metadata.' + this.component.props.filterField,
+                field: "indexed_metadata." + this.component.props.filterField,
                 values: fieldValues,
-                filter_type: 'range'
+                filter_type: "range",
             };
         }
     }
@@ -147,4 +145,4 @@ class RangeFilter extends Widget {
  *
  * @param settings
  */
-export default settings => new RangeFilter(settings);
+export default (settings) => new RangeFilter(settings);

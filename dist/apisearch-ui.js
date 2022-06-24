@@ -11432,7 +11432,7 @@ var Store = /** @class */ (function (_super) {
         var queryAsObject = query.toArray();
         var urlObject = {};
         if (this.urlHash.match("q=.*") !== null) {
-            var urlHashQuery = this.urlHash.slice(2);
+            var urlHashQuery = decodeURI(this.urlHash.slice(2));
             urlObject = { q: urlHashQuery };
             this.emit("fromUrlObject", urlObject, queryAsObject);
         }
@@ -11466,9 +11466,16 @@ var Store = /** @class */ (function (_super) {
         var queryAsObject = query.toArray();
         var urlObject = {};
         this.emit("toUrlObject", queryAsObject, urlObject);
-        var objectAsJson = decodeURI(JSON.stringify(urlObject));
-        objectAsJson = (objectAsJson === "{}") ? "" : objectAsJson;
-        objectAsJson = encodeURI(objectAsJson);
+        var objectAsJson;
+        if (Object.keys(urlObject).length === 1 &&
+            typeof urlObject.q !== undefined) {
+            objectAsJson = "q=" + urlObject.q;
+        }
+        else {
+            objectAsJson = decodeURI(JSON.stringify(urlObject));
+            objectAsJson = (objectAsJson === "{}") ? "" : objectAsJson;
+            objectAsJson = encodeURI(objectAsJson);
+        }
         if (!this.isUnderIframe) {
             var path = window.location.href;
             var pathWithoutHash = path.split("#", 2)[0];
@@ -15180,9 +15187,11 @@ var CheckboxFilter = /** @class */ (function (_super) {
      * @param dictionary
      */
     CheckboxFilter.prototype.render = function (environmentId, store, repository, dictionary) {
-        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store, dictionary: dictionary });
-        var targetNode = document.querySelector(this.target);
-        preact_1.render(this.component, targetNode);
+        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId,
+            repository: repository,
+            store: store,
+            dictionary: dictionary });
+        preact_1.render(this.component, document.querySelector(this.target));
     };
     /**
      * @param query
@@ -15191,12 +15200,13 @@ var CheckboxFilter = /** @class */ (function (_super) {
     CheckboxFilter.prototype.toUrlObject = function (query, object) {
         var filterName = this.component.props.filterName;
         var aggregation = query.aggregations[filterName];
+        var filterField = this.component.props.filterField;
         if (aggregation !== undefined &&
             query.filters !== undefined &&
             query.filters[filterName] !== undefined) {
             var filterValues = query.filters[filterName].values;
             if (filterValues.length > 0) {
-                object[filterName] = filterValues;
+                object[filterField] = filterValues;
             }
         }
     };
@@ -15205,9 +15215,11 @@ var CheckboxFilter = /** @class */ (function (_super) {
      * @param query
      */
     CheckboxFilter.prototype.fromUrlObject = function (object, query) {
+        var _a;
         var filterName = this.component.props.filterName;
         var aggregation = query.aggregations[filterName];
-        var fieldValues = object[filterName];
+        var filterField = this.component.props.filterField;
+        var fieldValues = (_a = object[filterField]) !== null && _a !== void 0 ? _a : object[filterName];
         if (aggregation !== undefined &&
             fieldValues !== undefined &&
             Array.isArray(fieldValues) &&
@@ -15216,10 +15228,8 @@ var CheckboxFilter = /** @class */ (function (_super) {
                 query.filters = {};
             }
             query.filters[filterName] = {
-                field: 'indexed_metadata.' + this.component.props.filterField,
+                field: "indexed_metadata." + this.component.props.filterField,
                 values: fieldValues,
-                application_type: this.component.props.application_type,
-                filter_type: this.component.props.filterType
             };
         }
     };
@@ -15495,6 +15505,7 @@ var MultipleFilter = /** @class */ (function (_super) {
     MultipleFilter.prototype.toUrlObject = function (query, object) {
         var filterName = this.component.props.filterName;
         var aggregation = query.aggregations[filterName];
+        var filterField = this.component.props.filterField;
         if (aggregation !== undefined &&
             query.filters !== undefined &&
             query.filters[filterName] !== undefined) {
@@ -15503,13 +15514,13 @@ var MultipleFilter = /** @class */ (function (_super) {
             if (filterValues.length > 0) {
                 if (filter.application_type === 6) {
                     var levelsValues = Helpers_1.getShadowFilterValuesFromQuery(query, filterName, false);
-                    object[filterName] = {
+                    object[filterField] = {
                         l: levelsValues,
                         v: filter.values,
                     };
                 }
                 else {
-                    object[filterName] = filterValues;
+                    object[filterField] = filterValues;
                 }
             }
         }
@@ -15519,9 +15530,11 @@ var MultipleFilter = /** @class */ (function (_super) {
      * @param query
      */
     MultipleFilter.prototype.fromUrlObject = function (object, query) {
+        var _a;
         var filterName = this.component.props.filterName;
         var aggregation = query.aggregations[filterName];
-        var fieldValues = object[filterName];
+        var filterField = this.component.props.filterField;
+        var fieldValues = (_a = object[filterField]) !== null && _a !== void 0 ? _a : object[filterName];
         var rangesValues = Object.keys(this.component.props.ranges);
         var filterType = (rangesValues.length > 0) ? "range" : "field";
         if (aggregation !== undefined &&
@@ -15733,9 +15746,10 @@ var RangeFilter = /** @class */ (function (_super) {
      * @param dictionary
      */
     RangeFilter.prototype.render = function (environmentId, store, repository, dictionary) {
-        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store });
-        var targetNode = document.querySelector(this.target);
-        preact_1.render(this.component, targetNode);
+        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId,
+            repository: repository,
+            store: store });
+        preact_1.render(this.component, document.querySelector(this.target));
     };
     /**
      * @param query
@@ -15743,10 +15757,11 @@ var RangeFilter = /** @class */ (function (_super) {
      */
     RangeFilter.prototype.toUrlObject = function (query, object) {
         var filterName = this.component.props.filterName;
+        var filterField = this.component.props.filterField;
         if (query.filters !== undefined && query.filters[filterName] !== undefined) {
             var filterValues = query.filters[filterName].values;
             if (filterValues.length > 0) {
-                object[filterName] = filterValues;
+                object[filterField] = filterValues;
             }
         }
     };
@@ -15755,8 +15770,10 @@ var RangeFilter = /** @class */ (function (_super) {
      * @param query
      */
     RangeFilter.prototype.fromUrlObject = function (object, query) {
+        var _a;
         var filterName = this.component.props.filterName;
-        var fieldValues = object[filterName];
+        var filterField = this.component.props.filterField;
+        var fieldValues = (_a = object[filterField]) !== null && _a !== void 0 ? _a : object[filterName];
         if (fieldValues !== undefined &&
             Array.isArray(fieldValues) &&
             fieldValues.length > 0) {
@@ -15764,9 +15781,9 @@ var RangeFilter = /** @class */ (function (_super) {
                 query.filters = {};
             }
             query.filters[filterName] = {
-                field: 'indexed_metadata.' + this.component.props.filterField,
+                field: "indexed_metadata." + this.component.props.filterField,
                 values: fieldValues,
-                filter_type: 'range'
+                filter_type: "range",
             };
         }
     };
