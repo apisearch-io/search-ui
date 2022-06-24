@@ -115,6 +115,8 @@ class MultipleFilter extends Widget {
     ) {
         const filterName = this.component.props.filterName;
         const aggregation = query.aggregations[filterName];
+        const filterField = this.component.props.filterField;
+
         if (
             aggregation !== undefined &&
             query.filters !== undefined &&
@@ -126,13 +128,13 @@ class MultipleFilter extends Widget {
                 if (filter.application_type === 6) {
 
                     const levelsValues = getShadowFilterValuesFromQuery(query, filterName, false);
-                    object[filterName] = {
+                    object[filterField] = {
                         l: levelsValues,
                         v: filter.values,
                     };
 
                 } else {
-                    object[filterName] = filterValues;
+                    object[filterField] = filterValues;
                 }
             }
         }
@@ -148,7 +150,8 @@ class MultipleFilter extends Widget {
     ) {
         const filterName = this.component.props.filterName;
         const aggregation = query.aggregations[filterName];
-        let fieldValues = object[filterName];
+        const filterField = this.component.props.filterField;
+        let fieldValues = object[filterField] ?? object[filterName];
         const rangesValues = Object.keys(this.component.props.ranges);
         const filterType = (rangesValues.length > 0) ? "range" : "field";
 

@@ -28,13 +28,13 @@ class CheckboxFilter extends Widget {
             filterValue={filterValue}
             classNames={{
                 ...CheckboxFilterComponent.defaultProps.classNames,
-                ...classNames
+                ...classNames,
             }}
             template={{
                 ...CheckboxFilterComponent.defaultProps.template,
-                ...template
+                ...template,
             }}
-        />
+        />;
     }
 
     /**
@@ -47,22 +47,20 @@ class CheckboxFilter extends Widget {
         environmentId: string,
         store: Store,
         repository: Repository,
-        dictionary: { [key: string]: string; }
+        dictionary: { [key: string]: string; },
     ) {
         this.component.props = {
             ...this.component.props,
-            environmentId: environmentId,
-            repository: repository,
-            store: store,
-            dictionary: dictionary
+            environmentId,
+            repository,
+            store,
+            dictionary,
         };
-
-        let targetNode = document.querySelector(this.target);
 
         render(
             this.component,
-            targetNode
-        )
+            document.querySelector(this.target),
+        );
     }
 
     /**
@@ -71,11 +69,11 @@ class CheckboxFilter extends Widget {
      */
     public toUrlObject(
         query: any,
-        object: any
-    )
-    {
+        object: any,
+    ) {
         const filterName = this.component.props.filterName;
         const aggregation = query.aggregations[filterName];
+        const filterField = this.component.props.filterField;
         if (
             aggregation !== undefined &&
             query.filters !== undefined &&
@@ -83,7 +81,7 @@ class CheckboxFilter extends Widget {
         ) {
             const filterValues = query.filters[filterName].values;
             if (filterValues.length > 0) {
-                object[filterName] = filterValues;
+                object[filterField] = filterValues;
             }
         }
     }
@@ -94,12 +92,12 @@ class CheckboxFilter extends Widget {
      */
     public fromUrlObject(
         object: any,
-        query: any
-    )
-    {
+        query: any,
+    ) {
         const filterName = this.component.props.filterName;
         const aggregation = query.aggregations[filterName];
-        const fieldValues = object[filterName];
+        const filterField = this.component.props.filterField;
+        const fieldValues = object[filterField] ?? object[filterName];
 
         if (
             aggregation !== undefined &&
@@ -112,10 +110,8 @@ class CheckboxFilter extends Widget {
             }
 
             query.filters[filterName] = {
-                field: 'indexed_metadata.' + this.component.props.filterField,
+                field: "indexed_metadata." + this.component.props.filterField,
                 values: fieldValues,
-                application_type: this.component.props.application_type,
-                filter_type: this.component.props.filterType
             };
         }
     }

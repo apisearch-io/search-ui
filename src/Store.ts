@@ -302,7 +302,7 @@ class Store extends EventEmitter {
         let urlObject = {};
 
         if (this.urlHash.match("q=.*") !== null) {
-            const urlHashQuery = this.urlHash.slice(2);
+            const urlHashQuery = decodeURI(this.urlHash.slice(2));
             urlObject = {q: urlHashQuery};
             this.emit("fromUrlObject", urlObject, queryAsObject);
         } else {
@@ -344,9 +344,18 @@ class Store extends EventEmitter {
         const queryAsObject = query.toArray();
         const urlObject: any = {};
         this.emit("toUrlObject", queryAsObject, urlObject);
-        let objectAsJson = decodeURI(JSON.stringify(urlObject));
-        objectAsJson = (objectAsJson === "{}") ? "" : objectAsJson;
-        objectAsJson = encodeURI(objectAsJson);
+        let objectAsJson;
+
+        if (
+            Object.keys(urlObject).length === 1 &&
+            typeof urlObject.q !== undefined
+        ) {
+            objectAsJson = "q=" + urlObject.q;
+        } else {
+            objectAsJson = decodeURI(JSON.stringify(urlObject));
+            objectAsJson = (objectAsJson === "{}") ? "" : objectAsJson;
+            objectAsJson = encodeURI(objectAsJson);
+        }
 
         if (!this.isUnderIframe) {
 
