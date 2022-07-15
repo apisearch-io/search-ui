@@ -24,7 +24,6 @@ class SearchInput extends Widget{
      * @param autocomplete
      * @param classNames
      * @param template
-     * @param initialSearch
      * @param searchableFields
      * @param speechRecognition
      * @param queryOperator
@@ -39,7 +38,6 @@ class SearchInput extends Widget{
         autocomplete,
         classNames,
         template,
-        initialSearch,
         searchableFields,
         speechRecognition,
         queryOperator,
@@ -64,7 +62,6 @@ class SearchInput extends Widget{
                 ...SearchInputComponent.defaultProps.template,
                 ...template,
             }}
-            initialSearch={initialSearch}
             queryOperator={queryOperator}
             config={this.config}
         />;

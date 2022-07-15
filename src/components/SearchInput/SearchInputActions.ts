@@ -12,7 +12,6 @@ import Clone from "../Clone";
  *
  * @param environmentId
  * @param currentQuery
- * @param initialSearch
  * @param autocomplete
  * @param searchableFields
  * @param queryOperator
@@ -20,7 +19,6 @@ import Clone from "../Clone";
 export function initialSearchSetup(
     environmentId: string,
     currentQuery: Query,
-    initialSearch: string,
     autocomplete: boolean,
     searchableFields: string[],
     queryOperator: string,
@@ -28,7 +26,6 @@ export function initialSearchSetup(
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
     const clonedQuery = Clone.object(currentQuery);
 
-    clonedQuery.filters._query.values = [initialSearch];
     clonedQuery.page = 1;
     clonedQuery.queryOperator = queryOperator;
 

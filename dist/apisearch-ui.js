@@ -10958,8 +10958,8 @@ function bootstrap(environmentId, config, hash) {
      * Register apisearch store
      */
     Container_1["default"].register(storeId, function () {
-        var _a, _b, _c, _d;
-        return new Store_1["default"](config.coordinate, config.options.min_score, hash, (_a = config.user_id) !== null && _a !== void 0 ? _a : "", (_b = config.options.site) !== null && _b !== void 0 ? _b : "", (_c = config.options.device) !== null && _c !== void 0 ? _c : "", (_d = config.options.generate_random_session_uuid) !== null && _d !== void 0 ? _d : false);
+        var _a, _b, _c, _d, _e;
+        return new Store_1["default"](config.coordinate, config.options.min_score, hash, (_a = config.user_id) !== null && _a !== void 0 ? _a : "", (_b = config.options.site) !== null && _b !== void 0 ? _b : "", (_c = config.options.device) !== null && _c !== void 0 ? _c : "", (_d = config.options.generate_random_session_uuid) !== null && _d !== void 0 ? _d : false, (_e = config.options.initial_state) !== null && _e !== void 0 ? _e : {});
     });
     /**
      * Register an event dispatcher
@@ -11220,14 +11220,16 @@ var Store = /** @class */ (function (_super) {
      * @param site
      * @param device
      * @param generateRandomSessionUUID
+     * @param initialState
      */
-    function Store(coordinate, minScore, hash, userId, site, device, generateRandomSessionUUID) {
+    function Store(coordinate, minScore, hash, userId, site, device, generateRandomSessionUUID, initialState) {
         var _this = _super.call(this) || this;
         _this.withHash = false;
         _this.doNotCleanUrlHashAtFirst = false;
         _this.dirty = true;
         _this.site = site;
         _this.device = device;
+        _this.initialState = initialState;
         var initialQuery = Store.loadInitialQuery(coordinate, userId, site, device);
         _this.window = window.top;
         _this.isUnderIframe = (window !== window.top);
@@ -11399,6 +11401,7 @@ var Store = /** @class */ (function (_super) {
      * @param userId
      * @param site
      * @param device
+     *
      * @private
      */
     Store.loadInitialQuery = function (coordinate, userId, site, device) {
@@ -11431,10 +11434,12 @@ var Store = /** @class */ (function (_super) {
         }
         var queryAsObject = query.toArray();
         var urlObject = {};
+        var didTakeQueryFromUrl = false;
         if (this.urlHash.match("q=.*") !== null) {
             var urlHashQuery = decodeURI(this.urlHash.slice(2));
             urlObject = { q: urlHashQuery };
             this.emit("fromUrlObject", urlObject, queryAsObject);
+            didTakeQueryFromUrl = true;
         }
         else {
             try {
@@ -11444,12 +11449,19 @@ var Store = /** @class */ (function (_super) {
                     this.urlHash !== "/")
                     ? JSON.parse(decodeURI(this.urlHash))
                     : {};
-                this.emit("fromUrlObject", urlObject, queryAsObject);
+                if (Object.keys(urlObject).length > 0) {
+                    this.emit("fromUrlObject", urlObject, queryAsObject);
+                    didTakeQueryFromUrl = true;
+                }
             }
             catch (e) {
                 // Silent pass
                 this.doNotCleanUrlHashAtFirst = true;
             }
+        }
+        if (!didTakeQueryFromUrl &&
+            Object.keys(this.initialState).length > 0) {
+            this.emit("fromUrlObject", this.initialState, queryAsObject);
         }
         return apisearch_1.Query.createFromArray(queryAsObject);
     };
@@ -14200,15 +14212,13 @@ var Clone_1 = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
  *
  * @param environmentId
  * @param currentQuery
- * @param initialSearch
  * @param autocomplete
  * @param searchableFields
  * @param queryOperator
  */
-function initialSearchSetup(environmentId, currentQuery, initialSearch, autocomplete, searchableFields, queryOperator) {
+function initialSearchSetup(environmentId, currentQuery, autocomplete, searchableFields, queryOperator) {
     var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
     var clonedQuery = Clone_1["default"].object(currentQuery);
-    clonedQuery.filters._query.values = [initialSearch];
     clonedQuery.page = 1;
     clonedQuery.queryOperator = queryOperator;
     if (searchableFields.length > 0) {
@@ -14349,7 +14359,7 @@ var SearchInputComponent = /** @class */ (function (_super) {
         /**
          * Dispatch action
          */
-        SearchInputActions_1.initialSearchSetup(props.environmentId, props.store.getCurrentQuery(), props.initialSearch, props.autocomplete, props.searchableFields, props.queryOperator);
+        SearchInputActions_1.initialSearchSetup(props.environmentId, props.store.getCurrentQuery(), props.autocomplete, props.searchableFields, props.queryOperator);
     };
     /**
      * Component will receive props
@@ -14481,7 +14491,6 @@ SearchInputComponent.defaultProps = {
     autocomplete: false,
     startSearchOn: 0,
     clearSearch: true,
-    initialSearch: "",
     withContainer: true,
     searchableFields: [],
     speechRecognition: false,
@@ -16036,16 +16045,15 @@ var SearchInput = /** @class */ (function (_super) {
      * @param autocomplete
      * @param classNames
      * @param template
-     * @param initialSearch
      * @param searchableFields
      * @param speechRecognition
      * @param queryOperator
      */
     function SearchInput(_a) {
-        var target = _a.target, placeholder = _a.placeholder, startSearchOn = _a.startSearchOn, clearSearch = _a.clearSearch, withContainer = _a.withContainer, autofocus = _a.autofocus, autocomplete = _a.autocomplete, classNames = _a.classNames, template = _a.template, initialSearch = _a.initialSearch, searchableFields = _a.searchableFields, speechRecognition = _a.speechRecognition, queryOperator = _a.queryOperator;
+        var target = _a.target, placeholder = _a.placeholder, startSearchOn = _a.startSearchOn, clearSearch = _a.clearSearch, withContainer = _a.withContainer, autofocus = _a.autofocus, autocomplete = _a.autocomplete, classNames = _a.classNames, template = _a.template, searchableFields = _a.searchableFields, speechRecognition = _a.speechRecognition, queryOperator = _a.queryOperator;
         var _this = _super.call(this) || this;
         _this.target = target;
-        _this.component = preact_1.h(SearchInputComponent_1["default"], { target: target, placeholder: placeholder, autofocus: autofocus, autocomplete: autocomplete, startSearchOn: startSearchOn, clearSearch: clearSearch, withContainer: withContainer, searchableFields: searchableFields, speechRecognition: speechRecognition, classNames: __assign(__assign({}, SearchInputComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, SearchInputComponent_1["default"].defaultProps.template), template), initialSearch: initialSearch, queryOperator: queryOperator, config: _this.config });
+        _this.component = preact_1.h(SearchInputComponent_1["default"], { target: target, placeholder: placeholder, autofocus: autofocus, autocomplete: autocomplete, startSearchOn: startSearchOn, clearSearch: clearSearch, withContainer: withContainer, searchableFields: searchableFields, speechRecognition: speechRecognition, classNames: __assign(__assign({}, SearchInputComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, SearchInputComponent_1["default"].defaultProps.template), template), queryOperator: queryOperator, config: _this.config });
         return _this;
     }
     /**

@@ -11,7 +11,6 @@ export interface SearchInputProps {
     autocomplete: boolean;
     startSearchOn: number;
     clearSearch: boolean;
-    initialSearch: string;
     withContainer: boolean;
     searchableFields: string[];
     speechRecognition: boolean;
