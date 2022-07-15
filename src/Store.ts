@@ -1,4 +1,4 @@
-import apisearch, {Query, Repository, Result} from "apisearch";
+import apisearch, {FILTER_MUST_ALL, FILTER_TYPE_RANGE, FILTER_AT_LEAST_ONE, Query, Repository, Result} from "apisearch";
 import {EventEmitter} from "events";
 import {APISEARCH_DISPATCHER} from "./Constants";
 import container from "./Container";
@@ -19,6 +19,7 @@ class Store extends EventEmitter {
     private doNotCleanUrlHashAtFirst: boolean = false;
     private site: string;
     private device: string;
+    private initialState: any;
 
     /**
      * @param coordinate
@@ -28,6 +29,7 @@ class Store extends EventEmitter {
      * @param site
      * @param device
      * @param generateRandomSessionUUID
+     * @param initialState
      */
     constructor(
         coordinate: {
@@ -40,12 +42,14 @@ class Store extends EventEmitter {
         site: string,
         device: string,
         generateRandomSessionUUID: boolean,
+        initialState: any,
     ) {
         super();
 
         this.dirty = true;
         this.site = site;
         this.device = device;
+        this.initialState = initialState;
         const initialQuery = Store.loadInitialQuery(coordinate, userId, site, device);
         this.window = window.top;
         this.isUnderIframe = (window !== window.top);
@@ -256,12 +260,18 @@ class Store extends EventEmitter {
      * @param userId
      * @param site
      * @param device
+     *
      * @private
      */
-    private static loadInitialQuery(coordinate: {
-        lat: number,
-        lon: number,
-    }, userId: string, site: string, device: string): Query {
+    private static loadInitialQuery(
+        coordinate: {
+            lat: number,
+            lon: number,
+        },
+        userId: string,
+        site: string,
+        device: string,
+    ): Query {
         const withCoordinate = (
             coordinate &&
             coordinate.lat !== undefined &&
@@ -300,11 +310,13 @@ class Store extends EventEmitter {
 
         const queryAsObject = query.toArray();
         let urlObject = {};
+        let didTakeQueryFromUrl = false;
 
         if (this.urlHash.match("q=.*") !== null) {
             const urlHashQuery = decodeURI(this.urlHash.slice(2));
             urlObject = {q: urlHashQuery};
             this.emit("fromUrlObject", urlObject, queryAsObject);
+            didTakeQueryFromUrl = true;
         } else {
             try {
                 urlObject = (
@@ -316,11 +328,21 @@ class Store extends EventEmitter {
                     ? JSON.parse(decodeURI(this.urlHash))
                     : {};
 
-                this.emit("fromUrlObject", urlObject, queryAsObject);
+                if (Object.keys(urlObject).length > 0) {
+                    this.emit("fromUrlObject", urlObject, queryAsObject);
+                    didTakeQueryFromUrl = true;
+                }
             } catch (e) {
                 // Silent pass
                 this.doNotCleanUrlHashAtFirst = true;
             }
+        }
+
+        if (
+            !didTakeQueryFromUrl &&
+            Object.keys(this.initialState).length > 0
+        ) {
+            this.emit("fromUrlObject", this.initialState, queryAsObject);
         }
 
         return Query.createFromArray(queryAsObject);

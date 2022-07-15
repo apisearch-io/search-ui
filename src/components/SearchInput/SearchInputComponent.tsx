@@ -42,7 +42,6 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
         initialSearchSetup(
             props.environmentId,
             props.store.getCurrentQuery(),
-            props.initialSearch,
             props.autocomplete,
             props.searchableFields,
             props.queryOperator,
@@ -278,7 +277,6 @@ SearchInputComponent.defaultProps = {
     autocomplete: false,
     startSearchOn: 0,
     clearSearch: true,
-    initialSearch: "",
     withContainer: true,
     searchableFields: [],
     speechRecognition: false,
