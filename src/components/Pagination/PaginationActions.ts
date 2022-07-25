@@ -20,6 +20,10 @@ export function paginationChangeAction(
     repository: Repository,
     selectedPage: number,
 ) {
+    window.postMessage({
+        name: "apisearch_scroll_top",
+    }, "*");
+
     const clonedQuery = Clone.object(currentQuery);
     clonedQuery.page = selectedPage;
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);

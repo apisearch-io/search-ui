@@ -18,6 +18,10 @@ export function reloadAction(
     currentQuery: Query,
     repository: Repository,
 ) {
+    window.postMessage({
+        name: "apisearch_scroll_top",
+    }, "*");
+
     const clonedQuery = Clone.object(currentQuery);
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
     if (repository instanceof HttpRepository) {

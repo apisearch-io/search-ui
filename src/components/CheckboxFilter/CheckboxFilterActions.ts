@@ -48,6 +48,10 @@ export function onChangeSearchAction(
     isChecked: boolean,
     filterValue: string,
 ) {
+    window.postMessage({
+        name: "apisearch_scroll_top",
+    }, "*");
+
     const clonedQuery = Clone.object(currentQuery);
 
     clonedQuery.filterBy(filterName, filterField, isChecked

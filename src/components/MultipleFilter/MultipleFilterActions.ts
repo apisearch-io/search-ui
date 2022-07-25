@@ -100,6 +100,10 @@ export function filterAction(
     shadowLeveledFilters: any[],
     originalFilterField: string,
 ) {
+    window.postMessage({
+        name: "apisearch_scroll_top",
+    }, "*");
+
     const clonedQuery = Clone.object(currentQuery);
     const rangesValues = Object.keys(ranges);
 

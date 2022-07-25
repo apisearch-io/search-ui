@@ -44,6 +44,10 @@ export function onChangeSearchAction(
     repository: Repository,
     selectedOption: string,
 ) {
+    window.postMessage({
+        name: "apisearch_scroll_top",
+    }, "*");
+
     const clonedQuery = Clone.object(currentQuery);
     applySortByToQuery(clonedQuery, selectedOption);
     clonedQuery.page = 1;

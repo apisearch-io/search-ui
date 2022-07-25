@@ -21,6 +21,10 @@ export function clearFiltersAction(
     repository: Repository,
     filterToClear: string = null,
 ) {
+    window.postMessage({
+        name: "apisearch_scroll_top",
+    }, "*");
+
     const clonedQuery = Clone.object(currentQuery);
 
     if (filterToClear === null) {
