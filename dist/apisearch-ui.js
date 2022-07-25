@@ -1208,19 +1208,15 @@ var AxiosClient = /** @class */ (function (_super) {
         _this.host = host;
         _this.timeout = timeout;
         _this.overrideQueries = overrideQueries;
-        _this.cancelToken = {};
+        _this.abortControllers = {};
         return _this;
     }
     /**
-     * Get
-     *
      * @param url
      * @param method
      * @param credentials
      * @param parameters
      * @param data
-     *
-     * @return {Promise<Response>}
      */
     AxiosClient.prototype.get = function (url, method, credentials, parameters, data) {
         if (parameters === void 0) { parameters = {}; }
@@ -1235,7 +1231,7 @@ var AxiosClient = /** @class */ (function (_super) {
                         method = method.toLowerCase();
                         if ("get" === method &&
                             this.overrideQueries) {
-                            this.abort(url);
+                            this.abort(url, true);
                         }
                         headers = "get" === method
                             ? {}
@@ -1254,8 +1250,8 @@ var AxiosClient = /** @class */ (function (_super) {
                                 token: credentials.token
                             })).replace(/#/g, "%23")
                         };
-                        if (typeof this.cancelToken[url] !== "undefined") {
-                            axiosRequestConfig.cancelToken = this.cancelToken[url].token;
+                        if (typeof this.abortControllers[url] !== "undefined") {
+                            axiosRequestConfig.signal = this.abortControllers[url].signal;
                         }
                         _a.label = 1;
                     case 1:
@@ -1286,20 +1282,25 @@ var AxiosClient = /** @class */ (function (_super) {
      * And regenerate the cancellation token
      *
      * @param url
+     * @param urlIsFormatted
      */
-    AxiosClient.prototype.abort = function (url) {
-        if (typeof this.cancelToken[url] !== "undefined") {
-            this.cancelToken[url].cancel();
+    AxiosClient.prototype.abort = function (url, urlIsFormatted) {
+        if (!urlIsFormatted) {
+            url = url.replace(/^\/*|\/*$/g, "");
+            url = "/" + (this.version + "/" + url).replace(/^\/*|\/*$/g, "");
         }
-        this.generateCancelToken(url);
+        if (typeof this.abortControllers[url] !== "undefined") {
+            this.abortControllers[url].abort();
+        }
+        this.generateAbortController(url);
     };
     /**
      * Generate a new cancellation token for a query
      *
      * @param url
      */
-    AxiosClient.prototype.generateCancelToken = function (url) {
-        this.cancelToken[url] = axios_1["default"].CancelToken.source();
+    AxiosClient.prototype.generateAbortController = function (url) {
+        this.abortControllers[url] = new AbortController();
     };
     /**
      * @param url
@@ -1414,6 +1415,7 @@ var CacheClient = /** @class */ (function () {
                         _a[_b] = _c.sent();
                         return [3 /*break*/, 3];
                     case 2:
+                        this.httpClient.abort(url, false);
                         this.hits++;
                         _c.label = 3;
                     case 3: return [2 /*return*/, this.cache[cacheUID]];
@@ -1422,19 +1424,13 @@ var CacheClient = /** @class */ (function () {
         });
     };
     /**
-     * Generate a new cancellation token for a query
-     *
-     * @param url
-     */
-    CacheClient.prototype.generateCancelToken = function (url) {
-    };
-    /**
      * Abort current request
      * And regenerate the cancellation token
      *
      * @param url
+     * @param urlIsFormatted
      */
-    CacheClient.prototype.abort = function (url) {
+    CacheClient.prototype.abort = function (url, urlIsFormatted) {
     };
     return CacheClient;
 }());
@@ -11557,6 +11553,9 @@ exports.aggregationSetup = aggregationSetup;
  * @param filterValue
  */
 function onChangeSearchAction(environmentId, currentQuery, repository, filterName, filterField, isChecked, filterValue) {
+    window.postMessage({
+        name: "apisearch_scroll_top",
+    }, "*");
     var clonedQuery = Clone_1["default"].object(currentQuery);
     clonedQuery.filterBy(filterName, filterField, isChecked
         ? [filterValue]
@@ -11763,6 +11762,9 @@ var Clone_1 = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
  */
 function clearFiltersAction(environmentId, currentQuery, repository, filterToClear) {
     if (filterToClear === void 0) { filterToClear = null; }
+    window.postMessage({
+        name: "apisearch_scroll_top",
+    }, "*");
     var clonedQuery = Clone_1["default"].object(currentQuery);
     if (filterToClear === null) {
         clonedQuery.filters = {
@@ -12254,6 +12256,9 @@ exports.aggregationSetup = aggregationSetup;
  * @param originalFilterField
  */
 function filterAction(environmentId, currentQuery, repository, filterName, filterField, aggregationField, filterValues, applicationType, sortBy, fetchLimit, ranges, labels, shadowLeveledFilters, originalFilterField) {
+    window.postMessage({
+        name: "apisearch_scroll_top",
+    }, "*");
     var clonedQuery = Clone_1["default"].object(currentQuery);
     var rangesValues = Object.keys(ranges);
     if (rangesValues.length > 0) {
@@ -12859,6 +12864,9 @@ var Clone_1 = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
  * @param selectedPage
  */
 function paginationChangeAction(environmentId, currentQuery, repository, selectedPage) {
+    window.postMessage({
+        name: "apisearch_scroll_top",
+    }, "*");
     var clonedQuery = Clone_1["default"].object(currentQuery);
     clonedQuery.page = selectedPage;
     var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
@@ -13095,6 +13103,9 @@ exports.aggregationSetup = aggregationSetup;
  * @param deleteMinMaxAggregation
  */
 function filterAction(environmentId, currentQuery, repository, filterName, filterField, from, to) {
+    window.postMessage({
+        name: "apisearch_scroll_top",
+    }, "*");
     var clonedQuery = Clone_1["default"].object(currentQuery);
     var realValueFrom = Math.min(from, to);
     var realValueTo = Math.max(from, to);
@@ -13506,6 +13517,9 @@ var Clone_1 = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
  * @param repository
  */
 function reloadAction(environmentId, currentQuery, repository) {
+    window.postMessage({
+        name: "apisearch_scroll_top",
+    }, "*");
     var clonedQuery = Clone_1["default"].object(currentQuery);
     var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
     if (repository instanceof apisearch_1.HttpRepository) {
@@ -14242,6 +14256,9 @@ exports.initialSearchSetup = initialSearchSetup;
  * @param visibleResults
  */
 function simpleSearchAction(environmentId, currentQuery, repository, queryText, visibleResults) {
+    window.postMessage({
+        name: "apisearch_scroll_top",
+    }, "*");
     var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
     var clonedQuery = Clone_1["default"].object(currentQuery);
     clonedQuery.filters._query.values = [queryText];
@@ -14609,6 +14626,9 @@ exports.initialSortBySetup = initialSortBySetup;
  * @param selectedOption
  */
 function onChangeSearchAction(environmentId, currentQuery, repository, selectedOption) {
+    window.postMessage({
+        name: "apisearch_scroll_top",
+    }, "*");
     var clonedQuery = Clone_1["default"].object(currentQuery);
     SortByHelper_1.applySortByToQuery(clonedQuery, selectedOption);
     clonedQuery.page = 1;

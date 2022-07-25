@@ -58,6 +58,10 @@ export function simpleSearchAction(
     queryText: string,
     visibleResults: boolean,
 ) {
+    window.postMessage({
+        name: "apisearch_scroll_top",
+    }, "*");
+
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
     const clonedQuery = Clone.object(currentQuery);
 

@@ -53,6 +53,10 @@ export function filterAction(
     from: number,
     to: number
 ) {
+    window.postMessage({
+        name: "apisearch_scroll_top",
+    }, "*");
+
     const clonedQuery = Clone.object(currentQuery);
     const realValueFrom = Math.min(from, to);
     const realValueTo = Math.max(from, to);
