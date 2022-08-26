@@ -29,9 +29,11 @@ export interface MultipleFilterProps {
         showMore: string,
         showLess: string,
     };
-    formatData: Function;
+    formatData: (item) => void;
     activeFirst: boolean;
-    promoted: string[],
+    promoted: string[];
+    dynamicSearch: boolean;
+    dynamicSearchPlaceholder: string;
     environmentId?: string;
     repository?: Repository;
     store?: Store;

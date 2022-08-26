@@ -1,0 +1,6 @@
+/**
+ * ItemsState
+ */
+export interface ItemState {
+
+}

@@ -78,13 +78,27 @@ export function simpleSearchAction(
         return;
     }
 
+    const mode = clonedQuery.metadata.mode ?? {};
+    clonedQuery.metadata.number_of_suggestions = clonedQuery.getNumberOfSuggestions();
+    mode.suggestions ?? true
+        ? clonedQuery.setNumberOfSuggestions(clonedQuery.metadata.number_of_suggestions)
+        : clonedQuery.disableSuggestions();
+
+    mode.aggregations ?? true
+        ? clonedQuery.enableAggregations()
+        : clonedQuery.disableAggregations();
+
+    mode.results ?? true
+        ? clonedQuery.enableResults()
+        : clonedQuery.disableResults();
+
     repository
         .query(clonedQuery)
         .then((result) => {
             dispatcher.dispatch("RENDER_FETCHED_DATA", {
                 query: clonedQuery,
-                result: result,
-                visibleResults: visibleResults,
+                result,
+                visibleResults,
             });
         })
         .catch((error) => {

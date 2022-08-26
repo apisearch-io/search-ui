@@ -7,6 +7,7 @@ import Store from "../../Store";
 export interface SuggestionsFilterProps {
     target: string;
     numberOfSuggestions: number;
+    firstSuggestionCategories: boolean;
     classNames: {
         container: string,
         top: string,
@@ -15,6 +16,7 @@ export interface SuggestionsFilterProps {
     template: {
         top: string,
         item: string,
+        itemWithCategory: string,
     };
     environmentId?: string;
     repository?: Repository;

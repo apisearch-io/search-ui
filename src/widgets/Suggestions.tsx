@@ -12,6 +12,7 @@ class SuggestionsFilter extends Widget {
     constructor({
         target,
         numberOfSuggestions,
+        firstSuggestionCategories,
         classNames,
         template,
     }) {
@@ -20,6 +21,7 @@ class SuggestionsFilter extends Widget {
         this.component = <SuggestionsFilterComponent
             target={target}
             numberOfSuggestions={numberOfSuggestions}
+            firstSuggestionCategories={firstSuggestionCategories}
             classNames={{
                 ...SuggestionsFilterComponent.defaultProps.classNames,
                 ...classNames,

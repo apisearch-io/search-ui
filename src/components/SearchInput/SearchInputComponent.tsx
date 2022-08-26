@@ -99,6 +99,11 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
                 this.replaceWithAutocomplete(e);
                 return;
         }
+
+        window.postMessage({
+            key: e.key ?? e.keyCode,
+            name: "apisearch_input_keydown",
+        }, "*");
     }
 
     replaceWithAutocomplete(e) {

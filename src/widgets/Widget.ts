@@ -80,4 +80,24 @@ export default abstract class Widget {
     ) {
 
     }
+
+    /**
+     * @param query
+     * @param filterName
+     * @param filterValues
+     */
+    public filter(
+        query: any,
+        filterName: string,
+        filterValues: string[],
+    ) {
+
+    }
+
+    /**
+     *
+     */
+    public buildRelativeWidget(): Widget {
+        return null;
+    }
 }

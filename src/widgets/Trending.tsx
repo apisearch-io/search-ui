@@ -1,17 +1,15 @@
 import {Repository} from "apisearch";
 import {h, render} from "preact";
-import ResultComponent from "../components/Result/ResultComponent";
+import TrendingComponent from "../components/Result/TrendingComponent";
 import Store from "../Store";
-import Trending from "./Trending";
 import Widget from "./Widget";
 
 /**
- * Result
+ *
  */
-class Result extends Widget {
+class Trending extends Widget {
 
     private targetNode: any;
-    private trendingTargetArguments: any;
 
     /**
      * Constructor
@@ -30,7 +28,6 @@ class Result extends Widget {
      * @param infiniteScroll
      * @param fieldsConciliation
      * @param minScore
-     * @param trendingTarget
      */
     constructor({
         target,
@@ -47,12 +44,11 @@ class Result extends Widget {
         infiniteScroll,
         fieldsConciliation,
         minScore,
-        trendingTarget,
     }) {
         super();
         this.target = target;
         this.targetNode = document.querySelector(this.target);
-        this.component = <ResultComponent
+        this.component = <TrendingComponent
             target={target}
             fields={fields}
             itemsPerPage={itemsPerPage}
@@ -61,11 +57,11 @@ class Result extends Widget {
             filter={filter}
             highlightsEnabled={highlightsEnabled}
             classNames={{
-                ...ResultComponent.defaultProps.classNames,
+                ...TrendingComponent.defaultProps.classNames,
                 ...classNames,
             }}
             template={{
-                ...ResultComponent.defaultProps.template,
+                ...TrendingComponent.defaultProps.template,
                 ...template,
             }}
             formatData={formatData}
@@ -74,13 +70,6 @@ class Result extends Widget {
             fieldsConciliation={fieldsConciliation}
             minScore={minScore}
         />;
-
-        if (trendingTarget) {
-            this.trendingTargetArguments = {
-                target: trendingTarget, fields, itemsPerPage, promote, exclude, filter, highlightsEnabled,
-                classNames, template, formatData, fadeInSelector, infiniteScroll, fieldsConciliation, minScore
-            };
-        }
     }
 
     /**
@@ -110,12 +99,6 @@ class Result extends Widget {
         );
     }
 
-    public buildRelativeWidget() {
-        return this.trendingTargetArguments
-            ? Trending(this.trendingTargetArguments)
-            : null;
-    }
-
     /**
      * @param query
      */
@@ -129,4 +112,4 @@ class Result extends Widget {
  *
  * @param settings
  */
-export default (settings) => new Result(settings);
+export default (settings) => new Trending(settings);

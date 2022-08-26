@@ -1,4 +1,4 @@
-import apisearch, {FILTER_MUST_ALL, FILTER_TYPE_RANGE, FILTER_AT_LEAST_ONE, Query, Repository, Result} from "apisearch";
+import apisearch, {Query, Repository, Result} from "apisearch";
 import {EventEmitter} from "events";
 import {APISEARCH_DISPATCHER} from "./Constants";
 import container from "./Container";
@@ -65,6 +65,8 @@ class Store extends EventEmitter {
         if (minScore) {
             initialQuery.setMinScore(minScore);
         }
+
+        initialQuery.setMetadataValue("mode", initialState ?? {});
 
         /**
          * Data received

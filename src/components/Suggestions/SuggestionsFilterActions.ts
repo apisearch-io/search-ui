@@ -8,15 +8,21 @@ import Clone from "../Clone";
  * @param environmentId
  * @param currentQuery
  * @param numberOfSuggestions
+ * @param firstSuggestionCategories
  */
 export function enableSuggestions(
     environmentId: string,
     currentQuery: Query,
     numberOfSuggestions: number,
+    firstSuggestionCategories: boolean,
 ) {
     const clonedQuery = Clone.object(currentQuery);
     if (numberOfSuggestions > 0) {
         clonedQuery.setNumberOfSuggestions(numberOfSuggestions);
+    }
+
+    if (firstSuggestionCategories) {
+        clonedQuery.setMetadataValue("first_suggestion_categories", true);
     }
 
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
@@ -26,34 +32,3 @@ export function enableSuggestions(
     });
 }
 
-/**
- * @param environmentId
- * @param currentQuery
- * @param repository
- * @param word
- */
-export function onWordClickAction(
-    environmentId: string,
-    currentQuery: Query,
-    repository: Repository,
-    word: string,
-) {
-    const clonedQuery = Clone.object(currentQuery);
-
-    clonedQuery.filters._query.values = [word];
-    clonedQuery.page = 1;
-
-    const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
-
-    repository
-        .query(clonedQuery)
-        .then((result) => {
-            dispatcher.dispatch("RENDER_FETCHED_DATA", {
-                query: clonedQuery,
-                result: result,
-            });
-        })
-        .catch((error) => {
-            // Do nothing
-        });
-}

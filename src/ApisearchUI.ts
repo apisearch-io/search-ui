@@ -8,6 +8,8 @@ import {APISEARCH_DISPATCHER, APISEARCH_UI} from "./Constants";
 import container from "./Container";
 import {createEnvironmentId} from "./Environment";
 import Store from "./Store";
+import Result from "./widgets/Result";
+import Trending from "./widgets/Trending";
 import Widget from "./widgets/Widget";
 import widgets from "./widgets/Widgets";
 
@@ -148,6 +150,11 @@ export default class ApisearchUI {
     public addWidget(widget: Widget): ApisearchUI {
         widget.withConfig(this.config);
         this.activeWidgets = [...this.activeWidgets, widget];
+        const relativeWidget = widget.buildRelativeWidget();
+        if (relativeWidget) {
+            this.addWidget(relativeWidget);
+        }
+
         return this;
     }
 
@@ -437,12 +444,39 @@ export default class ApisearchUI {
     }
 
     /**
-     * @param query
+     * @param text
+     * @param filterName
+     * @param filterValues
+     * @param mode
      */
-    public pushQuery(query) {
+    public writeAndFilter(
+        text: string,
+        filterName: string,
+        filterValues: string[],
+        mode: any = null,
+    ) {
+        const query = this.getQuery();
+        query.page = 1;
+        query.metadata.mode = mode ?? query.metadata.mode;
+        const object = {q: text};
+        object[filterName] = filterValues;
+
+        this.fromUrlObject(object, query);
+        this.pushQuery(query);
+    }
+
+    /**
+     *
+     * @param query
+     * @param reload
+     */
+    public pushQuery(query, reload: boolean = true) {
 
         const queryObject = Query.createFromArray(query);
         this.store.setCurrentQuery(queryObject);
+        if (!reload) {
+            return;
+        }
         this.repository
             .query(queryObject)
             .then((result) => {
@@ -452,5 +486,15 @@ export default class ApisearchUI {
             .catch((error) => {
                 // Do nothing
             });
+    }
+
+    public setMode(mode: {
+        suggestions: boolean,
+        results: boolean,
+        aggregations: boolean,
+    }) {
+        const query = this.getQuery();
+        query.metadata.mode = mode;
+        this.pushQuery(query, false);
     }
 }

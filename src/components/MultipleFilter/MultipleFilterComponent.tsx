@@ -1,6 +1,6 @@
-import { h, Component } from 'preact';
+import { h, Component } from "preact";
 
-import {aggregationSetup, filterAction, modifyQueryAggregationWithProperLevelValue} from "./MultipleFilterActions";
+import {aggregationSetup, filterAction} from "./MultipleFilterActions";
 import {
     getFilterValuesFromQuery,
     getShadowFilterValuesFromQuery,
@@ -13,7 +13,7 @@ import ShowMoreComponent from "./ShowMoreComponent";
 import {defaultItemTemplate} from "./defaultTemplates";
 import {MultipleFilterProps} from "./MultipleFilterProps";
 import {MultipleFilterState} from "./MultipleFilterState";
-import {Counter} from 'apisearch';
+import {Counter} from "apisearch";
 
 /**
  * Filter Component
@@ -30,6 +30,7 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
         super();
         this.state = {
             aggregations: [],
+            dynamicSearch: "",
             viewLimit: 0,
         };
     }
@@ -165,17 +166,7 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
         const fetchLimit = props.fetchLimit;
         const repository = props.repository;
         const currentQuery = props.store.getCurrentQuery();
-        // const aggregation = props.store.getCurrentResult().getAggregation(filterName);
         const selectedFilterAsString = String(selectedFilter);
-
-        /*
-        const currentActiveFilterValues =
-            aggregation instanceof ResultAggregation &&
-            (aggregation.getActiveElements() !== null)
-                ? Object.values(aggregation.getActiveElements())
-                : [];
-
-         */
 
         const valuesAsString = (applicationType === 6)
             ? getShadowFilterValuesFromQuery(currentQuery, filterName, true)
@@ -250,6 +241,27 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
     }
 
     /**
+     * @param event
+     */
+    public filterByDynamicSearch = (event) => {
+        this.setState((_) => {
+            return {
+                dynamicSearch: event.target.value,
+            };
+        });
+    }
+
+    /**
+     */
+    public clearDynamicSearch = () => {
+        this.setState((_) => {
+            return {
+                dynamicSearch: "",
+            };
+        });
+    }
+
+    /**
      * Render
      *
      * @return {any}
@@ -272,6 +284,9 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
         const showLessTemplate = props.template.showLess;
         const currentQuery = props.store.getCurrentQuery();
 
+        const dynamicSearch = props.dynamicSearch;
+        const dynamicSearchData = this.state.dynamicSearch;
+        const dynamicSearchIsEmpty = dynamicSearchData === "";
         const formatData = props.formatData;
         const labels = Object.keys(props.ranges).length > 0
             ? props.ranges
@@ -330,6 +345,15 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
             return null;
         }
 
+        /**
+         * Limiting by dynamic search
+         */
+        if (this.state.dynamicSearch !== "") {
+            allItems = allItems.filter((item) => {
+                return item.values.name.includes(that.state.dynamicSearch);
+            });
+        }
+
         const items = allItems.slice(0, this.state.viewLimit);
         const allItemsLength = allItems.length;
         let levelCounter = 1;
@@ -350,6 +374,21 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
                     className={`as-multipleFilter__top ${topClassName}`}
                     dictionary={this.props.dictionary}
                 />
+
+                {(dynamicSearch)
+                    ? (
+                        <div className={`as-multipleFilter__dynamicSearch`}>
+                            <input value={dynamicSearchData} onChange={this.filterByDynamicSearch} placeholder={props.dynamicSearchPlaceholder}/>
+                            {(dynamicSearchIsEmpty)
+                                ? ""
+                                : (
+                                    <div className={`as-multipleFilter__dynamicSearch_clear`} onClick={this.clearDynamicSearch}></div>
+                                )
+                            }
+                        </div>
+                    )
+                    : ("")
+                }
 
                 <div className={`as-multipleFilter__itemsList ${itemsListClassName}`}>
                     <ul>
@@ -406,26 +445,28 @@ MultipleFilterComponent.defaultProps = {
     applicationType: 8, // FILTER_MUST_ALL
     fetchLimit: 10,
     viewLimit: null,
-    sortBy: ['_term', 'desc'],
+    sortBy: ["_term", "desc"],
     ranges: {},
     labels: {},
     classNames: {
-        container: '',
-        top: '',
-        itemsList: '',
-        item: '',
-        active: 'as-multipleFilter__item--active',
-        showMoreContainer: ''
+        container: "",
+        top: "",
+        itemsList: "",
+        item: "",
+        active: "as-multipleFilter__item--active",
+        showMoreContainer: "",
     },
     template: {
         top: null,
         item: defaultItemTemplate,
-        showMore: '+ Show more',
-        showLess: '- Show less'
+        showMore: "+ Show more",
+        showLess: "- Show less",
     },
     formatData: (data) => data,
     activeFirst: true,
     promoted: [],
+    dynamicSearch: false,
+    dynamicSearchPlaceholder: "",
 };
 
 export default MultipleFilterComponent;
