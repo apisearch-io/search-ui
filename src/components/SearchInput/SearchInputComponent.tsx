@@ -12,6 +12,7 @@ import {useRef} from "preact/compat";
 class SearchInputComponent extends Component<SearchInputProps, SearchInputState> {
     private inputRef = useRef(null);
     private queryTextEvent;
+    private lastQueryTextStringDispatched;
 
     /**
      * Constructor
@@ -156,12 +157,20 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
     dispatchQueryStringEvent(props: SearchInputProps, timeout: number) {
         const currentQuery = props.store.getCurrentQuery();
         const currentQueryText = currentQuery.getQueryText();
+
         if (this.queryTextEvent) {
+            this.lastQueryTextStringDispatched = null;
             clearTimeout(this.queryTextEvent);
         }
 
+        if (this.lastQueryTextStringDispatched === currentQueryText) {
+            return;
+        }
+
+        this.lastQueryTextStringDispatched = currentQueryText;
         if (currentQueryText !== "") {
             const that = this;
+            this.lastQueryTextStringDispatched = currentQueryText;
             this.queryTextEvent = setTimeout(function() {
                 that.queryTextEvent = null;
                 window.postMessage({
