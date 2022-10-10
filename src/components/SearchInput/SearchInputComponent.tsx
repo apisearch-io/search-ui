@@ -1,5 +1,5 @@
 import {h, Component} from 'preact';
-import {simpleSearchAction, initialSearchSetup} from "./SearchInputActions";
+import {simpleSearchAction} from "./SearchInputActions";
 import Template from "../Template";
 import {SearchInputProps} from "./SearchInputProps";
 import {SearchInputState} from "./SearchInputState";
@@ -25,28 +25,9 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
 
         const that = this;
 
-        window.addEventListener('beforeunload', function() {
+        window.addEventListener("beforeunload", function() {
             that.dispatchQueryStringEvent(props, 0);
         });
-    }
-
-    /**
-     * Components will mount
-     */
-    componentWillMount() {
-
-        const props = this.props;
-
-        /**
-         * Dispatch action
-         */
-        initialSearchSetup(
-            props.environmentId,
-            props.store.getCurrentQuery(),
-            props.autocomplete,
-            props.searchableFields,
-            props.queryOperator,
-        );
     }
 
     /**

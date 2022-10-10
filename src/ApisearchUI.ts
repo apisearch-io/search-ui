@@ -110,8 +110,7 @@ export default class ApisearchUI {
      *
      * @return boolean
      */
-    private fetchQuery(loadQuery: boolean) : boolean
-    {
+    private fetchQuery(loadQuery: boolean): boolean {
         /**
          * 3.- Dispatch the initial data request
          *     With all widget previous initial configurations
@@ -173,6 +172,12 @@ export default class ApisearchUI {
      */
     public render() {
         this.activeWidgets.map((widget) => {
+            widget.initialSetup(
+                this.environmentId,
+                this.store,
+                this.repository,
+            );
+
             widget.render(
                 this.environmentId,
                 this.store,

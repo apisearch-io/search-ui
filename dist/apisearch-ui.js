@@ -10688,6 +10688,7 @@ var ApisearchUI = /** @class */ (function () {
     ApisearchUI.prototype.render = function () {
         var _this = this;
         this.activeWidgets.map(function (widget) {
+            widget.initialSetup(_this.environmentId, _this.store, _this.repository);
             widget.render(_this.environmentId, _this.store, _this.repository, _this.dictionary);
         });
         window.dispatchEvent(new Event("apisearch_rendered", {
@@ -14379,21 +14380,11 @@ var SearchInputComponent = /** @class */ (function (_super) {
             _this.state = { queryText: "" };
         }
         var that = _this;
-        window.addEventListener('beforeunload', function () {
+        window.addEventListener("beforeunload", function () {
             that.dispatchQueryStringEvent(props, 0);
         });
         return _this;
     }
-    /**
-     * Components will mount
-     */
-    SearchInputComponent.prototype.componentWillMount = function () {
-        var props = this.props;
-        /**
-         * Dispatch action
-         */
-        SearchInputActions_1.initialSearchSetup(props.environmentId, props.store.getCurrentQuery(), props.autocomplete, props.searchableFields, props.queryOperator);
-    };
     /**
      * Component will receive props
      *
@@ -16068,6 +16059,7 @@ var __assign = (this && this.__assign) || function () {
 };
 exports.__esModule = true;
 var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+var SearchInputActions_1 = __webpack_require__(/*! ../components/SearchInput/SearchInputActions */ "./src/components/SearchInput/SearchInputActions.ts");
 var SearchInputComponent_1 = __webpack_require__(/*! ../components/SearchInput/SearchInputComponent */ "./src/components/SearchInput/SearchInputComponent.tsx");
 var Widget_1 = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
 /**
@@ -16096,6 +16088,9 @@ var SearchInput = /** @class */ (function (_super) {
         var _this = _super.call(this) || this;
         _this.target = target;
         _this.component = preact_1.h(SearchInputComponent_1["default"], { target: target, placeholder: placeholder, autofocus: autofocus, autocomplete: autocomplete, startSearchOn: startSearchOn, clearSearch: clearSearch, withContainer: withContainer, searchableFields: searchableFields, speechRecognition: speechRecognition, classNames: __assign(__assign({}, SearchInputComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, SearchInputComponent_1["default"].defaultProps.template), template), queryOperator: queryOperator, config: _this.config });
+        _this.queryOperator = queryOperator;
+        _this.autocomplete = autocomplete;
+        _this.searchableFields = searchableFields;
         return _this;
     }
     /**
@@ -16106,9 +16101,12 @@ var SearchInput = /** @class */ (function (_super) {
      */
     SearchInput.prototype.render = function (environmentId, store, repository, dictionary) {
         this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store, htmlNodeInheritProps: {
-                autocomplete: 'off',
-                spellcheck: false
+                autocomplete: "off",
+                spellcheck: false,
             }, dictionary: dictionary });
+        if (this.target === null) {
+            return;
+        }
         if (!this.targetNode) {
             var targetNode = document.querySelector(this.target);
             var isInput = isInputElement(targetNode);
@@ -16122,11 +16120,14 @@ var SearchInput = /** @class */ (function (_super) {
                 this.targetNode = targetNode;
             }
         }
-        if (this.isSecondRender == undefined) {
+        if (this.isSecondRender === undefined) {
             this.isSecondRender = true;
         }
-        else if (this.isSecondRender == true) {
+        else if (this.isSecondRender === true) {
             this.isSecondRender = false;
+        }
+        if (!this.targetNode) {
+            return;
         }
         preact_1.render(this.component, this.targetNode);
     };
@@ -16157,6 +16158,17 @@ var SearchInput = /** @class */ (function (_super) {
      */
     SearchInput.prototype.reset = function (query) {
         delete query.q;
+    };
+    /**
+     * @param environmentId
+     * @param store
+     * @param repository
+     */
+    SearchInput.prototype.initialSetup = function (environmentId, store, repository) {
+        /**
+         * Dispatch action
+         */
+        SearchInputActions_1.initialSearchSetup(environmentId, store.getCurrentQuery(), this.autocomplete, this.searchableFields, this.queryOperator);
     };
     return SearchInput;
 }(Widget_1["default"]));
@@ -16529,6 +16541,13 @@ var Widget = /** @class */ (function () {
      * @param query
      */
     Widget.prototype.normalizeQuery = function (environmentId, query) {
+    };
+    /**
+     * @param environmentId
+     * @param store
+     * @param repository
+     */
+    Widget.prototype.initialSetup = function (environmentId, store, repository) {
     };
     return Widget;
 }());
