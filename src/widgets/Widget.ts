@@ -55,7 +55,6 @@ export default abstract class Widget {
      * @param query
      */
     public reset(query: any) {
-
     }
 
     /**
@@ -64,7 +63,20 @@ export default abstract class Widget {
      */
     public normalizeQuery(
         environmentId: string,
-        query: any
+        query: any,
+    ) {
+
+    }
+
+    /**
+     * @param environmentId
+     * @param store
+     * @param repository
+     */
+    public initialSetup(
+        environmentId: string,
+        store: Store,
+        repository: Repository,
     ) {
 
     }

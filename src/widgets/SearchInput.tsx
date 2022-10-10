@@ -1,5 +1,6 @@
 import {Repository} from "apisearch";
-import {h, render} from 'preact';
+import {h, render} from "preact";
+import {initialSearchSetup} from "../components/SearchInput/SearchInputActions";
 import SearchInputComponent from "../components/SearchInput/SearchInputComponent";
 import Store from "../Store";
 import Widget from "./Widget";
@@ -7,10 +8,13 @@ import Widget from "./Widget";
 /**
  * SearchInput
  */
-class SearchInput extends Widget{
+class SearchInput extends Widget {
 
     private targetNode: any;
     private isSecondRender: boolean;
+    private autocomplete: boolean;
+    private searchableFields: any;
+    private queryOperator: string;
 
     /**
      * Constructor
@@ -65,6 +69,10 @@ class SearchInput extends Widget{
             queryOperator={queryOperator}
             config={this.config}
         />;
+
+        this.queryOperator = queryOperator;
+        this.autocomplete = autocomplete;
+        this.searchableFields = searchableFields;
     }
 
     /**
@@ -77,7 +85,7 @@ class SearchInput extends Widget{
         environmentId: string,
         store: Store,
         repository: Repository,
-        dictionary: { [key: string]: string; }
+        dictionary: { [key: string]: string; },
     ) {
         this.component.props = {
             ...this.component.props,
@@ -85,14 +93,18 @@ class SearchInput extends Widget{
             repository: repository,
             store: store,
             htmlNodeInheritProps: {
-                autocomplete: 'off',
-                spellcheck: false
+                autocomplete: "off",
+                spellcheck: false,
             },
             dictionary: dictionary,
         };
 
+        if (this.target === null) {
+            return;
+        }
+
         if (!this.targetNode) {
-            const targetNode = document.querySelector(this.target)
+            const targetNode = document.querySelector(this.target);
             const isInput = isInputElement(targetNode);
 
             if (isInput) {
@@ -101,8 +113,8 @@ class SearchInput extends Widget{
                     withContainer: false,
                     htmlNodeInheritProps: {
                         ...this.component.props.htmlNodeInheritedProps,
-                        ...getNodeAttributes(targetNode)
-                    }
+                        ...getNodeAttributes(targetNode),
+                    },
                 };
 
                 const parentNode = targetNode.parentNode;
@@ -113,16 +125,20 @@ class SearchInput extends Widget{
             }
         }
 
-        if (this.isSecondRender == undefined) {
+        if (this.isSecondRender === undefined) {
             this.isSecondRender = true;
-        } else if (this.isSecondRender == true) {
+        } else if (this.isSecondRender === true) {
             this.isSecondRender = false;
+        }
+
+        if (!this.targetNode) {
+            return;
         }
 
         render(
             this.component,
-            this.targetNode
-        )
+            this.targetNode,
+        );
     }
 
     /**
@@ -148,9 +164,8 @@ class SearchInput extends Widget{
      */
     public fromUrlObject(
         object: any,
-        query: any
-    )
-    {
+        query: any,
+    ) {
         const q = object.q;
         if (
             q !== undefined &&
@@ -166,6 +181,28 @@ class SearchInput extends Widget{
     public reset(query: any) {
         delete query.q;
     }
+
+    /**
+     * @param environmentId
+     * @param store
+     * @param repository
+     */
+    public initialSetup(
+        environmentId: string,
+        store: Store,
+        repository: Repository,
+    ) {
+        /**
+         * Dispatch action
+         */
+        initialSearchSetup(
+            environmentId,
+            store.getCurrentQuery(),
+            this.autocomplete,
+            this.searchableFields,
+            this.queryOperator,
+        );
+    }
 }
 
 /**
@@ -178,12 +215,12 @@ class SearchInput extends Widget{
 const getNodeAttributes = (htmlNode) => {
     let nodeAttributes = {};
     for (let i = 0; i < htmlNode.attributes.length; i++) {
-        let attr = htmlNode.attributes[i];
+        const attr = htmlNode.attributes[i];
         if (attr.specified) {
             nodeAttributes = {
                 ...nodeAttributes,
-                [attr.name]: attr.value
-            }
+                [attr.name]: attr.value,
+            };
         }
     }
 
@@ -206,4 +243,4 @@ const isInputElement = (targetNode) => {
  *
  * @param settings
  */
-export default settings => new SearchInput(settings);
+export default (settings) => new SearchInput(settings);
