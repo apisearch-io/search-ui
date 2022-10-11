@@ -10878,7 +10878,6 @@ var ApisearchUI = /** @class */ (function () {
             _this.store.setCurrentResult(result);
             _this.render();
         })["catch"](function (error) {
-            console.log("Apisearch UI error - " + error);
             // Do nothing
         });
     };
@@ -14017,7 +14016,12 @@ var ResultComponent = /** @class */ (function (_super) {
             page: currentQuery.getPage(),
             site: props.store.getSite(),
             device: props.store.getDevice(),
-            items: itemsForEvent,
+            items: itemsForEvent.map(function (item) {
+                return {
+                    fields: item.fields,
+                    uuid: item.uuid,
+                };
+            }),
         }, "*");
         /**
          * Uses defined a custom items list. Old version

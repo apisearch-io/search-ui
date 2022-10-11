@@ -450,7 +450,6 @@ export default class ApisearchUI {
                 this.render();
             })
             .catch((error) => {
-                console.log("Apisearch UI error - " + error);
                 // Do nothing
             });
     }
