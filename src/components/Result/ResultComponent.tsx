@@ -220,7 +220,7 @@ class ResultComponent extends Component<ResultProps, ResultState> {
             itemsForEvent = Array.prototype.slice.call(items, firstItem);
         }
 
-        Array.prototype.forEach.call(itemsForEvent, function(item) {
+        Array.prototype.forEach.call(itemsForEvent, (item) => {
             item.position = ++firstItem;
             item.id = item.getId();
         });
@@ -233,7 +233,12 @@ class ResultComponent extends Component<ResultProps, ResultState> {
             page: currentQuery.getPage(),
             site: props.store.getSite(),
             device: props.store.getDevice(),
-            items: itemsForEvent,
+            items: itemsForEvent.map((item) => {
+                return {
+                    fields: item.fields,
+                    uuid: item.uuid,
+                };
+            }),
         }, "*");
 
         /**
