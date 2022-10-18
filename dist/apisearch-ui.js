@@ -11769,15 +11769,15 @@ var Constants_1 = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts
 var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
 var Clone_1 = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
 /**
- * Clear filters action
- *
  * @param environmentId
  * @param currentQuery
  * @param repository
  * @param filterToClear
+ * @param filterValueToClear
  */
-function clearFiltersAction(environmentId, currentQuery, repository, filterToClear) {
+function clearFiltersAction(environmentId, currentQuery, repository, filterToClear, filterValueToClear) {
     if (filterToClear === void 0) { filterToClear = null; }
+    if (filterValueToClear === void 0) { filterValueToClear = null; }
     window.postMessage({
         name: "apisearch_scroll_top",
     }, "*");
@@ -11787,8 +11787,15 @@ function clearFiltersAction(environmentId, currentQuery, repository, filterToCle
             _query: currentQuery.getFilter("_query"),
         };
     }
-    else {
+    else if (filterValueToClear === null) {
         delete clonedQuery.filters[filterToClear];
+    }
+    else {
+        var values = clonedQuery.filters[filterToClear].values;
+        var valueIndex = values.indexOf(filterValueToClear, 0);
+        if (valueIndex > -1) {
+            clonedQuery.filters[filterToClear].values.splice(valueIndex, 1);
+        }
     }
     clonedQuery.page = 1;
     var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
@@ -11866,7 +11873,7 @@ var ClearFiltersComponent = /** @class */ (function (_super) {
         /**
          * Handle individual click
          */
-        _this.handleIndividualClick = function (filterKey) {
+        _this.handleIndividualClick = function (filterKey, filterValue) {
             var props = _this.props;
             var environmentId = props.environmentId;
             var currentQuery = props.store.getCurrentQuery();
@@ -11874,7 +11881,7 @@ var ClearFiltersComponent = /** @class */ (function (_super) {
             /**
              * Dispatch a clear filter action
              */
-            ClearFiltersActions_1.clearFiltersAction(environmentId, currentQuery, repository, filterKey);
+            ClearFiltersActions_1.clearFiltersAction(environmentId, currentQuery, repository, filterKey, filterValue);
         };
         _this.state = {
             appliedFilters: [],
@@ -11909,6 +11916,7 @@ var ClearFiltersComponent = /** @class */ (function (_super) {
                 appliedFiltersFormatted.push({
                     filter: key,
                     num: filter.getValues().length,
+                    values: filter.getValues(),
                 });
             }
         }
@@ -11928,16 +11936,33 @@ var ClearFiltersComponent = /** @class */ (function (_super) {
         var containerTemplate = props.template.container;
         var filterTemplate = props.template.filter;
         var appliedFiltersFormatted = this.state.appliedFilters;
-        var individualFilterClear = props.showIndividualFilterClear
-            ? preact_1.h("ul", { className: "as-clearFilters__filtersList " + filtersListClassName }, appliedFiltersFormatted.map(function (filter) {
-                return preact_1.h("li", { className: "as-clearFilters__filter " + filterClassName, onClick: function () { return _this.handleIndividualClick(filter.filter); } },
+        var showIndividualValueClear = true;
+        var individualFilterClear = null;
+        if (showIndividualValueClear) {
+            var values_1 = [];
+            this.state.appliedFilters.forEach(function (filter) {
+                filter.values.forEach(function (value) { return values_1.push({
+                    filter: filter.filter,
+                    value: value,
+                }); });
+            });
+            individualFilterClear = preact_1.h("ul", { className: "as-clearFilters__filtersList " + filtersListClassName }, values_1.map(function (filter) {
+                return preact_1.h("li", { className: "as-clearFilters__filter " + filterClassName, onClick: function () { return _this.handleIndividualClick(filter.filter, filter.value); } },
                     preact_1.h(Template_1["default"], { template: filterTemplate, dictionary: _this.props.dictionary, data: filter }));
-            }))
-            : "";
+            }));
+        }
+        else if (props.showIndividualFilterClear) {
+            individualFilterClear = preact_1.h("ul", { className: "as-clearFilters__filtersList " + filtersListClassName }, appliedFiltersFormatted.map(function (filter) {
+                return preact_1.h("li", { className: "as-clearFilters__filter " + filterClassName, onClick: function () { return _this.handleIndividualClick(filter.filter, null); } },
+                    preact_1.h(Template_1["default"], { template: filterTemplate, dictionary: _this.props.dictionary, data: filter }));
+            }));
+        }
         return (this.state.showClearFilters)
             ? (preact_1.h("div", { className: "as-clearFilters " + containerClassName },
-                preact_1.h("div", { onClick: this.handleClick },
-                    preact_1.h(Template_1["default"], { template: containerTemplate, dictionary: this.props.dictionary })),
+                props.showIndividualFilterClear
+                    ? preact_1.h("div", { onClick: this.handleClick },
+                        preact_1.h(Template_1["default"], { template: containerTemplate, dictionary: this.props.dictionary }))
+                    : "",
                 individualFilterClear)) : null;
     };
     return ClearFiltersComponent;
@@ -11948,7 +11973,9 @@ ClearFiltersComponent.defaultProps = {
         filter: "",
         filtersList: "",
     },
+    showGlobalFilterClear: true,
     showIndividualFilterClear: false,
+    showIndividualFilterValueClear: false,
     template: {
         container: "Clear filters",
         filter: "Clear {{filter}} ({{num}})",
@@ -15344,18 +15371,18 @@ var Widget_1 = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
 var ClearFilters = /** @class */ (function (_super) {
     __extends(ClearFilters, _super);
     /**
-     * Constructor
-     *
      * @param target
      * @param classNames
-     * @param showIndividualFilterClear
      * @param template
+     * @param showIndividualFilterClear
+     * @param showGlobalFilterClear
+     * @param showIndividualFilterValueClear
      */
     function ClearFilters(_a) {
-        var target = _a.target, classNames = _a.classNames, template = _a.template, showIndividualFilterClear = _a.showIndividualFilterClear;
+        var target = _a.target, classNames = _a.classNames, template = _a.template, showIndividualFilterClear = _a.showIndividualFilterClear, showGlobalFilterClear = _a.showGlobalFilterClear, showIndividualFilterValueClear = _a.showIndividualFilterValueClear;
         var _this = _super.call(this) || this;
         _this.target = target;
-        _this.component = preact_1.h(ClearFiltersComponent_1["default"], { target: target, classNames: __assign(__assign({}, ClearFiltersComponent_1["default"].defaultProps.classNames), classNames), showIndividualFilterClear: showIndividualFilterClear, template: __assign(__assign({}, ClearFiltersComponent_1["default"].defaultProps.template), template) });
+        _this.component = preact_1.h(ClearFiltersComponent_1["default"], { target: target, classNames: __assign(__assign({}, ClearFiltersComponent_1["default"].defaultProps.classNames), classNames), showIndividualFilterClear: showIndividualFilterClear, showGlobalFilterClear: showGlobalFilterClear, showIndividualFilterValueClear: showIndividualFilterValueClear, template: __assign(__assign({}, ClearFiltersComponent_1["default"].defaultProps.template), template) });
         return _this;
     }
     /**
@@ -15365,7 +15392,10 @@ var ClearFilters = /** @class */ (function (_super) {
      * @param dictionary
      */
     ClearFilters.prototype.render = function (environmentId, store, repository, dictionary) {
-        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store, dictionary: dictionary });
+        this.component.props = __assign(__assign({}, this.component.props), { dictionary: dictionary,
+            environmentId: environmentId,
+            repository: repository,
+            store: store });
         preact_1.render(this.component, document.querySelector(this.target));
     };
     return ClearFilters;

@@ -12,6 +12,8 @@ export interface ClearFiltersProps {
         filtersList: string,
     };
     showIndividualFilterClear: boolean;
+    showGlobalFilterClear: boolean;
+    showIndividualFilterValueClear: boolean;
     template: {
         container: string,
         filter: string,

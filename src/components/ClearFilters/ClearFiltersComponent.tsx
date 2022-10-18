@@ -67,7 +67,7 @@ class ClearFiltersComponent extends Component<ClearFiltersProps, ClearFiltersSta
     /**
      * Handle individual click
      */
-    public handleIndividualClick = (filterKey) => {
+    public handleIndividualClick = (filterKey, filterValue) => {
 
         const props = this.props;
         const environmentId = props.environmentId;
@@ -82,6 +82,7 @@ class ClearFiltersComponent extends Component<ClearFiltersProps, ClearFiltersSta
             currentQuery,
             repository,
             filterKey,
+            filterValue
         );
     }
 
@@ -96,6 +97,7 @@ class ClearFiltersComponent extends Component<ClearFiltersProps, ClearFiltersSta
                 appliedFiltersFormatted.push({
                     filter: key,
                     num: filter.getValues().length,
+                    values: filter.getValues(),
                 });
             }
         }
@@ -118,10 +120,23 @@ class ClearFiltersComponent extends Component<ClearFiltersProps, ClearFiltersSta
         const containerTemplate = props.template.container;
         const filterTemplate = props.template.filter;
         const appliedFiltersFormatted = this.state.appliedFilters;
-        const individualFilterClear = props.showIndividualFilterClear
-            ? <ul className={`as-clearFilters__filtersList ${filtersListClassName}`}>
-                {appliedFiltersFormatted.map((filter) => {
-                    return <li className={`as-clearFilters__filter ${filterClassName}`} onClick={() => this.handleIndividualClick(filter.filter)}>
+        const showIndividualValueClear = true;
+        let individualFilterClear = null;
+
+        if (showIndividualValueClear) {
+
+            const values = [];
+            this.state.appliedFilters.forEach((filter) => {
+                filter.values.forEach((value) => values.push({
+                    filter: filter.filter,
+                    value,
+                }));
+            });
+
+            individualFilterClear = <ul className={`as-clearFilters__filtersList ${filtersListClassName}`}>
+                {values.map((filter) => {
+                    return <li className={`as-clearFilters__filter ${filterClassName}`}
+                               onClick={() => this.handleIndividualClick(filter.filter, filter.value)}>
                         <Template
                             template={filterTemplate}
                             dictionary={this.props.dictionary}
@@ -129,17 +144,35 @@ class ClearFiltersComponent extends Component<ClearFiltersProps, ClearFiltersSta
                         />
                     </li>;
                 })}
-            </ul>
-            : "";
+            </ul>;
+
+        } else if (props.showIndividualFilterClear) {
+
+            individualFilterClear = <ul className={`as-clearFilters__filtersList ${filtersListClassName}`}>
+                {appliedFiltersFormatted.map((filter) => {
+                    return <li className={`as-clearFilters__filter ${filterClassName}`}
+                               onClick={() => this.handleIndividualClick(filter.filter, null)}>
+                        <Template
+                            template={filterTemplate}
+                            dictionary={this.props.dictionary}
+                            data={filter}
+                        />
+                    </li>;
+                })}
+            </ul>;
+        }
 
         return (this.state.showClearFilters)
             ? ( <div className={`as-clearFilters ${containerClassName}`}>
-                    <div onClick={this.handleClick}>
-                        <Template
-                            template={containerTemplate}
-                            dictionary={this.props.dictionary}
-                        />
-                    </div>
+                    {props.showIndividualFilterClear
+                        ? <div onClick={this.handleClick}>
+                            <Template
+                                template={containerTemplate}
+                                dictionary={this.props.dictionary}
+                            />
+                        </div>
+                        : ""
+                    }
                     {individualFilterClear}
                 </div>
             ) : null;
@@ -152,7 +185,9 @@ ClearFiltersComponent.defaultProps = {
         filter: "",
         filtersList: "",
     },
+    showGlobalFilterClear: true,
     showIndividualFilterClear: false,
+    showIndividualFilterValueClear: false,
     template: {
         container: "Clear filters",
         filter: "Clear {{filter}} ({{num}})",

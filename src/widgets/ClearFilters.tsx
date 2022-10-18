@@ -1,5 +1,5 @@
 import {Repository} from "apisearch";
-import {h, render} from 'preact';
+import {h, render} from "preact";
 import ClearFiltersComponent from "../components/ClearFilters/ClearFiltersComponent";
 import Store from "../Store";
 import Widget from "./Widget";
@@ -10,18 +10,20 @@ import Widget from "./Widget";
 class ClearFilters extends Widget {
 
     /**
-     * Constructor
-     *
      * @param target
      * @param classNames
-     * @param showIndividualFilterClear
      * @param template
+     * @param showIndividualFilterClear
+     * @param showGlobalFilterClear
+     * @param showIndividualFilterValueClear
      */
     constructor({
         target,
         classNames,
         template,
         showIndividualFilterClear,
+        showGlobalFilterClear,
+        showIndividualFilterValueClear,
     }) {
         super();
         this.target = target;
@@ -32,6 +34,8 @@ class ClearFilters extends Widget {
                 ...classNames,
             }}
             showIndividualFilterClear={showIndividualFilterClear}
+            showGlobalFilterClear={showGlobalFilterClear}
+            showIndividualFilterValueClear={showIndividualFilterValueClear}
             template={{
                 ...ClearFiltersComponent.defaultProps.template,
                 ...template,
@@ -49,14 +53,14 @@ class ClearFilters extends Widget {
         environmentId: string,
         store: Store,
         repository: Repository,
-        dictionary: { [key: string]: string; }
+        dictionary: { [key: string]: string; },
     ) {
         this.component.props = {
             ...this.component.props,
-            environmentId: environmentId,
-            repository: repository,
-            store: store,
-            dictionary: dictionary,
+            dictionary,
+            environmentId,
+            repository,
+            store,
         };
 
         render(

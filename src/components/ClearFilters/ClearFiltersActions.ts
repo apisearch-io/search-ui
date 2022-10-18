@@ -8,18 +8,18 @@ import container from "../../Container";
 import Clone from "../Clone";
 
 /**
- * Clear filters action
- *
  * @param environmentId
  * @param currentQuery
  * @param repository
  * @param filterToClear
+ * @param filterValueToClear
  */
 export function clearFiltersAction(
     environmentId: string,
     currentQuery: Query,
     repository: Repository,
     filterToClear: string = null,
+    filterValueToClear: string = null,
 ) {
     window.postMessage({
         name: "apisearch_scroll_top",
@@ -31,8 +31,14 @@ export function clearFiltersAction(
         clonedQuery.filters = {
             _query: currentQuery.getFilter("_query"),
         };
-    } else {
+    } else if (filterValueToClear === null) {
         delete clonedQuery.filters[filterToClear];
+    } else {
+        const values = clonedQuery.filters[filterToClear].values;
+        const valueIndex = values.indexOf(filterValueToClear, 0);
+        if (valueIndex > -1) {
+            clonedQuery.filters[filterToClear].values.splice(valueIndex, 1);
+        }
     }
 
     clonedQuery.page = 1;
