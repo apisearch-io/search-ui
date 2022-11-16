@@ -72,7 +72,7 @@ export function simpleSearchAction(
         dispatcher.dispatch("RENDER_FETCHED_DATA", {
             query: clonedQuery,
             result: null,
-            visibleResults: visibleResults,
+            visibleResults,
         });
 
         return;

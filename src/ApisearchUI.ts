@@ -452,6 +452,10 @@ export default class ApisearchUI {
         this.repository
             .query(queryObject)
             .then((result) => {
+                window.postMessage({
+                    name: "apisearch_scroll_top",
+                }, "*");
+
                 this.store.renderFetchedData({
                     "query": queryObject,
                     result,
