@@ -1,5 +1,5 @@
 import {Repository} from "apisearch";
-import {h, render} from 'preact';
+import {h, render} from "preact";
 import ResultComponent from "../components/Result/ResultComponent";
 import Store from "../Store";
 import Widget from "./Widget";
@@ -69,7 +69,7 @@ class Result extends Widget {
             infiniteScroll={infiniteScroll}
             fieldsConciliation={fieldsConciliation}
             minScore={minScore}
-        />
+        />;
     }
 
     /**
@@ -82,21 +82,21 @@ class Result extends Widget {
         environmentId: string,
         store: Store,
         repository: Repository,
-        dictionary: { [key: string]: string; }
+        dictionary: { [key: string]: string; },
     ) {
         this.component.props = {
             ...this.component.props,
-            environmentId: environmentId,
-            repository: repository,
-            store: store,
+            environmentId,
+            repository,
+            store,
             currentVisibleResults: store.resultsAreVisible(),
-            dictionary: dictionary,
+            dictionary,
         };
 
         render(
             this.component,
-            this.targetNode
-        )
+            this.targetNode,
+        );
     }
 
     /**
@@ -104,6 +104,9 @@ class Result extends Widget {
      */
     public reset(query: any) {
         delete query.page;
+        this.component.state = {
+            page: 1,
+        };
     }
 }
 
@@ -112,4 +115,4 @@ class Result extends Widget {
  *
  * @param settings
  */
-export default settings => new Result(settings);
+export default (settings) => new Result(settings);
