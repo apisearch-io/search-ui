@@ -26,6 +26,7 @@ export default class ApisearchUI {
     private userId: string;
     private firstQuery: boolean;
     private config: any;
+    private initialSetupPerformed = false;
 
     /**
      * Constructor
@@ -172,11 +173,13 @@ export default class ApisearchUI {
      */
     public render() {
         this.activeWidgets.map((widget) => {
-            widget.initialSetup(
-                this.environmentId,
-                this.store,
-                this.repository,
-            );
+            if (!this.initialSetupPerformed) {
+                widget.initialSetup(
+                    this.environmentId,
+                    this.store,
+                    this.repository,
+                );
+            }
 
             widget.render(
                 this.environmentId,
@@ -186,6 +189,7 @@ export default class ApisearchUI {
             );
         });
 
+        this.initialSetupPerformed = true;
         window.dispatchEvent(new Event("apisearch_rendered", {
             bubbles: true,
         }));
@@ -431,9 +435,12 @@ export default class ApisearchUI {
      * @param text
      */
     public write(text: string) {
+        text = text.trim();
         const query = this.getQuery();
-        query.q = text;
-        this.pushQuery(query);
+        if (query.q !== text) {
+            query.q = text;
+            this.pushQuery(query);
+        }
     }
 
     /**
@@ -442,12 +449,13 @@ export default class ApisearchUI {
     public pushQuery(query) {
 
         const queryObject = Query.createFromArray(query);
-        this.store.setCurrentQuery(queryObject);
         this.repository
             .query(queryObject)
             .then((result) => {
-                this.store.setCurrentResult(result);
-                this.render();
+                this.store.renderFetchedData({
+                    "query": queryObject,
+                    result,
+                });
             })
             .catch((error) => {
                 // Do nothing

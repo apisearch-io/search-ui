@@ -10568,6 +10568,7 @@ var ApisearchUI = /** @class */ (function () {
      * @param store
      */
     function ApisearchUI(environmentId, repository, store) {
+        this.initialSetupPerformed = false;
         /**
          * Environment Id
          */
@@ -10688,9 +10689,12 @@ var ApisearchUI = /** @class */ (function () {
     ApisearchUI.prototype.render = function () {
         var _this = this;
         this.activeWidgets.map(function (widget) {
-            widget.initialSetup(_this.environmentId, _this.store, _this.repository);
+            if (!_this.initialSetupPerformed) {
+                widget.initialSetup(_this.environmentId, _this.store, _this.repository);
+            }
             widget.render(_this.environmentId, _this.store, _this.repository, _this.dictionary);
         });
+        this.initialSetupPerformed = true;
         window.dispatchEvent(new Event("apisearch_rendered", {
             bubbles: true,
         }));
@@ -10861,9 +10865,12 @@ var ApisearchUI = /** @class */ (function () {
      * @param text
      */
     ApisearchUI.prototype.write = function (text) {
+        text = text.trim();
         var query = this.getQuery();
-        query.q = text;
-        this.pushQuery(query);
+        if (query.q !== text) {
+            query.q = text;
+            this.pushQuery(query);
+        }
     };
     /**
      * @param query
@@ -10871,12 +10878,13 @@ var ApisearchUI = /** @class */ (function () {
     ApisearchUI.prototype.pushQuery = function (query) {
         var _this = this;
         var queryObject = apisearch_1.Query.createFromArray(query);
-        this.store.setCurrentQuery(queryObject);
         this.repository
             .query(queryObject)
             .then(function (result) {
-            _this.store.setCurrentResult(result);
-            _this.render();
+            _this.store.renderFetchedData({
+                "query": queryObject,
+                result: result,
+            });
         })["catch"](function (error) {
             // Do nothing
         });
@@ -11428,9 +11436,7 @@ var Store = /** @class */ (function (_super) {
             q.user = { id: userId };
         }
         if (q.metadata === undefined) {
-            q.metadata = {
-                device: device
-            };
+            q.metadata = { device: device };
         }
         if (site !== "") {
             q.metadata.site = site;
