@@ -1,6 +1,6 @@
 import {ItemUUID} from "apisearch/lib/Model/ItemUUID";
-import {Component, h} from 'preact';
-import {useCallback, useEffect, useRef} from 'preact/compat';
+import {Component, h} from "preact";
+import {useCallback, useEffect, useRef} from "preact/compat";
 import {APISEARCH_CONFIG, APISEARCH_UI} from "../../Constants";
 import container from "../../Container";
 import Template from "../Template";
@@ -17,6 +17,7 @@ class ResultComponent extends Component<ResultProps, ResultState> {
 
     private fromLoadingNextPage: boolean = false;
     private observer = useRef();
+    private currentExpectedPage;
     private endResultsBoxRef = useCallback((node) => {
         if (this.observer.current instanceof IntersectionObserver) {
             this.observer.current.disconnect();
@@ -31,11 +32,12 @@ class ResultComponent extends Component<ResultProps, ResultState> {
                 } = this.props;
 
                 this.fromLoadingNextPage = true;
+                this.currentExpectedPage = this.state.page + 1;
                 infiniteScrollNextPageAction(
                     environmentId,
                     store.getCurrentQuery(),
                     repository,
-                    this.state.page + 1,
+                    this.currentExpectedPage,
                 );
             }
         });
@@ -52,10 +54,11 @@ class ResultComponent extends Component<ResultProps, ResultState> {
         super(props);
 
         this.state = {
+            customResponse: "",
+            focus: props.fadeInSelector === "",
+            hasNewPage: false,
             items: [],
             page: 0,
-            hasNewPage: false,
-            focus: props.fadeInSelector === "",
         };
     }
 
@@ -93,13 +96,13 @@ class ResultComponent extends Component<ResultProps, ResultState> {
      * @param props
      */
     public componentWillReceiveProps(props) {
-
         if (props.store.getCurrentResult() == null) {
-            this.setState((prevState) => {
+            this.setState((_) => {
                 return {
+                    customResponse: "",
+                    hasNewPage: false,
                     items: [],
                     page: 0,
-                    hasNewPage: false,
                };
             });
             return;
@@ -108,18 +111,21 @@ class ResultComponent extends Component<ResultProps, ResultState> {
         const currentResult = props.store.getCurrentResult();
         const currentQuery = props.store.getCurrentQuery();
         const items = currentResult.getItems();
-        const currentPage = currentQuery.getPage();
+        const currentPage = this.page();
         const hasNewPage = (currentResult.getTotalHits() > (currentPage * currentQuery.getSize()));
+
         const currentItems = this.fromLoadingNextPage
             ? this.state.items.concat(items)
             : items;
 
         this.fromLoadingNextPage = false;
-        this.setState((prevState) => {
+        this.currentExpectedPage = undefined;
+        this.setState((_) => {
             return {
+                customResponse: currentResult.getMetadataValue("custom_response"),
+                hasNewPage,
                 items: currentItems,
-                page: props.store.getCurrentQuery().getPage(),
-                hasNewPage: hasNewPage,
+                page: currentPage,
             };
         });
     }
@@ -156,6 +162,13 @@ class ResultComponent extends Component<ResultProps, ResultState> {
     }
 
     /**
+     * @private
+     */
+    private page() {
+        return this.currentExpectedPage ?? this.props.store.getCurrentQuery().getPage();
+    }
+
+    /**
      * Render
      *
      * @return {any}
@@ -172,6 +185,45 @@ class ResultComponent extends Component<ResultProps, ResultState> {
         const currentQuery = props.store.getCurrentQuery();
         const currentVisibleResults = props.currentVisibleResults;
         const wrapperRef = useRef(null);
+        const customResponse = currentResult.getMetadataValue("custom_response");
+        const redirection = currentResult.getMetadataValue("redirection");
+
+        // Check for custom response html
+        let customResponseBody;
+        if (customResponse) {
+            customResponseBody = (
+                <Template
+                    template={customResponse.content}
+                    className={`as-result__custom_response`}
+                    dictionary={this.props.dictionary}
+                />
+            );
+
+            if (customResponse.only) {
+                return customResponseBody;
+            }
+        }
+
+        let withoutEnterRedirection = false;
+        if (redirection) {
+            if (redirection.type === "automatic") {
+                window.top.location.href = redirection.url;
+            } else if (redirection.type === "on_enter") {
+                window.postMessage({
+                    name: "apisearch_bind_enter_redirection",
+                    url: redirection.url,
+                }, "*");
+                withoutEnterRedirection = false;
+            }
+        }
+
+        if (withoutEnterRedirection) {
+            window.postMessage({
+                name: "apisearch_bind_enter_redirection",
+                url: undefined,
+            }, "*");
+        }
+
         const hasInfiniteScrollNextPage =
             (props.infiniteScroll !== false) &&
             (
@@ -208,15 +260,15 @@ class ResultComponent extends Component<ResultProps, ResultState> {
             suggestions: currentResult.getSuggestions(),
         };
 
-
         /**
          * We should add positions to items
          * When the number of items to render is higher than the page size, we are in front of infinite scroll
          */
-        const isInfinite = (currentQuery.getPage() === 1) || items.length > currentQuery.getSize();
-        let firstItem = ((currentQuery.getPage() - 1) * currentQuery.getSize());
+        const page = this.state.page;
+        const isInfiniteActive = page > 1;
+        let firstItem = ((this.state.page - 1) * currentQuery.getSize());
         let itemsForEvent = items;
-        if (isInfinite) {
+        if (isInfiniteActive) {
             itemsForEvent = Array.prototype.slice.call(items, firstItem);
         }
 
@@ -230,7 +282,7 @@ class ResultComponent extends Component<ResultProps, ResultState> {
             query: currentQuery.toArray(),
             query_text: currentQuery.getQueryText(),
             with_results: items.length > 0,
-            page: currentQuery.getPage(),
+            page: this.state.page,
             site: props.store.getSite(),
             device: props.store.getDevice(),
             items: itemsForEvent.map((item) => {
@@ -281,6 +333,7 @@ class ResultComponent extends Component<ResultProps, ResultState> {
          */
         return (
             <div className={`as-result ${containerClassName}`} ref={wrapperRef}>
+                {customResponseBody}
                 {(dirty)
                     ? <Template
                         template={placeholderTemplate}

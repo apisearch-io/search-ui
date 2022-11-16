@@ -13888,7 +13888,8 @@ var ResultComponent = /** @class */ (function (_super) {
                 if (entries[0].isIntersecting) {
                     var _a = _this.props, environmentId = _a.environmentId, store = _a.store, repository = _a.repository;
                     _this.fromLoadingNextPage = true;
-                    ResultActions_1.infiniteScrollNextPageAction(environmentId, store.getCurrentQuery(), repository, _this.state.page + 1);
+                    _this.currentExpectedPage = _this.state.page + 1;
+                    ResultActions_1.infiniteScrollNextPageAction(environmentId, store.getCurrentQuery(), repository, _this.currentExpectedPage);
                 }
             });
             if ((_this.observer.current instanceof IntersectionObserver) && node) {
@@ -13896,10 +13897,11 @@ var ResultComponent = /** @class */ (function (_super) {
             }
         }, []);
         _this.state = {
+            customResponse: "",
+            focus: props.fadeInSelector === "",
+            hasNewPage: false,
             items: [],
             page: 0,
-            hasNewPage: false,
-            focus: props.fadeInSelector === "",
         };
         return _this;
     }
@@ -13935,11 +13937,12 @@ var ResultComponent = /** @class */ (function (_super) {
      */
     ResultComponent.prototype.componentWillReceiveProps = function (props) {
         if (props.store.getCurrentResult() == null) {
-            this.setState(function (prevState) {
+            this.setState(function (_) {
                 return {
+                    customResponse: "",
+                    hasNewPage: false,
                     items: [],
                     page: 0,
-                    hasNewPage: false,
                 };
             });
             return;
@@ -13947,17 +13950,19 @@ var ResultComponent = /** @class */ (function (_super) {
         var currentResult = props.store.getCurrentResult();
         var currentQuery = props.store.getCurrentQuery();
         var items = currentResult.getItems();
-        var currentPage = currentQuery.getPage();
+        var currentPage = this.page();
         var hasNewPage = (currentResult.getTotalHits() > (currentPage * currentQuery.getSize()));
         var currentItems = this.fromLoadingNextPage
             ? this.state.items.concat(items)
             : items;
         this.fromLoadingNextPage = false;
-        this.setState(function (prevState) {
+        this.currentExpectedPage = undefined;
+        this.setState(function (_) {
             return {
-                items: currentItems,
-                page: props.store.getCurrentQuery().getPage(),
+                customResponse: currentResult.getMetadataValue("custom_response"),
                 hasNewPage: hasNewPage,
+                items: currentItems,
+                page: currentPage,
             };
         });
     };
@@ -13980,6 +13985,13 @@ var ResultComponent = /** @class */ (function (_super) {
         }), props.fields, props.filter, props.minScore);
     };
     /**
+     * @private
+     */
+    ResultComponent.prototype.page = function () {
+        var _a;
+        return (_a = this.currentExpectedPage) !== null && _a !== void 0 ? _a : this.props.store.getCurrentQuery().getPage();
+    };
+    /**
      * Render
      *
      * @return {any}
@@ -13998,6 +14010,35 @@ var ResultComponent = /** @class */ (function (_super) {
         var currentQuery = props.store.getCurrentQuery();
         var currentVisibleResults = props.currentVisibleResults;
         var wrapperRef = compat_1.useRef(null);
+        var customResponse = currentResult.getMetadataValue("custom_response");
+        var redirection = currentResult.getMetadataValue("redirection");
+        // Check for custom response html
+        var customResponseBody;
+        if (customResponse) {
+            customResponseBody = (preact_1.h(Template_1["default"], { template: customResponse.content, className: "as-result__custom_response", dictionary: this.props.dictionary }));
+            if (customResponse.only) {
+                return customResponseBody;
+            }
+        }
+        var withoutEnterRedirection = false;
+        if (redirection) {
+            if (redirection.type === "automatic") {
+                window.top.location.href = redirection.url;
+            }
+            else if (redirection.type === "on_enter") {
+                window.postMessage({
+                    name: "apisearch_bind_enter_redirection",
+                    url: redirection.url,
+                }, "*");
+                withoutEnterRedirection = false;
+            }
+        }
+        if (withoutEnterRedirection) {
+            window.postMessage({
+                name: "apisearch_bind_enter_redirection",
+                url: undefined,
+            }, "*");
+        }
         var hasInfiniteScrollNextPage = (props.infiniteScroll !== false) &&
             ((props.infiniteScroll === true) ||
                 (props.infiniteScroll >= 0)) &&
@@ -14025,10 +14066,11 @@ var ResultComponent = /** @class */ (function (_super) {
          * We should add positions to items
          * When the number of items to render is higher than the page size, we are in front of infinite scroll
          */
-        var isInfinite = (currentQuery.getPage() === 1) || items.length > currentQuery.getSize();
-        var firstItem = ((currentQuery.getPage() - 1) * currentQuery.getSize());
+        var page = this.state.page;
+        var isInfiniteActive = page > 1;
+        var firstItem = ((this.state.page - 1) * currentQuery.getSize());
         var itemsForEvent = items;
-        if (isInfinite) {
+        if (isInfiniteActive) {
             itemsForEvent = Array.prototype.slice.call(items, firstItem);
         }
         Array.prototype.forEach.call(itemsForEvent, function (item) {
@@ -14040,7 +14082,7 @@ var ResultComponent = /** @class */ (function (_super) {
             query: currentQuery.toArray(),
             query_text: currentQuery.getQueryText(),
             with_results: items.length > 0,
-            page: currentQuery.getPage(),
+            page: this.state.page,
             site: props.store.getSite(),
             device: props.store.getDevice(),
             items: itemsForEvent.map(function (item) {
@@ -14067,19 +14109,21 @@ var ResultComponent = /** @class */ (function (_super) {
         /**
          * New version
          */
-        return (preact_1.h("div", { className: "as-result " + containerClassName, ref: wrapperRef }, (dirty)
-            ? preact_1.h(Template_1["default"], { template: placeholderTemplate, className: "as-result__placeholder " + placeholderClassName, dictionary: this.props.dictionary })
-            : ((items.length > 0)
-                ? (preact_1.h("div", { className: "as-result__itemsList " + props.classNames.itemsList },
-                    items.map(function (item) {
-                        return preact_1.h(Item_1["default"], { data: __assign(__assign({}, reducedTemplateData), _this.hydrateItem(item)), template: props.template.item, className: "as-result__item " + props.classNames.item, dictionary: _this.props.dictionary });
-                    }),
-                    hasInfiniteScrollNextPage
-                        ? preact_1.h("div", { id: "as-result__infinite_scroll_inspector", ref: this.endResultsBoxRef, style: "bottom: " + infiniteScrollMargin + "px; position: relative; width: 100%;" })
-                        : ""))
-                : preact_1.h(Template_1["default"], { template: props.template.noResults, data: {
-                        query: currentQuery.getQueryText(),
-                    }, className: "as-result__noresults " + props.classNames.noResults, dictionary: this.props.dictionary }))));
+        return (preact_1.h("div", { className: "as-result " + containerClassName, ref: wrapperRef },
+            customResponseBody,
+            (dirty)
+                ? preact_1.h(Template_1["default"], { template: placeholderTemplate, className: "as-result__placeholder " + placeholderClassName, dictionary: this.props.dictionary })
+                : ((items.length > 0)
+                    ? (preact_1.h("div", { className: "as-result__itemsList " + props.classNames.itemsList },
+                        items.map(function (item) {
+                            return preact_1.h(Item_1["default"], { data: __assign(__assign({}, reducedTemplateData), _this.hydrateItem(item)), template: props.template.item, className: "as-result__item " + props.classNames.item, dictionary: _this.props.dictionary });
+                        }),
+                        hasInfiniteScrollNextPage
+                            ? preact_1.h("div", { id: "as-result__infinite_scroll_inspector", ref: this.endResultsBoxRef, style: "bottom: " + infiniteScrollMargin + "px; position: relative; width: 100%;" })
+                            : ""))
+                    : preact_1.h(Template_1["default"], { template: props.template.noResults, data: {
+                            query: currentQuery.getQueryText(),
+                        }, className: "as-result__noresults " + props.classNames.noResults, dictionary: this.props.dictionary }))));
     };
     /**
      * @param item
@@ -16038,7 +16082,9 @@ var Result = /** @class */ (function (_super) {
      * @param dictionary
      */
     Result.prototype.render = function (environmentId, store, repository, dictionary) {
-        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store, currentVisibleResults: store.resultsAreVisible(), dictionary: dictionary });
+        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId,
+            repository: repository,
+            store: store, currentVisibleResults: store.resultsAreVisible(), dictionary: dictionary });
         preact_1.render(this.component, this.targetNode);
     };
     /**
@@ -16046,6 +16092,9 @@ var Result = /** @class */ (function (_super) {
      */
     Result.prototype.reset = function (query) {
         delete query.page;
+        this.component.state = {
+            page: 1,
+        };
     };
     return Result;
 }(Widget_1["default"]));

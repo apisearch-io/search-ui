@@ -6,4 +6,5 @@ export interface ResultState {
     page: number;
     hasNewPage: boolean;
     focus: boolean;
+    customResponse: string;
 }
