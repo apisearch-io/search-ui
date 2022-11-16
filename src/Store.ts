@@ -288,9 +288,7 @@ class Store extends EventEmitter {
         }
 
         if (q.metadata === undefined) {
-            q.metadata = {
-                device: device
-            };
+            q.metadata = {device};
         }
 
         if (site !== "") {
