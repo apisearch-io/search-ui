@@ -24,6 +24,8 @@ export interface ResultProps {
         item: string,
         noResults: string,
         placeholder: null,
+        alternative_title: string,
+        alternative_all_results: string,
     };
     formatData: (Item) => {Item};
     fadeInSelector: string;

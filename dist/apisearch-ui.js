@@ -11716,13 +11716,16 @@ var CheckboxFilterComponent = /** @class */ (function (_super) {
             n: n,
             isActive: isActive,
             label: label,
-            uid: uid
+            uid: uid,
         };
+        if (n === 0) {
+            return null;
+        }
         return (preact_1.h("div", { className: "as-checkboxFilter " + containerClassName },
             preact_1.h(Template_1["default"], { template: topTemplate, className: "as-checkboxFilter__top " + topClassName, dictionary: this.props.dictionary }),
             preact_1.h("div", { className: "as-checkboxFilter__item " +
                     (itemClassName + " ") +
-                    ("" + ((isActive) ? activeClassName : '')), onClick: function (e) {
+                    ("" + ((isActive) ? activeClassName : "")), onClick: function (e) {
                     e.stopPropagation();
                     e.preventDefault();
                     that.handleChange(!isActive);
@@ -11734,10 +11737,10 @@ var CheckboxFilterComponent = /** @class */ (function (_super) {
 CheckboxFilterComponent.defaultProps = {
     filterValue: 'true',
     classNames: {
-        container: '',
-        top: '',
-        item: '',
-        active: 'as-checkboxFilter__item--active',
+        container: "",
+        top: "",
+        item: "",
+        active: "as-checkboxFilter__item--active",
     },
     template: {
         top: null,
@@ -12013,6 +12016,54 @@ var Clone = /** @class */ (function () {
     return Clone;
 }());
 exports["default"] = Clone;
+
+
+/***/ }),
+
+/***/ "./src/components/Common.ts":
+/*!**********************************!*\
+  !*** ./src/components/Common.ts ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+exports.__esModule = true;
+exports.onWordClickAction = void 0;
+var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
+var Clone_1 = __webpack_require__(/*! ./Clone */ "./src/components/Clone.ts");
+var Container_1 = __webpack_require__(/*! ../Container */ "./src/Container.ts");
+var Constants_1 = __webpack_require__(/*! ../Constants */ "./src/Constants.ts");
+/**
+ *
+ * @param environmentId
+ * @param currentQuery
+ * @param repository
+ * @param word
+ * @param category
+ */
+function onWordClickAction(environmentId, currentQuery, repository, word, category) {
+    if (category === void 0) { category = null; }
+    var clonedQuery = Clone_1["default"].object(currentQuery);
+    clonedQuery.filters._query.values = [word];
+    clonedQuery.page = 1;
+    if (category) {
+        clonedQuery = apisearch_1.Query.createFromArray(clonedQuery);
+        clonedQuery.filterBy("Categoría", "category_level_0", [category]);
+    }
+    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
+    repository
+        .query(clonedQuery)
+        .then(function (result) {
+        dispatcher.dispatch("RENDER_FETCHED_DATA", {
+            query: clonedQuery,
+            result: result,
+        });
+    })["catch"](function (error) {
+        // Do nothing
+    });
+}
+exports.onWordClickAction = onWordClickAction;
 
 
 /***/ }),
@@ -12450,16 +12501,7 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
             var fetchLimit = props.fetchLimit;
             var repository = props.repository;
             var currentQuery = props.store.getCurrentQuery();
-            // const aggregation = props.store.getCurrentResult().getAggregation(filterName);
             var selectedFilterAsString = String(selectedFilter);
-            /*
-            const currentActiveFilterValues =
-                aggregation instanceof ResultAggregation &&
-                (aggregation.getActiveElements() !== null)
-                    ? Object.values(aggregation.getActiveElements())
-                    : [];
-    
-             */
             var valuesAsString = (applicationType === 6)
                 ? Helpers_1.getShadowFilterValuesFromQuery(currentQuery, filterName, true)
                 : Helpers_1.getFilterValuesFromQuery(currentQuery, filterName);
@@ -12698,18 +12740,18 @@ MultipleFilterComponent.defaultProps = {
     ranges: {},
     labels: {},
     classNames: {
-        container: '',
-        top: '',
-        itemsList: '',
-        item: '',
-        active: 'as-multipleFilter__item--active',
-        showMoreContainer: ''
+        container: "",
+        top: "",
+        itemsList: "",
+        item: "",
+        active: "as-multipleFilter__item--active",
+        showMoreContainer: "",
     },
     template: {
         top: null,
         item: defaultTemplates_1.defaultItemTemplate,
-        showMore: '+ Show more',
-        showLess: '- Show less'
+        showMore: "+ Show more",
+        showLess: "- Show less",
     },
     formatData: function (data) { return data; },
     activeFirst: true,
@@ -13328,6 +13370,16 @@ var RangeFilterComponent = /** @class */ (function (_super) {
             .getCurrentResult();
         var aggregation = currentResult.getAggregation(props.filterName);
         if (!(aggregation instanceof apisearch_1.ResultAggregation)) {
+            this.setState(function (prevState) {
+                return {
+                    from: prevState.from,
+                    to: prevState.to,
+                    min: prevState.min,
+                    max: prevState.max,
+                    currency_placeholder: prevState.currency_placeholder,
+                    visible: false
+                };
+            });
             return;
         }
         var metadata = aggregation.getMetadata();
@@ -13453,7 +13505,10 @@ var RangeFilterComponent = /** @class */ (function (_super) {
         var to = state.to;
         var min = state.min;
         var max = state.max;
-        var visibleStyle = state.visible ? '' : 'display:none!important;';
+        var isVisible = state.visible && !(props.store.currentResult.getTotalHits() === 0 &&
+            from === min &&
+            to === max);
+        var visibleStyle = isVisible ? '' : 'display:none!important;';
         return (preact_1.h("div", { id: this.rangeUid, className: "as-rangeFilter " + containerClassName, style: visibleStyle },
             preact_1.h(Template_1["default"], { template: topTemplate, className: "as-rangeFilter__top " + topClassName, dictionary: this.props.dictionary }),
             preact_1.h("div", { className: "as-rangeFilter__wrapper " + wrapperClassName },
@@ -13739,7 +13794,7 @@ var Item = /** @class */ (function (_super) {
         var data = props.data;
         var dictionary = (_a = props.dictionary) !== null && _a !== void 0 ? _a : {};
         var id = "as-result-" + data.uuid_composed;
-        return preact_1.h(Template_1["default"], { template: template, data: data, id: id, className: "as-result__itemsList " + props.className, dictionary: dictionary });
+        return preact_1.h(Template_1["default"], { template: template, data: data, id: id, className: "" + props.className, dictionary: dictionary });
     };
     return Item;
 }(preact_1.Component));
@@ -13877,6 +13932,7 @@ var Template_1 = __webpack_require__(/*! ../Template */ "./src/components/Templa
 var defaultTemplates_1 = __webpack_require__(/*! ./defaultTemplates */ "./src/components/Result/defaultTemplates.tsx");
 var Item_1 = __webpack_require__(/*! ./Item */ "./src/components/Result/Item.tsx");
 var ResultActions_1 = __webpack_require__(/*! ./ResultActions */ "./src/components/Result/ResultActions.ts");
+var Common_1 = __webpack_require__(/*! ../Common */ "./src/components/Common.ts");
 /**
  * Result Component
  */
@@ -13905,6 +13961,16 @@ var ResultComponent = /** @class */ (function (_super) {
                 _this.observer.current.observe(node);
             }
         }, []);
+        /**
+         * @param word
+         */
+        _this.handleAlternativeClick = function (word) {
+            var props = _this.props;
+            /**
+             * Dispatch action
+             */
+            Common_1.onWordClickAction(props.environmentId, props.store.getCurrentQuery(), props.repository, word);
+        };
         _this.state = {
             customResponse: "",
             focus: props.fadeInSelector === "",
@@ -14008,6 +14074,7 @@ var ResultComponent = /** @class */ (function (_super) {
     ResultComponent.prototype.render = function () {
         var _this = this;
         var _a;
+        var that = this;
         var props = this.props;
         var dirty = props.store.isDirty();
         var containerClassName = props.classNames.container;
@@ -14018,6 +14085,7 @@ var ResultComponent = /** @class */ (function (_super) {
         var currentResult = props.store.getCurrentResult();
         var currentQuery = props.store.getCurrentQuery();
         var currentVisibleResults = props.currentVisibleResults;
+        var subResults = Object.values(currentResult.getSubresults());
         var wrapperRef = compat_1.useRef(null);
         var customResponse = currentResult.getMetadataValue("custom_response");
         var redirection = currentResult.getMetadataValue("redirection");
@@ -14115,6 +14183,10 @@ var ResultComponent = /** @class */ (function (_super) {
                     ? preact_1.h("div", { ref: this.endResultsBoxRef, style: "bottom: " + infiniteScrollMargin + "px; position: relative;" })
                     : ""));
         }
+        if (dirty) {
+            return (preact_1.h("div", { className: "as-result " + containerClassName, ref: wrapperRef },
+                preact_1.h(Template_1["default"], { template: placeholderTemplate, className: "as-result__placeholder " + placeholderClassName, dictionary: props.dictionary })));
+        }
         /**
          * New version
          */
@@ -14125,14 +14197,41 @@ var ResultComponent = /** @class */ (function (_super) {
                 : ((items.length > 0)
                     ? (preact_1.h("div", { className: "as-result__itemsList " + props.classNames.itemsList },
                         items.map(function (item) {
-                            return preact_1.h(Item_1["default"], { data: __assign(__assign({}, reducedTemplateData), _this.hydrateItem(item)), template: props.template.item, className: "as-result__item " + props.classNames.item, dictionary: _this.props.dictionary });
+                            return preact_1.h(Item_1["default"], { data: __assign(__assign({}, reducedTemplateData), _this.hydrateItem(item)), template: props.template.item, className: "as-result__item " + props.classNames.item, dictionary: props.dictionary });
                         }),
                         hasInfiniteScrollNextPage
                             ? preact_1.h("div", { id: "as-result__infinite_scroll_inspector", ref: this.endResultsBoxRef, style: "bottom: " + infiniteScrollMargin + "px; position: relative; width: 100%;" })
                             : ""))
-                    : preact_1.h(Template_1["default"], { template: props.template.noResults, data: {
+                    : ""),
+            (subResults.length > 0)
+                ? preact_1.h("div", { className: "as-result__alternativeList" }, subResults.map(function (subResult) {
+                    return preact_1.h("div", { className: "as-result__alternative" },
+                        preact_1.h("div", { className: "as-result__alternative_query" },
+                            preact_1.h("span", { onClick: function (e) {
+                                    e.stopPropagation();
+                                    e.preventDefault();
+                                    that.handleAlternativeClick(subResult.metadata.query_text);
+                                } },
+                                preact_1.h(Template_1["default"], { template: props.template.alternative_title, data: {
+                                        word: subResult.metadata.query_text_html,
+                                    } })),
+                            preact_1.h("a", { onClick: function (e) {
+                                    e.stopPropagation();
+                                    e.preventDefault();
+                                    that.handleAlternativeClick(subResult.metadata.query_text);
+                                } },
+                                preact_1.h(Template_1["default"], { template: props.template.alternative_all_results, data: {
+                                        num: subResult.getTotalHits(),
+                                    }, dictionary: props.dictionary }))),
+                        preact_1.h("div", { className: "as-result__alternative_items" }, subResult.items.map(function (item) {
+                            return preact_1.h(Item_1["default"], { data: __assign(__assign({}, reducedTemplateData), _this.hydrateItem(item)), template: props.template.item, className: "as-result__alternative_item " + props.classNames.item, dictionary: _this.props.dictionary });
+                        })));
+                }))
+                : ((items.length === 0)
+                    ? preact_1.h(Template_1["default"], { template: props.template.noResults, data: {
                             query: currentQuery.getQueryText(),
-                        }, className: "as-result__noresults " + props.classNames.noResults, dictionary: this.props.dictionary }))));
+                        }, className: "as-result__noresults " + props.classNames.noResults, dictionary: props.dictionary })
+                    : "")));
     };
     /**
      * @param item
@@ -14200,6 +14299,8 @@ ResultComponent.defaultProps = {
         item: defaultTemplates_1.defaultItemTemplate,
         noResults: defaultTemplates_1.defaultNoResultsItemTemplate,
         placeholder: null,
+        alternative_title: defaultTemplates_1.defaultAlternativeTitleTemplate,
+        alternative_all_results: defaultTemplates_1.defaultAlternativeAllResultsTemplate,
     },
     formatData: function (data) { return data; },
     fadeInSelector: "",
@@ -14219,10 +14320,12 @@ exports["default"] = ResultComponent;
 "use strict";
 
 exports.__esModule = true;
-exports.defaultNoResultsItemTemplate = exports.defaultItemTemplate = exports.defaultItemsListTemplate = void 0;
+exports.defaultAlternativeAllResultsTemplate = exports.defaultAlternativeTitleTemplate = exports.defaultNoResultsItemTemplate = exports.defaultItemTemplate = exports.defaultItemsListTemplate = void 0;
 exports.defaultItemsListTemplate = "\n    <div>\n    {{#items}}\n        <div class=\"as-result__item\" data-id=\"{{uuid_composed}}\">\n            <strong>Score:</strong> {{score}}<br />\n            <strong>Uuid:</strong> {{uuid.type}} - {{uuid.id}}<br />\n            <strong>Title:</strong> {{{fields.title}}}<br />\n            <strong>Description:</strong> {{fields.description}}<br />\n            <strong>Link:</strong> <a href=\"{{metadata.link}}\" onclick=\"{{click}}\" target=\"_blank\">{{metadata.link}}</a>\n        </div>\n    {{/items}}\n    </div>\n    {{^items}}No results{{/items}}\n";
 exports.defaultItemTemplate = "\n    <strong>Score:</strong> {{score}}<br />\n    <strong>Uuid:</strong> {{uuid.type}} - {{uuid.id}}<br />\n    <strong>Title:</strong> {{{fields.title}}}<br />\n    <strong>Description:</strong> {{fields.description}}<br />\n    <strong>Link:</strong> <a href=\"{{metadata.link}}\" onclick=\"{{click}}\" target=\"_blank\">{{metadata.link}}</a>\n";
 exports.defaultNoResultsItemTemplate = "\n    No results\n";
+exports.defaultAlternativeTitleTemplate = "{{{word}}}";
+exports.defaultAlternativeAllResultsTemplate = "All results ({{num}})";
 
 
 /***/ }),
@@ -14938,7 +15041,7 @@ function splitQueryValue(string) {
 "use strict";
 
 exports.__esModule = true;
-exports.onWordClickAction = exports.enableSuggestions = void 0;
+exports.enableSuggestions = void 0;
 var Constants_1 = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
 var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
 var Clone_1 = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
@@ -14958,29 +15061,6 @@ function enableSuggestions(environmentId, currentQuery, numberOfSuggestions) {
     });
 }
 exports.enableSuggestions = enableSuggestions;
-/**
- * @param environmentId
- * @param currentQuery
- * @param repository
- * @param word
- */
-function onWordClickAction(environmentId, currentQuery, repository, word) {
-    var clonedQuery = Clone_1["default"].object(currentQuery);
-    clonedQuery.filters._query.values = [word];
-    clonedQuery.page = 1;
-    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
-    repository
-        .query(clonedQuery)
-        .then(function (result) {
-        dispatcher.dispatch("RENDER_FETCHED_DATA", {
-            query: clonedQuery,
-            result: result,
-        });
-    })["catch"](function (error) {
-        // Do nothing
-    });
-}
-exports.onWordClickAction = onWordClickAction;
 
 
 /***/ }),
@@ -15008,6 +15088,8 @@ var __extends = (this && this.__extends) || (function () {
 })();
 exports.__esModule = true;
 var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+var Highlight_1 = __webpack_require__(/*! ../../Highlight */ "./src/Highlight.ts");
+var Common_1 = __webpack_require__(/*! ../Common */ "./src/components/Common.ts");
 var defaultTemplates_1 = __webpack_require__(/*! ./defaultTemplates */ "./src/components/Suggestions/defaultTemplates.tsx");
 var SuggestionsFilterActions_1 = __webpack_require__(/*! ./SuggestionsFilterActions */ "./src/components/Suggestions/SuggestionsFilterActions.ts");
 var Template_1 = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
@@ -15031,10 +15113,25 @@ var SuggestionsFilterComponent = /** @class */ (function (_super) {
             /**
              * Dispatch action
              */
-            SuggestionsFilterActions_1.onWordClickAction(props.environmentId, props.store.getCurrentQuery(), props.repository, word);
+            Common_1.onWordClickAction(props.environmentId, props.store.getCurrentQuery(), props.repository, word);
         };
         return _this;
     }
+    SuggestionsFilterComponent.prototype.componentDidMount = function () {
+        this.highlight();
+    };
+    SuggestionsFilterComponent.prototype.componentDidUpdate = function () {
+        this.highlight();
+    };
+    SuggestionsFilterComponent.prototype.highlight = function () {
+        var queryText = this.props.store.getCurrentQuery().getQueryText();
+        if (queryText !== "") {
+            var list = document.getElementsByClassName("as-suggestions");
+            for (var i = 0; i < list.length; i++) {
+                Highlight_1.highlightElement(list[i], queryText);
+            }
+        }
+    };
     /**
      * Component will mount
      */
@@ -15102,10 +15199,10 @@ var SuggestionsFilterComponent = /** @class */ (function (_super) {
 }(preact_1.Component));
 SuggestionsFilterComponent.defaultProps = {
     classNames: {
-        container: '',
-        top: '',
-        itemsList: '',
-        item: '',
+        container: "",
+        top: "",
+        itemsList: "",
+        item: "",
     },
     template: {
         top: null,
@@ -15127,7 +15224,7 @@ exports["default"] = SuggestionsFilterComponent;
 
 exports.__esModule = true;
 exports.defaultItemTemplate = void 0;
-exports.defaultItemTemplate = "\n    <span>{{{highlightedWord}}}</span>\n";
+exports.defaultItemTemplate = "\n    <span class=\"highlight\">{{word}}</span>\n";
 
 
 /***/ }),
@@ -15587,8 +15684,6 @@ var Widget_1 = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
 var MultipleFilter = /** @class */ (function (_super) {
     __extends(MultipleFilter, _super);
     /**
-     * Filtername
-     *
      * @param target
      * @param filterName
      * @param filterField
@@ -15677,8 +15772,8 @@ var MultipleFilter = /** @class */ (function (_super) {
             var fieldName = "indexed_metadata." + this.component.props.filterField;
             if (applicationType === 6) {
                 var originalFieldValues = fieldValues;
-                fieldValues = originalFieldValues["v"];
-                var leveledValues = originalFieldValues["l"];
+                fieldValues = originalFieldValues.v;
+                var leveledValues = originalFieldValues.l;
                 for (var it_1 = 0; it_1 < leveledValues.length; it_1++) {
                     var level = it_1 + 1;
                     var fieldNameWithoutPrefix = fieldName.substr(17);

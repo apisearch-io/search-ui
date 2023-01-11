@@ -54,7 +54,7 @@ class Item extends Component<ItemProps, ItemState> {
             template={template}
             data={data}
             id={id}
-            className={`as-result__itemsList ${props.className}`}
+            className={`${props.className}`}
             dictionary={dictionary}
         />;
     }

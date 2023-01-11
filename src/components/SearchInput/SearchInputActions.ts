@@ -83,8 +83,8 @@ export function simpleSearchAction(
         .then((result) => {
             dispatcher.dispatch("RENDER_FETCHED_DATA", {
                 query: clonedQuery,
-                result: result,
-                visibleResults: visibleResults,
+                result,
+                visibleResults,
             });
         })
         .catch((error) => {
