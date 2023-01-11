@@ -4,11 +4,17 @@ import {useCallback, useEffect, useRef} from "preact/compat";
 import {APISEARCH_CONFIG, APISEARCH_UI} from "../../Constants";
 import container from "../../Container";
 import Template from "../Template";
-import {defaultItemsListTemplate, defaultItemTemplate, defaultNoResultsItemTemplate} from "./defaultTemplates";
+import {
+    defaultAlternativeAllResultsTemplate, defaultAlternativeTitleTemplate,
+    defaultItemsListTemplate,
+    defaultItemTemplate,
+    defaultNoResultsItemTemplate,
+} from "./defaultTemplates";
 import Item from "./Item";
 import {configureQuery, infiniteScrollNextPageAction} from "./ResultActions";
 import {ResultProps} from "./ResultProps";
 import {ResultState} from "./ResultState";
+import {onWordClickAction} from "../Common";
 
 /**
  * Result Component
@@ -162,6 +168,24 @@ class ResultComponent extends Component<ResultProps, ResultState> {
     }
 
     /**
+     * @param word
+     */
+    public handleAlternativeClick = (word) => {
+
+        const props = this.props;
+
+        /**
+         * Dispatch action
+         */
+        onWordClickAction(
+            props.environmentId,
+            props.store.getCurrentQuery(),
+            props.repository,
+            word,
+        );
+    }
+
+    /**
      * @private
      */
     private page() {
@@ -174,6 +198,7 @@ class ResultComponent extends Component<ResultProps, ResultState> {
      * @return {any}
      */
     public render() {
+        const that = this;
         const props = this.props;
         const dirty = props.store.isDirty();
         const containerClassName = props.classNames.container;
@@ -184,6 +209,7 @@ class ResultComponent extends Component<ResultProps, ResultState> {
         const currentResult = props.store.getCurrentResult();
         const currentQuery = props.store.getCurrentQuery();
         const currentVisibleResults = props.currentVisibleResults;
+        const subResults = Object.values(currentResult.getSubresults());
         const wrapperRef = useRef(null);
         const customResponse = currentResult.getMetadataValue("custom_response");
         const redirection = currentResult.getMetadataValue("redirection");
@@ -328,6 +354,18 @@ class ResultComponent extends Component<ResultProps, ResultState> {
             );
         }
 
+        if (dirty) {
+            return (
+                <div className={`as-result ${containerClassName}`} ref={wrapperRef}>
+                    <Template
+                        template={placeholderTemplate}
+                        className={`as-result__placeholder ${placeholderClassName}`}
+                        dictionary={props.dictionary}
+                    />
+                </div>
+            );
+        }
+
         /**
          * New version
          */
@@ -351,7 +389,7 @@ class ResultComponent extends Component<ResultProps, ResultState> {
                                         }}
                                         template={props.template.item}
                                         className={`as-result__item ${props.classNames.item}`}
-                                        dictionary={this.props.dictionary}
+                                        dictionary={props.dictionary}
                                     />;
                                 })}
                                 {hasInfiniteScrollNextPage
@@ -363,14 +401,71 @@ class ResultComponent extends Component<ResultProps, ResultState> {
                                     : ""}
                             </div>
                         )
-                        : <Template
-                            template={props.template.noResults}
-                            data={{
-                                query: currentQuery.getQueryText(),
-                            }}
-                            className={`as-result__noresults ${props.classNames.noResults}`}
-                            dictionary={this.props.dictionary}
-                        />
+                        : "")
+                }
+
+                {(subResults.length > 0)
+                    ? <div className={`as-result__alternativeList`}>
+                        {subResults.map((subResult) => {
+                            return <div className={`as-result__alternative`}>
+                                <div className={`as-result__alternative_query`}>
+                                    <span
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            e.preventDefault();
+                                            that.handleAlternativeClick(subResult.metadata.query_text);
+                                        }}
+                                    >
+                                        <Template
+                                            template={props.template.alternative_title}
+                                            data={{
+                                                word: subResult.metadata.query_text_html,
+                                            }}
+                                        />
+                                    </span>
+                                    <a
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            e.preventDefault();
+                                            that.handleAlternativeClick(subResult.metadata.query_text);
+                                        }}
+                                    >
+                                        <Template
+                                            template={props.template.alternative_all_results}
+                                            data={{
+                                                num: subResult.getTotalHits(),
+                                            }}
+                                            dictionary={props.dictionary}
+                                        />
+                                    </a>
+                                </div>
+                                <div className={`as-result__alternative_items`}>
+                                    {subResult.items.map((item) => {
+                                        return <Item
+                                            data={{
+                                                ...reducedTemplateData,
+                                                ...this.hydrateItem(item),
+                                            }}
+                                            template={props.template.item}
+                                            className={`as-result__alternative_item ${props.classNames.item}`}
+                                            dictionary={this.props.dictionary}
+                                        />;
+                                    })}
+                                </div>
+                            </div>;
+                        })}
+                        </div>
+                    : (
+                        (items.length === 0)
+                            ? <Template
+                                template={props.template.noResults}
+                                data={{
+                                    query: currentQuery.getQueryText(),
+                                }}
+                                className={`as-result__noresults ${props.classNames.noResults}`}
+                                dictionary={props.dictionary}
+                            />
+                            : ""
                     )
                 }
             </div>
@@ -460,6 +555,8 @@ ResultComponent.defaultProps = {
         item: defaultItemTemplate,
         noResults: defaultNoResultsItemTemplate,
         placeholder: null,
+        alternative_title: defaultAlternativeTitleTemplate,
+        alternative_all_results: defaultAlternativeAllResultsTemplate,
     },
     formatData: (data) => data,
     fadeInSelector: "",

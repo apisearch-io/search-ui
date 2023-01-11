@@ -24,3 +24,6 @@ export const defaultItemTemplate = `
 export const defaultNoResultsItemTemplate = `
     No results
 `;
+
+export const defaultAlternativeTitleTemplate = `{{{word}}}`;
+export const defaultAlternativeAllResultsTemplate = `All results ({{num}})`;

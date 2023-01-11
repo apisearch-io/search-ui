@@ -4,7 +4,7 @@ import {CheckboxFilterProps} from './CheckboxFilterProps';
 import {CheckboxFilterState} from './CheckboxFilterState';
 import {
     aggregationSetup,
-    onChangeSearchAction
+    onChangeSearchAction,
 } from "./CheckboxFilterActions";
 import Template from "../Template";
 import {defaultItemTemplate} from "./defaultTemplates";
@@ -114,11 +114,15 @@ class CheckboxFilterComponent extends Component<CheckboxFilterProps, CheckboxFil
         const that = this;
         const uid = Math.floor(Math.random() * 10000000000);
         const templateData = {
-            n: n,
-            isActive: isActive,
-            label: label,
-            uid: uid
+            n,
+            isActive,
+            label,
+            uid,
         };
+
+        if (n === 0) {
+            return null;
+        }
 
         return (
             <div className={`as-checkboxFilter ${containerClassName}`}>
@@ -132,9 +136,9 @@ class CheckboxFilterComponent extends Component<CheckboxFilterProps, CheckboxFil
                     className={
                         `as-checkboxFilter__item ` +
                         `${itemClassName} ` +
-                        `${(isActive) ? activeClassName : ''}`
+                        `${(isActive) ? activeClassName : ""}`
                     }
-                    onClick={function(e) {
+                    onClick={(e) => {
                         e.stopPropagation();
                         e.preventDefault();
                         that.handleChange(!isActive);
@@ -147,22 +151,22 @@ class CheckboxFilterComponent extends Component<CheckboxFilterProps, CheckboxFil
                     />
                 </div>
             </div>
-        )
+        );
     }
 }
 
 CheckboxFilterComponent.defaultProps = {
     filterValue: 'true',
     classNames: {
-        container: '',
-        top: '',
-        item: '',
-        active: 'as-checkboxFilter__item--active',
+        container: "",
+        top: "",
+        item: "",
+        active: "as-checkboxFilter__item--active",
     },
     template: {
         top: null,
         item: defaultItemTemplate,
     },
-}
+};
 
 export default CheckboxFilterComponent;

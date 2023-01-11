@@ -1,4 +1,4 @@
-import {FILTER_MUST_ALL, FILTER_TYPE_FIELD, Repository} from "apisearch";
+import {FILTER_TYPE_FIELD, Repository} from "apisearch";
 import {h, render} from "preact";
 import {getShadowFilterValuesFromQuery, isFilterAvailable} from "../components/MultipleFilter/Helpers";
 import {modifyQueryAggregationWithProperLevelValue} from "../components/MultipleFilter/MultipleFilterActions";
@@ -11,12 +11,10 @@ import Widget from "./Widget";
  */
 class MultipleFilter extends Widget {
 
-    private filterField: string;
-    private aggregationField: string;
+    private readonly filterField: string;
+    private readonly aggregationField: string;
 
     /**
-     * Filtername
-     *
      * @param target
      * @param filterName
      * @param filterField
@@ -171,8 +169,8 @@ class MultipleFilter extends Widget {
             let fieldName = "indexed_metadata." + this.component.props.filterField;
             if (applicationType === 6) {
                 const originalFieldValues = fieldValues;
-                fieldValues = originalFieldValues["v"];
-                const leveledValues = originalFieldValues["l"];
+                fieldValues = originalFieldValues.v;
+                const leveledValues = originalFieldValues.l;
 
                 for (let it = 0; it < leveledValues.length; it++) {
                     const level = it + 1;

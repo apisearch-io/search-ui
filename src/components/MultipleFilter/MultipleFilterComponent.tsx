@@ -1,6 +1,6 @@
-import { h, Component } from 'preact';
+import { h, Component } from "preact";
 
-import {aggregationSetup, filterAction, modifyQueryAggregationWithProperLevelValue} from "./MultipleFilterActions";
+import {aggregationSetup, filterAction} from "./MultipleFilterActions";
 import {
     getFilterValuesFromQuery,
     getShadowFilterValuesFromQuery,
@@ -13,7 +13,7 @@ import ShowMoreComponent from "./ShowMoreComponent";
 import {defaultItemTemplate} from "./defaultTemplates";
 import {MultipleFilterProps} from "./MultipleFilterProps";
 import {MultipleFilterState} from "./MultipleFilterState";
-import {Counter} from 'apisearch';
+import {Counter} from "apisearch";
 
 /**
  * Filter Component
@@ -165,17 +165,7 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
         const fetchLimit = props.fetchLimit;
         const repository = props.repository;
         const currentQuery = props.store.getCurrentQuery();
-        // const aggregation = props.store.getCurrentResult().getAggregation(filterName);
         const selectedFilterAsString = String(selectedFilter);
-
-        /*
-        const currentActiveFilterValues =
-            aggregation instanceof ResultAggregation &&
-            (aggregation.getActiveElements() !== null)
-                ? Object.values(aggregation.getActiveElements())
-                : [];
-
-         */
 
         const valuesAsString = (applicationType === 6)
             ? getShadowFilterValuesFromQuery(currentQuery, filterName, true)
@@ -410,18 +400,18 @@ MultipleFilterComponent.defaultProps = {
     ranges: {},
     labels: {},
     classNames: {
-        container: '',
-        top: '',
-        itemsList: '',
-        item: '',
-        active: 'as-multipleFilter__item--active',
-        showMoreContainer: ''
+        container: "",
+        top: "",
+        itemsList: "",
+        item: "",
+        active: "as-multipleFilter__item--active",
+        showMoreContainer: "",
     },
     template: {
         top: null,
         item: defaultItemTemplate,
-        showMore: '+ Show more',
-        showLess: '- Show less'
+        showMore: "+ Show more",
+        showLess: "- Show less",
     },
     formatData: (data) => data,
     activeFirst: true,

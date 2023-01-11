@@ -1,8 +1,10 @@
 import {Component, h} from 'preact';
+import {highlightElement} from "../../Highlight";
+import {onWordClickAction} from "../Common";
 import {SuggestionsFilterProps} from "./SuggestionsFilterProps";
 import {SuggestionsFilterState} from "./SuggestionsFilterState";
 import {defaultItemTemplate} from "./defaultTemplates";
-import {enableSuggestions, onWordClickAction} from "./SuggestionsFilterActions";
+import {enableSuggestions} from "./SuggestionsFilterActions";
 import Template from "../Template";
 
 /**
@@ -10,12 +12,30 @@ import Template from "../Template";
  */
 class SuggestionsFilterComponent extends Component<SuggestionsFilterProps, SuggestionsFilterState> {
 
+    public componentDidMount() {
+        this.highlight();
+    }
+
+    public componentDidUpdate() {
+        this.highlight();
+    }
+
+    public highlight() {
+        const queryText = this.props.store.getCurrentQuery().getQueryText();
+        if (queryText !== "") {
+            const list = document.getElementsByClassName("as-suggestions");
+            for (let i = 0; i < list.length; i++) {
+                highlightElement(list[i], queryText);
+            }
+        }
+    }
+
     /**
      * Component will mount
      */
     componentWillMount() {
 
-        this.setState(prevState => {
+        this.setState((prevState) => {
             return {
                 words: [],
             };
@@ -42,7 +62,7 @@ class SuggestionsFilterComponent extends Component<SuggestionsFilterProps, Sugge
      */
     componentWillReceiveProps(props) {
 
-        this.setState(prevState => {
+        this.setState((prevState) => {
             return {
                 words: props
                     .store
@@ -94,7 +114,6 @@ class SuggestionsFilterComponent extends Component<SuggestionsFilterProps, Sugge
         const itemTemplate = props.template.item;
         const that = this;
 
-
         return (
             <div className={`as-suggestions ${containerClassName} ${noSuggestionsClassName}`}>
                 <Template
@@ -124,25 +143,25 @@ class SuggestionsFilterComponent extends Component<SuggestionsFilterProps, Sugge
                                     dictionary={this.props.dictionary}
                                 />
                             </div>
-                        )
+                        );
                     })}
                 </div>
             </div>
-        )
+        );
     }
 }
 
 SuggestionsFilterComponent.defaultProps = {
     classNames: {
-        container: '',
-        top: '',
-        itemsList: '',
-        item: '',
+        container: "",
+        top: "",
+        itemsList: "",
+        item: "",
     },
     template: {
         top: null,
         item: defaultItemTemplate,
     },
-}
+};
 
 export default SuggestionsFilterComponent;

@@ -148,6 +148,16 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
         const aggregation = currentResult.getAggregation(props.filterName);
 
         if (!(aggregation instanceof ResultAggregation)) {
+            this.setState(prevState => {
+                return {
+                    from: prevState.from,
+                    to: prevState.to,
+                    min: prevState.min,
+                    max: prevState.max,
+                    currency_placeholder: prevState.currency_placeholder,
+                    visible: false
+                };
+            });
             return;
         }
 
@@ -308,7 +318,13 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
         const min = state.min;
         const max = state.max;
 
-        const visibleStyle = state.visible ? '' : 'display:none!important;';
+        const isVisible = state.visible && !(
+            props.store.currentResult.getTotalHits() === 0 &&
+            from === min &&
+            to === max
+        );
+
+        const visibleStyle = isVisible ? '' : 'display:none!important;';
 
         return (
             <div id={this.rangeUid} className={`as-rangeFilter ${containerClassName}`} style={visibleStyle}>

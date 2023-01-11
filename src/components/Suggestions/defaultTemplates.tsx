@@ -1,3 +1,3 @@
 export const defaultItemTemplate = `
-    <span>{{{highlightedWord}}}</span>
+    <span class="highlight">{{word}}</span>
 `;
