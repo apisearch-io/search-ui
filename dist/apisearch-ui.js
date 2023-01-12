@@ -11971,7 +11971,7 @@ var ClearFiltersComponent = /** @class */ (function (_super) {
         }
         return (this.state.showClearFilters)
             ? (preact_1.h("div", { className: "as-clearFilters " + containerClassName },
-                props.showIndividualFilterClear
+                props.showGlobalFilterClear
                     ? preact_1.h("div", { onClick: this.handleClick },
                         preact_1.h(Template_1["default"], { template: containerTemplate, dictionary: this.props.dictionary }))
                     : "",
@@ -14183,7 +14183,14 @@ var ResultComponent = /** @class */ (function (_super) {
                                 ? items.map(function (item) { return _this.hydrateItem(item); })
                                 : [] }), className: "as-result__itemsList " + itemsListClassName, dictionary: this.props.dictionary }),
                 hasInfiniteScrollNextPage
-                    ? preact_1.h("div", { ref: this.endResultsBoxRef, style: "bottom: " + infiniteScrollMargin + "px; position: relative;" })
+                    ? (props.infiniteScrollButton
+                        ? preact_1.h("div", { onClick: function (e) {
+                                that.loadNextPage();
+                            } },
+                            preact_1.h(Template_1["default"], { template: props.template.next_page_button, data: {
+                                    page: this.state.page + 1,
+                                } }))
+                        : preact_1.h("div", { ref: this.endResultsBoxRef, style: "bottom: " + infiniteScrollMargin + "px; position: relative;" }))
                     : ""));
         }
         if (dirty) {
