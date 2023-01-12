@@ -27,3 +27,5 @@ export const defaultNoResultsItemTemplate = `
 
 export const defaultAlternativeTitleTemplate = `{{{word}}}`;
 export const defaultAlternativeAllResultsTemplate = `All results ({{num}})`;
+
+export const defaultNextPageButtonTemplate = `Load page {{page}}`;

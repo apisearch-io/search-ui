@@ -26,6 +26,7 @@ class Result extends Widget {
      * @param formatData
      * @param fadeInSelector
      * @param infiniteScroll
+     * @param infiniteScrollButton
      * @param fieldsConciliation
      * @param minScore
      */
@@ -42,6 +43,7 @@ class Result extends Widget {
         formatData,
         fadeInSelector,
         infiniteScroll,
+        infiniteScrollButton,
         fieldsConciliation,
         minScore,
     }) {
@@ -67,6 +69,7 @@ class Result extends Widget {
             formatData={formatData}
             fadeInSelector={fadeInSelector}
             infiniteScroll={infiniteScroll}
+            infiniteScrollButton={infiniteScrollButton}
             fieldsConciliation={fieldsConciliation}
             minScore={minScore}
         />;

@@ -26,6 +26,7 @@ export interface ResultProps {
         placeholder: null,
         alternative_title: string,
         alternative_all_results: string,
+        next_page_button: string,
     };
     formatData: (Item) => {Item};
     fadeInSelector: string;
@@ -35,6 +36,7 @@ export interface ResultProps {
     dictionary?: { [key: string]: string; };
     currentVisibleResults?: boolean;
     infiniteScroll?: boolean|number;
+    infiniteScrollButton?: boolean|number;
     fieldsConciliation: string[];
     minScore: number;
 }

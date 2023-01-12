@@ -13951,10 +13951,7 @@ var ResultComponent = /** @class */ (function (_super) {
             }
             _this.observer.current = new IntersectionObserver(function (entries) {
                 if (entries[0].isIntersecting) {
-                    var _a = _this.props, environmentId = _a.environmentId, store = _a.store, repository = _a.repository;
-                    _this.fromLoadingNextPage = true;
-                    _this.currentExpectedPage = _this.state.page + 1;
-                    ResultActions_1.infiniteScrollNextPageAction(environmentId, store.getCurrentQuery(), repository, _this.currentExpectedPage);
+                    _this.loadNextPage();
                 }
             });
             if ((_this.observer.current instanceof IntersectionObserver) && node) {
@@ -13980,6 +13977,12 @@ var ResultComponent = /** @class */ (function (_super) {
         };
         return _this;
     }
+    ResultComponent.prototype.loadNextPage = function () {
+        var _a = this.props, environmentId = _a.environmentId, store = _a.store, repository = _a.repository;
+        this.fromLoadingNextPage = true;
+        this.currentExpectedPage = this.state.page + 1;
+        ResultActions_1.infiniteScrollNextPageAction(environmentId, store.getCurrentQuery(), repository, this.currentExpectedPage);
+    };
     /**
      * Hook that change state once mouse clicks inside or outside the container
      */
@@ -14200,9 +14203,21 @@ var ResultComponent = /** @class */ (function (_super) {
                             return preact_1.h(Item_1["default"], { data: __assign(__assign({}, reducedTemplateData), _this.hydrateItem(item)), template: props.template.item, className: "as-result__item " + props.classNames.item, dictionary: props.dictionary });
                         }),
                         hasInfiniteScrollNextPage
-                            ? preact_1.h("div", { id: "as-result__infinite_scroll_inspector", ref: this.endResultsBoxRef, style: "bottom: " + infiniteScrollMargin + "px; position: relative; width: 100%;" })
+                            ? (props.infiniteScrollButton
+                                ? ""
+                                : (preact_1.h("div", { id: "as-result__infinite_scroll_inspector", ref: this.endResultsBoxRef, style: "bottom: " + infiniteScrollMargin + "px; position: relative; width: 100%;" })))
                             : ""))
                     : ""),
+            hasInfiniteScrollNextPage
+                ? (props.infiniteScrollButton
+                    ? (preact_1.h("div", { onClick: function (e) {
+                            that.loadNextPage();
+                        } },
+                        preact_1.h(Template_1["default"], { template: props.template.next_page_button, data: {
+                                page: this.state.page + 1,
+                            } })))
+                    : "")
+                : "",
             (subResults.length > 0)
                 ? preact_1.h("div", { className: "as-result__alternativeList" }, subResults.map(function (subResult) {
                     return preact_1.h("div", { className: "as-result__alternative" },
@@ -14301,6 +14316,7 @@ ResultComponent.defaultProps = {
         placeholder: null,
         alternative_title: defaultTemplates_1.defaultAlternativeTitleTemplate,
         alternative_all_results: defaultTemplates_1.defaultAlternativeAllResultsTemplate,
+        next_page_button: defaultTemplates_1.defaultNextPageButtonTemplate,
     },
     formatData: function (data) { return data; },
     fadeInSelector: "",
@@ -14320,12 +14336,13 @@ exports["default"] = ResultComponent;
 "use strict";
 
 exports.__esModule = true;
-exports.defaultAlternativeAllResultsTemplate = exports.defaultAlternativeTitleTemplate = exports.defaultNoResultsItemTemplate = exports.defaultItemTemplate = exports.defaultItemsListTemplate = void 0;
+exports.defaultNextPageButtonTemplate = exports.defaultAlternativeAllResultsTemplate = exports.defaultAlternativeTitleTemplate = exports.defaultNoResultsItemTemplate = exports.defaultItemTemplate = exports.defaultItemsListTemplate = void 0;
 exports.defaultItemsListTemplate = "\n    <div>\n    {{#items}}\n        <div class=\"as-result__item\" data-id=\"{{uuid_composed}}\">\n            <strong>Score:</strong> {{score}}<br />\n            <strong>Uuid:</strong> {{uuid.type}} - {{uuid.id}}<br />\n            <strong>Title:</strong> {{{fields.title}}}<br />\n            <strong>Description:</strong> {{fields.description}}<br />\n            <strong>Link:</strong> <a href=\"{{metadata.link}}\" onclick=\"{{click}}\" target=\"_blank\">{{metadata.link}}</a>\n        </div>\n    {{/items}}\n    </div>\n    {{^items}}No results{{/items}}\n";
 exports.defaultItemTemplate = "\n    <strong>Score:</strong> {{score}}<br />\n    <strong>Uuid:</strong> {{uuid.type}} - {{uuid.id}}<br />\n    <strong>Title:</strong> {{{fields.title}}}<br />\n    <strong>Description:</strong> {{fields.description}}<br />\n    <strong>Link:</strong> <a href=\"{{metadata.link}}\" onclick=\"{{click}}\" target=\"_blank\">{{metadata.link}}</a>\n";
 exports.defaultNoResultsItemTemplate = "\n    No results\n";
 exports.defaultAlternativeTitleTemplate = "{{{word}}}";
 exports.defaultAlternativeAllResultsTemplate = "All results ({{num}})";
+exports.defaultNextPageButtonTemplate = "Load page {{page}}";
 
 
 /***/ }),
@@ -16168,15 +16185,16 @@ var Result = /** @class */ (function (_super) {
      * @param formatData
      * @param fadeInSelector
      * @param infiniteScroll
+     * @param infiniteScrollButton
      * @param fieldsConciliation
      * @param minScore
      */
     function Result(_a) {
-        var target = _a.target, fields = _a.fields, itemsPerPage = _a.itemsPerPage, promote = _a.promote, exclude = _a.exclude, filter = _a.filter, highlightsEnabled = _a.highlightsEnabled, classNames = _a.classNames, template = _a.template, formatData = _a.formatData, fadeInSelector = _a.fadeInSelector, infiniteScroll = _a.infiniteScroll, fieldsConciliation = _a.fieldsConciliation, minScore = _a.minScore;
+        var target = _a.target, fields = _a.fields, itemsPerPage = _a.itemsPerPage, promote = _a.promote, exclude = _a.exclude, filter = _a.filter, highlightsEnabled = _a.highlightsEnabled, classNames = _a.classNames, template = _a.template, formatData = _a.formatData, fadeInSelector = _a.fadeInSelector, infiniteScroll = _a.infiniteScroll, infiniteScrollButton = _a.infiniteScrollButton, fieldsConciliation = _a.fieldsConciliation, minScore = _a.minScore;
         var _this = _super.call(this) || this;
         _this.target = target;
         _this.targetNode = document.querySelector(_this.target);
-        _this.component = preact_1.h(ResultComponent_1["default"], { target: target, fields: fields, itemsPerPage: itemsPerPage, promote: promote, exclude: exclude, filter: filter, highlightsEnabled: highlightsEnabled, classNames: __assign(__assign({}, ResultComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, ResultComponent_1["default"].defaultProps.template), template), formatData: formatData, fadeInSelector: fadeInSelector, infiniteScroll: infiniteScroll, fieldsConciliation: fieldsConciliation, minScore: minScore });
+        _this.component = preact_1.h(ResultComponent_1["default"], { target: target, fields: fields, itemsPerPage: itemsPerPage, promote: promote, exclude: exclude, filter: filter, highlightsEnabled: highlightsEnabled, classNames: __assign(__assign({}, ResultComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, ResultComponent_1["default"].defaultProps.template), template), formatData: formatData, fadeInSelector: fadeInSelector, infiniteScroll: infiniteScroll, infiniteScrollButton: infiniteScrollButton, fieldsConciliation: fieldsConciliation, minScore: minScore });
         return _this;
     }
     /**
