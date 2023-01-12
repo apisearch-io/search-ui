@@ -120,10 +120,9 @@ class ClearFiltersComponent extends Component<ClearFiltersProps, ClearFiltersSta
         const containerTemplate = props.template.container;
         const filterTemplate = props.template.filter;
         const appliedFiltersFormatted = this.state.appliedFilters;
-        const showIndividualValueClear = true;
         let individualFilterClear = null;
 
-        if (showIndividualValueClear) {
+        if (props.showIndividualFilterValueClear) {
 
             const values = [];
             this.state.appliedFilters.forEach((filter) => {
