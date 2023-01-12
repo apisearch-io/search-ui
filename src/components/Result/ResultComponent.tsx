@@ -7,7 +7,7 @@ import Template from "../Template";
 import {
     defaultAlternativeAllResultsTemplate, defaultAlternativeTitleTemplate,
     defaultItemsListTemplate,
-    defaultItemTemplate,
+    defaultItemTemplate, defaultNextPageButtonTemplate,
     defaultNoResultsItemTemplate,
 } from "./defaultTemplates";
 import Item from "./Item";
@@ -31,20 +31,7 @@ class ResultComponent extends Component<ResultProps, ResultState> {
 
         this.observer.current = new IntersectionObserver((entries) => {
             if (entries[0].isIntersecting) {
-                const {
-                    environmentId,
-                    store,
-                    repository,
-                } = this.props;
-
-                this.fromLoadingNextPage = true;
-                this.currentExpectedPage = this.state.page + 1;
-                infiniteScrollNextPageAction(
-                    environmentId,
-                    store.getCurrentQuery(),
-                    repository,
-                    this.currentExpectedPage,
-                );
+                this.loadNextPage();
             }
         });
 
@@ -52,6 +39,23 @@ class ResultComponent extends Component<ResultProps, ResultState> {
             this.observer.current.observe(node);
         }
     }, []);
+
+    private loadNextPage() {
+        const {
+            environmentId,
+            store,
+            repository,
+        } = this.props;
+
+        this.fromLoadingNextPage = true;
+        this.currentExpectedPage = this.state.page + 1;
+        infiniteScrollNextPageAction(
+            environmentId,
+            store.getCurrentQuery(),
+            repository,
+            this.currentExpectedPage,
+        );
+    }
 
     /**
      * Constructor
@@ -393,15 +397,36 @@ class ResultComponent extends Component<ResultProps, ResultState> {
                                     />;
                                 })}
                                 {hasInfiniteScrollNextPage
-                                    ? <div
-                                        id={`as-result__infinite_scroll_inspector`}
-                                        ref={this.endResultsBoxRef}
-                                        style={`bottom: ${infiniteScrollMargin}px; position: relative; width: 100%;`}
-                                    />
-                                    : ""}
+                                    ? (props.infiniteScrollButton
+                                            ? ""
+                                            : (<div
+                                                id={`as-result__infinite_scroll_inspector`}
+                                                ref={this.endResultsBoxRef}
+                                                style={`bottom: ${infiniteScrollMargin}px; position: relative; width: 100%;`}
+                                            />)
+                                    )
+                                    : ""
+                                }
                             </div>
                         )
                         : "")
+                }
+
+                {hasInfiniteScrollNextPage
+                    ? (props.infiniteScrollButton
+                            ? (<div onClick={(e) => {
+                                that.loadNextPage();
+                            }}>
+                                <Template
+                                    template={props.template.next_page_button}
+                                    data={{
+                                        page: this.state.page + 1,
+                                    }}
+                                />
+                            </div>)
+                            : ""
+                    )
+                    : ""
                 }
 
                 {(subResults.length > 0)
@@ -557,6 +582,7 @@ ResultComponent.defaultProps = {
         placeholder: null,
         alternative_title: defaultAlternativeTitleTemplate,
         alternative_all_results: defaultAlternativeAllResultsTemplate,
+        next_page_button: defaultNextPageButtonTemplate,
     },
     formatData: (data) => data,
     fadeInSelector: "",
