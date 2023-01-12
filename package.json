@@ -1,6 +1,6 @@
 {
   "name": "apisearch-ui",
-  "version": "0.3.28",
+  "version": "0.3.29",
   "description": "Javascript User Interface of Apisearch.",
   "main": "lib/index.js",
   "scripts": {
