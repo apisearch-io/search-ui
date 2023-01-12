@@ -164,7 +164,7 @@ class ClearFiltersComponent extends Component<ClearFiltersProps, ClearFiltersSta
 
         return (this.state.showClearFilters)
             ? ( <div className={`as-clearFilters ${containerClassName}`}>
-                    {props.showIndividualFilterClear
+                    {props.showGlobalFilterClear
                         ? <div onClick={this.handleClick}>
                             <Template
                                 template={containerTemplate}

@@ -347,11 +347,24 @@ class ResultComponent extends Component<ResultProps, ResultState> {
                             dictionary={this.props.dictionary}
                         />
                     }
+
                     {hasInfiniteScrollNextPage
-                        ? <div
-                            ref={this.endResultsBoxRef}
-                            style={`bottom: ${infiniteScrollMargin}px; position: relative;`}
-                       />
+                        ? (props.infiniteScrollButton
+                                ? <div onClick={(e) => {
+                                    that.loadNextPage();
+                                }}>
+                                    <Template
+                                        template={props.template.next_page_button}
+                                        data={{
+                                            page: this.state.page + 1,
+                                        }}
+                                    />
+                                </div>
+                                : <div
+                                    ref={this.endResultsBoxRef}
+                                    style={`bottom: ${infiniteScrollMargin}px; position: relative;`}
+                                />
+                        )
                         : ""
                     }
                 </div>
