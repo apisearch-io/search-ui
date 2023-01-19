@@ -302,19 +302,24 @@ class Store extends EventEmitter {
      * @param query
      */
     private loadQuery(query: Query): Query {
+
+        const queryAsObject = query.toArray();
+        if (Object.keys(this.initialState).length > 0) {
+            this.emit("fromUrlObject", this.initialState, queryAsObject);
+
+            return Query.createFromArray(queryAsObject);
+        }
+
         if (!this.withHash) {
             return query;
         }
 
-        const queryAsObject = query.toArray();
         let urlObject = {};
-        let didTakeQueryFromUrl = false;
 
         if (this.urlHash.match("q=.*") !== null) {
             const urlHashQuery = decodeURI(this.urlHash.slice(2));
             urlObject = {q: urlHashQuery};
             this.emit("fromUrlObject", urlObject, queryAsObject);
-            didTakeQueryFromUrl = true;
         } else {
             try {
                 urlObject = (
@@ -328,19 +333,11 @@ class Store extends EventEmitter {
 
                 if (Object.keys(urlObject).length > 0) {
                     this.emit("fromUrlObject", urlObject, queryAsObject);
-                    didTakeQueryFromUrl = true;
                 }
             } catch (e) {
                 // Silent pass
                 this.doNotCleanUrlHashAtFirst = true;
             }
-        }
-
-        if (
-            !didTakeQueryFromUrl &&
-            Object.keys(this.initialState).length > 0
-        ) {
-            this.emit("fromUrlObject", this.initialState, queryAsObject);
         }
 
         return Query.createFromArray(queryAsObject);
