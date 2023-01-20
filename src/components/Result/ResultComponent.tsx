@@ -459,6 +459,7 @@ class ResultComponent extends Component<ResultProps, ResultState> {
                                             data={{
                                                 word: subResult.metadata.query_text_html,
                                             }}
+                                            dictionary={props.dictionary}
                                         />
                                     </span>
                                     <a
