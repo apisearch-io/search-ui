@@ -7,7 +7,7 @@
 		exports["apisearchUI"] = factory();
 	else
 		root["apisearchUI"] = factory();
-})(self, function() {
+})(self, () => {
 return /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
@@ -1186,7 +1186,7 @@ exports.Square = Square;
 exports.__esModule = true;
 exports.AxiosClient = void 0;
 var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var axios_1 = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+var axios_1 = __webpack_require__(/*! axios */ "./node_modules/axios/dist/browser/axios.cjs");
 var __1 = __webpack_require__(/*! .. */ "./node_modules/apisearch/lib/index.js");
 var Client_1 = __webpack_require__(/*! ./Client */ "./node_modules/apisearch/lib/Http/Client.js");
 var Response_1 = __webpack_require__(/*! ./Response */ "./node_modules/apisearch/lib/Http/Response.js");
@@ -1360,7 +1360,7 @@ exports.AxiosClient = AxiosClient;
 exports.__esModule = true;
 exports.CacheClient = void 0;
 var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var ts_md5_1 = __webpack_require__(/*! ts-md5 */ "./node_modules/ts-md5/dist/md5.js");
+var ts_md5_1 = __webpack_require__(/*! ts-md5 */ "./node_modules/ts-md5/dist/esm/index.js");
 /**
  * AxiosClient
  */
@@ -5119,16 +5119,18 @@ var SortBy = /** @class */ (function () {
         var newSortBy = SortBy.create();
         for (var i in this.sortsBy) {
             var sortBy = this.sortsBy[i];
-            var sortByAsArray = JSON.parse(JSON.stringify(sortBy));
-            if (typeof sortBy.filter === typeof {} &&
-                sortBy.filter != null) {
-                sortByAsArray.filter = Filter_1.Filter.createFromArray(sortBy.filter.toArray());
+            if (typeof sortBy !== "function") {
+                var sortByAsArray = JSON.parse(JSON.stringify(sortBy));
+                if (typeof sortBy.filter === typeof {} &&
+                    sortBy.filter != null) {
+                    sortByAsArray.filter = Filter_1.Filter.createFromArray(sortBy.filter.toArray());
+                }
+                if (sortBy.coordinate != null &&
+                    typeof sortBy.coordinate == typeof {}) {
+                    sortByAsArray.coordinate = __1.Coordinate.createFromArray(sortBy.coordinate.toArray());
+                }
+                newSortBy.sortsBy.push(sortByAsArray);
             }
-            if (sortBy.coordinate != null &&
-                typeof sortBy.coordinate == typeof {}) {
-                sortByAsArray.coordinate = __1.Coordinate.createFromArray(sortBy.coordinate.toArray());
-            }
-            newSortBy.sortsBy.push(sortByAsArray);
         }
         return newSortBy;
     };
@@ -6566,8 +6568,10 @@ var ResultAggregation = /** @class */ (function () {
             : [];
         for (var i in countersAsArray) {
             var counterAsArray = countersAsArray[i];
-            var counter = Counter_1.Counter.createFromArray(counterAsArray);
-            aggregation.counters['_' + counter.getId()] = counter;
+            if (typeof counterAsArray !== "function") {
+                var counter = Counter_1.Counter.createFromArray(counterAsArray);
+                aggregation.counters['_' + counter.getId()] = counter;
+            }
         }
         aggregation.highestActiveElement = typeof array.highest_active_level === "number"
             ? array.highest_active_level
@@ -6927,2151 +6931,6 @@ tslib_1.__exportStar(__webpack_require__(/*! ./Result/Result */ "./node_modules/
 tslib_1.__exportStar(__webpack_require__(/*! ./Transformer/ReadTransformer */ "./node_modules/apisearch/lib/Transformer/ReadTransformer.js"), exports);
 tslib_1.__exportStar(__webpack_require__(/*! ./Transformer/Transformer */ "./node_modules/apisearch/lib/Transformer/Transformer.js"), exports);
 tslib_1.__exportStar(__webpack_require__(/*! ./Transformer/WriteTransformer */ "./node_modules/apisearch/lib/Transformer/WriteTransformer.js"), exports);
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/index.js":
-/*!*************************************!*\
-  !*** ./node_modules/axios/index.js ***!
-  \*************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-module.exports = __webpack_require__(/*! ./lib/axios */ "./node_modules/axios/lib/axios.js");
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/adapters/xhr.js":
-/*!************************************************!*\
-  !*** ./node_modules/axios/lib/adapters/xhr.js ***!
-  \************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var utils = __webpack_require__(/*! ./../utils */ "./node_modules/axios/lib/utils.js");
-var settle = __webpack_require__(/*! ./../core/settle */ "./node_modules/axios/lib/core/settle.js");
-var cookies = __webpack_require__(/*! ./../helpers/cookies */ "./node_modules/axios/lib/helpers/cookies.js");
-var buildURL = __webpack_require__(/*! ./../helpers/buildURL */ "./node_modules/axios/lib/helpers/buildURL.js");
-var buildFullPath = __webpack_require__(/*! ../core/buildFullPath */ "./node_modules/axios/lib/core/buildFullPath.js");
-var parseHeaders = __webpack_require__(/*! ./../helpers/parseHeaders */ "./node_modules/axios/lib/helpers/parseHeaders.js");
-var isURLSameOrigin = __webpack_require__(/*! ./../helpers/isURLSameOrigin */ "./node_modules/axios/lib/helpers/isURLSameOrigin.js");
-var createError = __webpack_require__(/*! ../core/createError */ "./node_modules/axios/lib/core/createError.js");
-var defaults = __webpack_require__(/*! ../defaults */ "./node_modules/axios/lib/defaults.js");
-var Cancel = __webpack_require__(/*! ../cancel/Cancel */ "./node_modules/axios/lib/cancel/Cancel.js");
-
-module.exports = function xhrAdapter(config) {
-  return new Promise(function dispatchXhrRequest(resolve, reject) {
-    var requestData = config.data;
-    var requestHeaders = config.headers;
-    var responseType = config.responseType;
-    var onCanceled;
-    function done() {
-      if (config.cancelToken) {
-        config.cancelToken.unsubscribe(onCanceled);
-      }
-
-      if (config.signal) {
-        config.signal.removeEventListener('abort', onCanceled);
-      }
-    }
-
-    if (utils.isFormData(requestData)) {
-      delete requestHeaders['Content-Type']; // Let the browser set it
-    }
-
-    var request = new XMLHttpRequest();
-
-    // HTTP basic authentication
-    if (config.auth) {
-      var username = config.auth.username || '';
-      var password = config.auth.password ? unescape(encodeURIComponent(config.auth.password)) : '';
-      requestHeaders.Authorization = 'Basic ' + btoa(username + ':' + password);
-    }
-
-    var fullPath = buildFullPath(config.baseURL, config.url);
-    request.open(config.method.toUpperCase(), buildURL(fullPath, config.params, config.paramsSerializer), true);
-
-    // Set the request timeout in MS
-    request.timeout = config.timeout;
-
-    function onloadend() {
-      if (!request) {
-        return;
-      }
-      // Prepare the response
-      var responseHeaders = 'getAllResponseHeaders' in request ? parseHeaders(request.getAllResponseHeaders()) : null;
-      var responseData = !responseType || responseType === 'text' ||  responseType === 'json' ?
-        request.responseText : request.response;
-      var response = {
-        data: responseData,
-        status: request.status,
-        statusText: request.statusText,
-        headers: responseHeaders,
-        config: config,
-        request: request
-      };
-
-      settle(function _resolve(value) {
-        resolve(value);
-        done();
-      }, function _reject(err) {
-        reject(err);
-        done();
-      }, response);
-
-      // Clean up request
-      request = null;
-    }
-
-    if ('onloadend' in request) {
-      // Use onloadend if available
-      request.onloadend = onloadend;
-    } else {
-      // Listen for ready state to emulate onloadend
-      request.onreadystatechange = function handleLoad() {
-        if (!request || request.readyState !== 4) {
-          return;
-        }
-
-        // The request errored out and we didn't get a response, this will be
-        // handled by onerror instead
-        // With one exception: request that using file: protocol, most browsers
-        // will return status as 0 even though it's a successful request
-        if (request.status === 0 && !(request.responseURL && request.responseURL.indexOf('file:') === 0)) {
-          return;
-        }
-        // readystate handler is calling before onerror or ontimeout handlers,
-        // so we should call onloadend on the next 'tick'
-        setTimeout(onloadend);
-      };
-    }
-
-    // Handle browser request cancellation (as opposed to a manual cancellation)
-    request.onabort = function handleAbort() {
-      if (!request) {
-        return;
-      }
-
-      reject(createError('Request aborted', config, 'ECONNABORTED', request));
-
-      // Clean up request
-      request = null;
-    };
-
-    // Handle low level network errors
-    request.onerror = function handleError() {
-      // Real errors are hidden from us by the browser
-      // onerror should only fire if it's a network error
-      reject(createError('Network Error', config, null, request));
-
-      // Clean up request
-      request = null;
-    };
-
-    // Handle timeout
-    request.ontimeout = function handleTimeout() {
-      var timeoutErrorMessage = config.timeout ? 'timeout of ' + config.timeout + 'ms exceeded' : 'timeout exceeded';
-      var transitional = config.transitional || defaults.transitional;
-      if (config.timeoutErrorMessage) {
-        timeoutErrorMessage = config.timeoutErrorMessage;
-      }
-      reject(createError(
-        timeoutErrorMessage,
-        config,
-        transitional.clarifyTimeoutError ? 'ETIMEDOUT' : 'ECONNABORTED',
-        request));
-
-      // Clean up request
-      request = null;
-    };
-
-    // Add xsrf header
-    // This is only done if running in a standard browser environment.
-    // Specifically not if we're in a web worker, or react-native.
-    if (utils.isStandardBrowserEnv()) {
-      // Add xsrf header
-      var xsrfValue = (config.withCredentials || isURLSameOrigin(fullPath)) && config.xsrfCookieName ?
-        cookies.read(config.xsrfCookieName) :
-        undefined;
-
-      if (xsrfValue) {
-        requestHeaders[config.xsrfHeaderName] = xsrfValue;
-      }
-    }
-
-    // Add headers to the request
-    if ('setRequestHeader' in request) {
-      utils.forEach(requestHeaders, function setRequestHeader(val, key) {
-        if (typeof requestData === 'undefined' && key.toLowerCase() === 'content-type') {
-          // Remove Content-Type if data is undefined
-          delete requestHeaders[key];
-        } else {
-          // Otherwise add header to the request
-          request.setRequestHeader(key, val);
-        }
-      });
-    }
-
-    // Add withCredentials to request if needed
-    if (!utils.isUndefined(config.withCredentials)) {
-      request.withCredentials = !!config.withCredentials;
-    }
-
-    // Add responseType to request if needed
-    if (responseType && responseType !== 'json') {
-      request.responseType = config.responseType;
-    }
-
-    // Handle progress if needed
-    if (typeof config.onDownloadProgress === 'function') {
-      request.addEventListener('progress', config.onDownloadProgress);
-    }
-
-    // Not all browsers support upload events
-    if (typeof config.onUploadProgress === 'function' && request.upload) {
-      request.upload.addEventListener('progress', config.onUploadProgress);
-    }
-
-    if (config.cancelToken || config.signal) {
-      // Handle cancellation
-      // eslint-disable-next-line func-names
-      onCanceled = function(cancel) {
-        if (!request) {
-          return;
-        }
-        reject(!cancel || (cancel && cancel.type) ? new Cancel('canceled') : cancel);
-        request.abort();
-        request = null;
-      };
-
-      config.cancelToken && config.cancelToken.subscribe(onCanceled);
-      if (config.signal) {
-        config.signal.aborted ? onCanceled() : config.signal.addEventListener('abort', onCanceled);
-      }
-    }
-
-    if (!requestData) {
-      requestData = null;
-    }
-
-    // Send the request
-    request.send(requestData);
-  });
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/axios.js":
-/*!*****************************************!*\
-  !*** ./node_modules/axios/lib/axios.js ***!
-  \*****************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var utils = __webpack_require__(/*! ./utils */ "./node_modules/axios/lib/utils.js");
-var bind = __webpack_require__(/*! ./helpers/bind */ "./node_modules/axios/lib/helpers/bind.js");
-var Axios = __webpack_require__(/*! ./core/Axios */ "./node_modules/axios/lib/core/Axios.js");
-var mergeConfig = __webpack_require__(/*! ./core/mergeConfig */ "./node_modules/axios/lib/core/mergeConfig.js");
-var defaults = __webpack_require__(/*! ./defaults */ "./node_modules/axios/lib/defaults.js");
-
-/**
- * Create an instance of Axios
- *
- * @param {Object} defaultConfig The default config for the instance
- * @return {Axios} A new instance of Axios
- */
-function createInstance(defaultConfig) {
-  var context = new Axios(defaultConfig);
-  var instance = bind(Axios.prototype.request, context);
-
-  // Copy axios.prototype to instance
-  utils.extend(instance, Axios.prototype, context);
-
-  // Copy context to instance
-  utils.extend(instance, context);
-
-  // Factory for creating new instances
-  instance.create = function create(instanceConfig) {
-    return createInstance(mergeConfig(defaultConfig, instanceConfig));
-  };
-
-  return instance;
-}
-
-// Create the default instance to be exported
-var axios = createInstance(defaults);
-
-// Expose Axios class to allow class inheritance
-axios.Axios = Axios;
-
-// Expose Cancel & CancelToken
-axios.Cancel = __webpack_require__(/*! ./cancel/Cancel */ "./node_modules/axios/lib/cancel/Cancel.js");
-axios.CancelToken = __webpack_require__(/*! ./cancel/CancelToken */ "./node_modules/axios/lib/cancel/CancelToken.js");
-axios.isCancel = __webpack_require__(/*! ./cancel/isCancel */ "./node_modules/axios/lib/cancel/isCancel.js");
-axios.VERSION = __webpack_require__(/*! ./env/data */ "./node_modules/axios/lib/env/data.js").version;
-
-// Expose all/spread
-axios.all = function all(promises) {
-  return Promise.all(promises);
-};
-axios.spread = __webpack_require__(/*! ./helpers/spread */ "./node_modules/axios/lib/helpers/spread.js");
-
-// Expose isAxiosError
-axios.isAxiosError = __webpack_require__(/*! ./helpers/isAxiosError */ "./node_modules/axios/lib/helpers/isAxiosError.js");
-
-module.exports = axios;
-
-// Allow use of default import syntax in TypeScript
-module.exports["default"] = axios;
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/cancel/Cancel.js":
-/*!*************************************************!*\
-  !*** ./node_modules/axios/lib/cancel/Cancel.js ***!
-  \*************************************************/
-/***/ ((module) => {
-
-"use strict";
-
-
-/**
- * A `Cancel` is an object that is thrown when an operation is canceled.
- *
- * @class
- * @param {string=} message The message.
- */
-function Cancel(message) {
-  this.message = message;
-}
-
-Cancel.prototype.toString = function toString() {
-  return 'Cancel' + (this.message ? ': ' + this.message : '');
-};
-
-Cancel.prototype.__CANCEL__ = true;
-
-module.exports = Cancel;
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/cancel/CancelToken.js":
-/*!******************************************************!*\
-  !*** ./node_modules/axios/lib/cancel/CancelToken.js ***!
-  \******************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var Cancel = __webpack_require__(/*! ./Cancel */ "./node_modules/axios/lib/cancel/Cancel.js");
-
-/**
- * A `CancelToken` is an object that can be used to request cancellation of an operation.
- *
- * @class
- * @param {Function} executor The executor function.
- */
-function CancelToken(executor) {
-  if (typeof executor !== 'function') {
-    throw new TypeError('executor must be a function.');
-  }
-
-  var resolvePromise;
-
-  this.promise = new Promise(function promiseExecutor(resolve) {
-    resolvePromise = resolve;
-  });
-
-  var token = this;
-
-  // eslint-disable-next-line func-names
-  this.promise.then(function(cancel) {
-    if (!token._listeners) return;
-
-    var i;
-    var l = token._listeners.length;
-
-    for (i = 0; i < l; i++) {
-      token._listeners[i](cancel);
-    }
-    token._listeners = null;
-  });
-
-  // eslint-disable-next-line func-names
-  this.promise.then = function(onfulfilled) {
-    var _resolve;
-    // eslint-disable-next-line func-names
-    var promise = new Promise(function(resolve) {
-      token.subscribe(resolve);
-      _resolve = resolve;
-    }).then(onfulfilled);
-
-    promise.cancel = function reject() {
-      token.unsubscribe(_resolve);
-    };
-
-    return promise;
-  };
-
-  executor(function cancel(message) {
-    if (token.reason) {
-      // Cancellation has already been requested
-      return;
-    }
-
-    token.reason = new Cancel(message);
-    resolvePromise(token.reason);
-  });
-}
-
-/**
- * Throws a `Cancel` if cancellation has been requested.
- */
-CancelToken.prototype.throwIfRequested = function throwIfRequested() {
-  if (this.reason) {
-    throw this.reason;
-  }
-};
-
-/**
- * Subscribe to the cancel signal
- */
-
-CancelToken.prototype.subscribe = function subscribe(listener) {
-  if (this.reason) {
-    listener(this.reason);
-    return;
-  }
-
-  if (this._listeners) {
-    this._listeners.push(listener);
-  } else {
-    this._listeners = [listener];
-  }
-};
-
-/**
- * Unsubscribe from the cancel signal
- */
-
-CancelToken.prototype.unsubscribe = function unsubscribe(listener) {
-  if (!this._listeners) {
-    return;
-  }
-  var index = this._listeners.indexOf(listener);
-  if (index !== -1) {
-    this._listeners.splice(index, 1);
-  }
-};
-
-/**
- * Returns an object that contains a new `CancelToken` and a function that, when called,
- * cancels the `CancelToken`.
- */
-CancelToken.source = function source() {
-  var cancel;
-  var token = new CancelToken(function executor(c) {
-    cancel = c;
-  });
-  return {
-    token: token,
-    cancel: cancel
-  };
-};
-
-module.exports = CancelToken;
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/cancel/isCancel.js":
-/*!***************************************************!*\
-  !*** ./node_modules/axios/lib/cancel/isCancel.js ***!
-  \***************************************************/
-/***/ ((module) => {
-
-"use strict";
-
-
-module.exports = function isCancel(value) {
-  return !!(value && value.__CANCEL__);
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/core/Axios.js":
-/*!**********************************************!*\
-  !*** ./node_modules/axios/lib/core/Axios.js ***!
-  \**********************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var utils = __webpack_require__(/*! ./../utils */ "./node_modules/axios/lib/utils.js");
-var buildURL = __webpack_require__(/*! ../helpers/buildURL */ "./node_modules/axios/lib/helpers/buildURL.js");
-var InterceptorManager = __webpack_require__(/*! ./InterceptorManager */ "./node_modules/axios/lib/core/InterceptorManager.js");
-var dispatchRequest = __webpack_require__(/*! ./dispatchRequest */ "./node_modules/axios/lib/core/dispatchRequest.js");
-var mergeConfig = __webpack_require__(/*! ./mergeConfig */ "./node_modules/axios/lib/core/mergeConfig.js");
-var validator = __webpack_require__(/*! ../helpers/validator */ "./node_modules/axios/lib/helpers/validator.js");
-
-var validators = validator.validators;
-/**
- * Create a new instance of Axios
- *
- * @param {Object} instanceConfig The default config for the instance
- */
-function Axios(instanceConfig) {
-  this.defaults = instanceConfig;
-  this.interceptors = {
-    request: new InterceptorManager(),
-    response: new InterceptorManager()
-  };
-}
-
-/**
- * Dispatch a request
- *
- * @param {Object} config The config specific for this request (merged with this.defaults)
- */
-Axios.prototype.request = function request(config) {
-  /*eslint no-param-reassign:0*/
-  // Allow for axios('example/url'[, config]) a la fetch API
-  if (typeof config === 'string') {
-    config = arguments[1] || {};
-    config.url = arguments[0];
-  } else {
-    config = config || {};
-  }
-
-  config = mergeConfig(this.defaults, config);
-
-  // Set config.method
-  if (config.method) {
-    config.method = config.method.toLowerCase();
-  } else if (this.defaults.method) {
-    config.method = this.defaults.method.toLowerCase();
-  } else {
-    config.method = 'get';
-  }
-
-  var transitional = config.transitional;
-
-  if (transitional !== undefined) {
-    validator.assertOptions(transitional, {
-      silentJSONParsing: validators.transitional(validators.boolean),
-      forcedJSONParsing: validators.transitional(validators.boolean),
-      clarifyTimeoutError: validators.transitional(validators.boolean)
-    }, false);
-  }
-
-  // filter out skipped interceptors
-  var requestInterceptorChain = [];
-  var synchronousRequestInterceptors = true;
-  this.interceptors.request.forEach(function unshiftRequestInterceptors(interceptor) {
-    if (typeof interceptor.runWhen === 'function' && interceptor.runWhen(config) === false) {
-      return;
-    }
-
-    synchronousRequestInterceptors = synchronousRequestInterceptors && interceptor.synchronous;
-
-    requestInterceptorChain.unshift(interceptor.fulfilled, interceptor.rejected);
-  });
-
-  var responseInterceptorChain = [];
-  this.interceptors.response.forEach(function pushResponseInterceptors(interceptor) {
-    responseInterceptorChain.push(interceptor.fulfilled, interceptor.rejected);
-  });
-
-  var promise;
-
-  if (!synchronousRequestInterceptors) {
-    var chain = [dispatchRequest, undefined];
-
-    Array.prototype.unshift.apply(chain, requestInterceptorChain);
-    chain = chain.concat(responseInterceptorChain);
-
-    promise = Promise.resolve(config);
-    while (chain.length) {
-      promise = promise.then(chain.shift(), chain.shift());
-    }
-
-    return promise;
-  }
-
-
-  var newConfig = config;
-  while (requestInterceptorChain.length) {
-    var onFulfilled = requestInterceptorChain.shift();
-    var onRejected = requestInterceptorChain.shift();
-    try {
-      newConfig = onFulfilled(newConfig);
-    } catch (error) {
-      onRejected(error);
-      break;
-    }
-  }
-
-  try {
-    promise = dispatchRequest(newConfig);
-  } catch (error) {
-    return Promise.reject(error);
-  }
-
-  while (responseInterceptorChain.length) {
-    promise = promise.then(responseInterceptorChain.shift(), responseInterceptorChain.shift());
-  }
-
-  return promise;
-};
-
-Axios.prototype.getUri = function getUri(config) {
-  config = mergeConfig(this.defaults, config);
-  return buildURL(config.url, config.params, config.paramsSerializer).replace(/^\?/, '');
-};
-
-// Provide aliases for supported request methods
-utils.forEach(['delete', 'get', 'head', 'options'], function forEachMethodNoData(method) {
-  /*eslint func-names:0*/
-  Axios.prototype[method] = function(url, config) {
-    return this.request(mergeConfig(config || {}, {
-      method: method,
-      url: url,
-      data: (config || {}).data
-    }));
-  };
-});
-
-utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
-  /*eslint func-names:0*/
-  Axios.prototype[method] = function(url, data, config) {
-    return this.request(mergeConfig(config || {}, {
-      method: method,
-      url: url,
-      data: data
-    }));
-  };
-});
-
-module.exports = Axios;
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/core/InterceptorManager.js":
-/*!***********************************************************!*\
-  !*** ./node_modules/axios/lib/core/InterceptorManager.js ***!
-  \***********************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var utils = __webpack_require__(/*! ./../utils */ "./node_modules/axios/lib/utils.js");
-
-function InterceptorManager() {
-  this.handlers = [];
-}
-
-/**
- * Add a new interceptor to the stack
- *
- * @param {Function} fulfilled The function to handle `then` for a `Promise`
- * @param {Function} rejected The function to handle `reject` for a `Promise`
- *
- * @return {Number} An ID used to remove interceptor later
- */
-InterceptorManager.prototype.use = function use(fulfilled, rejected, options) {
-  this.handlers.push({
-    fulfilled: fulfilled,
-    rejected: rejected,
-    synchronous: options ? options.synchronous : false,
-    runWhen: options ? options.runWhen : null
-  });
-  return this.handlers.length - 1;
-};
-
-/**
- * Remove an interceptor from the stack
- *
- * @param {Number} id The ID that was returned by `use`
- */
-InterceptorManager.prototype.eject = function eject(id) {
-  if (this.handlers[id]) {
-    this.handlers[id] = null;
-  }
-};
-
-/**
- * Iterate over all the registered interceptors
- *
- * This method is particularly useful for skipping over any
- * interceptors that may have become `null` calling `eject`.
- *
- * @param {Function} fn The function to call for each interceptor
- */
-InterceptorManager.prototype.forEach = function forEach(fn) {
-  utils.forEach(this.handlers, function forEachHandler(h) {
-    if (h !== null) {
-      fn(h);
-    }
-  });
-};
-
-module.exports = InterceptorManager;
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/core/buildFullPath.js":
-/*!******************************************************!*\
-  !*** ./node_modules/axios/lib/core/buildFullPath.js ***!
-  \******************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var isAbsoluteURL = __webpack_require__(/*! ../helpers/isAbsoluteURL */ "./node_modules/axios/lib/helpers/isAbsoluteURL.js");
-var combineURLs = __webpack_require__(/*! ../helpers/combineURLs */ "./node_modules/axios/lib/helpers/combineURLs.js");
-
-/**
- * Creates a new URL by combining the baseURL with the requestedURL,
- * only when the requestedURL is not already an absolute URL.
- * If the requestURL is absolute, this function returns the requestedURL untouched.
- *
- * @param {string} baseURL The base URL
- * @param {string} requestedURL Absolute or relative URL to combine
- * @returns {string} The combined full path
- */
-module.exports = function buildFullPath(baseURL, requestedURL) {
-  if (baseURL && !isAbsoluteURL(requestedURL)) {
-    return combineURLs(baseURL, requestedURL);
-  }
-  return requestedURL;
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/core/createError.js":
-/*!****************************************************!*\
-  !*** ./node_modules/axios/lib/core/createError.js ***!
-  \****************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var enhanceError = __webpack_require__(/*! ./enhanceError */ "./node_modules/axios/lib/core/enhanceError.js");
-
-/**
- * Create an Error with the specified message, config, error code, request and response.
- *
- * @param {string} message The error message.
- * @param {Object} config The config.
- * @param {string} [code] The error code (for example, 'ECONNABORTED').
- * @param {Object} [request] The request.
- * @param {Object} [response] The response.
- * @returns {Error} The created error.
- */
-module.exports = function createError(message, config, code, request, response) {
-  var error = new Error(message);
-  return enhanceError(error, config, code, request, response);
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/core/dispatchRequest.js":
-/*!********************************************************!*\
-  !*** ./node_modules/axios/lib/core/dispatchRequest.js ***!
-  \********************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var utils = __webpack_require__(/*! ./../utils */ "./node_modules/axios/lib/utils.js");
-var transformData = __webpack_require__(/*! ./transformData */ "./node_modules/axios/lib/core/transformData.js");
-var isCancel = __webpack_require__(/*! ../cancel/isCancel */ "./node_modules/axios/lib/cancel/isCancel.js");
-var defaults = __webpack_require__(/*! ../defaults */ "./node_modules/axios/lib/defaults.js");
-var Cancel = __webpack_require__(/*! ../cancel/Cancel */ "./node_modules/axios/lib/cancel/Cancel.js");
-
-/**
- * Throws a `Cancel` if cancellation has been requested.
- */
-function throwIfCancellationRequested(config) {
-  if (config.cancelToken) {
-    config.cancelToken.throwIfRequested();
-  }
-
-  if (config.signal && config.signal.aborted) {
-    throw new Cancel('canceled');
-  }
-}
-
-/**
- * Dispatch a request to the server using the configured adapter.
- *
- * @param {object} config The config that is to be used for the request
- * @returns {Promise} The Promise to be fulfilled
- */
-module.exports = function dispatchRequest(config) {
-  throwIfCancellationRequested(config);
-
-  // Ensure headers exist
-  config.headers = config.headers || {};
-
-  // Transform request data
-  config.data = transformData.call(
-    config,
-    config.data,
-    config.headers,
-    config.transformRequest
-  );
-
-  // Flatten headers
-  config.headers = utils.merge(
-    config.headers.common || {},
-    config.headers[config.method] || {},
-    config.headers
-  );
-
-  utils.forEach(
-    ['delete', 'get', 'head', 'post', 'put', 'patch', 'common'],
-    function cleanHeaderConfig(method) {
-      delete config.headers[method];
-    }
-  );
-
-  var adapter = config.adapter || defaults.adapter;
-
-  return adapter(config).then(function onAdapterResolution(response) {
-    throwIfCancellationRequested(config);
-
-    // Transform response data
-    response.data = transformData.call(
-      config,
-      response.data,
-      response.headers,
-      config.transformResponse
-    );
-
-    return response;
-  }, function onAdapterRejection(reason) {
-    if (!isCancel(reason)) {
-      throwIfCancellationRequested(config);
-
-      // Transform response data
-      if (reason && reason.response) {
-        reason.response.data = transformData.call(
-          config,
-          reason.response.data,
-          reason.response.headers,
-          config.transformResponse
-        );
-      }
-    }
-
-    return Promise.reject(reason);
-  });
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/core/enhanceError.js":
-/*!*****************************************************!*\
-  !*** ./node_modules/axios/lib/core/enhanceError.js ***!
-  \*****************************************************/
-/***/ ((module) => {
-
-"use strict";
-
-
-/**
- * Update an Error with the specified config, error code, and response.
- *
- * @param {Error} error The error to update.
- * @param {Object} config The config.
- * @param {string} [code] The error code (for example, 'ECONNABORTED').
- * @param {Object} [request] The request.
- * @param {Object} [response] The response.
- * @returns {Error} The error.
- */
-module.exports = function enhanceError(error, config, code, request, response) {
-  error.config = config;
-  if (code) {
-    error.code = code;
-  }
-
-  error.request = request;
-  error.response = response;
-  error.isAxiosError = true;
-
-  error.toJSON = function toJSON() {
-    return {
-      // Standard
-      message: this.message,
-      name: this.name,
-      // Microsoft
-      description: this.description,
-      number: this.number,
-      // Mozilla
-      fileName: this.fileName,
-      lineNumber: this.lineNumber,
-      columnNumber: this.columnNumber,
-      stack: this.stack,
-      // Axios
-      config: this.config,
-      code: this.code,
-      status: this.response && this.response.status ? this.response.status : null
-    };
-  };
-  return error;
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/core/mergeConfig.js":
-/*!****************************************************!*\
-  !*** ./node_modules/axios/lib/core/mergeConfig.js ***!
-  \****************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var utils = __webpack_require__(/*! ../utils */ "./node_modules/axios/lib/utils.js");
-
-/**
- * Config-specific merge-function which creates a new config-object
- * by merging two configuration objects together.
- *
- * @param {Object} config1
- * @param {Object} config2
- * @returns {Object} New object resulting from merging config2 to config1
- */
-module.exports = function mergeConfig(config1, config2) {
-  // eslint-disable-next-line no-param-reassign
-  config2 = config2 || {};
-  var config = {};
-
-  function getMergedValue(target, source) {
-    if (utils.isPlainObject(target) && utils.isPlainObject(source)) {
-      return utils.merge(target, source);
-    } else if (utils.isPlainObject(source)) {
-      return utils.merge({}, source);
-    } else if (utils.isArray(source)) {
-      return source.slice();
-    }
-    return source;
-  }
-
-  // eslint-disable-next-line consistent-return
-  function mergeDeepProperties(prop) {
-    if (!utils.isUndefined(config2[prop])) {
-      return getMergedValue(config1[prop], config2[prop]);
-    } else if (!utils.isUndefined(config1[prop])) {
-      return getMergedValue(undefined, config1[prop]);
-    }
-  }
-
-  // eslint-disable-next-line consistent-return
-  function valueFromConfig2(prop) {
-    if (!utils.isUndefined(config2[prop])) {
-      return getMergedValue(undefined, config2[prop]);
-    }
-  }
-
-  // eslint-disable-next-line consistent-return
-  function defaultToConfig2(prop) {
-    if (!utils.isUndefined(config2[prop])) {
-      return getMergedValue(undefined, config2[prop]);
-    } else if (!utils.isUndefined(config1[prop])) {
-      return getMergedValue(undefined, config1[prop]);
-    }
-  }
-
-  // eslint-disable-next-line consistent-return
-  function mergeDirectKeys(prop) {
-    if (prop in config2) {
-      return getMergedValue(config1[prop], config2[prop]);
-    } else if (prop in config1) {
-      return getMergedValue(undefined, config1[prop]);
-    }
-  }
-
-  var mergeMap = {
-    'url': valueFromConfig2,
-    'method': valueFromConfig2,
-    'data': valueFromConfig2,
-    'baseURL': defaultToConfig2,
-    'transformRequest': defaultToConfig2,
-    'transformResponse': defaultToConfig2,
-    'paramsSerializer': defaultToConfig2,
-    'timeout': defaultToConfig2,
-    'timeoutMessage': defaultToConfig2,
-    'withCredentials': defaultToConfig2,
-    'adapter': defaultToConfig2,
-    'responseType': defaultToConfig2,
-    'xsrfCookieName': defaultToConfig2,
-    'xsrfHeaderName': defaultToConfig2,
-    'onUploadProgress': defaultToConfig2,
-    'onDownloadProgress': defaultToConfig2,
-    'decompress': defaultToConfig2,
-    'maxContentLength': defaultToConfig2,
-    'maxBodyLength': defaultToConfig2,
-    'transport': defaultToConfig2,
-    'httpAgent': defaultToConfig2,
-    'httpsAgent': defaultToConfig2,
-    'cancelToken': defaultToConfig2,
-    'socketPath': defaultToConfig2,
-    'responseEncoding': defaultToConfig2,
-    'validateStatus': mergeDirectKeys
-  };
-
-  utils.forEach(Object.keys(config1).concat(Object.keys(config2)), function computeConfigValue(prop) {
-    var merge = mergeMap[prop] || mergeDeepProperties;
-    var configValue = merge(prop);
-    (utils.isUndefined(configValue) && merge !== mergeDirectKeys) || (config[prop] = configValue);
-  });
-
-  return config;
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/core/settle.js":
-/*!***********************************************!*\
-  !*** ./node_modules/axios/lib/core/settle.js ***!
-  \***********************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var createError = __webpack_require__(/*! ./createError */ "./node_modules/axios/lib/core/createError.js");
-
-/**
- * Resolve or reject a Promise based on response status.
- *
- * @param {Function} resolve A function that resolves the promise.
- * @param {Function} reject A function that rejects the promise.
- * @param {object} response The response.
- */
-module.exports = function settle(resolve, reject, response) {
-  var validateStatus = response.config.validateStatus;
-  if (!response.status || !validateStatus || validateStatus(response.status)) {
-    resolve(response);
-  } else {
-    reject(createError(
-      'Request failed with status code ' + response.status,
-      response.config,
-      null,
-      response.request,
-      response
-    ));
-  }
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/core/transformData.js":
-/*!******************************************************!*\
-  !*** ./node_modules/axios/lib/core/transformData.js ***!
-  \******************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var utils = __webpack_require__(/*! ./../utils */ "./node_modules/axios/lib/utils.js");
-var defaults = __webpack_require__(/*! ./../defaults */ "./node_modules/axios/lib/defaults.js");
-
-/**
- * Transform the data for a request or a response
- *
- * @param {Object|String} data The data to be transformed
- * @param {Array} headers The headers for the request or response
- * @param {Array|Function} fns A single function or Array of functions
- * @returns {*} The resulting transformed data
- */
-module.exports = function transformData(data, headers, fns) {
-  var context = this || defaults;
-  /*eslint no-param-reassign:0*/
-  utils.forEach(fns, function transform(fn) {
-    data = fn.call(context, data, headers);
-  });
-
-  return data;
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/defaults.js":
-/*!********************************************!*\
-  !*** ./node_modules/axios/lib/defaults.js ***!
-  \********************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var utils = __webpack_require__(/*! ./utils */ "./node_modules/axios/lib/utils.js");
-var normalizeHeaderName = __webpack_require__(/*! ./helpers/normalizeHeaderName */ "./node_modules/axios/lib/helpers/normalizeHeaderName.js");
-var enhanceError = __webpack_require__(/*! ./core/enhanceError */ "./node_modules/axios/lib/core/enhanceError.js");
-
-var DEFAULT_CONTENT_TYPE = {
-  'Content-Type': 'application/x-www-form-urlencoded'
-};
-
-function setContentTypeIfUnset(headers, value) {
-  if (!utils.isUndefined(headers) && utils.isUndefined(headers['Content-Type'])) {
-    headers['Content-Type'] = value;
-  }
-}
-
-function getDefaultAdapter() {
-  var adapter;
-  if (typeof XMLHttpRequest !== 'undefined') {
-    // For browsers use XHR adapter
-    adapter = __webpack_require__(/*! ./adapters/xhr */ "./node_modules/axios/lib/adapters/xhr.js");
-  } else if (typeof process !== 'undefined' && Object.prototype.toString.call(process) === '[object process]') {
-    // For node use HTTP adapter
-    adapter = __webpack_require__(/*! ./adapters/http */ "./node_modules/axios/lib/adapters/xhr.js");
-  }
-  return adapter;
-}
-
-function stringifySafely(rawValue, parser, encoder) {
-  if (utils.isString(rawValue)) {
-    try {
-      (parser || JSON.parse)(rawValue);
-      return utils.trim(rawValue);
-    } catch (e) {
-      if (e.name !== 'SyntaxError') {
-        throw e;
-      }
-    }
-  }
-
-  return (encoder || JSON.stringify)(rawValue);
-}
-
-var defaults = {
-
-  transitional: {
-    silentJSONParsing: true,
-    forcedJSONParsing: true,
-    clarifyTimeoutError: false
-  },
-
-  adapter: getDefaultAdapter(),
-
-  transformRequest: [function transformRequest(data, headers) {
-    normalizeHeaderName(headers, 'Accept');
-    normalizeHeaderName(headers, 'Content-Type');
-
-    if (utils.isFormData(data) ||
-      utils.isArrayBuffer(data) ||
-      utils.isBuffer(data) ||
-      utils.isStream(data) ||
-      utils.isFile(data) ||
-      utils.isBlob(data)
-    ) {
-      return data;
-    }
-    if (utils.isArrayBufferView(data)) {
-      return data.buffer;
-    }
-    if (utils.isURLSearchParams(data)) {
-      setContentTypeIfUnset(headers, 'application/x-www-form-urlencoded;charset=utf-8');
-      return data.toString();
-    }
-    if (utils.isObject(data) || (headers && headers['Content-Type'] === 'application/json')) {
-      setContentTypeIfUnset(headers, 'application/json');
-      return stringifySafely(data);
-    }
-    return data;
-  }],
-
-  transformResponse: [function transformResponse(data) {
-    var transitional = this.transitional || defaults.transitional;
-    var silentJSONParsing = transitional && transitional.silentJSONParsing;
-    var forcedJSONParsing = transitional && transitional.forcedJSONParsing;
-    var strictJSONParsing = !silentJSONParsing && this.responseType === 'json';
-
-    if (strictJSONParsing || (forcedJSONParsing && utils.isString(data) && data.length)) {
-      try {
-        return JSON.parse(data);
-      } catch (e) {
-        if (strictJSONParsing) {
-          if (e.name === 'SyntaxError') {
-            throw enhanceError(e, this, 'E_JSON_PARSE');
-          }
-          throw e;
-        }
-      }
-    }
-
-    return data;
-  }],
-
-  /**
-   * A timeout in milliseconds to abort a request. If set to 0 (default) a
-   * timeout is not created.
-   */
-  timeout: 0,
-
-  xsrfCookieName: 'XSRF-TOKEN',
-  xsrfHeaderName: 'X-XSRF-TOKEN',
-
-  maxContentLength: -1,
-  maxBodyLength: -1,
-
-  validateStatus: function validateStatus(status) {
-    return status >= 200 && status < 300;
-  },
-
-  headers: {
-    common: {
-      'Accept': 'application/json, text/plain, */*'
-    }
-  }
-};
-
-utils.forEach(['delete', 'get', 'head'], function forEachMethodNoData(method) {
-  defaults.headers[method] = {};
-});
-
-utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
-  defaults.headers[method] = utils.merge(DEFAULT_CONTENT_TYPE);
-});
-
-module.exports = defaults;
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/env/data.js":
-/*!********************************************!*\
-  !*** ./node_modules/axios/lib/env/data.js ***!
-  \********************************************/
-/***/ ((module) => {
-
-module.exports = {
-  "version": "0.24.0"
-};
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/helpers/bind.js":
-/*!************************************************!*\
-  !*** ./node_modules/axios/lib/helpers/bind.js ***!
-  \************************************************/
-/***/ ((module) => {
-
-"use strict";
-
-
-module.exports = function bind(fn, thisArg) {
-  return function wrap() {
-    var args = new Array(arguments.length);
-    for (var i = 0; i < args.length; i++) {
-      args[i] = arguments[i];
-    }
-    return fn.apply(thisArg, args);
-  };
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/helpers/buildURL.js":
-/*!****************************************************!*\
-  !*** ./node_modules/axios/lib/helpers/buildURL.js ***!
-  \****************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var utils = __webpack_require__(/*! ./../utils */ "./node_modules/axios/lib/utils.js");
-
-function encode(val) {
-  return encodeURIComponent(val).
-    replace(/%3A/gi, ':').
-    replace(/%24/g, '$').
-    replace(/%2C/gi, ',').
-    replace(/%20/g, '+').
-    replace(/%5B/gi, '[').
-    replace(/%5D/gi, ']');
-}
-
-/**
- * Build a URL by appending params to the end
- *
- * @param {string} url The base of the url (e.g., http://www.google.com)
- * @param {object} [params] The params to be appended
- * @returns {string} The formatted url
- */
-module.exports = function buildURL(url, params, paramsSerializer) {
-  /*eslint no-param-reassign:0*/
-  if (!params) {
-    return url;
-  }
-
-  var serializedParams;
-  if (paramsSerializer) {
-    serializedParams = paramsSerializer(params);
-  } else if (utils.isURLSearchParams(params)) {
-    serializedParams = params.toString();
-  } else {
-    var parts = [];
-
-    utils.forEach(params, function serialize(val, key) {
-      if (val === null || typeof val === 'undefined') {
-        return;
-      }
-
-      if (utils.isArray(val)) {
-        key = key + '[]';
-      } else {
-        val = [val];
-      }
-
-      utils.forEach(val, function parseValue(v) {
-        if (utils.isDate(v)) {
-          v = v.toISOString();
-        } else if (utils.isObject(v)) {
-          v = JSON.stringify(v);
-        }
-        parts.push(encode(key) + '=' + encode(v));
-      });
-    });
-
-    serializedParams = parts.join('&');
-  }
-
-  if (serializedParams) {
-    var hashmarkIndex = url.indexOf('#');
-    if (hashmarkIndex !== -1) {
-      url = url.slice(0, hashmarkIndex);
-    }
-
-    url += (url.indexOf('?') === -1 ? '?' : '&') + serializedParams;
-  }
-
-  return url;
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/helpers/combineURLs.js":
-/*!*******************************************************!*\
-  !*** ./node_modules/axios/lib/helpers/combineURLs.js ***!
-  \*******************************************************/
-/***/ ((module) => {
-
-"use strict";
-
-
-/**
- * Creates a new URL by combining the specified URLs
- *
- * @param {string} baseURL The base URL
- * @param {string} relativeURL The relative URL
- * @returns {string} The combined URL
- */
-module.exports = function combineURLs(baseURL, relativeURL) {
-  return relativeURL
-    ? baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '')
-    : baseURL;
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/helpers/cookies.js":
-/*!***************************************************!*\
-  !*** ./node_modules/axios/lib/helpers/cookies.js ***!
-  \***************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var utils = __webpack_require__(/*! ./../utils */ "./node_modules/axios/lib/utils.js");
-
-module.exports = (
-  utils.isStandardBrowserEnv() ?
-
-  // Standard browser envs support document.cookie
-    (function standardBrowserEnv() {
-      return {
-        write: function write(name, value, expires, path, domain, secure) {
-          var cookie = [];
-          cookie.push(name + '=' + encodeURIComponent(value));
-
-          if (utils.isNumber(expires)) {
-            cookie.push('expires=' + new Date(expires).toGMTString());
-          }
-
-          if (utils.isString(path)) {
-            cookie.push('path=' + path);
-          }
-
-          if (utils.isString(domain)) {
-            cookie.push('domain=' + domain);
-          }
-
-          if (secure === true) {
-            cookie.push('secure');
-          }
-
-          document.cookie = cookie.join('; ');
-        },
-
-        read: function read(name) {
-          var match = document.cookie.match(new RegExp('(^|;\\s*)(' + name + ')=([^;]*)'));
-          return (match ? decodeURIComponent(match[3]) : null);
-        },
-
-        remove: function remove(name) {
-          this.write(name, '', Date.now() - 86400000);
-        }
-      };
-    })() :
-
-  // Non standard browser env (web workers, react-native) lack needed support.
-    (function nonStandardBrowserEnv() {
-      return {
-        write: function write() {},
-        read: function read() { return null; },
-        remove: function remove() {}
-      };
-    })()
-);
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/helpers/isAbsoluteURL.js":
-/*!*********************************************************!*\
-  !*** ./node_modules/axios/lib/helpers/isAbsoluteURL.js ***!
-  \*********************************************************/
-/***/ ((module) => {
-
-"use strict";
-
-
-/**
- * Determines whether the specified URL is absolute
- *
- * @param {string} url The URL to test
- * @returns {boolean} True if the specified URL is absolute, otherwise false
- */
-module.exports = function isAbsoluteURL(url) {
-  // A URL is considered absolute if it begins with "<scheme>://" or "//" (protocol-relative URL).
-  // RFC 3986 defines scheme name as a sequence of characters beginning with a letter and followed
-  // by any combination of letters, digits, plus, period, or hyphen.
-  return /^([a-z][a-z\d\+\-\.]*:)?\/\//i.test(url);
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/helpers/isAxiosError.js":
-/*!********************************************************!*\
-  !*** ./node_modules/axios/lib/helpers/isAxiosError.js ***!
-  \********************************************************/
-/***/ ((module) => {
-
-"use strict";
-
-
-/**
- * Determines whether the payload is an error thrown by Axios
- *
- * @param {*} payload The value to test
- * @returns {boolean} True if the payload is an error thrown by Axios, otherwise false
- */
-module.exports = function isAxiosError(payload) {
-  return (typeof payload === 'object') && (payload.isAxiosError === true);
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/helpers/isURLSameOrigin.js":
-/*!***********************************************************!*\
-  !*** ./node_modules/axios/lib/helpers/isURLSameOrigin.js ***!
-  \***********************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var utils = __webpack_require__(/*! ./../utils */ "./node_modules/axios/lib/utils.js");
-
-module.exports = (
-  utils.isStandardBrowserEnv() ?
-
-  // Standard browser envs have full support of the APIs needed to test
-  // whether the request URL is of the same origin as current location.
-    (function standardBrowserEnv() {
-      var msie = /(msie|trident)/i.test(navigator.userAgent);
-      var urlParsingNode = document.createElement('a');
-      var originURL;
-
-      /**
-    * Parse a URL to discover it's components
-    *
-    * @param {String} url The URL to be parsed
-    * @returns {Object}
-    */
-      function resolveURL(url) {
-        var href = url;
-
-        if (msie) {
-        // IE needs attribute set twice to normalize properties
-          urlParsingNode.setAttribute('href', href);
-          href = urlParsingNode.href;
-        }
-
-        urlParsingNode.setAttribute('href', href);
-
-        // urlParsingNode provides the UrlUtils interface - http://url.spec.whatwg.org/#urlutils
-        return {
-          href: urlParsingNode.href,
-          protocol: urlParsingNode.protocol ? urlParsingNode.protocol.replace(/:$/, '') : '',
-          host: urlParsingNode.host,
-          search: urlParsingNode.search ? urlParsingNode.search.replace(/^\?/, '') : '',
-          hash: urlParsingNode.hash ? urlParsingNode.hash.replace(/^#/, '') : '',
-          hostname: urlParsingNode.hostname,
-          port: urlParsingNode.port,
-          pathname: (urlParsingNode.pathname.charAt(0) === '/') ?
-            urlParsingNode.pathname :
-            '/' + urlParsingNode.pathname
-        };
-      }
-
-      originURL = resolveURL(window.location.href);
-
-      /**
-    * Determine if a URL shares the same origin as the current location
-    *
-    * @param {String} requestURL The URL to test
-    * @returns {boolean} True if URL shares the same origin, otherwise false
-    */
-      return function isURLSameOrigin(requestURL) {
-        var parsed = (utils.isString(requestURL)) ? resolveURL(requestURL) : requestURL;
-        return (parsed.protocol === originURL.protocol &&
-            parsed.host === originURL.host);
-      };
-    })() :
-
-  // Non standard browser envs (web workers, react-native) lack needed support.
-    (function nonStandardBrowserEnv() {
-      return function isURLSameOrigin() {
-        return true;
-      };
-    })()
-);
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/helpers/normalizeHeaderName.js":
-/*!***************************************************************!*\
-  !*** ./node_modules/axios/lib/helpers/normalizeHeaderName.js ***!
-  \***************************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var utils = __webpack_require__(/*! ../utils */ "./node_modules/axios/lib/utils.js");
-
-module.exports = function normalizeHeaderName(headers, normalizedName) {
-  utils.forEach(headers, function processHeader(value, name) {
-    if (name !== normalizedName && name.toUpperCase() === normalizedName.toUpperCase()) {
-      headers[normalizedName] = value;
-      delete headers[name];
-    }
-  });
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/helpers/parseHeaders.js":
-/*!********************************************************!*\
-  !*** ./node_modules/axios/lib/helpers/parseHeaders.js ***!
-  \********************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var utils = __webpack_require__(/*! ./../utils */ "./node_modules/axios/lib/utils.js");
-
-// Headers whose duplicates are ignored by node
-// c.f. https://nodejs.org/api/http.html#http_message_headers
-var ignoreDuplicateOf = [
-  'age', 'authorization', 'content-length', 'content-type', 'etag',
-  'expires', 'from', 'host', 'if-modified-since', 'if-unmodified-since',
-  'last-modified', 'location', 'max-forwards', 'proxy-authorization',
-  'referer', 'retry-after', 'user-agent'
-];
-
-/**
- * Parse headers into an object
- *
- * ```
- * Date: Wed, 27 Aug 2014 08:58:49 GMT
- * Content-Type: application/json
- * Connection: keep-alive
- * Transfer-Encoding: chunked
- * ```
- *
- * @param {String} headers Headers needing to be parsed
- * @returns {Object} Headers parsed into an object
- */
-module.exports = function parseHeaders(headers) {
-  var parsed = {};
-  var key;
-  var val;
-  var i;
-
-  if (!headers) { return parsed; }
-
-  utils.forEach(headers.split('\n'), function parser(line) {
-    i = line.indexOf(':');
-    key = utils.trim(line.substr(0, i)).toLowerCase();
-    val = utils.trim(line.substr(i + 1));
-
-    if (key) {
-      if (parsed[key] && ignoreDuplicateOf.indexOf(key) >= 0) {
-        return;
-      }
-      if (key === 'set-cookie') {
-        parsed[key] = (parsed[key] ? parsed[key] : []).concat([val]);
-      } else {
-        parsed[key] = parsed[key] ? parsed[key] + ', ' + val : val;
-      }
-    }
-  });
-
-  return parsed;
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/helpers/spread.js":
-/*!**************************************************!*\
-  !*** ./node_modules/axios/lib/helpers/spread.js ***!
-  \**************************************************/
-/***/ ((module) => {
-
-"use strict";
-
-
-/**
- * Syntactic sugar for invoking a function and expanding an array for arguments.
- *
- * Common use case would be to use `Function.prototype.apply`.
- *
- *  ```js
- *  function f(x, y, z) {}
- *  var args = [1, 2, 3];
- *  f.apply(null, args);
- *  ```
- *
- * With `spread` this example can be re-written.
- *
- *  ```js
- *  spread(function(x, y, z) {})([1, 2, 3]);
- *  ```
- *
- * @param {Function} callback
- * @returns {Function}
- */
-module.exports = function spread(callback) {
-  return function wrap(arr) {
-    return callback.apply(null, arr);
-  };
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/helpers/validator.js":
-/*!*****************************************************!*\
-  !*** ./node_modules/axios/lib/helpers/validator.js ***!
-  \*****************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var VERSION = __webpack_require__(/*! ../env/data */ "./node_modules/axios/lib/env/data.js").version;
-
-var validators = {};
-
-// eslint-disable-next-line func-names
-['object', 'boolean', 'number', 'function', 'string', 'symbol'].forEach(function(type, i) {
-  validators[type] = function validator(thing) {
-    return typeof thing === type || 'a' + (i < 1 ? 'n ' : ' ') + type;
-  };
-});
-
-var deprecatedWarnings = {};
-
-/**
- * Transitional option validator
- * @param {function|boolean?} validator - set to false if the transitional option has been removed
- * @param {string?} version - deprecated version / removed since version
- * @param {string?} message - some message with additional info
- * @returns {function}
- */
-validators.transitional = function transitional(validator, version, message) {
-  function formatMessage(opt, desc) {
-    return '[Axios v' + VERSION + '] Transitional option \'' + opt + '\'' + desc + (message ? '. ' + message : '');
-  }
-
-  // eslint-disable-next-line func-names
-  return function(value, opt, opts) {
-    if (validator === false) {
-      throw new Error(formatMessage(opt, ' has been removed' + (version ? ' in ' + version : '')));
-    }
-
-    if (version && !deprecatedWarnings[opt]) {
-      deprecatedWarnings[opt] = true;
-      // eslint-disable-next-line no-console
-      console.warn(
-        formatMessage(
-          opt,
-          ' has been deprecated since v' + version + ' and will be removed in the near future'
-        )
-      );
-    }
-
-    return validator ? validator(value, opt, opts) : true;
-  };
-};
-
-/**
- * Assert object's properties type
- * @param {object} options
- * @param {object} schema
- * @param {boolean?} allowUnknown
- */
-
-function assertOptions(options, schema, allowUnknown) {
-  if (typeof options !== 'object') {
-    throw new TypeError('options must be an object');
-  }
-  var keys = Object.keys(options);
-  var i = keys.length;
-  while (i-- > 0) {
-    var opt = keys[i];
-    var validator = schema[opt];
-    if (validator) {
-      var value = options[opt];
-      var result = value === undefined || validator(value, opt, options);
-      if (result !== true) {
-        throw new TypeError('option ' + opt + ' must be ' + result);
-      }
-      continue;
-    }
-    if (allowUnknown !== true) {
-      throw Error('Unknown option ' + opt);
-    }
-  }
-}
-
-module.exports = {
-  assertOptions: assertOptions,
-  validators: validators
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/utils.js":
-/*!*****************************************!*\
-  !*** ./node_modules/axios/lib/utils.js ***!
-  \*****************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var bind = __webpack_require__(/*! ./helpers/bind */ "./node_modules/axios/lib/helpers/bind.js");
-
-// utils is a library of generic helper functions non-specific to axios
-
-var toString = Object.prototype.toString;
-
-/**
- * Determine if a value is an Array
- *
- * @param {Object} val The value to test
- * @returns {boolean} True if value is an Array, otherwise false
- */
-function isArray(val) {
-  return toString.call(val) === '[object Array]';
-}
-
-/**
- * Determine if a value is undefined
- *
- * @param {Object} val The value to test
- * @returns {boolean} True if the value is undefined, otherwise false
- */
-function isUndefined(val) {
-  return typeof val === 'undefined';
-}
-
-/**
- * Determine if a value is a Buffer
- *
- * @param {Object} val The value to test
- * @returns {boolean} True if value is a Buffer, otherwise false
- */
-function isBuffer(val) {
-  return val !== null && !isUndefined(val) && val.constructor !== null && !isUndefined(val.constructor)
-    && typeof val.constructor.isBuffer === 'function' && val.constructor.isBuffer(val);
-}
-
-/**
- * Determine if a value is an ArrayBuffer
- *
- * @param {Object} val The value to test
- * @returns {boolean} True if value is an ArrayBuffer, otherwise false
- */
-function isArrayBuffer(val) {
-  return toString.call(val) === '[object ArrayBuffer]';
-}
-
-/**
- * Determine if a value is a FormData
- *
- * @param {Object} val The value to test
- * @returns {boolean} True if value is an FormData, otherwise false
- */
-function isFormData(val) {
-  return (typeof FormData !== 'undefined') && (val instanceof FormData);
-}
-
-/**
- * Determine if a value is a view on an ArrayBuffer
- *
- * @param {Object} val The value to test
- * @returns {boolean} True if value is a view on an ArrayBuffer, otherwise false
- */
-function isArrayBufferView(val) {
-  var result;
-  if ((typeof ArrayBuffer !== 'undefined') && (ArrayBuffer.isView)) {
-    result = ArrayBuffer.isView(val);
-  } else {
-    result = (val) && (val.buffer) && (val.buffer instanceof ArrayBuffer);
-  }
-  return result;
-}
-
-/**
- * Determine if a value is a String
- *
- * @param {Object} val The value to test
- * @returns {boolean} True if value is a String, otherwise false
- */
-function isString(val) {
-  return typeof val === 'string';
-}
-
-/**
- * Determine if a value is a Number
- *
- * @param {Object} val The value to test
- * @returns {boolean} True if value is a Number, otherwise false
- */
-function isNumber(val) {
-  return typeof val === 'number';
-}
-
-/**
- * Determine if a value is an Object
- *
- * @param {Object} val The value to test
- * @returns {boolean} True if value is an Object, otherwise false
- */
-function isObject(val) {
-  return val !== null && typeof val === 'object';
-}
-
-/**
- * Determine if a value is a plain Object
- *
- * @param {Object} val The value to test
- * @return {boolean} True if value is a plain Object, otherwise false
- */
-function isPlainObject(val) {
-  if (toString.call(val) !== '[object Object]') {
-    return false;
-  }
-
-  var prototype = Object.getPrototypeOf(val);
-  return prototype === null || prototype === Object.prototype;
-}
-
-/**
- * Determine if a value is a Date
- *
- * @param {Object} val The value to test
- * @returns {boolean} True if value is a Date, otherwise false
- */
-function isDate(val) {
-  return toString.call(val) === '[object Date]';
-}
-
-/**
- * Determine if a value is a File
- *
- * @param {Object} val The value to test
- * @returns {boolean} True if value is a File, otherwise false
- */
-function isFile(val) {
-  return toString.call(val) === '[object File]';
-}
-
-/**
- * Determine if a value is a Blob
- *
- * @param {Object} val The value to test
- * @returns {boolean} True if value is a Blob, otherwise false
- */
-function isBlob(val) {
-  return toString.call(val) === '[object Blob]';
-}
-
-/**
- * Determine if a value is a Function
- *
- * @param {Object} val The value to test
- * @returns {boolean} True if value is a Function, otherwise false
- */
-function isFunction(val) {
-  return toString.call(val) === '[object Function]';
-}
-
-/**
- * Determine if a value is a Stream
- *
- * @param {Object} val The value to test
- * @returns {boolean} True if value is a Stream, otherwise false
- */
-function isStream(val) {
-  return isObject(val) && isFunction(val.pipe);
-}
-
-/**
- * Determine if a value is a URLSearchParams object
- *
- * @param {Object} val The value to test
- * @returns {boolean} True if value is a URLSearchParams object, otherwise false
- */
-function isURLSearchParams(val) {
-  return typeof URLSearchParams !== 'undefined' && val instanceof URLSearchParams;
-}
-
-/**
- * Trim excess whitespace off the beginning and end of a string
- *
- * @param {String} str The String to trim
- * @returns {String} The String freed of excess whitespace
- */
-function trim(str) {
-  return str.trim ? str.trim() : str.replace(/^\s+|\s+$/g, '');
-}
-
-/**
- * Determine if we're running in a standard browser environment
- *
- * This allows axios to run in a web worker, and react-native.
- * Both environments support XMLHttpRequest, but not fully standard globals.
- *
- * web workers:
- *  typeof window -> undefined
- *  typeof document -> undefined
- *
- * react-native:
- *  navigator.product -> 'ReactNative'
- * nativescript
- *  navigator.product -> 'NativeScript' or 'NS'
- */
-function isStandardBrowserEnv() {
-  if (typeof navigator !== 'undefined' && (navigator.product === 'ReactNative' ||
-                                           navigator.product === 'NativeScript' ||
-                                           navigator.product === 'NS')) {
-    return false;
-  }
-  return (
-    typeof window !== 'undefined' &&
-    typeof document !== 'undefined'
-  );
-}
-
-/**
- * Iterate over an Array or an Object invoking a function for each item.
- *
- * If `obj` is an Array callback will be called passing
- * the value, index, and complete array for each item.
- *
- * If 'obj' is an Object callback will be called passing
- * the value, key, and complete object for each property.
- *
- * @param {Object|Array} obj The object to iterate
- * @param {Function} fn The callback to invoke for each item
- */
-function forEach(obj, fn) {
-  // Don't bother if no value provided
-  if (obj === null || typeof obj === 'undefined') {
-    return;
-  }
-
-  // Force an array if not already something iterable
-  if (typeof obj !== 'object') {
-    /*eslint no-param-reassign:0*/
-    obj = [obj];
-  }
-
-  if (isArray(obj)) {
-    // Iterate over array values
-    for (var i = 0, l = obj.length; i < l; i++) {
-      fn.call(null, obj[i], i, obj);
-    }
-  } else {
-    // Iterate over object keys
-    for (var key in obj) {
-      if (Object.prototype.hasOwnProperty.call(obj, key)) {
-        fn.call(null, obj[key], key, obj);
-      }
-    }
-  }
-}
-
-/**
- * Accepts varargs expecting each argument to be an object, then
- * immutably merges the properties of each object and returns result.
- *
- * When multiple objects contain the same key the later object in
- * the arguments list will take precedence.
- *
- * Example:
- *
- * ```js
- * var result = merge({foo: 123}, {foo: 456});
- * console.log(result.foo); // outputs 456
- * ```
- *
- * @param {Object} obj1 Object to merge
- * @returns {Object} Result of all merge properties
- */
-function merge(/* obj1, obj2, obj3, ... */) {
-  var result = {};
-  function assignValue(val, key) {
-    if (isPlainObject(result[key]) && isPlainObject(val)) {
-      result[key] = merge(result[key], val);
-    } else if (isPlainObject(val)) {
-      result[key] = merge({}, val);
-    } else if (isArray(val)) {
-      result[key] = val.slice();
-    } else {
-      result[key] = val;
-    }
-  }
-
-  for (var i = 0, l = arguments.length; i < l; i++) {
-    forEach(arguments[i], assignValue);
-  }
-  return result;
-}
-
-/**
- * Extends object a by mutably adding to it the properties of object b.
- *
- * @param {Object} a The object to be extended
- * @param {Object} b The object to copy properties from
- * @param {Object} thisArg The object to bind function to
- * @return {Object} The resulting value of object a
- */
-function extend(a, b, thisArg) {
-  forEach(b, function assignValue(val, key) {
-    if (thisArg && typeof val === 'function') {
-      a[key] = bind(val, thisArg);
-    } else {
-      a[key] = val;
-    }
-  });
-  return a;
-}
-
-/**
- * Remove byte order marker. This catches EF BB BF (the UTF-8 BOM)
- *
- * @param {string} content with BOM
- * @return {string} content value without BOM
- */
-function stripBOM(content) {
-  if (content.charCodeAt(0) === 0xFEFF) {
-    content = content.slice(1);
-  }
-  return content;
-}
-
-module.exports = {
-  isArray: isArray,
-  isArrayBuffer: isArrayBuffer,
-  isBuffer: isBuffer,
-  isFormData: isFormData,
-  isArrayBufferView: isArrayBufferView,
-  isString: isString,
-  isNumber: isNumber,
-  isObject: isObject,
-  isPlainObject: isPlainObject,
-  isUndefined: isUndefined,
-  isDate: isDate,
-  isFile: isFile,
-  isBlob: isBlob,
-  isFunction: isFunction,
-  isStream: isStream,
-  isURLSearchParams: isURLSearchParams,
-  isStandardBrowserEnv: isStandardBrowserEnv,
-  forEach: forEach,
-  merge: merge,
-  extend: extend,
-  trim: trim,
-  stripBOM: stripBOM
-};
 
 
 /***/ }),
@@ -9590,7 +7449,6 @@ function eventTargetAgnosticAddListener(emitter, name, listener, flags) {
   \*******************************************/
 /***/ (function(module) {
 
-// This file has been generated from mustache.mjs
 (function (global, factory) {
    true ? module.exports = factory() :
   0;
@@ -10292,7 +8150,7 @@ function eventTargetAgnosticAddListener(emitter, name, listener, flags) {
 
   var mustache = {
     name: 'mustache.js',
-    version: '4.1.0',
+    version: '4.2.0',
     tags: [ '{{', '}}' ],
     clearCache: undefined,
     escape: undefined,
@@ -10375,6 +8233,30 @@ function eventTargetAgnosticAddListener(emitter, name, listener, flags) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Children": () => (/* binding */ A),
+/* harmony export */   "Component": () => (/* reexport safe */ preact__WEBPACK_IMPORTED_MODULE_1__.Component),
+/* harmony export */   "Fragment": () => (/* reexport safe */ preact__WEBPACK_IMPORTED_MODULE_1__.Fragment),
+/* harmony export */   "PureComponent": () => (/* binding */ w),
+/* harmony export */   "StrictMode": () => (/* binding */ an),
+/* harmony export */   "Suspense": () => (/* binding */ F),
+/* harmony export */   "SuspenseList": () => (/* binding */ D),
+/* harmony export */   "__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED": () => (/* binding */ tn),
+/* harmony export */   "cloneElement": () => (/* binding */ on),
+/* harmony export */   "createContext": () => (/* reexport safe */ preact__WEBPACK_IMPORTED_MODULE_1__.createContext),
+/* harmony export */   "createElement": () => (/* reexport safe */ preact__WEBPACK_IMPORTED_MODULE_1__.createElement),
+/* harmony export */   "createFactory": () => (/* binding */ rn),
+/* harmony export */   "createPortal": () => (/* binding */ P),
+/* harmony export */   "createRef": () => (/* reexport safe */ preact__WEBPACK_IMPORTED_MODULE_1__.createRef),
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   "findDOMNode": () => (/* binding */ ln),
+/* harmony export */   "forwardRef": () => (/* binding */ k),
+/* harmony export */   "hydrate": () => (/* binding */ Z),
+/* harmony export */   "isValidElement": () => (/* binding */ un),
+/* harmony export */   "lazy": () => (/* binding */ j),
+/* harmony export */   "memo": () => (/* binding */ C),
+/* harmony export */   "render": () => (/* binding */ H),
+/* harmony export */   "unmountComponentAtNode": () => (/* binding */ cn),
+/* harmony export */   "unstable_batchedUpdates": () => (/* binding */ fn),
 /* harmony export */   "useCallback": () => (/* reexport safe */ preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useCallback),
 /* harmony export */   "useContext": () => (/* reexport safe */ preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useContext),
 /* harmony export */   "useDebugValue": () => (/* reexport safe */ preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useDebugValue),
@@ -10386,31 +8268,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "useReducer": () => (/* reexport safe */ preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useReducer),
 /* harmony export */   "useRef": () => (/* reexport safe */ preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useRef),
 /* harmony export */   "useState": () => (/* reexport safe */ preact_hooks__WEBPACK_IMPORTED_MODULE_0__.useState),
-/* harmony export */   "createElement": () => (/* reexport safe */ preact__WEBPACK_IMPORTED_MODULE_1__.createElement),
-/* harmony export */   "createContext": () => (/* reexport safe */ preact__WEBPACK_IMPORTED_MODULE_1__.createContext),
-/* harmony export */   "createRef": () => (/* reexport safe */ preact__WEBPACK_IMPORTED_MODULE_1__.createRef),
-/* harmony export */   "Fragment": () => (/* reexport safe */ preact__WEBPACK_IMPORTED_MODULE_1__.Fragment),
-/* harmony export */   "Component": () => (/* reexport safe */ preact__WEBPACK_IMPORTED_MODULE_1__.Component),
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
-/* harmony export */   "version": () => (/* binding */ en),
-/* harmony export */   "Children": () => (/* binding */ A),
-/* harmony export */   "render": () => (/* binding */ H),
-/* harmony export */   "hydrate": () => (/* binding */ Z),
-/* harmony export */   "unmountComponentAtNode": () => (/* binding */ cn),
-/* harmony export */   "createPortal": () => (/* binding */ P),
-/* harmony export */   "createFactory": () => (/* binding */ rn),
-/* harmony export */   "cloneElement": () => (/* binding */ on),
-/* harmony export */   "isValidElement": () => (/* binding */ un),
-/* harmony export */   "findDOMNode": () => (/* binding */ ln),
-/* harmony export */   "PureComponent": () => (/* binding */ w),
-/* harmony export */   "memo": () => (/* binding */ C),
-/* harmony export */   "forwardRef": () => (/* binding */ k),
-/* harmony export */   "unstable_batchedUpdates": () => (/* binding */ fn),
-/* harmony export */   "StrictMode": () => (/* binding */ an),
-/* harmony export */   "Suspense": () => (/* binding */ F),
-/* harmony export */   "SuspenseList": () => (/* binding */ D),
-/* harmony export */   "lazy": () => (/* binding */ j),
-/* harmony export */   "__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED": () => (/* binding */ tn)
+/* harmony export */   "version": () => (/* binding */ en)
 /* harmony export */ });
 /* harmony import */ var preact_hooks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact/hooks */ "./node_modules/preact/hooks/dist/hooks.module.js");
 /* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
@@ -10429,19 +8287,19 @@ function E(n,t){for(var e in t)n[e]=t[e];return n}function S(n,t){for(var e in n
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* binding */ O),
-/* harmony export */   "hydrate": () => (/* binding */ S),
-/* harmony export */   "createElement": () => (/* binding */ h),
-/* harmony export */   "h": () => (/* binding */ h),
-/* harmony export */   "Fragment": () => (/* binding */ p),
-/* harmony export */   "createRef": () => (/* binding */ y),
-/* harmony export */   "isValidElement": () => (/* binding */ l),
 /* harmony export */   "Component": () => (/* binding */ d),
+/* harmony export */   "Fragment": () => (/* binding */ p),
+/* harmony export */   "__u": () => (/* binding */ L),
 /* harmony export */   "cloneElement": () => (/* binding */ q),
 /* harmony export */   "createContext": () => (/* binding */ B),
-/* harmony export */   "toChildArray": () => (/* binding */ b),
-/* harmony export */   "__u": () => (/* binding */ L),
-/* harmony export */   "options": () => (/* binding */ n)
+/* harmony export */   "createElement": () => (/* binding */ h),
+/* harmony export */   "createRef": () => (/* binding */ y),
+/* harmony export */   "h": () => (/* binding */ h),
+/* harmony export */   "hydrate": () => (/* binding */ S),
+/* harmony export */   "isValidElement": () => (/* binding */ l),
+/* harmony export */   "options": () => (/* binding */ n),
+/* harmony export */   "render": () => (/* binding */ O),
+/* harmony export */   "toChildArray": () => (/* binding */ b)
 /* harmony export */ });
 var n,l,u,i,t,o,r,f={},e=[],c=/acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i;function s(n,l){for(var u in l)n[u]=l[u];return n}function a(n){var l=n.parentNode;l&&l.removeChild(n)}function h(n,l,u){var i,t,o,r=arguments,f={};for(o in l)"key"==o?i=l[o]:"ref"==o?t=l[o]:f[o]=l[o];if(arguments.length>3)for(u=[u],o=3;o<arguments.length;o++)u.push(r[o]);if(null!=u&&(f.children=u),"function"==typeof n&&null!=n.defaultProps)for(o in n.defaultProps)void 0===f[o]&&(f[o]=n.defaultProps[o]);return v(n,f,i,t,null)}function v(l,u,i,t,o){var r={type:l,props:u,key:i,ref:t,__k:null,__:null,__b:0,__e:null,__d:void 0,__c:null,__h:null,constructor:void 0,__v:o};return null==o&&(r.__v=r),null!=n.vnode&&n.vnode(r),r}function y(){return{current:null}}function p(n){return n.children}function d(n,l){this.props=n,this.context=l}function _(n,l){if(null==l)return n.__?_(n.__,n.__.__k.indexOf(n)+1):null;for(var u;l<n.__k.length;l++)if(null!=(u=n.__k[l])&&null!=u.__e)return u.__e;return"function"==typeof n.type?_(n):null}function w(n){var l,u;if(null!=(n=n.__)&&null!=n.__c){for(n.__e=n.__c.base=null,l=0;l<n.__k.length;l++)if(null!=(u=n.__k[l])&&null!=u.__e){n.__e=n.__c.base=u.__e;break}return w(n)}}function k(l){(!l.__d&&(l.__d=!0)&&u.push(l)&&!g.__r++||t!==n.debounceRendering)&&((t=n.debounceRendering)||i)(g)}function g(){for(var n;g.__r=u.length;)n=u.sort(function(n,l){return n.__v.__b-l.__v.__b}),u=[],n.some(function(n){var l,u,i,t,o,r,f;n.__d&&(r=(o=(l=n).__v).__e,(f=l.__P)&&(u=[],(i=s({},o)).__v=i,t=$(f,o,i,l.__n,void 0!==f.ownerSVGElement,null!=o.__h?[r]:null,u,null==r?_(o):r,o.__h),j(u,o),t!=r&&w(o)))})}function m(n,l,u,i,t,o,r,c,s,h){var y,d,w,k,g,m,b,A=i&&i.__k||e,P=A.length;for(s==f&&(s=null!=r?r[0]:P?_(i,0):null),u.__k=[],y=0;y<l.length;y++)if(null!=(k=u.__k[y]=null==(k=l[y])||"boolean"==typeof k?null:"string"==typeof k||"number"==typeof k?v(null,k,null,null,k):Array.isArray(k)?v(p,{children:k},null,null,null):null!=k.__e||null!=k.__c?v(k.type,k.props,k.key,null,k.__v):k)){if(k.__=u,k.__b=u.__b+1,null===(w=A[y])||w&&k.key==w.key&&k.type===w.type)A[y]=void 0;else for(d=0;d<P;d++){if((w=A[d])&&k.key==w.key&&k.type===w.type){A[d]=void 0;break}w=null}g=$(n,k,w=w||f,t,o,r,c,s,h),(d=k.ref)&&w.ref!=d&&(b||(b=[]),w.ref&&b.push(w.ref,null,k),b.push(d,k.__c||g,k)),null!=g?(null==m&&(m=g),s=x(n,k,w,A,r,g,s),h||"option"!=u.type?"function"==typeof u.type&&(u.__d=s):n.value=""):s&&w.__e==s&&s.parentNode!=n&&(s=_(w))}if(u.__e=m,null!=r&&"function"!=typeof u.type)for(y=r.length;y--;)null!=r[y]&&a(r[y]);for(y=P;y--;)null!=A[y]&&L(A[y],A[y]);if(b)for(y=0;y<b.length;y++)I(b[y],b[++y],b[++y])}function b(n,l){return l=l||[],null==n||"boolean"==typeof n||(Array.isArray(n)?n.some(function(n){b(n,l)}):l.push(n)),l}function x(n,l,u,i,t,o,r){var f,e,c;if(void 0!==l.__d)f=l.__d,l.__d=void 0;else if(t==u||o!=r||null==o.parentNode)n:if(null==r||r.parentNode!==n)n.appendChild(o),f=null;else{for(e=r,c=0;(e=e.nextSibling)&&c<i.length;c+=2)if(e==o)break n;n.insertBefore(o,r),f=r}return void 0!==f?f:o.nextSibling}function A(n,l,u,i,t){var o;for(o in u)"children"===o||"key"===o||o in l||C(n,o,null,u[o],i);for(o in l)t&&"function"!=typeof l[o]||"children"===o||"key"===o||"value"===o||"checked"===o||u[o]===l[o]||C(n,o,l[o],u[o],i)}function P(n,l,u){"-"===l[0]?n.setProperty(l,u):n[l]=null==u?"":"number"!=typeof u||c.test(l)?u:u+"px"}function C(n,l,u,i,t){var o,r,f;if(t&&"className"==l&&(l="class"),"style"===l)if("string"==typeof u)n.style.cssText=u;else{if("string"==typeof i&&(n.style.cssText=i=""),i)for(l in i)u&&l in u||P(n.style,l,"");if(u)for(l in u)i&&u[l]===i[l]||P(n.style,l,u[l])}else"o"===l[0]&&"n"===l[1]?(o=l!==(l=l.replace(/Capture$/,"")),(r=l.toLowerCase())in n&&(l=r),l=l.slice(2),n.l||(n.l={}),n.l[l+o]=u,f=o?N:z,u?i||n.addEventListener(l,f,o):n.removeEventListener(l,f,o)):"list"!==l&&"tagName"!==l&&"form"!==l&&"type"!==l&&"size"!==l&&"download"!==l&&"href"!==l&&!t&&l in n?n[l]=null==u?"":u:"function"!=typeof u&&"dangerouslySetInnerHTML"!==l&&(l!==(l=l.replace(/xlink:?/,""))?null==u||!1===u?n.removeAttributeNS("http://www.w3.org/1999/xlink",l.toLowerCase()):n.setAttributeNS("http://www.w3.org/1999/xlink",l.toLowerCase(),u):null==u||!1===u&&!/^ar/.test(l)?n.removeAttribute(l):n.setAttribute(l,u))}function z(l){this.l[l.type+!1](n.event?n.event(l):l)}function N(l){this.l[l.type+!0](n.event?n.event(l):l)}function T(n,l,u){var i,t;for(i=0;i<n.__k.length;i++)(t=n.__k[i])&&(t.__=n,t.__e&&("function"==typeof t.type&&t.__k.length>1&&T(t,l,u),l=x(u,t,t,n.__k,null,t.__e,l),"function"==typeof n.type&&(n.__d=l)))}function $(l,u,i,t,o,r,f,e,c){var a,h,v,y,_,w,k,g,b,x,A,P=u.type;if(void 0!==u.constructor)return null;null!=i.__h&&(c=i.__h,e=u.__e=i.__e,u.__h=null,r=[e]),(a=n.__b)&&a(u);try{n:if("function"==typeof P){if(g=u.props,b=(a=P.contextType)&&t[a.__c],x=a?b?b.props.value:a.__:t,i.__c?k=(h=u.__c=i.__c).__=h.__E:("prototype"in P&&P.prototype.render?u.__c=h=new P(g,x):(u.__c=h=new d(g,x),h.constructor=P,h.render=M),b&&b.sub(h),h.props=g,h.state||(h.state={}),h.context=x,h.__n=t,v=h.__d=!0,h.__h=[]),null==h.__s&&(h.__s=h.state),null!=P.getDerivedStateFromProps&&(h.__s==h.state&&(h.__s=s({},h.__s)),s(h.__s,P.getDerivedStateFromProps(g,h.__s))),y=h.props,_=h.state,v)null==P.getDerivedStateFromProps&&null!=h.componentWillMount&&h.componentWillMount(),null!=h.componentDidMount&&h.__h.push(h.componentDidMount);else{if(null==P.getDerivedStateFromProps&&g!==y&&null!=h.componentWillReceiveProps&&h.componentWillReceiveProps(g,x),!h.__e&&null!=h.shouldComponentUpdate&&!1===h.shouldComponentUpdate(g,h.__s,x)||u.__v===i.__v){h.props=g,h.state=h.__s,u.__v!==i.__v&&(h.__d=!1),h.__v=u,u.__e=i.__e,u.__k=i.__k,h.__h.length&&f.push(h),T(u,e,l);break n}null!=h.componentWillUpdate&&h.componentWillUpdate(g,h.__s,x),null!=h.componentDidUpdate&&h.__h.push(function(){h.componentDidUpdate(y,_,w)})}h.context=x,h.props=g,h.state=h.__s,(a=n.__r)&&a(u),h.__d=!1,h.__v=u,h.__P=l,a=h.render(h.props,h.state,h.context),h.state=h.__s,null!=h.getChildContext&&(t=s(s({},t),h.getChildContext())),v||null==h.getSnapshotBeforeUpdate||(w=h.getSnapshotBeforeUpdate(y,_)),A=null!=a&&a.type==p&&null==a.key?a.props.children:a,m(l,Array.isArray(A)?A:[A],u,i,t,o,r,f,e,c),h.base=u.__e,u.__h=null,h.__h.length&&f.push(h),k&&(h.__E=h.__=null),h.__e=!1}else null==r&&u.__v===i.__v?(u.__k=i.__k,u.__e=i.__e):u.__e=H(i.__e,u,i,t,o,r,f,c);(a=n.diffed)&&a(u)}catch(l){u.__v=null,(c||null!=r)&&(u.__e=e,u.__h=!!c,r[r.indexOf(e)]=null),n.__e(l,u,i)}return u.__e}function j(l,u){n.__c&&n.__c(u,l),l.some(function(u){try{l=u.__h,u.__h=[],l.some(function(n){n.call(u)})}catch(l){n.__e(l,u.__v)}})}function H(n,l,u,i,t,o,r,c){var s,a,h,v,y,p=u.props,d=l.props;if(t="svg"===l.type||t,null!=o)for(s=0;s<o.length;s++)if(null!=(a=o[s])&&((null===l.type?3===a.nodeType:a.localName===l.type)||n==a)){n=a,o[s]=null;break}if(null==n){if(null===l.type)return document.createTextNode(d);n=t?document.createElementNS("http://www.w3.org/2000/svg",l.type):document.createElement(l.type,d.is&&{is:d.is}),o=null,c=!1}if(null===l.type)p===d||c&&n.data===d||(n.data=d);else{if(null!=o&&(o=e.slice.call(n.childNodes)),h=(p=u.props||f).dangerouslySetInnerHTML,v=d.dangerouslySetInnerHTML,!c){if(null!=o)for(p={},y=0;y<n.attributes.length;y++)p[n.attributes[y].name]=n.attributes[y].value;(v||h)&&(v&&(h&&v.__html==h.__html||v.__html===n.innerHTML)||(n.innerHTML=v&&v.__html||""))}A(n,d,p,t,c),v?l.__k=[]:(s=l.props.children,m(n,Array.isArray(s)?s:[s],l,u,i,"foreignObject"!==l.type&&t,o,r,f,c)),c||("value"in d&&void 0!==(s=d.value)&&(s!==n.value||"progress"===l.type&&!s)&&C(n,"value",s,p.value,!1),"checked"in d&&void 0!==(s=d.checked)&&s!==n.checked&&C(n,"checked",s,p.checked,!1))}return n}function I(l,u,i){try{"function"==typeof l?l(u):l.current=u}catch(l){n.__e(l,i)}}function L(l,u,i){var t,o,r;if(n.unmount&&n.unmount(l),(t=l.ref)&&(t.current&&t.current!==l.__e||I(t,null,u)),i||"function"==typeof l.type||(i=null!=(o=l.__e)),l.__e=l.__d=void 0,null!=(t=l.__c)){if(t.componentWillUnmount)try{t.componentWillUnmount()}catch(l){n.__e(l,u)}t.base=t.__P=null}if(t=l.__k)for(r=0;r<t.length;r++)t[r]&&L(t[r],u,i);null!=o&&a(o)}function M(n,l,u){return this.constructor(n,u)}function O(l,u,i){var t,r,c;n.__&&n.__(l,u),r=(t=i===o)?null:i&&i.__k||u.__k,l=h(p,null,[l]),c=[],$(u,(t?u:i||u).__k=l,r||f,f,void 0!==u.ownerSVGElement,i&&!t?[i]:r?null:u.childNodes.length?e.slice.call(u.childNodes):null,c,i||f,t),j(c,l)}function S(n,l){O(n,l,o)}function q(n,l,u){var i,t,o,r=arguments,f=s({},n.props);for(o in l)"key"==o?i=l[o]:"ref"==o?t=l[o]:f[o]=l[o];if(arguments.length>3)for(u=[u],o=3;o<arguments.length;o++)u.push(r[o]);return null!=u&&(f.children=u),v(n.type,f,i||n.key,t||n.ref,null)}function B(n,l){var u={__c:l="__cC"+r++,__:n,Consumer:function(n,l){return n.children(l)},Provider:function(n,u,i){return this.getChildContext||(u=[],(i={})[l]=this,this.getChildContext=function(){return i},this.shouldComponentUpdate=function(n){this.props.value!==n.value&&u.some(k)},this.sub=function(n){u.push(n);var l=n.componentWillUnmount;n.componentWillUnmount=function(){u.splice(u.indexOf(n),1),l&&l.call(n)}}),n.children}};return u.Provider.__=u.Consumer.contextType=u}n={__e:function(n,l){for(var u,i,t,o=l.__h;l=l.__;)if((u=l.__c)&&!u.__)try{if((i=u.constructor)&&null!=i.getDerivedStateFromError&&(u.setState(i.getDerivedStateFromError(n)),t=u.__d),null!=u.componentDidCatch&&(u.componentDidCatch(n),t=u.__d),t)return l.__h=o,u.__E=u}catch(l){n=l}throw n}},l=function(n){return null!=n&&void 0===n.constructor},d.prototype.setState=function(n,l){var u;u=null!=this.__s&&this.__s!==this.state?this.__s:this.__s=s({},this.state),"function"==typeof n&&(n=n(s({},u),this.props)),n&&s(u,n),null!=n&&this.__v&&(l&&this.__h.push(l),k(this))},d.prototype.forceUpdate=function(n){this.__v&&(this.__e=!0,n&&this.__h.push(n),k(this))},d.prototype.render=p,u=[],i="function"==typeof Promise?Promise.prototype.then.bind(Promise.resolve()):setTimeout,g.__r=0,o=f,r=0;
 //# sourceMappingURL=preact.module.js.map
@@ -10458,17 +8316,17 @@ var n,l,u,i,t,o,r,f={},e=[],c=/acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "useState": () => (/* binding */ m),
-/* harmony export */   "useReducer": () => (/* binding */ p),
-/* harmony export */   "useEffect": () => (/* binding */ y),
-/* harmony export */   "useLayoutEffect": () => (/* binding */ l),
-/* harmony export */   "useRef": () => (/* binding */ h),
-/* harmony export */   "useImperativeHandle": () => (/* binding */ s),
-/* harmony export */   "useMemo": () => (/* binding */ _),
 /* harmony export */   "useCallback": () => (/* binding */ A),
 /* harmony export */   "useContext": () => (/* binding */ F),
 /* harmony export */   "useDebugValue": () => (/* binding */ T),
-/* harmony export */   "useErrorBoundary": () => (/* binding */ d)
+/* harmony export */   "useEffect": () => (/* binding */ y),
+/* harmony export */   "useErrorBoundary": () => (/* binding */ d),
+/* harmony export */   "useImperativeHandle": () => (/* binding */ s),
+/* harmony export */   "useLayoutEffect": () => (/* binding */ l),
+/* harmony export */   "useMemo": () => (/* binding */ _),
+/* harmony export */   "useReducer": () => (/* binding */ p),
+/* harmony export */   "useRef": () => (/* binding */ h),
+/* harmony export */   "useState": () => (/* binding */ m)
 /* harmony export */ });
 /* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
 var t,u,r,o=0,i=[],c=preact__WEBPACK_IMPORTED_MODULE_0__.options.__r,f=preact__WEBPACK_IMPORTED_MODULE_0__.options.diffed,e=preact__WEBPACK_IMPORTED_MODULE_0__.options.__c,a=preact__WEBPACK_IMPORTED_MODULE_0__.options.unmount;function v(t,r){preact__WEBPACK_IMPORTED_MODULE_0__.options.__h&&preact__WEBPACK_IMPORTED_MODULE_0__.options.__h(u,t,o||r),o=0;var i=u.__H||(u.__H={__:[],__h:[]});return t>=i.__.length&&i.__.push({}),i.__[t]}function m(n){return o=1,p(k,n)}function p(n,r,o){var i=v(t++,2);return i.t=n,i.__c||(i.__=[o?o(r):k(void 0,r),function(n){var t=i.t(i.__[0],n);i.__[0]!==t&&(i.__=[t,i.__[1]],i.__c.setState({}))}],i.__c=u),i.__}function y(r,o){var i=v(t++,3);!preact__WEBPACK_IMPORTED_MODULE_0__.options.__s&&j(i.__H,o)&&(i.__=r,i.__H=o,u.__H.__h.push(i))}function l(r,o){var i=v(t++,4);!preact__WEBPACK_IMPORTED_MODULE_0__.options.__s&&j(i.__H,o)&&(i.__=r,i.__H=o,u.__h.push(i))}function h(n){return o=5,_(function(){return{current:n}},[])}function s(n,t,u){o=6,l(function(){"function"==typeof n?n(t()):n&&(n.current=t())},null==u?u:u.concat(n))}function _(n,u){var r=v(t++,7);return j(r.__H,u)&&(r.__=n(),r.__H=u,r.__h=n),r.__}function A(n,t){return o=8,_(function(){return n},t)}function F(n){var r=u.context[n.__c],o=v(t++,9);return o.__c=n,r?(null==o.__&&(o.__=!0,r.sub(u)),r.props.value):n.__}function T(t,u){preact__WEBPACK_IMPORTED_MODULE_0__.options.useDebugValue&&preact__WEBPACK_IMPORTED_MODULE_0__.options.useDebugValue(u?u(t):t)}function d(n){var r=v(t++,10),o=m();return r.__=n,u.componentDidCatch||(u.componentDidCatch=function(n){r.__&&r.__(n),o[1](n)}),[o[0],function(){o[1](void 0)}]}function q(){i.some(function(t){if(t.__P)try{t.__H.__h.forEach(b),t.__H.__h.forEach(g),t.__H.__h=[]}catch(u){return t.__H.__h=[],preact__WEBPACK_IMPORTED_MODULE_0__.options.__e(u,t.__v),!0}}),i=[]}preact__WEBPACK_IMPORTED_MODULE_0__.options.__r=function(n){c&&c(n),t=0;var r=(u=n.__c).__H;r&&(r.__h.forEach(b),r.__h.forEach(g),r.__h=[])},preact__WEBPACK_IMPORTED_MODULE_0__.options.diffed=function(t){f&&f(t);var u=t.__c;u&&u.__H&&u.__H.__h.length&&(1!==i.push(u)&&r===preact__WEBPACK_IMPORTED_MODULE_0__.options.requestAnimationFrame||((r=preact__WEBPACK_IMPORTED_MODULE_0__.options.requestAnimationFrame)||function(n){var t,u=function(){clearTimeout(r),x&&cancelAnimationFrame(t),setTimeout(n)},r=setTimeout(u,100);x&&(t=requestAnimationFrame(u))})(q))},preact__WEBPACK_IMPORTED_MODULE_0__.options.__c=function(t,u){u.some(function(t){try{t.__h.forEach(b),t.__h=t.__h.filter(function(n){return!n.__||g(n)})}catch(r){u.some(function(n){n.__h&&(n.__h=[])}),u=[],preact__WEBPACK_IMPORTED_MODULE_0__.options.__e(r,t.__v)}}),e&&e(t,u)},preact__WEBPACK_IMPORTED_MODULE_0__.options.unmount=function(t){a&&a(t);var u=t.__c;if(u&&u.__H)try{u.__H.__.forEach(b)}catch(t){preact__WEBPACK_IMPORTED_MODULE_0__.options.__e(t,u.__v)}};var x="function"==typeof requestAnimationFrame;function b(n){"function"==typeof n.u&&n.u()}function g(n){n.u=n.__()}function j(n,t){return!n||n.length!==t.length||t.some(function(t,u){return t!==n[u]})}function k(n,t){return"function"==typeof t?t(n):t}
@@ -10499,7 +8357,7 @@ var ApisearchHelper = /** @class */ (function () {
      * @param sortBy
      */
     ApisearchHelper.prototype.sortBy = function (query, sortBy) {
-        SortByHelper_1.applySortByToQuery(query, sortBy);
+        (0, SortByHelper_1.applySortByToQuery)(query, sortBy);
     };
     /**
      * @param query
@@ -10517,9 +8375,9 @@ var ApisearchHelper = /** @class */ (function () {
                 "field": field,
                 "values": [value],
                 "application_type": apisearch_1.FILTER_MUST_ALL,
-                "filter_type": apisearch_1.FILTER_TYPE_FIELD,
+                "filter_type": apisearch_1.FILTER_TYPE_FIELD
             },
-            "match_main_query": true,
+            "match_main_query": true
         }));
         query.setScoreStrategies(scoreStrategies);
     };
@@ -10538,12 +8396,14 @@ exports["default"] = ApisearchHelper;
 
 "use strict";
 
-var __spreadArrays = (this && this.__spreadArrays) || function () {
-    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
-    for (var r = Array(s), k = 0, i = 0; i < il; i++)
-        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
-            r[k] = a[j];
-    return r;
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
 };
 exports.__esModule = true;
 var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
@@ -10590,7 +8450,7 @@ var ApisearchUI = /** @class */ (function () {
      */
     ApisearchUI.prototype.init = function (_a) {
         var _this = this;
-        var _b = (_a === void 0 ? {} : _a).firstQuery, firstQuery = _b === void 0 ? true : _b;
+        var _b = _a === void 0 ? {} : _a, _c = _b.firstQuery, firstQuery = _c === void 0 ? true : _c;
         this.activeWidgets.map(function (widget) { return widget.withConfig(_this.config); });
         /**
          * 1.- Register all events on the store
@@ -10610,7 +8470,7 @@ var ApisearchUI = /** @class */ (function () {
         this.firstQuery = firstQuery;
         this.fetchQuery(true);
         window.dispatchEvent(new Event("apisearch_loaded", {
-            bubbles: true,
+            bubbles: true
         }));
     };
     /**
@@ -10660,7 +8520,7 @@ var ApisearchUI = /** @class */ (function () {
      */
     ApisearchUI.prototype.addWidget = function (widget) {
         widget.withConfig(this.config);
-        this.activeWidgets = __spreadArrays(this.activeWidgets, [widget]);
+        this.activeWidgets = __spreadArray(__spreadArray([], this.activeWidgets, true), [widget], false);
         return this;
     };
     /**
@@ -10696,7 +8556,7 @@ var ApisearchUI = /** @class */ (function () {
         });
         this.initialSetupPerformed = true;
         window.dispatchEvent(new Event("apisearch_rendered", {
-            bubbles: true,
+            bubbles: true
         }));
     };
     /**
@@ -10738,17 +8598,17 @@ var ApisearchUI = /** @class */ (function () {
         /**
          * Build environment Id
          */
-        var environmentId = Environment_1.createEnvironmentId();
+        var environmentId = (0, Environment_1.createEnvironmentId)();
         /**
          * Bootstrapping ApisearchUI application
          */
-        Bootstrap_1.bootstrap(environmentId, config, hash);
+        (0, Bootstrap_1.bootstrap)(environmentId, config, hash);
         /**
          * Register handleActions method (store reducer)
          * into the event dispatcher
          */
-        var apisearchUI = Container_1["default"].get(Constants_1.APISEARCH_UI + "__" + environmentId);
-        var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
+        var apisearchUI = Container_1["default"].get("".concat(Constants_1.APISEARCH_UI, "__").concat(environmentId));
+        var dispatcher = Container_1["default"].get("".concat(Constants_1.APISEARCH_DISPATCHER, "__").concat(environmentId));
         dispatcher.registerListener("RENDER_INITIAL_DATA", function (payload) { return apisearchUI.store.renderInitialData(payload); });
         dispatcher.registerListener("RENDER_FETCHED_DATA", function (payload) { return apisearchUI.store.renderFetchedData(payload); });
         dispatcher.registerListener("UPDATE_APISEARCH_SETUP", function (payload) { return apisearchUI.store.updateApisearchSetup(payload); });
@@ -10758,7 +8618,7 @@ var ApisearchUI = /** @class */ (function () {
          */
         apisearchUI.widgets = Widgets_1["default"];
         apisearchUI.config = config;
-        var uiId = "ui_" + Math.ceil(Math.random() * (9999999 - 1) + 1);
+        var uiId = "ui_".concat(Math.ceil(Math.random() * (9999999 - 1) + 1));
         apisearchUI.reference = uiId;
         apisearchUI.userId = (_a = config.user_id) !== null && _a !== void 0 ? _a : "";
         window[uiId] = apisearchUI;
@@ -10799,7 +8659,7 @@ var ApisearchUI = /** @class */ (function () {
             site: this.store.getSite(),
             device: this.store.getDevice(),
             query: queryAsArray,
-            result: resultAsArray,
+            result: resultAsArray
         }, "*");
         window.postMessage({
             name: "apisearch_item_was_interacted",
@@ -10810,7 +8670,7 @@ var ApisearchUI = /** @class */ (function () {
             site: this.store.getSite(),
             device: this.store.getDevice(),
             query: queryAsArray,
-            result: resultAsArray,
+            result: resultAsArray
         }, "*");
     };
     /**
@@ -10834,7 +8694,7 @@ var ApisearchUI = /** @class */ (function () {
             site: this.store.getSite(),
             device: this.store.getDevice(),
             query: this.store.getCurrentQuery().toArray(),
-            result: this.store.getCurrentResult().toArray(),
+            result: this.store.getCurrentResult().toArray()
         }, "*");
     };
     /**
@@ -10852,7 +8712,7 @@ var ApisearchUI = /** @class */ (function () {
             app_id: appId,
             index_id: indexId,
             site: this.store.getSite(),
-            device: this.store.getDevice(),
+            device: this.store.getDevice()
         }, "*");
     };
     /**
@@ -10882,11 +8742,11 @@ var ApisearchUI = /** @class */ (function () {
             .query(queryObject)
             .then(function (result) {
             window.postMessage({
-                name: "apisearch_scroll_top",
+                name: "apisearch_scroll_top"
             }, "*");
             _this.store.renderFetchedData({
                 "query": queryObject,
-                result: result,
+                result: result
             });
         })["catch"](function (error) {
             // Do nothing
@@ -10966,11 +8826,11 @@ var Constants_1 = __webpack_require__(/*! ./Constants */ "./src/Constants.ts");
  */
 function bootstrap(environmentId, config, hash) {
     var configAsString = JSON.stringify(config);
-    var repositoryId = Constants_1.APISEARCH_REPOSITORY + "__" + configAsString;
-    var storeId = Constants_1.APISEARCH_STORE + "__" + environmentId;
-    var dispatcherId = Constants_1.APISEARCH_DISPATCHER + "__" + environmentId;
-    var configId = Constants_1.APISEARCH_CONFIG + "__" + environmentId;
-    var asuiId = Constants_1.APISEARCH_UI + "__" + environmentId;
+    var repositoryId = "".concat(Constants_1.APISEARCH_REPOSITORY, "__").concat(configAsString);
+    var storeId = "".concat(Constants_1.APISEARCH_STORE, "__").concat(environmentId);
+    var dispatcherId = "".concat(Constants_1.APISEARCH_DISPATCHER, "__").concat(environmentId);
+    var configId = "".concat(Constants_1.APISEARCH_CONFIG, "__").concat(environmentId);
+    var asuiId = "".concat(Constants_1.APISEARCH_UI, "__").concat(environmentId);
     /**
      * Register Apisearch repository
      */
@@ -11055,7 +8915,7 @@ var Container = /** @class */ (function () {
         if (this.services[id]) {
             return this.services[id];
         }
-        throw new Error("Service with id (" + id + ") is not registered.");
+        throw new Error("Service with id (".concat(id, ") is not registered."));
     };
     /**
      * Register service
@@ -11121,7 +8981,8 @@ exports.createEnvironmentId = void 0;
 /**
  * Create an envID
  */
-exports.createEnvironmentId = function () { return "env_" + Math.ceil(Math.random() * (9999999 - 1) + 1); };
+var createEnvironmentId = function () { return "env_".concat(Math.ceil(Math.random() * (9999999 - 1) + 1)); };
+exports.createEnvironmentId = createEnvironmentId;
 
 
 /***/ }),
@@ -11220,6 +9081,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -11398,12 +9261,12 @@ var Store = /** @class */ (function (_super) {
      */
     Store.prototype.fetchInitialQuery = function (environmentId, repository, loadQuery) {
         var _this = this;
-        var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
+        var dispatcher = Container_1["default"].get("".concat(Constants_1.APISEARCH_DISPATCHER, "__").concat(environmentId));
         this.currentQuery = loadQuery
             ? this.loadQuery(this.currentQuery)
             : this.currentQuery;
         dispatcher.dispatch("NORMALIZE_QUERY", {
-            query: this.currentQuery,
+            query: this.currentQuery
         });
         /**
          * In initial query, we must delete user
@@ -11415,7 +9278,7 @@ var Store = /** @class */ (function (_super) {
             .then(function (result) {
             dispatcher.dispatch("RENDER_INITIAL_DATA", {
                 query: _this.currentQuery,
-                result: result,
+                result: result
             });
         });
     };
@@ -11518,7 +9381,7 @@ var Store = /** @class */ (function (_super) {
             if (!this.doNotCleanUrlHashAtFirst) {
                 this.window.postMessage({
                     name: "apisearch_replace_hash",
-                    hash: objectAsJson,
+                    hash: objectAsJson
                 }, "*");
             }
             this.doNotCleanUrlHashAtFirst = false;
@@ -11559,9 +9422,9 @@ var Clone_1 = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
 function aggregationSetup(environmentId, currentQuery, filterName, aggregationField) {
     var clonedQuery = Clone_1["default"].object(currentQuery);
     clonedQuery.aggregateBy(filterName, aggregationField, apisearch_1.FILTER_TYPE_FIELD);
-    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
+    var dispatcher = Container_1["default"].get("".concat(Constants_1.APISEARCH_DISPATCHER, "__").concat(environmentId));
     dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
-        query: clonedQuery,
+        query: clonedQuery
     });
 }
 exports.aggregationSetup = aggregationSetup;
@@ -11576,20 +9439,20 @@ exports.aggregationSetup = aggregationSetup;
  */
 function onChangeSearchAction(environmentId, currentQuery, repository, filterName, filterField, isChecked, filterValue) {
     window.postMessage({
-        name: "apisearch_scroll_top",
+        name: "apisearch_scroll_top"
     }, "*");
     var clonedQuery = Clone_1["default"].object(currentQuery);
     clonedQuery.filterBy(filterName, filterField, isChecked
         ? [filterValue]
         : [], apisearch_1.FILTER_MUST_ALL, false);
     clonedQuery.page = 1;
-    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
+    var dispatcher = Container_1["default"].get("".concat(Constants_1.APISEARCH_DISPATCHER, "__").concat(environmentId));
     repository
         .query(clonedQuery)
         .then(function (result) {
         dispatcher.dispatch("RENDER_FETCHED_DATA", {
             query: clonedQuery,
-            result: result,
+            result: result
         });
     })["catch"](function (error) {
         // Do nothing
@@ -11616,6 +9479,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -11642,7 +9507,7 @@ var CheckboxFilterComponent = /** @class */ (function (_super) {
             /**
              * Dispatch action
              */
-            CheckboxFilterActions_1.onChangeSearchAction(props.environmentId, props.store.getCurrentQuery(), props.repository, props.filterName, props.filterField, activeElement, props.filterValue);
+            (0, CheckboxFilterActions_1.onChangeSearchAction)(props.environmentId, props.store.getCurrentQuery(), props.repository, props.filterName, props.filterField, activeElement, props.filterValue);
         };
         return _this;
     }
@@ -11658,7 +9523,7 @@ var CheckboxFilterComponent = /** @class */ (function (_super) {
         /**
          * Dispatch action
          */
-        CheckboxFilterActions_1.aggregationSetup(environmentId, currentQuery, filterName, aggregationField);
+        (0, CheckboxFilterActions_1.aggregationSetup)(environmentId, currentQuery, filterName, aggregationField);
     };
     /**
      * Component will receive props
@@ -11692,7 +9557,7 @@ var CheckboxFilterComponent = /** @class */ (function (_super) {
             filterValue = filterValue ? "true" : "false";
         }
         var n = 0;
-        var isActive = Helpers_1.getFilterValuesFromQuery(props.store.getCurrentQuery(), props.filterName)[0];
+        var isActive = (0, Helpers_1.getFilterValuesFromQuery)(props.store.getCurrentQuery(), props.filterName)[0];
         var aggregation = state.aggregation;
         if (aggregation != null) {
             var counters = aggregation.getCounters();
@@ -11713,21 +9578,21 @@ var CheckboxFilterComponent = /** @class */ (function (_super) {
             n: n,
             isActive: isActive,
             label: label,
-            uid: uid,
+            uid: uid
         };
         if (n === 0) {
             return null;
         }
-        return (preact_1.h("div", { className: "as-checkboxFilter " + containerClassName },
-            preact_1.h(Template_1["default"], { template: topTemplate, className: "as-checkboxFilter__top " + topClassName, dictionary: this.props.dictionary }),
-            preact_1.h("div", { className: "as-checkboxFilter__item " +
-                    (itemClassName + " ") +
-                    ("" + ((isActive) ? activeClassName : "")), onClick: function (e) {
+        return ((0, preact_1.h)("div", { className: "as-checkboxFilter ".concat(containerClassName) },
+            (0, preact_1.h)(Template_1["default"], { template: topTemplate, className: "as-checkboxFilter__top ".concat(topClassName), dictionary: this.props.dictionary }),
+            (0, preact_1.h)("div", { className: "as-checkboxFilter__item " +
+                    "".concat(itemClassName, " ") +
+                    "".concat((isActive) ? activeClassName : ""), onClick: function (e) {
                     e.stopPropagation();
                     e.preventDefault();
                     that.handleChange(!isActive);
                 } },
-                preact_1.h(Template_1["default"], { template: itemTemplate, data: templateData, dictionary: this.props.dictionary }))));
+                (0, preact_1.h)(Template_1["default"], { template: itemTemplate, data: templateData, dictionary: this.props.dictionary }))));
     };
     return CheckboxFilterComponent;
 }(preact_1.Component));
@@ -11737,12 +9602,12 @@ CheckboxFilterComponent.defaultProps = {
         container: "",
         top: "",
         item: "",
-        active: "as-checkboxFilter__item--active",
+        active: "as-checkboxFilter__item--active"
     },
     template: {
         top: null,
-        item: defaultTemplates_1.defaultItemTemplate,
-    },
+        item: defaultTemplates_1.defaultItemTemplate
+    }
 };
 exports["default"] = CheckboxFilterComponent;
 
@@ -11788,12 +9653,12 @@ function clearFiltersAction(environmentId, currentQuery, repository, filterToCle
     if (filterToClear === void 0) { filterToClear = null; }
     if (filterValueToClear === void 0) { filterValueToClear = null; }
     window.postMessage({
-        name: "apisearch_scroll_top",
+        name: "apisearch_scroll_top"
     }, "*");
     var clonedQuery = Clone_1["default"].object(currentQuery);
     if (filterToClear === null) {
         clonedQuery.filters = {
-            _query: currentQuery.getFilter("_query"),
+            _query: currentQuery.getFilter("_query")
         };
     }
     else if (filterValueToClear === null) {
@@ -11807,13 +9672,13 @@ function clearFiltersAction(environmentId, currentQuery, repository, filterToCle
         }
     }
     clonedQuery.page = 1;
-    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
+    var dispatcher = Container_1["default"].get("".concat(Constants_1.APISEARCH_DISPATCHER, "__").concat(environmentId));
     repository
         .query(clonedQuery)
         .then(function (result) {
         dispatcher.dispatch("RENDER_FETCHED_DATA", {
             query: clonedQuery,
-            result: result,
+            result: result
         });
     })["catch"](function (error) {
         // Do nothing
@@ -11840,6 +9705,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -11871,13 +9738,13 @@ var ClearFiltersComponent = /** @class */ (function (_super) {
             _this.setState(function (prevState) {
                 return {
                     appliedFilters: [],
-                    showClearFilters: false,
+                    showClearFilters: false
                 };
             });
             /**
              * Dispatch a clear filter action
              */
-            ClearFiltersActions_1.clearFiltersAction(environmentId, currentQuery, repository);
+            (0, ClearFiltersActions_1.clearFiltersAction)(environmentId, currentQuery, repository);
         };
         /**
          * Handle individual click
@@ -11890,11 +9757,11 @@ var ClearFiltersComponent = /** @class */ (function (_super) {
             /**
              * Dispatch a clear filter action
              */
-            ClearFiltersActions_1.clearFiltersAction(environmentId, currentQuery, repository, filterKey, filterValue);
+            (0, ClearFiltersActions_1.clearFiltersAction)(environmentId, currentQuery, repository, filterKey, filterValue);
         };
         _this.state = {
             appliedFilters: [],
-            showClearFilters: false,
+            showClearFilters: false
         };
         return _this;
     }
@@ -11908,7 +9775,7 @@ var ClearFiltersComponent = /** @class */ (function (_super) {
         this.setState(function (prevState) {
             return {
                 appliedFilters: appliedFiltersFormatted,
-                showClearFilters: appliedFiltersFormatted.length > 0,
+                showClearFilters: appliedFiltersFormatted.length > 0
             };
         });
     };
@@ -11925,7 +9792,7 @@ var ClearFiltersComponent = /** @class */ (function (_super) {
                 appliedFiltersFormatted.push({
                     filter: key,
                     num: filter.getValues().length,
-                    values: filter.getValues(),
+                    values: filter.getValues()
                 });
             }
         }
@@ -11951,25 +9818,25 @@ var ClearFiltersComponent = /** @class */ (function (_super) {
             this.state.appliedFilters.forEach(function (filter) {
                 filter.values.forEach(function (value) { return values_1.push({
                     filter: filter.filter,
-                    value: value,
+                    value: value
                 }); });
             });
-            individualFilterClear = preact_1.h("ul", { className: "as-clearFilters__filtersList " + filtersListClassName }, values_1.map(function (filter) {
-                return preact_1.h("li", { className: "as-clearFilters__filter " + filterClassName, onClick: function () { return _this.handleIndividualClick(filter.filter, filter.value); } },
-                    preact_1.h(Template_1["default"], { template: filterTemplate, dictionary: _this.props.dictionary, data: filter }));
+            individualFilterClear = (0, preact_1.h)("ul", { className: "as-clearFilters__filtersList ".concat(filtersListClassName) }, values_1.map(function (filter) {
+                return (0, preact_1.h)("li", { className: "as-clearFilters__filter ".concat(filterClassName), onClick: function () { return _this.handleIndividualClick(filter.filter, filter.value); } },
+                    (0, preact_1.h)(Template_1["default"], { template: filterTemplate, dictionary: _this.props.dictionary, data: filter }));
             }));
         }
         else if (props.showIndividualFilterClear) {
-            individualFilterClear = preact_1.h("ul", { className: "as-clearFilters__filtersList " + filtersListClassName }, appliedFiltersFormatted.map(function (filter) {
-                return preact_1.h("li", { className: "as-clearFilters__filter " + filterClassName, onClick: function () { return _this.handleIndividualClick(filter.filter, null); } },
-                    preact_1.h(Template_1["default"], { template: filterTemplate, dictionary: _this.props.dictionary, data: filter }));
+            individualFilterClear = (0, preact_1.h)("ul", { className: "as-clearFilters__filtersList ".concat(filtersListClassName) }, appliedFiltersFormatted.map(function (filter) {
+                return (0, preact_1.h)("li", { className: "as-clearFilters__filter ".concat(filterClassName), onClick: function () { return _this.handleIndividualClick(filter.filter, null); } },
+                    (0, preact_1.h)(Template_1["default"], { template: filterTemplate, dictionary: _this.props.dictionary, data: filter }));
             }));
         }
         return (this.state.showClearFilters)
-            ? (preact_1.h("div", { className: "as-clearFilters " + containerClassName },
+            ? ((0, preact_1.h)("div", { className: "as-clearFilters ".concat(containerClassName) },
                 props.showGlobalFilterClear
-                    ? preact_1.h("div", { onClick: this.handleClick },
-                        preact_1.h(Template_1["default"], { template: containerTemplate, dictionary: this.props.dictionary }))
+                    ? (0, preact_1.h)("div", { onClick: this.handleClick },
+                        (0, preact_1.h)(Template_1["default"], { template: containerTemplate, dictionary: this.props.dictionary }))
                     : "",
                 individualFilterClear)) : null;
     };
@@ -11979,15 +9846,15 @@ ClearFiltersComponent.defaultProps = {
     classNames: {
         container: "",
         filter: "",
-        filtersList: "",
+        filtersList: ""
     },
     showGlobalFilterClear: true,
     showIndividualFilterClear: false,
     showIndividualFilterValueClear: false,
     template: {
         container: "Clear filters",
-        filter: "Clear {{filter}} ({{num}})",
-    },
+        filter: "Clear {{filter}} ({{num}})"
+    }
 };
 exports["default"] = ClearFiltersComponent;
 
@@ -12047,13 +9914,13 @@ function onWordClickAction(environmentId, currentQuery, repository, word, catego
         clonedQuery = apisearch_1.Query.createFromArray(clonedQuery);
         clonedQuery.filterBy("Categoría", "category_level_0", [category]);
     }
-    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
+    var dispatcher = Container_1["default"].get("".concat(Constants_1.APISEARCH_DISPATCHER, "__").concat(environmentId));
     repository
         .query(clonedQuery)
         .then(function (result) {
         dispatcher.dispatch("RENDER_FETCHED_DATA", {
             query: clonedQuery,
-            result: result,
+            result: result
         });
     })["catch"](function (error) {
         // Do nothing
@@ -12080,6 +9947,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -12154,7 +10023,7 @@ var InformationComponent = /** @class */ (function (_super) {
             to: to
         };
         var formattedTemplateData = formatData(reducedTemplateData);
-        return (preact_1.h(Template_1["default"], { template: containerTemplate, data: formattedTemplateData, className: "as-information " + containerClassName, dictionary: this.props.dictionary }));
+        return ((0, preact_1.h)(Template_1["default"], { template: containerTemplate, data: formattedTemplateData, className: "as-information ".concat(containerClassName), dictionary: this.props.dictionary }));
     };
     return InformationComponent;
 }(preact_1.Component));
@@ -12180,12 +10049,14 @@ exports["default"] = InformationComponent;
 
 "use strict";
 
-var __spreadArrays = (this && this.__spreadArrays) || function () {
-    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
-    for (var r = Array(s), k = 0, i = 0; i < il; i++)
-        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
-            r[k] = a[j];
-    return r;
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
 };
 exports.__esModule = true;
 exports.isLeveledFilter = exports.getFilterValuesFromQuery = exports.isFilterAvailable = exports.getShadowFilterValuesFromQuery = exports.manageCurrentFilterItems = exports.wasElementRecentlySelected = void 0;
@@ -12217,9 +10088,9 @@ function manageCurrentFilterItems(selectedItem, currentItems, wasElementRecently
             : currentItems;
     }
     else {
-        return __spreadArrays(currentItems, [
+        return __spreadArray(__spreadArray([], currentItems, true), [
             selectedItem,
-        ]);
+        ], false);
     }
 }
 exports.manageCurrentFilterItems = manageCurrentFilterItems;
@@ -12330,9 +10201,9 @@ function aggregationSetup(environmentId, currentQuery, filterName, filterField, 
     else {
         clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy, fetchLimit, promoted);
     }
-    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
+    var dispatcher = Container_1["default"].get("".concat(Constants_1.APISEARCH_DISPATCHER, "__").concat(environmentId));
     dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
-        query: clonedQuery,
+        query: clonedQuery
     });
 }
 exports.aggregationSetup = aggregationSetup;
@@ -12356,7 +10227,7 @@ exports.aggregationSetup = aggregationSetup;
  */
 function filterAction(environmentId, currentQuery, repository, filterName, filterField, aggregationField, filterValues, applicationType, sortBy, fetchLimit, ranges, labels, shadowLeveledFilters, originalFilterField) {
     window.postMessage({
-        name: "apisearch_scroll_top",
+        name: "apisearch_scroll_top"
     }, "*");
     var clonedQuery = Clone_1["default"].object(currentQuery);
     var rangesValues = Object.keys(ranges);
@@ -12372,13 +10243,13 @@ function filterAction(environmentId, currentQuery, repository, filterName, filte
         configureQueryWithShadowLeveledFilters(clonedQuery, shadowLeveledFilters, originalFilterField);
     }
     clonedQuery.page = 1;
-    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
+    var dispatcher = Container_1["default"].get("".concat(Constants_1.APISEARCH_DISPATCHER, "__").concat(environmentId));
     repository
         .query(clonedQuery)
         .then(function (result) {
         dispatcher.dispatch("RENDER_FETCHED_DATA", {
             query: clonedQuery,
-            result: result,
+            result: result
         });
     })["catch"](function (error) {
         // Do nothing
@@ -12401,9 +10272,9 @@ function modifyQueryAggregationWithProperLevelValue(environmentId, currentQuery,
         var currentLevel = parseInt(fieldNameParts[fieldNameParts.length - 1], 10);
         var fieldNameWithoutLevel = fieldNameParts.slice(0, fieldNameParts.length - 1).join("_");
         clonedQuery.aggregations[filterName].field = fieldNameWithoutLevel + "_" + (currentLevel + 1);
-        var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
+        var dispatcher = Container_1["default"].get("".concat(Constants_1.APISEARCH_DISPATCHER, "__").concat(environmentId));
         dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
-            query: clonedQuery,
+            query: clonedQuery
         });
     }
 }
@@ -12448,17 +10319,21 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __spreadArrays = (this && this.__spreadArrays) || function () {
-    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
-    for (var r = Array(s), k = 0, i = 0; i < il; i++)
-        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
-            r[k] = a[j];
-    return r;
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
 };
 exports.__esModule = true;
 var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
@@ -12499,10 +10374,10 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
             var currentQuery = props.store.getCurrentQuery();
             var selectedFilterAsString = String(selectedFilter);
             var valuesAsString = (applicationType === 6)
-                ? Helpers_1.getShadowFilterValuesFromQuery(currentQuery, filterName, true)
-                : Helpers_1.getFilterValuesFromQuery(currentQuery, filterName);
-            var wasSelected = Helpers_1.wasElementRecentlySelected(selectedFilterAsString, valuesAsString);
-            var filterItems = Helpers_1.manageCurrentFilterItems(selectedFilterAsString, valuesAsString, wasSelected, (applicationType !== 6));
+                ? (0, Helpers_1.getShadowFilterValuesFromQuery)(currentQuery, filterName, true)
+                : (0, Helpers_1.getFilterValuesFromQuery)(currentQuery, filterName);
+            var wasSelected = (0, Helpers_1.wasElementRecentlySelected)(selectedFilterAsString, valuesAsString);
+            var filterItems = (0, Helpers_1.manageCurrentFilterItems)(selectedFilterAsString, valuesAsString, wasSelected, (applicationType !== 6));
             var currentLevel = level;
             if (applicationType === 6) {
                 currentLevel = wasSelected ? currentLevel : (currentLevel - 1);
@@ -12520,7 +10395,7 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
             /**
              * Dispatch filter action
              */
-            MultipleFilterActions_1.filterAction(environmentId, currentQuery, repository, filterName, filterField, aggregationField, filterItems, applicationType, sortBy, fetchLimit, ranges, labels, shadowLeveledFilters, originalFilterField);
+            (0, MultipleFilterActions_1.filterAction)(environmentId, currentQuery, repository, filterName, filterField, aggregationField, filterItems, applicationType, sortBy, fetchLimit, ranges, labels, shadowLeveledFilters, originalFilterField);
         };
         /**
          * Handle show more
@@ -12542,7 +10417,7 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
         };
         _this.state = {
             aggregations: [],
-            viewLimit: 0,
+            viewLimit: 0
         };
         return _this;
     }
@@ -12564,7 +10439,7 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
             return {
                 viewLimit: (isViewLimitProperlySet)
                     ? viewLimit
-                    : fetchLimit,
+                    : fetchLimit
             };
         });
         if (applicationType === 6) {
@@ -12573,7 +10448,7 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
         /**
          * Dispatch action
          */
-        MultipleFilterActions_1.aggregationSetup(props.environmentId, props.store.getCurrentQuery(), props.filterName, props.filterField, aggregationField, applicationType, props.sortBy, fetchLimit, props.ranges, props.promoted);
+        (0, MultipleFilterActions_1.aggregationSetup)(props.environmentId, props.store.getCurrentQuery(), props.filterName, props.filterField, aggregationField, applicationType, props.sortBy, fetchLimit, props.ranges, props.promoted);
     };
     /**
      * Component will receive props
@@ -12586,7 +10461,7 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
             this.setState(function (prevState) {
                 return {
                     aggregations: [],
-                    filters: [],
+                    filters: []
                 };
             });
             return;
@@ -12601,16 +10476,16 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
             var counters = aggregation.getCounters();
             var countersAsArray = Object.values(counters);
             aggregations = props.activeFirst
-                ? __spreadArrays(countersAsArray.filter(function (counter) {
+                ? __spreadArray(__spreadArray([], countersAsArray.filter(function (counter) {
                     return true === counter.isUsed();
-                }), countersAsArray.filter(function (counter) {
+                }), true), countersAsArray.filter(function (counter) {
                     return (false === counter.isUsed() ||
                         null === counter.isUsed());
-                })) : countersAsArray;
+                }), true) : countersAsArray;
         }
         this.setState(function (prevState) {
             return {
-                aggregations: aggregations,
+                aggregations: aggregations
             };
         });
         if (props.applicationType === 6 &&
@@ -12663,7 +10538,7 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
                 isActive: item.isUsed(),
                 n: item.getN(),
                 uid: uid,
-                values: values,
+                values: values
             };
         });
         /**
@@ -12671,8 +10546,8 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
          * first
          */
         var appliedFilters = (props.applicationType === 6)
-            ? Helpers_1.getShadowFilterValuesFromQuery(currentQuery, props.filterName, true)
-            : Helpers_1.getFilterValuesFromQuery(currentQuery, props.filterName);
+            ? (0, Helpers_1.getShadowFilterValuesFromQuery)(currentQuery, props.filterName, true)
+            : (0, Helpers_1.getFilterValuesFromQuery)(currentQuery, props.filterName);
         if (appliedFilters.length > 0) {
             var zeroItemsFilters_1 = [];
             appliedFilters.forEach(function (filter) {
@@ -12684,12 +10559,12 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
                         uid: uid,
                         values: {
                             id: filter,
-                            name: filter,
-                        },
+                            name: filter
+                        }
                     });
                 }
             });
-            allItems = __spreadArrays(zeroItemsFilters_1, allItems);
+            allItems = __spreadArray(__spreadArray([], zeroItemsFilters_1, true), allItems, true);
         }
         /**
          * Get existing applied filters if they exist
@@ -12706,24 +10581,24 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
         var isViewLimitProperlySet = (viewLimit &&
             viewLimit < fetchLimit &&
             allItemsLength > viewLimit);
-        return (preact_1.h("div", { className: "as-multipleFilter " + containerClassName },
-            preact_1.h(Template_1["default"], { template: topTemplate, className: "as-multipleFilter__top " + topClassName, dictionary: this.props.dictionary }),
-            preact_1.h("div", { className: "as-multipleFilter__itemsList " + itemsListClassName },
-                preact_1.h("ul", null, items.map(function (item) {
+        return ((0, preact_1.h)("div", { className: "as-multipleFilter ".concat(containerClassName) },
+            (0, preact_1.h)(Template_1["default"], { template: topTemplate, className: "as-multipleFilter__top ".concat(topClassName), dictionary: this.props.dictionary }),
+            (0, preact_1.h)("div", { className: "as-multipleFilter__itemsList ".concat(itemsListClassName) },
+                (0, preact_1.h)("ul", null, items.map(function (item) {
                     var formattedTemplateData = formatData(item);
                     var level = Math.min(levelCounter, _this.currentLevel + 1);
                     levelCounter++;
-                    return (preact_1.h("li", { className: "as-multipleFilter__item " +
-                            (itemClassName + " ") +
-                            ("" + ((item.isActive) ? activeClassName : "")), onClick: function (e) {
+                    return ((0, preact_1.h)("li", { className: "as-multipleFilter__item " +
+                            "".concat(itemClassName, " ") +
+                            "".concat((item.isActive) ? activeClassName : ""), onClick: function (e) {
                             e.stopPropagation();
                             e.preventDefault();
                             that.handleClick(item.values.id, level);
                         } },
-                        preact_1.h(Template_1["default"], { template: itemTemplate, data: formattedTemplateData, dictionary: _this.props.dictionary })));
+                        (0, preact_1.h)(Template_1["default"], { template: itemTemplate, data: formattedTemplateData, dictionary: _this.props.dictionary })));
                 }))),
             (isViewLimitProperlySet)
-                ? preact_1.h(ShowMoreComponent_1["default"], { allItemsLength: allItemsLength, currentLimit: this.state.viewLimit, handleShowMore: this.handleShowMore, handleShowLess: this.handleShowLess, showMoreContainerClassName: showMoreContainerClassName, showMoreTemplate: showMoreTemplate, showLessTemplate: showLessTemplate, dictionary: this.props.dictionary }) : null));
+                ? (0, preact_1.h)(ShowMoreComponent_1["default"], { allItemsLength: allItemsLength, currentLimit: this.state.viewLimit, handleShowMore: this.handleShowMore, handleShowLess: this.handleShowLess, showMoreContainerClassName: showMoreContainerClassName, showMoreTemplate: showMoreTemplate, showLessTemplate: showLessTemplate, dictionary: this.props.dictionary }) : null));
     };
     return MultipleFilterComponent;
 }(preact_1.Component));
@@ -12741,17 +10616,17 @@ MultipleFilterComponent.defaultProps = {
         itemsList: "",
         item: "",
         active: "as-multipleFilter__item--active",
-        showMoreContainer: "",
+        showMoreContainer: ""
     },
     template: {
         top: null,
         item: defaultTemplates_1.defaultItemTemplate,
         showMore: "+ Show more",
-        showLess: "- Show less",
+        showLess: "- Show less"
     },
     formatData: function (data) { return data; },
     activeFirst: true,
-    promoted: [],
+    promoted: []
 };
 exports["default"] = MultipleFilterComponent;
 
@@ -12779,11 +10654,11 @@ var Template_1 = __webpack_require__(/*! ../Template */ "./src/components/Templa
 var ShowMoreComponent = function (_a) {
     var allItemsLength = _a.allItemsLength, currentLimit = _a.currentLimit, handleShowMore = _a.handleShowMore, handleShowLess = _a.handleShowLess, showMoreContainerClassName = _a.showMoreContainerClassName, showMoreTemplate = _a.showMoreTemplate, showLessTemplate = _a.showLessTemplate, dictionary = _a.dictionary;
     return (allItemsLength > currentLimit)
-        ? (preact_1.h("div", { className: "as-showMore " + showMoreContainerClassName, onClick: handleShowMore },
-            preact_1.h(Template_1["default"], { template: showMoreTemplate, className: "as-showMore--more", dictionary: dictionary })))
+        ? ((0, preact_1.h)("div", { className: "as-showMore ".concat(showMoreContainerClassName), onClick: handleShowMore },
+            (0, preact_1.h)(Template_1["default"], { template: showMoreTemplate, className: "as-showMore--more", dictionary: dictionary })))
         : (allItemsLength === currentLimit)
-            ? (preact_1.h("div", { className: "as-showMore " + showMoreContainerClassName, onClick: handleShowLess },
-                preact_1.h(Template_1["default"], { template: showLessTemplate, className: "as-showMore--less", dictionary: dictionary })))
+            ? ((0, preact_1.h)("div", { className: "as-showMore ".concat(showMoreContainerClassName), onClick: handleShowLess },
+                (0, preact_1.h)(Template_1["default"], { template: showLessTemplate, className: "as-showMore--less", dictionary: dictionary })))
             : null;
 };
 exports["default"] = ShowMoreComponent;
@@ -12923,8 +10798,8 @@ var Template_1 = __webpack_require__(/*! ../Template */ "./src/components/Templa
 function NavigationComponent(_a) {
     var isVisible = _a.isVisible, classNames = _a.classNames, template = _a.template, handleClick = _a.handleClick;
     return (isVisible)
-        ? (preact_1.h("li", { className: classNames, onClick: handleClick },
-            preact_1.h(Template_1["default"], { template: template, dictionary: this.props.dictionary })))
+        ? ((0, preact_1.h)("li", { className: classNames, onClick: handleClick },
+            (0, preact_1.h)(Template_1["default"], { template: template, dictionary: this.props.dictionary })))
         : null;
 }
 exports["default"] = NavigationComponent;
@@ -12955,17 +10830,17 @@ var Clone_1 = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
  */
 function paginationChangeAction(environmentId, currentQuery, repository, selectedPage) {
     window.postMessage({
-        name: "apisearch_scroll_top",
+        name: "apisearch_scroll_top"
     }, "*");
     var clonedQuery = Clone_1["default"].object(currentQuery);
     clonedQuery.page = selectedPage;
-    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
+    var dispatcher = Container_1["default"].get("".concat(Constants_1.APISEARCH_DISPATCHER, "__").concat(environmentId));
     repository
         .query(clonedQuery)
         .then(function (result) {
         dispatcher.dispatch("RENDER_FETCHED_DATA", {
             query: clonedQuery,
-            result: result,
+            result: result
         });
     })["catch"](function (error) {
         // Do nothing
@@ -12992,6 +10867,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -13022,7 +10899,7 @@ var PaginationComponent = /** @class */ (function (_super) {
             var _a = _this.props, store = _a.store, environmentId = _a.environmentId, repository = _a.repository;
             var currentResult = store.getCurrentResult();
             var currentQuery = store.getCurrentQuery();
-            var totalPages = Helpers_1.getTotalPages(currentResult.getTotalHits(), currentQuery.getSize());
+            var totalPages = (0, Helpers_1.getTotalPages)(currentResult.getTotalHits(), currentQuery.getSize());
             /**
              * Do not let go further
              */
@@ -13036,7 +10913,7 @@ var PaginationComponent = /** @class */ (function (_super) {
             /**
              * Dispatch change page action
              */
-            PaginationActions_1.paginationChangeAction(environmentId, currentQuery, repository, page);
+            (0, PaginationActions_1.paginationChangeAction)(environmentId, currentQuery, repository, page);
         };
         _this.state = {
             page: 1
@@ -13069,7 +10946,7 @@ var PaginationComponent = /** @class */ (function (_super) {
             return;
         }
         var currentQuerySize = props.store.getCurrentQuery().getSize();
-        var totalPages = Helpers_1.getTotalPages(currentResult.getTotalHits(), currentQuerySize);
+        var totalPages = (0, Helpers_1.getTotalPages)(currentResult.getTotalHits(), currentQuerySize);
         /**
          * Hide container if hits are empty
          */
@@ -13096,26 +10973,26 @@ var PaginationComponent = /** @class */ (function (_super) {
         /**
          * Get Total pages
          */
-        var pages = Helpers_1.totalPagesToArray(totalPages);
+        var pages = (0, Helpers_1.totalPagesToArray)(totalPages);
         /**
          *  Get pages spectre
          */
         var spectreSize = (padding * 2) + 1;
         var isTouchingLeft = currentQueryPage <= (padding + 1);
         var isTouchingRight = (currentQueryPage + padding) >= totalPages;
-        var spectre = pages.slice(Helpers_1.getStart(totalPages, padding, currentQueryPage, spectreSize, isTouchingLeft, isTouchingRight), Helpers_1.getEnd(totalPages, padding, currentQueryPage, spectreSize, isTouchingLeft, isTouchingRight));
+        var spectre = pages.slice((0, Helpers_1.getStart)(totalPages, padding, currentQueryPage, spectreSize, isTouchingLeft, isTouchingRight), (0, Helpers_1.getEnd)(totalPages, padding, currentQueryPage, spectreSize, isTouchingLeft, isTouchingRight));
         /**
          * Dynamic disabled classes
          */
         var previousDisabledClass = (currentQueryPage === 1) ? disabledClassName : '';
         var nextDisabledClass = (currentQueryPage === totalPages) ? disabledClassName : '';
-        return (preact_1.h("ul", { className: "as-pagination " + containerClassName },
-            preact_1.h(NavigationComponent_1["default"], { isVisible: goFirstLast, classNames: "as-pagination__item as-pagination__item--first " + firstClassName + " " + previousDisabledClass, template: firstTemplate, handleClick: function () { return _this.handleClick(1); } }),
-            preact_1.h(NavigationComponent_1["default"], { isVisible: true, classNames: "as-pagination__item as-pagination__item--previous " + previousClassName + " " + previousDisabledClass, template: previousTemplate, handleClick: function () { return _this.handleClick(currentQueryPage - 1); } }),
-            spectre.map(function (page) { return (preact_1.h("li", { className: "as-pagination__item as-pagination__item--link " + itemClassName + " " + ((currentQueryPage === page) ? activeClassName : ''), onClick: function () { return _this.handleClick(page); } },
-                preact_1.h(Template_1["default"], { template: itemTemplate, data: { page: page.toLocaleString('de-DE') }, dictionary: _this.props.dictionary }))); }),
-            preact_1.h(NavigationComponent_1["default"], { isVisible: true, classNames: "as-pagination__item as-pagination__item--next " + nextClassName + " " + nextDisabledClass, template: nextTemplate, handleClick: function () { return _this.handleClick(currentQueryPage + 1); } }),
-            preact_1.h(NavigationComponent_1["default"], { isVisible: goFirstLast, classNames: "as-pagination__item as-pagination__item--last " + lastClassName + " " + nextDisabledClass, template: lastTemplate, handleClick: function () { return _this.handleClick(totalPages); } })));
+        return ((0, preact_1.h)("ul", { className: "as-pagination ".concat(containerClassName) },
+            (0, preact_1.h)(NavigationComponent_1["default"], { isVisible: goFirstLast, classNames: "as-pagination__item as-pagination__item--first ".concat(firstClassName, " ").concat(previousDisabledClass), template: firstTemplate, handleClick: function () { return _this.handleClick(1); } }),
+            (0, preact_1.h)(NavigationComponent_1["default"], { isVisible: true, classNames: "as-pagination__item as-pagination__item--previous ".concat(previousClassName, " ").concat(previousDisabledClass), template: previousTemplate, handleClick: function () { return _this.handleClick(currentQueryPage - 1); } }),
+            spectre.map(function (page) { return ((0, preact_1.h)("li", { className: "as-pagination__item as-pagination__item--link ".concat(itemClassName, " ").concat((currentQueryPage === page) ? activeClassName : ''), onClick: function () { return _this.handleClick(page); } },
+                (0, preact_1.h)(Template_1["default"], { template: itemTemplate, data: { page: page.toLocaleString('de-DE') }, dictionary: _this.props.dictionary }))); }),
+            (0, preact_1.h)(NavigationComponent_1["default"], { isVisible: true, classNames: "as-pagination__item as-pagination__item--next ".concat(nextClassName, " ").concat(nextDisabledClass), template: nextTemplate, handleClick: function () { return _this.handleClick(currentQueryPage + 1); } }),
+            (0, preact_1.h)(NavigationComponent_1["default"], { isVisible: goFirstLast, classNames: "as-pagination__item as-pagination__item--last ".concat(lastClassName, " ").concat(nextDisabledClass), template: lastTemplate, handleClick: function () { return _this.handleClick(totalPages); } })));
     };
     return PaginationComponent;
 }(preact_1.Component));
@@ -13176,9 +11053,9 @@ function aggregationSetup(environmentId, currentQuery, filterName, filterField, 
     var filterType = withMinMax ? 'range_min_max' : 'range';
     var filterValues = withMinMax ? ['..'] : [min + '..' + max];
     clonedQuery.aggregateByRange(filterName, filterField, filterValues, apisearch_1.FILTER_AT_LEAST_ONE, filterType);
-    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
+    var dispatcher = Container_1["default"].get("".concat(Constants_1.APISEARCH_DISPATCHER, "__").concat(environmentId));
     dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
-        query: clonedQuery,
+        query: clonedQuery
     });
 }
 exports.aggregationSetup = aggregationSetup;
@@ -13194,7 +11071,7 @@ exports.aggregationSetup = aggregationSetup;
  */
 function filterAction(environmentId, currentQuery, repository, filterName, filterField, from, to) {
     window.postMessage({
-        name: "apisearch_scroll_top",
+        name: "apisearch_scroll_top"
     }, "*");
     var clonedQuery = Clone_1["default"].object(currentQuery);
     var realValueFrom = Math.min(from, to);
@@ -13202,13 +11079,13 @@ function filterAction(environmentId, currentQuery, repository, filterName, filte
     var toWithIncluded = realValueTo + ']';
     clonedQuery.filterByRange(filterName, filterField, [], [realValueFrom + ".." + toWithIncluded], apisearch_1.FILTER_AT_LEAST_ONE, 'range_min_max', false);
     clonedQuery.page = 1;
-    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
+    var dispatcher = Container_1["default"].get("".concat(Constants_1.APISEARCH_DISPATCHER, "__").concat(environmentId));
     repository
         .query(clonedQuery)
         .then(function (result) {
         dispatcher.dispatch("RENDER_FETCHED_DATA", {
             query: clonedQuery,
-            result: result,
+            result: result
         });
     })["catch"](function (error) {
         // Do nothing
@@ -13235,6 +11112,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -13274,7 +11153,7 @@ var RangeFilterComponent = /** @class */ (function (_super) {
                 to: null,
                 min: null,
                 max: null,
-                visible: true,
+                visible: true
             };
         });
         return _this;
@@ -13288,7 +11167,7 @@ var RangeFilterComponent = /** @class */ (function (_super) {
         var filterName = props.filterName;
         var filterField = props.filterField;
         var currentQuery = props.store.getCurrentQuery();
-        RangeFilterActions_1.aggregationSetup(environmentId, currentQuery, filterName, filterField, props.minValue, props.maxValue);
+        (0, RangeFilterActions_1.aggregationSetup)(environmentId, currentQuery, filterName, filterField, props.minValue, props.maxValue);
     };
     RangeFilterComponent.prototype.configureFromObserver = function () {
         var that = this;
@@ -13465,14 +11344,14 @@ var RangeFilterComponent = /** @class */ (function (_super) {
     RangeFilterComponent.prototype.render = function (props, state) {
         var _this = this;
         var filterName = props.filterName;
-        var ref = compat_1.useRef(null);
+        var ref = (0, compat_1.useRef)(null);
         var topTemplate = props.template.top;
         var sliderTemplate = props.template.slider;
         var containerClassName = props.classNames.container;
         var topClassName = props.classNames.top;
         var wrapperClassName = props.classNames.wrapper;
         var that = this;
-        compat_1.useEffect(function () {
+        (0, compat_1.useEffect)(function () {
             var self = _this;
             if (!ref.current) {
                 return;
@@ -13505,10 +11384,10 @@ var RangeFilterComponent = /** @class */ (function (_super) {
             from === min &&
             to === max);
         var visibleStyle = isVisible ? '' : 'display:none!important;';
-        return (preact_1.h("div", { id: this.rangeUid, className: "as-rangeFilter " + containerClassName, style: visibleStyle },
-            preact_1.h(Template_1["default"], { template: topTemplate, className: "as-rangeFilter__top " + topClassName, dictionary: this.props.dictionary }),
-            preact_1.h("div", { className: "as-rangeFilter__wrapper " + wrapperClassName },
-                preact_1.h("input", __assign({ type: type, "class": "as-rangeFilter__from " + props.classNames.input + " as-rangeFilter__" + this.uid + " as-rangeFilter__from__" + this.uid }, props.attributes.from, { value: from, min: min, max: max, step: props.step, onClick: function (e) {
+        return ((0, preact_1.h)("div", { id: this.rangeUid, className: "as-rangeFilter ".concat(containerClassName), style: visibleStyle },
+            (0, preact_1.h)(Template_1["default"], { template: topTemplate, className: "as-rangeFilter__top ".concat(topClassName), dictionary: this.props.dictionary }),
+            (0, preact_1.h)("div", { className: "as-rangeFilter__wrapper ".concat(wrapperClassName) },
+                (0, preact_1.h)("input", __assign({ type: type, "class": "as-rangeFilter__from ".concat(props.classNames.input, " as-rangeFilter__").concat(this.uid, " as-rangeFilter__from__").concat(this.uid) }, props.attributes.from, { value: from, min: min, max: max, step: props.step, onClick: function (e) {
                         if (isNotNative)
                             return false;
                         that.handleSliderChange([parseInt(e.target.value), to]);
@@ -13524,7 +11403,7 @@ var RangeFilterComponent = /** @class */ (function (_super) {
                         }
                         that.handleSliderChange(positions);
                     }, autocomplete: "off" })),
-                preact_1.h("input", __assign({ type: type, "class": "as-rangeFilter__to " + props.classNames.input + " as-rangeFilter__" + this.uid + " as-rangeFilter__to__" + this.uid }, props.attributes.to, { value: to, min: min, max: max, step: props.step, onClick: function (e) {
+                (0, preact_1.h)("input", __assign({ type: type, "class": "as-rangeFilter__to ".concat(props.classNames.input, " as-rangeFilter__").concat(this.uid, " as-rangeFilter__to__").concat(this.uid) }, props.attributes.to, { value: to, min: min, max: max, step: props.step, onClick: function (e) {
                         if (isNotNative)
                             return false;
                         that.handleSliderChange([from, parseInt(e.target.value)]);
@@ -13540,8 +11419,8 @@ var RangeFilterComponent = /** @class */ (function (_super) {
                         }
                         that.handleSliderChange(positions);
                     }, autocomplete: "off" })),
-                preact_1.h("div", { "class": "slider" },
-                    preact_1.h(Template_1["default"], { template: sliderTemplate, dictionary: this.props.dictionary })))));
+                (0, preact_1.h)("div", { "class": "slider" },
+                    (0, preact_1.h)(Template_1["default"], { template: sliderTemplate, dictionary: this.props.dictionary })))));
     };
     /**
      * Apply filter
@@ -13551,7 +11430,7 @@ var RangeFilterComponent = /** @class */ (function (_super) {
         /**
          * Dispatch action
          */
-        RangeFilterActions_1.filterAction(props.environmentId, props.store.getCurrentQuery(), props.repository, props.filterName, props.filterField, valueFrom, valueTo);
+        (0, RangeFilterActions_1.filterAction)(props.environmentId, props.store.getCurrentQuery(), props.repository, props.filterName, props.filterField, valueFrom, valueTo);
     };
     /**
      * @param price
@@ -13588,7 +11467,7 @@ RangeFilterComponent.defaultProps = {
     template: {
         top: '',
         slider: ''
-    },
+    }
 };
 exports["default"] = RangeFilterComponent;
 
@@ -13621,10 +11500,10 @@ var Clone_1 = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
  */
 function reloadAction(environmentId, currentQuery, repository) {
     window.postMessage({
-        name: "apisearch_scroll_top",
+        name: "apisearch_scroll_top"
     }, "*");
     var clonedQuery = Clone_1["default"].object(currentQuery);
-    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
+    var dispatcher = Container_1["default"].get("".concat(Constants_1.APISEARCH_DISPATCHER, "__").concat(environmentId));
     if (repository instanceof apisearch_1.HttpRepository) {
         var httpClient = repository.getHttpClient();
         if (httpClient instanceof apisearch_1.CacheClient) {
@@ -13636,7 +11515,7 @@ function reloadAction(environmentId, currentQuery, repository) {
         .then(function (result) {
         dispatcher.dispatch("RENDER_FETCHED_DATA", {
             query: clonedQuery,
-            result: result,
+            result: result
         });
     })["catch"](function (error) {
         // Do nothing
@@ -13663,6 +11542,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -13690,7 +11571,7 @@ var ReloadComponent = /** @class */ (function (_super) {
             /**
              * Dispatch a clear filter action
              */
-            ReloadActions_1.reloadAction(environmentId, currentQuery, repository);
+            (0, ReloadActions_1.reloadAction)(environmentId, currentQuery, repository);
         };
         return _this;
     }
@@ -13703,18 +11584,18 @@ var ReloadComponent = /** @class */ (function (_super) {
         var props = this.props;
         var containerClassName = props.classNames.container;
         var containerTemplate = props.template.container;
-        return (preact_1.h("div", { className: "as-clearFilters " + containerClassName, onClick: this.handleClick },
-            preact_1.h(Template_1["default"], { template: containerTemplate, dictionary: this.props.dictionary })));
+        return ((0, preact_1.h)("div", { className: "as-clearFilters ".concat(containerClassName), onClick: this.handleClick },
+            (0, preact_1.h)(Template_1["default"], { template: containerTemplate, dictionary: this.props.dictionary })));
     };
     return ReloadComponent;
 }(preact_1.Component));
 ReloadComponent.defaultProps = {
     classNames: {
-        container: "",
+        container: ""
     },
     template: {
-        container: "Reload",
-    },
+        container: "Reload"
+    }
 };
 exports["default"] = ReloadComponent;
 
@@ -13737,6 +11618,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -13775,7 +11658,7 @@ var Item = /** @class */ (function (_super) {
         var queryText = this.props.data.query_text;
         if (this.props.data.highlights_enabled && queryText !== "") {
             var element = document.getElementById("as-result-" + this.props.data.uuid_composed);
-            Highlight_1.highlightElement(element, queryText);
+            (0, Highlight_1.highlightElement)(element, queryText);
         }
     };
     /**
@@ -13790,7 +11673,7 @@ var Item = /** @class */ (function (_super) {
         var data = props.data;
         var dictionary = (_a = props.dictionary) !== null && _a !== void 0 ? _a : {};
         var id = "as-result-" + data.uuid_composed;
-        return preact_1.h(Template_1["default"], { template: template, data: data, id: id, className: "" + props.className, dictionary: dictionary });
+        return (0, preact_1.h)(Template_1["default"], { template: template, data: data, id: id, className: "".concat(props.className), dictionary: dictionary });
     };
     return Item;
 }(preact_1.Component));
@@ -13852,9 +11735,9 @@ function configureQuery(environmentId, currentQuery, itemsPerPage, highlightsEna
     if (minScore > 0) {
         clonedQuery.minScore = minScore;
     }
-    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
+    var dispatcher = Container_1["default"].get("".concat(Constants_1.APISEARCH_DISPATCHER, "__").concat(environmentId));
     dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
-        query: clonedQuery,
+        query: clonedQuery
     });
 }
 exports.configureQuery = configureQuery;
@@ -13869,13 +11752,13 @@ exports.configureQuery = configureQuery;
 function infiniteScrollNextPageAction(environmentId, currentQuery, repository, nextPage) {
     var clonedQuery = Clone_1["default"].object(currentQuery);
     clonedQuery.page = nextPage;
-    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
+    var dispatcher = Container_1["default"].get("".concat(Constants_1.APISEARCH_DISPATCHER, "__").concat(environmentId));
     repository
         .query(clonedQuery)
         .then(function (result) {
         dispatcher.dispatch("RENDER_FETCHED_DATA", {
             query: clonedQuery,
-            result: result,
+            result: result
         });
     })["catch"](function (error) {
         // Do nothing
@@ -13902,6 +11785,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -13940,8 +11825,8 @@ var ResultComponent = /** @class */ (function (_super) {
     function ResultComponent(props) {
         var _this = _super.call(this, props) || this;
         _this.fromLoadingNextPage = false;
-        _this.observer = compat_1.useRef();
-        _this.endResultsBoxRef = compat_1.useCallback(function (node) {
+        _this.observer = (0, compat_1.useRef)();
+        _this.endResultsBoxRef = (0, compat_1.useCallback)(function (node) {
             if (_this.observer.current instanceof IntersectionObserver) {
                 _this.observer.current.disconnect();
             }
@@ -13962,14 +11847,14 @@ var ResultComponent = /** @class */ (function (_super) {
             /**
              * Dispatch action
              */
-            Common_1.onWordClickAction(props.environmentId, props.store.getCurrentQuery(), props.repository, word);
+            (0, Common_1.onWordClickAction)(props.environmentId, props.store.getCurrentQuery(), props.repository, word);
         };
         _this.state = {
             customResponse: "",
             focus: props.fadeInSelector === "",
             hasNewPage: false,
             items: [],
-            page: 0,
+            page: 0
         };
         return _this;
     }
@@ -13977,14 +11862,14 @@ var ResultComponent = /** @class */ (function (_super) {
         var _a = this.props, environmentId = _a.environmentId, store = _a.store, repository = _a.repository;
         this.fromLoadingNextPage = true;
         this.currentExpectedPage = this.state.page + 1;
-        ResultActions_1.infiniteScrollNextPageAction(environmentId, store.getCurrentQuery(), repository, this.currentExpectedPage);
+        (0, ResultActions_1.infiniteScrollNextPageAction)(environmentId, store.getCurrentQuery(), repository, this.currentExpectedPage);
     };
     /**
      * Hook that change state once mouse clicks inside or outside the container
      */
     ResultComponent.prototype.addMouseDownListeners = function (ref, fadeInSelector) {
         var _this = this;
-        compat_1.useEffect(function () {
+        (0, compat_1.useEffect)(function () {
             var self = _this;
             /**
              * Alert if clicked on outside of element
@@ -13992,7 +11877,7 @@ var ResultComponent = /** @class */ (function (_super) {
             function handleClickOutside(event) {
                 self.setState(function () {
                     return {
-                        focus: event.target.closest(fadeInSelector) != null,
+                        focus: event.target.closest(fadeInSelector) != null
                     };
                 });
             }
@@ -14016,7 +11901,7 @@ var ResultComponent = /** @class */ (function (_super) {
                     customResponse: "",
                     hasNewPage: false,
                     items: [],
-                    page: 0,
+                    page: 0
                 };
             });
             return;
@@ -14036,7 +11921,7 @@ var ResultComponent = /** @class */ (function (_super) {
                 customResponse: currentResult.getMetadataValue("custom_response"),
                 hasNewPage: hasNewPage,
                 items: currentItems,
-                page: currentPage,
+                page: currentPage
             };
         });
     };
@@ -14048,7 +11933,7 @@ var ResultComponent = /** @class */ (function (_super) {
         /**
          * Dispatch action
          */
-        ResultActions_1.configureQuery(props.environmentId, props.store.getCurrentQuery(), props.itemsPerPage, props.highlightsEnabled, props.promote.map(function (itemUUID) {
+        (0, ResultActions_1.configureQuery)(props.environmentId, props.store.getCurrentQuery(), props.itemsPerPage, props.highlightsEnabled, props.promote.map(function (itemUUID) {
             return itemUUID instanceof ItemUUID_1.ItemUUID
                 ? itemUUID
                 : ItemUUID_1.ItemUUID.createFromArray(itemUUID);
@@ -14085,13 +11970,13 @@ var ResultComponent = /** @class */ (function (_super) {
         var currentQuery = props.store.getCurrentQuery();
         var currentVisibleResults = props.currentVisibleResults;
         var subResults = Object.values(currentResult.getSubresults());
-        var wrapperRef = compat_1.useRef(null);
+        var wrapperRef = (0, compat_1.useRef)(null);
         var customResponse = currentResult.getMetadataValue("custom_response");
         var redirection = currentResult.getMetadataValue("redirection");
         // Check for custom response html
         var customResponseBody;
         if (customResponse) {
-            customResponseBody = (preact_1.h(Template_1["default"], { template: customResponse.content, className: "as-result__custom_response", dictionary: this.props.dictionary }));
+            customResponseBody = ((0, preact_1.h)(Template_1["default"], { template: customResponse.content, className: "as-result__custom_response", dictionary: this.props.dictionary }));
             if (customResponse.only) {
                 return customResponseBody;
             }
@@ -14104,7 +11989,7 @@ var ResultComponent = /** @class */ (function (_super) {
             else if (redirection.type === "on_enter") {
                 window.postMessage({
                     name: "apisearch_bind_enter_redirection",
-                    url: redirection.url,
+                    url: redirection.url
                 }, "*");
                 withoutEnterRedirection = false;
             }
@@ -14112,7 +11997,7 @@ var ResultComponent = /** @class */ (function (_super) {
         if (withoutEnterRedirection) {
             window.postMessage({
                 name: "apisearch_bind_enter_redirection",
-                url: undefined,
+                url: undefined
             }, "*");
         }
         var hasInfiniteScrollNextPage = (props.infiniteScroll !== false) &&
@@ -14128,7 +12013,7 @@ var ResultComponent = /** @class */ (function (_super) {
             this.addMouseDownListeners(wrapperRef, props.fadeInSelector);
         }
         if (!currentVisibleResults || !this.state.focus) {
-            return (preact_1.h("div", { className: "as-result " + containerClassName }));
+            return ((0, preact_1.h)("div", { className: "as-result ".concat(containerClassName) }));
         }
         /**
          * Data accessible to the template
@@ -14136,7 +12021,7 @@ var ResultComponent = /** @class */ (function (_super) {
         var items = this.state.items;
         var reducedTemplateData = {
             query: currentQuery.getQueryText(),
-            suggestions: currentResult.getSuggestions(),
+            suggestions: currentResult.getSuggestions()
         };
         /**
          * We should add positions to items
@@ -14164,91 +12049,91 @@ var ResultComponent = /** @class */ (function (_super) {
             items: itemsForEvent.map(function (item) {
                 return {
                     fields: item.fields,
-                    uuid: item.uuid,
+                    uuid: item.uuid
                 };
-            }),
+            })
         }, "*");
         /**
          * Uses defined a custom items list. Old version
          */
         if (props.template.itemsList !== defaultTemplates_1.defaultItemsListTemplate) {
-            return (preact_1.h("div", { className: "as-result " + containerClassName, ref: wrapperRef, style: "position: relative" },
+            return ((0, preact_1.h)("div", { className: "as-result ".concat(containerClassName), ref: wrapperRef, style: "position: relative" },
                 (dirty)
-                    ? preact_1.h(Template_1["default"], { template: placeholderTemplate, className: "as-result__placeholder " + placeholderClassName, dictionary: this.props.dictionary })
-                    : preact_1.h(Template_1["default"], { template: itemsListTemplate, data: __assign(__assign({}, reducedTemplateData), { items: (items)
+                    ? (0, preact_1.h)(Template_1["default"], { template: placeholderTemplate, className: "as-result__placeholder ".concat(placeholderClassName), dictionary: this.props.dictionary })
+                    : (0, preact_1.h)(Template_1["default"], { template: itemsListTemplate, data: __assign(__assign({}, reducedTemplateData), { items: (items)
                                 ? items.map(function (item) { return _this.hydrateItem(item); })
-                                : [] }), className: "as-result__itemsList " + itemsListClassName, dictionary: this.props.dictionary }),
+                                : [] }), className: "as-result__itemsList ".concat(itemsListClassName), dictionary: this.props.dictionary }),
                 hasInfiniteScrollNextPage
                     ? (props.infiniteScrollButton
-                        ? preact_1.h("div", { onClick: function (e) {
+                        ? (0, preact_1.h)("div", { onClick: function (e) {
                                 that.loadNextPage();
                             } },
-                            preact_1.h(Template_1["default"], { template: props.template.next_page_button, data: {
-                                    page: this.state.page + 1,
+                            (0, preact_1.h)(Template_1["default"], { template: props.template.next_page_button, data: {
+                                    page: this.state.page + 1
                                 } }))
-                        : preact_1.h("div", { ref: this.endResultsBoxRef, style: "bottom: " + infiniteScrollMargin + "px; position: relative;" }))
+                        : (0, preact_1.h)("div", { ref: this.endResultsBoxRef, style: "bottom: ".concat(infiniteScrollMargin, "px; position: relative;") }))
                     : ""));
         }
         if (dirty) {
-            return (preact_1.h("div", { className: "as-result " + containerClassName, ref: wrapperRef },
-                preact_1.h(Template_1["default"], { template: placeholderTemplate, className: "as-result__placeholder " + placeholderClassName, dictionary: props.dictionary })));
+            return ((0, preact_1.h)("div", { className: "as-result ".concat(containerClassName), ref: wrapperRef },
+                (0, preact_1.h)(Template_1["default"], { template: placeholderTemplate, className: "as-result__placeholder ".concat(placeholderClassName), dictionary: props.dictionary })));
         }
         /**
          * New version
          */
-        return (preact_1.h("div", { className: "as-result " + containerClassName, ref: wrapperRef },
+        return ((0, preact_1.h)("div", { className: "as-result ".concat(containerClassName), ref: wrapperRef },
             customResponseBody,
             (dirty)
-                ? preact_1.h(Template_1["default"], { template: placeholderTemplate, className: "as-result__placeholder " + placeholderClassName, dictionary: this.props.dictionary })
+                ? (0, preact_1.h)(Template_1["default"], { template: placeholderTemplate, className: "as-result__placeholder ".concat(placeholderClassName), dictionary: this.props.dictionary })
                 : ((items.length > 0)
-                    ? (preact_1.h("div", { className: "as-result__itemsList " + props.classNames.itemsList },
+                    ? ((0, preact_1.h)("div", { className: "as-result__itemsList ".concat(props.classNames.itemsList) },
                         items.map(function (item) {
-                            return preact_1.h(Item_1["default"], { data: __assign(__assign({}, reducedTemplateData), _this.hydrateItem(item)), template: props.template.item, className: "as-result__item " + props.classNames.item, dictionary: props.dictionary });
+                            return (0, preact_1.h)(Item_1["default"], { data: __assign(__assign({}, reducedTemplateData), _this.hydrateItem(item)), template: props.template.item, className: "as-result__item ".concat(props.classNames.item), dictionary: props.dictionary });
                         }),
                         hasInfiniteScrollNextPage
                             ? (props.infiniteScrollButton
                                 ? ""
-                                : (preact_1.h("div", { id: "as-result__infinite_scroll_inspector", ref: this.endResultsBoxRef, style: "bottom: " + infiniteScrollMargin + "px; position: relative; width: 100%;" })))
+                                : ((0, preact_1.h)("div", { id: "as-result__infinite_scroll_inspector", ref: this.endResultsBoxRef, style: "bottom: ".concat(infiniteScrollMargin, "px; position: relative; width: 100%;") })))
                             : ""))
                     : ""),
             hasInfiniteScrollNextPage
                 ? (props.infiniteScrollButton
-                    ? (preact_1.h("div", { onClick: function (e) {
+                    ? ((0, preact_1.h)("div", { onClick: function (e) {
                             that.loadNextPage();
                         } },
-                        preact_1.h(Template_1["default"], { template: props.template.next_page_button, data: {
-                                page: this.state.page + 1,
+                        (0, preact_1.h)(Template_1["default"], { template: props.template.next_page_button, data: {
+                                page: this.state.page + 1
                             } })))
                     : "")
                 : "",
             (subResults.length > 0)
-                ? preact_1.h("div", { className: "as-result__alternativeList" }, subResults.map(function (subResult) {
-                    return preact_1.h("div", { className: "as-result__alternative" },
-                        preact_1.h("div", { className: "as-result__alternative_query" },
-                            preact_1.h("span", { onClick: function (e) {
+                ? (0, preact_1.h)("div", { className: "as-result__alternativeList" }, subResults.map(function (subResult) {
+                    return (0, preact_1.h)("div", { className: "as-result__alternative" },
+                        (0, preact_1.h)("div", { className: "as-result__alternative_query" },
+                            (0, preact_1.h)("span", { onClick: function (e) {
                                     e.stopPropagation();
                                     e.preventDefault();
                                     that.handleAlternativeClick(subResult.metadata.query_text);
                                 } },
-                                preact_1.h(Template_1["default"], { template: props.template.alternative_title, data: {
-                                        word: subResult.metadata.query_text_html,
+                                (0, preact_1.h)(Template_1["default"], { template: props.template.alternative_title, data: {
+                                        word: subResult.metadata.query_text_html
                                     } })),
-                            preact_1.h("a", { onClick: function (e) {
+                            (0, preact_1.h)("a", { onClick: function (e) {
                                     e.stopPropagation();
                                     e.preventDefault();
                                     that.handleAlternativeClick(subResult.metadata.query_text);
                                 } },
-                                preact_1.h(Template_1["default"], { template: props.template.alternative_all_results, data: {
-                                        num: subResult.getTotalHits(),
+                                (0, preact_1.h)(Template_1["default"], { template: props.template.alternative_all_results, data: {
+                                        num: subResult.getTotalHits()
                                     }, dictionary: props.dictionary }))),
-                        preact_1.h("div", { className: "as-result__alternative_items" }, subResult.items.map(function (item) {
-                            return preact_1.h(Item_1["default"], { data: __assign(__assign({}, reducedTemplateData), _this.hydrateItem(item)), template: props.template.item, className: "as-result__alternative_item " + props.classNames.item, dictionary: _this.props.dictionary });
+                        (0, preact_1.h)("div", { className: "as-result__alternative_items" }, subResult.items.map(function (item) {
+                            return (0, preact_1.h)(Item_1["default"], { data: __assign(__assign({}, reducedTemplateData), _this.hydrateItem(item)), template: props.template.item, className: "as-result__alternative_item ".concat(props.classNames.item), dictionary: _this.props.dictionary });
                         })));
                 }))
                 : ((items.length === 0)
-                    ? preact_1.h(Template_1["default"], { template: props.template.noResults, data: {
-                            query: currentQuery.getQueryText(),
-                        }, className: "as-result__noresults " + props.classNames.noResults, dictionary: props.dictionary })
+                    ? (0, preact_1.h)(Template_1["default"], { template: props.template.noResults, data: {
+                            query: currentQuery.getQueryText()
+                        }, className: "as-result__noresults ".concat(props.classNames.noResults), dictionary: props.dictionary })
                     : "")));
     };
     /**
@@ -14257,8 +12142,8 @@ var ResultComponent = /** @class */ (function (_super) {
     ResultComponent.prototype.hydrateItem = function (item) {
         var props = this.props;
         var environmentId = props.environmentId;
-        var config = Container_1["default"].get(Constants_1.APISEARCH_CONFIG + "__" + environmentId);
-        var apisearchUI = Container_1["default"].get(Constants_1.APISEARCH_UI + "__" + environmentId);
+        var config = Container_1["default"].get("".concat(Constants_1.APISEARCH_CONFIG, "__").concat(environmentId));
+        var apisearchUI = Container_1["default"].get("".concat(Constants_1.APISEARCH_UI, "__").concat(environmentId));
         var apisearchReference = apisearchUI.reference;
         var appId = config.app_id;
         var appUUID = item.getAppUUID();
@@ -14293,7 +12178,7 @@ var ResultComponent = /** @class */ (function (_super) {
             highlights_enabled: this.props.highlightsEnabled,
             striptags: function () {
                 return function (val, render) { return render(val).replace(/(<([^>]+)>)/ig, ""); };
-            },
+            }
         });
     };
     return ResultComponent;
@@ -14310,7 +12195,7 @@ ResultComponent.defaultProps = {
         itemsList: "",
         item: "",
         noResults: "",
-        placeholder: "",
+        placeholder: ""
     },
     template: {
         itemsList: defaultTemplates_1.defaultItemsListTemplate,
@@ -14319,11 +12204,11 @@ ResultComponent.defaultProps = {
         placeholder: null,
         alternative_title: defaultTemplates_1.defaultAlternativeTitleTemplate,
         alternative_all_results: defaultTemplates_1.defaultAlternativeAllResultsTemplate,
-        next_page_button: defaultTemplates_1.defaultNextPageButtonTemplate,
+        next_page_button: defaultTemplates_1.defaultNextPageButtonTemplate
     },
     formatData: function (data) { return data; },
     fadeInSelector: "",
-    fieldsConciliation: {},
+    fieldsConciliation: {}
 };
 exports["default"] = ResultComponent;
 
@@ -14366,6 +12251,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -14384,7 +12271,7 @@ var AutocompleteComponent = /** @class */ (function (_super) {
     function AutocompleteComponent(props) {
         var _this = _super.call(this, props) || this;
         _this.state = {
-            autocomplete: "",
+            autocomplete: ""
         };
         return _this;
     }
@@ -14397,14 +12284,14 @@ var AutocompleteComponent = /** @class */ (function (_super) {
         if (props.autocomplete !== null) {
             this.setState(function (prevState) {
                 return {
-                    autocomplete: props.autocomplete,
+                    autocomplete: props.autocomplete
                 };
             });
         }
         else {
             this.setState(function (prevState) {
                 return {
-                    autocomplete: "",
+                    autocomplete: ""
                 };
             });
         }
@@ -14423,7 +12310,7 @@ var AutocompleteComponent = /** @class */ (function (_super) {
         var formattedAutocompleteText = autocompleteText === ""
             ? ""
             : queryText + autocompleteText + " ⤷";
-        return (preact_1.h("input", { type: "text", className: "as-searchInput__input as-searchInput__autocomplete " + inputClassName, placeholder: formattedAutocompleteText, style: "position: absolute; top: 0px; left: 0px; background-color: white;" }));
+        return ((0, preact_1.h)("input", { type: "text", className: "as-searchInput__input as-searchInput__autocomplete ".concat(inputClassName), placeholder: formattedAutocompleteText, style: "position: absolute; top: 0px; left: 0px; background-color: white;" }));
     };
     return AutocompleteComponent;
 }(preact_1.Component));
@@ -14455,7 +12342,7 @@ var Clone_1 = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
  * @param queryOperator
  */
 function initialSearchSetup(environmentId, currentQuery, autocomplete, searchableFields, queryOperator) {
-    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
+    var dispatcher = Container_1["default"].get("".concat(Constants_1.APISEARCH_DISPATCHER, "__").concat(environmentId));
     var clonedQuery = Clone_1["default"].object(currentQuery);
     clonedQuery.page = 1;
     clonedQuery.queryOperator = queryOperator;
@@ -14466,7 +12353,7 @@ function initialSearchSetup(environmentId, currentQuery, autocomplete, searchabl
         clonedQuery.enableAutocomplete();
     }
     dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
-        query: clonedQuery,
+        query: clonedQuery
     });
 }
 exports.initialSearchSetup = initialSearchSetup;
@@ -14481,9 +12368,9 @@ exports.initialSearchSetup = initialSearchSetup;
  */
 function simpleSearchAction(environmentId, currentQuery, repository, queryText, visibleResults) {
     window.postMessage({
-        name: "apisearch_scroll_top",
+        name: "apisearch_scroll_top"
     }, "*");
-    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
+    var dispatcher = Container_1["default"].get("".concat(Constants_1.APISEARCH_DISPATCHER, "__").concat(environmentId));
     var clonedQuery = Clone_1["default"].object(currentQuery);
     clonedQuery.filters._query.values = [queryText];
     clonedQuery.page = 1;
@@ -14491,7 +12378,7 @@ function simpleSearchAction(environmentId, currentQuery, repository, queryText, 
         dispatcher.dispatch("RENDER_FETCHED_DATA", {
             query: clonedQuery,
             result: null,
-            visibleResults: visibleResults,
+            visibleResults: visibleResults
         });
         return;
     }
@@ -14501,7 +12388,7 @@ function simpleSearchAction(environmentId, currentQuery, repository, queryText, 
         dispatcher.dispatch("RENDER_FETCHED_DATA", {
             query: clonedQuery,
             result: result,
-            visibleResults: visibleResults,
+            visibleResults: visibleResults
         });
     })["catch"](function (error) {
         // Do nothing
@@ -14528,6 +12415,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -14560,7 +12449,7 @@ var SearchInputComponent = /** @class */ (function (_super) {
      */
     function SearchInputComponent(props) {
         var _this = _super.call(this, props) || this;
-        _this.inputRef = compat_1.useRef(null);
+        _this.inputRef = (0, compat_1.useRef)(null);
         /**
          * @param search
          */
@@ -14569,7 +12458,7 @@ var SearchInputComponent = /** @class */ (function (_super) {
             var startSearchOn = props.startSearchOn;
             var finalSpace = search.charAt(search.length - 1) === " " ? " " : "";
             var targetValueNoSpaces = search.trim() + finalSpace;
-            SearchInputActions_1.simpleSearchAction(props.environmentId, props.store.getCurrentQuery(), props.repository, targetValueNoSpaces === " " ? "" : targetValueNoSpaces, search.length >= startSearchOn);
+            (0, SearchInputActions_1.simpleSearchAction)(props.environmentId, props.store.getCurrentQuery(), props.repository, targetValueNoSpaces === " " ? "" : targetValueNoSpaces, search.length >= startSearchOn);
         };
         /**
          * Clear search
@@ -14581,7 +12470,7 @@ var SearchInputComponent = /** @class */ (function (_super) {
             var currentQuery = props.store.getCurrentQuery();
             var repository = props.repository;
             var visibleResults = 0 === startSearchOn;
-            SearchInputActions_1.simpleSearchAction(environmentId, currentQuery, repository, "", visibleResults);
+            (0, SearchInputActions_1.simpleSearchAction)(environmentId, currentQuery, repository, "", visibleResults);
         };
         if (props.autocomplete) {
             _this.state = { queryText: "" };
@@ -14599,7 +12488,7 @@ var SearchInputComponent = /** @class */ (function (_super) {
      */
     SearchInputComponent.prototype.componentWillReceiveProps = function (props) {
         this.setState({
-            queryText: props.store.getCurrentQuery().getQueryText(),
+            queryText: props.store.getCurrentQuery().getQueryText()
         });
     };
     /**
@@ -14625,7 +12514,7 @@ var SearchInputComponent = /** @class */ (function (_super) {
         var props = this.props;
         var autocomplete = this.props.store.getCurrentResult().getAutocomplete();
         if (autocomplete !== null && autocomplete !== "") {
-            SearchInputActions_1.simpleSearchAction(props.environmentId, props.store.getCurrentQuery(), props.repository, this.props.store.getCurrentResult().getAutocomplete(), true);
+            (0, SearchInputActions_1.simpleSearchAction)(props.environmentId, props.store.getCurrentQuery(), props.repository, this.props.store.getCurrentResult().getAutocomplete(), true);
             e.preventDefault();
             return;
         }
@@ -14664,7 +12553,7 @@ var SearchInputComponent = /** @class */ (function (_super) {
                     query_text: currentQueryText,
                     query: currentQuery.toArray(),
                     site: props.store.getSite(),
-                    device: props.store.getDevice(),
+                    device: props.store.getDevice()
                 }, "*");
             }, timeout);
         }
@@ -14705,18 +12594,18 @@ var SearchInputComponent = /** @class */ (function (_super) {
             ? "autocompletable"
             : "";
         this.dispatchQueryStringEvent(props, 2000);
-        var searchInput = (preact_1.h("input", __assign({ type: "text", className: "as-searchInput__input " + inputClassName + " " + autocompletableClass, placeholder: placeholder, autofocus: autofocus }, htmlNodeInheritProps, { onInput: function (event) { return _this.handleSearch(event.target.value); }, value: currentQueryText, style: style, onKeyDown: keyDownCallback, onTouchStart: keyDownAction, ref: this.inputRef })));
+        var searchInput = ((0, preact_1.h)("input", __assign({ type: "text", className: "as-searchInput__input ".concat(inputClassName, " ").concat(autocompletableClass), placeholder: placeholder, autofocus: autofocus }, htmlNodeInheritProps, { onInput: function (event) { return _this.handleSearch(event.target.value); }, value: currentQueryText, style: style, onKeyDown: keyDownCallback, onTouchStart: keyDownAction, ref: this.inputRef })));
         if (showAutocomplete) {
-            searchInput = (preact_1.h("div", { style: "position: relative" },
-                preact_1.h(AutocompleteComponent_1["default"], { autocomplete: autocomplete, queryText: currentQueryText, inputClassName: inputClassName }),
+            searchInput = ((0, preact_1.h)("div", { style: "position: relative" },
+                (0, preact_1.h)(AutocompleteComponent_1["default"], { autocomplete: autocomplete, queryText: currentQueryText, inputClassName: inputClassName }),
                 searchInput));
         }
         if (withContainer) {
-            searchInput = (preact_1.h("div", { className: "as-searchInput " + containerClassName },
+            searchInput = ((0, preact_1.h)("div", { className: "as-searchInput ".concat(containerClassName) },
                 searchInput,
                 (clearSearch && currentQueryText && currentQueryText.length !== 0)
-                    ? (preact_1.h("div", { className: "as-searchInput__clearSearch " + clearSearchClassName, onClick: this.clearSearch },
-                        preact_1.h(Template_1["default"], { template: clearSearchTemplate, dictionary: props.dictionary }))) : null));
+                    ? ((0, preact_1.h)("div", { className: "as-searchInput__clearSearch ".concat(clearSearchClassName), onClick: this.clearSearch },
+                        (0, preact_1.h)(Template_1["default"], { template: clearSearchTemplate, dictionary: props.dictionary }))) : null));
         }
         return searchInput;
     };
@@ -14734,12 +12623,12 @@ SearchInputComponent.defaultProps = {
     classNames: {
         container: "",
         input: "",
-        clearSearch: "",
+        clearSearch: ""
     },
     template: {
         clearSearch: "x",
-        speechRecognition: "{S}",
-    },
+        speechRecognition: "{S}"
+    }
 };
 exports["default"] = SearchInputComponent;
 
@@ -14762,6 +12651,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -14797,7 +12688,7 @@ var SnapshotComponent = /** @class */ (function (_super) {
         var queryAsJson = this.state.query == undefined
             ? ''
             : JSON.stringify(this.state.query.toArray());
-        return (preact_1.h("div", null, queryAsJson));
+        return ((0, preact_1.h)("div", null, queryAsJson));
     };
     return SnapshotComponent;
 }(preact_1.Component));
@@ -14828,12 +12719,12 @@ var SortByHelper_1 = __webpack_require__(/*! ./SortByHelper */ "./src/components
  * @param initialOption
  */
 function initialSortBySetup(environmentId, currentQuery, initialOption) {
-    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
+    var dispatcher = Container_1["default"].get("".concat(Constants_1.APISEARCH_DISPATCHER, "__").concat(environmentId));
     var clonedQuery = Clone_1["default"].object(currentQuery);
-    SortByHelper_1.applySortByToQuery(clonedQuery, initialOption);
+    (0, SortByHelper_1.applySortByToQuery)(clonedQuery, initialOption);
     clonedQuery.page = 1;
     dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
-        query: clonedQuery,
+        query: clonedQuery
     });
 }
 exports.initialSortBySetup = initialSortBySetup;
@@ -14847,18 +12738,18 @@ exports.initialSortBySetup = initialSortBySetup;
  */
 function onChangeSearchAction(environmentId, currentQuery, repository, selectedOption) {
     window.postMessage({
-        name: "apisearch_scroll_top",
+        name: "apisearch_scroll_top"
     }, "*");
     var clonedQuery = Clone_1["default"].object(currentQuery);
-    SortByHelper_1.applySortByToQuery(clonedQuery, selectedOption);
+    (0, SortByHelper_1.applySortByToQuery)(clonedQuery, selectedOption);
     clonedQuery.page = 1;
-    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
+    var dispatcher = Container_1["default"].get("".concat(Constants_1.APISEARCH_DISPATCHER, "__").concat(environmentId));
     repository
         .query(clonedQuery)
         .then(function (result) {
         dispatcher.dispatch("RENDER_FETCHED_DATA", {
             query: clonedQuery,
-            result: result,
+            result: result
         });
     })["catch"](function (error) {
         // Do nothing
@@ -14885,6 +12776,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -14912,12 +12805,12 @@ var SortByComponent = /** @class */ (function (_super) {
             var repository = props.repository;
             var currentOption = e.target.value;
             _this.setState({
-                value: currentOption,
+                value: currentOption
             });
             /**
              * Dispatch action
              */
-            SortByActions_1.onChangeSearchAction(environmentId, currentQuery, repository, currentOption);
+            (0, SortByActions_1.onChangeSearchAction)(environmentId, currentQuery, repository, currentOption);
         };
         return _this;
     }
@@ -14932,12 +12825,12 @@ var SortByComponent = /** @class */ (function (_super) {
         var currentOption = options[0].value;
         this.setState({
             value: currentOption,
-            visible: false,
+            visible: false
         });
         /**
          * Dispatch action
          */
-        SortByActions_1.initialSortBySetup(environmentId, currentQuery, currentOption);
+        (0, SortByActions_1.initialSortBySetup)(environmentId, currentQuery, currentOption);
     };
     /**
      * Component will receive props
@@ -14954,7 +12847,7 @@ var SortByComponent = /** @class */ (function (_super) {
             this.setState(function (prevState) {
                 return {
                     value: nextFirstSortAsString,
-                    visible: nextVisible,
+                    visible: nextVisible
                 };
             });
         }
@@ -14977,16 +12870,16 @@ var SortByComponent = /** @class */ (function (_super) {
                 return o.value !== "distance";
             });
         }
-        return (preact_1.h("div", { className: "as-sortBy " + containerClassName },
-            preact_1.h("select", { className: "as-sortBy__selector " + selectClassName, onChange: this.handleChange, value: state.value }, options.map(function (option) { return (preact_1.h("option", { value: option.value }, option.name)); }))));
+        return ((0, preact_1.h)("div", { className: "as-sortBy ".concat(containerClassName) },
+            (0, preact_1.h)("select", { className: "as-sortBy__selector ".concat(selectClassName), onChange: this.handleChange, value: state.value }, options.map(function (option) { return ((0, preact_1.h)("option", { value: option.value }, option.name)); }))));
     };
     return SortByComponent;
 }(preact_1.Component));
 SortByComponent.defaultProps = {
     classNames: {
         container: "",
-        select: "",
-    },
+        select: ""
+    }
 };
 exports["default"] = SortByComponent;
 
@@ -15045,7 +12938,7 @@ function splitQueryValue(string) {
     var queryValue = string.split(":");
     return {
         field: queryValue[0],
-        sort: queryValue[1],
+        sort: queryValue[1]
     };
 }
 
@@ -15075,9 +12968,9 @@ function enableSuggestions(environmentId, currentQuery, numberOfSuggestions) {
     if (numberOfSuggestions > 0) {
         clonedQuery.setNumberOfSuggestions(numberOfSuggestions);
     }
-    var dispatcher = Container_1["default"].get(Constants_1.APISEARCH_DISPATCHER + "__" + environmentId);
+    var dispatcher = Container_1["default"].get("".concat(Constants_1.APISEARCH_DISPATCHER, "__").concat(environmentId));
     dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
-        query: clonedQuery,
+        query: clonedQuery
     });
 }
 exports.enableSuggestions = enableSuggestions;
@@ -15101,6 +12994,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -15133,7 +13028,7 @@ var SuggestionsFilterComponent = /** @class */ (function (_super) {
             /**
              * Dispatch action
              */
-            Common_1.onWordClickAction(props.environmentId, props.store.getCurrentQuery(), props.repository, word);
+            (0, Common_1.onWordClickAction)(props.environmentId, props.store.getCurrentQuery(), props.repository, word);
         };
         return _this;
     }
@@ -15148,7 +13043,7 @@ var SuggestionsFilterComponent = /** @class */ (function (_super) {
         if (queryText !== "") {
             var list = document.getElementsByClassName("as-suggestions");
             for (var i = 0; i < list.length; i++) {
-                Highlight_1.highlightElement(list[i], queryText);
+                (0, Highlight_1.highlightElement)(list[i], queryText);
             }
         }
     };
@@ -15158,7 +13053,7 @@ var SuggestionsFilterComponent = /** @class */ (function (_super) {
     SuggestionsFilterComponent.prototype.componentWillMount = function () {
         this.setState(function (prevState) {
             return {
-                words: [],
+                words: []
             };
         });
         var props = this.props;
@@ -15167,7 +13062,7 @@ var SuggestionsFilterComponent = /** @class */ (function (_super) {
         /**
          * Dispatch action
          */
-        SuggestionsFilterActions_1.enableSuggestions(environmentId, currentQuery, props.numberOfSuggestions);
+        (0, SuggestionsFilterActions_1.enableSuggestions)(environmentId, currentQuery, props.numberOfSuggestions);
     };
     /**
      * Component will receive props
@@ -15180,7 +13075,7 @@ var SuggestionsFilterComponent = /** @class */ (function (_super) {
                 words: props
                     .store
                     .getCurrentResult()
-                    .getSuggestions(),
+                    .getSuggestions()
             };
         });
     };
@@ -15201,18 +13096,18 @@ var SuggestionsFilterComponent = /** @class */ (function (_super) {
         var topTemplate = props.template.top;
         var itemTemplate = props.template.item;
         var that = this;
-        return (preact_1.h("div", { className: "as-suggestions " + containerClassName + " " + noSuggestionsClassName },
-            preact_1.h(Template_1["default"], { template: topTemplate, className: "as-suggestions__top " + topClassName, dictionary: this.props.dictionary }),
-            preact_1.h("div", { className: "as-suggestions__itemsList " + itemsListClassName }, state.words.map(function (word) {
+        return ((0, preact_1.h)("div", { className: "as-suggestions ".concat(containerClassName, " ").concat(noSuggestionsClassName) },
+            (0, preact_1.h)(Template_1["default"], { template: topTemplate, className: "as-suggestions__top ".concat(topClassName), dictionary: this.props.dictionary }),
+            (0, preact_1.h)("div", { className: "as-suggestions__itemsList ".concat(itemsListClassName) }, state.words.map(function (word) {
                 var templateData = {
-                    word: word,
+                    word: word
                 };
-                return (preact_1.h("div", { className: "as-suggestions__item " + itemClassName, onClick: function (e) {
+                return ((0, preact_1.h)("div", { className: "as-suggestions__item ".concat(itemClassName), onClick: function (e) {
                         e.stopPropagation();
                         e.preventDefault();
                         that.handleClick(word);
                     } },
-                    preact_1.h(Template_1["default"], { template: itemTemplate, data: templateData, dictionary: _this.props.dictionary })));
+                    (0, preact_1.h)(Template_1["default"], { template: itemTemplate, data: templateData, dictionary: _this.props.dictionary })));
             }))));
     };
     return SuggestionsFilterComponent;
@@ -15222,12 +13117,12 @@ SuggestionsFilterComponent.defaultProps = {
         container: "",
         top: "",
         itemsList: "",
-        item: "",
+        item: ""
     },
     template: {
         top: null,
-        item: defaultTemplates_1.defaultItemTemplate,
-    },
+        item: defaultTemplates_1.defaultItemTemplate
+    }
 };
 exports["default"] = SuggestionsFilterComponent;
 
@@ -15265,6 +13160,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -15308,10 +13205,10 @@ var Template = /** @class */ (function (_super) {
                 };
             };
             var output = Mustache.render(template, __assign(__assign({}, result), {
-                "trans": trans,
+                "trans": trans
             }));
             return {
-                __html: output,
+                __html: output
             };
         };
         return _this;
@@ -15330,7 +13227,7 @@ var Template = /** @class */ (function (_super) {
         var id = (_a = props.id) !== null && _a !== void 0 ? _a : "";
         var dictionary = (_b = props.dictionary) !== null && _b !== void 0 ? _b : {};
         return (template)
-            ? preact_1.h("div", { id: id, className: className, dangerouslySetInnerHTML: this.renderTemplate(template, data, dictionary) })
+            ? (0, preact_1.h)("div", { id: id, className: className, dangerouslySetInnerHTML: this.renderTemplate(template, data, dictionary) })
             : null;
     };
     return Template;
@@ -15391,6 +13288,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -15420,7 +13319,7 @@ var CheckboxFilter = /** @class */ (function (_super) {
         var target = _a.target, filterName = _a.filterName, filterField = _a.filterField, label = _a.label, filterValue = _a.filterValue, classNames = _a.classNames, template = _a.template;
         var _this = _super.call(this) || this;
         _this.target = target;
-        _this.component = preact_1.h(CheckboxFilterComponent_1["default"], { target: target, filterName: filterName, filterField: filterField, label: label, filterValue: filterValue, classNames: __assign(__assign({}, CheckboxFilterComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, CheckboxFilterComponent_1["default"].defaultProps.template), template) });
+        _this.component = (0, preact_1.h)(CheckboxFilterComponent_1["default"], { target: target, filterName: filterName, filterField: filterField, label: label, filterValue: filterValue, classNames: __assign(__assign({}, CheckboxFilterComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, CheckboxFilterComponent_1["default"].defaultProps.template), template) });
         return _this;
     }
     /**
@@ -15430,11 +13329,8 @@ var CheckboxFilter = /** @class */ (function (_super) {
      * @param dictionary
      */
     CheckboxFilter.prototype.render = function (environmentId, store, repository, dictionary) {
-        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId,
-            repository: repository,
-            store: store,
-            dictionary: dictionary });
-        preact_1.render(this.component, document.querySelector(this.target));
+        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store, dictionary: dictionary });
+        (0, preact_1.render)(this.component, document.querySelector(this.target));
     };
     /**
      * @param query
@@ -15472,7 +13368,7 @@ var CheckboxFilter = /** @class */ (function (_super) {
             }
             query.filters[filterName] = {
                 field: "indexed_metadata." + this.component.props.filterField,
-                values: fieldValues,
+                values: fieldValues
             };
         }
     };
@@ -15515,6 +13411,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -15552,7 +13450,7 @@ var ClearFilters = /** @class */ (function (_super) {
         var target = _a.target, classNames = _a.classNames, template = _a.template, showIndividualFilterClear = _a.showIndividualFilterClear, showGlobalFilterClear = _a.showGlobalFilterClear, showIndividualFilterValueClear = _a.showIndividualFilterValueClear;
         var _this = _super.call(this) || this;
         _this.target = target;
-        _this.component = preact_1.h(ClearFiltersComponent_1["default"], { target: target, classNames: __assign(__assign({}, ClearFiltersComponent_1["default"].defaultProps.classNames), classNames), showIndividualFilterClear: showIndividualFilterClear, showGlobalFilterClear: showGlobalFilterClear, showIndividualFilterValueClear: showIndividualFilterValueClear, template: __assign(__assign({}, ClearFiltersComponent_1["default"].defaultProps.template), template) });
+        _this.component = (0, preact_1.h)(ClearFiltersComponent_1["default"], { target: target, classNames: __assign(__assign({}, ClearFiltersComponent_1["default"].defaultProps.classNames), classNames), showIndividualFilterClear: showIndividualFilterClear, showGlobalFilterClear: showGlobalFilterClear, showIndividualFilterValueClear: showIndividualFilterValueClear, template: __assign(__assign({}, ClearFiltersComponent_1["default"].defaultProps.template), template) });
         return _this;
     }
     /**
@@ -15562,11 +13460,8 @@ var ClearFilters = /** @class */ (function (_super) {
      * @param dictionary
      */
     ClearFilters.prototype.render = function (environmentId, store, repository, dictionary) {
-        this.component.props = __assign(__assign({}, this.component.props), { dictionary: dictionary,
-            environmentId: environmentId,
-            repository: repository,
-            store: store });
-        preact_1.render(this.component, document.querySelector(this.target));
+        this.component.props = __assign(__assign({}, this.component.props), { dictionary: dictionary, environmentId: environmentId, repository: repository, store: store });
+        (0, preact_1.render)(this.component, document.querySelector(this.target));
     };
     return ClearFilters;
 }(Widget_1["default"]));
@@ -15596,6 +13491,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -15633,7 +13530,7 @@ var Information = /** @class */ (function (_super) {
         var target = _a.target, classNames = _a.classNames, template = _a.template, formatData = _a.formatData;
         var _this = _super.call(this) || this;
         _this.target = target;
-        _this.component = preact_1.h(InformationComponent_1["default"], { target: target, classNames: __assign(__assign({}, InformationComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, InformationComponent_1["default"].defaultProps.template), template), formatData: formatData });
+        _this.component = (0, preact_1.h)(InformationComponent_1["default"], { target: target, classNames: __assign(__assign({}, InformationComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, InformationComponent_1["default"].defaultProps.template), template), formatData: formatData });
         return _this;
     }
     /**
@@ -15645,7 +13542,7 @@ var Information = /** @class */ (function (_super) {
     Information.prototype.render = function (environmentId, store, repository, dictionary) {
         this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store, dictionary: dictionary });
         var targetNode = document.querySelector(this.target);
-        preact_1.render(this.component, targetNode);
+        (0, preact_1.render)(this.component, targetNode);
     };
     return Information;
 }(Widget_1["default"]));
@@ -15675,6 +13572,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -15726,7 +13625,7 @@ var MultipleFilter = /** @class */ (function (_super) {
         _this.target = target;
         _this.filterField = filterField;
         _this.aggregationField = aggregationField !== null && aggregationField !== void 0 ? aggregationField : filterField;
-        _this.component = preact_1.h(MultipleFilterComponent_1["default"], { target: target, filterName: filterName, filterField: _this.filterField, aggregationField: _this.aggregationField, applicationType: applicationType, fetchLimit: fetchLimit, viewLimit: viewLimit, sortBy: sortBy, ranges: ranges, labels: labels, classNames: __assign(__assign({}, MultipleFilterComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, MultipleFilterComponent_1["default"].defaultProps.template), template), formatData: formatData, activeFirst: activeFirst, promoted: promoted });
+        _this.component = (0, preact_1.h)(MultipleFilterComponent_1["default"], { target: target, filterName: filterName, filterField: _this.filterField, aggregationField: _this.aggregationField, applicationType: applicationType, fetchLimit: fetchLimit, viewLimit: viewLimit, sortBy: sortBy, ranges: ranges, labels: labels, classNames: __assign(__assign({}, MultipleFilterComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, MultipleFilterComponent_1["default"].defaultProps.template), template), formatData: formatData, activeFirst: activeFirst, promoted: promoted });
         return _this;
     }
     /**
@@ -15736,11 +13635,8 @@ var MultipleFilter = /** @class */ (function (_super) {
      * @param dictionary
      */
     MultipleFilter.prototype.render = function (environmentId, store, repository, dictionary) {
-        this.component.props = __assign(__assign({}, this.component.props), { dictionary: dictionary,
-            environmentId: environmentId,
-            repository: repository,
-            store: store });
-        preact_1.render(this.component, document.querySelector(this.target));
+        this.component.props = __assign(__assign({}, this.component.props), { dictionary: dictionary, environmentId: environmentId, repository: repository, store: store });
+        (0, preact_1.render)(this.component, document.querySelector(this.target));
     };
     /**
      * @param query
@@ -15757,10 +13653,10 @@ var MultipleFilter = /** @class */ (function (_super) {
             var filterValues = filter.values;
             if (filterValues.length > 0) {
                 if (filter.application_type === 6) {
-                    var levelsValues = Helpers_1.getShadowFilterValuesFromQuery(query, filterName, false);
+                    var levelsValues = (0, Helpers_1.getShadowFilterValuesFromQuery)(query, filterName, false);
                     object[filterField] = {
                         l: levelsValues,
-                        v: filter.values,
+                        v: filter.values
                     };
                 }
                 else {
@@ -15803,7 +13699,7 @@ var MultipleFilter = /** @class */ (function (_super) {
                         application_type: applicationType,
                         field: leveledFieldName,
                         filter_type: apisearch_1.FILTER_TYPE_FIELD,
-                        values: [leveledValues[it_1]],
+                        values: [leveledValues[it_1]]
                     };
                 }
                 fieldName = fieldName + "_level_" + (leveledValues.length + 1);
@@ -15812,7 +13708,7 @@ var MultipleFilter = /** @class */ (function (_super) {
                 application_type: applicationType,
                 field: fieldName,
                 filter_type: filterType,
-                values: fieldValues,
+                values: fieldValues
             };
         }
     };
@@ -15833,8 +13729,8 @@ var MultipleFilter = /** @class */ (function (_super) {
      */
     MultipleFilter.prototype.normalizeQuery = function (environmentId, query) {
         var filterName = this.component.props.filterName;
-        if (Helpers_1.isFilterAvailable(query, filterName, 6)) {
-            MultipleFilterActions_1.modifyQueryAggregationWithProperLevelValue(environmentId, query, filterName, this.filterField, this.aggregationField);
+        if ((0, Helpers_1.isFilterAvailable)(query, filterName, 6)) {
+            (0, MultipleFilterActions_1.modifyQueryAggregationWithProperLevelValue)(environmentId, query, filterName, this.filterField, this.aggregationField);
         }
     };
     return MultipleFilter;
@@ -15865,6 +13761,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -15903,7 +13801,7 @@ var Pagination = /** @class */ (function (_super) {
         var target = _a.target, padding = _a.padding, goFirstLast = _a.goFirstLast, classNames = _a.classNames, template = _a.template;
         var _this = _super.call(this) || this;
         _this.target = target;
-        _this.component = preact_1.h(PaginationComponent_1["default"], { target: target, padding: padding, goFirstLast: goFirstLast, classNames: __assign(__assign({}, PaginationComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, PaginationComponent_1["default"].defaultProps.template), template) });
+        _this.component = (0, preact_1.h)(PaginationComponent_1["default"], { target: target, padding: padding, goFirstLast: goFirstLast, classNames: __assign(__assign({}, PaginationComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, PaginationComponent_1["default"].defaultProps.template), template) });
         return _this;
     }
     /**
@@ -15915,7 +13813,7 @@ var Pagination = /** @class */ (function (_super) {
     Pagination.prototype.render = function (environmentId, store, repository, dictionary) {
         this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store, dictionary: dictionary });
         var targetNode = document.querySelector(this.target);
-        preact_1.render(this.component, targetNode);
+        (0, preact_1.render)(this.component, targetNode);
     };
     /**
      * @param query
@@ -15951,6 +13849,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -15980,7 +13880,7 @@ var RangeFilter = /** @class */ (function (_super) {
         var target = _a.target, filterName = _a.filterName, filterField = _a.filterField, minValue = _a.minValue, maxValue = _a.maxValue, minMaxCallback = _a.minMaxCallback, step = _a.step, callback = _a.callback, onSliderMove = _a.onSliderMove, template = _a.template, classNames = _a.classNames, attributes = _a.attributes, native = _a.native;
         var _this = _super.call(this) || this;
         _this.target = target;
-        _this.component = preact_1.h(RangeFilterComponent_1["default"], { target: target, filterName: filterName, filterField: filterField, minValue: minValue, maxValue: maxValue, minMaxCallback: minMaxCallback, step: step, callback: callback, onSliderMove: onSliderMove, native: native, template: __assign(__assign({}, RangeFilterComponent_1["default"].defaultProps.template), template), classNames: __assign(__assign({}, RangeFilterComponent_1["default"].defaultProps.classNames), classNames), attributes: __assign(__assign({}, RangeFilterComponent_1["default"].defaultProps.attributes), attributes) });
+        _this.component = (0, preact_1.h)(RangeFilterComponent_1["default"], { target: target, filterName: filterName, filterField: filterField, minValue: minValue, maxValue: maxValue, minMaxCallback: minMaxCallback, step: step, callback: callback, onSliderMove: onSliderMove, native: native, template: __assign(__assign({}, RangeFilterComponent_1["default"].defaultProps.template), template), classNames: __assign(__assign({}, RangeFilterComponent_1["default"].defaultProps.classNames), classNames), attributes: __assign(__assign({}, RangeFilterComponent_1["default"].defaultProps.attributes), attributes) });
         return _this;
     }
     /**
@@ -15990,10 +13890,8 @@ var RangeFilter = /** @class */ (function (_super) {
      * @param dictionary
      */
     RangeFilter.prototype.render = function (environmentId, store, repository, dictionary) {
-        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId,
-            repository: repository,
-            store: store });
-        preact_1.render(this.component, document.querySelector(this.target));
+        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store });
+        (0, preact_1.render)(this.component, document.querySelector(this.target));
     };
     /**
      * @param query
@@ -16027,7 +13925,7 @@ var RangeFilter = /** @class */ (function (_super) {
             query.filters[filterName] = {
                 field: "indexed_metadata." + this.component.props.filterField,
                 values: fieldValues,
-                filter_type: "range",
+                filter_type: "range"
             };
         }
     };
@@ -16070,6 +13968,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -16106,7 +14006,7 @@ var Reload = /** @class */ (function (_super) {
         var target = _a.target, classNames = _a.classNames, template = _a.template;
         var _this = _super.call(this) || this;
         _this.target = target;
-        _this.component = preact_1.h(ReloadComponent_1["default"], { target: target, classNames: __assign(__assign({}, ReloadComponent_1["default"].defaultProps.classNames), classNames), template: template });
+        _this.component = (0, preact_1.h)(ReloadComponent_1["default"], { target: target, classNames: __assign(__assign({}, ReloadComponent_1["default"].defaultProps.classNames), classNames), template: template });
         return _this;
     }
     /**
@@ -16118,7 +14018,7 @@ var Reload = /** @class */ (function (_super) {
     Reload.prototype.render = function (environmentId, store, repository, dictionary) {
         this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store, dictionary: dictionary });
         var targetNode = document.querySelector(this.target);
-        preact_1.render(this.component, targetNode);
+        (0, preact_1.render)(this.component, targetNode);
     };
     return Reload;
 }(Widget_1["default"]));
@@ -16148,6 +14048,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -16197,7 +14099,7 @@ var Result = /** @class */ (function (_super) {
         var _this = _super.call(this) || this;
         _this.target = target;
         _this.targetNode = document.querySelector(_this.target);
-        _this.component = preact_1.h(ResultComponent_1["default"], { target: target, fields: fields, itemsPerPage: itemsPerPage, promote: promote, exclude: exclude, filter: filter, highlightsEnabled: highlightsEnabled, classNames: __assign(__assign({}, ResultComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, ResultComponent_1["default"].defaultProps.template), template), formatData: formatData, fadeInSelector: fadeInSelector, infiniteScroll: infiniteScroll, infiniteScrollButton: infiniteScrollButton, fieldsConciliation: fieldsConciliation, minScore: minScore });
+        _this.component = (0, preact_1.h)(ResultComponent_1["default"], { target: target, fields: fields, itemsPerPage: itemsPerPage, promote: promote, exclude: exclude, filter: filter, highlightsEnabled: highlightsEnabled, classNames: __assign(__assign({}, ResultComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, ResultComponent_1["default"].defaultProps.template), template), formatData: formatData, fadeInSelector: fadeInSelector, infiniteScroll: infiniteScroll, infiniteScrollButton: infiniteScrollButton, fieldsConciliation: fieldsConciliation, minScore: minScore });
         return _this;
     }
     /**
@@ -16207,10 +14109,8 @@ var Result = /** @class */ (function (_super) {
      * @param dictionary
      */
     Result.prototype.render = function (environmentId, store, repository, dictionary) {
-        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId,
-            repository: repository,
-            store: store, currentVisibleResults: store.resultsAreVisible(), dictionary: dictionary });
-        preact_1.render(this.component, this.targetNode);
+        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store, currentVisibleResults: store.resultsAreVisible(), dictionary: dictionary });
+        (0, preact_1.render)(this.component, this.targetNode);
     };
     /**
      * @param query
@@ -16218,7 +14118,7 @@ var Result = /** @class */ (function (_super) {
     Result.prototype.reset = function (query) {
         delete query.page;
         this.component.state = {
-            page: 1,
+            page: 1
         };
     };
     return Result;
@@ -16249,6 +14149,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -16295,7 +14197,7 @@ var SearchInput = /** @class */ (function (_super) {
         var target = _a.target, placeholder = _a.placeholder, startSearchOn = _a.startSearchOn, clearSearch = _a.clearSearch, withContainer = _a.withContainer, autofocus = _a.autofocus, autocomplete = _a.autocomplete, classNames = _a.classNames, template = _a.template, searchableFields = _a.searchableFields, speechRecognition = _a.speechRecognition, queryOperator = _a.queryOperator;
         var _this = _super.call(this) || this;
         _this.target = target;
-        _this.component = preact_1.h(SearchInputComponent_1["default"], { target: target, placeholder: placeholder, autofocus: autofocus, autocomplete: autocomplete, startSearchOn: startSearchOn, clearSearch: clearSearch, withContainer: withContainer, searchableFields: searchableFields, speechRecognition: speechRecognition, classNames: __assign(__assign({}, SearchInputComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, SearchInputComponent_1["default"].defaultProps.template), template), queryOperator: queryOperator, config: _this.config });
+        _this.component = (0, preact_1.h)(SearchInputComponent_1["default"], { target: target, placeholder: placeholder, autofocus: autofocus, autocomplete: autocomplete, startSearchOn: startSearchOn, clearSearch: clearSearch, withContainer: withContainer, searchableFields: searchableFields, speechRecognition: speechRecognition, classNames: __assign(__assign({}, SearchInputComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, SearchInputComponent_1["default"].defaultProps.template), template), queryOperator: queryOperator, config: _this.config });
         _this.queryOperator = queryOperator;
         _this.autocomplete = autocomplete;
         _this.searchableFields = searchableFields;
@@ -16310,7 +14212,7 @@ var SearchInput = /** @class */ (function (_super) {
     SearchInput.prototype.render = function (environmentId, store, repository, dictionary) {
         this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store, htmlNodeInheritProps: {
                 autocomplete: "off",
-                spellcheck: false,
+                spellcheck: false
             }, dictionary: dictionary });
         if (this.target === null) {
             return;
@@ -16337,7 +14239,7 @@ var SearchInput = /** @class */ (function (_super) {
         if (!this.targetNode) {
             return;
         }
-        preact_1.render(this.component, this.targetNode);
+        (0, preact_1.render)(this.component, this.targetNode);
     };
     /**
      * @param query
@@ -16376,7 +14278,7 @@ var SearchInput = /** @class */ (function (_super) {
         /**
          * Dispatch action
          */
-        SearchInputActions_1.initialSearchSetup(environmentId, store.getCurrentQuery(), this.autocomplete, this.searchableFields, this.queryOperator);
+        (0, SearchInputActions_1.initialSearchSetup)(environmentId, store.getCurrentQuery(), this.autocomplete, this.searchableFields, this.queryOperator);
     };
     return SearchInput;
 }(Widget_1["default"]));
@@ -16434,6 +14336,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -16470,7 +14374,7 @@ var Snapshot = /** @class */ (function (_super) {
         var target = _a.target, classNames = _a.classNames, template = _a.template;
         var _this = _super.call(this) || this;
         _this.target = target;
-        _this.component = preact_1.h(SnapshotComponent_1["default"], { target: target });
+        _this.component = (0, preact_1.h)(SnapshotComponent_1["default"], { target: target });
         return _this;
     }
     /**
@@ -16482,7 +14386,7 @@ var Snapshot = /** @class */ (function (_super) {
     Snapshot.prototype.render = function (environmentId, store, repository, dictionary) {
         this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store });
         var targetNode = document.querySelector(this.target);
-        preact_1.render(this.component, targetNode);
+        (0, preact_1.render)(this.component, targetNode);
     };
     return Snapshot;
 }(Widget_1["default"]));
@@ -16510,6 +14414,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -16541,7 +14447,7 @@ var SortBy = /** @class */ (function (_super) {
         var _this = _super.call(this) || this;
         _this.target = target;
         _this.targetNode = document.querySelector(_this.target);
-        _this.component = preact_1.h(SortByComponent_1["default"], { target: target, classNames: __assign(__assign({}, SortByComponent_1["default"].defaultProps.classNames), classNames), options: options });
+        _this.component = (0, preact_1.h)(SortByComponent_1["default"], { target: target, classNames: __assign(__assign({}, SortByComponent_1["default"].defaultProps.classNames), classNames), options: options });
         return _this;
     }
     /**
@@ -16551,10 +14457,8 @@ var SortBy = /** @class */ (function (_super) {
      * @param dictionary
      */
     SortBy.prototype.render = function (environmentId, store, repository, dictionary) {
-        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId,
-            repository: repository,
-            store: store });
-        preact_1.render(this.component, this.targetNode);
+        this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store });
+        (0, preact_1.render)(this.component, this.targetNode);
     };
     /**
      * @private
@@ -16616,7 +14520,7 @@ var SortBy = /** @class */ (function (_super) {
             query.sort[0].unit = distanceSortParts[1];
             query.sort[0].coordinate = {
                 lat: distanceSortParts[2],
-                lon: distanceSortParts[3],
+                lon: distanceSortParts[3]
             };
             return;
         }
@@ -16653,6 +14557,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -16682,7 +14588,7 @@ var SuggestionsFilter = /** @class */ (function (_super) {
         var target = _a.target, numberOfSuggestions = _a.numberOfSuggestions, classNames = _a.classNames, template = _a.template;
         var _this = _super.call(this) || this;
         _this.target = target;
-        _this.component = preact_1.h(SuggestionsFilterComponent_1["default"], { target: target, numberOfSuggestions: numberOfSuggestions, classNames: __assign(__assign({}, SuggestionsFilterComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, SuggestionsFilterComponent_1["default"].defaultProps.template), template) });
+        _this.component = (0, preact_1.h)(SuggestionsFilterComponent_1["default"], { target: target, numberOfSuggestions: numberOfSuggestions, classNames: __assign(__assign({}, SuggestionsFilterComponent_1["default"].defaultProps.classNames), classNames), template: __assign(__assign({}, SuggestionsFilterComponent_1["default"].defaultProps.template), template) });
         return _this;
     }
     /**
@@ -16693,7 +14599,7 @@ var SuggestionsFilter = /** @class */ (function (_super) {
      */
     SuggestionsFilter.prototype.render = function (environmentId, store, repository, dictionary) {
         this.component.props = __assign(__assign({}, this.component.props), { environmentId: environmentId, repository: repository, store: store, dictionary: dictionary });
-        preact_1.render(this.component, document.querySelector(this.target));
+        (0, preact_1.render)(this.component, document.querySelector(this.target));
     };
     return SuggestionsFilter;
 }(Widget_1["default"]));
@@ -16806,14 +14712,40 @@ exports["default"] = {
 
 /***/ }),
 
-/***/ "./node_modules/ts-md5/dist/md5.js":
-/*!*****************************************!*\
-  !*** ./node_modules/ts-md5/dist/md5.js ***!
-  \*****************************************/
-/***/ ((__unused_webpack_module, exports) => {
+/***/ "./node_modules/ts-md5/dist/esm/index.js":
+/*!***********************************************!*\
+  !*** ./node_modules/ts-md5/dist/esm/index.js ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Md5": () => (/* reexport safe */ _md5__WEBPACK_IMPORTED_MODULE_0__.Md5),
+/* harmony export */   "Md5FileHasher": () => (/* reexport safe */ _md5_file_hasher__WEBPACK_IMPORTED_MODULE_1__.Md5FileHasher),
+/* harmony export */   "ParallelHasher": () => (/* reexport safe */ _parallel_hasher__WEBPACK_IMPORTED_MODULE_2__.ParallelHasher)
+/* harmony export */ });
+/* harmony import */ var _md5__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./md5 */ "./node_modules/ts-md5/dist/esm/md5.js");
+/* harmony import */ var _md5_file_hasher__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./md5_file_hasher */ "./node_modules/ts-md5/dist/esm/md5_file_hasher.js");
+/* harmony import */ var _parallel_hasher__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./parallel_hasher */ "./node_modules/ts-md5/dist/esm/parallel_hasher.js");
 
+
+
+//# sourceMappingURL=index.js.map
+
+/***/ }),
+
+/***/ "./node_modules/ts-md5/dist/esm/md5.js":
+/*!*********************************************!*\
+  !*** ./node_modules/ts-md5/dist/esm/md5.js ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Md5": () => (/* binding */ Md5)
+/* harmony export */ });
 /*
 
 TypeScript Md5
@@ -16850,7 +14782,7 @@ THE SOFTWARE.
 
 
 
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+            DO WHAT YOU WANT TO PUBLIC LICENSE
                     Version 2, December 2004
 
  Copyright (C) 2015 André Cruz <amdfcruz@gmail.com>
@@ -16859,43 +14791,43 @@ THE SOFTWARE.
  copies of this license document, and changing it is allowed as long
  as the name is changed.
 
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+            DO WHAT YOU WANT TO PUBLIC LICENSE
    TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
 
-  0. You just DO WHAT THE FUCK YOU WANT TO.
+  0. You just DO WHAT YOU WANT TO.
 
 
 */
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-var Md5 = /** @class */ (function () {
-    function Md5() {
+;
+class Md5 {
+    constructor() {
+        this._dataLength = 0;
+        this._bufferLength = 0;
         this._state = new Int32Array(4);
         this._buffer = new ArrayBuffer(68);
         this._buffer8 = new Uint8Array(this._buffer, 0, 68);
         this._buffer32 = new Uint32Array(this._buffer, 0, 17);
         this.start();
     }
-    Md5.hashStr = function (str, raw) {
-        if (raw === void 0) { raw = false; }
+    static hashStr(str, raw = false) {
         return this.onePassHasher
             .start()
             .appendStr(str)
             .end(raw);
-    };
-    Md5.hashAsciiStr = function (str, raw) {
-        if (raw === void 0) { raw = false; }
+    }
+    static hashAsciiStr(str, raw = false) {
         return this.onePassHasher
             .start()
             .appendAsciiStr(str)
             .end(raw);
-    };
-    Md5._hex = function (x) {
-        var hc = Md5.hexChars;
-        var ho = Md5.hexOut;
-        var n;
-        var offset;
-        var j;
-        var i;
+    }
+    static _hex(x) {
+        const hc = Md5.hexChars;
+        const ho = Md5.hexOut;
+        let n;
+        let offset;
+        let j;
+        let i;
         for (i = 0; i < 4; i += 1) {
             offset = i * 8;
             n = x[i];
@@ -16907,12 +14839,12 @@ var Md5 = /** @class */ (function () {
             }
         }
         return ho.join('');
-    };
-    Md5._md5cycle = function (x, k) {
-        var a = x[0];
-        var b = x[1];
-        var c = x[2];
-        var d = x[3];
+    }
+    static _md5cycle(x, k) {
+        let a = x[0];
+        let b = x[1];
+        let c = x[2];
+        let d = x[3];
         // ff()
         a += (b & c | ~b & d) + k[0] - 680876936 | 0;
         a = (a << 7 | a >>> 25) + b | 0;
@@ -17049,22 +14981,29 @@ var Md5 = /** @class */ (function () {
         x[1] = b + x[1] | 0;
         x[2] = c + x[2] | 0;
         x[3] = d + x[3] | 0;
-    };
-    Md5.prototype.start = function () {
+    }
+    /**
+     * Initialise buffer to be hashed
+     */
+    start() {
         this._dataLength = 0;
         this._bufferLength = 0;
         this._state.set(Md5.stateIdentity);
         return this;
-    };
+    }
     // Char to code point to to array conversion:
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/charCodeAt
     // #Example.3A_Fixing_charCodeAt_to_handle_non-Basic-Multilingual-Plane_characters_if_their_presence_earlier_in_the_string_is_unknown
-    Md5.prototype.appendStr = function (str) {
-        var buf8 = this._buffer8;
-        var buf32 = this._buffer32;
-        var bufLen = this._bufferLength;
-        var code;
-        var i;
+    /**
+     * Append a UTF-8 string to the hash buffer
+     * @param str String to append
+     */
+    appendStr(str) {
+        const buf8 = this._buffer8;
+        const buf32 = this._buffer32;
+        let bufLen = this._bufferLength;
+        let code;
+        let i;
         for (i = 0; i < str.length; i += 1) {
             code = str.charCodeAt(i);
             if (code < 128) {
@@ -17098,13 +15037,17 @@ var Md5 = /** @class */ (function () {
         }
         this._bufferLength = bufLen;
         return this;
-    };
-    Md5.prototype.appendAsciiStr = function (str) {
-        var buf8 = this._buffer8;
-        var buf32 = this._buffer32;
-        var bufLen = this._bufferLength;
-        var i;
-        var j = 0;
+    }
+    /**
+     * Append an ASCII string to the hash buffer
+     * @param str String to append
+     */
+    appendAsciiStr(str) {
+        const buf8 = this._buffer8;
+        const buf32 = this._buffer32;
+        let bufLen = this._bufferLength;
+        let i;
+        let j = 0;
         for (;;) {
             i = Math.min(str.length - j, 64 - bufLen);
             while (i--) {
@@ -17119,13 +15062,17 @@ var Md5 = /** @class */ (function () {
         }
         this._bufferLength = bufLen;
         return this;
-    };
-    Md5.prototype.appendByteArray = function (input) {
-        var buf8 = this._buffer8;
-        var buf32 = this._buffer32;
-        var bufLen = this._bufferLength;
-        var i;
-        var j = 0;
+    }
+    /**
+     * Append a byte array to the hash buffer
+     * @param input array to append
+     */
+    appendByteArray(input) {
+        const buf8 = this._buffer8;
+        const buf32 = this._buffer32;
+        let bufLen = this._bufferLength;
+        let i;
+        let j = 0;
         for (;;) {
             i = Math.min(input.length - j, 64 - bufLen);
             while (i--) {
@@ -17140,22 +15087,28 @@ var Md5 = /** @class */ (function () {
         }
         this._bufferLength = bufLen;
         return this;
-    };
-    Md5.prototype.getState = function () {
-        var self = this;
-        var s = self._state;
+    }
+    /**
+     * Get the state of the hash buffer
+     */
+    getState() {
+        const s = this._state;
         return {
-            buffer: String.fromCharCode.apply(null, self._buffer8),
-            buflen: self._bufferLength,
-            length: self._dataLength,
+            buffer: String.fromCharCode.apply(null, Array.from(this._buffer8)),
+            buflen: this._bufferLength,
+            length: this._dataLength,
             state: [s[0], s[1], s[2], s[3]]
         };
-    };
-    Md5.prototype.setState = function (state) {
-        var buf = state.buffer;
-        var x = state.state;
-        var s = this._state;
-        var i;
+    }
+    /**
+     * Override the current state of the hash buffer
+     * @param state New hash buffer state
+     */
+    setState(state) {
+        const buf = state.buffer;
+        const x = state.state;
+        const s = this._state;
+        let i;
         this._dataLength = state.length;
         this._bufferLength = state.buflen;
         s[0] = x[0];
@@ -17165,15 +15118,18 @@ var Md5 = /** @class */ (function () {
         for (i = 0; i < buf.length; i += 1) {
             this._buffer8[i] = buf.charCodeAt(i);
         }
-    };
-    Md5.prototype.end = function (raw) {
-        if (raw === void 0) { raw = false; }
-        var bufLen = this._bufferLength;
-        var buf8 = this._buffer8;
-        var buf32 = this._buffer32;
-        var i = (bufLen >> 2) + 1;
-        var dataBitsLen;
+    }
+    /**
+     * Hash the current state of the hash buffer and return the result
+     * @param raw Whether to return the value as an `Int32Array`
+     */
+    end(raw = false) {
+        const bufLen = this._bufferLength;
+        const buf8 = this._buffer8;
+        const buf32 = this._buffer32;
+        const i = (bufLen >> 2) + 1;
         this._dataLength += bufLen;
+        const dataBitsLen = this._dataLength * 8;
         buf8[bufLen] = 0x80;
         buf8[bufLen + 1] = buf8[bufLen + 2] = buf8[bufLen + 3] = 0;
         buf32.set(Md5.buffer32Identity.subarray(i), i);
@@ -17183,37 +15139,216 @@ var Md5 = /** @class */ (function () {
         }
         // Do the final computation based on the tail and length
         // Beware that the final length may not fit in 32 bits so we take care of that
-        dataBitsLen = this._dataLength * 8;
         if (dataBitsLen <= 0xFFFFFFFF) {
             buf32[14] = dataBitsLen;
         }
         else {
-            var matches = dataBitsLen.toString(16).match(/(.*?)(.{0,8})$/);
+            const matches = dataBitsLen.toString(16).match(/(.*?)(.{0,8})$/);
             if (matches === null) {
                 return;
             }
-            var lo = parseInt(matches[2], 16);
-            var hi = parseInt(matches[1], 16) || 0;
+            const lo = parseInt(matches[2], 16);
+            const hi = parseInt(matches[1], 16) || 0;
             buf32[14] = lo;
             buf32[15] = hi;
         }
         Md5._md5cycle(this._state, buf32);
         return raw ? this._state : Md5._hex(this._state);
-    };
-    // Private Static Variables
-    Md5.stateIdentity = new Int32Array([1732584193, -271733879, -1732584194, 271733878]);
-    Md5.buffer32Identity = new Int32Array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-    Md5.hexChars = '0123456789abcdef';
-    Md5.hexOut = [];
-    // Permanent instance is to use for one-call hashing
-    Md5.onePassHasher = new Md5();
-    return Md5;
-}());
-exports.Md5 = Md5;
+    }
+}
+// Private Static Variables
+Md5.stateIdentity = new Int32Array([1732584193, -271733879, -1732584194, 271733878]);
+Md5.buffer32Identity = new Int32Array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+Md5.hexChars = '0123456789abcdef';
+Md5.hexOut = [];
+// Permanent instance is to use for one-call hashing
+Md5.onePassHasher = new Md5();
 if (Md5.hashStr('hello') !== '5d41402abc4b2a76b9719d911017c592') {
-    console.error('Md5 self test failed.');
+    throw new Error('Md5 self test failed.');
 }
 //# sourceMappingURL=md5.js.map
+
+/***/ }),
+
+/***/ "./node_modules/ts-md5/dist/esm/md5_file_hasher.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/ts-md5/dist/esm/md5_file_hasher.js ***!
+  \*********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Md5FileHasher": () => (/* binding */ Md5FileHasher)
+/* harmony export */ });
+/* harmony import */ var _md5__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./md5 */ "./node_modules/ts-md5/dist/esm/md5.js");
+
+// Hashes any blob
+class Md5FileHasher {
+    constructor(_callback, // Callback to return the result
+    _async = true, // Async version is not always available in a web worker
+    _partSize = 1048576) {
+        this._callback = _callback;
+        this._async = _async;
+        this._partSize = _partSize;
+        this._configureReader();
+    }
+    /**
+     * Hash a blob of data in the worker
+     * @param blob Data to hash
+     */
+    hash(blob) {
+        const self = this;
+        self._blob = blob;
+        // self._length = Math.ceil(blob.size / self._partSize);
+        self._part = 0;
+        self._md5 = new _md5__WEBPACK_IMPORTED_MODULE_0__.Md5();
+        self._processPart();
+    }
+    _fail() {
+        this._callback({
+            success: false,
+            result: 'data read failed'
+        });
+    }
+    _hashData(e) {
+        let self = this;
+        self._md5.appendByteArray(new Uint8Array(e.target.result));
+        if (self._part * self._partSize >= self._blob.size) {
+            self._callback({
+                success: true,
+                result: self._md5.end()
+            });
+        }
+        else {
+            self._processPart();
+        }
+    }
+    _processPart() {
+        const self = this;
+        let endbyte = 0;
+        let current_part;
+        self._part += 1;
+        if (self._blob.size > self._partSize) { // If blob bigger then part_size we will slice it up
+            endbyte = self._part * self._partSize;
+            if (endbyte > self._blob.size) {
+                endbyte = self._blob.size;
+            }
+            current_part = self._blob.slice((self._part - 1) * self._partSize, endbyte);
+        }
+        else {
+            current_part = self._blob;
+        }
+        if (self._async) {
+            self._reader.readAsArrayBuffer(current_part);
+        }
+        else {
+            setTimeout(() => {
+                try {
+                    self._hashData({
+                        target: {
+                            result: self._reader.readAsArrayBuffer(current_part)
+                        },
+                    });
+                }
+                catch (e) {
+                    self._fail();
+                }
+            }, 0);
+        }
+    }
+    _configureReader() {
+        const self = this;
+        if (self._async) {
+            self._reader = new FileReader();
+            self._reader.onload = self._hashData.bind(self);
+            self._reader.onerror = self._fail.bind(self);
+            self._reader.onabort = self._fail.bind(self);
+        }
+        else {
+            self._reader = new FileReaderSync();
+        }
+    }
+}
+//# sourceMappingURL=md5_file_hasher.js.map
+
+/***/ }),
+
+/***/ "./node_modules/ts-md5/dist/esm/parallel_hasher.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/ts-md5/dist/esm/parallel_hasher.js ***!
+  \*********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "ParallelHasher": () => (/* binding */ ParallelHasher)
+/* harmony export */ });
+;
+class ParallelHasher {
+    constructor(workerUri, workerOptions) {
+        this._queue = [];
+        this._ready = true;
+        const self = this;
+        if (Worker) {
+            self._hashWorker = new Worker(workerUri, workerOptions);
+            self._hashWorker.onmessage = self._recievedMessage.bind(self);
+            self._hashWorker.onerror = (err) => {
+                self._ready = false;
+                console.error('Hash worker failure', err);
+            };
+        }
+        else {
+            self._ready = false;
+            console.error('Web Workers are not supported in this browser');
+        }
+    }
+    /**
+     * Hash a blob of data in the worker
+     * @param blob Data to hash
+     * @returns Promise of the Hashed result
+     */
+    hash(blob) {
+        const self = this;
+        let promise;
+        promise = new Promise((resolve, reject) => {
+            self._queue.push({
+                blob,
+                resolve,
+                reject,
+            });
+            self._processNext();
+        });
+        return promise;
+    }
+    /** Terminate any existing hash requests */
+    terminate() {
+        this._ready = false;
+        this._hashWorker.terminate();
+    }
+    // Processes the next item in the queue
+    _processNext() {
+        if (this._ready && !this._processing && this._queue.length > 0) {
+            this._processing = this._queue.pop();
+            this._hashWorker.postMessage(this._processing.blob);
+        }
+    }
+    // Hash result is returned from the worker
+    _recievedMessage(evt) {
+        var _a, _b;
+        const data = evt.data;
+        if (data.success) {
+            (_a = this._processing) === null || _a === void 0 ? void 0 : _a.resolve(data.result);
+        }
+        else {
+            (_b = this._processing) === null || _b === void 0 ? void 0 : _b.reject(data.result);
+        }
+        this._processing = undefined;
+        this._processNext();
+    }
+}
+//# sourceMappingURL=parallel_hasher.js.map
 
 /***/ }),
 
@@ -17226,29 +15361,29 @@ if (Md5.hashStr('hello') !== '5d41402abc4b2a76b9719d911017c592') {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "__extends": () => (/* binding */ __extends),
 /* harmony export */   "__assign": () => (/* binding */ __assign),
-/* harmony export */   "__rest": () => (/* binding */ __rest),
-/* harmony export */   "__decorate": () => (/* binding */ __decorate),
-/* harmony export */   "__param": () => (/* binding */ __param),
-/* harmony export */   "__metadata": () => (/* binding */ __metadata),
+/* harmony export */   "__asyncDelegator": () => (/* binding */ __asyncDelegator),
+/* harmony export */   "__asyncGenerator": () => (/* binding */ __asyncGenerator),
+/* harmony export */   "__asyncValues": () => (/* binding */ __asyncValues),
+/* harmony export */   "__await": () => (/* binding */ __await),
 /* harmony export */   "__awaiter": () => (/* binding */ __awaiter),
-/* harmony export */   "__generator": () => (/* binding */ __generator),
+/* harmony export */   "__classPrivateFieldGet": () => (/* binding */ __classPrivateFieldGet),
+/* harmony export */   "__classPrivateFieldSet": () => (/* binding */ __classPrivateFieldSet),
 /* harmony export */   "__createBinding": () => (/* binding */ __createBinding),
+/* harmony export */   "__decorate": () => (/* binding */ __decorate),
 /* harmony export */   "__exportStar": () => (/* binding */ __exportStar),
-/* harmony export */   "__values": () => (/* binding */ __values),
+/* harmony export */   "__extends": () => (/* binding */ __extends),
+/* harmony export */   "__generator": () => (/* binding */ __generator),
+/* harmony export */   "__importDefault": () => (/* binding */ __importDefault),
+/* harmony export */   "__importStar": () => (/* binding */ __importStar),
+/* harmony export */   "__makeTemplateObject": () => (/* binding */ __makeTemplateObject),
+/* harmony export */   "__metadata": () => (/* binding */ __metadata),
+/* harmony export */   "__param": () => (/* binding */ __param),
 /* harmony export */   "__read": () => (/* binding */ __read),
+/* harmony export */   "__rest": () => (/* binding */ __rest),
 /* harmony export */   "__spread": () => (/* binding */ __spread),
 /* harmony export */   "__spreadArrays": () => (/* binding */ __spreadArrays),
-/* harmony export */   "__await": () => (/* binding */ __await),
-/* harmony export */   "__asyncGenerator": () => (/* binding */ __asyncGenerator),
-/* harmony export */   "__asyncDelegator": () => (/* binding */ __asyncDelegator),
-/* harmony export */   "__asyncValues": () => (/* binding */ __asyncValues),
-/* harmony export */   "__makeTemplateObject": () => (/* binding */ __makeTemplateObject),
-/* harmony export */   "__importStar": () => (/* binding */ __importStar),
-/* harmony export */   "__importDefault": () => (/* binding */ __importDefault),
-/* harmony export */   "__classPrivateFieldGet": () => (/* binding */ __classPrivateFieldGet),
-/* harmony export */   "__classPrivateFieldSet": () => (/* binding */ __classPrivateFieldSet)
+/* harmony export */   "__values": () => (/* binding */ __values)
 /* harmony export */ });
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -17470,6 +15605,3172 @@ function __classPrivateFieldSet(receiver, privateMap, value) {
 }
 
 
+/***/ }),
+
+/***/ "./node_modules/axios/dist/browser/axios.cjs":
+/*!***************************************************!*\
+  !*** ./node_modules/axios/dist/browser/axios.cjs ***!
+  \***************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+// Axios v1.2.3 Copyright (c) 2023 Matt Zabriskie and contributors
+
+
+function bind(fn, thisArg) {
+  return function wrap() {
+    return fn.apply(thisArg, arguments);
+  };
+}
+
+// utils is a library of generic helper functions non-specific to axios
+
+const {toString} = Object.prototype;
+const {getPrototypeOf} = Object;
+
+const kindOf = (cache => thing => {
+    const str = toString.call(thing);
+    return cache[str] || (cache[str] = str.slice(8, -1).toLowerCase());
+})(Object.create(null));
+
+const kindOfTest = (type) => {
+  type = type.toLowerCase();
+  return (thing) => kindOf(thing) === type
+};
+
+const typeOfTest = type => thing => typeof thing === type;
+
+/**
+ * Determine if a value is an Array
+ *
+ * @param {Object} val The value to test
+ *
+ * @returns {boolean} True if value is an Array, otherwise false
+ */
+const {isArray} = Array;
+
+/**
+ * Determine if a value is undefined
+ *
+ * @param {*} val The value to test
+ *
+ * @returns {boolean} True if the value is undefined, otherwise false
+ */
+const isUndefined = typeOfTest('undefined');
+
+/**
+ * Determine if a value is a Buffer
+ *
+ * @param {*} val The value to test
+ *
+ * @returns {boolean} True if value is a Buffer, otherwise false
+ */
+function isBuffer(val) {
+  return val !== null && !isUndefined(val) && val.constructor !== null && !isUndefined(val.constructor)
+    && isFunction(val.constructor.isBuffer) && val.constructor.isBuffer(val);
+}
+
+/**
+ * Determine if a value is an ArrayBuffer
+ *
+ * @param {*} val The value to test
+ *
+ * @returns {boolean} True if value is an ArrayBuffer, otherwise false
+ */
+const isArrayBuffer = kindOfTest('ArrayBuffer');
+
+
+/**
+ * Determine if a value is a view on an ArrayBuffer
+ *
+ * @param {*} val The value to test
+ *
+ * @returns {boolean} True if value is a view on an ArrayBuffer, otherwise false
+ */
+function isArrayBufferView(val) {
+  let result;
+  if ((typeof ArrayBuffer !== 'undefined') && (ArrayBuffer.isView)) {
+    result = ArrayBuffer.isView(val);
+  } else {
+    result = (val) && (val.buffer) && (isArrayBuffer(val.buffer));
+  }
+  return result;
+}
+
+/**
+ * Determine if a value is a String
+ *
+ * @param {*} val The value to test
+ *
+ * @returns {boolean} True if value is a String, otherwise false
+ */
+const isString = typeOfTest('string');
+
+/**
+ * Determine if a value is a Function
+ *
+ * @param {*} val The value to test
+ * @returns {boolean} True if value is a Function, otherwise false
+ */
+const isFunction = typeOfTest('function');
+
+/**
+ * Determine if a value is a Number
+ *
+ * @param {*} val The value to test
+ *
+ * @returns {boolean} True if value is a Number, otherwise false
+ */
+const isNumber = typeOfTest('number');
+
+/**
+ * Determine if a value is an Object
+ *
+ * @param {*} thing The value to test
+ *
+ * @returns {boolean} True if value is an Object, otherwise false
+ */
+const isObject = (thing) => thing !== null && typeof thing === 'object';
+
+/**
+ * Determine if a value is a Boolean
+ *
+ * @param {*} thing The value to test
+ * @returns {boolean} True if value is a Boolean, otherwise false
+ */
+const isBoolean = thing => thing === true || thing === false;
+
+/**
+ * Determine if a value is a plain Object
+ *
+ * @param {*} val The value to test
+ *
+ * @returns {boolean} True if value is a plain Object, otherwise false
+ */
+const isPlainObject = (val) => {
+  if (kindOf(val) !== 'object') {
+    return false;
+  }
+
+  const prototype = getPrototypeOf(val);
+  return (prototype === null || prototype === Object.prototype || Object.getPrototypeOf(prototype) === null) && !(Symbol.toStringTag in val) && !(Symbol.iterator in val);
+};
+
+/**
+ * Determine if a value is a Date
+ *
+ * @param {*} val The value to test
+ *
+ * @returns {boolean} True if value is a Date, otherwise false
+ */
+const isDate = kindOfTest('Date');
+
+/**
+ * Determine if a value is a File
+ *
+ * @param {*} val The value to test
+ *
+ * @returns {boolean} True if value is a File, otherwise false
+ */
+const isFile = kindOfTest('File');
+
+/**
+ * Determine if a value is a Blob
+ *
+ * @param {*} val The value to test
+ *
+ * @returns {boolean} True if value is a Blob, otherwise false
+ */
+const isBlob = kindOfTest('Blob');
+
+/**
+ * Determine if a value is a FileList
+ *
+ * @param {*} val The value to test
+ *
+ * @returns {boolean} True if value is a File, otherwise false
+ */
+const isFileList = kindOfTest('FileList');
+
+/**
+ * Determine if a value is a Stream
+ *
+ * @param {*} val The value to test
+ *
+ * @returns {boolean} True if value is a Stream, otherwise false
+ */
+const isStream = (val) => isObject(val) && isFunction(val.pipe);
+
+/**
+ * Determine if a value is a FormData
+ *
+ * @param {*} thing The value to test
+ *
+ * @returns {boolean} True if value is an FormData, otherwise false
+ */
+const isFormData = (thing) => {
+  const pattern = '[object FormData]';
+  return thing && (
+    (typeof FormData === 'function' && thing instanceof FormData) ||
+    toString.call(thing) === pattern ||
+    (isFunction(thing.toString) && thing.toString() === pattern)
+  );
+};
+
+/**
+ * Determine if a value is a URLSearchParams object
+ *
+ * @param {*} val The value to test
+ *
+ * @returns {boolean} True if value is a URLSearchParams object, otherwise false
+ */
+const isURLSearchParams = kindOfTest('URLSearchParams');
+
+/**
+ * Trim excess whitespace off the beginning and end of a string
+ *
+ * @param {String} str The String to trim
+ *
+ * @returns {String} The String freed of excess whitespace
+ */
+const trim = (str) => str.trim ?
+  str.trim() : str.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
+
+/**
+ * Iterate over an Array or an Object invoking a function for each item.
+ *
+ * If `obj` is an Array callback will be called passing
+ * the value, index, and complete array for each item.
+ *
+ * If 'obj' is an Object callback will be called passing
+ * the value, key, and complete object for each property.
+ *
+ * @param {Object|Array} obj The object to iterate
+ * @param {Function} fn The callback to invoke for each item
+ *
+ * @param {Boolean} [allOwnKeys = false]
+ * @returns {any}
+ */
+function forEach(obj, fn, {allOwnKeys = false} = {}) {
+  // Don't bother if no value provided
+  if (obj === null || typeof obj === 'undefined') {
+    return;
+  }
+
+  let i;
+  let l;
+
+  // Force an array if not already something iterable
+  if (typeof obj !== 'object') {
+    /*eslint no-param-reassign:0*/
+    obj = [obj];
+  }
+
+  if (isArray(obj)) {
+    // Iterate over array values
+    for (i = 0, l = obj.length; i < l; i++) {
+      fn.call(null, obj[i], i, obj);
+    }
+  } else {
+    // Iterate over object keys
+    const keys = allOwnKeys ? Object.getOwnPropertyNames(obj) : Object.keys(obj);
+    const len = keys.length;
+    let key;
+
+    for (i = 0; i < len; i++) {
+      key = keys[i];
+      fn.call(null, obj[key], key, obj);
+    }
+  }
+}
+
+function findKey(obj, key) {
+  key = key.toLowerCase();
+  const keys = Object.keys(obj);
+  let i = keys.length;
+  let _key;
+  while (i-- > 0) {
+    _key = keys[i];
+    if (key === _key.toLowerCase()) {
+      return _key;
+    }
+  }
+  return null;
+}
+
+const _global = (() => {
+  /*eslint no-undef:0*/
+  if (typeof globalThis !== "undefined") return globalThis;
+  return typeof self !== "undefined" ? self : (typeof window !== 'undefined' ? window : __webpack_require__.g)
+})();
+
+const isContextDefined = (context) => !isUndefined(context) && context !== _global;
+
+/**
+ * Accepts varargs expecting each argument to be an object, then
+ * immutably merges the properties of each object and returns result.
+ *
+ * When multiple objects contain the same key the later object in
+ * the arguments list will take precedence.
+ *
+ * Example:
+ *
+ * ```js
+ * var result = merge({foo: 123}, {foo: 456});
+ * console.log(result.foo); // outputs 456
+ * ```
+ *
+ * @param {Object} obj1 Object to merge
+ *
+ * @returns {Object} Result of all merge properties
+ */
+function merge(/* obj1, obj2, obj3, ... */) {
+  const {caseless} = isContextDefined(this) && this || {};
+  const result = {};
+  const assignValue = (val, key) => {
+    const targetKey = caseless && findKey(result, key) || key;
+    if (isPlainObject(result[targetKey]) && isPlainObject(val)) {
+      result[targetKey] = merge(result[targetKey], val);
+    } else if (isPlainObject(val)) {
+      result[targetKey] = merge({}, val);
+    } else if (isArray(val)) {
+      result[targetKey] = val.slice();
+    } else {
+      result[targetKey] = val;
+    }
+  };
+
+  for (let i = 0, l = arguments.length; i < l; i++) {
+    arguments[i] && forEach(arguments[i], assignValue);
+  }
+  return result;
+}
+
+/**
+ * Extends object a by mutably adding to it the properties of object b.
+ *
+ * @param {Object} a The object to be extended
+ * @param {Object} b The object to copy properties from
+ * @param {Object} thisArg The object to bind function to
+ *
+ * @param {Boolean} [allOwnKeys]
+ * @returns {Object} The resulting value of object a
+ */
+const extend = (a, b, thisArg, {allOwnKeys}= {}) => {
+  forEach(b, (val, key) => {
+    if (thisArg && isFunction(val)) {
+      a[key] = bind(val, thisArg);
+    } else {
+      a[key] = val;
+    }
+  }, {allOwnKeys});
+  return a;
+};
+
+/**
+ * Remove byte order marker. This catches EF BB BF (the UTF-8 BOM)
+ *
+ * @param {string} content with BOM
+ *
+ * @returns {string} content value without BOM
+ */
+const stripBOM = (content) => {
+  if (content.charCodeAt(0) === 0xFEFF) {
+    content = content.slice(1);
+  }
+  return content;
+};
+
+/**
+ * Inherit the prototype methods from one constructor into another
+ * @param {function} constructor
+ * @param {function} superConstructor
+ * @param {object} [props]
+ * @param {object} [descriptors]
+ *
+ * @returns {void}
+ */
+const inherits = (constructor, superConstructor, props, descriptors) => {
+  constructor.prototype = Object.create(superConstructor.prototype, descriptors);
+  constructor.prototype.constructor = constructor;
+  Object.defineProperty(constructor, 'super', {
+    value: superConstructor.prototype
+  });
+  props && Object.assign(constructor.prototype, props);
+};
+
+/**
+ * Resolve object with deep prototype chain to a flat object
+ * @param {Object} sourceObj source object
+ * @param {Object} [destObj]
+ * @param {Function|Boolean} [filter]
+ * @param {Function} [propFilter]
+ *
+ * @returns {Object}
+ */
+const toFlatObject = (sourceObj, destObj, filter, propFilter) => {
+  let props;
+  let i;
+  let prop;
+  const merged = {};
+
+  destObj = destObj || {};
+  // eslint-disable-next-line no-eq-null,eqeqeq
+  if (sourceObj == null) return destObj;
+
+  do {
+    props = Object.getOwnPropertyNames(sourceObj);
+    i = props.length;
+    while (i-- > 0) {
+      prop = props[i];
+      if ((!propFilter || propFilter(prop, sourceObj, destObj)) && !merged[prop]) {
+        destObj[prop] = sourceObj[prop];
+        merged[prop] = true;
+      }
+    }
+    sourceObj = filter !== false && getPrototypeOf(sourceObj);
+  } while (sourceObj && (!filter || filter(sourceObj, destObj)) && sourceObj !== Object.prototype);
+
+  return destObj;
+};
+
+/**
+ * Determines whether a string ends with the characters of a specified string
+ *
+ * @param {String} str
+ * @param {String} searchString
+ * @param {Number} [position= 0]
+ *
+ * @returns {boolean}
+ */
+const endsWith = (str, searchString, position) => {
+  str = String(str);
+  if (position === undefined || position > str.length) {
+    position = str.length;
+  }
+  position -= searchString.length;
+  const lastIndex = str.indexOf(searchString, position);
+  return lastIndex !== -1 && lastIndex === position;
+};
+
+
+/**
+ * Returns new array from array like object or null if failed
+ *
+ * @param {*} [thing]
+ *
+ * @returns {?Array}
+ */
+const toArray = (thing) => {
+  if (!thing) return null;
+  if (isArray(thing)) return thing;
+  let i = thing.length;
+  if (!isNumber(i)) return null;
+  const arr = new Array(i);
+  while (i-- > 0) {
+    arr[i] = thing[i];
+  }
+  return arr;
+};
+
+/**
+ * Checking if the Uint8Array exists and if it does, it returns a function that checks if the
+ * thing passed in is an instance of Uint8Array
+ *
+ * @param {TypedArray}
+ *
+ * @returns {Array}
+ */
+// eslint-disable-next-line func-names
+const isTypedArray = (TypedArray => {
+  // eslint-disable-next-line func-names
+  return thing => {
+    return TypedArray && thing instanceof TypedArray;
+  };
+})(typeof Uint8Array !== 'undefined' && getPrototypeOf(Uint8Array));
+
+/**
+ * For each entry in the object, call the function with the key and value.
+ *
+ * @param {Object<any, any>} obj - The object to iterate over.
+ * @param {Function} fn - The function to call for each entry.
+ *
+ * @returns {void}
+ */
+const forEachEntry = (obj, fn) => {
+  const generator = obj && obj[Symbol.iterator];
+
+  const iterator = generator.call(obj);
+
+  let result;
+
+  while ((result = iterator.next()) && !result.done) {
+    const pair = result.value;
+    fn.call(obj, pair[0], pair[1]);
+  }
+};
+
+/**
+ * It takes a regular expression and a string, and returns an array of all the matches
+ *
+ * @param {string} regExp - The regular expression to match against.
+ * @param {string} str - The string to search.
+ *
+ * @returns {Array<boolean>}
+ */
+const matchAll = (regExp, str) => {
+  let matches;
+  const arr = [];
+
+  while ((matches = regExp.exec(str)) !== null) {
+    arr.push(matches);
+  }
+
+  return arr;
+};
+
+/* Checking if the kindOfTest function returns true when passed an HTMLFormElement. */
+const isHTMLForm = kindOfTest('HTMLFormElement');
+
+const toCamelCase = str => {
+  return str.toLowerCase().replace(/[_-\s]([a-z\d])(\w*)/g,
+    function replacer(m, p1, p2) {
+      return p1.toUpperCase() + p2;
+    }
+  );
+};
+
+/* Creating a function that will check if an object has a property. */
+const hasOwnProperty = (({hasOwnProperty}) => (obj, prop) => hasOwnProperty.call(obj, prop))(Object.prototype);
+
+/**
+ * Determine if a value is a RegExp object
+ *
+ * @param {*} val The value to test
+ *
+ * @returns {boolean} True if value is a RegExp object, otherwise false
+ */
+const isRegExp = kindOfTest('RegExp');
+
+const reduceDescriptors = (obj, reducer) => {
+  const descriptors = Object.getOwnPropertyDescriptors(obj);
+  const reducedDescriptors = {};
+
+  forEach(descriptors, (descriptor, name) => {
+    if (reducer(descriptor, name, obj) !== false) {
+      reducedDescriptors[name] = descriptor;
+    }
+  });
+
+  Object.defineProperties(obj, reducedDescriptors);
+};
+
+/**
+ * Makes all methods read-only
+ * @param {Object} obj
+ */
+
+const freezeMethods = (obj) => {
+  reduceDescriptors(obj, (descriptor, name) => {
+    // skip restricted props in strict mode
+    if (isFunction(obj) && ['arguments', 'caller', 'callee'].indexOf(name) !== -1) {
+      return false;
+    }
+
+    const value = obj[name];
+
+    if (!isFunction(value)) return;
+
+    descriptor.enumerable = false;
+
+    if ('writable' in descriptor) {
+      descriptor.writable = false;
+      return;
+    }
+
+    if (!descriptor.set) {
+      descriptor.set = () => {
+        throw Error('Can not rewrite read-only method \'' + name + '\'');
+      };
+    }
+  });
+};
+
+const toObjectSet = (arrayOrString, delimiter) => {
+  const obj = {};
+
+  const define = (arr) => {
+    arr.forEach(value => {
+      obj[value] = true;
+    });
+  };
+
+  isArray(arrayOrString) ? define(arrayOrString) : define(String(arrayOrString).split(delimiter));
+
+  return obj;
+};
+
+const noop = () => {};
+
+const toFiniteNumber = (value, defaultValue) => {
+  value = +value;
+  return Number.isFinite(value) ? value : defaultValue;
+};
+
+const toJSONObject = (obj) => {
+  const stack = new Array(10);
+
+  const visit = (source, i) => {
+
+    if (isObject(source)) {
+      if (stack.indexOf(source) >= 0) {
+        return;
+      }
+
+      if(!('toJSON' in source)) {
+        stack[i] = source;
+        const target = isArray(source) ? [] : {};
+
+        forEach(source, (value, key) => {
+          const reducedValue = visit(value, i + 1);
+          !isUndefined(reducedValue) && (target[key] = reducedValue);
+        });
+
+        stack[i] = undefined;
+
+        return target;
+      }
+    }
+
+    return source;
+  };
+
+  return visit(obj, 0);
+};
+
+var utils = {
+  isArray,
+  isArrayBuffer,
+  isBuffer,
+  isFormData,
+  isArrayBufferView,
+  isString,
+  isNumber,
+  isBoolean,
+  isObject,
+  isPlainObject,
+  isUndefined,
+  isDate,
+  isFile,
+  isBlob,
+  isRegExp,
+  isFunction,
+  isStream,
+  isURLSearchParams,
+  isTypedArray,
+  isFileList,
+  forEach,
+  merge,
+  extend,
+  trim,
+  stripBOM,
+  inherits,
+  toFlatObject,
+  kindOf,
+  kindOfTest,
+  endsWith,
+  toArray,
+  forEachEntry,
+  matchAll,
+  isHTMLForm,
+  hasOwnProperty,
+  hasOwnProp: hasOwnProperty, // an alias to avoid ESLint no-prototype-builtins detection
+  reduceDescriptors,
+  freezeMethods,
+  toObjectSet,
+  toCamelCase,
+  noop,
+  toFiniteNumber,
+  findKey,
+  global: _global,
+  isContextDefined,
+  toJSONObject
+};
+
+/**
+ * Create an Error with the specified message, config, error code, request and response.
+ *
+ * @param {string} message The error message.
+ * @param {string} [code] The error code (for example, 'ECONNABORTED').
+ * @param {Object} [config] The config.
+ * @param {Object} [request] The request.
+ * @param {Object} [response] The response.
+ *
+ * @returns {Error} The created error.
+ */
+function AxiosError(message, code, config, request, response) {
+  Error.call(this);
+
+  if (Error.captureStackTrace) {
+    Error.captureStackTrace(this, this.constructor);
+  } else {
+    this.stack = (new Error()).stack;
+  }
+
+  this.message = message;
+  this.name = 'AxiosError';
+  code && (this.code = code);
+  config && (this.config = config);
+  request && (this.request = request);
+  response && (this.response = response);
+}
+
+utils.inherits(AxiosError, Error, {
+  toJSON: function toJSON() {
+    return {
+      // Standard
+      message: this.message,
+      name: this.name,
+      // Microsoft
+      description: this.description,
+      number: this.number,
+      // Mozilla
+      fileName: this.fileName,
+      lineNumber: this.lineNumber,
+      columnNumber: this.columnNumber,
+      stack: this.stack,
+      // Axios
+      config: utils.toJSONObject(this.config),
+      code: this.code,
+      status: this.response && this.response.status ? this.response.status : null
+    };
+  }
+});
+
+const prototype$1 = AxiosError.prototype;
+const descriptors = {};
+
+[
+  'ERR_BAD_OPTION_VALUE',
+  'ERR_BAD_OPTION',
+  'ECONNABORTED',
+  'ETIMEDOUT',
+  'ERR_NETWORK',
+  'ERR_FR_TOO_MANY_REDIRECTS',
+  'ERR_DEPRECATED',
+  'ERR_BAD_RESPONSE',
+  'ERR_BAD_REQUEST',
+  'ERR_CANCELED',
+  'ERR_NOT_SUPPORT',
+  'ERR_INVALID_URL'
+// eslint-disable-next-line func-names
+].forEach(code => {
+  descriptors[code] = {value: code};
+});
+
+Object.defineProperties(AxiosError, descriptors);
+Object.defineProperty(prototype$1, 'isAxiosError', {value: true});
+
+// eslint-disable-next-line func-names
+AxiosError.from = (error, code, config, request, response, customProps) => {
+  const axiosError = Object.create(prototype$1);
+
+  utils.toFlatObject(error, axiosError, function filter(obj) {
+    return obj !== Error.prototype;
+  }, prop => {
+    return prop !== 'isAxiosError';
+  });
+
+  AxiosError.call(axiosError, error.message, code, config, request, response);
+
+  axiosError.cause = error;
+
+  axiosError.name = error.name;
+
+  customProps && Object.assign(axiosError, customProps);
+
+  return axiosError;
+};
+
+/* eslint-env browser */
+var browser = typeof self == 'object' ? self.FormData : window.FormData;
+
+var FormData$2 = browser;
+
+/**
+ * Determines if the given thing is a array or js object.
+ *
+ * @param {string} thing - The object or array to be visited.
+ *
+ * @returns {boolean}
+ */
+function isVisitable(thing) {
+  return utils.isPlainObject(thing) || utils.isArray(thing);
+}
+
+/**
+ * It removes the brackets from the end of a string
+ *
+ * @param {string} key - The key of the parameter.
+ *
+ * @returns {string} the key without the brackets.
+ */
+function removeBrackets(key) {
+  return utils.endsWith(key, '[]') ? key.slice(0, -2) : key;
+}
+
+/**
+ * It takes a path, a key, and a boolean, and returns a string
+ *
+ * @param {string} path - The path to the current key.
+ * @param {string} key - The key of the current object being iterated over.
+ * @param {string} dots - If true, the key will be rendered with dots instead of brackets.
+ *
+ * @returns {string} The path to the current key.
+ */
+function renderKey(path, key, dots) {
+  if (!path) return key;
+  return path.concat(key).map(function each(token, i) {
+    // eslint-disable-next-line no-param-reassign
+    token = removeBrackets(token);
+    return !dots && i ? '[' + token + ']' : token;
+  }).join(dots ? '.' : '');
+}
+
+/**
+ * If the array is an array and none of its elements are visitable, then it's a flat array.
+ *
+ * @param {Array<any>} arr - The array to check
+ *
+ * @returns {boolean}
+ */
+function isFlatArray(arr) {
+  return utils.isArray(arr) && !arr.some(isVisitable);
+}
+
+const predicates = utils.toFlatObject(utils, {}, null, function filter(prop) {
+  return /^is[A-Z]/.test(prop);
+});
+
+/**
+ * If the thing is a FormData object, return true, otherwise return false.
+ *
+ * @param {unknown} thing - The thing to check.
+ *
+ * @returns {boolean}
+ */
+function isSpecCompliant(thing) {
+  return thing && utils.isFunction(thing.append) && thing[Symbol.toStringTag] === 'FormData' && thing[Symbol.iterator];
+}
+
+/**
+ * Convert a data object to FormData
+ *
+ * @param {Object} obj
+ * @param {?Object} [formData]
+ * @param {?Object} [options]
+ * @param {Function} [options.visitor]
+ * @param {Boolean} [options.metaTokens = true]
+ * @param {Boolean} [options.dots = false]
+ * @param {?Boolean} [options.indexes = false]
+ *
+ * @returns {Object}
+ **/
+
+/**
+ * It converts an object into a FormData object
+ *
+ * @param {Object<any, any>} obj - The object to convert to form data.
+ * @param {string} formData - The FormData object to append to.
+ * @param {Object<string, any>} options
+ *
+ * @returns
+ */
+function toFormData(obj, formData, options) {
+  if (!utils.isObject(obj)) {
+    throw new TypeError('target must be an object');
+  }
+
+  // eslint-disable-next-line no-param-reassign
+  formData = formData || new (FormData$2 || FormData)();
+
+  // eslint-disable-next-line no-param-reassign
+  options = utils.toFlatObject(options, {
+    metaTokens: true,
+    dots: false,
+    indexes: false
+  }, false, function defined(option, source) {
+    // eslint-disable-next-line no-eq-null,eqeqeq
+    return !utils.isUndefined(source[option]);
+  });
+
+  const metaTokens = options.metaTokens;
+  // eslint-disable-next-line no-use-before-define
+  const visitor = options.visitor || defaultVisitor;
+  const dots = options.dots;
+  const indexes = options.indexes;
+  const _Blob = options.Blob || typeof Blob !== 'undefined' && Blob;
+  const useBlob = _Blob && isSpecCompliant(formData);
+
+  if (!utils.isFunction(visitor)) {
+    throw new TypeError('visitor must be a function');
+  }
+
+  function convertValue(value) {
+    if (value === null) return '';
+
+    if (utils.isDate(value)) {
+      return value.toISOString();
+    }
+
+    if (!useBlob && utils.isBlob(value)) {
+      throw new AxiosError('Blob is not supported. Use a Buffer instead.');
+    }
+
+    if (utils.isArrayBuffer(value) || utils.isTypedArray(value)) {
+      return useBlob && typeof Blob === 'function' ? new Blob([value]) : Buffer.from(value);
+    }
+
+    return value;
+  }
+
+  /**
+   * Default visitor.
+   *
+   * @param {*} value
+   * @param {String|Number} key
+   * @param {Array<String|Number>} path
+   * @this {FormData}
+   *
+   * @returns {boolean} return true to visit the each prop of the value recursively
+   */
+  function defaultVisitor(value, key, path) {
+    let arr = value;
+
+    if (value && !path && typeof value === 'object') {
+      if (utils.endsWith(key, '{}')) {
+        // eslint-disable-next-line no-param-reassign
+        key = metaTokens ? key : key.slice(0, -2);
+        // eslint-disable-next-line no-param-reassign
+        value = JSON.stringify(value);
+      } else if (
+        (utils.isArray(value) && isFlatArray(value)) ||
+        (utils.isFileList(value) || utils.endsWith(key, '[]') && (arr = utils.toArray(value))
+        )) {
+        // eslint-disable-next-line no-param-reassign
+        key = removeBrackets(key);
+
+        arr.forEach(function each(el, index) {
+          !(utils.isUndefined(el) || el === null) && formData.append(
+            // eslint-disable-next-line no-nested-ternary
+            indexes === true ? renderKey([key], index, dots) : (indexes === null ? key : key + '[]'),
+            convertValue(el)
+          );
+        });
+        return false;
+      }
+    }
+
+    if (isVisitable(value)) {
+      return true;
+    }
+
+    formData.append(renderKey(path, key, dots), convertValue(value));
+
+    return false;
+  }
+
+  const stack = [];
+
+  const exposedHelpers = Object.assign(predicates, {
+    defaultVisitor,
+    convertValue,
+    isVisitable
+  });
+
+  function build(value, path) {
+    if (utils.isUndefined(value)) return;
+
+    if (stack.indexOf(value) !== -1) {
+      throw Error('Circular reference detected in ' + path.join('.'));
+    }
+
+    stack.push(value);
+
+    utils.forEach(value, function each(el, key) {
+      const result = !(utils.isUndefined(el) || el === null) && visitor.call(
+        formData, el, utils.isString(key) ? key.trim() : key, path, exposedHelpers
+      );
+
+      if (result === true) {
+        build(el, path ? path.concat(key) : [key]);
+      }
+    });
+
+    stack.pop();
+  }
+
+  if (!utils.isObject(obj)) {
+    throw new TypeError('data must be an object');
+  }
+
+  build(obj);
+
+  return formData;
+}
+
+/**
+ * It encodes a string by replacing all characters that are not in the unreserved set with
+ * their percent-encoded equivalents
+ *
+ * @param {string} str - The string to encode.
+ *
+ * @returns {string} The encoded string.
+ */
+function encode$1(str) {
+  const charMap = {
+    '!': '%21',
+    "'": '%27',
+    '(': '%28',
+    ')': '%29',
+    '~': '%7E',
+    '%20': '+',
+    '%00': '\x00'
+  };
+  return encodeURIComponent(str).replace(/[!'()~]|%20|%00/g, function replacer(match) {
+    return charMap[match];
+  });
+}
+
+/**
+ * It takes a params object and converts it to a FormData object
+ *
+ * @param {Object<string, any>} params - The parameters to be converted to a FormData object.
+ * @param {Object<string, any>} options - The options object passed to the Axios constructor.
+ *
+ * @returns {void}
+ */
+function AxiosURLSearchParams(params, options) {
+  this._pairs = [];
+
+  params && toFormData(params, this, options);
+}
+
+const prototype = AxiosURLSearchParams.prototype;
+
+prototype.append = function append(name, value) {
+  this._pairs.push([name, value]);
+};
+
+prototype.toString = function toString(encoder) {
+  const _encode = encoder ? function(value) {
+    return encoder.call(this, value, encode$1);
+  } : encode$1;
+
+  return this._pairs.map(function each(pair) {
+    return _encode(pair[0]) + '=' + _encode(pair[1]);
+  }, '').join('&');
+};
+
+/**
+ * It replaces all instances of the characters `:`, `$`, `,`, `+`, `[`, and `]` with their
+ * URI encoded counterparts
+ *
+ * @param {string} val The value to be encoded.
+ *
+ * @returns {string} The encoded value.
+ */
+function encode(val) {
+  return encodeURIComponent(val).
+    replace(/%3A/gi, ':').
+    replace(/%24/g, '$').
+    replace(/%2C/gi, ',').
+    replace(/%20/g, '+').
+    replace(/%5B/gi, '[').
+    replace(/%5D/gi, ']');
+}
+
+/**
+ * Build a URL by appending params to the end
+ *
+ * @param {string} url The base of the url (e.g., http://www.google.com)
+ * @param {object} [params] The params to be appended
+ * @param {?object} options
+ *
+ * @returns {string} The formatted url
+ */
+function buildURL(url, params, options) {
+  /*eslint no-param-reassign:0*/
+  if (!params) {
+    return url;
+  }
+  
+  const _encode = options && options.encode || encode;
+
+  const serializeFn = options && options.serialize;
+
+  let serializedParams;
+
+  if (serializeFn) {
+    serializedParams = serializeFn(params, options);
+  } else {
+    serializedParams = utils.isURLSearchParams(params) ?
+      params.toString() :
+      new AxiosURLSearchParams(params, options).toString(_encode);
+  }
+
+  if (serializedParams) {
+    const hashmarkIndex = url.indexOf("#");
+
+    if (hashmarkIndex !== -1) {
+      url = url.slice(0, hashmarkIndex);
+    }
+    url += (url.indexOf('?') === -1 ? '?' : '&') + serializedParams;
+  }
+
+  return url;
+}
+
+class InterceptorManager {
+  constructor() {
+    this.handlers = [];
+  }
+
+  /**
+   * Add a new interceptor to the stack
+   *
+   * @param {Function} fulfilled The function to handle `then` for a `Promise`
+   * @param {Function} rejected The function to handle `reject` for a `Promise`
+   *
+   * @return {Number} An ID used to remove interceptor later
+   */
+  use(fulfilled, rejected, options) {
+    this.handlers.push({
+      fulfilled,
+      rejected,
+      synchronous: options ? options.synchronous : false,
+      runWhen: options ? options.runWhen : null
+    });
+    return this.handlers.length - 1;
+  }
+
+  /**
+   * Remove an interceptor from the stack
+   *
+   * @param {Number} id The ID that was returned by `use`
+   *
+   * @returns {Boolean} `true` if the interceptor was removed, `false` otherwise
+   */
+  eject(id) {
+    if (this.handlers[id]) {
+      this.handlers[id] = null;
+    }
+  }
+
+  /**
+   * Clear all interceptors from the stack
+   *
+   * @returns {void}
+   */
+  clear() {
+    if (this.handlers) {
+      this.handlers = [];
+    }
+  }
+
+  /**
+   * Iterate over all the registered interceptors
+   *
+   * This method is particularly useful for skipping over any
+   * interceptors that may have become `null` calling `eject`.
+   *
+   * @param {Function} fn The function to call for each interceptor
+   *
+   * @returns {void}
+   */
+  forEach(fn) {
+    utils.forEach(this.handlers, function forEachHandler(h) {
+      if (h !== null) {
+        fn(h);
+      }
+    });
+  }
+}
+
+var InterceptorManager$1 = InterceptorManager;
+
+var transitionalDefaults = {
+  silentJSONParsing: true,
+  forcedJSONParsing: true,
+  clarifyTimeoutError: false
+};
+
+var URLSearchParams$1 = typeof URLSearchParams !== 'undefined' ? URLSearchParams : AxiosURLSearchParams;
+
+var FormData$1 = FormData;
+
+/**
+ * Determine if we're running in a standard browser environment
+ *
+ * This allows axios to run in a web worker, and react-native.
+ * Both environments support XMLHttpRequest, but not fully standard globals.
+ *
+ * web workers:
+ *  typeof window -> undefined
+ *  typeof document -> undefined
+ *
+ * react-native:
+ *  navigator.product -> 'ReactNative'
+ * nativescript
+ *  navigator.product -> 'NativeScript' or 'NS'
+ *
+ * @returns {boolean}
+ */
+const isStandardBrowserEnv = (() => {
+  let product;
+  if (typeof navigator !== 'undefined' && (
+    (product = navigator.product) === 'ReactNative' ||
+    product === 'NativeScript' ||
+    product === 'NS')
+  ) {
+    return false;
+  }
+
+  return typeof window !== 'undefined' && typeof document !== 'undefined';
+})();
+
+/**
+ * Determine if we're running in a standard browser webWorker environment
+ *
+ * Although the `isStandardBrowserEnv` method indicates that
+ * `allows axios to run in a web worker`, the WebWorker will still be
+ * filtered out due to its judgment standard
+ * `typeof window !== 'undefined' && typeof document !== 'undefined'`.
+ * This leads to a problem when axios post `FormData` in webWorker
+ */
+ const isStandardBrowserWebWorkerEnv = (() => {
+  return (
+    typeof WorkerGlobalScope !== 'undefined' &&
+    // eslint-disable-next-line no-undef
+    self instanceof WorkerGlobalScope &&
+    typeof self.importScripts === 'function'
+  );
+})();
+
+
+var platform = {
+  isBrowser: true,
+  classes: {
+    URLSearchParams: URLSearchParams$1,
+    FormData: FormData$1,
+    Blob
+  },
+  isStandardBrowserEnv,
+  isStandardBrowserWebWorkerEnv,
+  protocols: ['http', 'https', 'file', 'blob', 'url', 'data']
+};
+
+function toURLEncodedForm(data, options) {
+  return toFormData(data, new platform.classes.URLSearchParams(), Object.assign({
+    visitor: function(value, key, path, helpers) {
+      if (platform.isNode && utils.isBuffer(value)) {
+        this.append(key, value.toString('base64'));
+        return false;
+      }
+
+      return helpers.defaultVisitor.apply(this, arguments);
+    }
+  }, options));
+}
+
+/**
+ * It takes a string like `foo[x][y][z]` and returns an array like `['foo', 'x', 'y', 'z']
+ *
+ * @param {string} name - The name of the property to get.
+ *
+ * @returns An array of strings.
+ */
+function parsePropPath(name) {
+  // foo[x][y][z]
+  // foo.x.y.z
+  // foo-x-y-z
+  // foo x y z
+  return utils.matchAll(/\w+|\[(\w*)]/g, name).map(match => {
+    return match[0] === '[]' ? '' : match[1] || match[0];
+  });
+}
+
+/**
+ * Convert an array to an object.
+ *
+ * @param {Array<any>} arr - The array to convert to an object.
+ *
+ * @returns An object with the same keys and values as the array.
+ */
+function arrayToObject(arr) {
+  const obj = {};
+  const keys = Object.keys(arr);
+  let i;
+  const len = keys.length;
+  let key;
+  for (i = 0; i < len; i++) {
+    key = keys[i];
+    obj[key] = arr[key];
+  }
+  return obj;
+}
+
+/**
+ * It takes a FormData object and returns a JavaScript object
+ *
+ * @param {string} formData The FormData object to convert to JSON.
+ *
+ * @returns {Object<string, any> | null} The converted object.
+ */
+function formDataToJSON(formData) {
+  function buildPath(path, value, target, index) {
+    let name = path[index++];
+    const isNumericKey = Number.isFinite(+name);
+    const isLast = index >= path.length;
+    name = !name && utils.isArray(target) ? target.length : name;
+
+    if (isLast) {
+      if (utils.hasOwnProp(target, name)) {
+        target[name] = [target[name], value];
+      } else {
+        target[name] = value;
+      }
+
+      return !isNumericKey;
+    }
+
+    if (!target[name] || !utils.isObject(target[name])) {
+      target[name] = [];
+    }
+
+    const result = buildPath(path, value, target[name], index);
+
+    if (result && utils.isArray(target[name])) {
+      target[name] = arrayToObject(target[name]);
+    }
+
+    return !isNumericKey;
+  }
+
+  if (utils.isFormData(formData) && utils.isFunction(formData.entries)) {
+    const obj = {};
+
+    utils.forEachEntry(formData, (name, value) => {
+      buildPath(parsePropPath(name), value, obj, 0);
+    });
+
+    return obj;
+  }
+
+  return null;
+}
+
+const DEFAULT_CONTENT_TYPE = {
+  'Content-Type': undefined
+};
+
+/**
+ * It takes a string, tries to parse it, and if it fails, it returns the stringified version
+ * of the input
+ *
+ * @param {any} rawValue - The value to be stringified.
+ * @param {Function} parser - A function that parses a string into a JavaScript object.
+ * @param {Function} encoder - A function that takes a value and returns a string.
+ *
+ * @returns {string} A stringified version of the rawValue.
+ */
+function stringifySafely(rawValue, parser, encoder) {
+  if (utils.isString(rawValue)) {
+    try {
+      (parser || JSON.parse)(rawValue);
+      return utils.trim(rawValue);
+    } catch (e) {
+      if (e.name !== 'SyntaxError') {
+        throw e;
+      }
+    }
+  }
+
+  return (encoder || JSON.stringify)(rawValue);
+}
+
+const defaults = {
+
+  transitional: transitionalDefaults,
+
+  adapter: ['xhr', 'http'],
+
+  transformRequest: [function transformRequest(data, headers) {
+    const contentType = headers.getContentType() || '';
+    const hasJSONContentType = contentType.indexOf('application/json') > -1;
+    const isObjectPayload = utils.isObject(data);
+
+    if (isObjectPayload && utils.isHTMLForm(data)) {
+      data = new FormData(data);
+    }
+
+    const isFormData = utils.isFormData(data);
+
+    if (isFormData) {
+      if (!hasJSONContentType) {
+        return data;
+      }
+      return hasJSONContentType ? JSON.stringify(formDataToJSON(data)) : data;
+    }
+
+    if (utils.isArrayBuffer(data) ||
+      utils.isBuffer(data) ||
+      utils.isStream(data) ||
+      utils.isFile(data) ||
+      utils.isBlob(data)
+    ) {
+      return data;
+    }
+    if (utils.isArrayBufferView(data)) {
+      return data.buffer;
+    }
+    if (utils.isURLSearchParams(data)) {
+      headers.setContentType('application/x-www-form-urlencoded;charset=utf-8', false);
+      return data.toString();
+    }
+
+    let isFileList;
+
+    if (isObjectPayload) {
+      if (contentType.indexOf('application/x-www-form-urlencoded') > -1) {
+        return toURLEncodedForm(data, this.formSerializer).toString();
+      }
+
+      if ((isFileList = utils.isFileList(data)) || contentType.indexOf('multipart/form-data') > -1) {
+        const _FormData = this.env && this.env.FormData;
+
+        return toFormData(
+          isFileList ? {'files[]': data} : data,
+          _FormData && new _FormData(),
+          this.formSerializer
+        );
+      }
+    }
+
+    if (isObjectPayload || hasJSONContentType ) {
+      headers.setContentType('application/json', false);
+      return stringifySafely(data);
+    }
+
+    return data;
+  }],
+
+  transformResponse: [function transformResponse(data) {
+    const transitional = this.transitional || defaults.transitional;
+    const forcedJSONParsing = transitional && transitional.forcedJSONParsing;
+    const JSONRequested = this.responseType === 'json';
+
+    if (data && utils.isString(data) && ((forcedJSONParsing && !this.responseType) || JSONRequested)) {
+      const silentJSONParsing = transitional && transitional.silentJSONParsing;
+      const strictJSONParsing = !silentJSONParsing && JSONRequested;
+
+      try {
+        return JSON.parse(data);
+      } catch (e) {
+        if (strictJSONParsing) {
+          if (e.name === 'SyntaxError') {
+            throw AxiosError.from(e, AxiosError.ERR_BAD_RESPONSE, this, null, this.response);
+          }
+          throw e;
+        }
+      }
+    }
+
+    return data;
+  }],
+
+  /**
+   * A timeout in milliseconds to abort a request. If set to 0 (default) a
+   * timeout is not created.
+   */
+  timeout: 0,
+
+  xsrfCookieName: 'XSRF-TOKEN',
+  xsrfHeaderName: 'X-XSRF-TOKEN',
+
+  maxContentLength: -1,
+  maxBodyLength: -1,
+
+  env: {
+    FormData: platform.classes.FormData,
+    Blob: platform.classes.Blob
+  },
+
+  validateStatus: function validateStatus(status) {
+    return status >= 200 && status < 300;
+  },
+
+  headers: {
+    common: {
+      'Accept': 'application/json, text/plain, */*'
+    }
+  }
+};
+
+utils.forEach(['delete', 'get', 'head'], function forEachMethodNoData(method) {
+  defaults.headers[method] = {};
+});
+
+utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
+  defaults.headers[method] = utils.merge(DEFAULT_CONTENT_TYPE);
+});
+
+var defaults$1 = defaults;
+
+// RawAxiosHeaders whose duplicates are ignored by node
+// c.f. https://nodejs.org/api/http.html#http_message_headers
+const ignoreDuplicateOf = utils.toObjectSet([
+  'age', 'authorization', 'content-length', 'content-type', 'etag',
+  'expires', 'from', 'host', 'if-modified-since', 'if-unmodified-since',
+  'last-modified', 'location', 'max-forwards', 'proxy-authorization',
+  'referer', 'retry-after', 'user-agent'
+]);
+
+/**
+ * Parse headers into an object
+ *
+ * ```
+ * Date: Wed, 27 Aug 2014 08:58:49 GMT
+ * Content-Type: application/json
+ * Connection: keep-alive
+ * Transfer-Encoding: chunked
+ * ```
+ *
+ * @param {String} rawHeaders Headers needing to be parsed
+ *
+ * @returns {Object} Headers parsed into an object
+ */
+var parseHeaders = rawHeaders => {
+  const parsed = {};
+  let key;
+  let val;
+  let i;
+
+  rawHeaders && rawHeaders.split('\n').forEach(function parser(line) {
+    i = line.indexOf(':');
+    key = line.substring(0, i).trim().toLowerCase();
+    val = line.substring(i + 1).trim();
+
+    if (!key || (parsed[key] && ignoreDuplicateOf[key])) {
+      return;
+    }
+
+    if (key === 'set-cookie') {
+      if (parsed[key]) {
+        parsed[key].push(val);
+      } else {
+        parsed[key] = [val];
+      }
+    } else {
+      parsed[key] = parsed[key] ? parsed[key] + ', ' + val : val;
+    }
+  });
+
+  return parsed;
+};
+
+const $internals = Symbol('internals');
+
+function normalizeHeader(header) {
+  return header && String(header).trim().toLowerCase();
+}
+
+function normalizeValue(value) {
+  if (value === false || value == null) {
+    return value;
+  }
+
+  return utils.isArray(value) ? value.map(normalizeValue) : String(value);
+}
+
+function parseTokens(str) {
+  const tokens = Object.create(null);
+  const tokensRE = /([^\s,;=]+)\s*(?:=\s*([^,;]+))?/g;
+  let match;
+
+  while ((match = tokensRE.exec(str))) {
+    tokens[match[1]] = match[2];
+  }
+
+  return tokens;
+}
+
+function isValidHeaderName(str) {
+  return /^[-_a-zA-Z]+$/.test(str.trim());
+}
+
+function matchHeaderValue(context, value, header, filter) {
+  if (utils.isFunction(filter)) {
+    return filter.call(this, value, header);
+  }
+
+  if (!utils.isString(value)) return;
+
+  if (utils.isString(filter)) {
+    return value.indexOf(filter) !== -1;
+  }
+
+  if (utils.isRegExp(filter)) {
+    return filter.test(value);
+  }
+}
+
+function formatHeader(header) {
+  return header.trim()
+    .toLowerCase().replace(/([a-z\d])(\w*)/g, (w, char, str) => {
+      return char.toUpperCase() + str;
+    });
+}
+
+function buildAccessors(obj, header) {
+  const accessorName = utils.toCamelCase(' ' + header);
+
+  ['get', 'set', 'has'].forEach(methodName => {
+    Object.defineProperty(obj, methodName + accessorName, {
+      value: function(arg1, arg2, arg3) {
+        return this[methodName].call(this, header, arg1, arg2, arg3);
+      },
+      configurable: true
+    });
+  });
+}
+
+class AxiosHeaders {
+  constructor(headers) {
+    headers && this.set(headers);
+  }
+
+  set(header, valueOrRewrite, rewrite) {
+    const self = this;
+
+    function setHeader(_value, _header, _rewrite) {
+      const lHeader = normalizeHeader(_header);
+
+      if (!lHeader) {
+        throw new Error('header name must be a non-empty string');
+      }
+
+      const key = utils.findKey(self, lHeader);
+
+      if(!key || self[key] === undefined || _rewrite === true || (_rewrite === undefined && self[key] !== false)) {
+        self[key || _header] = normalizeValue(_value);
+      }
+    }
+
+    const setHeaders = (headers, _rewrite) =>
+      utils.forEach(headers, (_value, _header) => setHeader(_value, _header, _rewrite));
+
+    if (utils.isPlainObject(header) || header instanceof this.constructor) {
+      setHeaders(header, valueOrRewrite);
+    } else if(utils.isString(header) && (header = header.trim()) && !isValidHeaderName(header)) {
+      setHeaders(parseHeaders(header), valueOrRewrite);
+    } else {
+      header != null && setHeader(valueOrRewrite, header, rewrite);
+    }
+
+    return this;
+  }
+
+  get(header, parser) {
+    header = normalizeHeader(header);
+
+    if (header) {
+      const key = utils.findKey(this, header);
+
+      if (key) {
+        const value = this[key];
+
+        if (!parser) {
+          return value;
+        }
+
+        if (parser === true) {
+          return parseTokens(value);
+        }
+
+        if (utils.isFunction(parser)) {
+          return parser.call(this, value, key);
+        }
+
+        if (utils.isRegExp(parser)) {
+          return parser.exec(value);
+        }
+
+        throw new TypeError('parser must be boolean|regexp|function');
+      }
+    }
+  }
+
+  has(header, matcher) {
+    header = normalizeHeader(header);
+
+    if (header) {
+      const key = utils.findKey(this, header);
+
+      return !!(key && (!matcher || matchHeaderValue(this, this[key], key, matcher)));
+    }
+
+    return false;
+  }
+
+  delete(header, matcher) {
+    const self = this;
+    let deleted = false;
+
+    function deleteHeader(_header) {
+      _header = normalizeHeader(_header);
+
+      if (_header) {
+        const key = utils.findKey(self, _header);
+
+        if (key && (!matcher || matchHeaderValue(self, self[key], key, matcher))) {
+          delete self[key];
+
+          deleted = true;
+        }
+      }
+    }
+
+    if (utils.isArray(header)) {
+      header.forEach(deleteHeader);
+    } else {
+      deleteHeader(header);
+    }
+
+    return deleted;
+  }
+
+  clear() {
+    return Object.keys(this).forEach(this.delete.bind(this));
+  }
+
+  normalize(format) {
+    const self = this;
+    const headers = {};
+
+    utils.forEach(this, (value, header) => {
+      const key = utils.findKey(headers, header);
+
+      if (key) {
+        self[key] = normalizeValue(value);
+        delete self[header];
+        return;
+      }
+
+      const normalized = format ? formatHeader(header) : String(header).trim();
+
+      if (normalized !== header) {
+        delete self[header];
+      }
+
+      self[normalized] = normalizeValue(value);
+
+      headers[normalized] = true;
+    });
+
+    return this;
+  }
+
+  concat(...targets) {
+    return this.constructor.concat(this, ...targets);
+  }
+
+  toJSON(asStrings) {
+    const obj = Object.create(null);
+
+    utils.forEach(this, (value, header) => {
+      value != null && value !== false && (obj[header] = asStrings && utils.isArray(value) ? value.join(', ') : value);
+    });
+
+    return obj;
+  }
+
+  [Symbol.iterator]() {
+    return Object.entries(this.toJSON())[Symbol.iterator]();
+  }
+
+  toString() {
+    return Object.entries(this.toJSON()).map(([header, value]) => header + ': ' + value).join('\n');
+  }
+
+  get [Symbol.toStringTag]() {
+    return 'AxiosHeaders';
+  }
+
+  static from(thing) {
+    return thing instanceof this ? thing : new this(thing);
+  }
+
+  static concat(first, ...targets) {
+    const computed = new this(first);
+
+    targets.forEach((target) => computed.set(target));
+
+    return computed;
+  }
+
+  static accessor(header) {
+    const internals = this[$internals] = (this[$internals] = {
+      accessors: {}
+    });
+
+    const accessors = internals.accessors;
+    const prototype = this.prototype;
+
+    function defineAccessor(_header) {
+      const lHeader = normalizeHeader(_header);
+
+      if (!accessors[lHeader]) {
+        buildAccessors(prototype, _header);
+        accessors[lHeader] = true;
+      }
+    }
+
+    utils.isArray(header) ? header.forEach(defineAccessor) : defineAccessor(header);
+
+    return this;
+  }
+}
+
+AxiosHeaders.accessor(['Content-Type', 'Content-Length', 'Accept', 'Accept-Encoding', 'User-Agent']);
+
+utils.freezeMethods(AxiosHeaders.prototype);
+utils.freezeMethods(AxiosHeaders);
+
+var AxiosHeaders$1 = AxiosHeaders;
+
+/**
+ * Transform the data for a request or a response
+ *
+ * @param {Array|Function} fns A single function or Array of functions
+ * @param {?Object} response The response object
+ *
+ * @returns {*} The resulting transformed data
+ */
+function transformData(fns, response) {
+  const config = this || defaults$1;
+  const context = response || config;
+  const headers = AxiosHeaders$1.from(context.headers);
+  let data = context.data;
+
+  utils.forEach(fns, function transform(fn) {
+    data = fn.call(config, data, headers.normalize(), response ? response.status : undefined);
+  });
+
+  headers.normalize();
+
+  return data;
+}
+
+function isCancel(value) {
+  return !!(value && value.__CANCEL__);
+}
+
+/**
+ * A `CanceledError` is an object that is thrown when an operation is canceled.
+ *
+ * @param {string=} message The message.
+ * @param {Object=} config The config.
+ * @param {Object=} request The request.
+ *
+ * @returns {CanceledError} The created error.
+ */
+function CanceledError(message, config, request) {
+  // eslint-disable-next-line no-eq-null,eqeqeq
+  AxiosError.call(this, message == null ? 'canceled' : message, AxiosError.ERR_CANCELED, config, request);
+  this.name = 'CanceledError';
+}
+
+utils.inherits(CanceledError, AxiosError, {
+  __CANCEL__: true
+});
+
+// eslint-disable-next-line strict
+var httpAdapter = null;
+
+/**
+ * Resolve or reject a Promise based on response status.
+ *
+ * @param {Function} resolve A function that resolves the promise.
+ * @param {Function} reject A function that rejects the promise.
+ * @param {object} response The response.
+ *
+ * @returns {object} The response.
+ */
+function settle(resolve, reject, response) {
+  const validateStatus = response.config.validateStatus;
+  if (!response.status || !validateStatus || validateStatus(response.status)) {
+    resolve(response);
+  } else {
+    reject(new AxiosError(
+      'Request failed with status code ' + response.status,
+      [AxiosError.ERR_BAD_REQUEST, AxiosError.ERR_BAD_RESPONSE][Math.floor(response.status / 100) - 4],
+      response.config,
+      response.request,
+      response
+    ));
+  }
+}
+
+var cookies = platform.isStandardBrowserEnv ?
+
+// Standard browser envs support document.cookie
+  (function standardBrowserEnv() {
+    return {
+      write: function write(name, value, expires, path, domain, secure) {
+        const cookie = [];
+        cookie.push(name + '=' + encodeURIComponent(value));
+
+        if (utils.isNumber(expires)) {
+          cookie.push('expires=' + new Date(expires).toGMTString());
+        }
+
+        if (utils.isString(path)) {
+          cookie.push('path=' + path);
+        }
+
+        if (utils.isString(domain)) {
+          cookie.push('domain=' + domain);
+        }
+
+        if (secure === true) {
+          cookie.push('secure');
+        }
+
+        document.cookie = cookie.join('; ');
+      },
+
+      read: function read(name) {
+        const match = document.cookie.match(new RegExp('(^|;\\s*)(' + name + ')=([^;]*)'));
+        return (match ? decodeURIComponent(match[3]) : null);
+      },
+
+      remove: function remove(name) {
+        this.write(name, '', Date.now() - 86400000);
+      }
+    };
+  })() :
+
+// Non standard browser env (web workers, react-native) lack needed support.
+  (function nonStandardBrowserEnv() {
+    return {
+      write: function write() {},
+      read: function read() { return null; },
+      remove: function remove() {}
+    };
+  })();
+
+/**
+ * Determines whether the specified URL is absolute
+ *
+ * @param {string} url The URL to test
+ *
+ * @returns {boolean} True if the specified URL is absolute, otherwise false
+ */
+function isAbsoluteURL(url) {
+  // A URL is considered absolute if it begins with "<scheme>://" or "//" (protocol-relative URL).
+  // RFC 3986 defines scheme name as a sequence of characters beginning with a letter and followed
+  // by any combination of letters, digits, plus, period, or hyphen.
+  return /^([a-z][a-z\d+\-.]*:)?\/\//i.test(url);
+}
+
+/**
+ * Creates a new URL by combining the specified URLs
+ *
+ * @param {string} baseURL The base URL
+ * @param {string} relativeURL The relative URL
+ *
+ * @returns {string} The combined URL
+ */
+function combineURLs(baseURL, relativeURL) {
+  return relativeURL
+    ? baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '')
+    : baseURL;
+}
+
+/**
+ * Creates a new URL by combining the baseURL with the requestedURL,
+ * only when the requestedURL is not already an absolute URL.
+ * If the requestURL is absolute, this function returns the requestedURL untouched.
+ *
+ * @param {string} baseURL The base URL
+ * @param {string} requestedURL Absolute or relative URL to combine
+ *
+ * @returns {string} The combined full path
+ */
+function buildFullPath(baseURL, requestedURL) {
+  if (baseURL && !isAbsoluteURL(requestedURL)) {
+    return combineURLs(baseURL, requestedURL);
+  }
+  return requestedURL;
+}
+
+var isURLSameOrigin = platform.isStandardBrowserEnv ?
+
+// Standard browser envs have full support of the APIs needed to test
+// whether the request URL is of the same origin as current location.
+  (function standardBrowserEnv() {
+    const msie = /(msie|trident)/i.test(navigator.userAgent);
+    const urlParsingNode = document.createElement('a');
+    let originURL;
+
+    /**
+    * Parse a URL to discover it's components
+    *
+    * @param {String} url The URL to be parsed
+    * @returns {Object}
+    */
+    function resolveURL(url) {
+      let href = url;
+
+      if (msie) {
+        // IE needs attribute set twice to normalize properties
+        urlParsingNode.setAttribute('href', href);
+        href = urlParsingNode.href;
+      }
+
+      urlParsingNode.setAttribute('href', href);
+
+      // urlParsingNode provides the UrlUtils interface - http://url.spec.whatwg.org/#urlutils
+      return {
+        href: urlParsingNode.href,
+        protocol: urlParsingNode.protocol ? urlParsingNode.protocol.replace(/:$/, '') : '',
+        host: urlParsingNode.host,
+        search: urlParsingNode.search ? urlParsingNode.search.replace(/^\?/, '') : '',
+        hash: urlParsingNode.hash ? urlParsingNode.hash.replace(/^#/, '') : '',
+        hostname: urlParsingNode.hostname,
+        port: urlParsingNode.port,
+        pathname: (urlParsingNode.pathname.charAt(0) === '/') ?
+          urlParsingNode.pathname :
+          '/' + urlParsingNode.pathname
+      };
+    }
+
+    originURL = resolveURL(window.location.href);
+
+    /**
+    * Determine if a URL shares the same origin as the current location
+    *
+    * @param {String} requestURL The URL to test
+    * @returns {boolean} True if URL shares the same origin, otherwise false
+    */
+    return function isURLSameOrigin(requestURL) {
+      const parsed = (utils.isString(requestURL)) ? resolveURL(requestURL) : requestURL;
+      return (parsed.protocol === originURL.protocol &&
+          parsed.host === originURL.host);
+    };
+  })() :
+
+  // Non standard browser envs (web workers, react-native) lack needed support.
+  (function nonStandardBrowserEnv() {
+    return function isURLSameOrigin() {
+      return true;
+    };
+  })();
+
+function parseProtocol(url) {
+  const match = /^([-+\w]{1,25})(:?\/\/|:)/.exec(url);
+  return match && match[1] || '';
+}
+
+/**
+ * Calculate data maxRate
+ * @param {Number} [samplesCount= 10]
+ * @param {Number} [min= 1000]
+ * @returns {Function}
+ */
+function speedometer(samplesCount, min) {
+  samplesCount = samplesCount || 10;
+  const bytes = new Array(samplesCount);
+  const timestamps = new Array(samplesCount);
+  let head = 0;
+  let tail = 0;
+  let firstSampleTS;
+
+  min = min !== undefined ? min : 1000;
+
+  return function push(chunkLength) {
+    const now = Date.now();
+
+    const startedAt = timestamps[tail];
+
+    if (!firstSampleTS) {
+      firstSampleTS = now;
+    }
+
+    bytes[head] = chunkLength;
+    timestamps[head] = now;
+
+    let i = tail;
+    let bytesCount = 0;
+
+    while (i !== head) {
+      bytesCount += bytes[i++];
+      i = i % samplesCount;
+    }
+
+    head = (head + 1) % samplesCount;
+
+    if (head === tail) {
+      tail = (tail + 1) % samplesCount;
+    }
+
+    if (now - firstSampleTS < min) {
+      return;
+    }
+
+    const passed = startedAt && now - startedAt;
+
+    return passed ? Math.round(bytesCount * 1000 / passed) : undefined;
+  };
+}
+
+function progressEventReducer(listener, isDownloadStream) {
+  let bytesNotified = 0;
+  const _speedometer = speedometer(50, 250);
+
+  return e => {
+    const loaded = e.loaded;
+    const total = e.lengthComputable ? e.total : undefined;
+    const progressBytes = loaded - bytesNotified;
+    const rate = _speedometer(progressBytes);
+    const inRange = loaded <= total;
+
+    bytesNotified = loaded;
+
+    const data = {
+      loaded,
+      total,
+      progress: total ? (loaded / total) : undefined,
+      bytes: progressBytes,
+      rate: rate ? rate : undefined,
+      estimated: rate && total && inRange ? (total - loaded) / rate : undefined,
+      event: e
+    };
+
+    data[isDownloadStream ? 'download' : 'upload'] = true;
+
+    listener(data);
+  };
+}
+
+const isXHRAdapterSupported = typeof XMLHttpRequest !== 'undefined';
+
+var xhrAdapter = isXHRAdapterSupported && function (config) {
+  return new Promise(function dispatchXhrRequest(resolve, reject) {
+    let requestData = config.data;
+    const requestHeaders = AxiosHeaders$1.from(config.headers).normalize();
+    const responseType = config.responseType;
+    let onCanceled;
+    function done() {
+      if (config.cancelToken) {
+        config.cancelToken.unsubscribe(onCanceled);
+      }
+
+      if (config.signal) {
+        config.signal.removeEventListener('abort', onCanceled);
+      }
+    }
+
+    if (utils.isFormData(requestData) && (platform.isStandardBrowserEnv || platform.isStandardBrowserWebWorkerEnv)) {
+      requestHeaders.setContentType(false); // Let the browser set it
+    }
+
+    let request = new XMLHttpRequest();
+
+    // HTTP basic authentication
+    if (config.auth) {
+      const username = config.auth.username || '';
+      const password = config.auth.password ? unescape(encodeURIComponent(config.auth.password)) : '';
+      requestHeaders.set('Authorization', 'Basic ' + btoa(username + ':' + password));
+    }
+
+    const fullPath = buildFullPath(config.baseURL, config.url);
+
+    request.open(config.method.toUpperCase(), buildURL(fullPath, config.params, config.paramsSerializer), true);
+
+    // Set the request timeout in MS
+    request.timeout = config.timeout;
+
+    function onloadend() {
+      if (!request) {
+        return;
+      }
+      // Prepare the response
+      const responseHeaders = AxiosHeaders$1.from(
+        'getAllResponseHeaders' in request && request.getAllResponseHeaders()
+      );
+      const responseData = !responseType || responseType === 'text' || responseType === 'json' ?
+        request.responseText : request.response;
+      const response = {
+        data: responseData,
+        status: request.status,
+        statusText: request.statusText,
+        headers: responseHeaders,
+        config,
+        request
+      };
+
+      settle(function _resolve(value) {
+        resolve(value);
+        done();
+      }, function _reject(err) {
+        reject(err);
+        done();
+      }, response);
+
+      // Clean up request
+      request = null;
+    }
+
+    if ('onloadend' in request) {
+      // Use onloadend if available
+      request.onloadend = onloadend;
+    } else {
+      // Listen for ready state to emulate onloadend
+      request.onreadystatechange = function handleLoad() {
+        if (!request || request.readyState !== 4) {
+          return;
+        }
+
+        // The request errored out and we didn't get a response, this will be
+        // handled by onerror instead
+        // With one exception: request that using file: protocol, most browsers
+        // will return status as 0 even though it's a successful request
+        if (request.status === 0 && !(request.responseURL && request.responseURL.indexOf('file:') === 0)) {
+          return;
+        }
+        // readystate handler is calling before onerror or ontimeout handlers,
+        // so we should call onloadend on the next 'tick'
+        setTimeout(onloadend);
+      };
+    }
+
+    // Handle browser request cancellation (as opposed to a manual cancellation)
+    request.onabort = function handleAbort() {
+      if (!request) {
+        return;
+      }
+
+      reject(new AxiosError('Request aborted', AxiosError.ECONNABORTED, config, request));
+
+      // Clean up request
+      request = null;
+    };
+
+    // Handle low level network errors
+    request.onerror = function handleError() {
+      // Real errors are hidden from us by the browser
+      // onerror should only fire if it's a network error
+      reject(new AxiosError('Network Error', AxiosError.ERR_NETWORK, config, request));
+
+      // Clean up request
+      request = null;
+    };
+
+    // Handle timeout
+    request.ontimeout = function handleTimeout() {
+      let timeoutErrorMessage = config.timeout ? 'timeout of ' + config.timeout + 'ms exceeded' : 'timeout exceeded';
+      const transitional = config.transitional || transitionalDefaults;
+      if (config.timeoutErrorMessage) {
+        timeoutErrorMessage = config.timeoutErrorMessage;
+      }
+      reject(new AxiosError(
+        timeoutErrorMessage,
+        transitional.clarifyTimeoutError ? AxiosError.ETIMEDOUT : AxiosError.ECONNABORTED,
+        config,
+        request));
+
+      // Clean up request
+      request = null;
+    };
+
+    // Add xsrf header
+    // This is only done if running in a standard browser environment.
+    // Specifically not if we're in a web worker, or react-native.
+    if (platform.isStandardBrowserEnv) {
+      // Add xsrf header
+      const xsrfValue = (config.withCredentials || isURLSameOrigin(fullPath))
+        && config.xsrfCookieName && cookies.read(config.xsrfCookieName);
+
+      if (xsrfValue) {
+        requestHeaders.set(config.xsrfHeaderName, xsrfValue);
+      }
+    }
+
+    // Remove Content-Type if data is undefined
+    requestData === undefined && requestHeaders.setContentType(null);
+
+    // Add headers to the request
+    if ('setRequestHeader' in request) {
+      utils.forEach(requestHeaders.toJSON(), function setRequestHeader(val, key) {
+        request.setRequestHeader(key, val);
+      });
+    }
+
+    // Add withCredentials to request if needed
+    if (!utils.isUndefined(config.withCredentials)) {
+      request.withCredentials = !!config.withCredentials;
+    }
+
+    // Add responseType to request if needed
+    if (responseType && responseType !== 'json') {
+      request.responseType = config.responseType;
+    }
+
+    // Handle progress if needed
+    if (typeof config.onDownloadProgress === 'function') {
+      request.addEventListener('progress', progressEventReducer(config.onDownloadProgress, true));
+    }
+
+    // Not all browsers support upload events
+    if (typeof config.onUploadProgress === 'function' && request.upload) {
+      request.upload.addEventListener('progress', progressEventReducer(config.onUploadProgress));
+    }
+
+    if (config.cancelToken || config.signal) {
+      // Handle cancellation
+      // eslint-disable-next-line func-names
+      onCanceled = cancel => {
+        if (!request) {
+          return;
+        }
+        reject(!cancel || cancel.type ? new CanceledError(null, config, request) : cancel);
+        request.abort();
+        request = null;
+      };
+
+      config.cancelToken && config.cancelToken.subscribe(onCanceled);
+      if (config.signal) {
+        config.signal.aborted ? onCanceled() : config.signal.addEventListener('abort', onCanceled);
+      }
+    }
+
+    const protocol = parseProtocol(fullPath);
+
+    if (protocol && platform.protocols.indexOf(protocol) === -1) {
+      reject(new AxiosError('Unsupported protocol ' + protocol + ':', AxiosError.ERR_BAD_REQUEST, config));
+      return;
+    }
+
+
+    // Send the request
+    request.send(requestData || null);
+  });
+};
+
+const knownAdapters = {
+  http: httpAdapter,
+  xhr: xhrAdapter
+};
+
+utils.forEach(knownAdapters, (fn, value) => {
+  if(fn) {
+    try {
+      Object.defineProperty(fn, 'name', {value});
+    } catch (e) {
+      // eslint-disable-next-line no-empty
+    }
+    Object.defineProperty(fn, 'adapterName', {value});
+  }
+});
+
+var adapters = {
+  getAdapter: (adapters) => {
+    adapters = utils.isArray(adapters) ? adapters : [adapters];
+
+    const {length} = adapters;
+    let nameOrAdapter;
+    let adapter;
+
+    for (let i = 0; i < length; i++) {
+      nameOrAdapter = adapters[i];
+      if((adapter = utils.isString(nameOrAdapter) ? knownAdapters[nameOrAdapter.toLowerCase()] : nameOrAdapter)) {
+        break;
+      }
+    }
+
+    if (!adapter) {
+      if (adapter === false) {
+        throw new AxiosError(
+          `Adapter ${nameOrAdapter} is not supported by the environment`,
+          'ERR_NOT_SUPPORT'
+        );
+      }
+
+      throw new Error(
+        utils.hasOwnProp(knownAdapters, nameOrAdapter) ?
+          `Adapter '${nameOrAdapter}' is not available in the build` :
+          `Unknown adapter '${nameOrAdapter}'`
+      );
+    }
+
+    if (!utils.isFunction(adapter)) {
+      throw new TypeError('adapter is not a function');
+    }
+
+    return adapter;
+  },
+  adapters: knownAdapters
+};
+
+/**
+ * Throws a `CanceledError` if cancellation has been requested.
+ *
+ * @param {Object} config The config that is to be used for the request
+ *
+ * @returns {void}
+ */
+function throwIfCancellationRequested(config) {
+  if (config.cancelToken) {
+    config.cancelToken.throwIfRequested();
+  }
+
+  if (config.signal && config.signal.aborted) {
+    throw new CanceledError(null, config);
+  }
+}
+
+/**
+ * Dispatch a request to the server using the configured adapter.
+ *
+ * @param {object} config The config that is to be used for the request
+ *
+ * @returns {Promise} The Promise to be fulfilled
+ */
+function dispatchRequest(config) {
+  throwIfCancellationRequested(config);
+
+  config.headers = AxiosHeaders$1.from(config.headers);
+
+  // Transform request data
+  config.data = transformData.call(
+    config,
+    config.transformRequest
+  );
+
+  if (['post', 'put', 'patch'].indexOf(config.method) !== -1) {
+    config.headers.setContentType('application/x-www-form-urlencoded', false);
+  }
+
+  const adapter = adapters.getAdapter(config.adapter || defaults$1.adapter);
+
+  return adapter(config).then(function onAdapterResolution(response) {
+    throwIfCancellationRequested(config);
+
+    // Transform response data
+    response.data = transformData.call(
+      config,
+      config.transformResponse,
+      response
+    );
+
+    response.headers = AxiosHeaders$1.from(response.headers);
+
+    return response;
+  }, function onAdapterRejection(reason) {
+    if (!isCancel(reason)) {
+      throwIfCancellationRequested(config);
+
+      // Transform response data
+      if (reason && reason.response) {
+        reason.response.data = transformData.call(
+          config,
+          config.transformResponse,
+          reason.response
+        );
+        reason.response.headers = AxiosHeaders$1.from(reason.response.headers);
+      }
+    }
+
+    return Promise.reject(reason);
+  });
+}
+
+const headersToObject = (thing) => thing instanceof AxiosHeaders$1 ? thing.toJSON() : thing;
+
+/**
+ * Config-specific merge-function which creates a new config-object
+ * by merging two configuration objects together.
+ *
+ * @param {Object} config1
+ * @param {Object} config2
+ *
+ * @returns {Object} New object resulting from merging config2 to config1
+ */
+function mergeConfig(config1, config2) {
+  // eslint-disable-next-line no-param-reassign
+  config2 = config2 || {};
+  const config = {};
+
+  function getMergedValue(target, source, caseless) {
+    if (utils.isPlainObject(target) && utils.isPlainObject(source)) {
+      return utils.merge.call({caseless}, target, source);
+    } else if (utils.isPlainObject(source)) {
+      return utils.merge({}, source);
+    } else if (utils.isArray(source)) {
+      return source.slice();
+    }
+    return source;
+  }
+
+  // eslint-disable-next-line consistent-return
+  function mergeDeepProperties(a, b, caseless) {
+    if (!utils.isUndefined(b)) {
+      return getMergedValue(a, b, caseless);
+    } else if (!utils.isUndefined(a)) {
+      return getMergedValue(undefined, a, caseless);
+    }
+  }
+
+  // eslint-disable-next-line consistent-return
+  function valueFromConfig2(a, b) {
+    if (!utils.isUndefined(b)) {
+      return getMergedValue(undefined, b);
+    }
+  }
+
+  // eslint-disable-next-line consistent-return
+  function defaultToConfig2(a, b) {
+    if (!utils.isUndefined(b)) {
+      return getMergedValue(undefined, b);
+    } else if (!utils.isUndefined(a)) {
+      return getMergedValue(undefined, a);
+    }
+  }
+
+  // eslint-disable-next-line consistent-return
+  function mergeDirectKeys(a, b, prop) {
+    if (prop in config2) {
+      return getMergedValue(a, b);
+    } else if (prop in config1) {
+      return getMergedValue(undefined, a);
+    }
+  }
+
+  const mergeMap = {
+    url: valueFromConfig2,
+    method: valueFromConfig2,
+    data: valueFromConfig2,
+    baseURL: defaultToConfig2,
+    transformRequest: defaultToConfig2,
+    transformResponse: defaultToConfig2,
+    paramsSerializer: defaultToConfig2,
+    timeout: defaultToConfig2,
+    timeoutMessage: defaultToConfig2,
+    withCredentials: defaultToConfig2,
+    adapter: defaultToConfig2,
+    responseType: defaultToConfig2,
+    xsrfCookieName: defaultToConfig2,
+    xsrfHeaderName: defaultToConfig2,
+    onUploadProgress: defaultToConfig2,
+    onDownloadProgress: defaultToConfig2,
+    decompress: defaultToConfig2,
+    maxContentLength: defaultToConfig2,
+    maxBodyLength: defaultToConfig2,
+    beforeRedirect: defaultToConfig2,
+    transport: defaultToConfig2,
+    httpAgent: defaultToConfig2,
+    httpsAgent: defaultToConfig2,
+    cancelToken: defaultToConfig2,
+    socketPath: defaultToConfig2,
+    responseEncoding: defaultToConfig2,
+    validateStatus: mergeDirectKeys,
+    headers: (a, b) => mergeDeepProperties(headersToObject(a), headersToObject(b), true)
+  };
+
+  utils.forEach(Object.keys(config1).concat(Object.keys(config2)), function computeConfigValue(prop) {
+    const merge = mergeMap[prop] || mergeDeepProperties;
+    const configValue = merge(config1[prop], config2[prop], prop);
+    (utils.isUndefined(configValue) && merge !== mergeDirectKeys) || (config[prop] = configValue);
+  });
+
+  return config;
+}
+
+const VERSION = "1.2.3";
+
+const validators$1 = {};
+
+// eslint-disable-next-line func-names
+['object', 'boolean', 'number', 'function', 'string', 'symbol'].forEach((type, i) => {
+  validators$1[type] = function validator(thing) {
+    return typeof thing === type || 'a' + (i < 1 ? 'n ' : ' ') + type;
+  };
+});
+
+const deprecatedWarnings = {};
+
+/**
+ * Transitional option validator
+ *
+ * @param {function|boolean?} validator - set to false if the transitional option has been removed
+ * @param {string?} version - deprecated version / removed since version
+ * @param {string?} message - some message with additional info
+ *
+ * @returns {function}
+ */
+validators$1.transitional = function transitional(validator, version, message) {
+  function formatMessage(opt, desc) {
+    return '[Axios v' + VERSION + '] Transitional option \'' + opt + '\'' + desc + (message ? '. ' + message : '');
+  }
+
+  // eslint-disable-next-line func-names
+  return (value, opt, opts) => {
+    if (validator === false) {
+      throw new AxiosError(
+        formatMessage(opt, ' has been removed' + (version ? ' in ' + version : '')),
+        AxiosError.ERR_DEPRECATED
+      );
+    }
+
+    if (version && !deprecatedWarnings[opt]) {
+      deprecatedWarnings[opt] = true;
+      // eslint-disable-next-line no-console
+      console.warn(
+        formatMessage(
+          opt,
+          ' has been deprecated since v' + version + ' and will be removed in the near future'
+        )
+      );
+    }
+
+    return validator ? validator(value, opt, opts) : true;
+  };
+};
+
+/**
+ * Assert object's properties type
+ *
+ * @param {object} options
+ * @param {object} schema
+ * @param {boolean?} allowUnknown
+ *
+ * @returns {object}
+ */
+
+function assertOptions(options, schema, allowUnknown) {
+  if (typeof options !== 'object') {
+    throw new AxiosError('options must be an object', AxiosError.ERR_BAD_OPTION_VALUE);
+  }
+  const keys = Object.keys(options);
+  let i = keys.length;
+  while (i-- > 0) {
+    const opt = keys[i];
+    const validator = schema[opt];
+    if (validator) {
+      const value = options[opt];
+      const result = value === undefined || validator(value, opt, options);
+      if (result !== true) {
+        throw new AxiosError('option ' + opt + ' must be ' + result, AxiosError.ERR_BAD_OPTION_VALUE);
+      }
+      continue;
+    }
+    if (allowUnknown !== true) {
+      throw new AxiosError('Unknown option ' + opt, AxiosError.ERR_BAD_OPTION);
+    }
+  }
+}
+
+var validator = {
+  assertOptions,
+  validators: validators$1
+};
+
+const validators = validator.validators;
+
+/**
+ * Create a new instance of Axios
+ *
+ * @param {Object} instanceConfig The default config for the instance
+ *
+ * @return {Axios} A new instance of Axios
+ */
+class Axios {
+  constructor(instanceConfig) {
+    this.defaults = instanceConfig;
+    this.interceptors = {
+      request: new InterceptorManager$1(),
+      response: new InterceptorManager$1()
+    };
+  }
+
+  /**
+   * Dispatch a request
+   *
+   * @param {String|Object} configOrUrl The config specific for this request (merged with this.defaults)
+   * @param {?Object} config
+   *
+   * @returns {Promise} The Promise to be fulfilled
+   */
+  request(configOrUrl, config) {
+    /*eslint no-param-reassign:0*/
+    // Allow for axios('example/url'[, config]) a la fetch API
+    if (typeof configOrUrl === 'string') {
+      config = config || {};
+      config.url = configOrUrl;
+    } else {
+      config = configOrUrl || {};
+    }
+
+    config = mergeConfig(this.defaults, config);
+
+    const {transitional, paramsSerializer, headers} = config;
+
+    if (transitional !== undefined) {
+      validator.assertOptions(transitional, {
+        silentJSONParsing: validators.transitional(validators.boolean),
+        forcedJSONParsing: validators.transitional(validators.boolean),
+        clarifyTimeoutError: validators.transitional(validators.boolean)
+      }, false);
+    }
+
+    if (paramsSerializer !== undefined) {
+      validator.assertOptions(paramsSerializer, {
+        encode: validators.function,
+        serialize: validators.function
+      }, true);
+    }
+
+    // Set config.method
+    config.method = (config.method || this.defaults.method || 'get').toLowerCase();
+
+    let contextHeaders;
+
+    // Flatten headers
+    contextHeaders = headers && utils.merge(
+      headers.common,
+      headers[config.method]
+    );
+
+    contextHeaders && utils.forEach(
+      ['delete', 'get', 'head', 'post', 'put', 'patch', 'common'],
+      (method) => {
+        delete headers[method];
+      }
+    );
+
+    config.headers = AxiosHeaders$1.concat(contextHeaders, headers);
+
+    // filter out skipped interceptors
+    const requestInterceptorChain = [];
+    let synchronousRequestInterceptors = true;
+    this.interceptors.request.forEach(function unshiftRequestInterceptors(interceptor) {
+      if (typeof interceptor.runWhen === 'function' && interceptor.runWhen(config) === false) {
+        return;
+      }
+
+      synchronousRequestInterceptors = synchronousRequestInterceptors && interceptor.synchronous;
+
+      requestInterceptorChain.unshift(interceptor.fulfilled, interceptor.rejected);
+    });
+
+    const responseInterceptorChain = [];
+    this.interceptors.response.forEach(function pushResponseInterceptors(interceptor) {
+      responseInterceptorChain.push(interceptor.fulfilled, interceptor.rejected);
+    });
+
+    let promise;
+    let i = 0;
+    let len;
+
+    if (!synchronousRequestInterceptors) {
+      const chain = [dispatchRequest.bind(this), undefined];
+      chain.unshift.apply(chain, requestInterceptorChain);
+      chain.push.apply(chain, responseInterceptorChain);
+      len = chain.length;
+
+      promise = Promise.resolve(config);
+
+      while (i < len) {
+        promise = promise.then(chain[i++], chain[i++]);
+      }
+
+      return promise;
+    }
+
+    len = requestInterceptorChain.length;
+
+    let newConfig = config;
+
+    i = 0;
+
+    while (i < len) {
+      const onFulfilled = requestInterceptorChain[i++];
+      const onRejected = requestInterceptorChain[i++];
+      try {
+        newConfig = onFulfilled(newConfig);
+      } catch (error) {
+        onRejected.call(this, error);
+        break;
+      }
+    }
+
+    try {
+      promise = dispatchRequest.call(this, newConfig);
+    } catch (error) {
+      return Promise.reject(error);
+    }
+
+    i = 0;
+    len = responseInterceptorChain.length;
+
+    while (i < len) {
+      promise = promise.then(responseInterceptorChain[i++], responseInterceptorChain[i++]);
+    }
+
+    return promise;
+  }
+
+  getUri(config) {
+    config = mergeConfig(this.defaults, config);
+    const fullPath = buildFullPath(config.baseURL, config.url);
+    return buildURL(fullPath, config.params, config.paramsSerializer);
+  }
+}
+
+// Provide aliases for supported request methods
+utils.forEach(['delete', 'get', 'head', 'options'], function forEachMethodNoData(method) {
+  /*eslint func-names:0*/
+  Axios.prototype[method] = function(url, config) {
+    return this.request(mergeConfig(config || {}, {
+      method,
+      url,
+      data: (config || {}).data
+    }));
+  };
+});
+
+utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
+  /*eslint func-names:0*/
+
+  function generateHTTPMethod(isForm) {
+    return function httpMethod(url, data, config) {
+      return this.request(mergeConfig(config || {}, {
+        method,
+        headers: isForm ? {
+          'Content-Type': 'multipart/form-data'
+        } : {},
+        url,
+        data
+      }));
+    };
+  }
+
+  Axios.prototype[method] = generateHTTPMethod();
+
+  Axios.prototype[method + 'Form'] = generateHTTPMethod(true);
+});
+
+var Axios$1 = Axios;
+
+/**
+ * A `CancelToken` is an object that can be used to request cancellation of an operation.
+ *
+ * @param {Function} executor The executor function.
+ *
+ * @returns {CancelToken}
+ */
+class CancelToken {
+  constructor(executor) {
+    if (typeof executor !== 'function') {
+      throw new TypeError('executor must be a function.');
+    }
+
+    let resolvePromise;
+
+    this.promise = new Promise(function promiseExecutor(resolve) {
+      resolvePromise = resolve;
+    });
+
+    const token = this;
+
+    // eslint-disable-next-line func-names
+    this.promise.then(cancel => {
+      if (!token._listeners) return;
+
+      let i = token._listeners.length;
+
+      while (i-- > 0) {
+        token._listeners[i](cancel);
+      }
+      token._listeners = null;
+    });
+
+    // eslint-disable-next-line func-names
+    this.promise.then = onfulfilled => {
+      let _resolve;
+      // eslint-disable-next-line func-names
+      const promise = new Promise(resolve => {
+        token.subscribe(resolve);
+        _resolve = resolve;
+      }).then(onfulfilled);
+
+      promise.cancel = function reject() {
+        token.unsubscribe(_resolve);
+      };
+
+      return promise;
+    };
+
+    executor(function cancel(message, config, request) {
+      if (token.reason) {
+        // Cancellation has already been requested
+        return;
+      }
+
+      token.reason = new CanceledError(message, config, request);
+      resolvePromise(token.reason);
+    });
+  }
+
+  /**
+   * Throws a `CanceledError` if cancellation has been requested.
+   */
+  throwIfRequested() {
+    if (this.reason) {
+      throw this.reason;
+    }
+  }
+
+  /**
+   * Subscribe to the cancel signal
+   */
+
+  subscribe(listener) {
+    if (this.reason) {
+      listener(this.reason);
+      return;
+    }
+
+    if (this._listeners) {
+      this._listeners.push(listener);
+    } else {
+      this._listeners = [listener];
+    }
+  }
+
+  /**
+   * Unsubscribe from the cancel signal
+   */
+
+  unsubscribe(listener) {
+    if (!this._listeners) {
+      return;
+    }
+    const index = this._listeners.indexOf(listener);
+    if (index !== -1) {
+      this._listeners.splice(index, 1);
+    }
+  }
+
+  /**
+   * Returns an object that contains a new `CancelToken` and a function that, when called,
+   * cancels the `CancelToken`.
+   */
+  static source() {
+    let cancel;
+    const token = new CancelToken(function executor(c) {
+      cancel = c;
+    });
+    return {
+      token,
+      cancel
+    };
+  }
+}
+
+var CancelToken$1 = CancelToken;
+
+/**
+ * Syntactic sugar for invoking a function and expanding an array for arguments.
+ *
+ * Common use case would be to use `Function.prototype.apply`.
+ *
+ *  ```js
+ *  function f(x, y, z) {}
+ *  var args = [1, 2, 3];
+ *  f.apply(null, args);
+ *  ```
+ *
+ * With `spread` this example can be re-written.
+ *
+ *  ```js
+ *  spread(function(x, y, z) {})([1, 2, 3]);
+ *  ```
+ *
+ * @param {Function} callback
+ *
+ * @returns {Function}
+ */
+function spread(callback) {
+  return function wrap(arr) {
+    return callback.apply(null, arr);
+  };
+}
+
+/**
+ * Determines whether the payload is an error thrown by Axios
+ *
+ * @param {*} payload The value to test
+ *
+ * @returns {boolean} True if the payload is an error thrown by Axios, otherwise false
+ */
+function isAxiosError(payload) {
+  return utils.isObject(payload) && (payload.isAxiosError === true);
+}
+
+const HttpStatusCode = {
+  Continue: 100,
+  SwitchingProtocols: 101,
+  Processing: 102,
+  EarlyHints: 103,
+  Ok: 200,
+  Created: 201,
+  Accepted: 202,
+  NonAuthoritativeInformation: 203,
+  NoContent: 204,
+  ResetContent: 205,
+  PartialContent: 206,
+  MultiStatus: 207,
+  AlreadyReported: 208,
+  ImUsed: 226,
+  MultipleChoices: 300,
+  MovedPermanently: 301,
+  Found: 302,
+  SeeOther: 303,
+  NotModified: 304,
+  UseProxy: 305,
+  Unused: 306,
+  TemporaryRedirect: 307,
+  PermanentRedirect: 308,
+  BadRequest: 400,
+  Unauthorized: 401,
+  PaymentRequired: 402,
+  Forbidden: 403,
+  NotFound: 404,
+  MethodNotAllowed: 405,
+  NotAcceptable: 406,
+  ProxyAuthenticationRequired: 407,
+  RequestTimeout: 408,
+  Conflict: 409,
+  Gone: 410,
+  LengthRequired: 411,
+  PreconditionFailed: 412,
+  PayloadTooLarge: 413,
+  UriTooLong: 414,
+  UnsupportedMediaType: 415,
+  RangeNotSatisfiable: 416,
+  ExpectationFailed: 417,
+  ImATeapot: 418,
+  MisdirectedRequest: 421,
+  UnprocessableEntity: 422,
+  Locked: 423,
+  FailedDependency: 424,
+  TooEarly: 425,
+  UpgradeRequired: 426,
+  PreconditionRequired: 428,
+  TooManyRequests: 429,
+  RequestHeaderFieldsTooLarge: 431,
+  UnavailableForLegalReasons: 451,
+  InternalServerError: 500,
+  NotImplemented: 501,
+  BadGateway: 502,
+  ServiceUnavailable: 503,
+  GatewayTimeout: 504,
+  HttpVersionNotSupported: 505,
+  VariantAlsoNegotiates: 506,
+  InsufficientStorage: 507,
+  LoopDetected: 508,
+  NotExtended: 510,
+  NetworkAuthenticationRequired: 511,
+};
+
+Object.entries(HttpStatusCode).forEach(([key, value]) => {
+  HttpStatusCode[value] = key;
+});
+
+var HttpStatusCode$1 = HttpStatusCode;
+
+/**
+ * Create an instance of Axios
+ *
+ * @param {Object} defaultConfig The default config for the instance
+ *
+ * @returns {Axios} A new instance of Axios
+ */
+function createInstance(defaultConfig) {
+  const context = new Axios$1(defaultConfig);
+  const instance = bind(Axios$1.prototype.request, context);
+
+  // Copy axios.prototype to instance
+  utils.extend(instance, Axios$1.prototype, context, {allOwnKeys: true});
+
+  // Copy context to instance
+  utils.extend(instance, context, null, {allOwnKeys: true});
+
+  // Factory for creating new instances
+  instance.create = function create(instanceConfig) {
+    return createInstance(mergeConfig(defaultConfig, instanceConfig));
+  };
+
+  return instance;
+}
+
+// Create the default instance to be exported
+const axios = createInstance(defaults$1);
+
+// Expose Axios class to allow class inheritance
+axios.Axios = Axios$1;
+
+// Expose Cancel & CancelToken
+axios.CanceledError = CanceledError;
+axios.CancelToken = CancelToken$1;
+axios.isCancel = isCancel;
+axios.VERSION = VERSION;
+axios.toFormData = toFormData;
+
+// Expose AxiosError class
+axios.AxiosError = AxiosError;
+
+// alias for CanceledError for backward compatibility
+axios.Cancel = axios.CanceledError;
+
+// Expose all/spread
+axios.all = function all(promises) {
+  return Promise.all(promises);
+};
+
+axios.spread = spread;
+
+// Expose isAxiosError
+axios.isAxiosError = isAxiosError;
+
+// Expose mergeConfig
+axios.mergeConfig = mergeConfig;
+
+axios.AxiosHeaders = AxiosHeaders$1;
+
+axios.formToJSON = thing => formDataToJSON(utils.isHTMLForm(thing) ? new FormData(thing) : thing);
+
+axios.HttpStatusCode = HttpStatusCode$1;
+
+axios.default = axios;
+
+module.exports = axios;
+//# sourceMappingURL=axios.cjs.map
+
+
 /***/ })
 
 /******/ 	});
@@ -17509,6 +18810,18 @@ function __classPrivateFieldSet(receiver, privateMap, value) {
 /******/ 				}
 /******/ 			}
 /******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/global */
+/******/ 	(() => {
+/******/ 		__webpack_require__.g = (function() {
+/******/ 			if (typeof globalThis === 'object') return globalThis;
+/******/ 			try {
+/******/ 				return this || new Function('return this')();
+/******/ 			} catch (e) {
+/******/ 				if (typeof window === 'object') return window;
+/******/ 			}
+/******/ 		})();
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
