@@ -8729,6 +8729,7 @@ var ApisearchUI = /** @class */ (function () {
         var query = this.getQuery();
         if (query.q !== text) {
             query.q = text;
+            query.page = 1;
             this.pushQuery(query);
         }
     };
