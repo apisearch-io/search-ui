@@ -83,6 +83,7 @@ export function aggregationSetup(
  * @param labels
  * @param shadowLeveledFilters
  * @param originalFilterField
+ * @param promoted
  */
 export function filterAction(
     environmentId: string,
@@ -99,6 +100,7 @@ export function filterAction(
     labels: object,
     shadowLeveledFilters: any[],
     originalFilterField: string,
+    promoted: string[],
 ) {
     window.postMessage({
         name: "apisearch_scroll_top",
@@ -146,6 +148,7 @@ export function filterAction(
             applicationType,
             sortBy,
             fetchLimit,
+            promoted,
         );
     }
 

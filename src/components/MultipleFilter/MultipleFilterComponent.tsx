@@ -214,6 +214,7 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
             labels,
             shadowLeveledFilters,
             originalFilterField,
+            props.promoted,
         );
     }
 

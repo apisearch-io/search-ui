@@ -10225,8 +10225,9 @@ exports.aggregationSetup = aggregationSetup;
  * @param labels
  * @param shadowLeveledFilters
  * @param originalFilterField
+ * @param promoted
  */
-function filterAction(environmentId, currentQuery, repository, filterName, filterField, aggregationField, filterValues, applicationType, sortBy, fetchLimit, ranges, labels, shadowLeveledFilters, originalFilterField) {
+function filterAction(environmentId, currentQuery, repository, filterName, filterField, aggregationField, filterValues, applicationType, sortBy, fetchLimit, ranges, labels, shadowLeveledFilters, originalFilterField, promoted) {
     window.postMessage({
         name: "apisearch_scroll_top"
     }, "*");
@@ -10238,7 +10239,7 @@ function filterAction(environmentId, currentQuery, repository, filterName, filte
     }
     else {
         clonedQuery.filterBy(filterName, filterField, filterValues, applicationType, false, sortBy);
-        clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy, fetchLimit);
+        clonedQuery.aggregateBy(filterName, aggregationField, applicationType, sortBy, fetchLimit, promoted);
     }
     if (applicationType === 6) {
         configureQueryWithShadowLeveledFilters(clonedQuery, shadowLeveledFilters, originalFilterField);
@@ -10396,7 +10397,7 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
             /**
              * Dispatch filter action
              */
-            (0, MultipleFilterActions_1.filterAction)(environmentId, currentQuery, repository, filterName, filterField, aggregationField, filterItems, applicationType, sortBy, fetchLimit, ranges, labels, shadowLeveledFilters, originalFilterField);
+            (0, MultipleFilterActions_1.filterAction)(environmentId, currentQuery, repository, filterName, filterField, aggregationField, filterItems, applicationType, sortBy, fetchLimit, ranges, labels, shadowLeveledFilters, originalFilterField, props.promoted);
         };
         /**
          * Handle show more
