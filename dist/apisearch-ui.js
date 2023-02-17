@@ -11983,7 +11983,7 @@ var ResultComponent = /** @class */ (function (_super) {
                 return customResponseBody;
             }
         }
-        var withoutEnterRedirection = false;
+        var resetRedirectionOnEnter = true;
         if (redirection) {
             if (redirection.type === "automatic") {
                 window.top.location.href = redirection.url;
@@ -11993,10 +11993,18 @@ var ResultComponent = /** @class */ (function (_super) {
                     name: "apisearch_bind_enter_redirection",
                     url: redirection.url
                 }, "*");
-                withoutEnterRedirection = false;
+                resetRedirectionOnEnter = false;
+            }
+            if (this.props.template.redirection) {
+                customResponseBody = (0, preact_1.h)("div", null,
+                    (0, preact_1.h)(Template_1["default"], { template: this.props.template.redirection, data: {
+                            url: redirection.url,
+                            query: currentQuery.getQueryText()
+                        }, className: "as-result__redirection", dictionary: this.props.dictionary }),
+                    customResponseBody);
             }
         }
-        if (withoutEnterRedirection) {
+        if (resetRedirectionOnEnter) {
             window.postMessage({
                 name: "apisearch_bind_enter_redirection",
                 url: undefined
@@ -12132,7 +12140,7 @@ var ResultComponent = /** @class */ (function (_super) {
                             return (0, preact_1.h)(Item_1["default"], { data: __assign(__assign({}, reducedTemplateData), _this.hydrateItem(item)), template: props.template.item, className: "as-result__alternative_item ".concat(props.classNames.item), dictionary: _this.props.dictionary });
                         })));
                 }))
-                : ((items.length === 0)
+                : (((items.length === 0) && customResponseBody === undefined)
                     ? (0, preact_1.h)(Template_1["default"], { template: props.template.noResults, data: {
                             query: currentQuery.getQueryText()
                         }, className: "as-result__noresults ".concat(props.classNames.noResults), dictionary: props.dictionary })
@@ -12206,7 +12214,8 @@ ResultComponent.defaultProps = {
         placeholder: null,
         alternative_title: defaultTemplates_1.defaultAlternativeTitleTemplate,
         alternative_all_results: defaultTemplates_1.defaultAlternativeAllResultsTemplate,
-        next_page_button: defaultTemplates_1.defaultNextPageButtonTemplate
+        next_page_button: defaultTemplates_1.defaultNextPageButtonTemplate,
+        redirection: null
     },
     formatData: function (data) { return data; },
     fadeInSelector: "",
