@@ -234,7 +234,7 @@ class ResultComponent extends Component<ResultProps, ResultState> {
             }
         }
 
-        let withoutEnterRedirection = false;
+        let resetRedirectionOnEnter = true;
         if (redirection) {
             if (redirection.type === "automatic") {
                 window.top.location.href = redirection.url;
@@ -243,11 +243,26 @@ class ResultComponent extends Component<ResultProps, ResultState> {
                     name: "apisearch_bind_enter_redirection",
                     url: redirection.url,
                 }, "*");
-                withoutEnterRedirection = false;
+                resetRedirectionOnEnter = false;
+            }
+
+            if (this.props.template.redirection) {
+                customResponseBody = <div>
+                    <Template
+                        template={this.props.template.redirection}
+                        data={{
+                            url: redirection.url,
+                            query: currentQuery.getQueryText(),
+                        }}
+                        className={`as-result__redirection`}
+                        dictionary={this.props.dictionary}
+                    />
+                    {customResponseBody}
+                </div>;
             }
         }
 
-        if (withoutEnterRedirection) {
+        if (resetRedirectionOnEnter) {
             window.postMessage({
                 name: "apisearch_bind_enter_redirection",
                 url: undefined,
@@ -495,7 +510,7 @@ class ResultComponent extends Component<ResultProps, ResultState> {
                         })}
                         </div>
                     : (
-                        (items.length === 0)
+                        ((items.length === 0) && customResponseBody === undefined)
                             ? <Template
                                 template={props.template.noResults}
                                 data={{
@@ -597,6 +612,7 @@ ResultComponent.defaultProps = {
         alternative_title: defaultAlternativeTitleTemplate,
         alternative_all_results: defaultAlternativeAllResultsTemplate,
         next_page_button: defaultNextPageButtonTemplate,
+        redirection: null,
     },
     formatData: (data) => data,
     fadeInSelector: "",

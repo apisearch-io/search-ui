@@ -27,6 +27,7 @@ export interface ResultProps {
         alternative_title: string,
         alternative_all_results: string,
         next_page_button: string,
+        redirection: string,
     };
     formatData: (Item) => {Item};
     fadeInSelector: string;
