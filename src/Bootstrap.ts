@@ -46,6 +46,7 @@ export function bootstrap(
             hash,
             config.user_id ?? "",
             config.options.site ?? "",
+            config.options.language ?? "",
             config.options.device ?? "",
             config.options.generate_random_session_uuid ?? false,
             config.options.initial_state ?? {},

@@ -27,6 +27,7 @@ class Store extends EventEmitter {
      * @param hash
      * @param userId
      * @param site
+     * @param language
      * @param device
      * @param generateRandomSessionUUID
      * @param initialState
@@ -40,6 +41,7 @@ class Store extends EventEmitter {
         hash: string,
         userId: string,
         site: string,
+        language: string,
         device: string,
         generateRandomSessionUUID: boolean,
         initialState: any,
@@ -50,7 +52,7 @@ class Store extends EventEmitter {
         this.site = site;
         this.device = device;
         this.initialState = initialState;
-        const initialQuery = Store.loadInitialQuery(coordinate, userId, site, device);
+        const initialQuery = Store.loadInitialQuery(coordinate, userId, site, language, device);
         this.window = window.top;
         this.isUnderIframe = (window !== window.top);
 
@@ -259,6 +261,7 @@ class Store extends EventEmitter {
      * @param coordinate
      * @param userId
      * @param site
+     * @param language
      * @param device
      *
      * @private
@@ -270,6 +273,7 @@ class Store extends EventEmitter {
         },
         userId: string,
         site: string,
+        language: string,
         device: string,
     ): Query {
         const withCoordinate = (
@@ -293,6 +297,10 @@ class Store extends EventEmitter {
 
         if (site !== "") {
             q.metadata.site = site;
+        }
+
+        if (language !== "") {
+            q.metadata.language = language;
         }
 
         return Query.createFromArray(q);

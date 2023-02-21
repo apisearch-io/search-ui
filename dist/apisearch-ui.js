@@ -8842,8 +8842,8 @@ function bootstrap(environmentId, config, hash) {
      * Register apisearch store
      */
     Container_1["default"].register(storeId, function () {
-        var _a, _b, _c, _d, _e;
-        return new Store_1["default"](config.coordinate, config.options.min_score, hash, (_a = config.user_id) !== null && _a !== void 0 ? _a : "", (_b = config.options.site) !== null && _b !== void 0 ? _b : "", (_c = config.options.device) !== null && _c !== void 0 ? _c : "", (_d = config.options.generate_random_session_uuid) !== null && _d !== void 0 ? _d : false, (_e = config.options.initial_state) !== null && _e !== void 0 ? _e : {});
+        var _a, _b, _c, _d, _e, _f;
+        return new Store_1["default"](config.coordinate, config.options.min_score, hash, (_a = config.user_id) !== null && _a !== void 0 ? _a : "", (_b = config.options.site) !== null && _b !== void 0 ? _b : "", (_c = config.options.language) !== null && _c !== void 0 ? _c : "", (_d = config.options.device) !== null && _d !== void 0 ? _d : "", (_e = config.options.generate_random_session_uuid) !== null && _e !== void 0 ? _e : false, (_f = config.options.initial_state) !== null && _f !== void 0 ? _f : {});
     });
     /**
      * Register an event dispatcher
@@ -9105,11 +9105,12 @@ var Store = /** @class */ (function (_super) {
      * @param hash
      * @param userId
      * @param site
+     * @param language
      * @param device
      * @param generateRandomSessionUUID
      * @param initialState
      */
-    function Store(coordinate, minScore, hash, userId, site, device, generateRandomSessionUUID, initialState) {
+    function Store(coordinate, minScore, hash, userId, site, language, device, generateRandomSessionUUID, initialState) {
         var _this = _super.call(this) || this;
         _this.withHash = false;
         _this.doNotCleanUrlHashAtFirst = false;
@@ -9117,7 +9118,7 @@ var Store = /** @class */ (function (_super) {
         _this.site = site;
         _this.device = device;
         _this.initialState = initialState;
-        var initialQuery = Store.loadInitialQuery(coordinate, userId, site, device);
+        var initialQuery = Store.loadInitialQuery(coordinate, userId, site, language, device);
         _this.window = window.top;
         _this.isUnderIframe = (window !== window.top);
         if ((typeof hash === "string")) {
@@ -9287,11 +9288,12 @@ var Store = /** @class */ (function (_super) {
      * @param coordinate
      * @param userId
      * @param site
+     * @param language
      * @param device
      *
      * @private
      */
-    Store.loadInitialQuery = function (coordinate, userId, site, device) {
+    Store.loadInitialQuery = function (coordinate, userId, site, language, device) {
         var withCoordinate = (coordinate &&
             coordinate.lat !== undefined &&
             coordinate.lon !== undefined);
@@ -9307,6 +9309,9 @@ var Store = /** @class */ (function (_super) {
         }
         if (site !== "") {
             q.metadata.site = site;
+        }
+        if (language !== "") {
+            q.metadata.language = language;
         }
         return apisearch_1.Query.createFromArray(q);
     };
