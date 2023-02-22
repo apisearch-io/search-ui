@@ -11699,6 +11699,10 @@ exports["default"] = Item;
 
 exports.__esModule = true;
 exports.infiniteScrollNextPageAction = exports.configureQuery = void 0;
+/**
+ * Search actions
+ */
+var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
 var Constants_1 = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
 var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
 var Clone_1 = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
@@ -11731,13 +11735,17 @@ function configureQuery(environmentId, currentQuery, itemsPerPage, highlightsEna
      * Promoted uuids
      */
     for (var i in promotedUUIDs) {
-        clonedQuery.promoteUUID(promotedUUIDs[i]);
+        if (promotedUUIDs[i] instanceof apisearch_1.ItemUUID) {
+            clonedQuery.promoteUUID(promotedUUIDs[i]);
+        }
     }
     /**
      * excluded uuids
      */
     for (var i in excludedUUIDs) {
-        clonedQuery.excludeUUID(excludedUUIDs[i]);
+        if (excludedUUIDs[i] instanceof apisearch_1.ItemUUID) {
+            clonedQuery.excludeUUID(excludedUUIDs[i]);
+        }
     }
     if (minScore > 0) {
         clonedQuery.minScore = minScore;

@@ -48,14 +48,18 @@ export function configureQuery(
      * Promoted uuids
      */
     for (const i in promotedUUIDs) {
-        clonedQuery.promoteUUID(promotedUUIDs[i]);
+        if (promotedUUIDs[i] instanceof ItemUUID) {
+            clonedQuery.promoteUUID(promotedUUIDs[i]);
+        }
     }
 
     /**
      * excluded uuids
      */
     for (const i in excludedUUIDs) {
-        clonedQuery.excludeUUID(excludedUUIDs[i]);
+        if (excludedUUIDs[i] instanceof ItemUUID) {
+            clonedQuery.excludeUUID(excludedUUIDs[i]);
+        }
     }
 
     if (minScore > 0) {
