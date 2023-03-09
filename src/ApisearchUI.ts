@@ -329,8 +329,8 @@ export default class ApisearchUI {
                 this.store.getDevice(),
             );
 
-        const queryAsArray = this.store.getCurrentQuery().toArray();
-        const resultAsArray = this.store.getCurrentResult().toArray();
+        const queryAsArray = JSON.parse(JSON.stringify(this.store.getCurrentQuery().toArray()));
+        const resultAsArray = JSON.parse(JSON.stringify(this.store.getCurrentResult().toArray()));
 
         window.postMessage({
             name: "apisearch_item_was_clicked",
@@ -382,6 +382,9 @@ export default class ApisearchUI {
                 this.store.getDevice(),
             );
 
+        const queryAsArray = JSON.parse(JSON.stringify(this.store.getCurrentQuery().toArray()));
+        const resultAsArray = JSON.parse(JSON.stringify(this.store.getCurrentResult().toArray()));
+
         window.postMessage({
             name: "apisearch_item_was_interacted",
             interaction: interaction,
@@ -390,8 +393,8 @@ export default class ApisearchUI {
             item_id: itemId,
             site: this.store.getSite(),
             device: this.store.getDevice(),
-            query: this.store.getCurrentQuery().toArray(),
-            result: this.store.getCurrentResult().toArray(),
+            query: queryAsArray,
+            result: resultAsArray,
         }, "*");
     }
 

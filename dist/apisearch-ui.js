@@ -8649,8 +8649,8 @@ var ApisearchUI = /** @class */ (function () {
         this
             .repository
             .pushInteraction(IndexUUID_1.IndexUUID.createById(indexId), apisearch_1.ItemUUID.createByComposedUUID(itemId), this.userId, this.store.getCurrentQuery().getQueryText(), "cli", this.store.getSite(), this.store.getDevice());
-        var queryAsArray = this.store.getCurrentQuery().toArray();
-        var resultAsArray = this.store.getCurrentResult().toArray();
+        var queryAsArray = JSON.parse(JSON.stringify(this.store.getCurrentQuery().toArray()));
+        var resultAsArray = JSON.parse(JSON.stringify(this.store.getCurrentResult().toArray()));
         window.postMessage({
             name: "apisearch_item_was_clicked",
             app_id: appId,
@@ -8685,6 +8685,8 @@ var ApisearchUI = /** @class */ (function () {
         this
             .repository
             .pushInteraction(IndexUUID_1.IndexUUID.createById(indexId), apisearch_1.ItemUUID.createByComposedUUID(itemId), this.userId, this.store.getCurrentQuery().getQueryText(), interaction, this.store.getSite(), this.store.getDevice());
+        var queryAsArray = JSON.parse(JSON.stringify(this.store.getCurrentQuery().toArray()));
+        var resultAsArray = JSON.parse(JSON.stringify(this.store.getCurrentResult().toArray()));
         window.postMessage({
             name: "apisearch_item_was_interacted",
             interaction: interaction,
@@ -8693,8 +8695,8 @@ var ApisearchUI = /** @class */ (function () {
             item_id: itemId,
             site: this.store.getSite(),
             device: this.store.getDevice(),
-            query: this.store.getCurrentQuery().toArray(),
-            result: this.store.getCurrentResult().toArray()
+            query: queryAsArray,
+            result: resultAsArray
         }, "*");
     };
     /**
