@@ -25,7 +25,7 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
 
         const that = this;
 
-        window.addEventListener("beforeunload", function() {
+        window.addEventListener("beforeunload", () => {
             that.dispatchQueryStringEvent(props, 0);
         });
     }

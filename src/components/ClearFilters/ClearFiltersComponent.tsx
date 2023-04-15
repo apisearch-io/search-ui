@@ -82,7 +82,7 @@ class ClearFiltersComponent extends Component<ClearFiltersProps, ClearFiltersSta
             currentQuery,
             repository,
             filterKey,
-            filterValue
+            filterValue,
         );
     }
 
@@ -121,6 +121,7 @@ class ClearFiltersComponent extends Component<ClearFiltersProps, ClearFiltersSta
         const filterTemplate = props.template.filter;
         const appliedFiltersFormatted = this.state.appliedFilters;
         let individualFilterClear = null;
+        const isEmptyClass = (this.state.appliedFilters.length === 0) ? "empty" : "";
 
         if (props.showIndividualFilterValueClear) {
 
@@ -162,7 +163,7 @@ class ClearFiltersComponent extends Component<ClearFiltersProps, ClearFiltersSta
         }
 
         return (this.state.showClearFilters)
-            ? ( <div className={`as-clearFilters ${containerClassName}`}>
+            ? ( <div className={`as-clearFilters ${containerClassName} ${isEmptyClass}`}>
                     {props.showGlobalFilterClear
                         ? <div onClick={this.handleClick}>
                             <Template
