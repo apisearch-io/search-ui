@@ -324,6 +324,10 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
         const items = allItems.slice(0, this.state.viewLimit);
         const allItemsLength = allItems.length;
         let levelCounter = 1;
+        const topData = {
+            hasApplied: appliedFilters.length > 0,
+            nApplied: appliedFilters.length,
+        };
 
         /**
          * Check available view limit
@@ -340,6 +344,7 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
                     template={topTemplate}
                     className={`as-multipleFilter__top ${topClassName}`}
                     dictionary={this.props.dictionary}
+                    data={topData}
                 />
 
                 <div className={`as-multipleFilter__itemsList ${itemsListClassName}`}>

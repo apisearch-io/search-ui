@@ -9821,6 +9821,7 @@ var ClearFiltersComponent = /** @class */ (function (_super) {
         var filterTemplate = props.template.filter;
         var appliedFiltersFormatted = this.state.appliedFilters;
         var individualFilterClear = null;
+        var isEmptyClass = (this.state.appliedFilters.length === 0) ? "empty" : "";
         if (props.showIndividualFilterValueClear) {
             var values_1 = [];
             this.state.appliedFilters.forEach(function (filter) {
@@ -9841,7 +9842,7 @@ var ClearFiltersComponent = /** @class */ (function (_super) {
             }));
         }
         return (this.state.showClearFilters)
-            ? ((0, preact_1.h)("div", { className: "as-clearFilters ".concat(containerClassName) },
+            ? ((0, preact_1.h)("div", { className: "as-clearFilters ".concat(containerClassName, " ").concat(isEmptyClass) },
                 props.showGlobalFilterClear
                     ? (0, preact_1.h)("div", { onClick: this.handleClick },
                         (0, preact_1.h)(Template_1["default"], { template: containerTemplate, dictionary: this.props.dictionary }))
@@ -10584,6 +10585,10 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
         var items = allItems.slice(0, this.state.viewLimit);
         var allItemsLength = allItems.length;
         var levelCounter = 1;
+        var topData = {
+            hasApplied: appliedFilters.length > 0,
+            nApplied: appliedFilters.length
+        };
         /**
          * Check available view limit
          */
@@ -10591,7 +10596,7 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
             viewLimit < fetchLimit &&
             allItemsLength > viewLimit);
         return ((0, preact_1.h)("div", { className: "as-multipleFilter ".concat(containerClassName) },
-            (0, preact_1.h)(Template_1["default"], { template: topTemplate, className: "as-multipleFilter__top ".concat(topClassName), dictionary: this.props.dictionary }),
+            (0, preact_1.h)(Template_1["default"], { template: topTemplate, className: "as-multipleFilter__top ".concat(topClassName), dictionary: this.props.dictionary, data: topData }),
             (0, preact_1.h)("div", { className: "as-multipleFilter__itemsList ".concat(itemsListClassName) },
                 (0, preact_1.h)("ul", null, items.map(function (item) {
                     var formattedTemplateData = formatData(item);
@@ -11899,7 +11904,7 @@ var ResultComponent = /** @class */ (function (_super) {
                 });
             }
             // Bind the event listener
-            document.addEventListener("mousedown", handleClickOutside);
+            document.addEventListener("mousedown", handleClickOutside, { passive: true });
             return function () {
                 // Unbind the event listener on clean up
                 document.removeEventListener("mousedown", handleClickOutside);
