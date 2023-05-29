@@ -317,43 +317,74 @@ export default class ApisearchUI {
         indexId: string,
         itemId: string,
     ) {
-        this
-            .repository
-            .pushInteraction(
-                IndexUUID.createById(indexId),
-                ItemUUID.createByComposedUUID(itemId),
-                this.userId,
-                this.store.getCurrentQuery().getQueryText(),
-                "cli",
-                this.store.getSite(),
-                this.store.getDevice(),
-            );
+        try {
+            if (navigator.sendBeacon === undefined) {
+                this
+                    .repository
+                    .pushInteraction(
+                        IndexUUID.createById(indexId),
+                        ItemUUID.createByComposedUUID(itemId),
+                        this.userId,
+                        this.store.getCurrentQuery().getQueryText(),
+                        "cli",
+                        this.store.getSite(),
+                        this.store.getDevice(),
+                    );
+            } else {
+                this.sendClickBeacon(appId, indexId, itemId);
+            }
 
-        const queryAsArray = JSON.parse(JSON.stringify(this.store.getCurrentQuery().toArray()));
-        const resultAsArray = JSON.parse(JSON.stringify(this.store.getCurrentResult().toArray()));
+            const queryAsArray = JSON.parse(JSON.stringify(this.store.getCurrentQuery().toArray()));
+            const resultAsArray = JSON.parse(JSON.stringify(this.store.getCurrentResult().toArray()));
 
-        window.postMessage({
-            name: "apisearch_item_was_clicked",
-            app_id: appId,
-            index_id: indexId,
-            item_id: itemId,
-            site: this.store.getSite(),
-            device: this.store.getDevice(),
-            query: queryAsArray,
-            result: resultAsArray,
-        }, "*");
+            window.postMessage({
+                name: "apisearch_item_was_clicked",
+                app_id: appId,
+                index_id: indexId,
+                item_id: itemId,
+                site: this.store.getSite(),
+                device: this.store.getDevice(),
+                query: queryAsArray,
+                result: resultAsArray,
+            }, "*");
 
-        window.postMessage({
-            name: "apisearch_item_was_interacted",
-            interaction: "cli",
-            app_id: appId,
-            index_id: indexId,
-            item_id: itemId,
-            site: this.store.getSite(),
-            device: this.store.getDevice(),
-            query: queryAsArray,
-            result: resultAsArray,
-        }, "*");
+            window.postMessage({
+                name: "apisearch_item_was_interacted",
+                interaction: "cli",
+                app_id: appId,
+                index_id: indexId,
+                item_id: itemId,
+                site: this.store.getSite(),
+                device: this.store.getDevice(),
+                query: queryAsArray,
+                result: resultAsArray,
+            }, "*");
+        } catch (error) {
+            // Silent pass.
+            // Errors in Apisearch should never cause client browser error
+        }
+    }
+
+    /**
+     *
+     * @param appId
+     * @param indexId
+     * @param itemId
+     * @private
+     */
+    private sendClickBeacon(
+        appId: string,
+        indexId: string,
+        itemId: string,
+    ) {
+        const data = new FormData();
+        data.append("device", this.store.getDevice());
+        data.append("query_string", this.store.getCurrentQuery().getQueryText());
+        data.append("site", this.store.getSite());
+        data.append("user_id", this.userId);
+
+        const endpoint = this.config.options.endpoint + "/" + this.config.options.api_version;
+        navigator.sendBeacon(endpoint + "/" + appId + "/indices/" + indexId + "/items/" + itemId + "/interaction/cli?token=" + this.config.token, data);
     }
 
     /**
