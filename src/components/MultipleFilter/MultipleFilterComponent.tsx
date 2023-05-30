@@ -171,17 +171,17 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
             ? getShadowFilterValuesFromQuery(currentQuery, filterName, true)
             : getFilterValuesFromQuery(currentQuery, filterName);
 
-        const wasSelected = wasElementRecentlySelected(selectedFilterAsString, valuesAsString);
+        const wasNotSelected = wasElementRecentlySelected(selectedFilterAsString, valuesAsString);
         let filterItems = manageCurrentFilterItems(
             selectedFilterAsString,
             valuesAsString,
-            wasSelected,
+            wasNotSelected,
             (applicationType !== 6),
         );
 
         let currentLevel = level;
         if (applicationType === 6) {
-            currentLevel = wasSelected ? currentLevel : (currentLevel - 1);
+            currentLevel = wasNotSelected ? currentLevel : (currentLevel - 1);
         }
 
         let shadowLeveledFilters = [];
@@ -215,6 +215,7 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
             shadowLeveledFilters,
             originalFilterField,
             props.promoted,
+            wasNotSelected ? selectedFilterAsString : null,
         );
     }
 
