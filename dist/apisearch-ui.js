@@ -10289,6 +10289,7 @@ function filterAction(environmentId, currentQuery, repository, filterName, filte
     repository
         .query(clonedQuery)
         .then(function (result) {
+        clonedQuery.setMetadataValue("af", []);
         dispatcher.dispatch("RENDER_FETCHED_DATA", {
             query: clonedQuery,
             result: result
