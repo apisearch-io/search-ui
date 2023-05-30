@@ -10261,8 +10261,9 @@ exports.aggregationSetup = aggregationSetup;
  * @param shadowLeveledFilters
  * @param originalFilterField
  * @param promoted
+ * @param selectedFilter
  */
-function filterAction(environmentId, currentQuery, repository, filterName, filterField, aggregationField, filterValues, applicationType, sortBy, fetchLimit, ranges, labels, shadowLeveledFilters, originalFilterField, promoted) {
+function filterAction(environmentId, currentQuery, repository, filterName, filterField, aggregationField, filterValues, applicationType, sortBy, fetchLimit, ranges, labels, shadowLeveledFilters, originalFilterField, promoted, selectedFilter) {
     window.postMessage({
         name: "apisearch_scroll_top"
     }, "*");
@@ -10281,6 +10282,10 @@ function filterAction(environmentId, currentQuery, repository, filterName, filte
     }
     clonedQuery.page = 1;
     var dispatcher = Container_1["default"].get("".concat(Constants_1.APISEARCH_DISPATCHER, "__").concat(environmentId));
+    // We must explicitly tell that a filter was added at this point
+    if (selectedFilter) {
+        clonedQuery.setMetadataValue("af", [filterField, selectedFilter]);
+    }
     repository
         .query(clonedQuery)
         .then(function (result) {
@@ -10413,11 +10418,11 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
             var valuesAsString = (applicationType === 6)
                 ? (0, Helpers_1.getShadowFilterValuesFromQuery)(currentQuery, filterName, true)
                 : (0, Helpers_1.getFilterValuesFromQuery)(currentQuery, filterName);
-            var wasSelected = (0, Helpers_1.wasElementRecentlySelected)(selectedFilterAsString, valuesAsString);
-            var filterItems = (0, Helpers_1.manageCurrentFilterItems)(selectedFilterAsString, valuesAsString, wasSelected, (applicationType !== 6));
+            var wasNotSelected = (0, Helpers_1.wasElementRecentlySelected)(selectedFilterAsString, valuesAsString);
+            var filterItems = (0, Helpers_1.manageCurrentFilterItems)(selectedFilterAsString, valuesAsString, wasNotSelected, (applicationType !== 6));
             var currentLevel = level;
             if (applicationType === 6) {
-                currentLevel = wasSelected ? currentLevel : (currentLevel - 1);
+                currentLevel = wasNotSelected ? currentLevel : (currentLevel - 1);
             }
             var shadowLeveledFilters = [];
             var originalFilterField = filterField;
@@ -10432,7 +10437,7 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
             /**
              * Dispatch filter action
              */
-            (0, MultipleFilterActions_1.filterAction)(environmentId, currentQuery, repository, filterName, filterField, aggregationField, filterItems, applicationType, sortBy, fetchLimit, ranges, labels, shadowLeveledFilters, originalFilterField, props.promoted);
+            (0, MultipleFilterActions_1.filterAction)(environmentId, currentQuery, repository, filterName, filterField, aggregationField, filterItems, applicationType, sortBy, fetchLimit, ranges, labels, shadowLeveledFilters, originalFilterField, props.promoted, wasNotSelected ? selectedFilterAsString : null);
         };
         /**
          * Handle show more

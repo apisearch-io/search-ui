@@ -84,6 +84,7 @@ export function aggregationSetup(
  * @param shadowLeveledFilters
  * @param originalFilterField
  * @param promoted
+ * @param selectedFilter
  */
 export function filterAction(
     environmentId: string,
@@ -101,6 +102,7 @@ export function filterAction(
     shadowLeveledFilters: any[],
     originalFilterField: string,
     promoted: string[],
+    selectedFilter: string,
 ) {
     window.postMessage({
         name: "apisearch_scroll_top",
@@ -162,6 +164,11 @@ export function filterAction(
 
     clonedQuery.page = 1;
     const dispatcher = container.get(`${APISEARCH_DISPATCHER}__${environmentId}`);
+
+    // We must explicitly tell that a filter was added at this point
+    if (selectedFilter) {
+        clonedQuery.setMetadataValue("af", [filterField, selectedFilter]);
+    }
 
     repository
         .query(clonedQuery)
