@@ -11720,7 +11720,9 @@ var Item = /** @class */ (function (_super) {
         var data = props.data;
         var dictionary = (_a = props.dictionary) !== null && _a !== void 0 ? _a : {};
         var id = "as-result-" + data.uuid_composed;
-        return (0, preact_1.h)(Template_1["default"], { template: template, data: data, id: id, className: "".concat(props.className), dictionary: dictionary });
+        var isBestMatch = data.metadata.best_match ? "best-match" : "";
+        var isExactMatch = data.metadata.exact_match ? "exact-match" : "";
+        return (0, preact_1.h)(Template_1["default"], { template: template, data: data, id: id, className: "".concat(props.className, " ").concat(isBestMatch, " ").concat(isExactMatch), dictionary: dictionary });
     };
     return Item;
 }(preact_1.Component));

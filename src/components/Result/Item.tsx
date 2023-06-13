@@ -49,12 +49,14 @@ class Item extends Component<ItemProps, ItemState> {
         const data = props.data;
         const dictionary = props.dictionary ?? {};
         const id = "as-result-" + data.uuid_composed;
+        const isBestMatch = data.metadata.best_match ? "best-match" : "";
+        const isExactMatch = data.metadata.exact_match ? "exact-match" : "";
 
         return <Template
             template={template}
             data={data}
             id={id}
-            className={`${props.className}`}
+            className={`${props.className} ${isBestMatch} ${isExactMatch}`}
             dictionary={dictionary}
         />;
     }
