@@ -59,8 +59,10 @@ class InformationComponent extends Component<InformationProps, InformationState>
         const from = (page-1)*size;
         const to = from + size;
         let totalHits = this.state.hits.toLocaleString();
+        let moreThanLimit = false;
         if (totalHits === "10,000") {
             totalHits = '+10,000';
+            moreThanLimit = true;
         }
 
         /**
@@ -72,7 +74,8 @@ class InformationComponent extends Component<InformationProps, InformationState>
             page: page,
             size: size,
             from: from+1,
-            to: to
+            to: to,
+            more_than_limit: moreThanLimit,
         };
 
         let formattedTemplateData = formatData(reducedTemplateData);
