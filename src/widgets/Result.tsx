@@ -1,4 +1,4 @@
-import {Repository} from "apisearch";
+import {Filter, FILTER_AT_LEAST_ONE, FILTER_TYPE_FIELD, Repository} from "apisearch";
 import {h, render} from "preact";
 import ResultComponent from "../components/Result/ResultComponent";
 import Store from "../Store";
@@ -73,6 +73,24 @@ class Result extends Widget {
             fieldsConciliation={fieldsConciliation}
             minScore={minScore}
         />;
+
+        this.isResult = true;
+        this.configuration = {
+            target,
+            itemsPerPage,
+            promote,
+            exclude,
+            filter,
+            highlightsEnabled,
+            classNames,
+            template,
+            formatData,
+            fadeInSelector,
+            infiniteScroll,
+            infiniteScrollButton,
+            fieldsConciliation,
+            minScore,
+        };
     }
 
     /**
@@ -109,6 +127,34 @@ class Result extends Widget {
         delete query.page;
         this.component.state = {
             page: 1,
+        };
+    }
+
+    /**
+     * @param object
+     * @param query
+     */
+    public fromUrlObject(
+        object: any,
+        query: any,
+    ) {
+        console.log(object);
+console.log('A');
+        const its = object.its;
+        if (its === undefined) {
+            return;
+        }
+
+        if (query.filters === undefined) {
+            query.filters = {};
+        }
+
+        console.log('C');
+        query.filters["_id"] = {
+            application_type: FILTER_AT_LEAST_ONE,
+            field: "_id",
+            filter_type: FILTER_TYPE_FIELD,
+            values: its,
         };
     }
 }

@@ -6,6 +6,8 @@ import Store from "../Store";
  */
 export default abstract class Widget {
 
+    public configuration: any;
+    public isResult = false;
     protected target;
     protected component: any;
     protected config: any;

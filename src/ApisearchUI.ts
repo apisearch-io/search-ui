@@ -1,4 +1,4 @@
-import {HttpRepository, ItemUUID, Query} from "apisearch";
+import {HttpRepository, Item, ItemUUID, Query, Result as ModelResult} from "apisearch";
 import apisearch from "apisearch";
 import {IndexUUID} from "apisearch/lib/Model/IndexUUID";
 import ApisearchHelper from "./ApisearchHelper";
@@ -8,6 +8,7 @@ import {APISEARCH_DISPATCHER, APISEARCH_UI} from "./Constants";
 import container from "./Container";
 import {createEnvironmentId} from "./Environment";
 import Store from "./Store";
+import Result from "./widgets/Result";
 import Widget from "./widgets/Widget";
 import widgets from "./widgets/Widgets";
 
@@ -303,6 +304,32 @@ export default class ApisearchUI {
      */
     public static factory(config: any): ApisearchUIFactory{
         return ApisearchUIFactory.fromConfig(config);
+    }
+
+    /**
+     *
+     * @param items
+     * @param target
+     */
+    public renderItemsList(items: string[], target: string) {
+        if (this.widgets.result instanceof Result) {
+            return;
+        }
+
+        const activeResultWidgets = this.activeWidgets.filter((widget: any) => widget.isResult);
+        if (activeResultWidgets.length === 0) {
+            return;
+        }
+
+        const newConfig = JSON.parse(JSON.stringify(this.config));
+        newConfig.options.initial_state = {its: items};
+        const ui = ApisearchUI.create(newConfig, "");
+        const configuration = JSON.parse(JSON.stringify(activeResultWidgets[0].configuration));
+        configuration.target = target;
+        ui.addWidget(widgets.result(configuration));
+        ui.init({firstQuery: true});
+
+        return ui;
     }
 
     /**
