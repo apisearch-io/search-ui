@@ -10,21 +10,23 @@ import searchInput from "./SearchInput";
 import snapshot from "./Snapshot";
 import sortBy from "./SortBy";
 import suggestions from "./Suggestions";
+import banner from "./Banner";
 
 /**
  * Widget factories
  */
 export default {
-    searchInput: searchInput,
-    clearFilters: clearFilters,
-    multipleFilter: multipleFilter,
-    sortBy: sortBy,
-    information: information,
-    result: result,
-    pagination: pagination,
-    checkboxFilter: checkboxFilter,
-    rangeFilter: rangeFilter,
-    reload: reload,
-    snapshot: snapshot,
-    suggestions: suggestions
+    searchInput,
+    clearFilters,
+    multipleFilter,
+    sortBy,
+    information,
+    result,
+    pagination,
+    checkboxFilter,
+    rangeFilter,
+    reload,
+    snapshot,
+    suggestions,
+    banner,
 };
