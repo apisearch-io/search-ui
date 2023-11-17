@@ -9480,6 +9480,16 @@ var BannerComponent = /** @class */ (function (_super) {
      */
     BannerComponent.prototype.componentWillReceiveProps = function (props) {
         var _a;
+        if (props.store.getCurrentResult() == null) {
+            this.setState(function (prevState) {
+                return {
+                    mobile_img: "",
+                    desktop_img: "",
+                    url: ""
+                };
+            });
+            return;
+        }
         var banners = (_a = props.store.getCurrentResult().metadata.banners) !== null && _a !== void 0 ? _a : [];
         if (!banners) {
             this.setState(function (prevState) {
