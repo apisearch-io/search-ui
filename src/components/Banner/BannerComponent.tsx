@@ -28,6 +28,18 @@ class BannerComponent extends Component<BannerProps, BannerState> {
      */
     componentWillReceiveProps(props) {
 
+        if (props.store.getCurrentResult() == null) {
+            this.setState((prevState) => {
+                return {
+                    mobile_img: "",
+                    desktop_img: "",
+                    url: "",
+                };
+            });
+
+            return;
+        }
+
         const banners = props.store.getCurrentResult().metadata.banners ?? [];
         if (!banners) {
             this.setState((prevState) => {
