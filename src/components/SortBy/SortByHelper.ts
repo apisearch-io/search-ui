@@ -13,14 +13,14 @@ export function applySortByToQuery(query, selectedOption) {
 
     const sortByData = splitQueryValue(selectedOption);
     const sortBy = Apisearch.createEmptySortBy();
-    if (sortByData.field == 'distance') {
+    if (sortByData.field === "distance") {
         sortBy.byValue({
             type: SORT_BY_TYPE_DISTANCE,
             unit: sortByData.sort
                 ? sortByData.sort
-                : 'km'
+                : "km",
         });
-    } else if (sortByData.field == 'score') {
+    } else if (sortByData.field === "score") {
         sortBy.byValue(SORT_BY_SCORE);
     } else {
         sortBy.byFieldValue(

@@ -418,6 +418,7 @@ class ResultComponent extends Component<ResultProps, ResultState> {
                                         data={{
                                             ...reducedTemplateData,
                                             ...this.hydrateItem(item),
+                                            ...{query: currentQuery.getQueryText()},
                                         }}
                                         template={props.template.item}
                                         className={`as-result__item ${props.classNames.item}`}
@@ -597,6 +598,7 @@ ResultComponent.defaultProps = {
     promote: [],
     exclude: [],
     filter: (query) => null,
+    subResult: false,
     classNames: {
         container: "",
         itemsList: "",

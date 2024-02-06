@@ -173,7 +173,7 @@ export function filterAction(
     repository
         .query(clonedQuery)
         .then((result) => {
-            clonedQuery.setMetadataValue("af", []);
+            delete clonedQuery.metadata.af;
             dispatcher.dispatch("RENDER_FETCHED_DATA", {
                 query: clonedQuery,
                 result,

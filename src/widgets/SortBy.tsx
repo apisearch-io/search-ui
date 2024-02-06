@@ -116,12 +116,11 @@ class SortBy extends Widget {
      */
     private static setSortToQuery(query, option) {
 
-        query.sort = [{}];
-
         if (option === "score") {
-            query.sort[0].type = "score";
             return;
         }
+
+        query.sort = [{}];
 
         if (option.indexOf("distance:") === 0) {
             const distanceSortParts = option.split(":");

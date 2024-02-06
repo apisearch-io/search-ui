@@ -39,6 +39,10 @@ export function clearFiltersAction(
         if (valueIndex > -1) {
             clonedQuery.filters[filterToClear].values.splice(valueIndex, 1);
         }
+
+        if (clonedQuery.filters[filterToClear].values.length === 0) {
+            delete clonedQuery.filters[filterToClear];
+        }
     }
 
     clonedQuery.page = 1;

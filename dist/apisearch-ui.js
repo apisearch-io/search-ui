@@ -9553,7 +9553,7 @@ exports["default"] = BannerComponent;
 
 exports.__esModule = true;
 exports.defaultBannerTemplate = void 0;
-exports.defaultBannerTemplate = "\n    <div class=\"banner\">\n        {{#has_url}}<a href=\"{{url}}\">{{/has_url}}\n            <picture>\n                <source srcset=\"{{image_prefix}}{{desktop_img}}\" media=\"(min-width: {{breaking_point_size}}px)\" />\n                <img src=\"{{image_prefix}}{{mobile_img}}\" />\n            </picture>\n        {{#has_url}}</a>{{/has_url}}\n    </div>\n";
+exports.defaultBannerTemplate = "\n    <div class=\"banner\">\n        {{#has_url}}<a href=\"{{url}}\">{{/has_url}}\n            <picture>\n                <source srcset=\"{{image_prefix}}{{desktop_img}}\" media=\"(min-width: {{breaking_point_size}}px)\" />\n                <img src=\"{{image_prefix}}{{mobile_img}}\" loading=\"lazy\" class=\"soft-lazy\" onload=\"window.asImageShow(this)\" />\n            </picture>\n        {{#has_url}}</a>{{/has_url}}\n    </div>\n";
 
 
 /***/ }),
@@ -9833,6 +9833,9 @@ function clearFiltersAction(environmentId, currentQuery, repository, filterToCle
         var valueIndex = values.indexOf(filterValueToClear, 0);
         if (valueIndex > -1) {
             clonedQuery.filters[filterToClear].values.splice(valueIndex, 1);
+        }
+        if (clonedQuery.filters[filterToClear].values.length === 0) {
+            delete clonedQuery.filters[filterToClear];
         }
     }
     clonedQuery.page = 1;
@@ -10421,7 +10424,7 @@ function filterAction(environmentId, currentQuery, repository, filterName, filte
     repository
         .query(clonedQuery)
         .then(function (result) {
-        clonedQuery.setMetadataValue("af", []);
+        delete clonedQuery.metadata.af;
         dispatcher.dispatch("RENDER_FETCHED_DATA", {
             query: clonedQuery,
             result: result
@@ -11201,6 +11204,207 @@ exports["default"] = PaginationComponent;
 
 /***/ }),
 
+/***/ "./src/components/PriorityFilter/PriorityFilterActions.ts":
+/*!****************************************************************!*\
+  !*** ./src/components/PriorityFilter/PriorityFilterActions.ts ***!
+  \****************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+exports.__esModule = true;
+exports.priorityFilterAction = exports.setupPriorityFilters = void 0;
+var Constants_1 = __webpack_require__(/*! ../../Constants */ "./src/Constants.ts");
+var Container_1 = __webpack_require__(/*! ../../Container */ "./src/Container.ts");
+var Clone_1 = __webpack_require__(/*! ../Clone */ "./src/components/Clone.ts");
+function setupPriorityFilters(environmentId, currentQuery, filters) {
+    var clonedQuery = Clone_1["default"].object(currentQuery);
+    clonedQuery.setMetadataValue("pf", filters);
+    var dispatcher = Container_1["default"].get("".concat(Constants_1.APISEARCH_DISPATCHER, "__").concat(environmentId));
+    dispatcher.dispatch("UPDATE_APISEARCH_SETUP", {
+        query: clonedQuery
+    });
+}
+exports.setupPriorityFilters = setupPriorityFilters;
+/**
+ * @param environmentId
+ * @param currentQuery
+ * @param repository
+ * @param filterName
+ * @param filterField
+ * @param filterValue
+ * @param applicationType
+ */
+function priorityFilterAction(environmentId, currentQuery, repository, filterName, filterField, filterValue, applicationType) {
+    window.postMessage({
+        name: "apisearch_scroll_top"
+    }, "*");
+    var clonedQuery = Clone_1["default"].object(currentQuery);
+    clonedQuery.filterBy(filterName, filterField, [filterValue], applicationType, false);
+    clonedQuery.page = 1;
+    var dispatcher = Container_1["default"].get("".concat(Constants_1.APISEARCH_DISPATCHER, "__").concat(environmentId));
+    clonedQuery.setMetadataValue("af", [filterField, filterValue]);
+    repository
+        .query(clonedQuery)
+        .then(function (result) {
+        delete clonedQuery.metadata.af;
+        dispatcher.dispatch("RENDER_FETCHED_DATA", {
+            query: clonedQuery,
+            result: result
+        });
+    })["catch"](function (error) {
+        // Do nothing
+    });
+}
+exports.priorityFilterAction = priorityFilterAction;
+
+
+/***/ }),
+
+/***/ "./src/components/PriorityFilter/PriorityFilterComponent.tsx":
+/*!*******************************************************************!*\
+  !*** ./src/components/PriorityFilter/PriorityFilterComponent.tsx ***!
+  \*******************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+exports.__esModule = true;
+var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+var Template_1 = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
+var defaultTemplates_1 = __webpack_require__(/*! ./defaultTemplates */ "./src/components/PriorityFilter/defaultTemplates.tsx");
+var PriorityFilterActions_1 = __webpack_require__(/*! ./PriorityFilterActions */ "./src/components/PriorityFilter/PriorityFilterActions.ts");
+/**
+ * PriorityFilterComponent
+ */
+var PriorityFilterComponent = /** @class */ (function (_super) {
+    __extends(PriorityFilterComponent, _super);
+    /**
+     * Constructor
+     */
+    function PriorityFilterComponent() {
+        var _this = _super.call(this) || this;
+        _this.handleClick = function (filterValue) {
+            var props = _this.props;
+            var environmentId = props.environmentId;
+            var repository = props.repository;
+            var currentQuery = props.store.getCurrentQuery();
+            var priorityFilter = _this.props.store.getCurrentResult().getMetadataValue("priority_filter");
+            var priorityFilterName = priorityFilter.name;
+            var priorityFilterObject = props.store.getCurrentQuery().getAggregation(priorityFilterName);
+            (0, PriorityFilterActions_1.priorityFilterAction)(environmentId, currentQuery, repository, priorityFilterName, priorityFilterObject.getField().replace("indexed_metadata.", ""), filterValue, priorityFilterObject.getApplicationType());
+        };
+        _this.state = {
+            filterName: ""
+        };
+        return _this;
+    }
+    /**
+     * Components will mount
+     */
+    PriorityFilterComponent.prototype.componentWillMount = function () {
+        var props = this.props;
+        /**
+         * Dispatch action
+         */
+        (0, PriorityFilterActions_1.setupPriorityFilters)(props.environmentId, props.store.getCurrentQuery(), props.filters);
+    };
+    /**
+     * Component will receive props
+     *
+     * @param props
+     */
+    PriorityFilterComponent.prototype.componentWillReceiveProps = function (props) {
+        this.setState(function (_) {
+            return {
+                filterName: props.store.getCurrentResult().getMetadataValue("priority_filter")
+            };
+        });
+    };
+    /**
+     * Render
+     *
+     * @return {any}
+     */
+    PriorityFilterComponent.prototype.render = function () {
+        var _this = this;
+        var priorityFilter = this.props.store.getCurrentResult().getMetadataValue("priority_filter");
+        if (!priorityFilter) {
+            return null;
+        }
+        var priorityFilterName = priorityFilter.name;
+        var that = this;
+        return ((0, preact_1.h)("div", { className: "as-priorityFilter" },
+            (0, preact_1.h)(Template_1["default"], { template: this.props.template.top, className: "as-priorityFilter__top", dictionary: this.props.dictionary, data: {
+                    name: priorityFilterName
+                } }),
+            (0, preact_1.h)("div", { className: "as-priorityFilter__itemsList" },
+                (0, preact_1.h)("ul", null, Object.keys(priorityFilter.values).map(function (key) {
+                    var data = priorityFilter.values[key];
+                    return ((0, preact_1.h)("li", { onClick: function (e) {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            that.handleClick(key);
+                        } },
+                        (0, preact_1.h)(Template_1["default"], { template: _this.props.template.item, data: __assign(__assign({}, data), { value: key }), dictionary: _this.props.dictionary })));
+                })))));
+    };
+    return PriorityFilterComponent;
+}(preact_1.Component));
+PriorityFilterComponent.defaultProps = {
+    aggregationField: null,
+    template: {
+        item: defaultTemplates_1.defaultPriorityFilterItemTemplate,
+        top: defaultTemplates_1.defaultPriorityFilterTopTemplate
+    }
+};
+exports["default"] = PriorityFilterComponent;
+
+
+/***/ }),
+
+/***/ "./src/components/PriorityFilter/defaultTemplates.tsx":
+/*!************************************************************!*\
+  !*** ./src/components/PriorityFilter/defaultTemplates.tsx ***!
+  \************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+exports.__esModule = true;
+exports.defaultPriorityFilterItemTemplate = exports.defaultPriorityFilterTopTemplate = void 0;
+exports.defaultPriorityFilterTopTemplate = "\n    {{name}}\n";
+exports.defaultPriorityFilterItemTemplate = "\n    <div>{{value}}</div>\n    <img src=\"{{image}}\" />\n";
+
+
+/***/ }),
+
 /***/ "./src/components/RangeFilter/RangeFilterActions.ts":
 /*!**********************************************************!*\
   !*** ./src/components/RangeFilter/RangeFilterActions.ts ***!
@@ -11821,7 +12025,10 @@ var Item = /** @class */ (function (_super) {
      * @param nextState
      */
     Item.prototype.shouldComponentUpdate = function (nextProps, nextState) {
-        var shouldUpdate = this.props.data.uuid_composed !== nextProps.data.uuid_composed;
+        console.log(nextProps.data.query);
+        var shouldUpdate = this.props.data.uuid_composed !== nextProps.data.uuid_composed ||
+            this.props.data.metadata.image !== nextProps.data.metadata.image ||
+            this.props.data.query !== nextProps.data.query;
         if (!shouldUpdate) {
             this.highlight();
         }
@@ -12285,7 +12492,7 @@ var ResultComponent = /** @class */ (function (_super) {
                 : ((items.length > 0)
                     ? ((0, preact_1.h)("div", { className: "as-result__itemsList ".concat(props.classNames.itemsList) },
                         items.map(function (item) {
-                            return (0, preact_1.h)(Item_1["default"], { data: __assign(__assign({}, reducedTemplateData), _this.hydrateItem(item)), template: props.template.item, className: "as-result__item ".concat(props.classNames.item), dictionary: props.dictionary });
+                            return (0, preact_1.h)(Item_1["default"], { data: __assign(__assign(__assign({}, reducedTemplateData), _this.hydrateItem(item)), { query: currentQuery.getQueryText() }), template: props.template.item, className: "as-result__item ".concat(props.classNames.item), dictionary: props.dictionary });
                         }),
                         hasInfiniteScrollNextPage
                             ? (props.infiniteScrollButton
@@ -12387,6 +12594,7 @@ ResultComponent.defaultProps = {
     promote: [],
     exclude: [],
     filter: function (query) { return null; },
+    subResult: false,
     classNames: {
         container: "",
         itemsList: "",
@@ -13107,15 +13315,15 @@ var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch
 function applySortByToQuery(query, selectedOption) {
     var sortByData = splitQueryValue(selectedOption);
     var sortBy = apisearch_1["default"].createEmptySortBy();
-    if (sortByData.field == 'distance') {
+    if (sortByData.field === "distance") {
         sortBy.byValue({
             type: apisearch_1.SORT_BY_TYPE_DISTANCE,
             unit: sortByData.sort
                 ? sortByData.sort
-                : 'km'
+                : "km"
         });
     }
-    else if (sortByData.field == 'score') {
+    else if (sortByData.field === "score") {
         sortBy.byValue(apisearch_1.SORT_BY_SCORE);
     }
     else {
@@ -14107,6 +14315,84 @@ exports["default"] = (function (settings) { return new Pagination(settings); });
 
 /***/ }),
 
+/***/ "./src/widgets/PriorityFilter.tsx":
+/*!****************************************!*\
+  !*** ./src/widgets/PriorityFilter.tsx ***!
+  \****************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+exports.__esModule = true;
+var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+var PriorityFilterComponent_1 = __webpack_require__(/*! ../components/PriorityFilter/PriorityFilterComponent */ "./src/components/PriorityFilter/PriorityFilterComponent.tsx");
+var Widget_1 = __webpack_require__(/*! ./Widget */ "./src/widgets/Widget.ts");
+/**
+ * PriorityFilter
+ */
+var PriorityFilter = /** @class */ (function (_super) {
+    __extends(PriorityFilter, _super);
+    /**
+     *
+     * @param target
+     * @param filters
+     * @param template
+     */
+    function PriorityFilter(_a) {
+        var target = _a.target, filters = _a.filters, template = _a.template;
+        var _this = _super.call(this) || this;
+        _this.target = target;
+        _this.component = (0, preact_1.h)(PriorityFilterComponent_1["default"], { target: target, filters: filters, template: __assign(__assign({}, PriorityFilterComponent_1["default"].defaultProps.template), template) });
+        return _this;
+    }
+    /**
+     * @param environmentId
+     * @param store
+     * @param repository
+     * @param dictionary
+     */
+    PriorityFilter.prototype.render = function (environmentId, store, repository, dictionary) {
+        this.component.props = __assign(__assign({}, this.component.props), { dictionary: dictionary, environmentId: environmentId, repository: repository, store: store });
+        (0, preact_1.render)(this.component, document.querySelector(this.target));
+    };
+    return PriorityFilter;
+}(Widget_1["default"]));
+/**
+ * Multiple filter widget
+ *
+ * @param settings
+ */
+exports["default"] = (function (settings) { return new PriorityFilter(settings); });
+
+
+/***/ }),
+
 /***/ "./src/widgets/RangeFilter.tsx":
 /*!*************************************!*\
   !*** ./src/widgets/RangeFilter.tsx ***!
@@ -14783,11 +15069,10 @@ var SortBy = /** @class */ (function (_super) {
      * @private
      */
     SortBy.setSortToQuery = function (query, option) {
-        query.sort = [{}];
         if (option === "score") {
-            query.sort[0].type = "score";
             return;
         }
+        query.sort = [{}];
         if (option.indexOf("distance:") === 0) {
             var distanceSortParts = option.split(":");
             query.sort[0].type = distanceSortParts[0];
@@ -14966,6 +15251,7 @@ var Snapshot_1 = __webpack_require__(/*! ./Snapshot */ "./src/widgets/Snapshot.t
 var SortBy_1 = __webpack_require__(/*! ./SortBy */ "./src/widgets/SortBy.tsx");
 var Suggestions_1 = __webpack_require__(/*! ./Suggestions */ "./src/widgets/Suggestions.tsx");
 var Banner_1 = __webpack_require__(/*! ./Banner */ "./src/widgets/Banner.tsx");
+var PriorityFilter_1 = __webpack_require__(/*! ./PriorityFilter */ "./src/widgets/PriorityFilter.tsx");
 /**
  * Widget factories
  */
@@ -14982,7 +15268,8 @@ exports["default"] = {
     reload: Reload_1["default"],
     snapshot: Snapshot_1["default"],
     suggestions: Suggestions_1["default"],
-    banner: Banner_1["default"]
+    banner: Banner_1["default"],
+    priorityFilter: PriorityFilter_1["default"]
 };
 
 
