@@ -14,7 +14,11 @@ class Item extends Component<ItemProps, ItemState> {
      * @param nextState
      */
     public shouldComponentUpdate(nextProps: Readonly<ItemProps>, nextState: Readonly<ItemState>): boolean {
-        const shouldUpdate = this.props.data.uuid_composed !== nextProps.data.uuid_composed;
+        console.log(nextProps.data.query);
+        const shouldUpdate = this.props.data.uuid_composed !== nextProps.data.uuid_composed ||
+            this.props.data.metadata.image !== nextProps.data.metadata.image ||
+            this.props.data.query !== nextProps.data.query;
+
         if (!shouldUpdate) {
             this.highlight();
         }

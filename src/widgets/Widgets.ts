@@ -11,6 +11,7 @@ import snapshot from "./Snapshot";
 import sortBy from "./SortBy";
 import suggestions from "./Suggestions";
 import banner from "./Banner";
+import priorityFilter from "./PriorityFilter";
 
 /**
  * Widget factories
@@ -29,4 +30,5 @@ export default {
     snapshot,
     suggestions,
     banner,
+    priorityFilter,
 };
