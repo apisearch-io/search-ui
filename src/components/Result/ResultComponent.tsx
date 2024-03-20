@@ -355,7 +355,7 @@ class ResultComponent extends Component<ResultProps, ResultState> {
                             data={{
                                 ...reducedTemplateData,
                                 items: (items)
-                                    ? items.map((item) => this.hydrateItem(item))
+                                    ? items.map((item, position) => this.hydrateItem(item, position))
                                     : [],
                             }}
                             className={`as-result__itemsList ${itemsListClassName}`}
@@ -413,11 +413,11 @@ class ResultComponent extends Component<ResultProps, ResultState> {
                     : ((items.length > 0)
                         ? (
                             <div className={`as-result__itemsList ${props.classNames.itemsList}`}>
-                                {items.map((item) => {
+                                {items.map((item, position) => {
                                     return <Item
                                         data={{
                                             ...reducedTemplateData,
-                                            ...this.hydrateItem(item),
+                                            ...this.hydrateItem(item, position),
                                             ...{query: currentQuery.getQueryText()},
                                         }}
                                         template={props.template.item}
@@ -495,11 +495,11 @@ class ResultComponent extends Component<ResultProps, ResultState> {
                                     </a>
                                 </div>
                                 <div className={`as-result__alternative_items`}>
-                                    {subResult.items.map((item) => {
+                                    {subResult.items.map((item, position) => {
                                         return <Item
                                             data={{
                                                 ...reducedTemplateData,
-                                                ...this.hydrateItem(item),
+                                                ...this.hydrateItem(item, position),
                                             }}
                                             template={props.template.item}
                                             className={`as-result__alternative_item ${props.classNames.item}`}
@@ -529,8 +529,10 @@ class ResultComponent extends Component<ResultProps, ResultState> {
 
     /**
      * @param item
+     * @param position
+     * @private
      */
-    private hydrateItem(item: any) {
+    private hydrateItem(item: any, position: number) {
         const props = this.props;
         const environmentId = props.environmentId;
         const config = container.get(`${APISEARCH_CONFIG}__${environmentId}`);
@@ -579,8 +581,8 @@ class ResultComponent extends Component<ResultProps, ResultState> {
             ...{
                 key: "item_" + itemId,
                 uuid_composed: itemId,
-                click: apisearchReference + '.click("' + appId + '", "' + indexId + '", "' + itemId + '");',
-                add_to_cart: apisearchReference + '.interact("add_cart", "' + appId + '", "' + indexId + '", "' + itemId + '");',
+                click: apisearchReference + '.click("' + appId + '", "' + indexId + '", "' + itemId + '", ' + position + ");",
+                add_to_cart: apisearchReference + '.interact("add_cart", "' + appId + '", "' + indexId + '", "' + itemId + '", ' + position + ");",
                 query_text: queryText,
                 highlights_enabled: this.props.highlightsEnabled,
                 striptags: () => {
