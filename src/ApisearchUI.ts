@@ -309,13 +309,13 @@ export default class ApisearchUI {
      * @param appId
      * @param indexId
      * @param itemId
-     *
-     * @return {any}
+     * @param position
      */
     public click(
         appId: string,
         indexId: string,
         itemId: string,
+        position: 0,
     ) {
         try {
             if (navigator.sendBeacon === undefined) {
@@ -329,9 +329,10 @@ export default class ApisearchUI {
                         "cli",
                         this.store.getSite(),
                         this.store.getDevice(),
+                        position,
                     );
             } else {
-                this.sendClickBeacon(appId, indexId, itemId);
+                this.sendClickBeacon(appId, indexId, itemId, position);
             }
 
             const queryAsArray = JSON.parse(JSON.stringify(this.store.getCurrentQuery().toArray()));
@@ -346,6 +347,7 @@ export default class ApisearchUI {
                 device: this.store.getDevice(),
                 query: queryAsArray,
                 result: resultAsArray,
+                position: position,
             }, "*");
 
             window.postMessage({
@@ -358,6 +360,7 @@ export default class ApisearchUI {
                 device: this.store.getDevice(),
                 query: queryAsArray,
                 result: resultAsArray,
+                position: position,
             }, "*");
         } catch (error) {
             // Silent pass.
@@ -366,22 +369,24 @@ export default class ApisearchUI {
     }
 
     /**
-     *
      * @param appId
      * @param indexId
      * @param itemId
+     * @param position
      * @private
      */
     private sendClickBeacon(
         appId: string,
         indexId: string,
         itemId: string,
+        position: 0,
     ) {
         const data = new FormData();
         data.append("device", this.store.getDevice());
         data.append("query_string", this.store.getCurrentQuery().getQueryText());
         data.append("site", this.store.getSite());
         data.append("user_id", this.userId);
+        data.append("position", "" + position);
 
         const endpoint = this.config.options.endpoint + "/" + this.config.options.api_version;
         navigator.sendBeacon(endpoint + "/" + appId + "/indices/" + indexId + "/items/" + itemId + "/interaction/cli?token=" + this.config.token, data);
@@ -392,14 +397,14 @@ export default class ApisearchUI {
      * @param appId
      * @param indexId
      * @param itemId
-     *
-     * @return {any}
+     * @param position
      */
     public interact(
         interaction: string,
         appId: string,
         indexId: string,
         itemId: string,
+        position: 0,
     ) {
         this
             .repository
@@ -411,6 +416,7 @@ export default class ApisearchUI {
                 interaction,
                 this.store.getSite(),
                 this.store.getDevice(),
+                position,
             );
 
         const queryAsArray = JSON.parse(JSON.stringify(this.store.getCurrentQuery().toArray()));
@@ -426,6 +432,7 @@ export default class ApisearchUI {
             device: this.store.getDevice(),
             query: queryAsArray,
             result: resultAsArray,
+            position: position,
         }, "*");
     }
 

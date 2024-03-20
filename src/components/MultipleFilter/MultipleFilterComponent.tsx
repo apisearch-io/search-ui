@@ -359,7 +359,8 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
                                     className={
                                         `as-multipleFilter__item ` +
                                         `${itemClassName} ` +
-                                        `${(item.isActive) ? activeClassName : ""}`
+                                        `${(item.isActive) ? activeClassName : ""}` +
+                                        `${(props.promoted.includes(item.values.name) ? "as-multipleFilter__item_featured" : "")}`
                                     }
                                     onClick={(e) => {
                                         e.stopPropagation();
