@@ -17,6 +17,9 @@ export interface ClearFiltersProps {
     template: {
         container: string,
         filter: string,
+        filter_price: string,
+        filter_price_only_from: string,
+        filter_price_only_to: string,
     };
     environmentId?: string;
     repository?: Repository;

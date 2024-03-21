@@ -118,7 +118,6 @@ class ClearFiltersComponent extends Component<ClearFiltersProps, ClearFiltersSta
         const filterClassName = props.classNames.filter;
 
         const containerTemplate = props.template.container;
-        const filterTemplate = props.template.filter;
         const appliedFiltersFormatted = this.state.appliedFilters;
         let individualFilterClear = null;
         const isEmptyClass = (this.state.appliedFilters.length === 0) ? "empty" : "";
@@ -135,10 +134,25 @@ class ClearFiltersComponent extends Component<ClearFiltersProps, ClearFiltersSta
 
             individualFilterClear = <ul className={`as-clearFilters__filtersList ${filtersListClassName}`}>
                 {values.map((filter) => {
+                    const isFilterPrice = filter.value.indexOf("..") >= 0;
+
+                    let template = isFilterPrice
+                        ? this.props.template.filter_price
+                        : this.props.template.filter;
+
+                    if (isFilterPrice) {
+                        filter.parts = filter.value.replace(/[\[\]]/, "").split("..");
+                        if ((filter.parts[0] ?? "") === "0") {
+                            template = this.props.template.filter_price_only_to;
+                        } else if ((filter.parts[1] ?? "") === "") {
+                            template = this.props.template.filter_price_only_from;
+                        }
+                    }
+
                     return <li className={`as-clearFilters__filter ${filterClassName}`}
                                onClick={() => this.handleIndividualClick(filter.filter, filter.value)}>
                         <Template
-                            template={filterTemplate}
+                            template={template}
                             dictionary={this.props.dictionary}
                             data={filter}
                         />
@@ -153,7 +167,7 @@ class ClearFiltersComponent extends Component<ClearFiltersProps, ClearFiltersSta
                     return <li className={`as-clearFilters__filter ${filterClassName}`}
                                onClick={() => this.handleIndividualClick(filter.filter, null)}>
                         <Template
-                            template={filterTemplate}
+                            template={this.props.template.filter}
                             dictionary={this.props.dictionary}
                             data={filter}
                         />
