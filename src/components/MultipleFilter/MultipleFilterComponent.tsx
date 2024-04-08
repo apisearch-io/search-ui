@@ -1,4 +1,5 @@
 import { h, Component } from "preact";
+import {toCamelCase} from "../Common";
 
 import {aggregationSetup, filterAction} from "./MultipleFilterActions";
 import {
@@ -360,7 +361,8 @@ class MultipleFilterComponent extends Component<MultipleFilterProps, MultipleFil
                                         `as-multipleFilter__item ` +
                                         `${itemClassName} ` +
                                         `${(item.isActive) ? activeClassName : ""}` +
-                                        `${(props.promoted.includes(item.values.name) ? "as-multipleFilter__item_featured" : "")}`
+                                        `${(props.promoted.includes(item.values.name) ? "as-multipleFilter__item_featured" : "")}` +
+                                        `as-multipleFilter__item_${toCamelCase(item.values.id)}`
                                     }
                                     onClick={(e) => {
                                         e.stopPropagation();
