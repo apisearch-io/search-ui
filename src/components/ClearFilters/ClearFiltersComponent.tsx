@@ -134,7 +134,10 @@ class ClearFiltersComponent extends Component<ClearFiltersProps, ClearFiltersSta
 
             individualFilterClear = <ul className={`as-clearFilters__filtersList ${filtersListClassName}`}>
                 {values.map((filter) => {
-                    const isFilterPrice = filter.value.indexOf("..") >= 0;
+                    const isFilterPrice =
+                        filter &&
+                        typeof filter.value === "string" &&
+                        filter.value.indexOf("..") >= 0;
 
                     let template = isFilterPrice
                         ? this.props.template.filter_price
@@ -149,8 +152,14 @@ class ClearFiltersComponent extends Component<ClearFiltersProps, ClearFiltersSta
                         }
                     }
 
+                    filter.valueForClick = filter.value;
+                    if (typeof filter.value === "boolean") {
+                        filter = JSON.parse(JSON.stringify(filter));
+                        filter.value = filter.filter;
+                    }
+
                     return <li className={`as-clearFilters__filter ${filterClassName}`}
-                               onClick={() => this.handleIndividualClick(filter.filter, filter.value)}>
+                               onClick={() => this.handleIndividualClick(filter.filter, filter.valueForClick)}>
                         <Template
                             template={template}
                             dictionary={this.props.dictionary}

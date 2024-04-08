@@ -10,7 +10,8 @@
     "build:min": "webpack --config ./webpack.min.js --mode production",
     "fix": "tslint -c tslint.json --fix 'src/**/*.ts' 'src/*.ts'",
     "test:unit": "mocha --timeout 10000 --recursive --require ts-node/register test/**/*.tsx test/**/**/*.tsx",
-    "dist": "rm -rf ./dist/*; npm run test:unit; npm run build:lib && npm run build:dev && npm run build:min"
+    "dist": "rm -rf ./dist/*; npm run test:unit; npm run build:lib && npm run build:dev && npm run build:min",
+    "dist-min": "rm -rf ./dist/*; npm run build:min"
   },
   "license": "MIT",
   "author": "Apisearch Team <hello@apisearch.io>",

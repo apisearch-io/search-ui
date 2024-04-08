@@ -9993,7 +9993,9 @@ var ClearFiltersComponent = /** @class */ (function (_super) {
             });
             individualFilterClear = (0, preact_1.h)("ul", { className: "as-clearFilters__filtersList ".concat(filtersListClassName) }, values_1.map(function (filter) {
                 var _a, _b;
-                var isFilterPrice = filter.value.indexOf("..") >= 0;
+                var isFilterPrice = filter &&
+                    typeof filter.value === "string" &&
+                    filter.value.indexOf("..") >= 0;
                 var template = isFilterPrice
                     ? _this.props.template.filter_price
                     : _this.props.template.filter;
@@ -10006,7 +10008,12 @@ var ClearFiltersComponent = /** @class */ (function (_super) {
                         template = _this.props.template.filter_price_only_from;
                     }
                 }
-                return (0, preact_1.h)("li", { className: "as-clearFilters__filter ".concat(filterClassName), onClick: function () { return _this.handleIndividualClick(filter.filter, filter.value); } },
+                filter.valueForClick = filter.value;
+                if (typeof filter.value === "boolean") {
+                    filter = JSON.parse(JSON.stringify(filter));
+                    filter.value = filter.filter;
+                }
+                return (0, preact_1.h)("li", { className: "as-clearFilters__filter ".concat(filterClassName), onClick: function () { return _this.handleIndividualClick(filter.filter, filter.valueForClick); } },
                     (0, preact_1.h)(Template_1["default"], { template: template, dictionary: _this.props.dictionary, data: filter }));
             }));
         }
