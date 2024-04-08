@@ -10083,7 +10083,7 @@ exports["default"] = Clone;
 "use strict";
 
 exports.__esModule = true;
-exports.onWordClickAction = void 0;
+exports.toCamelCase = exports.onWordClickAction = void 0;
 var apisearch_1 = __webpack_require__(/*! apisearch */ "./node_modules/apisearch/lib/index.js");
 var Clone_1 = __webpack_require__(/*! ./Clone */ "./src/components/Clone.ts");
 var Container_1 = __webpack_require__(/*! ../Container */ "./src/Container.ts");
@@ -10118,6 +10118,18 @@ function onWordClickAction(environmentId, currentQuery, repository, word, catego
     });
 }
 exports.onWordClickAction = onWordClickAction;
+function toCamelCase(value) {
+    if (typeof value !== "string") {
+        return "";
+    }
+    return value.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
+        if (+match === 0) {
+            return ""; // or if (/\s+/.test(match)) for white spaces
+        }
+        return match.toLowerCase();
+    });
+}
+exports.toCamelCase = toCamelCase;
 
 
 /***/ }),
@@ -10538,6 +10550,7 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
 };
 exports.__esModule = true;
 var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.module.js");
+var Common_1 = __webpack_require__(/*! ../Common */ "./src/components/Common.ts");
 var MultipleFilterActions_1 = __webpack_require__(/*! ./MultipleFilterActions */ "./src/components/MultipleFilter/MultipleFilterActions.ts");
 var Helpers_1 = __webpack_require__(/*! ./Helpers */ "./src/components/MultipleFilter/Helpers.ts");
 var Template_1 = __webpack_require__(/*! ../Template */ "./src/components/Template.tsx");
@@ -10796,7 +10809,8 @@ var MultipleFilterComponent = /** @class */ (function (_super) {
                     return ((0, preact_1.h)("li", { className: "as-multipleFilter__item " +
                             "".concat(itemClassName, " ") +
                             "".concat((item.isActive) ? activeClassName : "") +
-                            "".concat((props.promoted.includes(item.values.name) ? "as-multipleFilter__item_featured" : "")), onClick: function (e) {
+                            "".concat((props.promoted.includes(item.values.name) ? "as-multipleFilter__item_featured" : "")) +
+                            "as-multipleFilter__item_".concat((0, Common_1.toCamelCase)(item.values.id)), onClick: function (e) {
                             e.stopPropagation();
                             e.preventDefault();
                             that.handleClick(item.values.id, level);
