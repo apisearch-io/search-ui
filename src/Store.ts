@@ -19,6 +19,7 @@ class Store extends EventEmitter {
     private doNotCleanUrlHashAtFirst: boolean = false;
     private site: string;
     private device: string;
+    private userType: string;
     private initialState: any;
 
     /**
@@ -29,6 +30,7 @@ class Store extends EventEmitter {
      * @param site
      * @param language
      * @param device
+     * @param userType
      * @param generateRandomSessionUUID
      * @param initialState
      */
@@ -43,6 +45,7 @@ class Store extends EventEmitter {
         site: string,
         language: string,
         device: string,
+        userType: string,
         generateRandomSessionUUID: boolean,
         initialState: any,
     ) {
@@ -51,8 +54,9 @@ class Store extends EventEmitter {
         this.dirty = true;
         this.site = site;
         this.device = device;
+        this.userType = userType;
         this.initialState = initialState;
-        const initialQuery = Store.loadInitialQuery(coordinate, userId, site, language, device);
+        const initialQuery = Store.loadInitialQuery(coordinate, userId, site, language, device, userType);
         this.window = window.top;
         this.isUnderIframe = (window !== window.top);
 
@@ -100,6 +104,13 @@ class Store extends EventEmitter {
      */
     public getDevice(): string {
         return this.device;
+    }
+
+    /**
+     *
+     */
+    public getUserType(): string {
+        return this.userType;
     }
 
     /**
@@ -263,6 +274,7 @@ class Store extends EventEmitter {
      * @param site
      * @param language
      * @param device
+     * @param userType
      *
      * @private
      */
@@ -275,6 +287,7 @@ class Store extends EventEmitter {
         site: string,
         language: string,
         device: string,
+        userType: string,
     ): Query {
         const withCoordinate = (
             coordinate &&
@@ -297,6 +310,10 @@ class Store extends EventEmitter {
 
         if (site !== "") {
             q.metadata.site = site;
+        }
+
+        if (userType !== "") {
+            q.metadata.user_type = userType;
         }
 
         if (language !== "") {

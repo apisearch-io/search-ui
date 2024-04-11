@@ -160,6 +160,7 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
                     query: currentQuery.toArray(),
                     site: props.store.getSite(),
                     device: props.store.getDevice(),
+                    userType: props.store.getUserType(),
                 }, "*");
             }, timeout);
         }
