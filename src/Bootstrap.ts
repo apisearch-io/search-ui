@@ -48,6 +48,7 @@ export function bootstrap(
             config.options.site ?? "",
             config.options.language ?? "",
             config.options.device ?? "",
+            config.options.user_type ?? "",
             config.options.generate_random_session_uuid ?? false,
             config.options.initial_state ?? {},
         );

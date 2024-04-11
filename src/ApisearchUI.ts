@@ -345,6 +345,7 @@ export default class ApisearchUI {
                 item_id: itemId,
                 site: this.store.getSite(),
                 device: this.store.getDevice(),
+                userType: this.store.getUserType(),
                 query: queryAsArray,
                 result: resultAsArray,
                 position: position,
@@ -358,6 +359,7 @@ export default class ApisearchUI {
                 item_id: itemId,
                 site: this.store.getSite(),
                 device: this.store.getDevice(),
+                userType: this.store.getUserType(),
                 query: queryAsArray,
                 result: resultAsArray,
                 position: position,
@@ -383,6 +385,7 @@ export default class ApisearchUI {
     ) {
         const data = new FormData();
         data.append("device", this.store.getDevice());
+        data.append("user_type", this.store.getUserType());
         data.append("query_string", this.store.getCurrentQuery().getQueryText());
         data.append("site", this.store.getSite());
         data.append("user_id", this.userId);
@@ -430,6 +433,7 @@ export default class ApisearchUI {
             item_id: itemId,
             site: this.store.getSite(),
             device: this.store.getDevice(),
+            userType: this.store.getUserType(),
             query: queryAsArray,
             result: resultAsArray,
             position: position,
@@ -462,6 +466,7 @@ export default class ApisearchUI {
             index_id: indexId,
             site: this.store.getSite(),
             device: this.store.getDevice(),
+            userType: this.store.getUserType(),
         }, "*");
     }
 

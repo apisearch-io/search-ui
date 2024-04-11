@@ -330,6 +330,7 @@ class ResultComponent extends Component<ResultProps, ResultState> {
             page: this.state.page,
             site: props.store.getSite(),
             device: props.store.getDevice(),
+            userType: props.store.getUserType(),
             items: itemsForEvent.map((item) => {
                 return {
                     fields: item.fields,

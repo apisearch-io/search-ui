@@ -8664,6 +8664,7 @@ var ApisearchUI = /** @class */ (function () {
                 item_id: itemId,
                 site: this.store.getSite(),
                 device: this.store.getDevice(),
+                userType: this.store.getUserType(),
                 query: queryAsArray,
                 result: resultAsArray,
                 position: position
@@ -8676,6 +8677,7 @@ var ApisearchUI = /** @class */ (function () {
                 item_id: itemId,
                 site: this.store.getSite(),
                 device: this.store.getDevice(),
+                userType: this.store.getUserType(),
                 query: queryAsArray,
                 result: resultAsArray,
                 position: position
@@ -8696,6 +8698,7 @@ var ApisearchUI = /** @class */ (function () {
     ApisearchUI.prototype.sendClickBeacon = function (appId, indexId, itemId, position) {
         var data = new FormData();
         data.append("device", this.store.getDevice());
+        data.append("user_type", this.store.getUserType());
         data.append("query_string", this.store.getCurrentQuery().getQueryText());
         data.append("site", this.store.getSite());
         data.append("user_id", this.userId);
@@ -8724,6 +8727,7 @@ var ApisearchUI = /** @class */ (function () {
             item_id: itemId,
             site: this.store.getSite(),
             device: this.store.getDevice(),
+            userType: this.store.getUserType(),
             query: queryAsArray,
             result: resultAsArray,
             position: position
@@ -8744,7 +8748,8 @@ var ApisearchUI = /** @class */ (function () {
             app_id: appId,
             index_id: indexId,
             site: this.store.getSite(),
-            device: this.store.getDevice()
+            device: this.store.getDevice(),
+            userType: this.store.getUserType()
         }, "*");
     };
     /**
@@ -8874,8 +8879,8 @@ function bootstrap(environmentId, config, hash) {
      * Register apisearch store
      */
     Container_1["default"].register(storeId, function () {
-        var _a, _b, _c, _d, _e, _f;
-        return new Store_1["default"](config.coordinate, config.options.min_score, hash, (_a = config.user_id) !== null && _a !== void 0 ? _a : "", (_b = config.options.site) !== null && _b !== void 0 ? _b : "", (_c = config.options.language) !== null && _c !== void 0 ? _c : "", (_d = config.options.device) !== null && _d !== void 0 ? _d : "", (_e = config.options.generate_random_session_uuid) !== null && _e !== void 0 ? _e : false, (_f = config.options.initial_state) !== null && _f !== void 0 ? _f : {});
+        var _a, _b, _c, _d, _e, _f, _g;
+        return new Store_1["default"](config.coordinate, config.options.min_score, hash, (_a = config.user_id) !== null && _a !== void 0 ? _a : "", (_b = config.options.site) !== null && _b !== void 0 ? _b : "", (_c = config.options.language) !== null && _c !== void 0 ? _c : "", (_d = config.options.device) !== null && _d !== void 0 ? _d : "", (_e = config.options.user_type) !== null && _e !== void 0 ? _e : "", (_f = config.options.generate_random_session_uuid) !== null && _f !== void 0 ? _f : false, (_g = config.options.initial_state) !== null && _g !== void 0 ? _g : {});
     });
     /**
      * Register an event dispatcher
@@ -9139,18 +9144,20 @@ var Store = /** @class */ (function (_super) {
      * @param site
      * @param language
      * @param device
+     * @param userType
      * @param generateRandomSessionUUID
      * @param initialState
      */
-    function Store(coordinate, minScore, hash, userId, site, language, device, generateRandomSessionUUID, initialState) {
+    function Store(coordinate, minScore, hash, userId, site, language, device, userType, generateRandomSessionUUID, initialState) {
         var _this = _super.call(this) || this;
         _this.withHash = false;
         _this.doNotCleanUrlHashAtFirst = false;
         _this.dirty = true;
         _this.site = site;
         _this.device = device;
+        _this.userType = userType;
         _this.initialState = initialState;
-        var initialQuery = Store.loadInitialQuery(coordinate, userId, site, language, device);
+        var initialQuery = Store.loadInitialQuery(coordinate, userId, site, language, device, userType);
         _this.window = window.top;
         _this.isUnderIframe = (window !== window.top);
         if ((typeof hash === "string")) {
@@ -9193,6 +9200,12 @@ var Store = /** @class */ (function (_super) {
      */
     Store.prototype.getDevice = function () {
         return this.device;
+    };
+    /**
+     *
+     */
+    Store.prototype.getUserType = function () {
+        return this.userType;
     };
     /**
      * Get current query
@@ -9322,10 +9335,11 @@ var Store = /** @class */ (function (_super) {
      * @param site
      * @param language
      * @param device
+     * @param userType
      *
      * @private
      */
-    Store.loadInitialQuery = function (coordinate, userId, site, language, device) {
+    Store.loadInitialQuery = function (coordinate, userId, site, language, device, userType) {
         var withCoordinate = (coordinate &&
             coordinate.lat !== undefined &&
             coordinate.lon !== undefined);
@@ -9341,6 +9355,9 @@ var Store = /** @class */ (function (_super) {
         }
         if (site !== "") {
             q.metadata.site = site;
+        }
+        if (userType !== "") {
+            q.metadata.user_type = userType;
         }
         if (language !== "") {
             q.metadata.language = language;
@@ -12487,6 +12504,7 @@ var ResultComponent = /** @class */ (function (_super) {
             page: this.state.page,
             site: props.store.getSite(),
             device: props.store.getDevice(),
+            userType: props.store.getUserType(),
             items: itemsForEvent.map(function (item) {
                 return {
                     fields: item.fields,
@@ -12998,7 +13016,8 @@ var SearchInputComponent = /** @class */ (function (_super) {
                     query_text: currentQueryText,
                     query: currentQuery.toArray(),
                     site: props.store.getSite(),
-                    device: props.store.getDevice()
+                    device: props.store.getDevice(),
+                    userType: props.store.getUserType()
                 }, "*");
             }, timeout);
         }
