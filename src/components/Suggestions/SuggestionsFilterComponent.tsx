@@ -1,9 +1,9 @@
 import {Component, h} from 'preact';
 import {highlightElement} from "../../Highlight";
-import {onWordClickAction} from "../Common";
+import {dispatchQueryStringEvent, onWordClickAction} from "../Common";
 import {SuggestionsFilterProps} from "./SuggestionsFilterProps";
 import {SuggestionsFilterState} from "./SuggestionsFilterState";
-import {defaultItemTemplate} from "./defaultTemplates";
+import {defaultItemCategoryTemplate, defaultItemTemplate} from "./defaultTemplates";
 import {enableSuggestions} from "./SuggestionsFilterActions";
 import Template from "../Template";
 
@@ -84,6 +84,17 @@ class SuggestionsFilterComponent extends Component<SuggestionsFilterProps, Sugge
                 .replace(/<\/em>/g, "");
         }
 
+        window.postMessage({
+            name: "apisearch_suggestion",
+            query_text: word,
+            query: props.store.getCurrentQuery().toArray(),
+            site: props.store.getSite(),
+            device: props.store.getDevice(),
+            user_type: props.store.getUserType(),
+        }, "*");
+
+        dispatchQueryStringEvent(props.store, 0);
+
         /**
          * Dispatch action
          */
@@ -92,6 +103,34 @@ class SuggestionsFilterComponent extends Component<SuggestionsFilterProps, Sugge
             props.store.getCurrentQuery(),
             props.repository,
             word,
+        );
+    }
+
+    handleCategoryClick = (word, categoryValue, categoryName, categoryField) => {
+        const props = this.props;
+
+        window.postMessage({
+            name: "apisearch_suggestion_with_category",
+            query_text: word,
+            category: categoryValue,
+            category_name: categoryName,
+            category_field: categoryField,
+            query: props.store.getCurrentQuery().toArray(),
+            site: props.store.getSite(),
+            device: props.store.getDevice(),
+            user_type: props.store.getUserType(),
+        }, "*");
+
+        dispatchQueryStringEvent(props.store, 0);
+
+        onWordClickAction(
+            props.environmentId,
+            props.store.getCurrentQuery(),
+            props.repository,
+            word,
+            categoryValue,
+            categoryName,
+            categoryField,
         );
     }
 
@@ -123,10 +162,16 @@ class SuggestionsFilterComponent extends Component<SuggestionsFilterProps, Sugge
                 />
 
                 <div className={`as-suggestions__itemsList ${itemsListClassName}`}>
-                    {state.words.map((word) => {
-                        const templateData = {
-                            word: word,
-                        };
+                    {state.words.map((word, index) => {
+                        const templateData = {word};
+                        let categoryList = [];
+
+                        if (index === 0) {
+                            categoryList = props
+                                .store
+                                .currentResult
+                                .getMetadataValue("first_suggestion_categories") ?? [];
+                        }
 
                         return (
                             <div
@@ -142,8 +187,30 @@ class SuggestionsFilterComponent extends Component<SuggestionsFilterProps, Sugge
                                     data={templateData}
                                     dictionary={this.props.dictionary}
                                 />
+
+                                <div>
+                                    {categoryList.map((item) => {
+                                        return <div
+                                            className={`as-suggestions__item_category`}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                e.preventDefault();
+                                                that.handleCategoryClick(
+                                                    word, item.value,
+                                                    props.categoryName, props.categoryField,
+                                                );
+                                            }}
+                                        >
+                                            <Template
+                                                template={props.template.category_item}
+                                                data={item}
+                                                dictionary={this.props.dictionary}
+                                            />
+                                        </div>;
+                                    })}
+                                </div>
                             </div>
-                        );
+                    );
                     })}
                 </div>
             </div>
@@ -161,6 +228,7 @@ SuggestionsFilterComponent.defaultProps = {
     template: {
         top: null,
         item: defaultItemTemplate,
+        category_item: defaultItemCategoryTemplate,
     },
 };
 

@@ -15,7 +15,10 @@ export interface SuggestionsFilterProps {
     template: {
         top: string,
         item: string,
+        category_item: string,
     };
+    categoryField?: string;
+    categoryName?: string;
     environmentId?: string;
     repository?: Repository;
     store?: Store;

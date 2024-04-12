@@ -1,4 +1,5 @@
 import {h, Component} from 'preact';
+import {dispatchQueryStringEvent} from "../Common";
 import {simpleSearchAction} from "./SearchInputActions";
 import Template from "../Template";
 import {SearchInputProps} from "./SearchInputProps";
@@ -11,8 +12,6 @@ import {useRef} from "preact/compat";
  */
 class SearchInputComponent extends Component<SearchInputProps, SearchInputState> {
     private inputRef = useRef(null);
-    private queryTextEvent;
-    private lastQueryTextStringDispatched;
 
     /**
      * Constructor
@@ -23,10 +22,8 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
             this.state = { queryText: "" };
         }
 
-        const that = this;
-
         window.addEventListener("beforeunload", () => {
-            that.dispatchQueryStringEvent(props, 0);
+            dispatchQueryStringEvent(props.store, 0);
         });
     }
 
@@ -49,6 +46,14 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
         const startSearchOn = props.startSearchOn;
         const finalSpace = search.charAt(search.length - 1) === " " ? " " : "";
         const targetValueNoSpaces = search.trim() + finalSpace;
+
+        window.postMessage({
+            name: "apisearch_search_letter",
+            query_text: search,
+            query: props.store.getCurrentQuery().toArray(),
+            site: props.store.getSite(),
+            device: props.store.getDevice(),
+        }, "*");
 
         simpleSearchAction(
             props.environmentId,
@@ -132,41 +137,6 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
     }
 
     /**
-     * @param props
-     * @param timeout
-     */
-    dispatchQueryStringEvent(props: SearchInputProps, timeout: number) {
-        const currentQuery = props.store.getCurrentQuery();
-        const currentQueryText = currentQuery.getQueryText();
-
-        if (this.queryTextEvent) {
-            this.lastQueryTextStringDispatched = null;
-            clearTimeout(this.queryTextEvent);
-        }
-
-        if (this.lastQueryTextStringDispatched === currentQueryText) {
-            return;
-        }
-
-        this.lastQueryTextStringDispatched = currentQueryText;
-        if (currentQueryText !== "") {
-            const that = this;
-            this.lastQueryTextStringDispatched = currentQueryText;
-            this.queryTextEvent = setTimeout(function() {
-                that.queryTextEvent = null;
-                window.postMessage({
-                    name: "apisearch_search",
-                    query_text: currentQueryText,
-                    query: currentQuery.toArray(),
-                    site: props.store.getSite(),
-                    device: props.store.getDevice(),
-                    userType: props.store.getUserType(),
-                }, "*");
-            }, timeout);
-        }
-    }
-
-    /**
      * Search
      *
      * @return {any}
@@ -206,7 +176,7 @@ class SearchInputComponent extends Component<SearchInputProps, SearchInputState>
             ? "autocompletable"
             : "";
 
-        this.dispatchQueryStringEvent(props, 2000);
+        dispatchQueryStringEvent(props.store, 2000);
 
         let searchInput = (<input
             type="text"

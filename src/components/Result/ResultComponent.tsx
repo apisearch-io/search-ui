@@ -553,24 +553,29 @@ class ResultComponent extends Component<ResultProps, ResultState> {
         }
 
         const itemId = item.getUUID().composedUUID();
-        const mainFields = {};
-        Object.assign(
-            mainFields,
-            item.getMetadata(),
-            item.getIndexedMetadata(),
-        );
+        let formattedItem = item;
 
-        const fieldsConciliation = {};
-        Object.keys(props.fieldsConciliation).map((field, index) => {
-            fieldsConciliation[field] = mainFields[props.fieldsConciliation[field]] ?? undefined;
-        });
+        if (!item.metadata.formatted) {
+            const mainFields = {};
+            Object.assign(
+                mainFields,
+                item.getMetadata(),
+                item.getIndexedMetadata(),
+            );
 
-        Object.assign(
-            mainFields,
-            fieldsConciliation,
-        );
+            const fieldsConciliation = {};
+            Object.keys(props.fieldsConciliation).map((field, index) => {
+                fieldsConciliation[field] = mainFields[props.fieldsConciliation[field]] ?? undefined;
+            });
 
-        item.fields = mainFields;
+            Object.assign(
+                mainFields,
+                fieldsConciliation,
+            );
+
+            item.fields = mainFields;
+            formattedItem = props.formatData(item);
+        }
 
         let queryText = "";
         if (this.props.store.getCurrentQuery()) {
@@ -578,7 +583,7 @@ class ResultComponent extends Component<ResultProps, ResultState> {
         }
 
         return {
-            ...props.formatData(item),
+            ...formattedItem,
             ...{
                 key: "item_" + itemId,
                 uuid_composed: itemId,

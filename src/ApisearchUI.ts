@@ -123,7 +123,7 @@ export default class ApisearchUI {
             this.store.fetchInitialQuery(
                 this.environmentId,
                 this.repository,
-                loadQuery,
+                loadQuery ?? true,
             );
 
             return true;
@@ -511,5 +511,9 @@ export default class ApisearchUI {
             .catch((error) => {
                 // Do nothing
             });
+    }
+
+    public getQueryObject() {
+        return this.store.getCurrentQuery();
     }
 }

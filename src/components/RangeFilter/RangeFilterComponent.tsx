@@ -318,11 +318,12 @@ class RangeFilterComponent extends Component<RangeFilterProps, RangeFilterState>
         const min = state.min;
         const max = state.max;
 
+
         const isVisible = state.visible && !(
             props.store.currentResult.getTotalHits() === 0 &&
             from === min &&
             to === max
-        );
+        ) && (min !== max) && (Math.abs(min - max) > 1);
 
         const visibleStyle = isVisible ? '' : 'display:none!important;';
 
