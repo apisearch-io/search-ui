@@ -60,8 +60,8 @@ class InformationComponent extends Component<InformationProps, InformationState>
         const to = from + size;
         let totalHits = this.state.hits.toLocaleString();
         let moreThanLimit = false;
-        if (totalHits === "10,000") {
-            totalHits = '+10,000';
+        if (totalHits === "10,000" || totalHits === "10.000" || totalHits === "10000") {
+            totalHits = "+10.000";
             moreThanLimit = true;
         }
 
