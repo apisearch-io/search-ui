@@ -83,6 +83,10 @@ class SuggestionsFilterComponent extends Component<SuggestionsFilterProps, Sugge
                 .replace(/<em>/g, "")
                 .replace(/<\/em>/g, "");
         }
+        window.postMessage({
+            name: "apisearch_suggestion_clicked",
+            suggestion: word,
+        }, "*");
 
         /**
          * Dispatch action
