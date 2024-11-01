@@ -12507,7 +12507,7 @@ var ResultComponent = /** @class */ (function (_super) {
             userType: props.store.getUserType(),
             items: itemsForEvent.map(function (item) {
                 return {
-                    fields: item.fields,
+                    fields: item.getAllMetadata(),
                     uuid: item.uuid
                 };
             })
@@ -13489,6 +13489,10 @@ var SuggestionsFilterComponent = /** @class */ (function (_super) {
                     .replace(/<em>/g, "")
                     .replace(/<\/em>/g, "");
             }
+            window.postMessage({
+                name: "apisearch_suggestion_clicked",
+                suggestion: word
+            }, "*");
             /**
              * Dispatch action
              */

@@ -333,7 +333,7 @@ class ResultComponent extends Component<ResultProps, ResultState> {
             userType: props.store.getUserType(),
             items: itemsForEvent.map((item) => {
                 return {
-                    fields: item.fields,
+                    fields: item.getAllMetadata(),
                     uuid: item.uuid,
                 };
             }),
